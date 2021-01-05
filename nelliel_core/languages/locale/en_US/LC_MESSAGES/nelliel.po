@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Nelliel v0.9.21\n"
+"Project-Id-Version: Nelliel v0.9.22\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-12-31 05:59:44 UTC +0000\n"
+"POT-Creation-Date: 2021-01-05 06:40:59 UTC +0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,621 +18,325 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 
-#: templates/nelliel_basic/banned_user.html
+#: templates/nelliel_basic/banned.html
 msgid "Submit Appeal"
 msgstr ""
 
-#: templates/nelliel_basic/banned_user.html
+#: templates/nelliel_basic/banned.html
+msgid "You have been banned from:"
+msgstr ""
+
+#: templates/nelliel_basic/banned.html
+msgid "The reason for your ban:"
+msgstr ""
+
+#: templates/nelliel_basic/banned.html
+msgid "This ban was set on"
+msgstr ""
+
+#: templates/nelliel_basic/banned.html
+msgid "It will expire on"
+msgstr ""
+
+#: templates/nelliel_basic/banned.html
+msgid "Remaining time until expiration is"
+msgstr ""
+
+#: templates/nelliel_basic/banned.html
+msgid "Your current IP is "
+msgstr ""
+
+#: templates/nelliel_basic/banned.html
 msgid "If you wish, you may appeal this ban. Enter your reason why you should get "
 "unbanned in the box below. A staff member will (probably) review it."
 msgstr ""
 
-#: templates/nelliel_basic/banned_user.html
+#: templates/nelliel_basic/banned.html
 msgid "This is part of a range ban. You cannot appeal it."
 msgstr ""
 
-#: templates/nelliel_basic/banned_user.html
+#: templates/nelliel_basic/banned.html
 msgid "You have already appealed this ban but the appeal has not been reviewed yet."
 msgstr ""
 
-#: templates/nelliel_basic/banned_user.html
-msgid "This is the response to your appeal: "
+#: templates/nelliel_basic/banned.html
+msgid "You appeal has been reviewed and denied. You cannot appeal again."
 msgstr ""
 
-#: templates/nelliel_basic/panels/users_panel_edit.html
-msgid "Update User"
+#: templates/nelliel_basic/banned.html
+msgid "Your appeal has been reviewed and the ban has been altered."
 msgstr ""
 
-#: templates/nelliel_basic/panels/users_panel_edit.html
-#: templates/nelliel_basic/panels/users_panel_main.html
-msgid "User ID"
+#: templates/nelliel_basic/banned.html
+msgid "This is the response to your appeal:"
 msgstr ""
 
-#: templates/nelliel_basic/panels/users_panel_edit.html
-msgid "New password (leave blank to keep current password)"
-msgstr ""
-
-#: templates/nelliel_basic/panels/users_panel_edit.html
-msgid "User display name"
-msgstr ""
-
-#: templates/nelliel_basic/panels/users_panel_edit.html
-msgid "User is active"
-msgstr ""
-
-#: templates/nelliel_basic/panels/users_panel_edit.html
-msgid "{{ domain_name }}"
-msgstr ""
-
-#: templates/nelliel_basic/panels/logs_panel.html
-#: templates/nelliel_basic/panels/roles_panel_main.html
-msgid "Level"
-msgstr ""
-
-#: templates/nelliel_basic/panels/logs_panel.html
-msgid "Event ID"
-msgstr ""
-
-#: templates/nelliel_basic/panels/logs_panel.html
-msgid "Originator"
-msgstr ""
-
-#: templates/nelliel_basic/panels/logs_panel.html
-msgid "IP Address"
-msgstr ""
-
-#: templates/nelliel_basic/panels/logs_panel.html
-#: templates/nelliel_basic/panels/thread_panel_expand.html
-msgid "Time"
-msgstr ""
-
-#: templates/nelliel_basic/panels/logs_panel.html
-msgid "Message"
-msgstr ""
-
-#: templates/nelliel_basic/panels/logs_panel.html
-msgid "View Staff Logs"
-msgstr ""
-
-#: templates/nelliel_basic/panels/logs_panel.html
-msgid "View System Logs"
-msgstr ""
-
-#: templates/nelliel_basic/panels/logs_panel.html
-msgid "View All Logs"
-msgstr ""
-
-#: templates/nelliel_basic/panels/filetypes_panel_edit.html
+#: templates/nelliel_basic/panels/filetypes_edit.html
 msgid "Update Filetype"
 msgstr ""
 
-#: templates/nelliel_basic/panels/filetypes_panel_edit.html
-#: templates/nelliel_basic/panels/filetypes_panel_main.html
+#: templates/nelliel_basic/panels/filetypes_edit.html
+#: templates/nelliel_basic/panels/filetypes_main.html
 msgid "Base extension"
 msgstr ""
 
-#: templates/nelliel_basic/panels/filetypes_panel_edit.html
-#: templates/nelliel_basic/panels/filetypes_panel_main.html
+#: templates/nelliel_basic/panels/filetypes_edit.html
+#: templates/nelliel_basic/panels/filetypes_main.html
 msgid "Category"
 msgstr ""
 
-#: templates/nelliel_basic/panels/filetypes_panel_edit.html
-#: templates/nelliel_basic/panels/filetypes_panel_main.html
+#: templates/nelliel_basic/panels/filetypes_edit.html
+#: templates/nelliel_basic/panels/filetypes_main.html
 msgid "Format"
 msgstr ""
 
-#: templates/nelliel_basic/panels/filetypes_panel_edit.html
-#: templates/nelliel_basic/panels/filetypes_panel_main.html
+#: templates/nelliel_basic/panels/filetypes_edit.html
+#: templates/nelliel_basic/panels/filetypes_main.html
 msgid "Mime"
 msgstr ""
 
-#: templates/nelliel_basic/panels/filetypes_panel_edit.html
-#: templates/nelliel_basic/panels/filetypes_panel_main.html
+#: templates/nelliel_basic/panels/filetypes_edit.html
+#: templates/nelliel_basic/panels/filetypes_main.html
 msgid "Sub extensions"
 msgstr ""
 
-#: templates/nelliel_basic/panels/filetypes_panel_edit.html
-#: templates/nelliel_basic/panels/filetypes_panel_main.html
+#: templates/nelliel_basic/panels/filetypes_edit.html
+#: templates/nelliel_basic/panels/filetypes_main.html
 msgid "ID regex"
 msgstr ""
 
-#: templates/nelliel_basic/panels/filetypes_panel_edit.html
-#: templates/nelliel_basic/panels/filetypes_panel_main.html
+#: templates/nelliel_basic/panels/filetypes_edit.html
+#: templates/nelliel_basic/panels/filetypes_main.html
 msgid "Label"
 msgstr ""
 
-#: templates/nelliel_basic/panels/filetypes_panel_edit.html
+#: templates/nelliel_basic/panels/filetypes_edit.html
 msgid "Enabled"
 msgstr ""
 
-#: templates/nelliel_basic/panels/permissions_panel.html
-msgid "Add Permission"
+#: templates/nelliel_basic/panels/roles_main.html
+msgid "List of roles"
 msgstr ""
 
-#: templates/nelliel_basic/panels/permissions_panel.html
-msgid "This panel basically exists for maintenance related to plugins that define "
-"extra permissions. Otherwise you shouldn't touch anything here."
+#: templates/nelliel_basic/panels/roles_main.html
+#: templates/nelliel_basic/panels/roles_edit.html
+msgid "Role ID"
 msgstr ""
 
-#: templates/nelliel_basic/panels/permissions_panel.html
-msgid "Permission"
+#: templates/nelliel_basic/panels/roles_main.html
+#: templates/nelliel_basic/panels/logs.html
+msgid "Level"
 msgstr ""
 
-#: templates/nelliel_basic/panels/permissions_panel.html
-msgid "Short description"
+#: templates/nelliel_basic/panels/roles_main.html
+msgid "Title"
 msgstr ""
 
-#: templates/nelliel_basic/panels/permissions_panel.html
-msgid "Description"
+#: templates/nelliel_basic/panels/roles_main.html
+msgid "Capcode Text"
 msgstr ""
 
-#: templates/nelliel_basic/panels/permissions_panel.html
-#: templates/nelliel_basic/panels/filetypes_panel_main.html
-#: templates/nelliel_basic/panels/users_panel_main.html
-#: templates/nelliel_basic/panels/manage_boards_panel.html
-#: templates/nelliel_basic/panels/roles_panel_main.html
-#: templates/nelliel_basic/panels/bans_panel_main.html
-#: templates/nelliel_basic/panels/file_filters_panel.html
-#: templates/nelliel_basic/panels/news_panel.html
-msgid "Remove"
-msgstr ""
-
-#: templates/nelliel_basic/panels/permissions_panel.html
-msgid "Remove Permission"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Update Ban"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Ban set by:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Time set:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Expires on:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Ban type:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "IP hash:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "IP address or range:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Apply ban to this board:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Ban from all boards."
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Ban length:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Years"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Days"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Hours"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Minutes"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Ban reason:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-#: templates/nelliel_basic/panels/bans_panel_main.html
-msgid "Appeal"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Appeal Response:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Appeal status:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "No appeal received"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Appeal received; not reviewed"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Appeal denied"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_modify.html
-msgid "Appeal accepted; ban modified"
-msgstr ""
-
-#: templates/nelliel_basic/panels/filetypes_panel_main.html
-#: templates/nelliel_basic/panels/users_panel_main.html
-#: templates/nelliel_basic/panels/thread_panel_expand.html
-#: templates/nelliel_basic/panels/roles_panel_main.html
-#: templates/nelliel_basic/panels/thread_panel.html
-#: templates/nelliel_basic/panels/bans_panel_main.html
-#: templates/nelliel_basic/panels/styles_panel.html
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-#: templates/nelliel_basic/panels/news_panel.html
-#: templates/nelliel_basic/panels/templates_panel.html
+#: templates/nelliel_basic/panels/roles_main.html
+#: templates/nelliel_basic/panels/filetypes_main.html
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/users_main.html
+#: templates/nelliel_basic/panels/news.html
+#: templates/nelliel_basic/panels/templates.html
+#: templates/nelliel_basic/panels/bans_main.html
+#: templates/nelliel_basic/panels/thread_expand.html
+#: templates/nelliel_basic/panels/thread.html
+#: templates/nelliel_basic/panels/icon_sets.html
 msgid "Actions"
 msgstr ""
 
-#: templates/nelliel_basic/panels/bans_panel_add.html
-#: nelliel_core/include/Render/OutputPanelBans.php:98
-msgid "Add Ban"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "IP hash to ban:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "IP to ban:"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Enter a single IP address or a range."
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Ban from all boards. This overrides any specific boards."
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Ban reason (optional):"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_add.html
-msgid "Attach comment to post (optional):"
-msgstr ""
-
-#: templates/nelliel_basic/panels/users_panel_main.html
-msgid "Display Name"
-msgstr ""
-
-#: templates/nelliel_basic/panels/users_panel_main.html
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:50
-msgid "Active"
-msgstr ""
-
-#: templates/nelliel_basic/panels/users_panel_main.html
-#: templates/nelliel_basic/panels/roles_panel_main.html
+#: templates/nelliel_basic/panels/roles_main.html
+#: templates/nelliel_basic/panels/users_main.html
+#: nelliel_core/include/Render/OutputPanelRoles.php:69
+#: nelliel_core/include/Render/OutputPanelFiletypes.php:112
+#: nelliel_core/include/Render/OutputPanelUsers.php:74
+#: nelliel_core/include/Render/OutputPanelBoardSettings.php:26
+#: nelliel_core/include/Render/OutputPanelSiteSettings.php:27
 msgid "Edit"
 msgstr ""
 
-#: templates/nelliel_basic/panels/users_panel_main.html
-msgid "New User"
+#: templates/nelliel_basic/panels/roles_main.html
+#: templates/nelliel_basic/panels/filetypes_main.html
+#: templates/nelliel_basic/panels/file_filters.html
+#: templates/nelliel_basic/panels/users_main.html
+#: templates/nelliel_basic/panels/news.html
+#: templates/nelliel_basic/panels/bans_main.html
+#: templates/nelliel_basic/panels/manage_boards.html
+#: templates/nelliel_basic/panels/permissions.html
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:84
+msgid "Remove"
 msgstr ""
 
-#: templates/nelliel_basic/panels/manage_boards_panel.html
-msgid "Create Board"
+#: templates/nelliel_basic/panels/roles_main.html
+msgid "New Role"
 msgstr ""
 
-#: templates/nelliel_basic/panels/manage_boards_panel.html
-#: templates/nelliel_basic/panels/file_filters_panel.html
-#: templates/nelliel_basic/panels/reports_panel.html
-msgid "Board ID"
+#: templates/nelliel_basic/panels/roles_edit.html
+msgid "Update Role"
 msgstr ""
 
-#: templates/nelliel_basic/panels/manage_boards_panel.html
-msgid "Board URI"
+#: templates/nelliel_basic/panels/roles_edit.html
+msgid "Role Level"
 msgstr ""
 
-#: templates/nelliel_basic/panels/manage_boards_panel.html
-msgid "DB Prefix"
+#: templates/nelliel_basic/panels/roles_edit.html
+msgid "Role Title"
 msgstr ""
 
-#: templates/nelliel_basic/panels/manage_boards_panel.html
-#: templates/nelliel_basic/panels/bans_panel_main.html
-msgid "Status"
+#: templates/nelliel_basic/panels/roles_edit.html
+msgid "Capcode Text (may contain HTML)"
 msgstr ""
 
-#: templates/nelliel_basic/panels/manage_boards_panel.html
-msgid "Lock/Unlock"
+#: templates/nelliel_basic/panels/filetypes_main.html
+msgid "List of filetypes"
 msgstr ""
 
-#: templates/nelliel_basic/panels/manage_boards_panel.html
-msgid "Board ID (this will also be the URI)"
+#: templates/nelliel_basic/panels/styles.html
+msgid "Installed styles"
 msgstr ""
 
-#: templates/nelliel_basic/panels/manage_boards_panel.html
-msgid "Only alphanumeric board IDs are allowed!"
+#: templates/nelliel_basic/panels/styles.html
+msgid "Style ID"
 msgstr ""
 
-#: templates/nelliel_basic/panels/board_panel.html
-#: nelliel_core/include/Render/OutputPanelBoardSettings.php:38
-#: nelliel_core/include/Render/OutputPanelBoardSettings.php:53
-msgid "Board Settings"
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/bans_main.html
+msgid "Type"
 msgstr ""
 
-#: templates/nelliel_basic/panels/board_panel.html
-#: templates/nelliel_basic/panels/main_panel.html
-msgid "Ban Controls"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_panel.html
-msgid "Thread Management"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_panel.html
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelReports.php:29
-msgid "Reports"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_panel.html
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelFileFilters.php:28
-msgid "File Filters"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_panel.html
-#: nelliel_core/include/Render/OutputIndex.php:36
-#: nelliel_core/include/Render/OutputThread.php:55
-msgid "Moderator Mode"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_panel.html
-msgid "Regenerate Board Pages"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_panel.html
-msgid "Regenerates all posts and threads for the board. May cause heavy server load."
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_panel.html
-msgid "Regenerate Board Caches"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_panel.html
-msgid "Regenerates all internal cache files for the board."
-msgstr ""
-
-#: templates/nelliel_basic/panels/thread_panel_expand.html
-msgid "Post Number"
-msgstr ""
-
-#: templates/nelliel_basic/panels/thread_panel_expand.html
-msgid "Thread"
-msgstr ""
-
-#: templates/nelliel_basic/panels/thread_panel_expand.html
-#: templates/nelliel_basic/panels/bans_panel_main.html
-msgid "IP"
-msgstr ""
-
-#: templates/nelliel_basic/panels/thread_panel_expand.html
-#: templates/nelliel_basic/panels/thread_panel.html
-#: templates/nelliel_basic/panels/styles_panel.html
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-#: templates/nelliel_basic/panels/templates_panel.html
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+#: templates/nelliel_basic/panels/thread_expand.html
+#: templates/nelliel_basic/panels/thread.html
+#: templates/nelliel_basic/panels/icon_sets.html
 #: templates/nelliel_basic/thread/posting_form.html
 msgid "Name"
 msgstr ""
 
-#: templates/nelliel_basic/panels/thread_panel_expand.html
-msgid "Email"
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Directory"
 msgstr ""
 
-#: templates/nelliel_basic/panels/thread_panel_expand.html
-#: templates/nelliel_basic/panels/thread_panel.html
-#: templates/nelliel_basic/thread/posting_form.html
-msgid "Subject"
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Default"
 msgstr ""
 
-#: templates/nelliel_basic/panels/thread_panel_expand.html
-#: templates/nelliel_basic/thread/posting_form.html
-msgid "Comment"
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "No"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:27
-msgid "Manage Boards"
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Yes"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelUsers.php:27
-msgid "Users"
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Make Default"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelRoles.php:27
-msgid "Roles"
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+msgid "Uninstall"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelSiteSettings.php:28
-msgid "Site Settings"
+#: templates/nelliel_basic/panels/styles.html
+msgid "Available styles"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-msgid "New Board Defaults"
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Installed"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelTemplates.php:28
-msgid "Templates"
+#: templates/nelliel_basic/panels/styles.html
+msgid "Install Style"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelFiletypes.php:29
-#: nelliel_core/include/Render/OutputPanelFiletypes.php:114
-msgid "Filetypes"
+#: templates/nelliel_basic/panels/users_edit.html
+msgid "Update User"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelStyles.php:28
-msgid "Styles"
+#: templates/nelliel_basic/panels/users_edit.html
+#: templates/nelliel_basic/panels/users_main.html
+msgid "User ID"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelPermissions.php:27
-msgid "Permissions"
+#: templates/nelliel_basic/panels/users_edit.html
+msgid "New password (leave blank to keep current password)"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: nelliel_core/include/Render/OutputPanelIconSets.php:28
-msgid "Icon Sets"
+#: templates/nelliel_basic/panels/users_edit.html
+msgid "User display name"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-#: templates/nelliel_basic/navigation/site_links.html
-#: nelliel_core/include/Render/OutputPanelNews.php:28
-msgid "News"
+#: templates/nelliel_basic/panels/users_edit.html
+msgid "User is active"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-msgid "Regenerate Overboard Pages"
+#: templates/nelliel_basic/panels/users_edit.html
+msgid "{{ domain_name }}"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-msgid "Regenerates all posts and threads for the overboards."
+#: templates/nelliel_basic/panels/site_settings.html
+#: templates/nelliel_basic/panels/board_settings.html
+msgid "Update Settings"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-msgid "Regenerate Site Caches"
+#: templates/nelliel_basic/panels/file_filters.html
+msgid "Add Filter"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-msgid "Regenerates all internal cache files for the main site."
+#: templates/nelliel_basic/panels/file_filters.html
+msgid "Hash type (md5, sha1, sha256, sha512)"
 msgstr ""
 
-#: templates/nelliel_basic/panels/main_panel.html
-msgid "Extract Gettext Strings"
+#: templates/nelliel_basic/panels/file_filters.html
+msgid "File hashes"
 msgstr ""
 
-#: templates/nelliel_basic/panels/roles_panel_main.html
-#: templates/nelliel_basic/panels/roles_panel_edit.html
-msgid "Role ID"
+#: templates/nelliel_basic/panels/file_filters.html
+msgid "File notes"
 msgstr ""
 
-#: templates/nelliel_basic/panels/roles_panel_main.html
-msgid "Title"
+#: templates/nelliel_basic/panels/file_filters.html
+#: templates/nelliel_basic/panels/manage_boards.html
+#: templates/nelliel_basic/panels/reports.html
+#: templates/nelliel_basic/headers/panel.html
+msgid "Board ID"
 msgstr ""
 
-#: templates/nelliel_basic/panels/roles_panel_main.html
-msgid "Capcode Text"
+#: templates/nelliel_basic/panels/file_filters.html
+msgid "List of file filters"
 msgstr ""
 
-#: templates/nelliel_basic/panels/roles_panel_main.html
-msgid "New Role"
+#: templates/nelliel_basic/panels/file_filters.html
+msgid "Filter ID"
 msgstr ""
 
-#: templates/nelliel_basic/panels/thread_panel.html
-msgid "Expand"
+#: templates/nelliel_basic/panels/file_filters.html
+msgid "Hash type"
 msgstr ""
 
-#: templates/nelliel_basic/panels/thread_panel.html
-msgid "First Post"
+#: templates/nelliel_basic/panels/file_filters.html
+msgid "File hash"
 msgstr ""
 
-#: templates/nelliel_basic/panels/thread_panel.html
-msgid "Last Updated"
-msgstr ""
-
-#: templates/nelliel_basic/panels/thread_panel.html
-msgid "Host"
-msgstr ""
-
-#: templates/nelliel_basic/panels/thread_panel.html
-msgid "Total Posts"
-msgstr ""
-
-#: templates/nelliel_basic/panels/thread_panel.html
-msgid "Total Files"
-msgstr ""
-
-#: templates/nelliel_basic/panels/thread_panel.html
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Expand Thread"
-msgstr ""
-
-#: templates/nelliel_basic/panels/roles_panel_edit.html
-msgid "Update Role"
-msgstr ""
-
-#: templates/nelliel_basic/panels/roles_panel_edit.html
-msgid "Role Level"
-msgstr ""
-
-#: templates/nelliel_basic/panels/roles_panel_edit.html
-msgid "Role Title"
-msgstr ""
-
-#: templates/nelliel_basic/panels/roles_panel_edit.html
-msgid "Capcode Text (may contain HTML)"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_main.html
-msgid "Ban ID"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_main.html
-#: templates/nelliel_basic/panels/styles_panel.html
-msgid "Type"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_main.html
-msgid "Board"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_main.html
-#: nelliel_core/include/Render/OutputBanPage.php:28
-msgid "All Boards"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_main.html
-#: templates/nelliel_basic/panels/reports_panel.html
-msgid "Reason"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_main.html
-msgid "Expiration"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_main.html
-msgid "Response"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_main.html
-msgid "Modify"
-msgstr ""
-
-#: templates/nelliel_basic/panels/bans_panel_main.html
-msgid "Add New Ban"
+#: templates/nelliel_basic/panels/file_filters.html
+msgid "Remove Filter"
 msgstr ""
 
 #: templates/nelliel_basic/panels/pieces/settings_radio.html
@@ -655,190 +359,574 @@ msgstr ""
 msgid "Force Update"
 msgstr ""
 
-#: templates/nelliel_basic/panels/styles_panel.html
-msgid "Installed Styles"
+#: templates/nelliel_basic/panels/users_main.html
+msgid "List of users"
 msgstr ""
 
-#: templates/nelliel_basic/panels/styles_panel.html
-msgid "Style ID"
+#: templates/nelliel_basic/panels/users_main.html
+msgid "Display Name"
 msgstr ""
 
-#: templates/nelliel_basic/panels/styles_panel.html
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-#: templates/nelliel_basic/panels/templates_panel.html
-msgid "Directory"
+#: templates/nelliel_basic/panels/users_main.html
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:53
+msgid "Active"
 msgstr ""
 
-#: templates/nelliel_basic/panels/styles_panel.html
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-#: templates/nelliel_basic/panels/templates_panel.html
-msgid "Default"
+#: templates/nelliel_basic/panels/users_main.html
+msgid "New User"
 msgstr ""
 
-#: templates/nelliel_basic/panels/styles_panel.html
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-#: templates/nelliel_basic/panels/templates_panel.html
-msgid "No"
-msgstr ""
-
-#: templates/nelliel_basic/panels/styles_panel.html
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-#: templates/nelliel_basic/panels/templates_panel.html
-msgid "Yes"
-msgstr ""
-
-#: templates/nelliel_basic/panels/styles_panel.html
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-#: templates/nelliel_basic/panels/templates_panel.html
-msgid "Make Default"
-msgstr ""
-
-#: templates/nelliel_basic/panels/styles_panel.html
-#: templates/nelliel_basic/panels/templates_panel.html
-msgid "Uninstall"
-msgstr ""
-
-#: templates/nelliel_basic/panels/styles_panel.html
-msgid "Available Styles"
-msgstr ""
-
-#: templates/nelliel_basic/panels/styles_panel.html
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-#: templates/nelliel_basic/panels/templates_panel.html
-msgid "Installed"
-msgstr ""
-
-#: templates/nelliel_basic/panels/styles_panel.html
-msgid "Install Style"
-msgstr ""
-
-#: templates/nelliel_basic/panels/file_filters_panel.html
-msgid "Add Filter"
-msgstr ""
-
-#: templates/nelliel_basic/panels/file_filters_panel.html
-msgid "Hash type (md5, sha1, sha256, sha512)"
-msgstr ""
-
-#: templates/nelliel_basic/panels/file_filters_panel.html
-msgid "File hashes"
-msgstr ""
-
-#: templates/nelliel_basic/panels/file_filters_panel.html
-msgid "File notes"
-msgstr ""
-
-#: templates/nelliel_basic/panels/file_filters_panel.html
-msgid "Filter ID"
-msgstr ""
-
-#: templates/nelliel_basic/panels/file_filters_panel.html
-msgid "Hash type"
-msgstr ""
-
-#: templates/nelliel_basic/panels/file_filters_panel.html
-msgid "File hash"
-msgstr ""
-
-#: templates/nelliel_basic/panels/file_filters_panel.html
-msgid "Remove Filter"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_settings_panel.html
-#: templates/nelliel_basic/panels/site_settings_panel.html
-msgid "Update Settings"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_settings_panel.html
-msgid "General Settings"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_settings_panel.html
-msgid "Posting Parameters"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_settings_panel.html
-msgid "Content Handling and Rendering"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_settings_panel.html
-msgid "Filetype Enabling"
-msgstr ""
-
-#: templates/nelliel_basic/panels/reports_panel.html
-msgid "Report ID"
-msgstr ""
-
-#: templates/nelliel_basic/panels/reports_panel.html
-msgid "Content ID"
-msgstr ""
-
-#: templates/nelliel_basic/panels/reports_panel.html
-msgid "Reporter IP"
-msgstr ""
-
-#: templates/nelliel_basic/panels/reports_panel.html
-msgid "Dismiss Report"
-msgstr ""
-
-#: templates/nelliel_basic/panels/reports_panel.html
-msgid " [File Link]"
-msgstr ""
-
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-msgid "Installed Icon Sets"
-msgstr ""
-
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-msgid "Icon Set ID"
-msgstr ""
-
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-msgid "Uninstall Icon Set"
-msgstr ""
-
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-msgid "Available Icon Sets"
-msgstr ""
-
-#: templates/nelliel_basic/panels/icon_sets_panel.html
-msgid "Install Icon Set"
-msgstr ""
-
-#: templates/nelliel_basic/panels/news_panel.html
+#: templates/nelliel_basic/panels/news.html
 msgid "Post News"
 msgstr ""
 
-#: templates/nelliel_basic/panels/news_panel.html
+#: templates/nelliel_basic/panels/news.html
 msgid "Headline"
 msgstr ""
 
-#: templates/nelliel_basic/panels/news_panel.html
+#: templates/nelliel_basic/panels/news.html
 msgid "News text"
 msgstr ""
 
-#: templates/nelliel_basic/panels/news_panel.html
+#: templates/nelliel_basic/panels/news.html
+msgid "List of news articles"
+msgstr ""
+
+#: templates/nelliel_basic/panels/news.html
 msgid "Date"
 msgstr ""
 
-#: templates/nelliel_basic/panels/templates_panel.html
-msgid "Installed Templates"
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Update Ban"
 msgstr ""
 
-#: templates/nelliel_basic/panels/templates_panel.html
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Ban set by:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Time set:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Expires on:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Ban type:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "IP hash:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "IP address or range:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Apply ban to this board:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Ban from all boards."
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Ban length:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Years"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Days"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Hours"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Minutes"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Ban reason:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+#: templates/nelliel_basic/panels/bans_main.html
+msgid "Appeal"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Appeal Response:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Appeal status:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "No appeal received"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Appeal received; not reviewed"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Appeal denied"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_modify.html
+msgid "Appeal accepted; ban modified"
+msgstr ""
+
+#: templates/nelliel_basic/panels/templates.html
+msgid "Installed templates"
+msgstr ""
+
+#: templates/nelliel_basic/panels/templates.html
 msgid "Template ID"
 msgstr ""
 
-#: templates/nelliel_basic/panels/templates_panel.html
+#: templates/nelliel_basic/panels/templates.html
 msgid "Output"
 msgstr ""
 
-#: templates/nelliel_basic/panels/templates_panel.html
-msgid "Available Templates"
+#: templates/nelliel_basic/panels/templates.html
+msgid "Available templates"
 msgstr ""
 
-#: templates/nelliel_basic/panels/templates_panel.html
+#: templates/nelliel_basic/panels/templates.html
 msgid "Install"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+msgid "List of bans"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+msgid "Ban ID"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+#: templates/nelliel_basic/panels/thread_expand.html
+msgid "IP"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+msgid "Board"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+#: nelliel_core/include/Render/OutputBanPage.php:29
+msgid "All Boards"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+#: templates/nelliel_basic/panels/reports.html
+msgid "Reason"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+msgid "Expiration"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+msgid "Response"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+#: templates/nelliel_basic/panels/manage_boards.html
+msgid "Status"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+msgid "Modify"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_main.html
+msgid "Add New Ban"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:26
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:83
+msgid "Manage Boards"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: nelliel_core/include/Render/OutputPanelUsers.php:26
+#: nelliel_core/include/Render/OutputPanelUsers.php:73
+msgid "Users"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: nelliel_core/include/Render/OutputPanelRoles.php:26
+#: nelliel_core/include/Render/OutputPanelRoles.php:68
+msgid "Roles"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: nelliel_core/include/Render/OutputPanelSiteSettings.php:26
+msgid "Site Settings"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: templates/nelliel_basic/panels/board.html
+#: nelliel_core/include/Render/OutputPanelFileFilters.php:26
+msgid "File Filters"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+msgid "New Board Defaults"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: templates/nelliel_basic/panels/board.html
+msgid "Ban Controls"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: templates/nelliel_basic/panels/board.html
+#: nelliel_core/include/Render/OutputPanelReports.php:27
+msgid "Reports"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: nelliel_core/include/Render/OutputPanelTemplates.php:26
+msgid "Templates"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: nelliel_core/include/Render/OutputPanelFiletypes.php:26
+#: nelliel_core/include/Render/OutputPanelFiletypes.php:111
+msgid "Filetypes"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: nelliel_core/include/Render/OutputPanelStyles.php:26
+msgid "Styles"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: nelliel_core/include/Render/OutputPanelPermissions.php:26
+msgid "Permissions"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: nelliel_core/include/Render/OutputPanelIconSets.php:26
+msgid "Icon Sets"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+#: templates/nelliel_basic/navigation/site_links.html
+#: nelliel_core/include/Render/OutputPanelNews.php:26
+msgid "News"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+msgid "Regenerate Overboard Pages"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+msgid "Regenerates all posts and threads for the overboards."
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+msgid "Regenerate Site Caches"
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+msgid "Regenerates all internal cache files for the main site."
+msgstr ""
+
+#: templates/nelliel_basic/panels/main.html
+msgid "Extract Gettext Strings"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board.html
+#: nelliel_core/include/Render/OutputPanelBoardSettings.php:43
+msgid "Board Settings"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board.html
+msgid "Thread Management"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board.html
+#: nelliel_core/include/Render/OutputIndex.php:40
+#: nelliel_core/include/Render/OutputThread.php:71
+msgid "Moderator Mode"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board.html
+msgid "Regenerate Board Pages"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board.html
+msgid "Regenerates all posts and threads for the board. May cause heavy server load."
+msgstr ""
+
+#: templates/nelliel_basic/panels/board.html
+msgid "Regenerate Board Caches"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board.html
+msgid "Regenerates all internal cache files for the board."
+msgstr ""
+
+#: templates/nelliel_basic/panels/manage_boards.html
+msgid "Create Board"
+msgstr ""
+
+#: templates/nelliel_basic/panels/manage_boards.html
+msgid "List of boards"
+msgstr ""
+
+#: templates/nelliel_basic/panels/manage_boards.html
+msgid "Board URI"
+msgstr ""
+
+#: templates/nelliel_basic/panels/manage_boards.html
+msgid "DB Prefix"
+msgstr ""
+
+#: templates/nelliel_basic/panels/manage_boards.html
+msgid "Lock/Unlock"
+msgstr ""
+
+#: templates/nelliel_basic/panels/manage_boards.html
+msgid "Board ID (this will also be the URI)"
+msgstr ""
+
+#: templates/nelliel_basic/panels/manage_boards.html
+msgid "Only alphanumeric board IDs are allowed!"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread_expand.html
+msgid "List of posts in thread"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread_expand.html
+msgid "Post Number"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread_expand.html
+msgid "Thread"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread_expand.html
+#: templates/nelliel_basic/panels/logs.html
+msgid "Time"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread_expand.html
+msgid "Email"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread_expand.html
+#: templates/nelliel_basic/panels/thread.html
+#: templates/nelliel_basic/thread/posting_form.html
+msgid "Subject"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread_expand.html
+#: templates/nelliel_basic/thread/posting_form.html
+msgid "Comment"
+msgstr ""
+
+#: templates/nelliel_basic/panels/logs.html
+msgid "List of logged events"
+msgstr ""
+
+#: templates/nelliel_basic/panels/logs.html
+msgid "Event ID"
+msgstr ""
+
+#: templates/nelliel_basic/panels/logs.html
+msgid "Originator"
+msgstr ""
+
+#: templates/nelliel_basic/panels/logs.html
+msgid "IP Address"
+msgstr ""
+
+#: templates/nelliel_basic/panels/logs.html
+msgid "Message"
+msgstr ""
+
+#: templates/nelliel_basic/panels/logs.html
+msgid "View Staff Logs"
+msgstr ""
+
+#: templates/nelliel_basic/panels/logs.html
+msgid "View System Logs"
+msgstr ""
+
+#: templates/nelliel_basic/panels/logs.html
+msgid "View All Logs"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Add Ban"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "IP hash to ban:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "IP to ban:"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Enter a single IP address or a range."
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Ban from all boards. This overrides any specific boards."
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Ban reason (optional):"
+msgstr ""
+
+#: templates/nelliel_basic/panels/bans_add.html
+msgid "Attach comment to post (optional):"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread.html
+msgid "List of threads"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread.html
+msgid "Expand"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread.html
+msgid "First Post"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread.html
+msgid "Last Updated"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread.html
+msgid "Host"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread.html
+msgid "Total Posts"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread.html
+msgid "Total Files"
+msgstr ""
+
+#: templates/nelliel_basic/panels/thread.html
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Expand Thread"
+msgstr ""
+
+#: templates/nelliel_basic/panels/permissions.html
+msgid "Add Permission"
+msgstr ""
+
+#: templates/nelliel_basic/panels/permissions.html
+msgid "This panel basically exists for maintenance related to plugins that define "
+"extra permissions. Otherwise you shouldn't touch anything here."
+msgstr ""
+
+#: templates/nelliel_basic/panels/permissions.html
+msgid "Permission"
+msgstr ""
+
+#: templates/nelliel_basic/panels/permissions.html
+msgid "Short description"
+msgstr ""
+
+#: templates/nelliel_basic/panels/permissions.html
+msgid "List of permissions"
+msgstr ""
+
+#: templates/nelliel_basic/panels/permissions.html
+msgid "Description"
+msgstr ""
+
+#: templates/nelliel_basic/panels/permissions.html
+msgid "Remove Permission"
+msgstr ""
+
+#: templates/nelliel_basic/panels/reports.html
+msgid "List of reports"
+msgstr ""
+
+#: templates/nelliel_basic/panels/reports.html
+msgid "Report ID"
+msgstr ""
+
+#: templates/nelliel_basic/panels/reports.html
+msgid "Content ID"
+msgstr ""
+
+#: templates/nelliel_basic/panels/reports.html
+msgid "Reporter IP"
+msgstr ""
+
+#: templates/nelliel_basic/panels/reports.html
+msgid "Dismiss Report"
+msgstr ""
+
+#: templates/nelliel_basic/panels/reports.html
+msgid " [File Link]"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board_settings.html
+msgid "General Settings"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board_settings.html
+msgid "Posting Parameters"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board_settings.html
+msgid "Content Handling and Rendering"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board_settings.html
+msgid "Filetype Enabling"
+msgstr ""
+
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Installed icon sets"
+msgstr ""
+
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Icon Set ID"
+msgstr ""
+
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Uninstall Icon Set"
+msgstr ""
+
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Available icon sets"
+msgstr ""
+
+#: templates/nelliel_basic/panels/icon_sets.html
+msgid "Install Icon Set"
 msgstr ""
 
 #: templates/nelliel_basic/navigation/site_links.html
@@ -862,8 +950,6 @@ msgid "Account"
 msgstr ""
 
 #: templates/nelliel_basic/navigation/site_links.html
-#: nelliel_core/include/Render/OutputPanelBoard.php:29
-#: nelliel_core/include/Render/OutputPanelMain.php:29
 msgid "Main Panel"
 msgstr ""
 
@@ -880,12 +966,11 @@ msgid "oh god how did this get here"
 msgstr ""
 
 #: templates/nelliel_basic/derp.html
-#: nelliel_core/include/derp.php:13
-msgid "Error ID: "
+msgid "Error ID:"
 msgstr ""
 
 #: templates/nelliel_basic/derp.html
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/thread.html
 msgid "Return"
 msgstr ""
 
@@ -929,66 +1014,66 @@ msgstr ""
 msgid "Last Login:"
 msgstr ""
 
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Show Post"
+#: templates/nelliel_basic/thread/pieces/poster_id.html
+msgid "ID:"
 msgstr ""
 
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Show Thread"
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Collapse Thread"
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Ban"
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
 #: templates/nelliel_basic/thread/file_info.html
+#: templates/nelliel_basic/thread/headers/modmode.html
 #: templates/nelliel_basic/thread/footer_form.html
 msgid "Delete"
 msgstr ""
 
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Ban and Delete"
+#: templates/nelliel_basic/thread/file_info.html
+msgid "More file info"
 msgstr ""
 
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "{{ lock_text }}"
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "{{ sticky_text }}"
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Hide Post"
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Link"
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Hide Thread"
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "Reply"
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
-msgid "ID: "
-msgstr ""
-
-#: templates/nelliel_basic/thread/post_headers.html
+#: templates/nelliel_basic/thread/headers/post_info.html
 msgid "No."
 msgstr ""
 
-#: templates/nelliel_basic/thread/file_info.html
-msgid "More file info"
+#: templates/nelliel_basic/thread/headers/post_options.html
+msgid "Show Post"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/post_options.html
+msgid "Hide Post"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/post_options.html
+msgid "Link"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/modmode.html
+msgid "Ban"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/modmode.html
+msgid "Ban and Delete"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/modmode.html
+msgid "{{ lock_text }}"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/modmode.html
+msgid "{{ sticky_text }}"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Show Thread"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Collapse Thread"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Hide Thread"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Reply"
 msgstr ""
 
 #: templates/nelliel_basic/thread/footer_form.html
@@ -1068,51 +1153,51 @@ msgstr ""
 msgid "The OP post cannot have multiple files."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:172
+#: nelliel_core/include/Post/FilesUpload.php:171
 msgid "Spoon is too big."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:177
+#: nelliel_core/include/Post/FilesUpload.php:176
 msgid "File is bigger than the server allows."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:182
+#: nelliel_core/include/Post/FilesUpload.php:181
 msgid "File is bigger than submission form allows."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:187
+#: nelliel_core/include/Post/FilesUpload.php:186
 msgid "Only part of the file was uploaded."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:192
+#: nelliel_core/include/Post/FilesUpload.php:191
 msgid "File size is 0 or Candlejack stole your uplo"
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:197
+#: nelliel_core/include/Post/FilesUpload.php:196
 msgid "Cannot save uploaded files to server for some reason."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:202
+#: nelliel_core/include/Post/FilesUpload.php:201
 msgid "The uploaded file just ain't right.'"
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:238
+#: nelliel_core/include/Post/FilesUpload.php:237
 msgid "That file is banned."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:276
+#: nelliel_core/include/Post/FilesUpload.php:275
 msgid "Duplicate file detected."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:291
+#: nelliel_core/include/Post/FilesUpload.php:290
 msgid "Unrecognized file type."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:296
+#: nelliel_core/include/Post/FilesUpload.php:295
 msgid "Filetype is not allowed."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:301
+#: nelliel_core/include/Post/FilesUpload.php:300
 msgid "Incorrect file type detected (does not match extension). Possible Hax."
 msgstr ""
 
@@ -1121,19 +1206,19 @@ msgstr ""
 msgid "Anonymous"
 msgstr ""
 
-#: nelliel_core/include/Post/PostData.php:191
+#: nelliel_core/include/Post/PostData.php:192
 msgid "Name is too long."
 msgstr ""
 
-#: nelliel_core/include/Post/PostData.php:205
+#: nelliel_core/include/Post/PostData.php:206
 msgid "Email is too long."
 msgstr ""
 
-#: nelliel_core/include/Post/PostData.php:220
+#: nelliel_core/include/Post/PostData.php:221
 msgid "Subject is too long."
 msgstr ""
 
-#: nelliel_core/include/Post/PostData.php:235
+#: nelliel_core/include/Post/PostData.php:236
 msgid "Comment is too long."
 msgstr ""
 
@@ -1141,43 +1226,43 @@ msgstr ""
 msgid "Board is locked. Cannot make new post."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:82
+#: nelliel_core/include/Post/NewPost.php:81
 msgid "Post contains no content or file. Dumbass."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:87
+#: nelliel_core/include/Post/NewPost.php:86
 msgid "Image or file required when making a new post."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:92
+#: nelliel_core/include/Post/NewPost.php:91
 msgid "Image or file required to make new thread."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:98
+#: nelliel_core/include/Post/NewPost.php:97
 msgid "Post is too long. Try looking up the word concise."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:249
+#: nelliel_core/include/Post/NewPost.php:248
 msgid "Flood detected! You\\'re posting too fast, slow the fuck down."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:264
+#: nelliel_core/include/Post/NewPost.php:263
 msgid "This thread is locked."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:269
+#: nelliel_core/include/Post/NewPost.php:268
 msgid "The thread you have tried posting in is currently inaccessible or archived."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:275
+#: nelliel_core/include/Post/NewPost.php:274
 msgid "The thread you have tried posting in could not be found."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:280
+#: nelliel_core/include/Post/NewPost.php:279
 msgid "The thread has reached maximum posts."
 msgstr ""
 
-#: nelliel_core/include/Post/NewPost.php:285
+#: nelliel_core/include/Post/NewPost.php:284
 msgid "The thread is archived or buffered and cannot be posted to."
 msgstr ""
 
@@ -1217,208 +1302,236 @@ msgstr ""
 msgid "IP address was invalid."
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:26
+#: nelliel_core/include/Setup/Setup.php:34
 msgid "Installation has already been completed!"
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:40
+#: nelliel_core/include/Setup/Setup.php:49
 msgid "Peppers file has been created."
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:44
+#: nelliel_core/include/Setup/Setup.php:53
 msgid "Peppers file already present."
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:58
+#: nelliel_core/include/Setup/Setup.php:69
 msgid "Site owner account already created."
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:59
+#: nelliel_core/include/Setup/Setup.php:70
 msgid "Install has finished with no apparent problems! When you\\'re ready to "
 "continue, follow this link to the login page: "
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:61
+#: nelliel_core/include/Setup/Setup.php:73
 msgid "Login page"
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:68
+#: nelliel_core/include/Setup/Setup.php:80
 msgid "No problems so far! To complete setup, a site owner account needs to be "
 "created. This account will have all permissions by default. It is also "
 "necessary to use the site settings control panel."
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:109
-msgid "InnoDB engine is required for MySQL or MariaDB support. However the engine is "
-"not available for some reason."
+#: nelliel_core/include/Setup/Setup.php:110
+msgid "Minimum PHP version required: "
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:114
-msgid "DB engine ok."
+#: nelliel_core/include/Setup/Setup.php:111
+msgid "PHP version detected: "
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:122
-msgid "The core directory not writable."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:126
-msgid "The core directory is writable."
+#: nelliel_core/include/Setup/Setup.php:115
+msgid "This version of PHP is too old! Upgrade to a version supported by Nelliel."
 msgstr ""
 
 #: nelliel_core/include/Setup/Setup.php:134
-msgid "Nelliel main directory is not writable."
+msgid "InnoDB engine is required for MySQL or MariaDB support but that engine is not "
+"available."
 msgstr ""
 
 #: nelliel_core/include/Setup/Setup.php:138
-msgid "Main directory is writable."
+msgid "DB engine ok."
 msgstr ""
 
 #: nelliel_core/include/Setup/Setup.php:146
+msgid "The core directory not writable."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:150
+msgid "The core directory is writable."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:158
+msgid "Nelliel main directory is not writable."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:162
+msgid "Main directory is writable."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:170
 msgid "Configuration directory is missing or not writable. Admin should check this "
 "out."
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:150
+#: nelliel_core/include/Setup/Setup.php:174
 msgid "The configuration directory is writable."
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:209
+#: nelliel_core/include/Setup/Setup.php:234
 msgid "Core database tables created."
 msgstr ""
 
-#: nelliel_core/include/Setup/Setup.php:219
+#: nelliel_core/include/Setup/Setup.php:243
 msgid "Core directories created."
 msgstr ""
 
-#: nelliel_core/include/Setup/TableHandler.php:180
+#: nelliel_core/include/Setup/Setup.php:312
+msgid "Core templates installed."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:343
+msgid "Core styles installed."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:374
+msgid "Core icon sets installed."
+msgstr ""
+
+#: nelliel_core/include/Setup/Table.php:180
 #, php-format
 msgid "Creation of %s failed! Check database settings and config.php then retry "
 "installation."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminRoles.php:27
+#: nelliel_core/include/Admin/AdminRoles.php:24
 msgid "The specified role does not exist."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminRoles.php:50
+#: nelliel_core/include/Admin/AdminRoles.php:47
 msgid "You are not allowed to add roles."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminRoles.php:70
+#: nelliel_core/include/Admin/AdminRoles.php:67
 msgid "You are not allowed to modify roles."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminRoles.php:101
+#: nelliel_core/include/Admin/AdminRoles.php:98
 msgid "You are not allowed to remove roles."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminRoles.php:112
+#: nelliel_core/include/Admin/AdminRoles.php:109
 msgid "You are not allowed to access the roles panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminStyles.php:39
+#: nelliel_core/include/Admin/AdminStyles.php:36
 msgid "You are not allowed to install styles."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminStyles.php:71
+#: nelliel_core/include/Admin/AdminStyles.php:68
 msgid "You are not allowed to uninstall styles."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminStyles.php:85
+#: nelliel_core/include/Admin/AdminStyles.php:82
 msgid "You are not allowed to set the default style."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminStyles.php:100
+#: nelliel_core/include/Admin/AdminStyles.php:97
 msgid "You are not allowed to access the styles panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminFiletypes.php:44
-#: nelliel_core/include/Admin/AdminFiletypes.php:80
+#: nelliel_core/include/Admin/AdminFiletypes.php:40
+#: nelliel_core/include/Admin/AdminFiletypes.php:76
 msgid "You are not allowed to add filetypes."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminFiletypes.php:108
+#: nelliel_core/include/Admin/AdminFiletypes.php:105
 msgid "You are not allowed to remove filetypes."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminFiletypes.php:121
-#: nelliel_core/include/Admin/AdminFiletypes.php:134
+#: nelliel_core/include/Admin/AdminFiletypes.php:118
+#: nelliel_core/include/Admin/AdminFiletypes.php:131
 msgid "You are not allowed to enable or disable filetypes."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminFiletypes.php:147
+#: nelliel_core/include/Admin/AdminFiletypes.php:144
 msgid "You are not allowed to access the filetypes panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:43
+#: nelliel_core/include/Admin/AdminBoards.php:46
 msgid "You are not allowed to create boards."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:51
+#: nelliel_core/include/Admin/AdminBoards.php:54
 msgid "No board ID provided."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:58
+#: nelliel_core/include/Admin/AdminBoards.php:61
 msgid "Board ID contains invalid characters. Must be alphanumeric only."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:68
+#: nelliel_core/include/Admin/AdminBoards.php:67
+msgid "Board ID is reserved."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoards.php:76
 msgid "There is already a board with the ID "
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:75
+#: nelliel_core/include/Admin/AdminBoards.php:83
 msgid "Had trouble registering the board ID "
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:110
+#: nelliel_core/include/Admin/AdminBoards.php:118
 msgid "You are not allowed to delete boards."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:118
+#: nelliel_core/include/Admin/AdminBoards.php:126
 msgid "Board does not appear to exist."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:169
+#: nelliel_core/include/Admin/AdminBoards.php:177
 msgid "You are not allowed to lock this board."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:183
+#: nelliel_core/include/Admin/AdminBoards.php:191
 msgid "You are not allowed to unlock this board."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoards.php:246
+#: nelliel_core/include/Admin/AdminBoards.php:252
 msgid "You are not allowed to access the boards panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminLogs.php:57
+#: nelliel_core/include/Admin/AdminLogs.php:53
 msgid "You are not allowed to access the logs panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminIconSets.php:39
+#: nelliel_core/include/Admin/AdminIconSets.php:36
 msgid "You are not allowed to install icon sets."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminIconSets.php:71
+#: nelliel_core/include/Admin/AdminIconSets.php:68
 msgid "You are not allowed to uninstall icon sets."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminIconSets.php:85
+#: nelliel_core/include/Admin/AdminIconSets.php:82
 msgid "You are not allowed to set the default icon set."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminIconSets.php:100
+#: nelliel_core/include/Admin/AdminIconSets.php:97
 msgid "You are not allowed to access the icon sets panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminFileFilters.php:39
+#: nelliel_core/include/Admin/AdminFileFilters.php:36
 msgid "You are not allowed to add file filters."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminFileFilters.php:71
+#: nelliel_core/include/Admin/AdminFileFilters.php:68
 msgid "You are not allowed to remove file filters."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminFileFilters.php:84
+#: nelliel_core/include/Admin/AdminFileFilters.php:81
 msgid "You are not allowed to access the file filters."
 msgstr ""
 
@@ -1442,35 +1555,35 @@ msgstr ""
 msgid "You are not allowed to access the users panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminThreads.php:77
+#: nelliel_core/include/Admin/AdminThreads.php:69
 msgid "You are not allowed to sticky threads."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminThreads.php:93
+#: nelliel_core/include/Admin/AdminThreads.php:85
 msgid "You are not allowed to unsticky threads."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminThreads.php:109
+#: nelliel_core/include/Admin/AdminThreads.php:101
 msgid "You are not allowed to lock threads."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminThreads.php:125
+#: nelliel_core/include/Admin/AdminThreads.php:117
 msgid "You are not allowed to unlock threads."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminSiteSettings.php:47
+#: nelliel_core/include/Admin/AdminSiteSettings.php:44
 msgid "You are not allowed to modify the site settings."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminSiteSettings.php:75
+#: nelliel_core/include/Admin/AdminSiteSettings.php:71
 msgid "You are not allowed to access the site settings."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminReports.php:54
+#: nelliel_core/include/Admin/AdminReports.php:51
 msgid "You are not allowed to dismiss reports."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminReports.php:66
+#: nelliel_core/include/Admin/AdminReports.php:63
 msgid "You are not allowed to access the reports panel."
 msgstr ""
 
@@ -1482,288 +1595,258 @@ msgstr ""
 msgid "You are not allowed to modify the default board settings."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoardSettings.php:183
+#: nelliel_core/include/Admin/AdminBoardSettings.php:184
 msgid "You are not allowed to access the default board settings."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBoardSettings.php:188
+#: nelliel_core/include/Admin/AdminBoardSettings.php:189
 msgid "You are not allowed to access the board settings."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminNews.php:40
+#: nelliel_core/include/Admin/AdminNews.php:36
 msgid "You are not allowed to make news posts."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminNews.php:68
+#: nelliel_core/include/Admin/AdminNews.php:64
 msgid "You are not allowed to remove news posts."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminNews.php:88
+#: nelliel_core/include/Admin/AdminNews.php:84
 msgid "You are not allowed to access the news panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminPermissions.php:39
+#: nelliel_core/include/Admin/AdminPermissions.php:36
 msgid "You are not allowed to add permissions."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminPermissions.php:62
+#: nelliel_core/include/Admin/AdminPermissions.php:59
 msgid "You are not allowed to remove permissions."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminPermissions.php:75
+#: nelliel_core/include/Admin/AdminPermissions.php:72
 msgid "You are not allowed to access the permissions panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBans.php:51
+#: nelliel_core/include/Admin/AdminBans.php:46
 msgid "You are not allowed to issue bans."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBans.php:90
-#: nelliel_core/include/Admin/AdminBans.php:110
+#: nelliel_core/include/Admin/AdminBans.php:85
+#: nelliel_core/include/Admin/AdminBans.php:105
 msgid "You are not allowed to modify bans."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBans.php:99
+#: nelliel_core/include/Admin/AdminBans.php:94
 msgid "You are not allowed to ban from all boards."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminBans.php:123
+#: nelliel_core/include/Admin/AdminBans.php:118
 msgid "You are not allowed to access the bans panel."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminTemplates.php:38
+#: nelliel_core/include/Admin/AdminTemplates.php:35
 msgid "You are not allowed to install templates."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminTemplates.php:75
+#: nelliel_core/include/Admin/AdminTemplates.php:72
 msgid "You are not allowed to uninstall templates."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminTemplates.php:89
+#: nelliel_core/include/Admin/AdminTemplates.php:86
 msgid "You are not allowed to set the default template."
 msgstr ""
 
-#: nelliel_core/include/Admin/AdminTemplates.php:103
+#: nelliel_core/include/Admin/AdminTemplates.php:100
 msgid "You are not allowed to access the templates panel."
 msgstr ""
 
 #: nelliel_core/include/Render/OutputPanelRoles.php:27
-#: nelliel_core/include/Render/OutputPanelRoles.php:74
-#: nelliel_core/include/Render/OutputPanelTemplates.php:28
-#: nelliel_core/include/Render/OutputPanelIconSets.php:28
+#: nelliel_core/include/Render/OutputPanelTemplates.php:27
+#: nelliel_core/include/Render/OutputPanelIconSets.php:27
 #: nelliel_core/include/Render/OutputPanelManageBoards.php:27
 #: nelliel_core/include/Render/OutputPanelPermissions.php:27
-#: nelliel_core/include/Render/OutputPanelStyles.php:28
-#: nelliel_core/include/Render/OutputPanelLogs.php:32
-#: nelliel_core/include/Render/OutputPanelReports.php:29
-#: nelliel_core/include/Render/OutputPanelFiletypes.php:29
-#: nelliel_core/include/Render/OutputPanelFiletypes.php:114
+#: nelliel_core/include/Render/OutputPanelFileFilters.php:27
+#: nelliel_core/include/Render/OutputPanelStyles.php:27
+#: nelliel_core/include/Render/OutputPanelBoard.php:25
+#: nelliel_core/include/Render/OutputPanelBoard.php:26
+#: nelliel_core/include/Render/OutputPanelLogs.php:27
+#: nelliel_core/include/Render/OutputPanelThreads.php:48
+#: nelliel_core/include/Render/OutputPanelReports.php:28
+#: nelliel_core/include/Render/OutputPanelFiletypes.php:27
 #: nelliel_core/include/Render/OutputPanelUsers.php:27
-#: nelliel_core/include/Render/OutputPanelUsers.php:75
-#: nelliel_core/include/Render/OutputPanelBoardSettings.php:33
-#: nelliel_core/include/Render/OutputPanelNews.php:28
-#: nelliel_core/include/Render/OutputPanelMain.php:29
-#: nelliel_core/include/Render/OutputPanelSiteSettings.php:28
-msgid "General Management"
+#: nelliel_core/include/Render/OutputPanelNews.php:27
+#: nelliel_core/include/Render/OutputPanelMain.php:26
+#: nelliel_core/include/Render/OutputPanelMain.php:27
+#: nelliel_core/include/Render/OutputPanelBans.php:28
+msgid "Main"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelRoles.php:74
-msgid "Edit Role"
+#: nelliel_core/include/Render/OutputPanelRoles.php:60
+#: nelliel_core/include/Render/OutputPanelFiletypes.php:103
+#: nelliel_core/include/Render/OutputPanelUsers.php:65
+msgid "New"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPostingForm.php:88
+#: nelliel_core/include/Render/OutputPostingForm.php:62
 msgid "Posting mode: Reply"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPostingForm.php:88
+#: nelliel_core/include/Render/OutputPostingForm.php:62
 msgid "Posting mode: New thread"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPostingForm.php:101
+#: nelliel_core/include/Render/OutputPostingForm.php:75
 #, php-format
 msgid "Supported %s file types: "
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPostingForm.php:118
+#: nelliel_core/include/Render/OutputPostingForm.php:93
 #, php-format
 msgid "Maximum file size allowed is %dKB"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPostingForm.php:121
+#: nelliel_core/include/Render/OutputPostingForm.php:95
 #, php-format
 msgid "Images greater than %d x %d pixels will be thumbnailed."
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:51
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:54
 msgid "Lock Board"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:60
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:62
 msgid "Locked"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:61
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:63
 msgid "Unlock Board"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:84
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:87
 #, php-format
 msgid "You are about to delete the board: %s"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:85
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:88
 msgid "This will wipe out all posts, settings, files, everything. There is no undo or "
 "recovery."
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:87
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:90
 msgid "Are you sure?"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:88
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:91
 msgid "NOPE. Do not delete the board."
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelManageBoards.php:91
+#: nelliel_core/include/Render/OutputPanelManageBoards.php:94
 msgid "Confirmed. Delete the board."
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPost.php:158
-#: nelliel_core/include/Render/OutputPanelThreads.php:88
+#: nelliel_core/include/Render/OutputPost.php:161
+#: nelliel_core/include/Render/OutputPanelThreads.php:91
 msgid "Unlock Thread"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPost.php:158
-#: nelliel_core/include/Render/OutputPanelThreads.php:94
+#: nelliel_core/include/Render/OutputPost.php:161
+#: nelliel_core/include/Render/OutputPanelThreads.php:97
 msgid "Lock Thread"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPost.php:164
-#: nelliel_core/include/Render/OutputPanelThreads.php:75
+#: nelliel_core/include/Render/OutputPost.php:167
+#: nelliel_core/include/Render/OutputPanelThreads.php:78
 msgid "Unsticky Thread"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPost.php:164
-#: nelliel_core/include/Render/OutputPanelThreads.php:81
+#: nelliel_core/include/Render/OutputPost.php:167
+#: nelliel_core/include/Render/OutputPanelThreads.php:84
 msgid "Sticky Thread"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPost.php:436
+#: nelliel_core/include/Render/OutputPost.php:413
 msgid "Post success!"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPost.php:438
-#: nelliel_core/include/Render/OutputPost.php:447
+#: nelliel_core/include/Render/OutputPost.php:415
+#: nelliel_core/include/Render/OutputPost.php:424
 msgid "Click here if you are not automatically redirected"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPost.php:445
+#: nelliel_core/include/Render/OutputPost.php:422
 msgid "The selected items have been deleted!"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelFileFilters.php:28
-#: nelliel_core/include/Render/OutputPanelBoard.php:29
-#: nelliel_core/include/Render/OutputPanelThreads.php:48
-#: nelliel_core/include/Render/OutputPanelThreads.php:136
-#: nelliel_core/include/Render/OutputPanelBoardSettings.php:38
-#: nelliel_core/include/Render/OutputPanelBoardSettings.php:46
-#: nelliel_core/include/Render/OutputPanelBoardSettings.php:53
-#: nelliel_core/include/Render/OutputPanelBans.php:33
-#: nelliel_core/include/Render/OutputPanelBans.php:98
-#: nelliel_core/include/Render/OutputPanelBans.php:130
+#: nelliel_core/include/Render/OutputHeader.php:115
+msgid "Site Management"
+msgstr ""
+
+#: nelliel_core/include/Render/OutputHeader.php:120
+#: nelliel_core/include/Render/OutputPanelThreads.php:139
 msgid "Board Management"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputHeader.php:64
-#: nelliel_core/include/Render/OutputHeader.php:125
-msgid "Current Board:"
-msgstr ""
-
-#: nelliel_core/include/Render/OutputIndex.php:37
+#: nelliel_core/include/Render/OutputIndex.php:41
 msgid "View Index"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputIndex.php:213
+#: nelliel_core/include/Render/OutputIndex.php:218
 msgid "Previous"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputIndex.php:214
+#: nelliel_core/include/Render/OutputIndex.php:219
 msgid "Next"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelLogs.php:32
+#: nelliel_core/include/Render/OutputPanelLogs.php:26
 msgid "Logs"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelLogs.php:81
+#: nelliel_core/include/Render/OutputPanelLogs.php:80
 msgid "<<"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelLogs.php:82
+#: nelliel_core/include/Render/OutputPanelLogs.php:81
 msgid ">>"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputAccount.php:29
-msgid "User Account"
-msgstr ""
-
-#: nelliel_core/include/Render/OutputAccount.php:29
-msgid "Main"
-msgstr ""
-
-#: nelliel_core/include/Render/OutputPanelThreads.php:48
+#: nelliel_core/include/Render/OutputPanelThreads.php:47
 msgid "Threads"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelThreads.php:99
+#: nelliel_core/include/Render/OutputPanelThreads.php:102
 msgid "Delete Thread"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelThreads.php:136
+#: nelliel_core/include/Render/OutputPanelThreads.php:139
 msgid "Expanded Thread"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelThreads.php:153
+#: nelliel_core/include/Render/OutputPanelThreads.php:156
 msgid "Delete Post"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelThreads.php:156
+#: nelliel_core/include/Render/OutputPanelThreads.php:159
 msgid "Sticky Post"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelFiletypes.php:74
+#: nelliel_core/include/Render/OutputPanelFiletypes.php:75
 msgid "Disable"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelFiletypes.php:83
+#: nelliel_core/include/Render/OutputPanelFiletypes.php:84
 msgid "Enable"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelUsers.php:75
-msgid "Edit User"
-msgstr ""
-
-#: nelliel_core/include/Render/OutputPanelBoardSettings.php:34
+#: nelliel_core/include/Render/OutputPanelBoardSettings.php:36
 msgid "Board Default Settings"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelBoardSettings.php:47
-msgid "Default Board Settings"
-msgstr ""
-
-#: nelliel_core/include/Render/OutputBanPage.php:76
-msgid "You appeal has been reviewed and denied. You cannot appeal again."
-msgstr ""
-
-#: nelliel_core/include/Render/OutputBanPage.php:82
-msgid "Your appeal has been reviewed and the ban has been altered."
-msgstr ""
-
-#: nelliel_core/include/Render/OutputThread.php:56
+#: nelliel_core/include/Render/OutputThread.php:72
 msgid "View Thread"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputCatalog.php:29
+#: nelliel_core/include/Render/OutputCatalog.php:30
 msgid "Catalog of "
 msgstr ""
 
@@ -1771,27 +1854,33 @@ msgstr ""
 msgid "Open thread"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelBans.php:33
+#: nelliel_core/include/Render/OutputPanelBans.php:27
+#: nelliel_core/include/Render/OutputPanelBans.php:92
+#: nelliel_core/include/Render/OutputPanelBans.php:124
 msgid "Bans"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputPanelBans.php:130
+#: nelliel_core/include/Render/OutputPanelBans.php:93
+msgid "New Ban"
+msgstr ""
+
+#: nelliel_core/include/Render/OutputPanelBans.php:125
 msgid "Modify Ban"
 msgstr ""
 
-#: nelliel_core/include/Render/OutputAboutNelliel.php:27
+#: nelliel_core/include/Render/OutputAboutNelliel.php:28
 msgid "Version: "
 msgstr ""
 
-#: nelliel_core/include/Content/ContentThread.php:145
+#: nelliel_core/include/Content/ContentThread.php:140
 msgid "Cannot remove thread. Board is locked."
 msgstr ""
 
-#: nelliel_core/include/Content/ContentPost.php:171
+#: nelliel_core/include/Content/ContentPost.php:172
 msgid "Cannot remove post. Board is locked."
 msgstr ""
 
-#: nelliel_core/include/Content/ContentPost.php:277
+#: nelliel_core/include/Content/ContentPost.php:266
 msgid "Password is wrong or you are not allowed to delete that."
 msgstr ""
 
@@ -1803,25 +1892,25 @@ msgstr ""
 msgid "You are not allowed to extract the gettext strings."
 msgstr ""
 
-#: nelliel_core/include/initializations.php:89
+#: nelliel_core/include/initializations.php:93
 msgid "Installation has not been done yet or is not complete."
 msgstr ""
 
-#: nelliel_core/include/Account/Login.php:55
+#: nelliel_core/include/Account/Login.php:53
 msgid "Detecting rapid login attempts. Wait a few seconds."
 msgstr ""
 
-#: nelliel_core/include/Account/Login.php:61
-#: nelliel_core/include/Account/Register.php:62
+#: nelliel_core/include/Account/Login.php:59
+#: nelliel_core/include/Account/Register.php:63
 msgid "No user ID provided."
 msgstr ""
 
-#: nelliel_core/include/Account/Login.php:67
-#: nelliel_core/include/Account/Register.php:67
+#: nelliel_core/include/Account/Login.php:65
+#: nelliel_core/include/Account/Register.php:68
 msgid "No password provided."
 msgstr ""
 
-#: nelliel_core/include/Account/Login.php:94
+#: nelliel_core/include/Account/Login.php:92
 msgid "User ID or password is incorrect."
 msgstr ""
 
@@ -1855,15 +1944,15 @@ msgstr ""
 msgid "You must be logged in for this action."
 msgstr ""
 
-#: nelliel_core/include/Account/Register.php:56
+#: nelliel_core/include/Account/Register.php:57
 msgid "Site owner cannot be created. Install ID does not match."
 msgstr ""
 
-#: nelliel_core/include/Account/Register.php:72
+#: nelliel_core/include/Account/Register.php:73
 msgid "User already exists."
 msgstr ""
 
-#: nelliel_core/include/Account/Register.php:77
+#: nelliel_core/include/Account/Register.php:78
 msgid "Passwords do not match."
 msgstr ""
 
@@ -1872,27 +1961,31 @@ msgid "No acceptable password hashing algorithm has been found. We can't functio
 "this."
 msgstr ""
 
-#: nelliel_core/include/central_dispatch.php:250
+#: nelliel_core/include/central_dispatch.php:254
 msgid "You are not allowed to regenerate board pages."
 msgstr ""
 
-#: nelliel_core/include/central_dispatch.php:262
+#: nelliel_core/include/central_dispatch.php:266
 msgid "You are not allowed to regenerate board caches."
 msgstr ""
 
-#: nelliel_core/include/central_dispatch.php:272
+#: nelliel_core/include/central_dispatch.php:276
 msgid "You are not allowed to regenerate site caches."
 msgstr ""
 
-#: nelliel_core/include/central_dispatch.php:282
+#: nelliel_core/include/central_dispatch.php:286
 msgid "You are not allowed to regenerate overboard pages."
 msgstr ""
 
-#: nelliel_core/include/derp.php:11
+#: nelliel_core/include/derp.php:12
 msgid "oh god how did this get in here"
 msgstr ""
 
-#: nelliel_core/include/derp.php:15
+#: nelliel_core/include/derp.php:14
+msgid "Error ID: "
+msgstr ""
+
+#: nelliel_core/include/derp.php:16
 msgid "Error Message: "
 msgstr ""
 
@@ -2366,11 +2459,31 @@ msgid "Site slogan"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Site description"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
 msgid "Site favicon"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
 msgid "Site banner"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Display site name"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Display site slogan"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Show site favicon"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Display site banner"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
@@ -2490,6 +2603,26 @@ msgid "Force anonymous posting"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Board name"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Board slogan"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Board description"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Board favicon"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Board banner"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
 msgid "Display board name"
 msgstr ""
 
@@ -2498,11 +2631,11 @@ msgid "Display board slogan"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
-msgid "Show favicon"
+msgid "Show board favicon"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
-msgid "Display banner"
+msgid "Display board banner"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
@@ -2551,26 +2684,6 @@ msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
 msgid "Check for duplicates in other op posts when creating new thread"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_label
-msgid "Board name"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_label
-msgid "Board slogan"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_label
-msgid "Board description"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_label
-msgid "Board favicon"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_label
-msgid "Board banner"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
@@ -2803,4 +2916,12 @@ msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_label
 msgid "Leave a placeholder when deleting files/embeds"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Characters for poster ID (limited by hash length)"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_label
+msgid "Add noreferrer and nofollow to links in posts"
 msgstr ""
