@@ -21,6 +21,7 @@ class OutputCatalog extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->setBodyTemplate('catalog');
         $cites = new \Nelliel\Cites($this->database);
         $output_head = new OutputHead($this->domain, $this->write_mode);

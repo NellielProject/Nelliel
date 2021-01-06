@@ -26,6 +26,7 @@ class OutputIndex extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->setBodyTemplate('index/index');
         $session = new \Nelliel\Account\Session();
         $page = 1;

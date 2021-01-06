@@ -43,7 +43,6 @@ abstract class Output
     protected function renderSetup()
     {
         $this->render_data = array();
-        $this->setupTimer();
         $this->render_data['page_language'] = $this->domain->locale();
     }
 
@@ -85,12 +84,10 @@ abstract class Output
         }
     }
 
-    protected function output(string $template, bool $data_only, bool $translate, array $render_data = null,
-            $dom = null)
+    protected function output(string $template, bool $data_only, bool $translate, array $render_data, $dom = null)
     {
         $output = null;
         $substitutes = $this->template_substitutes->getAll();
-        $render_data = $render_data ?? $this->render_data;
 
         if ($this->core_id === 'mustache')
         {

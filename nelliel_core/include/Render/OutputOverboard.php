@@ -24,6 +24,7 @@ class OutputOverboard extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->render_data['page_language'] = $this->domain->locale();
         $timer = new Timer();
         $timer->start();
