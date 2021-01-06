@@ -12,7 +12,6 @@ use PDO;
 
 class OutputPanelBoardSettings extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -21,9 +20,7 @@ class OutputPanelBoardSettings extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->setupTimer($this->domain, $this->render_data);
-        $this->render_data['page_language'] = $this->domain->locale();
+        $this->renderSetup();
         $this->setBodyTemplate('panels/board_settings');
         $parameters['is_panel'] = true;
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
@@ -51,7 +48,8 @@ class OutputPanelBoardSettings extends Output
         }
 
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $user_lock_override = $this->session->sessionUser()->checkPermission($this->domain, 'perm_board_config_lock_override');
+        $user_lock_override = $this->session->sessionUser()->checkPermission($this->domain,
+                'perm_board_config_lock_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
         $prepared = $this->database->prepare(

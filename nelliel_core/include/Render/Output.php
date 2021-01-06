@@ -16,6 +16,7 @@ abstract class Output
     protected $site_domain;
     protected $database;
     protected $render_core;
+    protected $render_data = array();
     protected static $render_cores = array();
     protected $file_handler;
     protected $output_filter;
@@ -39,6 +40,13 @@ abstract class Output
         $this->session = new \Nelliel\Account\Session();
     }
 
+    protected function renderSetup()
+    {
+        $this->render_data = array();
+        $this->setupTimer();
+        $this->render_data['page_language'] = $this->domain->locale();
+    }
+
     protected function selectRenderCore(string $core_id)
     {
         if ($core_id === 'mustache')
@@ -59,29 +67,30 @@ abstract class Output
         $this->core_id = $core_id;
     }
 
-    protected function timerTotalFunction(Timer $timer, bool $rounded = true, int $precision = 4)
+    protected function timerTotalFunction(bool $rounded = true, int $precision = 4)
     {
-        return function () use ($timer, $rounded, $precision)
+        return function () use ($rounded, $precision)
         {
-            return $timer->elapsed($rounded, $precision);
+            return $this->timer->elapsed($rounded, $precision);
         };
     }
 
-    protected function setupTimer(Domain $domain, array &$render_data)
+    protected function setupTimer(bool $rounded = true, int $precision = 4)
     {
-        if ($domain->setting('display_render_timer'))
+        if ($this->domain->setting('display_render_timer'))
         {
-            $timer = new Timer();
-            $timer->start();
-            $render_data['show_stats']['render_timer'] = $this->timerTotalFunction($timer);
+            $this->timer = new Timer();
+            $this->timer->start();
+            $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction($rounded, $precision);
         }
     }
 
-    protected function output(string $template, bool $data_only, bool $translate, array $render_data = array(),
+    protected function output(string $template, bool $data_only, bool $translate, array $render_data = null,
             $dom = null)
     {
         $output = null;
         $substitutes = $this->template_substitutes->getAll();
+        $render_data = $render_data ?? $this->render_data;
 
         if ($this->core_id === 'mustache')
         {

@@ -17,7 +17,6 @@ use PDO;
 
 class OutputIndex extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -26,9 +25,7 @@ class OutputIndex extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->setupTimer($this->domain, $this->render_data);
-        $this->render_data['page_language'] = $this->domain->locale();
+        $this->renderSetup();
         $this->setBodyTemplate('index/index');
         $session = new \Nelliel\Account\Session();
         $page = 1;
@@ -72,6 +69,7 @@ class OutputIndex extends Output
         $index_format = $site_domain->setting('index_filename_format');
         $this->render_data['catalog_url'] = 'catalog.html';
 
+        var_dump($this->timer);
         if (empty($thread_list))
         {
             $this->render_data['index_navigation'] = true;
@@ -210,6 +208,7 @@ class OutputIndex extends Output
                 $page ++;
             }
         }
+        var_dump($this->timer);
     }
 
     private function indexNavigation(int $page, int $page_count, $page_format)

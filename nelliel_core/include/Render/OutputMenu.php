@@ -12,7 +12,6 @@ use PDO;
 
 class OutputMenu extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -21,7 +20,7 @@ class OutputMenu extends Output
 
     public function styles(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
+        $this->renderSetup();
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "asset_id" ASC',
                 PDO::FETCH_ASSOC);

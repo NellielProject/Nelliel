@@ -13,7 +13,6 @@ use Nelliel\Domains\Domain;
 
 class OutputPanelBans extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -22,9 +21,7 @@ class OutputPanelBans extends Output
 
     public function main(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->setupTimer($this->domain, $this->render_data);
-        $this->render_data['page_language'] = $this->domain->locale();
+        $this->renderSetup();
         $this->setBodyTemplate('panels/bans_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
@@ -33,7 +30,8 @@ class OutputPanelBans extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['can_modify'] = $this->session->sessionUser()->checkPermission($this->domain, 'perm_manage_bans');
+        $this->render_data['can_modify'] = $this->session->sessionUser()->checkPermission($this->domain,
+                'perm_manage_bans');
         $bans_access = new BansAccess($this->database);
 
         if ($this->domain->id() !== Domain::SITE)
@@ -90,9 +88,7 @@ class OutputPanelBans extends Output
 
     public function new(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->setupTimer($this->domain, $this->render_data);
-        $this->render_data['page_language'] = $this->domain->locale();
+        $this->renderSetup();
         $this->setBodyTemplate('panels/bans_add');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('New Ban');
@@ -124,9 +120,7 @@ class OutputPanelBans extends Output
 
     public function modify(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->setupTimer($this->domain, $this->render_data);
-        $this->render_data['page_language'] = $this->domain->locale();
+        $this->renderSetup();
         $this->setBodyTemplate('panels/bans_modify');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Modify Ban');

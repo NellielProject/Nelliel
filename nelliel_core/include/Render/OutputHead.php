@@ -11,7 +11,6 @@ use Nelliel\Domains\Domain;
 
 class OutputHead extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -20,7 +19,7 @@ class OutputHead extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $this->render_data['main_js_file'] = NEL_SCRIPTS_WEB_PATH . 'core/nel.js';
         $this->render_data['js_ui_url'] = NEL_SCRIPTS_WEB_PATH . 'core/ui.js';

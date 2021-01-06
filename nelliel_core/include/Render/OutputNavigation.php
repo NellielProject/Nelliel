@@ -12,7 +12,6 @@ use PDO;
 
 class OutputNavigation extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -21,7 +20,7 @@ class OutputNavigation extends Output
 
     public function boardLinks(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
+        $this->renderSetup();
         $board_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
         $board_count = count($board_data);
         $end = $board_count - 1;
@@ -42,7 +41,7 @@ class OutputNavigation extends Output
 
     public function siteLinks(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $render_data['session_active'] = $session->isActive() && !$this->write_mode;

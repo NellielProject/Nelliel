@@ -13,7 +13,6 @@ use PDO;
 
 class OutputPost extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -22,7 +21,7 @@ class OutputPost extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
+        $this->renderSetup();
         $thread_data = $parameters['thread_data'] ?? array();
         $gen_data = $parameters['gen_data'] ?? array();
         $post_id = $parameters['post_id'] ?? 0;

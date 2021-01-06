@@ -12,7 +12,6 @@ use PDO;
 
 class OutputPanelRoles extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -21,9 +20,7 @@ class OutputPanelRoles extends Output
 
     public function main(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->setupTimer($this->domain, $this->render_data);
-        $this->render_data['page_language'] = $this->domain->locale();
+        $this->renderSetup();
         $this->setBodyTemplate('panels/roles_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Roles');
@@ -66,9 +63,7 @@ class OutputPanelRoles extends Output
 
     public function edit(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
-        $this->setupTimer($this->domain, $this->render_data);
-        $this->render_data['page_language'] = $this->domain->locale();
+        $this->renderSetup();
         $this->setBodyTemplate('panels/roles_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Roles');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');

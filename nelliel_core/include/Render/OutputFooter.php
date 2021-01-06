@@ -11,7 +11,6 @@ use Nelliel\Domains\Domain;
 
 class OutputFooter extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -20,7 +19,7 @@ class OutputFooter extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
+        $this->renderSetup();
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 

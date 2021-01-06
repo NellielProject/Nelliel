@@ -13,7 +13,6 @@ use PDO;
 
 class OutputThread extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -22,9 +21,7 @@ class OutputThread extends Output
 
     public function render(array $parameters = array(), bool $data_only = false)
     {
-        $this->render_data = array();
-        $this->setupTimer($this->domain, $this->render_data);
-        $this->render_data['page_language'] = $this->domain->locale();
+        $this->renderSetup();
         $this->setBodyTemplate('thread/thread');
         $session = new \Nelliel\Account\Session();
         $thread_id = ($parameters['thread_id']) ?? 0;
@@ -58,9 +55,9 @@ class OutputThread extends Output
         if ($session->inModmode($this->domain) && !$this->write_mode)
         {
             $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(
-                    ['module' => 'render', 'actions' => 'view-index', 'index' => '0',
-                    'board-id' => $this->domain->id(), 'modmode' => 'true']);
+                    http_build_query(
+                            ['module' => 'render', 'actions' => 'view-index', 'index' => '0',
+                                'board-id' => $this->domain->id(), 'modmode' => 'true']);
         }
         else
         {

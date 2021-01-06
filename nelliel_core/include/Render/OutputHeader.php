@@ -11,7 +11,6 @@ use Nelliel\Domains\Domain;
 
 class OutputHeader extends Output
 {
-    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -20,7 +19,7 @@ class OutputHeader extends Output
 
     public function general(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -46,7 +45,7 @@ class OutputHeader extends Output
 
     public function board(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;
@@ -68,7 +67,7 @@ class OutputHeader extends Output
         $this->render_data['board_uri'] = '/' . $this->domain->reference('board_directory') . '/';
         $board_name = $this->domain->setting('name');
 
-        if($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name')))
+        if ($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name')))
         {
             $this->render_data['name'] = ' - ' . $board_name;
         }
@@ -99,7 +98,7 @@ class OutputHeader extends Output
 
     public function manage(array $parameters, bool $data_only)
     {
-        $this->render_data = array();
+        $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
