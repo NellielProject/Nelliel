@@ -12,6 +12,7 @@ use Nelliel\Domains\Domain;
 
 class OutputFile extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -20,7 +21,7 @@ class OutputFile extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
         $post_data = $parameters['post_data'] ?? array();
         $file = $parameters['file_data'] ?? array();
         $web_paths = $parameters['web_paths'] ?? array();
@@ -188,7 +189,7 @@ class OutputFile extends Output
             }
         }
 
-        $output = $this->output('thread/file_info', $data_only, true);
+        $output = $this->output('thread/file_info', $data_only, true, $this->render_data);
         return $output;
     }
 }

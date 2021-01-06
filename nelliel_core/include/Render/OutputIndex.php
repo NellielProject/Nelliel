@@ -17,6 +17,7 @@ use PDO;
 
 class OutputIndex extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -25,7 +26,9 @@ class OutputIndex extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('index/index');
         $session = new \Nelliel\Account\Session();
         $page = 1;
@@ -82,8 +85,7 @@ class OutputIndex extends Output
             $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
-            $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
-            $output = $this->output('pasic_page', $data_only, true);
+            $output = $this->output('pasic_page', $data_only, true, $this->render_data);
             $index_filename = ($page == 1) ? 'index' . NEL_PAGE_EXT : sprintf($index_format, ($page)) . NEL_PAGE_EXT;
 
             if ($this->write_mode)
@@ -116,11 +118,9 @@ class OutputIndex extends Output
         $gen_data['index_rendering'] = true;
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=threads&board-id=' . $this->domain->id();
         $threads_on_page = 0;
-        $timer_offset = $this->endTimer(false);
 
         foreach ($thread_list as $thread_data)
         {
-            $this->startTimer($timer_offset);
             $thread_input = array();
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('posts_table') .
@@ -189,7 +189,7 @@ class OutputIndex extends Output
                 $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
                 $output_footer = new OutputFooter($this->domain, $this->write_mode);
                 $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
-                $output = $this->output('basic_page', $data_only, true);
+                $output = $this->output('basic_page', $data_only, true, $this->render_data);
                 $index_filename = ($page == 1) ? 'index' . NEL_PAGE_EXT : sprintf($index_format, ($page)) . NEL_PAGE_EXT;
 
                 if ($this->write_mode)

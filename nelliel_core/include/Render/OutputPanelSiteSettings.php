@@ -12,6 +12,7 @@ use PDO;
 
 class OutputPanelSiteSettings extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -20,7 +21,9 @@ class OutputPanelSiteSettings extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/site_settings');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Site Settings');
@@ -96,7 +99,7 @@ class OutputPanelSiteSettings extends Output
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }

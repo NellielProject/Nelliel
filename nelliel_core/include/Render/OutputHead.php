@@ -11,6 +11,7 @@ use Nelliel\Domains\Domain;
 
 class OutputHead extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -19,7 +20,7 @@ class OutputHead extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
         $session = new \Nelliel\Account\Session();
         $this->render_data['main_js_file'] = NEL_SCRIPTS_WEB_PATH . 'core/nel.js';
         $this->render_data['js_ui_url'] = NEL_SCRIPTS_WEB_PATH . 'core/ui.js';
@@ -39,6 +40,6 @@ class OutputHead extends Output
         $this->render_data['show_favicon'] = $this->domain->setting('show_favicon');
         $this->render_data['favicon_url'] = $this->domain->setting('favicon') ?? '';
         $this->render_data['page_title'] = $parameters['page_title'] ?? 'Nelliel Imageboard';
-        return $this->output('head', $data_only, true);
+        return $this->output('head', $data_only, true, $this->render_data);
     }
 }

@@ -13,6 +13,7 @@ use PDO;
 
 class OutputPost extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -21,7 +22,7 @@ class OutputPost extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
         $thread_data = $parameters['thread_data'] ?? array();
         $gen_data = $parameters['gen_data'] ?? array();
         $post_id = $parameters['post_id'] ?? 0;
@@ -106,7 +107,7 @@ class OutputPost extends Output
 
         $this->render_data['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $web_paths);
         $this->render_data['content_disclaimer'] = nel_site_domain()->setting('content_disclaimer');
-        $output = $this->output('thread/post', $data_only, true);
+        $output = $this->output('thread/post', $data_only, true, $this->render_data);
         return $output;
     }
 

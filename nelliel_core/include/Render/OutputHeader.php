@@ -11,6 +11,7 @@ use Nelliel\Domains\Domain;
 
 class OutputHeader extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -19,7 +20,7 @@ class OutputHeader extends Output
 
     public function general(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
         $session = new \Nelliel\Account\Session();
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -39,13 +40,13 @@ class OutputHeader extends Output
         $this->render_data['slogan'] = ($this->domain->setting('show_slogan')) ? $this->domain->setting('slogan') : '';
         $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
         $this->render_data['page_title'] = $this->domain->setting('name');
-        $output = $this->output('header', $data_only, true);
+        $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
 
     public function board(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
         $session = new \Nelliel\Account\Session();
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;
@@ -92,13 +93,13 @@ class OutputHeader extends Output
             $this->render_data['page_title'] = $this->domain->setting('name');
         }
 
-        $output = $this->output('header', $data_only, true);
+        $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
 
     public function manage(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
         $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
@@ -128,7 +129,7 @@ class OutputHeader extends Output
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $this->render_data['page_title'] = $site_domain->setting('name');
-        $output = $this->output('header', $data_only, true);
+        $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
 }

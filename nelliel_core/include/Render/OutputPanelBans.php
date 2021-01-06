@@ -13,6 +13,7 @@ use Nelliel\Domains\Domain;
 
 class OutputPanelBans extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -21,7 +22,9 @@ class OutputPanelBans extends Output
 
     public function main(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/bans_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
@@ -80,14 +83,16 @@ class OutputPanelBans extends Output
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }
 
     public function new(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/bans_add');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('New Ban');
@@ -112,14 +117,16 @@ class OutputPanelBans extends Output
                             'board-id' => $this->domain->id()]);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }
 
     public function modify(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/bans_modify');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Modify Ban');
@@ -158,7 +165,7 @@ class OutputPanelBans extends Output
         $this->render_data['appeal_status_' . $ban_hammer->getData('appeal_status')] = 'selected';
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }

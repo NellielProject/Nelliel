@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Timer;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Content\ContentID;
@@ -14,6 +15,7 @@ use PDO;
 
 class OutputOverboard extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -22,7 +24,11 @@ class OutputOverboard extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->render_data['page_language'] = $this->domain->locale();
+        $timer = new Timer();
+        $timer->start();
+        $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction($timer);
         $sfw = $parameters['sfw'] ?? false;
         $prefix = ($sfw) ? 'sfw_' : '';
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->site_domain, $this->file_handler);
@@ -49,7 +55,7 @@ class OutputOverboard extends Output
                 $this->render_data['footer_form'] = true;
                 $output_footer = new OutputFooter($this->site_domain, $this->write_mode);
                 $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
-                $output = $this->output('overboard', $data_only, true);
+                $output = $this->output('overboard', $data_only, true, $this->render_data);
                 $index_filename = 'index' . NEL_PAGE_EXT;
 
                 if ($this->write_mode)

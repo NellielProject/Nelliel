@@ -13,6 +13,7 @@ use PDO;
 
 class OutputThread extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -21,7 +22,9 @@ class OutputThread extends Output
 
     public function render(array $parameters = array(), bool $data_only = false)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('thread/thread');
         $session = new \Nelliel\Account\Session();
         $thread_id = ($parameters['thread_id']) ?? 0;
@@ -128,7 +131,7 @@ class OutputThread extends Output
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
         if ($this->write_mode)
         {

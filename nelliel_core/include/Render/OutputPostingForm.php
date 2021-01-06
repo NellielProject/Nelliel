@@ -11,6 +11,7 @@ use Nelliel\Domains\Domain;
 
 class OutputPostingForm extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -19,7 +20,7 @@ class OutputPostingForm extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
         $session = new \Nelliel\Account\Session();
         $response_to = $parameters['response_to'];
         $this->render_data['response_to'] = $response_to;
@@ -62,7 +63,7 @@ class OutputPostingForm extends Output
         $this->render_data['posting_mode'] = ($response_to) ? _gettext('Posting mode: Reply') : _gettext(
                 'Posting mode: New thread');
         $this->postingRules();
-        $output = $this->output('thread/posting_form', $data_only, true);
+        $output = $this->output('thread/posting_form', $data_only, true, $this->render_data);
         return $output;
     }
 

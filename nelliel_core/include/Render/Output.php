@@ -7,21 +7,18 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Timer;
 use Nelliel\Domains\Domain;
 
 abstract class Output
 {
-    protected $dom;
     protected $domain;
     protected $site_domain;
     protected $database;
     protected $render_core;
     protected static $render_cores = array();
-    protected $render_data = array();
     protected $file_handler;
     protected $output_filter;
-    protected $timer_start = 0;
-    protected $timer_end = 0;
     protected $core_id;
     protected $static_output = false;
     protected $write_mode = false;
@@ -40,14 +37,6 @@ abstract class Output
         $this->output_filter = new Filter();
         $this->template_substitutes = new TemplateSubstitutes();
         $this->session = new \Nelliel\Account\Session();
-    }
-
-    // Standard setup when beginning a render
-    protected function renderSetup()
-    {
-        $this->render_data = array();
-        $this->startTimer(); // Begin rendering timer
-        $this->render_data['page_language'] = str_replace('_', '-', $this->domain->locale()); // Convert underscore notation to hyphen for HTML
     }
 
     protected function selectRenderCore(string $core_id)
@@ -70,24 +59,21 @@ abstract class Output
         $this->core_id = $core_id;
     }
 
-    protected function startTimer(int $time_offset = 0)
+    protected function timerTotalFunction(Timer $timer, bool $rounded = true, int $precision = 4)
     {
-        $start = microtime(true);
-        $this->timer_start = $start - $time_offset;
-        return $start;
+        return function () use ($timer, $rounded, $precision)
+        {
+            return $timer->elapsed($rounded, $precision);
+        };
     }
 
-    protected function endTimer(bool $rounded = true, int $precision = 4)
+    protected function setupTimer(Domain $domain, array &$render_data)
     {
-        $this->timer_end = microtime(true);
-
-        if ($rounded)
+        if ($domain->setting('display_render_timer'))
         {
-            return number_format($this->timer_end - $this->timer_start, $precision);
-        }
-        else
-        {
-            return $this->timer_end - $this->timer_start;
+            $timer = new Timer();
+            $timer->start();
+            $render_data['show_stats']['render_timer'] = $this->timerTotalFunction($timer);
         }
     }
 
@@ -95,8 +81,6 @@ abstract class Output
             $dom = null)
     {
         $output = null;
-        $render_data = (empty($render_data)) ? $this->render_data : $render_data;
-        $dom = (is_null($dom)) ? $this->dom : $dom;
         $substitutes = $this->template_substitutes->getAll();
 
         if ($this->core_id === 'mustache')
@@ -105,18 +89,10 @@ abstract class Output
 
             if ($data_only)
             {
-                $output = $render_data;
+                return $render_data;
             }
             else
             {
-                if ($this->domain->setting('display_render_timer') && isset($this->timer_start))
-                {
-                    $render_data['show_stats']['render_timer'] = function ()
-                    {
-                        return 'Page rendered in ' . $this->endTimer() . ' seconds.';
-                    };
-                }
-
                 $output = $this->render_core->renderFromTemplateFile($template, $render_data);
 
                 if ($translate)

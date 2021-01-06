@@ -12,6 +12,7 @@ use PDO;
 
 class OutputPanelThreads extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -41,7 +42,9 @@ class OutputPanelThreads extends Output
 
     private function renderPanel(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/thread');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
@@ -123,14 +126,16 @@ class OutputPanelThreads extends Output
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }
 
     private function renderExpandedThread(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/thread_expand');
         $thread_id = $parameters['thread_id'] ?? 0;
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -171,7 +176,7 @@ class OutputPanelThreads extends Output
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }

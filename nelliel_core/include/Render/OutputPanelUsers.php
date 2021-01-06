@@ -12,6 +12,7 @@ use PDO;
 
 class OutputPanelUsers extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -20,7 +21,9 @@ class OutputPanelUsers extends Output
 
     public function main(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/users_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
@@ -55,7 +58,7 @@ class OutputPanelUsers extends Output
         $this->render_data['new_user_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=new';
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }
@@ -68,7 +71,9 @@ class OutputPanelUsers extends Output
 
     public function edit(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/users_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
@@ -148,7 +153,7 @@ class OutputPanelUsers extends Output
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }

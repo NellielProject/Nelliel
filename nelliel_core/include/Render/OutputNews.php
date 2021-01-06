@@ -12,6 +12,7 @@ use PDO;
 
 class OutputNews extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -20,7 +21,9 @@ class OutputNews extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('news');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -29,7 +32,7 @@ class OutputNews extends Output
         $this->render_data['news_entries'] = $this->newsList();
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         $this->file_handler->writeFile(NEL_BASE_PATH . 'news.html', $output);
     }
 

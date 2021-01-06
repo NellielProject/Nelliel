@@ -112,29 +112,23 @@ abstract class Domain
         return $this->translator;
     }
 
-    public function locale(string $locale = null)
+    public function locale(bool $html_format = false)
     {
-        if (!isset($this->locale) && is_null($locale))
+        if (!isset($this->locale))
         {
-            $locale = $this->setting('locale');
-
-            if (nel_true_empty($locale))
-            {
-                $locale = NEL_DEFAULT_LOCALE;
-            }
-
-            $this->updateLocale($locale);
+            return NEL_DEFAULT_LOCALE;
         }
 
-        if (!is_null($locale))
+        // Convert underscore notation to hyphen for HTML
+        if($html_format)
         {
-            $this->updateLocale($locale);
+            return str_replace('_', '-', $this->locale());
         }
 
         return $this->locale;
     }
 
-    private function updateLocale(string $locale)
+    public function updateLocale(string $locale)
     {
         $this->locale = $locale;
         $this->language->accessGettext()->locale($this->locale);

@@ -12,6 +12,7 @@ use PDO;
 
 class OutputPanelFiletypes extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -20,7 +21,9 @@ class OutputPanelFiletypes extends Output
 
     public function main(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/filetypes_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
@@ -93,7 +96,7 @@ class OutputPanelFiletypes extends Output
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }
@@ -106,7 +109,9 @@ class OutputPanelFiletypes extends Output
 
     public function edit(array $parameters, bool $data_only)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('panels/filetypes_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
@@ -158,7 +163,7 @@ class OutputPanelFiletypes extends Output
         $this->render_data['form_action'] = $form_action;
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
     }

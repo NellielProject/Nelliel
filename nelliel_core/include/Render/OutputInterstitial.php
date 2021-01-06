@@ -11,6 +11,7 @@ use Nelliel\Domains\Domain;
 
 class OutputInterstitial extends Output
 {
+    protected $render_data = array();
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -19,7 +20,9 @@ class OutputInterstitial extends Output
 
     public function render(array $parameters, bool $data_only, array $messages, array $links)
     {
-        $this->renderSetup();
+        $this->render_data = array();
+        $this->setupTimer($this->domain, $this->render_data);
+        $this->render_data['page_language'] = $this->domain->locale();
         $this->setBodyTemplate('basic_interstitial');
         $this->render_data['extra_message_break'] = $parameters['extra_message_break'] ?? false;
         $this->render_data['extra_url_break'] = $parameters['extra_url_break'] ?? false;
@@ -49,7 +52,7 @@ class OutputInterstitial extends Output
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
-        $output = $this->output('basic_page', $data_only, true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
         return $output;
     }
 }
