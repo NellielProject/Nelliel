@@ -330,21 +330,23 @@ class OutputPost extends Output
             $create_url_links = $this->domain->setting('create_url_links');
             $comment_lines = $this->output_filter->newlinesToArray($post_data['comment']);
             $line_count = count($comment_lines);
+            $stop = $line_count - 1;
             $last_i = $line_count - 1;
+
+            if ($gen_data['index_rendering'] && $line_count > $this->domain->setting('comment_display_lines'))
+            {
+                $comment_data['long_comment'] = true;
+                $comment_data['long_comment_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
+                        $post_content_id->postID();
+                $stop = $this->domain->setting('comment_display_lines') - 1;
+            }
+
             $i = 0;
 
-            for (; $i < $line_count; $i ++)
+            for (; $i < $stop; $i ++)
             {
-
                 $line = $comment_lines[$i];
                 $line_break = $i !== $last_i;
-
-                if ($gen_data['index_rendering'] && $line_count > $this->domain->setting('comment_display_lines'))
-                {
-                    $comment_data['post_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
-                            $post_content_id->postID();
-                    break;
-                }
 
                 // Split the line on spaces or embedded post cites, preserving the delimiters
                 $segment_chunks = preg_split($line_split_regex, $line, null,
