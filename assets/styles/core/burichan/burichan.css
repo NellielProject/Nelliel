@@ -78,22 +78,22 @@ a:hover {
     text-decoration: underline;
 }
 
-.op-poster-name {
+.op.poster-name {
     font-size: 0.8rem;
     font-family: serif;
 }
 
-.op-subject {
+.op.subject {
 	font-size: 1.2rem;
 	font-family: serif;
 }
 
-.reply-poster-name {
+.reply.poster-name {
     font-size: 0.8rem;
     font-family: serif;
 }
 
-.reply-subject {
+.reply.subject {
 	font-size: 1.2rem;
 	font-family: serif;
 }
