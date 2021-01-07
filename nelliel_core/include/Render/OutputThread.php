@@ -22,6 +22,7 @@ class OutputThread extends Output
     public function render(array $parameters = array(), bool $data_only = false)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->setBodyTemplate('thread/thread');
         $session = new \Nelliel\Account\Session();
         $thread_id = ($parameters['thread_id']) ?? 0;

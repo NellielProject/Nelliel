@@ -23,16 +23,18 @@
 	--manage-subheader-color: #FFFFFF;
 	--posting-form-label-background: #EEAA88;
 	--posting-form-label-border: none;
-	--op-background: inherit;
-	--op-border: none;
-	--op-highlight-color: #AABBFF;
-	--op-name-color: #117743;
-	--op-subject-color: #CC1105;
-	--reply-background: #F0E0D6;
-	--reply-border: 1px solid #D0C0D6;
-	--reply-highlight-color: #AABBFF;
-	--reply-name-color: #117743;
-	--reply-subject-color: #CC1105;
+	--op-post-background: inherit;
+	--op-post-border: none;
+	--op-post-highlight-color: #AABBFF;
+	--op-post-name-color: #117743;
+	--op-post-subject-color: #CC1105;
+	--op-post-comments-color: inherit;
+	--reply-post-background: #F0E0D6;
+	--reply-post-border: 1px solid #D0C0D6;
+	--reply-post-highlight-color: #AABBFF;
+	--reply-post-name-color: #117743;
+	--reply-post-subject-color: #CC1105;
+	--reply-post-comments-color: inherit;
 	--mod-comment-background: inherit;
 	--mod-comment-color: #FF0000;
 	--omitted-background: inherit;
@@ -53,10 +55,10 @@
 	font-size: 1.2rem;
 }
 
-.op-subject {
+.op.subject {
 	font-size: 1.2rem;
 }
 
-.reply-subject {
+.reply.subject {
 	font-size: 1.2rem;
 }

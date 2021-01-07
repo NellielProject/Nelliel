@@ -22,6 +22,7 @@ class OutputPanelBans extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->setBodyTemplate('panels/bans_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');

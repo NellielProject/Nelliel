@@ -1,8 +1,8 @@
 {{# post_headers }}
-<span id="{{ post_header_info_id }}" class="{{ post_header_info_class }}">
-	<span class="{{ subject_class }}">{{ subject }}</span>
+<span class="{{ op_reply }} post_header_info">
+	<span class="{{ op_reply }} subject">{{ subject }}</span>
 	{{> thread/pieces/mailto }}
-	<span class="{{ tripline_class }}">{{ tripline }}</span>
+	<span class="{{ op_reply }} trip-line">{{ tripline }}</span>
 	<span class="capcode">{{ capcode }}</span>
 	<span class="post-time">{{ post_time }}</span>
 	{{> thread/pieces/poster_id }}

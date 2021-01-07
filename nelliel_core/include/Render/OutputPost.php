@@ -40,26 +40,18 @@ class OutputPost extends Output
                 '/';
         $this->render_data['post_corral_id'] = 'post-corral-' . $post_content_id->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
-        $this->render_data['header_id'] = 'header-' . $post_content_id->getIDString();
-        $this->render_data['content_container_id'] = 'content-' . $post_content_id->getIDString();
-        $this->render_data['comments_id'] = 'post-comments-' . $post_content_id->getIDString();
 
         if ($response)
         {
-            $class_prefix = 'reply-';
+            $this->render_data['op_reply'] = 'reply';
             $this->render_data['indents_marker'] = $this->domain->setting('indent_marker');
         }
         else
         {
-            $class_prefix = 'op-';
+            $this->render_data['op_reply'] = 'op';
             $this->render_data['indents_marker'] = '';
         }
 
-        $this->render_data['post_container_class'] = $class_prefix . 'post';
-        $this->render_data['post_header_options_class'] = $class_prefix . 'post-header-options';
-        $this->render_data['post_header_info_class'] = $class_prefix . 'post-header-info';
-        $this->render_data['content_container_class'] = $class_prefix . 'content-container';
-        $this->render_data['post_disclaimer_class'] = $class_prefix . 'post-disclaimer';
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
                 $post_content_id, $web_paths, $gen_data, $in_thread_number);
@@ -182,8 +174,6 @@ class OutputPost extends Output
 
         if (!$response)
         {
-            $class_prefix = 'op-';
-            $thread_headers['hide_thread_id'] = 'hide-thread-' . $thread_content_id->getIDString();
             $thread_headers['thread_content_id'] = $thread_content_id->getIDString();
             $thread_headers['post_content_id'] = $post_content_id->getIDString();
             $thread_headers['sticky'] = $thread_data['sticky'];
@@ -211,21 +201,9 @@ class OutputPost extends Output
 
             $header_data['thread_headers'] = $thread_headers;
         }
-        else
-        {
-            $class_prefix = 'reply-';
-        }
 
         $post_headers['in_thread_number'] = $in_thread_number;
         $post_headers['post_content_id'] = $post_content_id->getIDString();
-        $post_headers['hide_post_id'] = 'hide-post-' . $post_content_id->getIDString();
-        $post_headers['post_header_info_id'] = 'post-header-info-' . $post_content_id->getIDString();
-        $post_headers['post_header_options_id'] = 'post-header-options-' . $post_content_id->getIDString();
-        $post_headers['header_info_class'] = $class_prefix . 'post-header-info';
-        $post_headers['subject_class'] = $class_prefix . 'subject';
-        $post_headers['poster_name_class'] = $class_prefix . 'poster-name';
-        $post_headers['tripline_class'] = $class_prefix . 'trip-line';
-        $post_headers['post_link_class'] = $class_prefix . 'post-link';
 
         if (!nel_true_empty($post_data['email']))
         {
@@ -330,21 +308,23 @@ class OutputPost extends Output
             $create_url_links = $this->domain->setting('create_url_links');
             $comment_lines = $this->output_filter->newlinesToArray($post_data['comment']);
             $line_count = count($comment_lines);
+            $stop = $line_count - 1;
             $last_i = $line_count - 1;
+
+            if ($gen_data['index_rendering'] && $line_count > $this->domain->setting('comment_display_lines'))
+            {
+                $comment_data['long_comment'] = true;
+                $comment_data['long_comment_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
+                        $post_content_id->postID();
+                $stop = $this->domain->setting('comment_display_lines') - 1;
+            }
+
             $i = 0;
 
-            for (; $i < $line_count; $i ++)
+            for (; $i < $stop; $i ++)
             {
-
                 $line = $comment_lines[$i];
                 $line_break = $i !== $last_i;
-
-                if ($gen_data['index_rendering'] && $line_count > $this->domain->setting('comment_display_lines'))
-                {
-                    $comment_data['post_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
-                            $post_content_id->postID();
-                    break;
-                }
 
                 // Split the line on spaces or embedded post cites, preserving the delimiters
                 $segment_chunks = preg_split($line_split_regex, $line, null,

@@ -21,6 +21,7 @@ class OutputNews extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->setBodyTemplate('news');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);

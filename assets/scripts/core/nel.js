@@ -14,9 +14,11 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     dataBin.is_modmode = is_modmode;
     dataBin.hidden_threads_id = "hidden_threads_" + board_id;
     dataBin.hidden_posts_id = "hidden_posts_" + board_id;
+    dataBin.hidden_files_id = "hidden_files_" + board_id;
     nelliel.setup.localStorageInitCheck();
     dataBin.hidden_threads = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_threads_id, true);
     dataBin.hidden_posts = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
+    dataBin.hidden_files = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_files_id, true);
     dataBin.collapsedThreads = [];
 
     if (board_id === "") {
@@ -31,7 +33,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     
     if (board_id !== "") {
         nelliel.setup.fillForms(board_id);
-        nelliel.ui.applyHidePostThread();
+        nelliel.ui.applyHideContent();
     }
     
     nelliel.core.unhideJSonly();
@@ -44,6 +46,10 @@ nelliel.setup.localStorageInitCheck = function() {
     
     if (!localStorage[dataBin.hidden_posts_id]) {
         localStorage[dataBin.hidden_posts_id] = '{}';
+    }
+    
+    if (!localStorage[dataBin.hidden_files_id]) {
+        localStorage[dataBin.hidden_files_id] = '{}';
     }
 }
 
@@ -121,10 +127,12 @@ nelliel.events.processPostClicks = function(event) {
         } else if (command === "inline-expand" || command === "inline-reduce") {
             nelliel.ui.inlineExpandReduce(event.target, command);
             event.preventDefault();
-        } else if (command === "hide-post" || command === "show-post" ) {
-            nelliel.ui.hideShowPost(event.target, command);
         } else if (command === "hide-thread" || command === "show-thread" ) {
-            nelliel.ui.hideShowThread(event.target, command);
+            nelliel.ui.hideShowThread(event.target, command, content_id);
+        } else if (command === "hide-post" || command === "show-post" ) {
+            nelliel.ui.hideShowPost(event.target, command, content_id);
+        } else if (command === "hide-file" || command === "show-file" ) {
+            nelliel.ui.hideShowFile(event.target, command, content_id);
         } else if (command === "reload-captcha" ) {
             reloadCAPTCHA(event.target, command);
         }

@@ -42,6 +42,7 @@ class OutputPanelThreads extends Output
     private function renderPanel(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->setBodyTemplate('panels/thread');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');

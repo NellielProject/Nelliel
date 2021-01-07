@@ -20,6 +20,7 @@ class OutputBanPage extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->setBodyTemplate('banned');
         $ban_hammer = $parameters['ban_hammer'];
         $output_head = new OutputHead($this->domain, $this->write_mode);

@@ -1,18 +1,18 @@
-<p class="{{ post_comments_class }}">
+<p class="{{ op_reply }} post-comments">
 {{# comment_lines }}
 	{{# line_parts }}{{> thread/pieces/comment_line }}{{/ line_parts }}
 {{/ comment_lines }}
-</p>
-<p class="{{ post_disclaimer_class }}">
-	{{ content_disclaimer }}
 </p>
 <p class="mod-comment">
 {{# mod_comment }}
 	{{ mod_comment }}
 {{/ mod_comment }}
 </p>
+{{# long_comment }}
 <p>
-{{# index_render }}
-	<span data-i18n="gettext">This is a long comment.</span>&nbsp;<a href="{{ post_url }}" data-i18n="gettext">Click here for the full text</a>
-{{/ index_render }}
+	<span data-i18n="gettext">This is a long comment.</span>&nbsp;<a href="{{ long_comment_url }}" data-i18n="gettext">Click here for the full text</a>
 </p>
+{{/ long_comment }}
+<small class="{{ op_reply }} post-disclaimer">
+	<i>{{ content_disclaimer }}</i>
+</small>

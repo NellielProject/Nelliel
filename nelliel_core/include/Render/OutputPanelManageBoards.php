@@ -21,6 +21,7 @@ class OutputPanelManageBoards extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->setBodyTemplate('panels/manage_boards');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Manage Boards');

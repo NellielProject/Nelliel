@@ -138,8 +138,8 @@ form {
 /* Catalog */
 .catalog-entry {
 	float: left;
-	background: var(--reply-background);
-    border: var(--reply-border);
+	background: var(--reply-post-background);
+    border: var(--reply-post-border);
 	margin: 3px;
 	padding: 3px;
 	width: 14rem;
@@ -186,15 +186,15 @@ form {
 }
 
 /* Files */
-.fileinfo {
+.single.file {
     float: left;
-    margin: 0.15em 0.75em 0.15em 0.75em;
+    margin: 0.15em 0.75em;
 }
 
-.multiple-fileinfo {
+.multiple.file {
     float: left;
     font-size: 0.9em;
-    margin: 0.15em 0.25em 0.15em 0.25em;
+    margin: 0.15em 0.25em;
 }
 
 .file-hash {
@@ -224,7 +224,7 @@ form {
     display: block;
 }
 
-.poster-id-color {
+.poster-id-style {
 	font-family: Arial, Helvetica, sans-serif;
 	font-size: 0.9em;
 	padding: 0.05em 0.15em;
@@ -244,45 +244,46 @@ form {
 }
 
 /* OP post */
-.op-post-header-info {
+.op.post-header-info {
     margin-left: 1.5em;
 }
 
-.op-post {
-	background: var(--op-background);
-	border: var(--op-border);
+.op.post {
+	background: var(--op-post-background, var(--post-background));
+	border: var(--op-post-border, var(--post-border));
 	padding: 0.2em;
     min-width: 20em;
     height: 100%;
     margin: 0.2em;
 }
 
-.op-post.post-highlight {
-    background: var(--op-highlight-color);
+.op.post.post-highlight {
+    background: var(--op-post-highlight-color, var(--post-highlight-color));
 }
 
-.op-poster-name {
-    color: var(--op-name-color);
+.op.poster-name {
+    color: var(--op-post-name-color, var(--post-name-color));
     font-weight: bold;
 }
 
-.op-subject {
-	color: var(--op-subject-color);
+.op.subject {
+	color: var(--op-post-subject-color, var(--post-subject-color));
 	font-weight: bold;
 }
 
-.op-post-comments {
+.op.post-comments {
+	color: var(--op-post-comments-color, var(--post-comments-color));
     word-wrap: break-word;
 }
 
 /* Reply post */
-.reply-post-header-info {
+.reply.post-header-info {
     margin-left: 1.5em;
 }
 
-.reply-post {
-    background: var(--reply-background);
-    border: var(--reply-border);
+.reply.post {
+    background: var(--reply-post-background, var(--post-background));
+    border: var(--reply-post-border, var(--post-border));
     padding: 0.2em;
     min-width: 20em;
     height: 100%;
@@ -290,31 +291,31 @@ form {
     display: inline-block;
 }
 
-.reply-post.post-highlight {
-    background: var(--reply-highlight-color);
+.reply.post.post-highlight {
+    background: var(--reply-post-highlight-color, var(--post-highlight-color));
 }
 
-.reply-poster-name {
-	color: var(--reply-name-color);
+.reply.poster-name {
+	color: var(--reply-post-name-color, var(--post-name-color));
 	font-weight: bold;
 }
 
-.reply-subject {
-	color: var(--reply-subject-color);
+.reply.subject {
+	color: var(--reply-post-subject-color, var(--post-subject-color));
 	font-weight: bold;
 }
 
-.reply-post-comments {
+.reply.post-comments {
+	color: var(--reply-post-comments-color, var(--post-comments-color));
     word-wrap: break-word;
 }
 
 .indents {
-    padding: 1px;
+    padding: 0.1em;
     float: left;
 }
 
 /* News */
-
 .news-page {
     margin: auto;
     max-width: 60rem;
@@ -338,9 +339,9 @@ form {
 }
 
 .news-paragraph {
-    padding: 3px;
     text-align: left;
     color: var(--news-paragraph-color, inherit);
+    margin: 1.0rem 0.25rem;
 }
 
 /* Other */

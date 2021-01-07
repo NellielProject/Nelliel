@@ -20,6 +20,7 @@ class OutputInterstitial extends Output
     public function render(array $parameters, bool $data_only, array $messages, array $links)
     {
         $this->renderSetup();
+        $this->setupTimer();
         $this->setBodyTemplate('basic_interstitial');
         $this->render_data['extra_message_break'] = $parameters['extra_message_break'] ?? false;
         $this->render_data['extra_url_break'] = $parameters['extra_url_break'] ?? false;

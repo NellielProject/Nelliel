@@ -1,6 +1,6 @@
 {{# post_headers }}
-<span id="{{ post_header_options_id }}" class="{{ post_header_options_class }}">
-	<span class="hidden" data-jsonly="">[<a id="{{ hide_post_id }}" href="#" data-command="hide-post" data-content-id="{{ post_content_id }}" data-alt-visual="Show Post" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Post</a>]</span>
-	<span class="{{ post_link_class }} hidden" data-jsonly="">[<a href="#" data-i18n="gettext" data-command="link-post" data-content-id="{{ post_content_id }}">Link</a>]</span>
+<span class="{{ op_reply }} post-header-options">
+	<span class="hidden" data-jsonly="">[<a class="toggle-post" href="#" data-command="hide-post" data-content-id="{{ post_content_id }}" data-alt-visual="Show Post" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Post</a>]</span>
+	<span class="{{ op_reply }} post-link hidden" data-jsonly="">[<a href="#" data-i18n="gettext" data-command="link-post" data-content-id="{{ post_content_id }}">Link</a>]</span>
 </span>
 {{/ post_headers }}
