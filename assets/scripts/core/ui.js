@@ -273,7 +273,7 @@ nelliel.ui.hideLinkedPost = function(element, event) {
     }
 }
 
-nelliel.ui.linkPost = function(element) {
+nelliel.ui.citePost = function(element) {
     if(element === null) {
         return;
     }

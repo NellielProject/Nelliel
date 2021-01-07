@@ -118,8 +118,8 @@ nelliel.events.processPostClicks = function(event) {
             nelliel.ui.expandCollapseThread(event.target, command);
         } else if (command === "expand-thread-render" || command === "collapse-thread-render") {
             nelliel.ui.expandCollapseThread(event.target, command, true);
-        } else if (command === "link-post") {
-            nelliel.ui.linkPost(event.target);
+        } else if (command === "cite-post") {
+            nelliel.ui.citePost(event.target);
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
             nelliel.ui.showHideFileMeta(event.target);
         } else if (command === "add-file-meta") {
