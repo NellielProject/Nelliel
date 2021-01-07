@@ -4,10 +4,14 @@ nelliel.ui.hideShowThread = function(element, command) {
     }
 
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
-    var post_files = document.getElementById("content-" + content_id.id_string);
-    var post_contents = document.getElementById("post-comments-" + content_id.id_string);
-    var post_header_options = document.getElementById("post-header-options-" + content_id.id_string);
-    var thread_container = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
+    var post_container = document.getElementById("post-container-" + content_id.id_string);
+    var thread_header_options = post_container.querySelector(".thread-header-options");
+    var post_header_options = post_container.querySelector(".op-post-header-options");
+    var expand_thread = thread_header_options.querySelector(".expand-thread");
+    var reply_thread = thread_header_options.querySelector(".reply-thread");
+    var content_container = post_container.querySelector(".op-content-container");
+    var post_comments = post_container.querySelector(".op-post-comment");
+    var thread_expand = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
 
     if (command === "hide-thread") {
         dataBin.hidden_threads[content_id.id_string] = Date.now();
@@ -15,10 +19,12 @@ nelliel.ui.hideShowThread = function(element, command) {
         delete dataBin.hidden_threads[content_id.id_string];
     }
 
-    nelliel.ui.toggleHidden(thread_container);
-    nelliel.ui.toggleHidden(post_files);
-    nelliel.ui.toggleHidden(post_contents);
-    nelliel.ui.toggleHidden(post_header_options);
+	nelliel.ui.toggleHidden(post_header_options);
+	nelliel.ui.toggleHidden(expand_thread);
+	nelliel.ui.toggleHidden(reply_thread);
+	nelliel.ui.toggleHidden(content_container);
+	nelliel.ui.toggleHidden(post_comments);
+	nelliel.ui.toggleHidden(thread_expand);
     nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
     nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -30,8 +36,11 @@ nelliel.ui.hideShowPost = function(element, command) {
     }
 
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
-    var post_files = document.getElementById("content-" + content_id.id_string);
-    var post_contents = document.getElementById("post-comments-" + content_id.id_string);
+    var post_container = document.getElementById("post-container-" + content_id.id_string);
+    var content_container = post_container.querySelector(".op-content-container");
+    var post_comment = post_container.querySelector(".op-post-comment");
+    /*var post_files = document.getElementById("content-" + content_id.id_string);
+    var post_contents = document.getElementById("post-comments-" + content_id.id_string);*/
 
 
     if (command == "hide-post") {

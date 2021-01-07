@@ -14,7 +14,7 @@
 		{{> thread/headers/post_info }}
 		</div>
 	{{/ headers }}
-		<div id="{{ content_container_id }}" class="{{ content_container_class }}">
+		<div class="{{ content_container_class }}">
 	{{# multi_file }}
 		{{> thread/multi_file }}
 	{{/ multi_file }}
@@ -22,7 +22,7 @@
 		{{> thread/file_info }}
 	{{/ multi_file }}
 		</div>
-		<div id="{{ comments_id }}" class="{{ comments_class }}">
+		<div class="{{ comments_class }}">
 	{{# post_comments }}
 		{{> thread/post_comments }}
 	{{/ post_comments }}

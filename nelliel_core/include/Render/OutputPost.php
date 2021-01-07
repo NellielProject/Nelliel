@@ -40,9 +40,6 @@ class OutputPost extends Output
                 '/';
         $this->render_data['post_corral_id'] = 'post-corral-' . $post_content_id->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
-        $this->render_data['header_id'] = 'header-' . $post_content_id->getIDString();
-        $this->render_data['content_container_id'] = 'content-' . $post_content_id->getIDString();
-        $this->render_data['comments_id'] = 'post-comments-' . $post_content_id->getIDString();
 
         if ($response)
         {
@@ -60,6 +57,7 @@ class OutputPost extends Output
         $this->render_data['post_header_info_class'] = $class_prefix . 'post-header-info';
         $this->render_data['content_container_class'] = $class_prefix . 'content-container';
         $this->render_data['post_disclaimer_class'] = $class_prefix . 'post-disclaimer';
+        $this->render_data['comments_class'] = $class_prefix . 'post-comment';
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
                 $post_content_id, $web_paths, $gen_data, $in_thread_number);
