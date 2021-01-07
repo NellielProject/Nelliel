@@ -11,7 +11,10 @@
 	<span> | </span>
 	<span>[<a href="{{ account_url }}" data-i18n="gettext">Account</a>]</span>
 	{{# session_active }}
-	<span>[<a href="{{ main_panel_url }}" data-i18n="gettext">Main Panel</a>]</span>
+	{{# board_area }}
+	<span>[<a href="{{ board_panel_url }}" data-i18n="gettext">Board Panel</a>]</span>
+	{{/ board_area }}
+	<span>[<a href="{{ site_panel_url }}" data-i18n="gettext">Site Panel</a>]</span>
 	<span>[<a href="{{ logout_url }}" data-i18n="gettext">Logout</a>]</span>
 	{{/ session_active }}
 </nav>

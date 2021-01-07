@@ -52,7 +52,7 @@ class OutputDerp extends Output
                 $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'render', 'actions' => 'view-index', 'index' => '0',
-                                    'board_id' => $this->domain->id(), 'modmode' => 'true']);
+                                    'board-id' => $this->domain->id(), 'modmode' => 'true']);
             }
         }
 

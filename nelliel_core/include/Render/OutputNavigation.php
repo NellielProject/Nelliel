@@ -43,11 +43,12 @@ class OutputNavigation extends Output
     {
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
-        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $render_data['session_active'] = $session->isActive() && !$this->write_mode;
+        $render_data['board_area'] = $this->domain->id() !== Domain::SITE;
         $render_data['logout_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account&section=logout';
-        $render_data['main_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-main-panel';
-        $render_data['home_url'] = $site_domain->setting('home_page');
+        $render_data['site_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-main-panel';
+        $render_data['board_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-main-panel&board-id=' . $this->domain->id();
+        $render_data['home_url'] = $this->site_domain->setting('home_page');
         $render_data['news_url'] = NEL_BASE_WEB_PATH . 'news.html';
         $render_data['account_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account';
         $render_data['overboard_active'] = $this->site_domain->setting('overboard_active');
