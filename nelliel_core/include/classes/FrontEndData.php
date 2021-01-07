@@ -13,23 +13,38 @@ class FrontEndData
 {
     private $database;
     private $ini_parser;
-    private $styles = array();
-    private $default_style = array();
-    private $templates = array();
-    private $default_template = array();
-    private $icon_sets = array();
-    private $default_icon_set = array();
+    private static $styles = array();
+    private static $default_style = array();
+    private static $templates = array();
+    private static $default_template = array();
+    private static $icon_sets = array();
+    private static $default_icon_set = array();
     private $core_icon_set_ids = array();
     private $core_style_ids = array();
     private $core_template_ids = array();
 
-    function __construct(NellielPDO $database)
+    function __construct(NellielPDO $database, bool $clear = false)
     {
         $this->database = $database;
         $this->ini_parser = new INIParser(nel_utilities()->fileHandler());
         $this->core_icon_set_ids = ['icons-nelliel-basic'];
         $this->core_style_ids = ['style-nelliel', 'style-nelliel-b', 'style-futaba', 'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];
+
+        if ($clear)
+        {
+            $this->clearStatic();
+        }
+    }
+
+    private function clearStatic()
+    {
+        self::$default_icon_set = array();
+        self::$icon_sets = array();
+        self::$default_style = array();
+        self::$styles = array();
+        self::$default_template = array();
+        self::$templates = array();
     }
 
     private function loadStylesData()
@@ -43,12 +58,10 @@ class FrontEndData
 
             if ($data['is_default'] == 1)
             {
-                $this->default_style = $info;
+                self::$default_style = $info;
             }
-            else
-            {
-                $this->styles[$data['id']] = $info;
-            }
+
+            self::$styles[$info['id']] = $info;
         }
     }
 
@@ -63,12 +76,10 @@ class FrontEndData
 
             if ($data['is_default'] == 1)
             {
-                $this->default_icon_set = $info;
+                self::$default_icon_set = $info;
             }
-            else
-            {
-                $this->icon_sets[$data['id']] = $info;
-            }
+
+            self::$icon_sets[$info['id']] = $info;
         }
     }
 
@@ -82,33 +93,31 @@ class FrontEndData
 
             if ($data['is_default'] == 1)
             {
-                $this->default_template = $info;
+                self::$default_template = $info;
             }
-            else
-            {
-                $this->templates[$data['id']] = $info;
-            }
+
+            self::$templates[$info['id']] = $info;
         }
     }
 
     public function style($style = null, bool $return_default = true)
     {
-        if (empty($this->styles))
+        if (empty(self::$styles))
         {
             $this->loadStylesData();
         }
 
         if (is_null($style))
         {
-            return $this->styles;
+            return self::$styles;
         }
 
-        if (!isset($this->styles[$style]) && $return_default)
+        if (!isset(self::$styles[$style]) && $return_default)
         {
             return $this->default_css_style;
         }
 
-        return $this->styles[$style];
+        return self::$styles[$style];
     }
 
     public function styleIsCore(string $id)
@@ -123,22 +132,22 @@ class FrontEndData
 
     public function template($template = null, bool $return_default = true)
     {
-        if (empty($this->templates))
+        if (empty(self::$templates))
         {
             $this->loadTemplateData();
         }
 
         if (is_null($template))
         {
-            return $this->templates;
+            return self::$templates;
         }
 
-        if (!isset($this->templates[$template]) && $return_default)
+        if (!isset(self::$templates[$template]) && $return_default)
         {
-            return $this->default_template;
+            return self::$default_template;
         }
 
-        return $this->templates[$template];
+        return self::$templates[$template];
     }
 
     public function templateIsCore(string $id)
@@ -153,22 +162,22 @@ class FrontEndData
 
     public function iconSet($set = null, bool $return_default = true)
     {
-        if (empty($this->icon_sets))
+        if (empty(self::$icon_sets))
         {
             $this->loadIconSetData();
         }
 
         if (is_null($set))
         {
-            return $this->icon_sets;
+            return self::$icon_sets;
         }
 
-        if (!isset($this->icon_sets[$set]) && $return_default)
+        if (!isset(self::$icon_sets[$set]) && $return_default)
         {
-            return $this->default_icon_set;
+            return self::$default_icon_set;
         }
 
-        return $this->icon_sets[$set];
+        return self::$icon_sets[$set];
     }
 
     public function iconSetIsCore(string $id)
