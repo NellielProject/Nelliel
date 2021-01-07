@@ -60,8 +60,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'post_password_algorithm', '', 'sha256', 'Post password hash algorithm', '', '{"type":"text"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'secure_tripcode_algorithm', '', 'sha256', 'Secure tripcode hash algorithm', '', '{"type":"text"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'do_password_rehash', '', '0', 'Rehash account passwords', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'index_filename_format', '', 'index-%d', 'Thread filename (sprintf)', '', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'thread_filename_format', '', 'thread-%d', 'Index filename (sprintf)', '', '{"type":"text"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'string', 'index_filename_format', '', 'index%d', 'Index filename (sprintf)', '', '{"type":"text"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'string', 'thread_filename_format', '', '%d', 'Thread filename (sprintf)', '', '{"type":"text"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'template_id', '', 'template-nelliel-basic', 'ID of default template for site', '', '{"type":"text"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for site (use ISO language + country code)', '', '{"type":"text"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'name', '', '', 'Site name', '', '{"type":"text"}']);

@@ -12,14 +12,14 @@ NOTE: This API is **not** directly compatible with other imageboard APIs.
 Contains a representation of boards present on the site.
 
 ### Index
-**Location:** http(s)://`:site_url`/`:board_directory`/index-`:index_number`.json
+**Location:** http(s)://`:site_url`/`:board_directory`/index`:index_number`.json
 
-NOTE: For index pages, `:index_number` starts at 1.
+NOTE: For index pages the first will be `index` without a number.
 
 Contains a representation of the specified index page.
 
 ### Thread
-**Location:** http(s)://`:site_url`/`:board_directory`/threads/`:thread_id`/thread-`:thread_id`.json
+**Location:** http(s)://`:site_url`/`:board_directory`/threads/`:thread_id`/`:thread_id`.json
 
 Contains a representation of the specified thread.
 

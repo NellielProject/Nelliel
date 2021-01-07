@@ -84,26 +84,14 @@ class OutputIndex extends Output
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
             $output = $this->output('pasic_page', $data_only, true, $this->render_data);
-            $index_filename = ($page == 1) ? 'index' . NEL_PAGE_EXT : sprintf($index_format, ($page)) . NEL_PAGE_EXT;
+            $index_basename = 'index';
 
             if ($this->write_mode)
             {
-                $this->file_handler->writeFile($this->domain->reference('board_path') . $index_filename, $output,
+                $this->file_handler->writeFile($this->domain->reference('board_path') . $index_basename . NEL_PAGE_EXT, $output,
                         NEL_FILES_PERM, true);
                 $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
-                $json_index->writeStoredData($this->domain->reference('board_path'), sprintf('index-%d', $page));
-            }
-            else
-            {
-                echo $output;
-                return $output;
-            }
-
-            if ($this->write_mode)
-            {
-                $this->file_handler->writeFile($this->domain->reference('board_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT,
-                        $output, NEL_FILES_PERM);
-                $json_index->writeStoredData($this->domain->reference('board_path'), 'index-1');
+                $json_index->writeStoredData($this->domain->reference('board_path'), $index_basename);
             }
             else
             {
@@ -120,6 +108,7 @@ class OutputIndex extends Output
         foreach ($thread_list as $thread_data)
         {
             $thread_input = array();
+            $index_basename = ($page == 1) ? 'index': sprintf($index_format, ($page));
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
@@ -177,7 +166,6 @@ class OutputIndex extends Output
             if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
             {
                 $this->render_data['index_navigation'] = true;
-                var_dump($index_format);
                 $this->render_data['footer_form'] = true;
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
                 $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
@@ -189,14 +177,13 @@ class OutputIndex extends Output
                 $output_footer = new OutputFooter($this->domain, $this->write_mode);
                 $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
                 $output = $this->output('basic_page', $data_only, true, $this->render_data);
-                $index_filename = ($page == 1) ? 'index' . NEL_PAGE_EXT : sprintf($index_format, ($page)) . NEL_PAGE_EXT;
 
                 if ($this->write_mode)
                 {
-                    $this->file_handler->writeFile($this->domain->reference('board_path') . $index_filename, $output,
+                    $this->file_handler->writeFile($this->domain->reference('board_path') . $index_basename . NEL_PAGE_EXT, $output,
                             NEL_FILES_PERM, true);
                     $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
-                    $json_index->writeStoredData($this->domain->reference('board_path'), sprintf('index-%d', $page));
+                    $json_index->writeStoredData($this->domain->reference('board_path'), $index_basename);
                 }
                 else
                 {

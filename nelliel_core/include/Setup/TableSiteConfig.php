@@ -46,8 +46,8 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['post_password_algorithm', 'sha256', 0]);
         $this->insertDefaultRow(['secure_tripcode_algorithm', 'sha256', 0]);
         $this->insertDefaultRow(['do_password_rehash', '0', 0]);
-        $this->insertDefaultRow(['index_filename_format', 'index-%d', 0]);
-        $this->insertDefaultRow(['thread_filename_format', 'thread-%d', 0]);
+        $this->insertDefaultRow(['index_filename_format', 'index%d', 0]);
+        $this->insertDefaultRow(['thread_filename_format', '%d', 0]);
         $this->insertDefaultRow(['template_id', 'template-nelliel-basic', 0]);
         $this->insertDefaultRow(['locale', 'en_US', 0]);
         $this->insertDefaultRow(['name', '', 0]);

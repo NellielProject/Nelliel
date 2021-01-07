@@ -33,8 +33,9 @@ class OutputPost extends Output
         $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
+        $thread_format = sprintf($this->site_domain->setting('thread_filename_format'), $thread_content_id->threadID());
         $web_paths['thread_page'] = $this->domain->reference('page_web_path') . $thread_content_id->threadID() .
-                '/thread-' . $thread_content_id->threadID() . '.html';
+                '/' . $thread_format . NEL_PAGE_EXT;
         $web_paths['thread_src'] = $this->domain->reference('src_web_path') . $thread_content_id->threadID() . '/';
         $web_paths['thread_preview'] = $this->domain->reference('preview_web_path') . $thread_content_id->threadID() .
                 '/';

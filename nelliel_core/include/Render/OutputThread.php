@@ -49,6 +49,7 @@ class OutputThread extends Output
             return;
         }
 
+        $thread_format = sprintf($this->site_domain->setting('thread_filename_format'), $thread_id);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -134,10 +135,9 @@ class OutputThread extends Output
         if ($this->write_mode)
         {
             $this->file_handler->writeFile(
-                    $this->domain->reference('page_path') . $thread_id . '/thread-' . $thread_id . '.html', $output,
+                    $this->domain->reference('page_path') . $thread_id . '/' . $thread_format . NEL_PAGE_EXT, $output,
                     NEL_FILES_PERM, true);
-            $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/',
-                    sprintf('thread-%d', $thread_id));
+            $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/', $thread_format);
         }
         else
         {
