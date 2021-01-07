@@ -174,7 +174,6 @@ class OutputPost extends Output
 
         if (!$response)
         {
-            $thread_headers['hide_thread_id'] = 'hide-thread-' . $thread_content_id->getIDString();
             $thread_headers['thread_content_id'] = $thread_content_id->getIDString();
             $thread_headers['post_content_id'] = $post_content_id->getIDString();
             $thread_headers['sticky'] = $thread_data['sticky'];
@@ -205,7 +204,6 @@ class OutputPost extends Output
 
         $post_headers['in_thread_number'] = $in_thread_number;
         $post_headers['post_content_id'] = $post_content_id->getIDString();
-        $post_headers['hide_post_id'] = 'hide-post-' . $post_content_id->getIDString();
 
         if (!nel_true_empty($post_data['email']))
         {

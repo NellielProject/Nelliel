@@ -1,11 +1,19 @@
-nelliel.ui.hideShowThread = function(element, command) {
-    if(element === null) {
+nelliel.ui.hideShowThread = function(element, command, content_id) {
+    if(element == null && content_id == null) {
         return;
     }
 
-    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
-    var post_container = document.getElementById("post-container-" + content_id.id_string);
+    if(content_id == null) {
+	    content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
+	}
+   
+	var post_container = document.getElementById("post-container-" + content_id.id_string);
     var thread_header_options = post_container.querySelector(".thread-header-options");
+    
+    if(element == null) {
+	    element = thread_header_options.querySelector(".toggle-thread");
+	}
+
     var post_header_options = post_container.querySelector(".post-header-options");
     var expand_thread = thread_header_options.querySelector(".expand-thread");
     var reply_thread = thread_header_options.querySelector(".reply-thread");
@@ -30,18 +38,24 @@ nelliel.ui.hideShowThread = function(element, command) {
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
-nelliel.ui.hideShowPost = function(element, command) {
-    if(element === null) {
+nelliel.ui.hideShowPost = function(element, command, content_id) {
+    if(element == null && content_id == null) {
         return;
     }
 
-    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
-    var post_container = document.getElementById("post-container-" + content_id.id_string);
+    if(content_id == null) {
+	    content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
+	}
+   
+	var post_container = document.getElementById("post-container-" + content_id.id_string);
+    var post_header_options = post_container.querySelector(".post-header-options");
+    
+    if(element == null) {
+	    element = post_header_options.querySelector(".toggle-post");
+	}
+
     var content_container = post_container.querySelector(".content-container");
     var comment_container = post_container.querySelector(".comment-container");
-    /*var post_files = document.getElementById("content-" + content_id.id_string);
-    var post_contents = document.getElementById("post-comments-" + content_id.id_string);*/
-
 
     if (command == "hide-post") {
         dataBin.hidden_posts[content_id.id_string] = Date.now();
@@ -60,44 +74,11 @@ nelliel.ui.applyHidePostThread = function() {
     var cids = [];
 
     for (var id in dataBin.hidden_threads) {
-        var content_id = nelliel.core.contentID(id);
-        var post_files = document.getElementById("files-" + content_id.id_string);
-        var post_contents = document.getElementById("post-contents-" + content_id.id_string);
-        var post_header_options = document.getElementById("post-header-options-" + content_id.id_string);
-        var thread_container = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
-        var element = document.getElementById("hide-thread-" + "cid_" + content_id.thread_id + "_0_0");
-        nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
-        nelliel.ui.swapContentAttribute(element, "data-alt-visual");
-
-        if (cids.includes(id)) {
-            continue;
-        } else {
-            cids.push(id);
-        }
-
-        nelliel.ui.toggleHidden(thread_container);
-        nelliel.ui.toggleHidden(post_files);
-        nelliel.ui.toggleHidden(post_contents);
-        nelliel.ui.toggleHidden(post_header_options);
+    	nelliel.ui.hideShowThread(null, "apply", nelliel.core.contentID(id));
     }
 
     for (var id in dataBin.hidden_posts) {
-        var content_id = nelliel.core.contentID(id);
-        var post_files = document.getElementById("files-" + content_id.id_string);
-        var post_contents = document.getElementById("post-contents-" + content_id.id_string);
-        var element = document.getElementById("hide-post-" + content_id.id_string);
-
-        nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
-        nelliel.ui.swapContentAttribute(element, "data-alt-visual");
-
-        if (cids.includes(id)) {
-            continue;
-        } else {
-            cids.push(id);
-        }
-
-        nelliel.ui.toggleHidden(post_files);
-        nelliel.ui.toggleHidden(post_contents);
+        nelliel.ui.hideShowPost(null, "apply", nelliel.core.contentID(id));
     }
 }
 

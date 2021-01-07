@@ -122,9 +122,9 @@ nelliel.events.processPostClicks = function(event) {
             nelliel.ui.inlineExpandReduce(event.target, command);
             event.preventDefault();
         } else if (command === "hide-post" || command === "show-post" ) {
-            nelliel.ui.hideShowPost(event.target, command);
+            nelliel.ui.hideShowPost(event.target, command, content_id);
         } else if (command === "hide-thread" || command === "show-thread" ) {
-            nelliel.ui.hideShowThread(event.target, command);
+            nelliel.ui.hideShowThread(event.target, command, content_id);
         } else if (command === "reload-captcha" ) {
             reloadCAPTCHA(event.target, command);
         }
