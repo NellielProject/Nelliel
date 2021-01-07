@@ -36,26 +36,6 @@ class ArchiveAndPrune
 
         if ($this->domain->setting('old_threads') === 'ARCHIVE')
         {
-            foreach ($this->getThreadListForStatus(3) as $thread)
-            {
-                $this->moveFilesToArchive($thread);
-            }
-
-            foreach ($this->getThreadListForStatus(2) as $thread)
-            {
-                $this->moveFilesToArchive($thread);
-            }
-
-            foreach ($this->getThreadListForStatus(1) as $thread)
-            {
-                $this->moveFilesFromArchive($thread);
-            }
-
-            foreach ($this->getThreadListForStatus(0) as $thread)
-            {
-                $this->moveFilesFromArchive($thread);
-            }
-
             if ($this->domain->setting('do_archive_pruning'))
             {
                 $this->pruneArchiveThreads();
@@ -147,23 +127,6 @@ class ArchiveAndPrune
 
             ++ $line;
         }
-    }
-
-    public function moveFilesToArchive($thread_id)
-    {
-        $this->file_handler->moveFile($this->domain->reference('src_path') . $thread_id,
-                $this->domain->reference('archive_src_path') . $thread_id);
-        $this->file_handler->moveFile($this->domain->reference('preview_path') . $thread_id,
-                $this->domain->reference('archive_preview_path') . $thread_id);
-        $this->file_handler->eraserGun($this->domain->reference('page_path') . $thread_id);
-    }
-
-    public function moveFilesFromArchive($thread_id)
-    {
-        $this->file_handler->moveFile($this->domain->reference('archive_src_path') . $thread_id,
-                $this->domain->reference('src_path') . $thread_id);
-        $this->file_handler->moveFile($this->domain->reference('archive_preview_path') . $thread_id,
-                $this->domain->reference('preview_path') . $thread_id);
     }
 
     public function pruneThreads()
