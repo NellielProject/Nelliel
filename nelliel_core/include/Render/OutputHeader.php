@@ -22,8 +22,6 @@ class OutputHeader extends Output
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
-        $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render([], true);
         $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
@@ -50,8 +48,6 @@ class OutputHeader extends Output
         $treeline = $parameters['treeline'] ?? array();
         $index_render = $parameters['index_render'] ?? false;
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
-        $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render([], true);
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
@@ -106,8 +102,6 @@ class OutputHeader extends Output
         $this->render_data['section'] = $parameters['section'] ?? '';
         $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
         $this->render_data['is_panel'] = $parameters['is_panel'] ?? false;
-        $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render([], true);
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if ($this->domain->id() === Domain::SITE)
