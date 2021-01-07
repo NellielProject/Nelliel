@@ -177,6 +177,7 @@ class OutputIndex extends Output
             if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
             {
                 $this->render_data['index_navigation'] = true;
+                var_dump($index_format);
                 $this->render_data['footer_form'] = true;
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
                 $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
@@ -215,9 +216,9 @@ class OutputIndex extends Output
         $pagination_object = new Pagination();
         $pagination_object->setPrevious(_gettext('Previous'));
         $pagination_object->setNext(_gettext('Next'));
-        $pagination_object->setPage('%d', $page_format);
+        $pagination_object->setPage('%d', $page_format . NEL_PAGE_EXT);
         $pagination_object->setFirst('%d', 'index' . NEL_PAGE_EXT);
-        $pagination_object->setLast('%d', $page_format);
+        $pagination_object->setLast('%d', $page_format . NEL_PAGE_EXT);
         return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 }
