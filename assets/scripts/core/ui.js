@@ -70,7 +70,39 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
-nelliel.ui.applyHidePostThread = function() {
+nelliel.ui.hideShowFile = function(element, command, content_id) {
+    if(element == null && content_id == null) {
+        return;
+    }
+
+    if(content_id == null) {
+        content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
+    }
+   
+    var file_container = document.getElementById("file-container-" + content_id.id_string);
+
+    
+    if(element == null) {
+        element = file_container.querySelector(".toggle-file");
+    }
+
+    var file_info = file_container.querySelector(".file-info");
+    var file_preview = file_container.querySelector(".file-preview");
+
+    if (command == "hide-file") {
+        dataBin.hidden_files[content_id.id_string] = Date.now();
+    } else if (command == "show-file") {
+        delete dataBin.hidden_files[content_id.id_string];
+    }
+
+    nelliel.ui.toggleHidden(file_info);
+    nelliel.ui.toggleHidden(file_preview);
+    nelliel.core.storeInLocalStorage(dataBin.hidden_files_id, dataBin.hidden_files);
+    nelliel.ui.switchDataCommand(element, "hide-file", "show-file");
+    nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+}
+
+nelliel.ui.applyHideContent = function() {
     var cids = [];
 
     for (var id in dataBin.hidden_threads) {
@@ -80,6 +112,10 @@ nelliel.ui.applyHidePostThread = function() {
     for (var id in dataBin.hidden_posts) {
         nelliel.ui.hideShowPost(null, "apply", nelliel.core.contentID(id));
     }
+
+    for (var id in dataBin.hidden_files) {
+        nelliel.ui.hideShowFile(null, "apply", nelliel.core.contentID(id));
+    }
 }
 
 nelliel.ui.showHideFileMeta = function(element) {
@@ -88,8 +124,8 @@ nelliel.ui.showHideFileMeta = function(element) {
     }
 
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
-    var fileinfo = document.getElementById("fileinfo-" + content_id.id_string);
-    var meta_element = fileinfo.querySelector(".file-meta");
+    var file_container = document.getElementById("file-container-" + content_id.id_string);
+    var meta_element = file_container.querySelector(".file-meta");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
     nelliel.ui.toggleHidden(meta_element);
     nelliel.ui.switchDataCommand(element, "show-file-meta", "hide-file-meta");
@@ -144,7 +180,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
     
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
     nelliel.ui.switchDataCommand(element, command1, command2);
-    nelliel.ui.applyHidePostThread();
+    nelliel.ui.applyHideContent();
 }
 
 nelliel.ui.highlightPost = function(content_id) {

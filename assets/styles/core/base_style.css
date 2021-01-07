@@ -186,12 +186,12 @@ form {
 }
 
 /* Files */
-.fileinfo {
+.single.file {
     float: left;
     margin: 0.15em 0.75em;
 }
 
-.multiple-fileinfo {
+.multiple.file {
     float: left;
     font-size: 0.9em;
     margin: 0.15em 0.25em;
