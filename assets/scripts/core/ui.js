@@ -4,15 +4,15 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
     }
 
     if(content_id == null) {
-	    content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
-	}
+        content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
+    }
    
-	var post_container = document.getElementById("post-container-" + content_id.id_string);
+    var post_container = document.getElementById("post-container-" + content_id.id_string);
     var thread_header_options = post_container.querySelector(".thread-header-options");
     
     if(element == null) {
-	    element = thread_header_options.querySelector(".toggle-thread");
-	}
+        element = thread_header_options.querySelector(".toggle-thread");
+    }
 
     var post_header_options = post_container.querySelector(".post-header-options");
     var expand_thread = thread_header_options.querySelector(".expand-thread");
@@ -27,12 +27,12 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
         delete dataBin.hidden_threads[content_id.id_string];
     }
 
-	nelliel.ui.toggleHidden(post_header_options);
-	nelliel.ui.toggleHidden(expand_thread);
-	nelliel.ui.toggleHidden(reply_thread);
-	nelliel.ui.toggleHidden(content_container);
-	nelliel.ui.toggleHidden(comment_container);
-	nelliel.ui.toggleHidden(thread_expand);
+    nelliel.ui.toggleHidden(post_header_options);
+    nelliel.ui.toggleHidden(expand_thread);
+    nelliel.ui.toggleHidden(reply_thread);
+    nelliel.ui.toggleHidden(content_container);
+    nelliel.ui.toggleHidden(comment_container);
+    nelliel.ui.toggleHidden(thread_expand);
     nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
     nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -44,15 +44,15 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
     }
 
     if(content_id == null) {
-	    content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
-	}
+        content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
+    }
    
-	var post_container = document.getElementById("post-container-" + content_id.id_string);
+    var post_container = document.getElementById("post-container-" + content_id.id_string);
     var post_header_options = post_container.querySelector(".post-header-options");
     
     if(element == null) {
-	    element = post_header_options.querySelector(".toggle-post");
-	}
+        element = post_header_options.querySelector(".toggle-post");
+    }
 
     var content_container = post_container.querySelector(".content-container");
     var comment_container = post_container.querySelector(".comment-container");
@@ -63,8 +63,8 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
         delete dataBin.hidden_posts[content_id.id_string];
     }
 
-	nelliel.ui.toggleHidden(content_container);
-	nelliel.ui.toggleHidden(comment_container);
+    nelliel.ui.toggleHidden(content_container);
+    nelliel.ui.toggleHidden(comment_container);
     nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
     nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -74,7 +74,7 @@ nelliel.ui.applyHidePostThread = function() {
     var cids = [];
 
     for (var id in dataBin.hidden_threads) {
-    	nelliel.ui.hideShowThread(null, "apply", nelliel.core.contentID(id));
+        nelliel.ui.hideShowThread(null, "apply", nelliel.core.contentID(id));
     }
 
     for (var id in dataBin.hidden_posts) {
@@ -88,7 +88,8 @@ nelliel.ui.showHideFileMeta = function(element) {
     }
 
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
-    var meta_element = document.getElementById("file-meta-" + content_id.id_string);
+    var fileinfo = document.getElementById("fileinfo-" + content_id.id_string);
+    var meta_element = fileinfo.querySelector(".file-meta");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
     nelliel.ui.toggleHidden(meta_element);
     nelliel.ui.switchDataCommand(element, "show-file-meta", "hide-file-meta");

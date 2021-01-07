@@ -73,8 +73,6 @@ class OutputFile extends Output
         }
 
         $this->render_data['display_filename'] = $display_filename . '.' . $display_extension;
-        $this->render_data['show_file_meta_id'] = 'show-file-meta-' . $file_content_id->getIDString();
-        $this->render_data['file_meta_id'] = 'file-meta-' . $file_content_id->getIDString();
 
         if (!empty($file['md5']))
         {
