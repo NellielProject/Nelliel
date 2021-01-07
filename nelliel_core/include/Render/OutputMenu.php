@@ -22,7 +22,7 @@ class OutputMenu extends Output
     {
         $this->renderSetup();
         $styles = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\' ORDER BY "asset_id" ASC',
+                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\'',
                 PDO::FETCH_ASSOC);
 
         foreach ($styles as $style)
@@ -36,6 +36,17 @@ class OutputMenu extends Output
             $render_data[] = $style_data;
         }
 
+        usort($render_data, [$this, 'sortByStyleName']);
         return $render_data;
+    }
+
+    private function sortByStyleName($a, $b)
+    {
+        if ($a['style_name'] == $b['style_name'])
+        {
+            return $a['style_name'] - $b['style_name'];
+        }
+
+        return ($a['style_name'] < $b['style_name']) ? -1 : 1;
     }
 }
