@@ -2,6 +2,7 @@
 
 namespace Nelliel\Admin;
 
+use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 
@@ -15,16 +16,19 @@ abstract class Admin
     protected $database;
     protected $authorization;
     protected $domain;
+    protected $session;
     protected $session_user;
     protected $output_main = true;
     protected $inputs;
 
-    function __construct(Authorization $authorization, Domain $domain, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session,  array $inputs)
     {
         $this->database = $domain->database();
         $this->authorization = $authorization;
         $this->domain = $domain;
-        $this->validateUser();
+        $this->session = $session;
+        $this->session->loggedInOrError();
+        $this->session_user = $session->sessionUser();
     }
 
     public abstract function renderPanel();
@@ -47,13 +51,6 @@ abstract class Admin
         }
 
         return $this->output_main;
-    }
-
-    public function validateUser()
-    {
-        $session = new \Nelliel\Account\Session();
-        $session->loggedInOrError();
-        $this->session_user = $session->sessionUser();
     }
 }
 

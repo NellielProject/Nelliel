@@ -8,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Regen;
+use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
@@ -19,12 +20,12 @@ class AdminBoardSettings extends Admin
     private $defaults = false;
     private $board_id;
 
-    function __construct(Authorization $authorization, Domain $domain, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
     {
         // TODO: Something better should be possible
         $this->board_id = $_GET['board-id'] ?? '';
         $this->defaults = empty($this->board_id) ? true : false;
-        parent::__construct($authorization, $domain, $inputs);
+        parent::__construct($authorization, $domain, $session, $inputs);
         $this->domain = ($this->defaults) ? new DomainSite($this->database) : new DomainBoard($this->board_id,
                 $this->database);
     }

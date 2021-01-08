@@ -9,17 +9,20 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Account\Session;
 use Nelliel\Domains\Domain;
 
 class NewPost
 {
     private $domain;
     private $database;
+    private $session;
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, Session $session)
     {
         $this->database = $domain->database();
         $this->domain = $domain;
+        $this->session = $session;
     }
 
     public function processPost()
@@ -47,8 +50,8 @@ class NewPost
 
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $file_handler = nel_utilities()->fileHandler();
-        $file_upload = new FilesUpload($this->domain, $_FILES, $authorization);
-        $data_handler = new PostData($this->domain, $authorization);
+        $file_upload = new FilesUpload($this->domain, $_FILES, $authorization, $this->session);
+        $data_handler = new PostData($this->domain, $authorization, $this->session);
         $post = new \Nelliel\Content\ContentPost(new \Nelliel\Content\ContentID(), $this->domain);
         $data_handler->processPostData($post);
         $time = nel_get_microtime();

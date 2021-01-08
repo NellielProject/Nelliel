@@ -7,37 +7,41 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Render\OutputPanelMain;
 
 class Dispatch
 {
     private $domain;
     private $authorization;
+    private $session;
 
-    function __construct(Domain $domain, Authorization $authorization)
+    function __construct(Domain $domain, Authorization $authorization, Session $session)
     {
         $this->domain = $domain;
         $this->authorization = $authorization;
+        $this->session = $session;
     }
 
     public function dispatch(array $inputs)
     {
-        $session = new \Nelliel\Account\Session();
-        $session->loggedInOrError();
+        $this->session->loggedInOrError();
 
         foreach ($inputs['actions'] as $action)
         {
             switch ($action)
             {
                 case 'extract-gettext':
-                    $language = new \Nelliel\Language\Language();
-                    $language->extractLanguageStrings($this->domain, $session->sessionUser(), 'nelliel', LC_MESSAGES);
+                    $language = new Language();
+                    $language->extractLanguageStrings($this->domain, $this->session->sessionUser(), 'nelliel',
+                            LC_MESSAGES);
                     break;
             }
         }
 
-        $output_main_panel = new \Nelliel\Render\OutputPanelMain($this->domain, false);
-        $output_main_panel->render(['user' => $session->sessionUser()], false);
+        $output_main_panel = new OutputPanelMain($this->domain, false);
+        $output_main_panel->render([], false);
     }
 }

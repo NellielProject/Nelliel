@@ -16,10 +16,12 @@ use Nelliel\Render\OutputRegisterPage;
 class Dispatch
 {
     private $domain;
+    private $session;
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, Session $session)
     {
         $this->domain = $domain;
+        $this->session = $session;
     }
 
     public function dispatch(array $inputs)
@@ -29,9 +31,8 @@ class Dispatch
             case 'login':
                 if ($inputs['actions'][0] === 'submit')
                 {
-                    $session = new Session();
-                    $session->login();
-                    $session->loggedInOrError();
+                    $this->session->login();
+                    $this->session->loggedInOrError();
                     $output_account = new OutputAccount($this->domain, false);
                     $output_account->render([], false);
                 }
@@ -44,8 +45,7 @@ class Dispatch
                 break;
 
             case 'logout':
-                $session = new Session();
-                $session->logout();
+                $this->session->logout();
                 break;
 
             case 'register':
@@ -65,9 +65,7 @@ class Dispatch
                 break;
 
             default:
-                $session = new Session();
-
-                if ($session->isActive())
+                if ($this->session->isActive())
                 {
                     $output_account = new OutputAccount($this->domain, false);
                     $output_account->render([], false);

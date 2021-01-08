@@ -8,7 +8,6 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
 use Nelliel\LogEvent;
 use Nelliel\Auth\Authorization;
 
@@ -32,7 +31,7 @@ class Session
             return;
         }
 
-        $this->domain = new DomainSite(nel_database());
+        $this->domain = nel_site_domain();
         $this->database = $this->domain->database();
         $this->authorization = new Authorization($this->database);
 

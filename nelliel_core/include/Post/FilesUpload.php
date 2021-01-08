@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
@@ -17,18 +18,20 @@ class FilesUpload
     private $uploaded_files = array();
     private $processed_files = array();
     private $authorization;
+    private $session;
 
-    function __construct(Domain $domain, array $files = array(), Authorization $authorization)
+    function __construct(Domain $domain, array $files = array(), Authorization $authorization, Session $session)
     {
         $this->domain = $domain;
         $this->uploaded_files = $files;
         $this->authorization = $authorization;
+        $this->session = $session;
     }
 
     public function processFiles($post)
     {
         $response_to = $post->data('response_to');
-        $data_handler = new PostData($this->domain, $this->authorization);
+        $data_handler = new PostData($this->domain, $this->authorization, $this->session);
         $file_handler = nel_utilities()->fileHandler();
         $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
         $file_count = count($this->uploaded_files['upload_files']['name']);

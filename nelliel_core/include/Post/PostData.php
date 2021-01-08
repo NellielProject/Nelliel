@@ -15,11 +15,13 @@ class PostData
 {
     private $domain;
     private $authorization;
+    private $session;
 
-    function __construct(Domain $domain, Authorization $authorization)
+    function __construct(Domain $domain, Authorization $authorization, Session $session)
     {
         $this->domain = $domain;
         $this->authorization = $authorization;
+        $this->session = $session;
     }
 
     public function processPostData($post)
@@ -50,8 +52,7 @@ class PostData
 
         if (!$post->data('post_as_staff'))
         {
-            $session = new Session();
-            $session->ignore(true);
+            $this->session->ignore(true);
         }
 
         if ($post->data('poster_name') !== '')
@@ -102,14 +103,12 @@ class PostData
             return;
         }
 
-        $session = new \Nelliel\Account\Session();
-
-        if (!$session->isActive())
+        if (!$this->session->isActive())
         {
             return;
         }
 
-        $user = $session->sessionUser();
+        $user = $this->session->sessionUser();
 
         if (!$user->checkPermission($this->domain, 'perm_board_post_as_staff'))
         {

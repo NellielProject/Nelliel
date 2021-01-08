@@ -96,12 +96,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'account':
-            $account_dispatch = new \Nelliel\Account\Dispatch($domain);
+            $account_dispatch = new \Nelliel\Account\Dispatch($domain, $session);
             $account_dispatch->dispatch($inputs);
             break;
 
         case 'admin':
-            $admin_dispatch = new \Nelliel\Admin\Dispatch($domain, $authorization);
+            $admin_dispatch = new \Nelliel\Admin\Dispatch($domain, $authorization, $session);
             $admin_dispatch->dispatch($inputs);
             break;
 
@@ -138,7 +138,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             break;
 
         case 'language':
-            $language_dispatch = new \Nelliel\Language\Dispatch($domain, $authorization);
+            $language_dispatch = new \Nelliel\Language\Dispatch($domain, $authorization, $session);
             $language_dispatch->dispatch($inputs);
             break;
 
@@ -152,7 +152,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($inputs['actions'][0] === 'new-post')
             {
-                $new_post = new \Nelliel\Post\NewPost($domain);
+                $new_post = new \Nelliel\Post\NewPost($domain, $session);
                 $new_post->processPost();
 
                 $redirect = new \Nelliel\Redirect();
