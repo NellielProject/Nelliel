@@ -163,6 +163,8 @@ class OutputIndex extends Output
 
                 $threads_on_page = 0;
                 $this->render_data['threads'] = array();
+                $this->timer->reset();
+                $this->timer->start();
                 $page ++;
             }
         }

@@ -40,7 +40,7 @@ class Timer
     {
         $this->start = 0;
         $this->elapsed = 0;
-        $this->stopped = false;
+        $this->stopped = true;
     }
 
     public function elapsed(bool $rounded = true, int $precision = 4)

@@ -26,6 +26,7 @@ abstract class Output
     protected $template_substitutes;
     protected $session;
     protected $default_body_template = 'empty_body';
+    protected $timer;
 
     function __construct(Domain $domain, bool $write_mode)
     {
