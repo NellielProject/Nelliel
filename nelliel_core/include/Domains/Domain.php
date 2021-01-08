@@ -148,6 +148,6 @@ abstract class Domain
     protected function cacheSettings()
     {
         $settings = $this->loadSettingsFromDatabase();
-        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', $this->domain_id);
+        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->domain_id);
     }
 }
