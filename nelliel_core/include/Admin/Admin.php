@@ -28,7 +28,7 @@ abstract class Admin
         $this->domain = $domain;
         $this->session = $session;
         $this->session->loggedInOrError();
-        $this->session_user = $session->sessionUser();
+        $this->session_user = $session->user();
     }
 
     public abstract function renderPanel();

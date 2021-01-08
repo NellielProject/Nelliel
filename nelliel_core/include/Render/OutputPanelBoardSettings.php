@@ -49,7 +49,7 @@ class OutputPanelBoardSettings extends Output
         }
 
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $user_lock_override = $this->session->sessionUser()->checkPermission($this->domain,
+        $user_lock_override = $this->session->user()->checkPermission($this->domain,
                 'perm_board_config_lock_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();

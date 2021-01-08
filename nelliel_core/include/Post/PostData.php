@@ -108,7 +108,7 @@ class PostData
             return;
         }
 
-        $user = $this->session->sessionUser();
+        $user = $this->session->user();
 
         if (!$user->checkPermission($this->domain, 'perm_board_post_as_staff'))
         {

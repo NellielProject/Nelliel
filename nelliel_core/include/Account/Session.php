@@ -196,7 +196,7 @@ class Session
         return (time() - $last_activity) > $this->domain->setting('session_length');
     }
 
-    public function sessionUser()
+    public function user()
     {
         $this->init(true);
         return self::$user;

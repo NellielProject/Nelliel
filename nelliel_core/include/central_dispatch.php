@@ -240,7 +240,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'regen':
             $regen = new \Nelliel\Regen();
             $session->loggedInOrError();
-            $user = $session->sessionUser();
+            $user = $session->user();
             $forward = 'site';
             $board_id = $_GET['board-id'] ?? '';
 
@@ -295,12 +295,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if ($forward === 'site')
             {
                 $output_main_panel = new \Nelliel\Render\OutputPanelMain($domain, false);
-                $output_main_panel->render(['user' => $session->sessionUser()], false);
+                $output_main_panel->render(['user' => $session->user()], false);
             }
             else if ($forward === 'board')
             {
                 $output_board_panel = new \Nelliel\Render\OutputPanelBoard($domain, false);
-                $output_board_panel->render(['user' => $session->sessionUser(), 'board_id' => $board_id], false);
+                $output_board_panel->render(['user' => $session->user(), 'board_id' => $board_id], false);
             }
 
             break;

@@ -35,7 +35,7 @@ class Dispatch
             {
                 case 'extract-gettext':
                     $language = new Language();
-                    $language->extractLanguageStrings($this->domain, $this->session->sessionUser(), 'nelliel',
+                    $language->extractLanguageStrings($this->domain, $this->session->user(), 'nelliel',
                             LC_MESSAGES);
                     break;
             }
