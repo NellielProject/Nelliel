@@ -32,11 +32,7 @@ class DomainSite extends Domain implements NellielCacheInterface
         if (empty($settings))
         {
             $settings = $this->loadSettingsFromDatabase();
-
-            if (NEL_USE_INTERNAL_CACHE)
-            {
-                $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', $this->domain_id);
-            }
+            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', $this->domain_id);
         }
 
         $this->domain_settings = $settings;

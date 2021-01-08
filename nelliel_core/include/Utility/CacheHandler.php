@@ -9,12 +9,12 @@ if (!defined('NELLIEL_VERSION'))
 
 class CacheHandler
 {
-    private $hashes;
+    private static $hashes;
     private $header = "<?php if(!defined('NELLIEL_VERSION')){die('NOPE.AVI');}\n";
 
-    function __construct(bool $no_hash_load = false)
+    function __construct(bool $hash_load = true)
     {
-        if (!$no_hash_load)
+        if (empty(self::$hashes) && $hash_load)
         {
             $this->loadHashes();
         }
@@ -23,10 +23,11 @@ class CacheHandler
     public function loadArrayFromFile(string $array_variable, string $filename, string $sub_directory = '')
     {
         $array = array();
-        $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
 
         if (NEL_USE_INTERNAL_CACHE)
         {
+            $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
+
             if (file_exists($file_path))
             {
                 include $file_path;
@@ -42,25 +43,28 @@ class CacheHandler
         $file_handler = new FileHandler();
         $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
 
-        if (!is_writable(NEL_CACHE_FILES_PATH))
+        if (NEL_USE_INTERNAL_CACHE)
         {
-            if (!file_exists(NEL_CACHE_FILES_PATH))
+            if (!is_writable(NEL_CACHE_FILES_PATH))
             {
-                $file_handler->createDirectory(NEL_CACHE_FILES_PATH);
+                if (!file_exists(NEL_CACHE_FILES_PATH))
+                {
+                    $file_handler->createDirectory(NEL_CACHE_FILES_PATH);
+                }
+                else
+                {
+                    return; // TODO: Work out so this can be a proper error
+                }
             }
-            else
-            {
-                return; // TODO: Work out so this can be a proper error
-            }
-        }
 
-        $exported_array = "\n$" . $array_variable . " = " . var_export($array, true) . ";\n";
-        $file_handler->writeFile($file_path, $this->header . $exported_array, NEL_FILES_PERM, true);
+            $exported_array = "\n$" . $array_variable . " = " . var_export($array, true) . ";\n";
+            $file_handler->writeFile($file_path, $this->header . $exported_array, NEL_FILES_PERM, true);
+        }
     }
 
     public function checkHash($id, $hash)
     {
-        return isset($this->hashes[$id]) && hash_equals($this->hashes[$id], $hash);
+        return isset(self::$hashes[$id]) && hash_equals(self::$hashes[$id], $hash);
     }
 
     public function loadHashes()
@@ -69,13 +73,13 @@ class CacheHandler
         {
             $hashes = array();
             include NEL_CACHE_FILES_PATH . 'hashes.php';
-            $this->hashes = $hashes;
+            self::$hashes = $hashes;
         }
     }
 
     public function updateHash($id, $hash)
     {
-        $this->hashes[$id] = $hash;
-        $this->writeArrayToFile('hashes', $this->hashes, 'hashes.php');
+        self::$hashes[$id] = $hash;
+        $this->writeArrayToFile('hashes', self::$hashes, 'hashes.php');
     }
 }
