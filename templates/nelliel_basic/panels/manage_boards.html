@@ -31,13 +31,16 @@
 <form action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="new_board_id" class="display-cell" data-i18n="gettext">Board ID (this will also be the URI)</label>
+			<label for="new_board_id" class="display-cell" data-i18n="gettext">Board ID</label>
 			<input id="new_board_id" class="display-cell" type="text" name="new_board_id" size="30" maxlength="50" value="">
+		</div>
+		<div class="display-row">
+			<label for="new_board_uri" class="display-cell" data-i18n="gettext">Board URI (the directory for the board)</label>
+			<input id="new_board_uri" class="display-cell" type="text" name="new_board_uri" size="30" maxlength="50" value="">
 		</div>
 		{{# alphanumeric_only }}
 		<div class="display-row">
 			<span class="display-cell" data-i18n="gettext">Only alphanumeric board IDs are allowed!</span>
-			<span class="display-cell"></span>
 		</div>
 		{{/ alphanumeric_only }}
 		<div class="display-row">

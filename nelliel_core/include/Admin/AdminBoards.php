@@ -68,13 +68,28 @@ class AdminBoards extends Admin
             nel_derp(244, _gettext('Board ID is reserved.'));
         }
 
-        $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ? OR "board_uri" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$board_id, $board_id], PDO::FETCH_COLUMN);
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             nel_derp(240, _gettext('There is already a board with the ID ' . $board_id . '.'));
+        }
+
+        $board_uri = trim($_POST['new_board_uri']);
+        $board_uri = (!empty($board_uri)) ? $board_uri : $board_id;
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_uri" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$board_uri], PDO::FETCH_COLUMN);
+
+        if ($result)
+        {
+            nel_derp(245, _gettext('There is already a board with the URI ' . $board_uri . '.'));
+        }
+
+        if ($board_uri === NEL_TEMPLATES_DIR || $board_uri === NEL_ASSETS_DIR || $board_uri === 'nelliel_core' ||
+                $board_uri === 'documentation' || $board_uri === 'tests')
+        {
+            nel_derp(246, _gettext('Board URI is reserved.'));
         }
 
         $db_prefix = $this->generateDBPrefix($board_id);
@@ -89,7 +104,7 @@ class AdminBoards extends Admin
                 'INSERT INTO "' . NEL_BOARD_DATA_TABLE .
                 '" ("board_id", "board_uri", "hashed_board_id", "db_prefix") VALUES (?, ?, ?, ?)');
         $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
-        $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
+        $prepared->bindValue(2, $board_uri, PDO::PARAM_STR);
         $prepared->bindValue(3, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
         $prepared->bindValue(4, $db_prefix, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);

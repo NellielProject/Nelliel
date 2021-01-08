@@ -84,6 +84,8 @@ Error 241: Trouble with board ID. (Admin/AdminBoards.php)
 Error 242: Invalid characters board ID. (Admin/AdminBoards.php) 
 Error 243: Board ID is empty. (Admin/AdminBoards.php) 
 Error 244: Board ID is reserved. (Admin/AdminBoards.php) 
+Error 245: Board URI already in use. (Admin/AdminBoards.php) 
+Error 246: Board URI is reserved. (Admin/AdminBoards.php) 
 
 Error 300: perm_manage_users (access) (Admin/AdminStaff.php)  
 Error 301: perm_manage_users (add) (Admin/AdminStaff.php)  
