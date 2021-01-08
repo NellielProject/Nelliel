@@ -7,12 +7,14 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Utility\CacheHandler;
 use PDO;
 
 class FrontEndData
 {
     private $database;
     private $ini_parser;
+    private $cache_handler;
     private static $styles = array();
     private static $default_style = array();
     private static $templates = array();
@@ -27,6 +29,7 @@ class FrontEndData
     {
         $this->database = $database;
         $this->ini_parser = new INIParser(nel_utilities()->fileHandler());
+        $this->cache_handler = new CacheHandler();
         $this->core_icon_set_ids = ['icons-nelliel-basic'];
         $this->core_style_ids = ['style-nelliel', 'style-nelliel-b', 'style-futaba', 'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];
@@ -49,10 +52,16 @@ class FrontEndData
 
     private function loadStylesData()
     {
-        $all_data = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\'', PDO::FETCH_ASSOC);
+        $styles_data = $this->cache_handler->loadArrayFromFile('styles_data', 'styles_data.php');
 
-        foreach ($all_data as $data)
+        if (empty($styles_data))
+        {
+            $styles_data = $this->database->executeFetchAll(
+                    'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\'', PDO::FETCH_ASSOC);
+            $this->cache_handler->writeArrayToFile('styles_data', $styles_data, 'styles_data.php');
+        }
+
+        foreach ($styles_data as $data)
         {
             $info = json_decode($data['info'], true);
 
@@ -67,10 +76,16 @@ class FrontEndData
 
     private function loadIconSetData()
     {
-        $all_data = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\'', PDO::FETCH_ASSOC);
+        $icon_set_data = $this->cache_handler->loadArrayFromFile('icon_set_data', 'icon_set_data.php');
 
-        foreach ($all_data as $data)
+        if (empty($icon_set_data))
+        {
+            $icon_set_data = $this->database->executeFetchAll(
+                    'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\'', PDO::FETCH_ASSOC);
+            $this->cache_handler->writeArrayToFile('icon_set_data', $icon_set_data, 'icon_set_data.php');
+        }
+
+        foreach ($icon_set_data as $data)
         {
             $info = json_decode($data['info'], true);
 
@@ -85,9 +100,16 @@ class FrontEndData
 
     private function loadTemplateData()
     {
-        $all_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_TEMPLATES_TABLE . '"', PDO::FETCH_ASSOC);
+        $template_data = $this->cache_handler->loadArrayFromFile('template_data', 'template_data.php');
 
-        foreach ($all_data as $data)
+        if (empty($template_data))
+        {
+            $template_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_TEMPLATES_TABLE . '"',
+                    PDO::FETCH_ASSOC);
+            $this->cache_handler->writeArrayToFile('template_data', $template_data, 'template_data.php');
+        }
+
+        foreach ($template_data as $data)
         {
             $info = json_decode($data['info'], true);
 

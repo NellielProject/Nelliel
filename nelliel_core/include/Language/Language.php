@@ -76,8 +76,7 @@ class Language
             if (NEL_USE_INTERNAL_CACHE)
             {
                 $cache_handler->updateHash($file_id, $hash);
-                $cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH, $cache_file,
-                        '$language_array = ' . var_export($language_array, true) . ';');
+                $this->cache_handler->writeArrayToFile('language_array', $language_array, $cache_file);
             }
 
             $loaded = true;
