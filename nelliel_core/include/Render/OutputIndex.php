@@ -69,36 +69,25 @@ class OutputIndex extends Output
 
         $index_format = $site_domain->setting('index_filename_format');
         $this->render_data['catalog_url'] = 'catalog.html';
+        $this->render_data['index_navigation'] = true;
+        $this->render_data['footer_form'] = true;
+        $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
+        $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
+        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
+                '?module=captcha&actions=generate&no-display';
+        $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
+        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
+        $index_basename = 'index';
 
         if (empty($thread_list))
         {
-            $this->render_data['index_navigation'] = true;
-            $this->render_data['footer_form'] = true;
-            $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
-            $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-            $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
-            $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
-                    '?module=captcha&actions=generate&no-display';
-            $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
-            $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
-            $output_footer = new OutputFooter($this->domain, $this->write_mode);
-            $output_footer = new OutputFooter($this->domain, $this->write_mode);
-            $output = $this->output('pasic_page', $data_only, true, $this->render_data);
-            $index_basename = 'index';
+            $output = $this->doOutput($gen_data, $index_basename, $data_only, $json_index);
 
-            if ($this->write_mode)
+            if (!$this->write_mode)
             {
-                $this->file_handler->writeFile($this->domain->reference('board_path') . $index_basename . NEL_PAGE_EXT, $output,
-                        NEL_FILES_PERM, true);
-                $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
-                $json_index->writeStoredData($this->domain->reference('board_path'), $index_basename);
+                return $output;
             }
-            else
-            {
-                echo $output;
-            }
-
-            return $output;
         }
 
         $gen_data['index_rendering'] = true;
@@ -108,7 +97,7 @@ class OutputIndex extends Output
         foreach ($thread_list as $thread_data)
         {
             $thread_input = array();
-            $index_basename = ($page == 1) ? 'index': sprintf($index_format, ($page));
+            $index_basename = ($page == 1) ? 'index' : sprintf($index_format, ($page));
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
@@ -165,29 +154,10 @@ class OutputIndex extends Output
 
             if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
             {
-                $this->render_data['index_navigation'] = true;
-                $this->render_data['footer_form'] = true;
-                $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
-                $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-                $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
-                $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
-                        '?module=captcha&actions=generate&no-display';
-                $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
-                $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
-                $output_footer = new OutputFooter($this->domain, $this->write_mode);
-                $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
-                $output = $this->output('basic_page', $data_only, true, $this->render_data);
+                $output = $this->doOutput($gen_data, $index_basename, $data_only, $json_index);
 
-                if ($this->write_mode)
+                if (!$this->write_mode)
                 {
-                    $this->file_handler->writeFile($this->domain->reference('board_path') . $index_basename . NEL_PAGE_EXT, $output,
-                            NEL_FILES_PERM, true);
-                    $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
-                    $json_index->writeStoredData($this->domain->reference('board_path'), $index_basename);
-                }
-                else
-                {
-                    echo $output;
                     return $output;
                 }
 
@@ -207,5 +177,26 @@ class OutputIndex extends Output
         $pagination_object->setFirst('%d', 'index' . NEL_PAGE_EXT);
         $pagination_object->setLast('%d', $page_format . NEL_PAGE_EXT);
         return $pagination_object->generateNumerical(1, $page_count, $page);
+    }
+
+    private function doOutput(array $gen_data, string $index_basename, bool $data_only, JSONIndex $json_index)
+    {
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
+        $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
+
+        if ($this->write_mode)
+        {
+            $this->file_handler->writeFile($this->domain->reference('board_path') . $index_basename . NEL_PAGE_EXT,
+                    $output, NEL_FILES_PERM, true);
+            $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
+            $json_index->writeStoredData($this->domain->reference('board_path'), $index_basename);
+        }
+        else
+        {
+            echo $output;
+        }
+
+        return $output;
     }
 }

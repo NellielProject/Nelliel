@@ -27,7 +27,7 @@ class DomainSite extends Domain implements NellielCacheInterface
 
     protected function loadSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', $this->domain_id);
+        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', 'domains/' . $this->domain_id);
 
         if (empty($settings))
         {
