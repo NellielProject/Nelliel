@@ -10,32 +10,52 @@ if (!defined('NELLIEL_VERSION'))
 class CacheHandler
 {
     private $hashes;
-    private $default_header;
+    private $header = "<?php if(!defined('NELLIEL_VERSION')){die('NOPE.AVI');}\n";
 
     function __construct(bool $no_hash_load = false)
     {
-        $this->default_header = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}';
-
         if (!$no_hash_load)
         {
             $this->loadHashes();
         }
     }
 
-    public function loadArrayFromCache(string $filename, $array_variable)
+    public function loadArrayFromFile(string $array_variable, string $filename, string $sub_directory = '')
     {
         $array = array();
+        $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
 
         if (NEL_USE_INTERNAL_CACHE)
         {
-            if (file_exists(NEL_CACHE_FILES_PATH . $filename))
+            if (file_exists($file_path))
             {
-                include NEL_CACHE_FILES_PATH . $filename;
+                include $file_path;
                 $array = $$array_variable;
             }
         }
 
         return $array;
+    }
+
+    public function writeArrayToFile(string $array_variable, array $array, string $filename, string $sub_directory = '')
+    {
+        $file_handler = new FileHandler();
+        $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
+
+        if (!is_writable(NEL_CACHE_FILES_PATH))
+        {
+            if (!file_exists(NEL_CACHE_FILES_PATH))
+            {
+                $file_handler->createDirectory(NEL_CACHE_FILES_PATH);
+            }
+            else
+            {
+                return; // TODO: Work out so this can be a proper error
+            }
+        }
+
+        $exported_array = "\n$" . $array_variable . " = " . var_export($array, true) . ";\n";
+        $file_handler->writeFile($file_path, $this->header . $exported_array, NEL_FILES_PERM, true);
     }
 
     public function checkHash($id, $hash)
@@ -56,28 +76,6 @@ class CacheHandler
     public function updateHash($id, $hash)
     {
         $this->hashes[$id] = $hash;
-        $this->writeCacheFile(NEL_CACHE_FILES_PATH, 'hashes.php', '$hashes = ' . var_export($this->hashes, true) . ';');
-    }
-
-    public function writeCacheFile($path, string $filename, $content, string $header = '', string $footer = '',
-            $file_perm = NEL_FILES_PERM)
-    {
-        $file_handler = new FileHandler();
-
-        if (!is_writable(NEL_CACHE_FILES_PATH))
-        {
-            if (!file_exists(NEL_CACHE_FILES_PATH))
-            {
-                $file_handler->createDirectory(NEL_CACHE_FILES_PATH);
-            }
-            else
-            {
-                return; // TODO: Work out so this can be a proper error
-            }
-        }
-
-        $header = (!empty($header)) ? $header : $this->default_header;
-
-        $file_handler->writeFile($path . $filename, $header . $content . $footer, $file_perm, true);
+        $this->writeArrayToFile('hashes', $this->hashes, 'hashes.php');
     }
 }

@@ -148,7 +148,6 @@ abstract class Domain
     protected function cacheSettings()
     {
         $settings = $this->loadSettingsFromDatabase();
-        $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/', 'domain_settings.php',
-                '$domain_settings = ' . var_export($settings, true) . ';');
+        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', $this->domain_id);
     }
 }

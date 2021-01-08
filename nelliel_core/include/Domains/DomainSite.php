@@ -14,13 +14,11 @@ use PDO;
 class DomainSite extends Domain implements NellielCacheInterface
 {
     private $file_filters;
-    private $settings_cache_file;
 
     public function __construct(NellielPDO $database)
     {
         $this->domain_id = Domain::SITE;
         $this->database = $database;
-        $this->settings_cache_file = $this->domain_id . '/' . 'domain_settings.php';
         $this->utilitySetup();
         $this->locale();
         $this->templatePath(
@@ -29,7 +27,7 @@ class DomainSite extends Domain implements NellielCacheInterface
 
     protected function loadSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromCache($this->settings_cache_file, 'domain_settings');
+        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', $this->domain_id);
 
         if (empty($settings))
         {
@@ -37,8 +35,7 @@ class DomainSite extends Domain implements NellielCacheInterface
 
             if (NEL_USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/',
-                        'domain_settings.php', '$domain_settings = ' . var_export($settings, true) . ';');
+                $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', $this->domain_id);
             }
         }
 

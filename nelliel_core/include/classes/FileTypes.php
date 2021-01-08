@@ -71,7 +71,7 @@ class FileTypes
 
         if (!$ignore_cache)
         {
-            $settings = $this->cache_handler->loadArrayFromCache($domain_id . '/filetype_settings.php', 'settings');
+            $settings = $this->cache_handler->loadArrayFromFile('settings', 'filetype_settings.php', $domain_id);
         }
 
         if (empty($settings))
@@ -207,8 +207,8 @@ class FileTypes
         if (NEL_USE_INTERNAL_CACHE)
         {
             $this->loadSettingsIfNot($domain_id, true);
-            $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $domain_id . '/', 'filetype_settings.php',
-                    '$settings = ' . var_export(self::$settings[$domain_id], true) . ';');
+            $this->cache_handler->writeArrayToFile('settings', self::$settings[$domain_id], 'filetype_settings.php',
+                    $domain_id);
         }
     }
 

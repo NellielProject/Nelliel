@@ -28,8 +28,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     protected function loadSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromCache($this->domain_id . '/domain_settings.php',
-                'domain_settings');
+        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', $this->domain_id);
 
         if (empty($settings))
         {
@@ -37,8 +36,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
             if (NEL_USE_INTERNAL_CACHE)
             {
-                $this->cache_handler->writeCacheFile(NEL_CACHE_FILES_PATH . $this->domain_id . '/',
-                        'domain_settings.php', '$domain_settings = ' . var_export($settings, true) . ';');
+                $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', $this->domain_id);
             }
         }
 
