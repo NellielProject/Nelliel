@@ -41,6 +41,7 @@ define('NEL_CAPTCHA_TABLE', 'nelliel_captcha');
 define('NEL_CITES_TABLE', 'nelliel_cites');
 define('NEL_FILES_FILTERS_TABLE', 'nelliel_file_filters');
 define('NEL_FILETYPES_TABLE', 'nelliel_filetypes');
+define('NEL_IF_THENS_TABLE', 'nelliel_if_thens');
 define('NEL_LOGS_TABLE', 'nelliel_logs');
 define('NEL_NEWS_TABLE', 'nelliel_news');
 define('NEL_PERMISSIONS_TABLE', 'nelliel_permissions');

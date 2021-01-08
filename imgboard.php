@@ -17,7 +17,7 @@ unset($core_path);
 
 define('NEL_INCLUDE_PATH', NEL_CORE_PATH . 'include/'); // Base include files path
 
-require_once NEL_INCLUDE_PATH . 'path_definitions.php';
+require_once NEL_INCLUDE_PATH . 'definitions.php';
 require_once NEL_INCLUDE_PATH . 'autoload.php';
 require_once NEL_INCLUDE_PATH . 'accessors.php';
 require_once NEL_INCLUDE_PATH . 'derp.php';
