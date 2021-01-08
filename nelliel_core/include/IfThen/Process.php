@@ -10,15 +10,17 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-class IfThen
+class Process
 {
     private $domain;
     private $database;
+    private $actions;
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, Actions $actions)
     {
         $this->domain = $domain;
         $this->database = $domain->database();
+        $this->actions = $actions;
     }
 
     public function loadIfs(string $board_id)
@@ -79,7 +81,17 @@ class IfThen
             }
 
             var_dump("success!");
-            // TODO: Process actions
+
+            foreach ($if_then['then'] as $action => $data)
+            {
+                // Just test values right now
+                switch ($action)
+                {
+                    case 'error':
+                        $this->actions->error($data);
+                        break;
+                }
+            }
         }
     }
 }
