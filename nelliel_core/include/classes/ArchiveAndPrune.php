@@ -144,7 +144,7 @@ class ArchiveAndPrune
     {
         foreach ($this->getThreadListForStatus(3) as $thread_id)
         {
-            $thread = new ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain, true);
+            $thread = new ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain);
             $thread->remove(true);
         }
     }

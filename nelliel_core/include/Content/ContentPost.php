@@ -20,30 +20,18 @@ class ContentPost extends ContentHandler
     protected $content_table;
     protected $src_path;
     protected $preview_path;
-    protected $archived;
     protected $archive_prune;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $archived = false)
+    function __construct(ContentID $content_id, Domain $domain)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
-        $this->archived = $archived;
         $this->authorization = new Authorization($this->database);
         $this->posts_table = $this->domain->reference('posts_table');
         $this->content_table = $this->domain->reference('content_table');
-
-        if ($archived)
-        {
-            $this->src_path = $this->domain->reference('archive_src_path');
-            $this->preview_path = $this->domain->reference('archive_preview_path');
-        }
-        else
-        {
-            $this->src_path = $this->domain->reference('src_path');
-            $this->preview_path = $this->domain->reference('preview_path');
-        }
-
+        $this->src_path = $this->domain->reference('src_path');
+        $this->preview_path = $this->domain->reference('preview_path');
         $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->storeMoar(new Moar());
     }
@@ -175,7 +163,7 @@ class ContentPost extends ContentHandler
 
         $this->removeFromDatabase();
         $this->removeFromDisk();
-        $thread = new ContentThread($this->content_id, $this->domain, $this->archived);
+        $thread = new ContentThread($this->content_id, $this->domain);
 
         // TODO: This is a (hopefully) temporary thing to keep normal imageboard function when deleting OP post
         if ($thread->postCount() <= 0 || $this->content_id->threadID() == $this->content_id->postID())
@@ -308,11 +296,6 @@ class ContentPost extends ContentHandler
         $new_thread->updateCounts();
         $this->archive_prune->updateThreads();
         return $new_thread;
-    }
-
-    public function isArchived()
-    {
-        return $this->archived;
     }
 
     public function sticky()

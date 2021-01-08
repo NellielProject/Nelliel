@@ -61,13 +61,6 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['preview_web_path'] = $board_web_path . rawurlencode($new_reference['preview_dir']) . '/';
         $new_reference['page_path'] = $board_path . $new_reference['page_dir'] . '/';
         $new_reference['page_web_path'] = $board_web_path . rawurlencode($new_reference['page_dir']) . '/';
-        $new_reference['archive_path'] = $board_path . $new_reference['archive_dir'] . '/';
-        $new_reference['archive_src_path'] = $board_path . $new_reference['archive_dir'] . '/' .
-                $new_reference['src_dir'] . '/';
-        $new_reference['archive_preview_path'] = $board_path . $new_reference['archive_dir'] . '/' .
-                $new_reference['preview_dir'] . '/';
-        $new_reference['archive_page_path'] = $board_path . $new_reference['archive_dir'] . '/' .
-                $new_reference['page_dir'] . '/';
         $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
         $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
         $new_reference['content_table'] = $new_reference['db_prefix'] . '_content';

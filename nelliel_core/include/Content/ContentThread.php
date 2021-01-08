@@ -20,33 +20,19 @@ class ContentThread extends ContentHandler
     protected $src_path;
     protected $preview_path;
     protected $page_path;
-    protected $archived;
     protected $archive_prune;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $archived = false)
+    function __construct(ContentID $content_id, Domain $domain)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
-        $this->archived = $archived;
         $this->threads_table = $this->domain->reference('threads_table');
         $this->posts_table = $this->domain->reference('posts_table');
         $this->content_table = $this->domain->reference('content_table');
-
-        if ($archived)
-        {
-            $this->src_path = $this->domain->reference('archive_src_path');
-            $this->preview_path = $this->domain->reference('archive_preview_path');
-            $this->page_path = $this->domain->reference('archive_page_path');
-        }
-        else
-        {
-
-            $this->src_path = $this->domain->reference('src_path');
-            $this->preview_path = $this->domain->reference('preview_path');
-            $this->page_path = $this->domain->reference('page_path');
-        }
-
+        $this->src_path = $this->domain->reference('src_path');
+        $this->preview_path = $this->domain->reference('preview_path');
+        $this->page_path = $this->domain->reference('page_path');
         $this->archive_prune = new \Nelliel\ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->storeMoar(new Moar());
     }
@@ -204,7 +190,7 @@ class ContentThread extends ContentHandler
 
     protected function verifyModifyPerms()
     {
-        $post = new ContentPost($this->content_id, $this->domain, $this->archived);
+        $post = new ContentPost($this->content_id, $this->domain);
         $post->content_id->changePostID($this->firstPost());
         return $post->verifyModifyPerms();
     }
@@ -289,6 +275,6 @@ class ContentThread extends ContentHandler
 
     public function isArchived()
     {
-        return $this->archived;
+        return $this->content_data['archive_status'] == 2;
     }
 }

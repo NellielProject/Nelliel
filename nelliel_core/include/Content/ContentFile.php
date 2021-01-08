@@ -16,27 +16,15 @@ class ContentFile extends ContentHandler
     protected $content_table;
     protected $src_path;
     protected $preview_path;
-    protected $archived;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $archived = false)
+    function __construct(ContentID $content_id, Domain $domain)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
-        $this->archived = $archived;
         $this->content_table = $this->domain->reference('content_table');
-
-        if ($archived)
-        {
-            $this->src_path = $this->domain->reference('archive_src_path');
-            $this->preview_path = $this->domain->reference('archive_preview_path');
-        }
-        else
-        {
-            $this->src_path = $this->domain->reference('src_path');
-            $this->preview_path = $this->domain->reference('preview_path');
-        }
-
+        $this->src_path = $this->domain->reference('src_path');
+        $this->preview_path = $this->domain->reference('preview_path');
         $this->storeMoar(new Moar());
     }
 
@@ -161,9 +149,9 @@ class ContentFile extends ContentHandler
 
         $this->removeFromDisk();
         $this->removeFromDatabase();
-        $post = new ContentPost($this->content_id, $this->domain, $this->archived);
+        $post = new ContentPost($this->content_id, $this->domain);
         $post->updateCounts();
-        $thread = new ContentThread($this->content_id, $this->domain, $this->archived);
+        $thread = new ContentThread($this->content_id, $this->domain);
         $thread->updateCounts();
     }
 
@@ -215,10 +203,5 @@ class ContentFile extends ContentHandler
     {
         $post = new ContentPost($this->content_id, $this->domain);
         return $post->verifyModifyPerms();
-    }
-
-    public function isArchived()
-    {
-        return $this->archived;
     }
 }
