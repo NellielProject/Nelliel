@@ -28,22 +28,32 @@ class FileTypes
     {
         $extensions = array();
         $types = array();
-        $db_results = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes" ORDER BY "entry" ASC',
-                PDO::FETCH_ASSOC);
 
-        foreach ($db_results as $result)
+        if (!$ignore_cache)
         {
-            if ($result['type_def'] == 1)
+            $filetype_data = $this->cache_handler->loadArrayFromFile('filetype_data', 'filetype_data.php');
+        }
+
+        if(empty($filetype_data))
+        {
+            $filetype_data = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes" ORDER BY "entry" ASC',
+                    PDO::FETCH_ASSOC);
+            $this->cache_handler->writeArrayToFile('filetype_data', $filetype_data, 'filetype_data.php');
+        }
+
+        foreach ($filetype_data as $data)
+        {
+            if ($data['type_def'] == 1)
             {
-                $types[$result['type']] = $result;
+                $types[$data['type']] = $data;
                 continue;
             }
             else
             {
-                $base_extension = $result['base_extension'];
+                $base_extension = $data['base_extension'];
                 $extensions_map[$base_extension] = $base_extension;
-                $extensions[$base_extension] = $result;
-                $sub_extensions = json_decode($result['sub_extensions'], true);
+                $extensions[$base_extension] = $data;
+                $sub_extensions = json_decode($data['sub_extensions'], true);
 
                 if (empty($sub_extensions))
                 {
