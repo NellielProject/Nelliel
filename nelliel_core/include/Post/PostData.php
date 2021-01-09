@@ -49,6 +49,8 @@ class PostData
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
         $post->changeData('post_as_staff',
                 (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false);
+        $post_if_then = new IfThenPost($this->domain->database(), $post);
+        $post_if_then->processIfThens($this->domain->id());
 
         if (!$post->data('post_as_staff'))
         {
