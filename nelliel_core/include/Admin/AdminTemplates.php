@@ -21,6 +21,7 @@ class AdminTemplates extends Admin
 
     public function renderPanel()
     {
+        $this->verifyAccess();
         $output_panel = new \Nelliel\Render\OutputPanelTemplates($this->domain, false);
         $output_panel->render([], false);
     }
@@ -51,7 +52,8 @@ class AdminTemplates extends Admin
         if ($info !== '')
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+                    'INSERT INTO "' . NEL_TEMPLATES_TABLE .
+                    '" ("template_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
             $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
         }
 
@@ -70,7 +72,7 @@ class AdminTemplates extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
-            nel_derp(422, _gettext('You are not allowed to uninstall templates.'));
+            nel_derp(423, _gettext('You are not allowed to uninstall templates.'));
         }
 
         $template_id = $_GET['template-id'];
@@ -84,12 +86,13 @@ class AdminTemplates extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
-            nel_derp(423, _gettext('You are not allowed to set the default template.'));
+            nel_derp(426, _gettext('You are not allowed to set the default template.'));
         }
 
         $template_id = $_GET['template-id'];
         $this->database->exec('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 0');
-        $prepared = $this->database->prepare('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "template_id" = ?');
+        $prepared = $this->database->prepare(
+                'UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "template_id" = ?');
         $this->database->executePrepared($prepared, [$template_id]);
         $this->outputMain(true);
     }

@@ -100,7 +100,7 @@ class AdminIfThens extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
         {
-            nel_derp(484, _gettext('You are not allowed to enable or disable if-thens.'));
+            nel_derp(484, _gettext('You are not allowed to enable if-thens.'));
         }
 
         $ifthen_id = $_GET['ifthen-id'];
@@ -113,7 +113,7 @@ class AdminIfThens extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
         {
-            nel_derp(484, _gettext('You are not allowed to enable or disable if-thens.'));
+            nel_derp(485, _gettext('You are not allowed to disable if-thens.'));
         }
 
         $ifthen_id = $_GET['ifthen-id'];

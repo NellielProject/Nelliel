@@ -21,7 +21,7 @@ abstract class Admin
     protected $output_main = true;
     protected $inputs;
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session,  array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
     {
         $this->database = $domain->database();
         $this->authorization = $authorization;

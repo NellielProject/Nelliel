@@ -87,14 +87,6 @@ class AdminBans extends Admin
         }
 
         $this->ban_hammer->collectFromPOST();
-
-        // TODO: Update or remove this perm
-        if ($this->ban_hammer->getData('all_boards') === 1 &&
-                !$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
-        {
-            nel_derp(323, _gettext('You are not allowed to ban from all boards.'));
-        }
-
         $this->ban_hammer->apply();
         $this->outputMain(true);
     }
@@ -103,7 +95,7 @@ class AdminBans extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(324, _gettext('You are not allowed to modify bans.'));
+            nel_derp(323, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_id = $_GET['ban_id'] ?? '';

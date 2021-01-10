@@ -62,7 +62,7 @@ class AdminNews extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
         {
-            nel_derp(472, _gettext('You are not allowed to remove news posts.'));
+            nel_derp(473, _gettext('You are not allowed to remove news posts.'));
         }
 
         $entry = $_GET['entry'];

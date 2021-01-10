@@ -51,18 +51,23 @@ class AdminBoardSettings extends Admin
 
     public function update()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_config'))
+        if ($this->defaults)
         {
-            nel_derp(331, _gettext('You are not allowed to modify the board settings.'));
+            if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
+            {
+                nel_derp(342, _gettext('You are not allowed to modify the default board settings.'));
+            }
         }
-
-        if ($this->defaults && !$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
+        else
         {
-            nel_derp(333, _gettext('You are not allowed to modify the default board settings.'));
+            if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_config'))
+            {
+                nel_derp(332, _gettext('You are not allowed to modify the board settings.'));
+            }
         }
 
         $config_table = ($this->defaults) ? NEL_BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
-        $lock_override = $this->session_user->checkPermission($this->domain, 'perm_board_config_lock_override');
+        $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
 
         foreach ($_POST as $key => $value)
         {
@@ -180,14 +185,19 @@ class AdminBoardSettings extends Admin
 
     private function verifyAccess()
     {
-        if ($this->defaults && !$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
+        if ($this->defaults)
         {
-            nel_derp(332, _gettext('You are not allowed to access the default board settings.'));
+            if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
+            {
+                nel_derp(340, _gettext('You are not allowed to access the board defaults panel.'));
+            }
         }
-
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_config'))
+        else
         {
-            nel_derp(330, _gettext('You are not allowed to access the board settings.'));
+            if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
+            {
+                nel_derp(330, _gettext('You are not allowed to access the board settings panel.'));
+            }
         }
     }
 }

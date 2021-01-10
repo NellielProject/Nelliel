@@ -49,7 +49,7 @@ class AdminReports extends Admin
 
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_reports'))
         {
-            nel_derp(381, _gettext('You are not allowed to dismiss reports.'));
+            nel_derp(383, _gettext('You are not allowed to dismiss reports.'));
         }
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');

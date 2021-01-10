@@ -74,7 +74,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
+            nel_derp(432, _gettext('You are not allowed to modify filetypes.'));
         }
 
         $filetype_id = $_GET['filetype-id'];
@@ -103,7 +103,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(432, _gettext('You are not allowed to remove filetypes.'));
+            nel_derp(433, _gettext('You are not allowed to remove filetypes.'));
         }
 
         $filetype_id = $_GET['filetype-id'];
@@ -116,7 +116,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(433, _gettext('You are not allowed to enable or disable filetypes.'));
+            nel_derp(434, _gettext('You are not allowed to enable filetypes.'));
         }
 
         $filetype_id = $_GET['filetype-id'];
@@ -129,7 +129,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(433, _gettext('You are not allowed to enable or disable filetypes.'));
+            nel_derp(435, _gettext('You are not allowed to disable filetypes.'));
         }
 
         $filetype_id = $_GET['filetype-id'];

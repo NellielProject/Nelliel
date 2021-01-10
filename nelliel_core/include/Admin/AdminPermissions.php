@@ -57,7 +57,7 @@ class AdminPermissions extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_modify'))
         {
-            nel_derp(452, _gettext('You are not allowed to remove permissions.'));
+            nel_derp(453, _gettext('You are not allowed to remove permissions.'));
         }
 
         $permission = $_GET['permission'];

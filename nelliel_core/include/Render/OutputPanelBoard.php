@@ -31,7 +31,7 @@ class OutputPanelBoard extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['module_board_settings'] = $this->session->user()->checkPermission($this->domain,
-                'perm_board_config');
+                'perm_manage_board_config');
         $this->render_data['board_settings_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 'module=admin&section=board-settings&board-id=' . $board_id;
         $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain,

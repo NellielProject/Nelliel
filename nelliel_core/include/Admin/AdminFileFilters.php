@@ -34,7 +34,7 @@ class AdminFileFilters extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
         {
-            nel_derp(341, _gettext('You are not allowed to add file filters.'));
+            nel_derp(351, _gettext('You are not allowed to add file filters.'));
         }
 
         $type = $_POST['hash_type'];
@@ -66,7 +66,7 @@ class AdminFileFilters extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
         {
-            nel_derp(342, _gettext('You are not allowed to remove file filters.'));
+            nel_derp(353, _gettext('You are not allowed to remove file filters.'));
         }
 
         $filter_id = $_GET['filter-id'];
@@ -79,7 +79,7 @@ class AdminFileFilters extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
         {
-            nel_derp(340, _gettext('You are not allowed to access the file filters.'));
+            nel_derp(350, _gettext('You are not allowed to access the file filters.'));
         }
     }
 }
