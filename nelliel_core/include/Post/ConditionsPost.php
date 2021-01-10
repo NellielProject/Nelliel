@@ -7,26 +7,24 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\IfThen;
-use Nelliel\NellielPDO;
+use Nelliel\IfThens\Conditions;
 use Nelliel\Content\ContentPost;
 
-class IfThenPost extends IfThen
+class ConditionsPost implements Conditions
 {
     private $post;
 
-    function __construct(NellielPDO $database, ContentPost $post)
+    function __construct(ContentPost $post)
     {
-        parent::__construct($database);
         $this->post = $post;
     }
 
-    public function if(array $if): bool
+    public function check(array $conditions): bool
     {
-        $total_conditions = count($if);
+        $total_conditions = count($conditions);
         $conditions_met = 0;
 
-        foreach ($if as $key => $condition)
+        foreach ($conditions as $key => $condition)
         {
             $met = false;
 
@@ -59,16 +57,5 @@ class IfThenPost extends IfThen
         }
 
         return $conditions_met === $total_conditions;
-    }
-
-    public function then(array $then)
-    {
-        foreach ($then as $action => $data)
-        {
-            switch ($action)
-            {
-                // Don't have actions ready yet
-            }
-        }
     }
 }

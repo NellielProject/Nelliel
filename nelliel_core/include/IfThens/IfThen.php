@@ -1,22 +1,27 @@
 <?php
 
-namespace Nelliel;
+namespace Nelliel\IfThens;
 
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
 }
 
+use Nelliel\NellielPDO;
 use PDO;
 
-abstract class IfThen
+class IfThen
 {
-    protected $database;
-    protected static $if_thens = array();
+    private $database;
+    private $conditions;
+    private $actions;
+    private static $if_thens = array();
 
-    function __construct(NellielPDO $database)
+    function __construct(NellielPDO $database, Conditions $conditions, Actions $actions)
     {
         $this->database = $database;
+        $this->conditions = $conditions;
+        $this->actions = $actions;
     }
 
     public function getIfThens(string $board_id): array
@@ -29,22 +34,22 @@ abstract class IfThen
         return self::$if_thens[$board_id];
     }
 
-    public function processIfThens(string $board_id)
+    public function process(string $board_id)
     {
         $if_thens = $this->getIfThens($board_id);
 
         foreach ($if_thens as $if_then)
         {
-            $conditions_met = $this->if($if_then['if']);
+            $conditions_met = $this->conditions->check($if_then['if']);
 
             if ($conditions_met)
             {
-                $this->then($if_then['then']);
+                $this->actions->do($if_then['then']);
             }
         }
     }
 
-    protected function loadIfThens(string $board_id)
+    private function loadIfThens(string $board_id)
     {
         $prepared = $this->database->prepare(
                 'SELECT "if_conditions", "then_actions" FROM "' . NEL_IF_THENS_TABLE . '" WHERE "board_id" = ?');
@@ -68,8 +73,4 @@ abstract class IfThen
 
         self::$if_thens[$board_id] = $decoded_sets;
     }
-
-    abstract public function if(array $if): bool;
-
-    abstract public function then(array $if);
 }
