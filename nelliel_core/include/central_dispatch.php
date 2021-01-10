@@ -78,7 +78,7 @@ function nel_dispatch_preparation()
 
     $session = new Session();
 
-    if(!$session->isActive())
+    if($inputs['module'] === 'threads' || !$session->isActive())
     {
         $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BansAccess(nel_database()));
         $snacks->applyBan($domain);
