@@ -71,7 +71,6 @@ class OutputIndex extends Output
         $this->render_data['catalog_url'] = 'catalog.html';
         $this->render_data['index_navigation'] = true;
         $this->render_data['footer_form'] = true;
-        $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
         $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
         $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
@@ -154,6 +153,7 @@ class OutputIndex extends Output
 
             if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
             {
+                $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
                 $output = $this->doOutput($gen_data, $index_basename, $data_only, $json_index);
 
                 if (!$this->write_mode)
