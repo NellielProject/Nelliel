@@ -57,19 +57,23 @@ nelliel.setup.setupListeners = function() {
 
         for (var j = 0; j < list_length; j++) {
             if (events_list[j].includes("click")) {
-                nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "click", nelliel.events.processPostClicks);
+                nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "click", nelliel.events.processPostClick);
             }
-            
+
             if (events_list[j].includes("mouseover")) {
                 nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "mouseover", nelliel.events.processMouseOver);
             }
-            
+
             if (events_list[j].includes("mouseout")) {
                 nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "mouseout", nelliel.events.processMouseOut);
             }
-            
+
             if (events_list[j].includes("change")) {
-                nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "change", nelliel.events.processChanges);
+                nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "change", nelliel.events.processChange);
+            }
+            
+            if (events_list[j].includes("input")) {
+                nelliel.setup.addListenerIfElementExists(jsevents_elements[i], "input", nelliel.events.processInput);
             }
         }
     }
@@ -84,23 +88,20 @@ nelliel.setup.addListenerIfElementExists = function(element, event, event_handle
 }
 
 nelliel.setup.fillForms = function(board) {
-    var pwd = nelliel.core.getCookie("pwd-" + board);
-    var name = nelliel.core.getCookie("name-" + board);
-    
-    if (pwd !== null) {
+    var post_password = nelliel.core.retrieveFromLocalStorage("post_password", false);
+
+    if (post_password !== null) {
         if (document.getElementById("posting-form-sekrit") !== null) {
-            document.getElementById("posting-form-sekrit").value = pwd;
+            document.getElementById("posting-form-sekrit").value = post_password;
         }
 
         if (document.getElementById("update-sekrit") !== null) {
-            document.getElementById("update-sekrit").value = pwd;
+            document.getElementById("update-sekrit").value = post_password;
         }
     }
-
-    /* document.getElementById("not-anonymous").value = name; */
 }
 
-nelliel.events.processPostClicks = function(event) {
+nelliel.events.processPostClick = function(event) {
     if (event.target.hasAttribute("data-command")) {
         if (event.target.hasAttribute("data-content-id")) {
             var content_id = nelliel.core.contentID(event.target.getAttribute("data-content-id"))
@@ -157,8 +158,8 @@ nelliel.events.processMouseOut = function(event) {
     }
 }
 
-nelliel.events.processChanges = function(event) {
-    if (event.target.hasAttribute("data-command")) {
+nelliel.events.processChange = function(event) {
+	if (event.target.hasAttribute("data-command")) {
         var command = event.target.getAttribute("data-command");
 
         if (command === "reveal-file-input") {
@@ -166,6 +167,16 @@ nelliel.events.processChanges = function(event) {
         } else if (command === "change-style") {
             setStyle(event.target.value, true);
         }
+    }
+}
+
+nelliel.events.processInput = function(event) {
+	if (event.target.id === "posting-form-sekrit") {
+		updatePostPassword(event.target.value);
+	}
+
+    if (event.target.hasAttribute("data-command")) {
+        var command = event.target.getAttribute("data-command");
     }
 }
 
@@ -249,6 +260,10 @@ nelliel.core.unhideJSonly = function () {
     for (i = 0; i < element_count; i++) {
         nelliel.ui.toggleHidden(elements[i]);
     }
+}
+
+function updatePostPassword(new_password) {
+    nelliel.core.storeInLocalStorage("post_password", new_password);
 }
 
 function addNewFileMeta(element, command) {

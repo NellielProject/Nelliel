@@ -102,28 +102,8 @@ class NewPost
 
         if (!is_null($post->data('post_password')))
         {
-            $poster_password = $post->data('post_password');
             $post->changeData('post_password', nel_post_password_hash($post->data('post_password')));
         }
-        else
-        {
-            $poster_password = utf8_substr(rand(), 0, 8);
-        }
-
-        // Cookies OM NOM NOM NOM
-        $cookie_password = '';
-
-        if (isset($_COOKIE['pwd-' . $this->domain->id()]))
-        {
-            $cookie_password = $_COOKIE['pwd-' . $this->domain->id()];
-        }
-
-        if (empty($cookie_password) || (!is_null($post->data('post_password')) && $cookie_password !== $poster_password))
-        {
-            setrawcookie('pwd-' . $this->domain->id(), $poster_password, time() + 9001 * 24 * 3600, '/');
-        }
-
-        setrawcookie('name-' . $this->domain->id(), $post->data('poster_name'), time() + 30 * 24 * 3600, '/'); // 1 month cookie expiration
 
         // Go ahead and put post into database
         $post->changeData('op', ($post->data('parent_thread') == 0) ? 1 : 0);
