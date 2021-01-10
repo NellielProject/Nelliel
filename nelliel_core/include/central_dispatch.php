@@ -76,9 +76,15 @@ function nel_dispatch_preparation()
 
     $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);
 
-    $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BansAccess(nel_database()));
-    $snacks->applyBan($domain);
-    $snacks->checkHoneypot($domain);
+    $session = new Session();
+
+    if(!$session->isActive())
+    {
+        $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BansAccess(nel_database()));
+        $snacks->applyBan($domain);
+        $snacks->checkHoneypot($domain);
+    }
+
     $inputs = nel_module_dispatch($inputs, $domain);
 }
 

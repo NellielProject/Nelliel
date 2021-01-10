@@ -103,31 +103,60 @@ class Snacks
     public function applyBan(Domain $domain)
     {
         $this->banAppeal();
+        $this->checkRangeBans($domain);
+        $this->checkIPBans($domain);
+    }
+
+    public function checkExpired(BanHammer $ban_hammer, bool $remove): bool
+    {
+        if ($ban_hammer->expired())
+        {
+            if ($remove)
+            {
+                $ban_hammer->remove();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function banPage(Domain $domain, BanHammer $ban_hammer): void
+    {
         $output_ban_page = new \Nelliel\Render\OutputBanPage($domain, false);
-        $bans_range = $this->bans_access->getBansByType(BansAccess::RANGE);
+        $output_ban_page->render(['ban_hammer' => $ban_hammer], false);
+        nel_clean_exit();
+    }
+
+    private function checkRangeBans(Domain $domain): void
+    {
+        $bans_range = $this->bans_access->getBansByType(BansAccess::RANGE, $domain->id());
 
         foreach ($bans_range as $ban_hammer)
         {
-            if ($ban_hammer->expired())
+            if ($this->checkExpired($ban_hammer, true))
             {
-                $ban_hammer->remove();
                 continue;
             }
 
-            if ($domain->id() === $ban_hammer->getData('board_id'))
+            $board_id = $ban_hammer->getData('board_id');
+
+            if ($board_id === Domain::ALL_BOARDS || $board_id === $domain->id())
             {
                 $range = new Range(new IP($ban_hammer->getData('ip_address_start')),
                         new IP($ban_hammer->getData('ip_address_end')));
 
                 if ($range->contains(new IP($this->ip_address)))
                 {
-                    $output_ban_page->render(['ban_hammer' => $ban_hammer], false);
-                    ;
-                    nel_clean_exit();
+                    $this->banPage($domain, $ban_hammer);
                 }
             }
         }
+    }
 
+    private function checkIPBans(DOmain $domain): void
+    {
         if (nel_site_domain()->setting('store_unhashed_ip'))
         {
             $bans_ip = $this->bans_access->getBansByIP($this->ip_address);
@@ -143,25 +172,18 @@ class Snacks
 
         foreach ($bans as $ban_hammer)
         {
-            if ($ban_hammer->expired())
+            if ($this->checkExpired($ban_hammer, true))
             {
-                $ban_hammer->remove();
                 continue;
             }
 
-            if ($domain->id() !== Domain::SITE &&
-                    ($domain->id() === $ban_hammer->getData('board_id') || $ban_hammer->getData('all_boards') == 1))
+            $board_id = $ban_hammer->getData('board_id');
+
+            if ($board_id === Domain::ALL_BOARDS || $board_id === $domain->id())
             {
-                if (empty($longest))
+                if (empty($longest) || $ban_hammer->timeToExpiration() > $longest->timeToExpiration())
                 {
                     $longest = $ban_hammer;
-                }
-                else
-                {
-                    if ($ban_hammer->timeToExpiration() > $longest->timeToExpiration())
-                    {
-                        $longest = $ban_hammer;
-                    }
                 }
 
                 continue;
@@ -173,8 +195,7 @@ class Snacks
             return;
         }
 
-        $output_ban_page->render(['ban_hammer' => $longest], false);
-        nel_clean_exit();
+        $this->banPage($domain, $longest);
     }
 }
 
