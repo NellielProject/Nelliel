@@ -31,7 +31,7 @@ class FrontEndData
         $this->ini_parser = new INIParser(nel_utilities()->fileHandler());
         $this->cache_handler = new CacheHandler();
         $this->core_icon_set_ids = ['icons-nelliel-basic'];
-        $this->core_style_ids = ['style-nelliel', 'style-nelliel-b', 'style-futaba', 'style-burichan', 'style-nigra'];
+        $this->core_style_ids = ['style-nelliel', 'style-nelliel-2', 'style-nelliel-classic', 'style-futaba', 'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];
 
         if ($clear)
