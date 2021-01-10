@@ -11,6 +11,8 @@ function dataBin() {
 
 nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     dataBin.board_id = board_id;
+    dataBin.style_override = nelliel.core.retrieveFromLocalStorage("style_override", false);
+    setStyle(dataBin.style_override);
     dataBin.is_modmode = is_modmode;
     dataBin.hidden_threads_id = "hidden_threads_" + board_id;
     dataBin.hidden_posts_id = "hidden_posts_" + board_id;
@@ -20,14 +22,6 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     dataBin.hidden_posts = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
     dataBin.hidden_files = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_files_id, true);
     dataBin.collapsedThreads = [];
-
-    if (board_id === "") {
-        setStyle(nelliel.core.getCookie("base-style"));
-    }
-    else {
-        setStyle(nelliel.core.getCookie("style-" + board_id));
-    }
-
     nelliel.setup.setupListeners();
     nelliel.core.hashHandler();
     
@@ -264,39 +258,42 @@ function addNewFileMeta(element, command) {
     element.className += " hidden";
 }
 
-function setStyle(style, update_cookie = false) {
+function setStyle(style, update = false) {
     if (style == null) {
         return;
     }
-    
-    if (update_cookie) {
-        if (dataBin.board_id == "") {
-            style_cookie = "base-style";
-        } else {
-            style_cookie = "style-" + dataBin.board_id;
-        }
-        
-        nelliel.core.setCookie(style_cookie, style, 9001);
+
+    if (update) {
+        nelliel.core.storeInLocalStorage("style_override", style);
     }
 
-
     var allstyles = document.getElementsByTagName("link");
+    var menu_style = null;
 
     for (i = 0; i < allstyles.length; i++) {
         if (allstyles[i].getAttribute("data-style-type") == "style-board") {
+            var style_id = allstyles[i].getAttribute("data-id");
             allstyles[i].disabled = true;
 
-            if (allstyles[i].getAttribute("data-id") == style) {
-                allstyles[i].disabled = false;
+            if (style === "") {
+                if (allstyles[i].getAttribute("rel") === "stylesheet") {
+                    allstyles[i].disabled = false;
+                    menu_style = style_id;
+                }
+            } else {
+                if (style_id === style) {
+                    allstyles[i].disabled = false;
+                    menu_style = style_id;
+                }
             }
         }
     }
 
     var style_menus = document.getElementsByClassName("styles-menu");
-    
+
     for (i = 0; i < style_menus.length; i++) {
-        style_menus.item(i).value = style;
-      } 
+        style_menus.item(i).value = menu_style;
+    } 
 }
 
 function reloadCAPTCHA(event_target, command) {
