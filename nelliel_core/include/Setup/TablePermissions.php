@@ -48,6 +48,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_manage_filetypes', 'Manage filetypes']);
         $this->insertDefaultRow(['perm_manage_file_filters', 'Manage file filters']);
         $this->insertDefaultRow(['perm_manage_icon_sets', 'Manage icon sets']);
+        $this->insertDefaultRow(['perm_manage_ifthens', 'Manage if-thens']);
         $this->insertDefaultRow(['perm_manage_logs', 'Access to the logs']);
         $this->insertDefaultRow(['perm_manage_news', 'Access to the news']);
         $this->insertDefaultRow(['perm_manage_permissions', 'Add or remove permissions']);

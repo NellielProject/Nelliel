@@ -74,7 +74,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(431, _gettext('You are not allowed to add filetypes.'));
+            nel_derp(431, _gettext('You are not allowed to modify filetypes.'));
         }
 
         $filetype_id = $_GET['filetype-id'];

@@ -90,11 +90,9 @@ class OutputPanelMain extends Output
         $this->render_data['module_manage_boards'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_boards');
         $this->render_data['manage_boards_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=manage-boards';
-        $this->render_data['module_users'] = $this->session->user()->checkPermission($this->domain,
-                'perm_manage_users');
+        $this->render_data['module_users'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_users');
         $this->render_data['users_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users';
-        $this->render_data['module_roles'] = $this->session->user()->checkPermission($this->domain,
-                'perm_manage_roles');
+        $this->render_data['module_roles'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_roles');
         $this->render_data['roles_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles';
         $this->render_data['module_permissions'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_permissions');
@@ -105,11 +103,13 @@ class OutputPanelMain extends Output
         $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_file_filters');
         $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=file-filters';
+        $this->render_data['module_ifthens'] = $this->session->user()->checkPermission($this->domain,
+                'perm_manage_ifthens');
+        $this->render_data['ifthens_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=ifthens';
         $this->render_data['module_board_defaults'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_board_defaults');
         $this->render_data['board_defaults_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-defaults';
-        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain,
-                'perm_manage_bans');
+        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_bans');
         $this->render_data['bans_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans';
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_reports');
@@ -126,8 +126,7 @@ class OutputPanelMain extends Output
         $this->render_data['module_icon_sets'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_icon_sets');
         $this->render_data['icon_sets_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=icon-sets';
-        $this->render_data['module_news'] = $this->session->user()->checkPermission($this->domain,
-                'perm_manage_news');
+        $this->render_data['module_news'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_news');
         $this->render_data['news_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=news';
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
                 'perm_regen_pages');
