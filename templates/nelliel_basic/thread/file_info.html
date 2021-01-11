@@ -33,7 +33,7 @@
 		{{/ image_preview }}
 	{{/ is_file }}
 	{{# is_embed }}
-		<embed width="{{ embed_width }}" height="{{ embed_height }}" src="{{ embed_url }}"></embed>
+		<iframe width="{{ embed_width }}" height="{{ embed_height }}" src="{{ embed_url }}" allowfullscreen="true" loading="lazy"></iframe>
 	{{/ is_embed }}
 	</div>
 </div>

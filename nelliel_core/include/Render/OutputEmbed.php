@@ -42,12 +42,16 @@ class OutputEmbed extends Output
 
         if ($embed_regexes !== false)
         {
+            var_dump($file['embed_url']);
             foreach ($embed_regexes as $regex)
             {
+                var_dump($regex['data_regex']);
+                var_dump($regex['embed_url']);
                 if (preg_match($regex['data_regex'], $file['embed_url']) === 1)
                 {
                     $embed_url = preg_replace($regex['data_regex'], $regex['embed_url'], $file['embed_url']);
                     $this->render_data['embed_url'] = $embed_url;
+                    var_dump($embed_url);
                     break;
                 }
             }

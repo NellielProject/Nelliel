@@ -31,7 +31,6 @@ class FilesUpload
 
     public function processFiles(ContentPost $post): array
     {
-        var_dump($this->uploaded_files);
         $response_to = $post->data('response_to');
         $data_handler = new PostData($this->domain, $this->authorization, $this->session);
         $file_handler = nel_utilities()->fileHandler();
