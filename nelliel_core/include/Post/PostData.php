@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\IfThens\IfThen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -50,8 +49,6 @@ class PostData
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
         $post->changeData('post_as_staff',
                 (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false);
-        $if_then = new IfThen($this->domain->database(), new ConditionsPost($post), new ActionsPost());
-        $if_then->process($this->domain->id());
 
         if (!$post->data('post_as_staff'))
         {

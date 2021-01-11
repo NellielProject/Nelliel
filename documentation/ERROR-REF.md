@@ -32,6 +32,7 @@ Error 30: Name too long. (Post/PostData.php)
 Error 31: Email too long. (Post/PostData.php)  
 Error 32: Subject too long. (Post/PostData.php)  
 Error 33: Comment too long. (Post/PostData.php)  
+Error 34: Post rejected due to if-then match. (Post/ActionsPost.php)  
 
 Error 50: Password does not match post. (Content/ContentPost.php)  
 Error 51: Board locked, can't remove file. (Content/ContentFile.php)  

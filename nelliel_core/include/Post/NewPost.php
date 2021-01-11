@@ -11,6 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Account\Session;
 use Nelliel\Domains\Domain;
+use Nelliel\IfThens\IfThen;
 
 class NewPost
 {
@@ -108,6 +109,11 @@ class NewPost
         // Go ahead and put post into database
         $post->changeData('op', ($post->data('parent_thread') == 0) ? 1 : 0);
         $post->changeData('has_content', ($post->data('content_count') > 0) ? 1 : 0);
+
+        // Process if-thens for new post here
+        $if_then = new IfThen($this->domain->database(), new ConditionsPost($post, $files), new ActionsPost($post, $files));
+        $if_then->process($this->domain->id());
+
         $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
         $thread = new \Nelliel\Content\ContentThread(new \Nelliel\Content\ContentID(), $this->domain);
 

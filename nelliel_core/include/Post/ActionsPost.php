@@ -22,7 +22,9 @@ class ActionsPost implements Actions
         {
             switch ($action)
             {
-                // Don't have actions ready yet
+                case 'reject':
+                    nel_derp(34, $data['message']);
+                    break;
             }
         }
     }
