@@ -101,13 +101,16 @@ class OutputFile extends Output
             $max_width = ($multiple) ? $this->domain->setting('max_multi_width') : $this->domain->setting('max_width');
             $max_height = ($multiple) ? $this->domain->setting('max_multi_height') : $this->domain->setting(
                     'max_height');
+            $this->render_data['max_width'] = $max_width;
+            $this->render_data['max_height'] = $max_height;
 
             if ($file['format'] == 'webm' || $file['format'] == 'mpeg4')
             {
                 $this->render_data['video_preview'] = true;
-                $this->render_data['preview_width'] = $max_width;
+                $this->render_data['video_width'] = $max_width;
+                $this->render_data['video_height'] = $max_height;
                 $this->render_data['mime_type'] = $file['mime'];
-                $this->render_data['video_url'] = $file['file_location'];
+                $this->render_data['video_url'] = $this->render_data['file_url'];
             }
             else
             {

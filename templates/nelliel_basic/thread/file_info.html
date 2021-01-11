@@ -21,7 +21,7 @@
 	</div>
 	<div class="file-preview">
 	{{# video_preview }}
-		<video preload="metadata" width="{{ video_width }}" controls>
+		<video preload="metadata" class="video-preview" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;" controls>
 			<source src="{{ video_url }}" type="{{ mime_type }}">
 		</video>
 	{{/ video_preview }}
