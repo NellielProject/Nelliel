@@ -40,10 +40,10 @@ class ContentFile extends ContentHandler
             return false;
         }
 
-        $result['md5'] = nel_convert_hash_from_storage($result['ip_address']);
-        $result['sha1'] = nel_convert_hash_from_storage($result['ip_address']);
-        $result['sha256'] = nel_convert_hash_from_storage($result['ip_address']);
-        $result['sha512'] = nel_convert_hash_from_storage($result['ip_address']);
+        $result['md5'] = nel_convert_hash_from_storage($result['md5']);
+        $result['sha1'] = nel_convert_hash_from_storage($result['sha1']);
+        $result['sha256'] = nel_convert_hash_from_storage($result['sha256']);
+        $result['sha512'] = nel_convert_hash_from_storage($result['sha512']);
         $this->content_data = $result;
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
