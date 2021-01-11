@@ -38,6 +38,12 @@
 			{{/ spoilers_enabled }}
 		</span>
 		{{/ file_uploads }}
+		{{# allow_embeds }}
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="gettext">Embed URL</span>
+			<input class="posting-form-input" type="text" name="embed_url" size="30">
+		</label>
+		{{/ allow_embeds }}
 		{{# use_fgsfds }}
 		<label class="posting-form-row">
 			<span class="posting-form-label">{{ fgsfds_name }}</span>

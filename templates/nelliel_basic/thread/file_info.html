@@ -5,6 +5,7 @@
 		<span>[<a href="{{ delete_url }}" data-i18n="gettext">Delete</a>]</span>
 	</div>
 	{{/ in_modmode }}
+	{{# is_file }}
 	<div class="file-header">
 		<input type="checkbox" name="{{ file_content_id }}" value="action">
 		<a href="{{ file_url }}" target="_blank">{{ display_filename }}</a>
@@ -14,22 +15,26 @@
 	<div class="file-info">
 		<div>[<a href="#" data-i18n="gettext" data-command="show-file-meta" data-content-id="{{ file_content_id }}" data-alt-visual="Less file info" data-i18n-attributes="data-alt-visual">More file info</a>]</div>
 		<div class="file-meta hidden">
-	{{# file_metadata }}
+		{{# file_metadata }}
 		<div class="file-hash">{{ metadata }}</div>
-	{{/ file_metadata }}
+		{{/ file_metadata }}
 		</div>
 	</div>
 	<div class="file-preview">
-	{{# video_preview }}
+		{{# video_preview }}
 		<video preload="metadata" class="video-preview" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;" controls>
 			<source src="{{ video_url }}" type="{{ mime_type }}">
 		</video>
-	{{/ video_preview }}
-	{{# image_preview }}
+		{{/ video_preview }}
+		{{# image_preview }}
 		<a href="{{ file_url }}" target="_blank" class="preview-link">
 		<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}" data-command="inline-expand" data-other-dims="{{ other_dims }}" data-other-loc="{{ other_loc }}">
 		</a>
-	{{/ image_preview }}
+		{{/ image_preview }}
+	{{/ is_file }}
+	{{# is_embed }}
+		<embed width="{{ embed_width }}" height="{{ embed_height }}" src="{{ embed_url }}"></embed>
+	{{/ is_embed }}
 	</div>
 </div>
 {{/ content_data }}

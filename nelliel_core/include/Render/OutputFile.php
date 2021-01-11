@@ -33,6 +33,7 @@ class OutputFile extends Output
         $file_content_id->changeThreadID($post_data['parent_thread']);
         $file_content_id->changePostID($post_data['post_number']);
         $file_content_id->changeOrderID($file['content_order']);
+        $this->render_data['is_file'] = true;
         $full_filename = $file['filename'] . '.' . $file['extension'];
         $this->render_data['file_container_id'] = 'file-container-' . $file_content_id->getIDString();
         $this->render_data['single_multiple'] = $multiple ? 'multiple' : 'single';

@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Content\ContentPost;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -28,8 +29,9 @@ class FilesUpload
         $this->session = $session;
     }
 
-    public function processFiles($post)
+    public function processFiles(ContentPost $post): array
     {
+        var_dump($this->uploaded_files);
         $response_to = $post->data('response_to');
         $data_handler = new PostData($this->domain, $this->authorization, $this->session);
         $file_handler = nel_utilities()->fileHandler();

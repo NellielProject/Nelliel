@@ -52,6 +52,7 @@ class NewPost
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $file_handler = nel_utilities()->fileHandler();
         $file_upload = new FilesUpload($this->domain, $_FILES, $authorization, $this->session);
+        $embed_handler = new Embeds($this->domain, [$_POST['embed_url']], $authorization, $this->session); // TODO: Support multiple embeds
         $data_handler = new PostData($this->domain, $authorization, $this->session);
         $post = new \Nelliel\Content\ContentPost(new \Nelliel\Content\ContentID(), $this->domain);
         $data_handler->processPostData($post);
@@ -74,7 +75,7 @@ class NewPost
         }
 
         $post->changeData('sage', $fgsfds->getCommandData('sage', 'value'));
-        $files = $file_upload->processFiles($post);
+        $files = array_merge($file_upload->processFiles($post), $embed_handler->process($post));
         $spoon = !empty($files);
         $post->changeData('content_count', count($files));
 

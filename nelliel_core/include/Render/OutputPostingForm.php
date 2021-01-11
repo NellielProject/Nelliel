@@ -22,6 +22,7 @@ class OutputPostingForm extends Output
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $response_to = $parameters['response_to'];
+        $this->render_data['allow_embeds'] = true; // TODO: Change this when we get a setting
         $this->render_data['response_to'] = $response_to;
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&actions=new-post&board-id=' .
                 $this->domain->id();

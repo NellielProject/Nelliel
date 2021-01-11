@@ -65,6 +65,7 @@ class OutputPost extends Output
             $file_list = $this->database->executePreparedFetchAll($prepared, [$post_data['post_number']],
                     PDO::FETCH_ASSOC);
             $output_file_info = new OutputFile($this->domain, $this->write_mode);
+            $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
             $content_row = array();
             $this->render_data['multi_file'] = count($file_list) > 1;
 
@@ -72,9 +73,20 @@ class OutputPost extends Output
             {
                 $json_content = new \Nelliel\API\JSON\JSONContent($this->domain, $this->file_handler);
                 $parameters['json_instances']['content'] = $json_content;
-                $file_data = $output_file_info->render(
-                        ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
+
+                if (nel_true_empty($file['embed_url']))
+                {
+                    $file_data = $output_file_info->render(
+                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
                             'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
+                }
+                else
+                {
+                    $file_data = $output_embed_info->render(
+                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
+                            'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
+                }
+
                 $content_row[]['content_data'] = $file_data;
 
                 if ($this->render_data['multi_file'])
