@@ -39,6 +39,7 @@ define('NEL_BOARD_DATA_TABLE', 'nelliel_board_data');
 define('NEL_BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
 define('NEL_CAPTCHA_TABLE', 'nelliel_captcha');
 define('NEL_CITES_TABLE', 'nelliel_cites');
+define('NEL_EMBEDS_TABLE', 'nelliel_embeds');
 define('NEL_FILES_FILTERS_TABLE', 'nelliel_file_filters');
 define('NEL_FILETYPES_TABLE', 'nelliel_filetypes');
 define('NEL_IF_THENS_TABLE', 'nelliel_if_thens');

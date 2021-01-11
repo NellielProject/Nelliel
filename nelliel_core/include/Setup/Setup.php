@@ -190,6 +190,8 @@ class Setup
         $board_defaults_table = new TableBoardConfig($this->database, $this->sql_compatibility);
         $board_defaults_table->tableName(NEL_BOARD_DEFAULTS_TABLE);
         $board_defaults_table->createTable();
+        $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
+        $embeds_table->createTable();
         $filetypes_table = new TableFiletypes($this->database, $this->sql_compatibility);
         $filetypes_table->createTable();
         $news_table = new TableNews($this->database, $this->sql_compatibility);

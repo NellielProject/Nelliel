@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
+use PDO;
 
 class OutputEmbed extends Output
 {
@@ -36,6 +37,21 @@ class OutputEmbed extends Output
         $this->render_data['file_container_id'] = 'file-container-' . $file_content_id->getIDString();
         $this->render_data['single_multiple'] = $multiple ? 'multiple' : 'single';
         $this->render_data['file_content_id'] = $file_content_id->getIDString();
+        $embed_regexes = $this->database->executeFetchAll(
+                'SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_ASSOC);
+
+        if ($embed_regexes !== false)
+        {
+            foreach ($embed_regexes as $regex)
+            {
+                if (preg_match($regex['data_regex'], $file['embed_url']) === 1)
+                {
+                    $embed_url = preg_replace($regex['data_regex'], $regex['embed_url'], $file['embed_url']);
+                    $this->render_data['embed_url'] = $embed_url;
+                    break;
+                }
+            }
+        }
 
         if ($session->inModmode($this->domain))
         {
@@ -44,7 +60,6 @@ class OutputEmbed extends Output
                     '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
         }
 
-        $this->render_data['embed_url'] = $file['embed_url'];
         //$this->render_data['embed_width'] = 560; // NOTE temp for testing
         //$this->render_data['embed_height'] = 315;
         $output = $this->output('thread/file_info', $data_only, true, $this->render_data);
