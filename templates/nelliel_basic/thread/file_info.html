@@ -5,6 +5,14 @@
 		<span>[<a href="{{ delete_url }}" data-i18n="gettext">Delete</a>]</span>
 	</div>
 	{{/ in_modmode }}
+	{{# is_embed }}
+	<div class="embed-header">
+		<input type="checkbox" name="{{ embed_content_id }}" value="action">
+		<a href="{{ original_url }}" target="_blank">{{ display_url }}</a>
+		<span class="hide-embed hidden" data-jsonly="">[<a class="toggle-embed" href="#" data-command="hide-embed" data-content-id="{{ embed_content_id }}" data-alt-visual="Show Embed" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Embed</a>]</span>
+	</div>
+	<iframe class="embed-frame" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;" src="{{ embed_url }}" allowfullscreen="true" loading="lazy"></iframe>
+	{{/ is_embed}}
 	{{# is_file }}
 	<div class="file-header">
 		<input type="checkbox" name="{{ file_content_id }}" value="action">
@@ -32,9 +40,6 @@
 		</a>
 		{{/ image_preview }}
 	{{/ is_file }}
-	{{# is_embed }}
-		<iframe width="{{ embed_width }}" height="{{ embed_height }}" src="{{ embed_url }}" allowfullscreen="true" loading="lazy"></iframe>
-	{{/ is_embed }}
 	</div>
 </div>
 {{/ content_data }}

@@ -201,6 +201,11 @@ form {
     padding-left: 0.1em;
 }
 
+/* Embeds */
+.embed-frame {
+	border: none;
+}
+
 /* General post */
 .mod-comment {
 	background: var(--mod-comment-background);

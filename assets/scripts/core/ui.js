@@ -102,6 +102,36 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
+nelliel.ui.hideShowEmbed = function(element, command, content_id) {
+    if(element == null && content_id == null) {
+        return;
+    }
+
+    if(content_id == null) {
+        content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
+    }
+   
+    var embed_container = document.getElementById("file-container-" + content_id.id_string);
+
+    
+    if(element == null) {
+        element = embed_container.querySelector(".toggle-embed");
+    }
+
+    var embed_frame = embed_container.querySelector(".embed-frame");
+
+    if (command == "hide-embed") {
+        dataBin.hidden_embeds[content_id.id_string] = Date.now();
+    } else if (command == "show-embed") {
+        delete dataBin.hidden_embeds[content_id.id_string];
+    }
+
+    nelliel.ui.toggleHidden(embed_frame);
+    nelliel.core.storeInLocalStorage(dataBin.hidden_embeds_id, dataBin.hidden_embeds);
+    nelliel.ui.switchDataCommand(element, "hide-embed", "show-embed");
+    nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+}
+
 nelliel.ui.applyHideContent = function() {
     var cids = [];
 
@@ -115,6 +145,10 @@ nelliel.ui.applyHideContent = function() {
 
     for (var id in dataBin.hidden_files) {
         nelliel.ui.hideShowFile(null, "apply", nelliel.core.contentID(id));
+    }
+    
+    for (var id in dataBin.hidden_embeds) {
+        nelliel.ui.hideShowEmbed(null, "apply", nelliel.core.contentID(id));
     }
 }
 

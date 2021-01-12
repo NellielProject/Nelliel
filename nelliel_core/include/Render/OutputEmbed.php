@@ -36,22 +36,20 @@ class OutputEmbed extends Output
         $this->render_data['is_embed'] = true;
         $this->render_data['file_container_id'] = 'file-container-' . $file_content_id->getIDString();
         $this->render_data['single_multiple'] = $multiple ? 'multiple' : 'single';
-        $this->render_data['file_content_id'] = $file_content_id->getIDString();
+        $this->render_data['embed_content_id'] = $file_content_id->getIDString();
+        $this->render_data['original_url'] = $file['embed_url'];
+        $this->render_data['display_url'] = $file['embed_url'];
         $embed_regexes = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_ASSOC);
 
         if ($embed_regexes !== false)
         {
-            var_dump($file['embed_url']);
             foreach ($embed_regexes as $regex)
             {
-                var_dump($regex['data_regex']);
-                var_dump($regex['embed_url']);
                 if (preg_match($regex['data_regex'], $file['embed_url']) === 1)
                 {
                     $embed_url = preg_replace($regex['data_regex'], $regex['embed_url'], $file['embed_url']);
                     $this->render_data['embed_url'] = $embed_url;
-                    var_dump($embed_url);
                     break;
                 }
             }
@@ -64,8 +62,8 @@ class OutputEmbed extends Output
                     '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
         }
 
-        //$this->render_data['embed_width'] = 560; // NOTE temp for testing
-        //$this->render_data['embed_height'] = 315;
+        $this->render_data['max_width'] = ($multiple) ? $this->domain->setting('max_multi_width') : $this->domain->setting('max_width');
+        $this->render_data['max_height'] = ($multiple) ? $this->domain->setting('max_multi_height') : $this->domain->setting('max_height');
         $output = $this->output('thread/file_info', $data_only, true, $this->render_data);
         return $output;
     }

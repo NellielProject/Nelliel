@@ -17,10 +17,12 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     dataBin.hidden_threads_id = "hidden_threads_" + board_id;
     dataBin.hidden_posts_id = "hidden_posts_" + board_id;
     dataBin.hidden_files_id = "hidden_files_" + board_id;
+    dataBin.hidden_embeds_id = "hidden_embeds_" + board_id;
     nelliel.setup.localStorageInitCheck();
     dataBin.hidden_threads = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_threads_id, true);
     dataBin.hidden_posts = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
     dataBin.hidden_files = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_files_id, true);
+    dataBin.hidden_embeds = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_embeds_id, true);
     dataBin.collapsedThreads = [];
     nelliel.setup.setupListeners();
     nelliel.core.hashHandler();
@@ -44,6 +46,10 @@ nelliel.setup.localStorageInitCheck = function() {
     
     if (!localStorage[dataBin.hidden_files_id]) {
         localStorage[dataBin.hidden_files_id] = '{}';
+    }
+    
+    if (!localStorage[dataBin.hidden_embeds_id]) {
+        localStorage[dataBin.hidden_embeds_id] = '{}';
     }
 }
 
@@ -128,6 +134,8 @@ nelliel.events.processPostClick = function(event) {
             nelliel.ui.hideShowPost(event.target, command, content_id);
         } else if (command === "hide-file" || command === "show-file" ) {
             nelliel.ui.hideShowFile(event.target, command, content_id);
+        } else if (command === "hide-embed" || command === "show-embed" ) {
+            nelliel.ui.hideShowEmbed(event.target, command, content_id);
         } else if (command === "reload-captcha" ) {
             reloadCAPTCHA(event.target, command);
         }
