@@ -175,6 +175,11 @@ class NewPost
 
             foreach ($files as $file)
             {
+                if($file->data('type') === 'embed')
+                {
+                    continue;
+                }
+
                 $file->contentID()->changeThreadID($thread->contentID()->threadID());
                 $file->changeData('parent_thread', $thread->contentID()->threadID());
                 $file->contentID()->changePostID($post->contentID()->postID());

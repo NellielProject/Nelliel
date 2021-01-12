@@ -37,7 +37,7 @@ class Embeds
             $embed = new \Nelliel\Content\ContentFile(new \Nelliel\Content\ContentID(), $this->domain);
             $embed->changeData('type', 'embed');
             $embed->changeData('format', ''); // TODO: Maybe detect specific services
-            $embed->changeData('embed_url', $this->embeds[$i]);
+            $embed->changeData('embed_url', trim($this->embeds[$i]));
             $this->processed_embeds[] = $embed;
         }
 

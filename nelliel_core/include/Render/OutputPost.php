@@ -296,9 +296,7 @@ class OutputPost extends Output
         $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
         $line_split_regex = '#(>>[0-9]+)|(>>>\/.+\/[0-9]+)|(\s)#';
         $comment_data = array();
-        $post_type_class = $post_data['op'] == 1 ? 'op-' : 'reply-';
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
-        $comment_data['comments_class'] = $post_type_class . 'post-comments';
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
         $comment_data['noreferrer_nofollow'] = $this->site_domain->setting('noreferrer_nofollow');
 
@@ -321,7 +319,7 @@ class OutputPost extends Output
             $create_url_links = $this->domain->setting('create_url_links');
             $comment_lines = $this->output_filter->newlinesToArray($post_data['comment']);
             $line_count = count($comment_lines);
-            $stop = $line_count - 1;
+            $stop = $line_count;
             $last_i = $line_count - 1;
 
             if ($gen_data['index_rendering'] && $line_count > $this->domain->setting('comment_display_lines'))
