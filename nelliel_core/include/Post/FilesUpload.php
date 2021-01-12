@@ -29,13 +29,13 @@ class FilesUpload
         $this->session = $session;
     }
 
-    public function processFiles(ContentPost $post): array
+    public function process(ContentPost $post): array
     {
+        $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
+        $file_count = count($this->uploaded_files['upload_files']['name']);
         $response_to = $post->data('response_to');
         $data_handler = new PostData($this->domain, $this->authorization, $this->session);
         $file_handler = nel_utilities()->fileHandler();
-        $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
-        $file_count = count($this->uploaded_files['upload_files']['name']);
 
         if ($file_count > 1)
         {
@@ -62,18 +62,22 @@ class FilesUpload
 
         for ($i = 0; $i < $file_count; $i ++)
         {
+            if (empty($this->uploaded_files['upload_files']['name'][$i]))
+            {
+                if ($file_count > 1 && !$this->domain->setting('allow_files'))
+                {
+                    nel_derp(37, _gettext('You are not allowed to upload files.'), $error_data);
+                }
+
+                continue;
+            }
+
             $file_data = array();
             $file_data['name'] = $this->uploaded_files['upload_files']['name'][$i];
             $file_data['type'] = $this->uploaded_files['upload_files']['type'][$i];
             $file_data['tmp_name'] = $this->uploaded_files['upload_files']['tmp_name'][$i];
             $file_data['error'] = $this->uploaded_files['upload_files']['error'][$i];
             $file_data['size'] = $this->uploaded_files['upload_files']['size'][$i];
-
-            if (empty($file_data['name']))
-            {
-                continue;
-            }
-
             $file = new \Nelliel\Content\ContentFile(new \Nelliel\Content\ContentID(), $this->domain);
             $file->changeData('location', $file_data['tmp_name']);
             $file->changeData('name', $file_data['name']);

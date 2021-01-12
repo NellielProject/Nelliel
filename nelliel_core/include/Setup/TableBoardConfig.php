@@ -71,16 +71,16 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['abbreviate_thread', '5', 0]);
         $this->insertDefaultRow(['max_post_files', '3', 0]);
         $this->insertDefaultRow(['max_files_row', '3', 0]);
-        $this->insertDefaultRow(['max_multi_width', '175', 0]);
-        $this->insertDefaultRow(['max_multi_height', '175', 0]);
+        $this->insertDefaultRow(['max_multi_width', '200', 0]);
+        $this->insertDefaultRow(['max_multi_height', '200', 0]);
         $this->insertDefaultRow(['jpeg_quality', '90', 0]);
         $this->insertDefaultRow(['png_compression', '6', 0]);
-        $this->insertDefaultRow(['max_width', '256', 0]);
-        $this->insertDefaultRow(['max_height', '256', 0]);
+        $this->insertDefaultRow(['max_width', '250', 0]);
+        $this->insertDefaultRow(['max_height', '250', 0]);
         $this->insertDefaultRow(['max_filesize', '4096', 0]);
         $this->insertDefaultRow(['max_name_length', '100', 0]);
         $this->insertDefaultRow(['max_email_length', '100', 0]);
-        $this->insertDefaultRow(['max_subject_length', '100', 0]);
+        $this->insertDefaultRow(['max_subject_length', '200', 0]);
         $this->insertDefaultRow(['max_comment_length', '5000', 0]);
         $this->insertDefaultRow(['comment_display_lines', '15', 0]);
         $this->insertDefaultRow(['truncate_long_fields', '0', 0]);
@@ -93,7 +93,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['date_format', 'Y/m/d (D) H:i:s', 0]);
         $this->insertDefaultRow(['old_threads', 'ARCHIVE', 0]);
         $this->insertDefaultRow(['do_archive_pruning', '1', 0]);
-        $this->insertDefaultRow(['max_archive_threads', '500', 0]);
+        $this->insertDefaultRow(['max_archive_threads', '1000', 0]);
         $this->insertDefaultRow(['fgsfds_name', 'FGSFDS', 0]);
         $this->insertDefaultRow(['indent_marker', '>>', 0]);
         $this->insertDefaultRow(['file_sha256', '1', 0]);
@@ -127,5 +127,9 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['enabled_filetypes', '{"graphics":{"enabled":true,"formats":{"jpeg":{"enabled":true},"gif":{"enabled":true},"png":{"enabled":true},"webp":{"enabled":true}}}}', 0]);
         $this->insertDefaultRow(['user_delete_own', '1', 0]);
         $this->insertDefaultRow(['deleted_content_placeholder', '0', 0]);
+        $this->insertDefaultRow(['allow_embeds', '0', 0]);
+        $this->insertDefaultRow(['allow_files', '1', 0]);
+        $this->insertDefaultRow(['check_embed_duplicates', '1', 0]);
+        $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
     }
 }

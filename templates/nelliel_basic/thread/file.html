@@ -1,19 +1,9 @@
-{{# content_data }}
 <div id="{{ file_container_id }}" class="{{ single_multiple }} file">
 	{{# in_modmode }}
 	<div>
 		<span>[<a href="{{ delete_url }}" data-i18n="gettext">Delete</a>]</span>
 	</div>
 	{{/ in_modmode }}
-	{{# is_embed }}
-	<div class="embed-header">
-		<input type="checkbox" name="{{ embed_content_id }}" value="action">
-		<a href="{{ original_url }}" target="_blank">{{ display_url }}</a>
-		<span class="hide-embed hidden" data-jsonly="">[<a class="toggle-embed" href="#" data-command="hide-embed" data-content-id="{{ embed_content_id }}" data-alt-visual="Show Embed" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Embed</a>]</span>
-	</div>
-	<iframe class="embed-frame" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;" src="{{ embed_url }}" allowfullscreen="true" loading="lazy"></iframe>
-	{{/ is_embed}}
-	{{# is_file }}
 	<div class="file-header">
 		<input type="checkbox" name="{{ file_content_id }}" value="action">
 		<a href="{{ file_url }}" target="_blank">{{ display_filename }}</a>
@@ -39,7 +29,5 @@
 		<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}" data-command="inline-expand" data-other-dims="{{ other_dims }}" data-other-loc="{{ other_loc }}">
 		</a>
 		{{/ image_preview }}
-	{{/ is_file }}
 	</div>
 </div>
-{{/ content_data }}

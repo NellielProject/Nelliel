@@ -106,12 +106,24 @@
 		{{# check_op_duplicates }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ check_op_duplicates }}
+		{{# check_embed_duplicates }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ check_embed_duplicates }}
 		{{# forced_anonymous }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ forced_anonymous }}
 		{{# allow_tripkeys }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_tripkeys }}
+		{{# allow_files }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_files }}
+		{{# allow_embeds }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_embeds }}
+		{{# embed_replaces_file }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ embed_replaces_file }}
 		{{# allow_multifile }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_multifile }}

@@ -111,8 +111,7 @@ nelliel.ui.hideShowEmbed = function(element, command, content_id) {
         content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     }
    
-    var embed_container = document.getElementById("file-container-" + content_id.id_string);
-
+    var embed_container = document.getElementById("embed-container-" + content_id.id_string);
     
     if(element == null) {
         element = embed_container.querySelector(".toggle-embed");
