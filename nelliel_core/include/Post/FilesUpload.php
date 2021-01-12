@@ -32,46 +32,60 @@ class FilesUpload
     public function process(ContentPost $post): array
     {
         $error_data = ['delete_files' => true, 'files' => $this->uploaded_files, 'board_id' => $this->domain->id()];
-        $file_count = count($this->uploaded_files['upload_files']['name']);
         $response_to = $post->data('response_to');
-        $data_handler = new PostData($this->domain, $this->authorization, $this->session);
-        $file_handler = nel_utilities()->fileHandler();
 
-        if ($file_count > 1)
+        if (!isset($this->uploaded_files['upload_files']['name']) ||
+                nel_true_empty($this->uploaded_files['upload_files']['name'][0]))
         {
-            if ($file_count > $this->domain->setting('max_post_files'))
+            return array();
+        }
+        else
+        {
+            if (!$this->domain->setting('allow_files'))
             {
-                nel_derp(25,
-                        sprintf(_gettext('You are trying to upload too many files in one post. Limit is %d'),
-                                $this->domain->setting('max_post_files')), $error_data);
+                nel_derp(25, _gettext('File uploads are not allowed.'), $error_data);
             }
 
-            if (!$this->domain->setting('allow_multifile'))
+            if (!$response_to && !$this->domain->setting('allow_op_uploads'))
             {
-                nel_derp(26, _gettext('You cannot upload multiple files.'), $error_data);
+                nel_derp(37, _gettext('The first post cannot have uploads.'), $error_data);
             }
 
-            if (!$this->domain->setting('allow_op_multifile'))
+            if ($response_to && !$this->domain->setting('allow_reply_uploads'))
             {
-                nel_derp(27, _gettext('The OP post cannot have multiple files.'), $error_data);
+                nel_derp(38, _gettext('Replies cannot have uploads.'), $error_data);
             }
         }
 
+        $file_count = count($this->uploaded_files['upload_files']['name']);
+
+        if ($file_count > $this->domain->setting('max_post_files'))
+        {
+            nel_derp(27,
+                    sprintf(_gettext('You are trying to upload too many files in one post. Limit is %d'),
+                            $this->domain->setting('max_post_files')), $error_data);
+        }
+
+        if ($file_count > 1)
+        {
+            if (!$response_to && !$this->domain->setting('allow_op_multiple'))
+            {
+                nel_derp(41, _gettext('The first post cannot have multiple files.'), $error_data);
+            }
+
+            if ($response_to && !$this->domain->setting('allow_reply_multiple'))
+            {
+                nel_derp(42, _gettext('Replies cannot have multiple files.'), $error_data);
+            }
+        }
+
+        $data_handler = new PostData($this->domain, $this->authorization, $this->session);
+        $file_handler = nel_utilities()->fileHandler();
         $filenames = array();
         $file_duplicate = 1;
 
         for ($i = 0; $i < $file_count; $i ++)
         {
-            if (empty($this->uploaded_files['upload_files']['name'][$i]))
-            {
-                if ($file_count > 1 && !$this->domain->setting('allow_files'))
-                {
-                    nel_derp(37, _gettext('You are not allowed to upload files.'), $error_data);
-                }
-
-                continue;
-            }
-
             $file_data = array();
             $file_data['name'] = $this->uploaded_files['upload_files']['name'][$i];
             $file_data['type'] = $this->uploaded_files['upload_files']['type'][$i];

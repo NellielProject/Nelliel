@@ -32,25 +32,25 @@ class OutputPostingForm extends Output
         $this->render_data['spam_target_maxlength'] = $this->domain->setting('max_email_length');
         $this->render_data['verb_maxlength'] = $this->domain->setting('max_subject_length');
         $this->render_data['forced_anonymous'] = $this->domain->setting('forced_anonymous');
-        $this->render_data['allow_embeds'] = $this->domain->setting('allow_embeds');
 
-        if($this->domain->setting('allow_files'))
+        if (!$response_to)
         {
-            $uploads_data = array();
-
-            if ($response_to)
-            {
-                $uploads_data['allow_multiple'] = $this->domain->setting('allow_multifile');
-            }
-            else
-            {
-                $uploads_data['allow_multiple'] = $this->domain->setting('allow_op_multifile');
-            }
-
-            $uploads_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
-            $this->render_data['file_uploads'] = $uploads_data;
+            $this->render_data['allow_files'] = $this->domain->setting('allow_files') &&
+                    $this->domain->setting('allow_op_uploads');
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_embeds') &&
+                    $this->domain->setting('allow_op_uploads');
+            $this->render_data['allow_multiple'] = $this->domain->setting('allow_op_multiple');
+        }
+        else
+        {
+            $this->render_data['allow_files'] = $this->domain->setting('allow_files') &&
+                    $this->domain->setting('allow_reply_uploads');
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_embeds') &&
+                    $this->domain->setting('allow_reply_uploads');
+            $this->render_data['allow_multiple'] = $this->domain->setting('allow_reply_multiple');
         }
 
+        $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['use_fgsfds'] = $this->domain->setting('use_fgsfds');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');

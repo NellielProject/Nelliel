@@ -22,10 +22,10 @@
 			<span class="posting-form-label" data-i18n="gettext">Comment</span>
 			<textarea id="wordswordswords" class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
 		</label>
-		{{# file_uploads }}
+		{{# allow_files }}
 		<span class="posting-form-row">
 			<label class="posting-form-label" for="form-file-upload">
-				<span data-i18n="gettext">File</span>&nbsp;<span>{{ file_number }}</span>
+				<span data-i18n="gettext">File</span>
 			</label>
 			<input id="form-file-upload" class="posting-form-input" type="file" name="upload_files[]" {{# allow_multiple }}multiple{{/ allow_multiple }}>
 			<br>
@@ -37,7 +37,7 @@
 			</span>
 			{{/ spoilers_enabled }}
 		</span>
-		{{/ file_uploads }}
+		{{/ allow_files}}
 		{{# allow_embeds }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Embed URL</span>

@@ -143,7 +143,7 @@ class ContentFile extends ContentHandler
 
             if ($this->domain->reference('locked'))
             {
-                nel_derp(51, _gettext('Cannot remove file. Board is locked.'));
+                nel_derp(61, _gettext('Cannot remove file. Board is locked.'));
             }
         }
 

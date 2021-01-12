@@ -157,7 +157,7 @@ class ContentPost extends ContentHandler
 
             if ($this->domain->reference('locked'))
             {
-                nel_derp(52, _gettext('Cannot remove post. Board is locked.'));
+                nel_derp(62, _gettext('Cannot remove post. Board is locked.'));
             }
         }
 
@@ -251,7 +251,7 @@ class ContentPost extends ContentHandler
                     !hash_equals($this->content_data['post_password'], nel_post_password_hash($update_sekrit)) ||
                     !$this->domain->setting('user_delete_own'))
             {
-                nel_derp(50, _gettext('Password is wrong or you are not allowed to delete that.'));
+                nel_derp(60, _gettext('Password is wrong or you are not allowed to delete that.'));
             }
         }
 

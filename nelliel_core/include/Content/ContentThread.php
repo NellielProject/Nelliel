@@ -123,7 +123,7 @@ class ContentThread extends ContentHandler
 
             if ($this->domain->reference('locked'))
             {
-                nel_derp(53, _gettext('Cannot remove thread. Board is locked.'));
+                nel_derp(63, _gettext('Cannot remove thread. Board is locked.'));
             }
         }
 

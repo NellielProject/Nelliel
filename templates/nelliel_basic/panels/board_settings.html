@@ -88,12 +88,33 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<span class="bold" data-i18n="gettext">Posting Parameters</span>
+				<span class="bold" data-i18n="gettext">New post settings</span>
 			</span>
 			{{# show_locked }}
 			<span class="display-cell"></span>
 			{{/ show_locked }}
 		</div>
+		{{# allow_files }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_files }}
+		{{# allow_embeds }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_embeds }}
+		{{# allow_op_uploads }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_op_uploads }}
+		{{# allow_reply_uploads }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_reply_uploads }}
+		{{# allow_op_multiple }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_op_multiple }}
+		{{# allow_reply_multiple }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_reply_multiple }}
+		{{# embed_replaces_file }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ embed_replaces_file }}
 		{{# require_content_start }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ require_content_start }}
@@ -106,45 +127,9 @@
 		{{# check_op_duplicates }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ check_op_duplicates }}
-		{{# check_embed_duplicates }}
+		{{# enable_spoilers }}
 			{{> panels/pieces/settings_checkbox }}
-		{{/ check_embed_duplicates }}
-		{{# forced_anonymous }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ forced_anonymous }}
-		{{# allow_tripkeys }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ allow_tripkeys }}
-		{{# allow_files }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ allow_files }}
-		{{# allow_embeds }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ allow_embeds }}
-		{{# embed_replaces_file }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ embed_replaces_file }}
-		{{# allow_multifile }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ allow_multifile }}
-		{{# allow_op_multifile }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ allow_op_multifile }}
-		{{# use_fgsfds }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ use_fgsfds }}
-		{{# fgsfds_name }}
-			{{> panels/pieces/settings_text }}
-		{{/ fgsfds_name }}
-		{{# max_post_files }}
-			{{> panels/pieces/settings_number }}
-		{{/ max_post_files }}
-		{{# thread_cooldown }}
-			{{> panels/pieces/settings_number }}
-		{{/ thread_cooldown }}
-		{{# reply_cooldown }}
-			{{> panels/pieces/settings_number }}
-		{{/ reply_cooldown }}
+		{{/ enable_spoilers }}
 		{{# max_name_length }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_name_length }}
@@ -157,21 +142,40 @@
 		{{# max_comment_length }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_comment_length }}
-		{{# comment_display_lines }}
+		{{# max_post_files }}
 			{{> panels/pieces/settings_number }}
-		{{/ comment_display_lines }}
-		{{# truncate_long_fields }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ truncate_long_fields }}
-		{{# filter_combining_characters }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ filter_combining_characters }}
+		{{/ max_post_files }}
 		{{# max_filesize }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_filesize }}
-		{{# enable_spoilers }}
+		{{# truncate_long_fields }}
 			{{> panels/pieces/settings_checkbox }}
-		{{/ enable_spoilers }}
+		{{/ truncate_long_fields }}
+		{{# forced_anonymous }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ forced_anonymous }}
+		{{# allow_tripkeys }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_tripkeys }}
+		{{# use_fgsfds }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ use_fgsfds }}
+		{{# fgsfds_name }}
+			{{> panels/pieces/settings_text }}
+		{{/ fgsfds_name }}
+		{{# thread_cooldown }}
+			{{> panels/pieces/settings_number }}
+		{{/ thread_cooldown }}
+		{{# reply_cooldown }}
+			{{> panels/pieces/settings_number }}
+		{{/ reply_cooldown }}
+
+		{{# comment_display_lines }}
+			{{> panels/pieces/settings_number }}
+		{{/ comment_display_lines }}
+		{{# filter_combining_characters }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ filter_combining_characters }}
 		{{# deleted_content_placeholder }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ deleted_content_placeholder }}

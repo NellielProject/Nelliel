@@ -59,12 +59,16 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['animated_gif_preview', '0', 0]);
         $this->insertDefaultRow(['require_content_start', '1', 0]);
         $this->insertDefaultRow(['require_content_always', '0', 0]);
-        $this->insertDefaultRow(['allow_multifile', '0', 0]);
-        $this->insertDefaultRow(['allow_op_multifile', '0', 0]);
-        $this->insertDefaultRow(['use_fgsfds', '1', 0]);
-        $this->insertDefaultRow(['use_honeypot', '1', 0]);
+        $this->insertDefaultRow(['allow_files', '1', 0]);
+        $this->insertDefaultRow(['allow_embeds', '0', 0]);
+        $this->insertDefaultRow(['allow_op_uploads', '1', 0]);
+        $this->insertDefaultRow(['allow_reply_uploads', '1', 0]);
+        $this->insertDefaultRow(['allow_op_multiple', '0', 0]);
+        $this->insertDefaultRow(['allow_reply_multiple', '0', 0]);
         $this->insertDefaultRow(['check_thread_duplicates', '1', 0]);
         $this->insertDefaultRow(['check_op_duplicates', '1', 0]);
+        $this->insertDefaultRow(['use_fgsfds', '1', 0]);
+        $this->insertDefaultRow(['use_honeypot', '1', 0]);
         $this->insertDefaultRow(['locale', 'en_US', 0]);
         $this->insertDefaultRow(['thread_cooldown', '120', 0]);
         $this->insertDefaultRow(['reply_cooldown', '60', 0]);
@@ -127,9 +131,6 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['enabled_filetypes', '{"graphics":{"enabled":true,"formats":{"jpeg":{"enabled":true},"gif":{"enabled":true},"png":{"enabled":true},"webp":{"enabled":true}}}}', 0]);
         $this->insertDefaultRow(['user_delete_own', '1', 0]);
         $this->insertDefaultRow(['deleted_content_placeholder', '0', 0]);
-        $this->insertDefaultRow(['allow_embeds', '0', 0]);
-        $this->insertDefaultRow(['allow_files', '1', 0]);
-        $this->insertDefaultRow(['check_embed_duplicates', '1', 0]);
         $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
     }
 }
