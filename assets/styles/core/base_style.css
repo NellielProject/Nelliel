@@ -227,6 +227,8 @@ form {
     height: auto;
     position: absolute;
     display: block;
+    background: var(--reply-post-background);
+    border: var(--reply-post-border);
 }
 
 .poster-id-style {

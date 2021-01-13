@@ -294,7 +294,7 @@ class OutputPost extends Output
         $greentext_regex = '#^\s*>[^>]#';
         $url_protocols = $this->domain->setting('url_protocols');
         $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
-        $line_split_regex = '#(>>[0-9]+)|(>>>\/.+\/[0-9]+)|(\s)#';
+        $line_split_regex = '#(>>[\d]+)|(>>>\/.+?\/[\d]+)|(\s)#';
         $comment_data = array();
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;

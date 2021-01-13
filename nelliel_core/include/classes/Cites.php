@@ -21,25 +21,15 @@ class Cites
         $this->database = $database;
     }
 
-    private function organizeCiteData(array $cite_data)
-    {
-        $final_data = array();
-        $final_data['source_board'] = $cite_data['source_board'] ?? null;
-        $final_data['source_thread'] = $cite_data['source_thread'] ?? null;
-        $final_data['source_post'] = $cite_data['source_post'] ?? null;
-        $final_data['target_board'] = $cite_data['target_board'] ?? null;
-        $final_data['target_thread'] = $cite_data['target_thread'] ?? null;
-        $final_data['target_post'] = $cite_data['target_post'] ?? null;
-        return $final_data;
-    }
-
-    public function getCiteData($source_board, $source_post, $target_board, $target_post)
+    public function getCiteData(array $cite_data)
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_CITES_TABLE .
-                '" WHERE "source_board" = ? AND "source_post" = ? AND "target_board" = ? AND "target_post" = ?');
+                '" WHERE "source_board" = ? AND "source_thread" = ? AND "source_post" = ? AND "target_board" = ? AND "target_thread" = ? AND "target_post" = ?');
         return $this->database->executePreparedFetch($prepared,
-                [$source_board, $source_post, $target_board, $target_post], PDO::FETCH_ASSOC);
+                [$cite_data['source_board'], $cite_data['source_thread'], $cite_data['source_post'],
+                    $cite_data['target_board'], $cite_data['target_thread'], $cite_data['target_post']],
+                PDO::FETCH_ASSOC);
     }
 
     public function getByTarget($board, $post, bool $get_all = false)
@@ -72,23 +62,23 @@ class Cites
         }
     }
 
-    public function citeExists($source_board, $source_post, $target_board, $target_post)
+    public function citeExists(array $cite_data)
     {
         $prepared = $this->database->prepare(
                 'SELECT 1 FROM "' . NEL_CITES_TABLE .
-                '" WHERE "source_board" = ? AND "source_post" = ? AND "target_board" = ? AND "target_post" = ?');
+                '" WHERE "source_board" = ? AND "source_thread" = ? AND "source_post" = ? AND "target_board" = ? AND "target_thread" = ? AND "target_post" = ?');
         return !empty(
                 $this->database->executePreparedFetch($prepared,
-                        [$source_board, $source_post, $target_board, $target_post], PDO::FETCH_COLUMN));
+                        [$cite_data['source_board'], $cite_data['source_thread'], $cite_data['source_post'],
+                            $cite_data['target_board'], $cite_data['target_thread'], $cite_data['target_post']],
+                        PDO::FETCH_COLUMN));
     }
 
-    public function addCite(array $data)
+    public function addCite(array $cite_data)
     {
-        $cite_data = $this->organizeCiteData($data);
+        $cite_exists = $this->citeExists($cite_data);
 
-        if (!empty(
-                $this->getCiteData($cite_data['source_board'], $cite_data['source_post'], $cite_data['target_board'],
-                        $cite_data['target_post'])))
+        if ($cite_exists !== false)
         {
             return;
         }
@@ -106,64 +96,46 @@ class Cites
     {
         $cite_data = array();
         $matches = array();
+        $target_domain = null;
+        $target_post = 0;
+        $url = '';
 
-        if (preg_match('#^>>([0-9]+)$#', $text_input, $matches) === 1)
+        if (preg_match('#^>>([\d]+)$#', $text_input, $matches) === 1)
         {
-            $cite_data = $this->getCiteData($domain->id(), $source_content_id->postID(), $domain->id(), $matches[1]);
-
-            if (empty($cite_data))
-            {
-                $prepared = $this->database->prepare(
-                        'SELECT "parent_thread" FROM "' . $domain->reference('posts_table') . '" WHERE "post_number" = ?');
-                $parent_thread = $this->database->executePreparedFetch($prepared, [$matches[1]], PDO::FETCH_COLUMN);
-
-                if (!empty($parent_thread))
-                {
-                    $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->threadID(),
-                        'source_post' => $source_content_id->postID(), 'target_board' => $domain->id(),
-                        'target_thread' => $parent_thread, 'target_post' => $matches[1]];
-
-                    if ($add_cite)
-                    {
-                        $this->addCite($cite_data);
-                    }
-                }
-            }
+            $target_domain = $domain;
+            $target_post = $matches[1];
         }
-        else if (preg_match('#^>>>\/(.+)\/([0-9]+)$#', $text_input, $matches) === 1)
+        else if (preg_match('#>>>\/(.+?)\/([\d]+)#', $text_input, $matches) === 1)
         {
             $target_domain = new DomainBoard($matches[1], $this->database);
-            $cite_data = $this->getCiteData($domain->id(), $source_content_id->postID(), $domain->id(), $matches[2]);
-
-            if (empty($cite_data))
-            {
-                $prepared = $this->database->prepare(
-                        'SELECT "parent_thread" FROM "' . $target_domain->reference('posts_table') .
-                        '" WHERE "post_number" = ?');
-                $parent_thread = $this->database->executePreparedFetch($prepared, [$matches[2]], PDO::FETCH_COLUMN);
-
-                if (!empty($parent_thread))
-                {
-                    $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->threadID(),
-                        'source_post' => $source_content_id->postID(), 'target_board' => $matches[1],
-                        'target_thread' => $parent_thread, 'target_post' => $matches[2]];
-
-                    if ($add_cite)
-                    {
-                        $this->addCite($cite_data);
-                    }
-                }
-            }
+            $target_post = $matches[2];
+        }
+        else
+        {
+            return $url;
         }
 
-        $url = '';
+        $prepared = $this->database->prepare(
+                'SELECT "parent_thread" FROM "' . $target_domain->reference('posts_table') . '" WHERE "post_number" = ?');
+        $parent_thread = $this->database->executePreparedFetch($prepared, [$target_post], PDO::FETCH_COLUMN);
+
+        if (!empty($parent_thread))
+        {
+            $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->threadID(),
+                'source_post' => $source_content_id->postID(), 'target_board' => $target_domain->id(),
+                'target_thread' => $parent_thread, 'target_post' => $target_post];
+
+            if ($add_cite)
+            {
+                $this->addCite($cite_data);
+            }
+        }
 
         if (!empty($cite_data))
         {
-            $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
             $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
             $url = NEL_BASE_WEB_PATH . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
-                    $cite_data['target_thread'] . '/thread-' . $cite_data['target_thread'] . '.html' . $p_anchor;
+                    $cite_data['target_thread'] . '/' . $cite_data['target_thread'] . '.html' . $p_anchor;
         }
 
         return $url;
