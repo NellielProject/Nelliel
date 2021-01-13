@@ -2,7 +2,6 @@
 	<caption class="data-table-caption" data-i18n="gettext">List of boards</caption>
 	<thead class="data-table-header">
 		<tr>
-			<th data-i18n="gettext">Board ID</th>
 			<th data-i18n="gettext">Board URI</th>
 			<th data-i18n="gettext">DB Prefix</th>
 			<th data-i18n="gettext">Status</th>
@@ -13,7 +12,6 @@
 	<tbody>
 {{# board_list }}
 		<tr class="{{ bgclass }}">
-			<td>{{ board_id }}</td>
 			<td>{{ board_uri }}</td>
 			<td>{{ db_prefix }}</td>
 			<td>{{ status }}</td>
@@ -31,16 +29,12 @@
 <form action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="new_board_id" class="display-cell" data-i18n="gettext">Board ID</label>
-			<input id="new_board_id" class="display-cell" type="text" name="new_board_id" size="30" maxlength="50" value="">
-		</div>
-		<div class="display-row">
-			<label for="new_board_uri" class="display-cell" data-i18n="gettext">Board URI (the directory for the board)</label>
+			<label for="new_board_uri" class="display-cell" data-i18n="gettext">Board URI</label>
 			<input id="new_board_uri" class="display-cell" type="text" name="new_board_uri" size="30" maxlength="50" value="">
 		</div>
 		{{# alphanumeric_only }}
 		<div class="display-row">
-			<span class="display-cell" data-i18n="gettext">Only alphanumeric board IDs are allowed!</span>
+			<span class="display-cell" data-i18n="gettext">Only alphanumeric board URIs are allowed!</span>
 		</div>
 		{{/ alphanumeric_only }}
 		<div class="display-row">

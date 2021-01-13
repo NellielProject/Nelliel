@@ -34,7 +34,6 @@ class TableBoardData extends Table
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             board_id        VARCHAR(50) NOT NULL UNIQUE,
-            board_uri       VARCHAR(50) NOT NULL,
             hashed_board_id " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             db_prefix       VARCHAR(20) NOT NULL UNIQUE,
             locked          SMALLINT NOT NULL DEFAULT 0,

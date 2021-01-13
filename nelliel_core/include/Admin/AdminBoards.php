@@ -48,70 +48,54 @@ class AdminBoards extends Admin
         }
 
         $site_domain = new DomainSite($this->database);
-        $board_id = trim($_POST['new_board_id']);
+        $board_uri = trim($_POST['new_board_uri']);
 
-        if (nel_true_empty($board_id))
+        if (nel_true_empty($board_uri))
         {
-            nel_derp(243, _gettext('No board ID provided.'));
+            nel_derp(243, _gettext('No board URI provided.'));
         }
 
         if ($site_domain->setting('only_alphanumeric_board_ids'))
         {
-            if (preg_match('/[^a-zA-Z0-9]/', $board_id) === 1)
+            if (preg_match('/[^a-zA-Z0-9]/', $board_uri) === 1)
             {
-                nel_derp(242, _gettext('Board ID contains invalid characters. Must be alphanumeric only.'));
+                nel_derp(242, _gettext('Board URI contains invalid characters. Must be alphanumeric only.'));
             }
         }
 
-        if ($board_id === Domain::SITE || $board_id === Domain::ALL_BOARDS || $board_id === Domain::MULTI_BOARD)
+        if ($board_uri === Domain::SITE || $board_uri === Domain::ALL_BOARDS || $board_uri === Domain::MULTI_BOARD || $board_uri === NEL_TEMPLATES_DIR || $board_uri === NEL_ASSETS_DIR || $board_uri === 'nelliel_core' ||
+                $board_uri === 'documentation' || $board_uri === 'tests')
         {
-            nel_derp(244, _gettext('Board ID is reserved.'));
+            nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
         $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$board_id], PDO::FETCH_COLUMN);
-
-        if ($result)
-        {
-            nel_derp(240, _gettext('There is already a board with the ID ' . $board_id . '.'));
-        }
-
-        $board_uri = trim($_POST['new_board_uri']);
-        $board_uri = (!empty($board_uri)) ? $board_uri : $board_id;
-        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_uri" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$board_uri], PDO::FETCH_COLUMN);
 
         if ($result)
         {
-            nel_derp(245, _gettext('There is already a board with the URI ' . $board_uri . '.'));
+            nel_derp(240, _gettext('There is already a board with the URI ' . $board_uri . '.'));
         }
 
-        if ($board_uri === NEL_TEMPLATES_DIR || $board_uri === NEL_ASSETS_DIR || $board_uri === 'nelliel_core' ||
-                $board_uri === 'documentation' || $board_uri === 'tests')
-        {
-            nel_derp(246, _gettext('Board URI is reserved.'));
-        }
-
-        $db_prefix = $this->generateDBPrefix($board_id);
+        $db_prefix = $this->generateDBPrefix($board_uri);
 
         if ($db_prefix === '')
         {
-            nel_derp(241, _gettext('Had trouble registering the board ID ' . $board_id . '. May want to change it.'));
+            nel_derp(241, _gettext('Had trouble registering the board URI ' . $board_uri . '. May want to change it.'));
         }
 
-        $hashed_board_id = hash('sha256', $board_id);
+        $hashed_board_id = hash('sha256', $board_uri);
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_BOARD_DATA_TABLE .
-                '" ("board_id", "board_uri", "hashed_board_id", "db_prefix") VALUES (?, ?, ?, ?)');
-        $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
-        $prepared->bindValue(2, $board_uri, PDO::PARAM_STR);
-        $prepared->bindValue(3, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
-        $prepared->bindValue(4, $db_prefix, PDO::PARAM_STR);
+                '" ("board_id", "hashed_board_id", "db_prefix") VALUES (?, ?, ?)');
+        $prepared->bindValue(1, $board_uri, PDO::PARAM_STR);
+        $prepared->bindValue(2, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
+        $prepared->bindValue(3, $db_prefix, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         $setup = new Setup($this->database, new SQLCompatibility($this->database), new FileHandler());
-        $setup->createBoardTables($board_id, $db_prefix);
-        $setup->createBoardDirectories($board_id);
-        $domain = new DomainBoard($board_id, $this->database);
+        $setup->createBoardTables($board_uri, $db_prefix);
+        $setup->createBoardDirectories($board_uri);
+        $domain = new DomainBoard($board_uri, $this->database);
         $regen = new Regen();
         $domain->regenCache();
         $regen->allBoardPages($domain);
