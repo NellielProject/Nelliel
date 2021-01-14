@@ -44,7 +44,6 @@ Contains a list of boards and their basic information. Contains one `cooldowns` 
 |`language`              |`string` |text           |Language code for the board default.|
 |`forced_anonymous`      |`boolean`|true or false  |Is forced anonymous posting enabled.|
 |`threads_per_page`      |`integer`|1-2147483647   |Maximum threads shown on each index page.|
-|`page_limit`            |`integer`|1-2147483647   |Maximum index pages available.|
 |`max_bumps`             |`integer`|1-2147483647   |Maximum times a thread can be bumped.|
 |`max_posts`             |`integer`|1-2147483647   |Maximum number of posts in a thread.|
 |`max_filesize`          |`integer`|1-2147483647   |Maximum size of uploaded files (in kilobytes).|

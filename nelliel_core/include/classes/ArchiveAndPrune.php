@@ -77,7 +77,7 @@ class ArchiveAndPrune
     public function updateAllArchiveStatus()
     {
         $line = 1;
-        $last_active = $this->domain->setting('threads_per_page') * $this->domain->setting('page_limit');
+        $last_active = $this->domain->setting('active_threads');
         $last_buffer = $last_active + $this->domain->setting('thread_buffer');
         $last_archive = $last_buffer + $this->domain->setting('max_archive_threads');
         $archive_prune = $this->domain->setting('do_archive_pruning');

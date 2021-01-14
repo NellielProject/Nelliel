@@ -171,15 +171,18 @@
 		{{# deleted_content_placeholder }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ deleted_content_placeholder }}
-		{{# thread_buffer }}
-			{{> panels/pieces/settings_number }}
-		{{/ thread_buffer }}
 		{{# max_posts }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_posts }}
 		{{# max_bumps }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_bumps }}
+		{{# active_threads }}
+			{{> panels/pieces/settings_number }}
+		{{/ active_threads }}
+		{{# thread_buffer }}
+			{{> panels/pieces/settings_number }}
+		{{/ thread_buffer }}
 		{{# old_threads }}
 			{{> panels/pieces/settings_select }}
 		{{/ old_threads }}
@@ -212,9 +215,6 @@
 		{{# threads_per_page }}
 			{{> panels/pieces/settings_number }}
 		{{/ threads_per_page }}
-		{{# page_limit }}
-			{{> panels/pieces/settings_number }}
-		{{/ page_limit }}
 		{{# comment_display_lines }}
 			{{> panels/pieces/settings_number }}
 		{{/ comment_display_lines }}

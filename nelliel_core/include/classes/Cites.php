@@ -101,12 +101,12 @@ class Cites
         $target_post = 0;
         $url = '';
 
-        if (preg_match('#^>>([\d]+)$#', $text_input, $matches) === 1)
+        if (preg_match('#^>>([\d]+)$#u', $text_input, $matches) === 1)
         {
             $target_domain = $domain;
             $target_post = $matches[1];
         }
-        else if (preg_match('#>>>\/(.+?)\/([\d]+)#', $text_input, $matches) === 1)
+        else if (preg_match('#>>>\/(.+?)\/([\d]+)#u', $text_input, $matches) === 1)
         {
             $target_domain = new DomainBoard($matches[1], $this->database);
             $target_post = $matches[2];

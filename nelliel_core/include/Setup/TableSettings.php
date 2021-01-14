@@ -156,9 +156,10 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'png_compression', '', '6', 'PNG compression (0-9)', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'animated_gif_preview', '', '0', 'Used animated previews (requires extra libraries)', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'deleted_content_placeholder', '', '0', 'Leave a placeholder when deleting files/embeds', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_buffer', '', '50', 'Max threads in buffer', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_posts', '', '1000', 'Max posts per thread', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_bumps', '', '1000', 'Max bumps per thread', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'active_threads', '', '100', 'Active threads (shown in index) before buffer', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_buffer', '', '50', 'Max threads in buffer', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'old_threads', '{"NOTHING":{"label":"Nothing"}, "PRUNE":{"label":"Prune"}, "ARCHIVE":{"label":"Archive"}}', 'ARCHIVE', 'How to handle old threads', '', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_archive_threads', '', '1000', 'Max threads kept in archive', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'do_archive_pruning', '', '1', 'Prune oldest threads in archive when limit is reached', '', '{"type":"checkbox"}']);
@@ -167,7 +168,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'date_format', '', 'Y/m/d (D) H:i:s', 'Format for post time (uses PHP date() function)', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'abbreviate_thread', '', '5', 'Max posts in a thread before abbreviating on index page', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'threads_per_page', '', '10', 'Threads per page', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'page_limit', '', '10', 'Max pages shown in index', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'comment_display_lines', '', '15', 'How many lines of comment to display when abbreviated', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'filter_combining_characters', '', '0', 'Filter Unicode combining characters', 'Combining characters are sometimes misused for things like Zalgo text. WARNING: This can break a bunch of non-English languages!', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_render_timer', '', '1', 'Display the rendering timer', '', '{"type":"checkbox"}']);

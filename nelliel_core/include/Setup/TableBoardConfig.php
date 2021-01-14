@@ -96,9 +96,10 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['png_compression', '6', 0]);
         $this->insertDefaultRow(['animated_gif_preview', '0', 0]);
         $this->insertDefaultRow(['deleted_content_placeholder', '0', 0]);
-        $this->insertDefaultRow(['thread_buffer', '50', 0]);
         $this->insertDefaultRow(['max_posts', '1000', 0]);
         $this->insertDefaultRow(['max_bumps', '1000', 0]);
+        $this->insertDefaultRow(['active_threads', '100', 0]);
+        $this->insertDefaultRow(['thread_buffer', '50', 0]);
         $this->insertDefaultRow(['old_threads', 'ARCHIVE', 0]);
         $this->insertDefaultRow(['max_archive_threads', '1000', 0]);
         $this->insertDefaultRow(['do_archive_pruning', '1', 0]);
@@ -107,7 +108,6 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['date_format', 'Y/m/d (D) H:i:s', 0]);
         $this->insertDefaultRow(['abbreviate_thread', '5', 0]);
         $this->insertDefaultRow(['threads_per_page', '10', 0]);
-        $this->insertDefaultRow(['page_limit', '10', 0]);
         $this->insertDefaultRow(['comment_display_lines', '15', 0]);
         $this->insertDefaultRow(['filter_combining_characters', '0', 0]);
         $this->insertDefaultRow(['display_render_timer', '1', 0]);
