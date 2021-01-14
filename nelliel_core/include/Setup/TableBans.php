@@ -21,7 +21,6 @@ class TableBans extends Table
             'ban_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => true],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'all_boards' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'ban_type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'creator' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'ip_type' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'ip_address_start' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
@@ -47,7 +46,6 @@ class TableBans extends Table
             ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             board_id            VARCHAR(50) DEFAULT NULL,
             all_boards          SMALLINT NOT NULL DEFAULT 0,
-            ban_type            VARCHAR(50) NOT NULL,
             creator             VARCHAR(50) NOT NULL,
             ip_type             SMALLINT NOT NULL DEFAULT 0,
             ip_address_start    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
@@ -64,6 +62,12 @@ class TableBans extends Table
         ) " . $options . ";";
 
         return $schema;
+    }
+
+    public function postCreate(array $other_tables = null)
+    {
+        $this->database->query('CREATE INDEX ip_address_start ON ' . $this->table_name . ' (ip_address_start)');
+        $this->database->query('CREATE INDEX hashed_ip_address ON ' . $this->table_name . ' (hashed_ip_address)');
     }
 
     public function insertDefaults()

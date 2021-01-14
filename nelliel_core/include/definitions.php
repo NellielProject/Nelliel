@@ -17,16 +17,6 @@ define('NEL_FONTS_DIR', 'fonts');
 define('NEL_GENERAL_DIR', '.nelliel');
 define('NEL_CAPTCHA_DIR', 'captchas');
 
-// TODO: Currently unused, possibly remove
-if ($_SERVER['SERVER_PORT'] != 80 && empty($_SERVER['HTTPS']))
-{
-    define('NEL_BASE_DOMAIN', $_SERVER['SERVER_NAME'] . ':' . $_SERVER['SERVER_PORT']);
-}
-else
-{
-    define('NEL_BASE_DOMAIN', $_SERVER['SERVER_NAME']);
-}
-
 define('NEL_MAIN_SCRIPT', 'imgboard.php');
 define('NEL_MAIN_SCRIPT_QUERY', 'imgboard.php?');
 define('NEL_MAIN_INDEX', 'index');

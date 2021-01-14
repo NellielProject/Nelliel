@@ -227,22 +227,22 @@ class NewPost
 
         if ($post->data('parent_thread') == 0)
         {
-            $thread_cooldown = $time - $this->domain->setting('thread_cooldown');
+            $thread_renzoku = $time - $this->domain->setting('thread_renzoku');
             $prepared = $this->database->prepare(
                     'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "post_time" > ? AND "hashed_ip_address" = ?');
-            $prepared->bindValue(1, $thread_cooldown, PDO::PARAM_STR);
+            $prepared->bindValue(1, $thread_renzoku, PDO::PARAM_STR);
             $prepared->bindValue(2, nel_prepare_hash_for_storage(nel_request_ip_address(true)), PDO::PARAM_LOB);
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }
         else
         {
-            $reply_cooldown = $time - $this->domain->setting('reply_cooldown');
+            $reply_renzoku = $time - $this->domain->setting('reply_renzoku');
             $prepared = $this->database->prepare(
                     'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? AND "post_time" > ? AND "hashed_ip_address" = ?');
             $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
-            $prepared->bindValue(2, $reply_cooldown, PDO::PARAM_STR);
+            $prepared->bindValue(2, $reply_renzoku, PDO::PARAM_STR);
             $prepared->bindValue(3, nel_prepare_hash_for_storage(nel_request_ip_address(true)), PDO::PARAM_LOB);
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }

@@ -6,8 +6,8 @@ if (!defined('NELLIEL_VERSION'))
 
 //
 // This file has only the very basic configuration needed to function and do setup.
-// It is intentionally kept as short and simple as possible.
-// Board management and all other settings are accessible from the management panels.
+// It is intentionally kept short and simple.
+// All other settings are accessible from the management panels and stored in the database.
 //
 
 //
@@ -16,6 +16,7 @@ if (!defined('NELLIEL_VERSION'))
 
 // The fallback default value for locale.
 // If a locale is specified elsewhere but no language file exists for it, Nelliel will use this value instead.
+// If this language file for this value is also missing, Nelliel will fallback to 'en_US' which is included by default.
 // Locale should follow the standard format using ISO-639 language and ISO-3166 country codes, e.g. 'en_US' for 'English (United States)'
 // The available locales and their translations can be found in the directory 'nelliel_core/language/locale'
 $base_config['default_locale'] = 'en_US';
@@ -124,20 +125,25 @@ $db_config['sqlite_encoding'] = 'UTF-8';
 
 // In most cases you won't need to mess with this stuff.
 
-// Default file and directory permissions. Format must be in the proper octal format.
+// Default file and directory permissions. Must be in the proper octal format.
 $base_config['directory_perm'] = '0755';
 $base_config['file_perm'] = '0644';
-
-// Enable/disable internal caching.
-// When enabled Nelliel will use its internal caching system. This speeds things up considerably.
-// The only time this should need to be disabled is for testing or troubleshooting.
-$base_config['use_internal_cache'] = true;
 
 // Enable/disable plugins
 $base_config['enable_plugins'] = true;
 
 // Enable/disable template caching for Mustache.
 $base_config['use_mustache_cache'] = true;
+
+// Enable/disable Nelliel's internal caching systems. These are separate from external systems like memcache.
+// Nelliel can function without them enabled but things become immensely slower.
+// The only time these need to be disabled is for testing or troubleshooting.
+
+// Writes certain commonly used settings and data to files for faster access.
+$base_config['use_file_cache'] = true;
+
+// Stores some parsing and rendering data so it doesn't have to be processed every time things are rendered.
+$base_config['use_render_cache'] = true;
 
 //
 // === Crypt Settings ===

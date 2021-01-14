@@ -19,7 +19,7 @@ class TablePosts extends Table
         $this->table_name = '_posts';
         $this->columns_data = [
             'post_number' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => true],
-            'parent_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
+            'parent_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'reply_to' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'poster_name' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'post_password' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -38,6 +38,9 @@ class TablePosts extends Table
             'sage' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'mod_post_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'mod_comment' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'content_hash' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
+            'regen_cache' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'cache' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -68,6 +71,9 @@ class TablePosts extends Table
             sage                SMALLINT NOT NULL DEFAULT 0,
             mod_post_id         VARCHAR(50) DEFAULT NULL,
             mod_comment         TEXT DEFAULT NULL,
+            content_hash        " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
+            regen_cache         SMALLINT NOT NULL DEFAULT 0,
+            cache               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['threads_table'] . "
             FOREIGN KEY (parent_thread) REFERENCES " . $other_tables['threads_table'] . " (thread_id)
@@ -76,6 +82,10 @@ class TablePosts extends Table
         ) " . $options . ";";
 
         return $schema;
+    }
+
+    public function postCreate(array $other_tables = null)
+    {
     }
 
     public function insertDefaults()

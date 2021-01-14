@@ -214,11 +214,11 @@ class FileTypes
 
     public function generateSettingsCache(string $domain_id)
     {
-        if (NEL_USE_INTERNAL_CACHE)
+        if (NEL_USE_FILE_CACHE)
         {
             $this->loadSettingsIfNot($domain_id, true);
             $this->cache_handler->writeArrayToFile('settings', self::$settings[$domain_id], 'filetype_settings.php',
-                    $domain_id);
+                    'domains/' . $domain_id);
         }
     }
 

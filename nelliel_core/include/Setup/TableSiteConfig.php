@@ -40,6 +40,10 @@ class TableSiteConfig extends Table
         return $schema;
     }
 
+    public function postCreate(array $other_tables = null)
+    {
+    }
+
     public function insertDefaults()
     {
         $this->insertDefaultRow(['home_page', '/', 0]);

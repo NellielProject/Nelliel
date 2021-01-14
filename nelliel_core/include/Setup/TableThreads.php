@@ -27,7 +27,7 @@ class TableThreads extends Table
             'last_update_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'post_count' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'content_count' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'thread_sage' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'permasage' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'sticky' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'archive_status' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
@@ -50,14 +50,19 @@ class TableThreads extends Table
             last_update_milli       SMALLINT NOT NULL,
             post_count              INTEGER NOT NULL DEFAULT 0,
             content_count           INTEGER NOT NULL DEFAULT 0,
-            thread_sage             SMALLINT NOT NULL DEFAULT 0,
+            permasage               SMALLINT NOT NULL DEFAULT 0,
             sticky                  SMALLINT NOT NULL DEFAULT 0,
+            cyclic                  SMALLINT NOT NULL DEFAULT 0,
             archive_status          SMALLINT NOT NULL DEFAULT 0,
             locked                  SMALLINT NOT NULL DEFAULT 0,
             moar                    TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;
+    }
+
+    public function postCreate(array $other_tables = null)
+    {
     }
 
     public function insertDefaults()

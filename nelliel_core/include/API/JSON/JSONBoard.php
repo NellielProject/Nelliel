@@ -38,8 +38,8 @@ class JSONBoard extends JSONOutput
         $boards_array['require_content_always'] = nel_cast_to_datatype($data['require_content_always'], 'boolean');
         $boards_array['allow_tripkeys'] = nel_cast_to_datatype($data['allow_tripkeys'], 'boolean');
         $boards_array['threads_per_page'] = nel_cast_to_datatype($data['threads_per_page'], 'integer');
-        $boards_array['cooldowns']['threads'] = nel_cast_to_datatype($data['thread_cooldown'], 'integer');
-        $boards_array['cooldowns']['replies'] = nel_cast_to_datatype($data['reply_cooldown'], 'integer');
+        $boards_array['cooldowns']['threads'] = nel_cast_to_datatype($data['thread_renzoku'], 'integer');
+        $boards_array['cooldowns']['replies'] = nel_cast_to_datatype($data['reply_renzoku'], 'integer');
         $boards_array = nel_plugins()->processHook('nel-json-prepare-board', [$data], $boards_array);
         return $boards_array;
     }

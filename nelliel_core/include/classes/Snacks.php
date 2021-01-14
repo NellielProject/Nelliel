@@ -43,7 +43,6 @@ class Snacks
                 !empty($_POST[NEL_BASE_HONEYPOT_FIELD3 . '_' . $domain->id()]))
         {
             $ban_hammer = new BanHammer($this->database);
-            $ban_hammer->modifyData('ban_type', 'SPAMBOT');
             $ban_hammer->modifyData('ip_address_start', $this->ip_address);
             $ban_hammer->modifyData('reason', 'Ur a spambot. Nobody wants any. GTFO!');
             $ban_hammer->modifyData('start_time', time());

@@ -19,6 +19,8 @@ abstract class Table
 
     public abstract function buildSchema(array $other_tables = null);
 
+    public abstract function postCreate(array $other_tables = null);
+
     public abstract function insertDefaults();
 
     public function createTable(array $other_tables = null)
@@ -28,6 +30,7 @@ abstract class Table
 
         if ($created)
         {
+            $this->postCreate($other_tables);
             $this->updateVersionsTable();
             $this->insertDefaults();
         }

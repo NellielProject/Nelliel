@@ -48,6 +48,10 @@ class TableRolePermissions extends Table
         return $schema;
     }
 
+    public function postCreate(array $other_tables = null)
+    {
+    }
+
     public function insertDefaults()
     {
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_bans', 1]);

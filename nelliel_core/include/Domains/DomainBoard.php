@@ -111,7 +111,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function regenCache()
     {
-        if (NEL_USE_INTERNAL_CACHE)
+        if (NEL_USE_FILE_CACHE)
         {
             $this->cacheSettings();
             $filetypes = new FileTypes($this->database());
@@ -121,7 +121,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function deleteCache()
     {
-        if (NEL_USE_INTERNAL_CACHE)
+        if (NEL_USE_FILE_CACHE)
         {
             $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->domain_id);
         }

@@ -44,6 +44,10 @@ class TableRoles extends Table
         return $schema;
     }
 
+    public function postCreate(array $other_tables = null)
+    {
+    }
+
     public function insertDefaults()
     {
         $this->insertDefaultRow(['SITE_ADMIN', 100, 'Site Administrator', '## Site Administrator ##']);

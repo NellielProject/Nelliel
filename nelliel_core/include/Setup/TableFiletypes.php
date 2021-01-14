@@ -54,6 +54,10 @@ class TableFiletypes extends Table
         return $schema;
     }
 
+    public function postCreate(array $other_tables = null)
+    {
+    }
+
     public function insertDefaults()
     {
         // IMPORTANT: If the regex has / in it, that needs to be escaped since that's the delimiter Nelliel uses

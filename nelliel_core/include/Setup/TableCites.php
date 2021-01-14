@@ -54,6 +54,10 @@ class TableCites extends Table
         return $schema;
     }
 
+    public function postCreate(array $other_tables = null)
+    {
+    }
+
     public function insertDefaults()
     {
     }

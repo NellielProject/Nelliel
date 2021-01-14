@@ -23,6 +23,7 @@ class TableCaptcha extends Table
             'captcha_text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'time_created' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'seen' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'solved' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
@@ -39,11 +40,16 @@ class TableCaptcha extends Table
             captcha_text    VARCHAR(100) NOT NULL,
             domain_id       VARCHAR(50) DEFAULT NULL,
             time_created    BIGINT NOT NULL,
+            seen            SMALLINT DEFAULT 0,
             solved          SMALLINT DEFAULT 0,
             moar            TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;
+    }
+
+    public function postCreate(array $other_tables = null)
+    {
     }
 
     public function insertDefaults()

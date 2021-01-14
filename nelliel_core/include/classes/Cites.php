@@ -116,7 +116,6 @@ class Cites
             return $url;
         }
 
-        // TODO: Set up cache of thread/post IDs to include and check
         $prepared = $this->database->prepare(
                 'SELECT "parent_thread" FROM "' . $target_domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $parent_thread = $this->database->executePreparedFetch($prepared, [$target_post], PDO::FETCH_COLUMN);

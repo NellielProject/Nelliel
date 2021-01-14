@@ -58,7 +58,6 @@ class OutputPanelBans extends Output
             $ban_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $ban_data['ban_id'] = $ban_hammer->getData('ban_id');
-            $ban_data['ban_type'] = $ban_hammer->getData('ban_type');
             $ban_data['ip_address'] = $this->formatIP($ban_hammer) ?? nel_truncate_hash(
                     $ban_hammer->getData('hashed_ip_address'));
             $ban_data['board_id'] = $ban_hammer->getData('board_id');
@@ -105,8 +104,6 @@ class OutputPanelBans extends Output
 
         $this->render_data['ban_ip'] = $parameters['ip_start'];
         $this->render_data['ban_hashed_ip'] = $parameters['hashed_ip'];
-        $this->render_data['ban_type'] = $parameters['ban_type'];
-        $this->render_data['content_ban'] = $this->render_data['ban_type'] === 'CONTENT';
         $this->render_data['unhashed_ip'] = nel_site_domain()->setting('store_unhashed_ip');
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
@@ -142,7 +139,6 @@ class OutputPanelBans extends Output
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
         $this->render_data['hashed_ip'] = $ban_hammer->getData('hashed_ip_address');
         $this->render_data['ban_board'] = $ban_hammer->getData('board_id');
-        $this->render_data['ban_type'] = $ban_hammer->getData('ban_type');
         $this->render_data['start_time_formatted'] = date("D F jS Y  H:i:s", $ban_hammer->getData('start_time'));
         $this->render_data['expiration'] = date("D F jS Y  H:i:s",
                 $ban_hammer->getData('length') + $ban_hammer->getData('start_time'));

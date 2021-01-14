@@ -40,6 +40,10 @@ class TableBoardConfig extends Table
         return $schema;
     }
 
+    public function postCreate(array $other_tables = null)
+    {
+    }
+
     public function insertDefaults()
     {
         $this->insertDefaultRow(['allow_tripkeys', '1', 0]);
@@ -70,8 +74,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['use_fgsfds', '1', 0]);
         $this->insertDefaultRow(['use_honeypot', '1', 0]);
         $this->insertDefaultRow(['locale', 'en_US', 0]);
-        $this->insertDefaultRow(['thread_cooldown', '120', 0]);
-        $this->insertDefaultRow(['reply_cooldown', '60', 0]);
+        $this->insertDefaultRow(['thread_renzoku', '120', 0]);
+        $this->insertDefaultRow(['reply_renzoku', '20', 0]);
         $this->insertDefaultRow(['abbreviate_thread', '5', 0]);
         $this->insertDefaultRow(['max_post_files', '3', 0]);
         $this->insertDefaultRow(['max_files_row', '3', 0]);
@@ -100,7 +104,6 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['max_archive_threads', '1000', 0]);
         $this->insertDefaultRow(['fgsfds_name', 'FGSFDS', 0]);
         $this->insertDefaultRow(['indent_marker', '>>', 0]);
-        $this->insertDefaultRow(['file_sha256', '1', 0]);
         $this->insertDefaultRow(['file_sha512', '0', 0]);
         $this->insertDefaultRow(['enable_dynamic_pages', '0', 0]);
         $this->insertDefaultRow(['template_id', 'template-nelliel-basic', 0]);

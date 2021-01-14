@@ -242,7 +242,7 @@ class FilesUpload
             $is_banned = $snacks->fileHashIsBanned($file->data('sha1'), 'sha1');
         }
 
-        if (!$is_banned && $this->domain->setting('file_sha256'))
+        if (!$is_banned)
         {
             $file->changeData('sha256', hash_file('sha256', $file->data('location')));
             $is_banned = $snacks->fileHashIsBanned($file->data('sha256'), 'sha256');

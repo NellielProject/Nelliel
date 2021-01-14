@@ -43,6 +43,8 @@ class TableContent extends Table
             'spoiler' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'deleted' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'exif' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'regen_cache' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'cache' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -77,6 +79,8 @@ class TableContent extends Table
             spoiler             SMALLINT NOT NULL DEFAULT 0,
             deleted             SMALLINT NOT NULL DEFAULT 0,
             exif                TEXT DEFAULT NULL,
+            regen_cache         SMALLINT NOT NULL DEFAULT 0,
+            cache               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['posts_table'] . "
             FOREIGN KEY (post_ref) REFERENCES " . $other_tables['posts_table'] . " (post_number)
@@ -85,6 +89,10 @@ class TableContent extends Table
         ) " . $options . ";";
 
         return $schema;
+    }
+
+    public function postCreate(array $other_tables = null)
+    {
     }
 
     public function insertDefaults()

@@ -24,7 +24,7 @@ class CacheHandler
     {
         $array = array();
 
-        if (NEL_USE_INTERNAL_CACHE)
+        if (NEL_USE_FILE_CACHE)
         {
             $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
 
@@ -43,7 +43,7 @@ class CacheHandler
         $file_handler = new FileHandler();
         $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
 
-        if (NEL_USE_INTERNAL_CACHE)
+        if (NEL_USE_FILE_CACHE)
         {
             if (!is_writable(NEL_CACHE_FILES_PATH))
             {

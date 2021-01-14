@@ -43,12 +43,16 @@ class TableLogs extends Table
             originator          VARCHAR(50) DEFAULT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
-            time                INTEGER NOT NULL,
+            time                BIGINT NOT NULL,
             message             TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;
+    }
+
+    public function postCreate(array $other_tables = null)
+    {
     }
 
     public function insertDefaults()

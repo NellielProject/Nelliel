@@ -59,7 +59,7 @@ class Language
             $hash = md5_file($file);
         }
 
-        if (NEL_USE_INTERNAL_CACHE && $cache_handler->checkHash($file_id, $hash))
+        if (NEL_USE_FILE_CACHE && $cache_handler->checkHash($file_id, $hash))
         {
             if (file_exists(NEL_CACHE_FILES_PATH . $cache_file))
             {
@@ -73,10 +73,10 @@ class Language
             $po_parser = new \SmallPHPGettext\ParsePo();
             $language_array = $po_parser->parseFile($file, $domain_id);
 
-            if (NEL_USE_INTERNAL_CACHE)
+            if (NEL_USE_FILE_CACHE)
             {
                 $cache_handler->updateHash($file_id, $hash);
-                $this->cache_handler->writeArrayToFile('language_array', $language_array, $cache_file);
+                $cache_handler->writeArrayToFile('language_array', $language_array, $cache_file);
             }
 
             $loaded = true;

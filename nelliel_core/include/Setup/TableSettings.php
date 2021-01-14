@@ -54,6 +54,10 @@ class TableSettings extends Table
         return $schema;
     }
 
+    public function postCreate(array $other_tables = null)
+    {
+    }
+
     public function insertDefaults()
     {
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'home_page', '', '/', 'Site home page', '', '{"type":"text"}']);
@@ -127,10 +131,11 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_thread_duplicates', '', '1', 'Check for duplicates in current thread when replying', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_op_duplicates', '', '1', 'Check for duplicates in other op posts when creating new thread', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_fgsfds', '', '1', 'Use FGSFDS field for commands (noko, sage, etc)', '', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'fgsfds_name', '', 'FGSFDS', 'Display name of FGSFDS field', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_honeypot', '', '1', 'Use honeypot for spambots', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for the board (use ISO language + country code)', '', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_cooldown', '', '120', 'Cooldown for new threads (seconds)', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'reply_cooldown', '', '60', 'Cooldown for new replies (seconds)', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_renzoku', '', '120', 'Cooldown for new threads (seconds)', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'reply_renzoku', '', '20', 'Cooldown for new replies (seconds)', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'abbreviate_thread', '', '5', 'Max posts in a thread before abbreviating on index page', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_post_files', '', '3', 'Max number of uploads per post', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_files_row', '', '3', 'Max number of uploads to display in each row', '', '{"type":"number"}']);
@@ -148,7 +153,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'comment_display_lines', '', '15', 'How many lines of comment to display when abbreviated', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'truncate_long_fields', '', '0', 'Truncate fields that are too long instead of giving an error', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'threads_per_page', '', '10', 'Threads per page', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'page_limit', '', '10', 'Max pages in index', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'page_limit', '', '10', 'Max pages shown in index', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_buffer', '', '100', 'Max threads in buffer', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_posts', '', '1000', 'Max posts per thread', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_bumps', '', '1000', 'Max bumps per thread', '', '{"type":"number"}']);
@@ -157,9 +162,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'old_threads', '{"NOTHING":{"label":"Nothing"}, "PRUNE":{"label":"Prune"}, "ARCHIVE":{"label":"Archive"}}', 'ARCHIVE', 'How to handle old threads', '', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'do_archive_pruning', '', '1', 'Prune oldest threads in archive when limit is reached', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_archive_threads', '', '500', 'Max threads kept in archive', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'fgsfds_name', '', 'FGSFDS', 'Display name of FGSFDS field', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'indent_marker', '', '>>', 'Indent marker next to replies', '', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'file_sha256', '', '1', 'Generate SHA256 hash for uploaded files', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'file_sha512', '', '0', 'Generate SHA512 hash for uploaded files', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_dynamic_pages', '', '0', 'Allow visitors to use dynamic page rendering', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'template_id', '', 'template-nelliel-basic', 'ID of template for board to use', '', '{"type":"text"}']);

@@ -41,8 +41,7 @@ class OutputPanelManageBoards extends Output
             $board_data = array();
             $board_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $board_data['board_id'] = $board_info['board_id'];
-            $board_data['board_uri'] = $board_info['board_uri'];
+            $board_data['board_uri'] = $board_info['board_id'];
             $board_data['db_prefix'] = $board_info['db_prefix'];
 
             if ($board_info['locked'] == 0)

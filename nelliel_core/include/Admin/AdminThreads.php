@@ -150,12 +150,11 @@ class AdminThreads extends Admin
         $content_instance->loadFromDatabase();
         $ip_start = $content_instance->data('ip_address');
         $hashed_ip = $content_instance->data('hashed_ip_address');
-        $ban_type = 'CONTENT';
         $content_instance->remove();
         $this->regenThread($content_id->threadID(), true);
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
         $output_panel->render(
-                ['section' => 'add', 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip, 'ban_type' => $ban_type],
+                ['section' => 'add', 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip],
                 false);
         $this->outputMain(false);
     }

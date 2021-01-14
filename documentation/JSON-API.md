@@ -85,7 +85,7 @@ Contains information about a thread.
 |`last_update_milli`   |`integer`|0-999                |Last thread update milliseconds. Used with `last_update` when high precision is needed.|
 |`post_count`          |`integer`|0-2147483647         |Total number of posts in the thread.|
 |`content_count`       |`integer`|0-2147483647         |Total content in the thread.|
-|`thread_sage`         |`boolean`|true or false        |Is the thread permasaged.|
+|`permasage`         |`boolean`|true or false        |Is the thread permasaged.|
 |`sticky`              |`boolean`|true or false        |Is the thread stickied.|
 |`locked`              |`boolean`|true or false        |Is the thread locked.|
 

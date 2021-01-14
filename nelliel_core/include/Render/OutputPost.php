@@ -254,6 +254,7 @@ class OutputPost extends Output
         $post_headers['post_number_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
                 $post_content_id->postID();
 
+        // TODO: Combine this into Cites class
         if ($this->domain->setting('display_post_backlinks'))
         {
             $prepared = $this->database->prepare(
