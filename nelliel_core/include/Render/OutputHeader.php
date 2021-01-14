@@ -34,7 +34,7 @@ class OutputHeader extends Output
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $this->render_data['use_site_header'] = true;
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
-        $this->render_data['slogan'] = ($this->domain->setting('show_slogan')) ? $this->domain->setting('slogan') : '';
+        $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting('description') : '';
         $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
         $this->render_data['page_title'] = $this->domain->setting('name');
         $output = $this->output('header', $data_only, true, $this->render_data);
@@ -68,7 +68,7 @@ class OutputHeader extends Output
             $this->render_data['name'] = ' - ' . $board_name;
         }
 
-        $this->render_data['slogan'] = ($this->domain->setting('show_slogan')) ? $this->domain->setting('slogan') : '';
+        $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting('description') : '';
         $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
 
         if (!$index_render && !empty($treeline))

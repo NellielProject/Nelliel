@@ -36,8 +36,8 @@ class Previews
             if ($files[$i]->data('type') === 'graphics')
             {
                 $parameters = array();
-                $ratio = min(($this->domain->setting('max_height') / $files[$i]->data('display_height')),
-                        ($this->domain->setting('max_width') / $files[$i]->data('display_width')));
+                $ratio = min(($this->domain->setting('max_preview_height') / $files[$i]->data('display_height')),
+                        ($this->domain->setting('max_preview_width') / $files[$i]->data('display_width')));
                 $files[$i]->changeData('preview_width',
                         ($ratio < 1) ? intval($ratio * $files[$i]->data('display_width')) : $files[$i]->data(
                                 'display_width'));
@@ -164,8 +164,8 @@ class Previews
                 return;
             }
 
-            if ($file->data('display_width') > $this->domain->setting('max_width') ||
-                    $file->data('display_height') > $this->domain->setting('max_height'))
+            if ($file->data('display_width') > $this->domain->setting('max_preview_width') ||
+                    $file->data('display_height') > $this->domain->setting('max_preview_height'))
             {
                 $resize_command .= '-coalesce ';
                 $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
@@ -235,8 +235,8 @@ class Previews
         {
             $file->changeData('preview_extension', 'gif');
 
-            if ($file->data('display_width') > $this->domain->setting('max_width') ||
-                    $file->data('display_height') > $this->domain->setting('max_height'))
+            if ($file->data('display_width') > $this->domain->setting('max_preview_width') ||
+                    $file->data('display_height') > $this->domain->setting('max_preview_height'))
             {
                 $resize_command .= '-coalesce ';
                 $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
@@ -272,8 +272,8 @@ class Previews
         {
             $file->changeData('preview_extension', 'gif');
 
-            if ($file->data('display_width') > $this->domain->setting('max_width') ||
-                    $file->data('display_height') > $this->domain->setting('max_height'))
+            if ($file->data('display_width') > $this->domain->setting('max_preview_width') ||
+                    $file->data('display_height') > $this->domain->setting('max_preview_height'))
             {
                 $image = $image->coalesceImages();
 

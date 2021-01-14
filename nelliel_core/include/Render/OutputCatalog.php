@@ -111,11 +111,11 @@ class OutputCatalog extends Output
                 $width = $first_file['preview_width'];
                 $height = $first_file['preview_height'];
 
-                if ($width > $this->domain->setting('max_catalog_width') ||
-                        $height > $this->domain->setting('max_catalog_height'))
+                if ($width > $this->domain->setting('max_catalog_display_width') ||
+                        $height > $this->domain->setting('max_catalog_display_height'))
                 {
-                    $ratio = min(($this->domain->setting('max_catalog_height') / $height),
-                            ($this->domain->setting('max_catalog_width') / $width));
+                    $ratio = min(($this->domain->setting('max_catalog_display_height') / $height),
+                            ($this->domain->setting('max_catalog_display_width') / $width));
                     $width = intval($ratio * $width);
                     $height = intval($ratio * $height);
                 }

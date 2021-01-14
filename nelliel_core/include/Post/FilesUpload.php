@@ -59,11 +59,11 @@ class FilesUpload
 
         $file_count = count($this->uploaded_files['upload_files']['name']);
 
-        if ($file_count > $this->domain->setting('max_post_files'))
+        if ($file_count > $this->domain->setting('max_post_uploads'))
         {
             nel_derp(27,
                     sprintf(_gettext('You are trying to upload too many files in one post. Limit is %d'),
-                            $this->domain->setting('max_post_files')), $error_data);
+                            $this->domain->setting('max_post_uploads')), $error_data);
         }
 
         if ($file_count > 1)

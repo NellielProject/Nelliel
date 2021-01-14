@@ -62,8 +62,8 @@ class OutputEmbed extends Output
                     '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
         }
 
-        $this->render_data['max_width'] = ($multiple) ? $this->domain->setting('max_multi_width') : $this->domain->setting('max_width');
-        $this->render_data['max_height'] = ($multiple) ? $this->domain->setting('max_multi_height') : $this->domain->setting('max_height');
+        $this->render_data['max_preview_width'] = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting('max_display_width');
+        $this->render_data['max_preview_height'] = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting('max_display_height');
         $output = $this->output('thread/file_info', $data_only, true, $this->render_data);
         return $output;
     }

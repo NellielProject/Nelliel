@@ -97,7 +97,7 @@ class OutputPostingForm extends Output
         $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
                 _gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize'));
         $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
-                _gettext('Images greater than %d x %d pixels will be thumbnailed.'), $this->domain->setting('max_width'),
-                $this->domain->setting('max_height'));
+                _gettext('Images greater than %d x %d pixels will be thumbnailed.'), $this->domain->setting('max_preview_width'),
+                $this->domain->setting('max_preview_height'));
     }
 }

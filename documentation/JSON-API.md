@@ -40,7 +40,6 @@ Contains a list of boards and their basic information. Contains one `cooldowns` 
 |:-----------------------|:--------|:--------------|:----------|
 |`board_id`              |`string` |text           |ID of the board.|
 |`name`                  |`string` |text           |Displayed name of the board.|
-|`slogan`                |`string` |text           |Slogan/subtitle for the board.|
 |`description`           |`string` |text           |Short description of the board.|
 |`language`              |`string` |text           |Language code for the board default.|
 |`forced_anonymous`      |`boolean`|true or false  |Is forced anonymous posting enabled.|
@@ -51,7 +50,7 @@ Contains a list of boards and their basic information. Contains one `cooldowns` 
 |`max_filesize`          |`integer`|1-2147483647   |Maximum size of uploaded files (in kilobytes).|
 |`require_content_start` |`boolean`|true or false  |Image, file or content required for new thread.|
 |`require_content_always`|`boolean`|true or false  |Image, file or content required for any post.|
-|`allow_tripkeys`        |`boolean`|true or false  |Are tripcodes allowed when posting.|
+|`allow_tripcodes`        |`boolean`|true or false  |Are tripcodes allowed when posting.|
 
 ### `cooldowns`
 Contains a list of cooldowns for posting on a board.

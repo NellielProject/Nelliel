@@ -96,12 +96,12 @@ class OutputFile extends Output
             $this->render_data['file_metadata'][] = $sha512_data;
         }
 
-        if ($this->domain->setting('use_preview'))
+        if ($this->domain->setting('generate_preview'))
         {
             $this->render_data['image_preview'] = true;
-            $max_width = ($multiple) ? $this->domain->setting('max_multi_width') : $this->domain->setting('max_width');
-            $max_height = ($multiple) ? $this->domain->setting('max_multi_height') : $this->domain->setting(
-                    'max_height');
+            $max_width = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting('max_display_width');
+            $max_height = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
+                    'max_display_height');
             $this->render_data['max_width'] = $max_width;
             $this->render_data['max_height'] = $max_height;
 

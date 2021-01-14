@@ -134,7 +134,7 @@ class PostData
         $post->changeData('tripcode', '');
         $post->changeData('secure_tripcode', '');
 
-        if ($name_pieces[2] !== '' && $this->domain->setting('allow_tripkeys'))
+        if ($name_pieces[2] !== '' && $this->domain->setting('allow_tripcodes'))
         {
             $trip = $this->tripcodeCharsetConvert($name_pieces[2], 'SHIFT_JIS', 'UTF-8');
             $salt = substr($trip . 'H.', 1, 2);
@@ -143,7 +143,7 @@ class PostData
             $post->changeData('tripcode', substr(crypt($trip, $salt), -10));
         }
 
-        if ($name_pieces[3] !== '' && $this->domain->setting('allow_tripkeys'))
+        if ($name_pieces[3] !== '' && $this->domain->setting('allow_tripcodes'))
         {
             $trip = $name_pieces[3];
             $trip = hash($site_domain->setting('secure_tripcode_algorithm'), $trip . NEL_TRIPCODE_PEPPER);

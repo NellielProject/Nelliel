@@ -172,7 +172,7 @@ class NewPost
         if ($spoon)
         {
             // Make previews and do final file processing
-            if ($this->domain->setting('use_preview'))
+            if ($this->domain->setting('generate_preview'))
             {
                 $preview_path = $this->domain->reference('preview_path') . $thread->contentID()->threadID() . '/' .
                         $post->contentID()->postID() . '/';

@@ -91,7 +91,7 @@ class OutputPost extends Output
 
                 if ($this->render_data['multi_file'])
                 {
-                    if (count($content_row) == $this->domain->setting('max_files_row'))
+                    if (count($content_row) == $this->domain->setting('max_uploads_row'))
                     {
                         $this->render_data['content_rows'][]['row'] = $content_row;
                         $content_row = array();
@@ -242,9 +242,9 @@ class OutputPost extends Output
             }
         }
 
-        $tripcode = (!empty($post_data['tripcode'])) ? $this->domain->setting('tripkey_marker') . $post_data['tripcode'] : '';
-        $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $this->domain->setting('tripkey_marker') .
-                $this->domain->setting('tripkey_marker') . $post_data['secure_tripcode'] : '';
+        $tripcode = (!empty($post_data['tripcode'])) ? $this->domain->setting('tripcode_marker') . $post_data['tripcode'] : '';
+        $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $this->domain->setting('tripcode_marker') .
+                $this->domain->setting('tripcode_marker') . $post_data['secure_tripcode'] : '';
         $capcode = ($post_data['mod_post_id']) ? $authorization->getRole($post_data['mod_post_id'])->auth_data['capcode'] : '';
         $trip_line = $tripcode . $secure_tripcode;
         $post_headers['tripline'] = $trip_line;
