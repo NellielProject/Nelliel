@@ -42,6 +42,7 @@
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Embed URL</span>
 			<input class="posting-form-input" type="text" name="embed_url" size="30">
+			{{# embed_replaces }}<span data-i18n="gettext">(Embed will replace files)</span>{{/ embed_replaces }}
 		</label>
 		{{/ allow_embeds }}
 		{{# use_fgsfds }}

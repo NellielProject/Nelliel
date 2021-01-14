@@ -95,17 +95,17 @@ class OutputPanelBoardSettings extends Output
                 $filetype_set[$filetype['base_extension']]['value'] = (array_key_exists($filetype['format'],
                         $enabled_formats)) ? 'checked' : '';
                 $filetype_set[$filetype['base_extension']]['disabled'] = ($types_edit_lock) ? 'disabled' : '';
-                $sub_extensions = ' - ';
+                $extensions = ' - ' . $filetype['base_extension'];
 
                 if (!empty($filetype['sub_extensions']))
                 {
                     foreach (json_decode($filetype['sub_extensions'], true) as $sub_extension)
                     {
-                        $sub_extensions .= $sub_extension . ', ';
+                        $extensions .= ', ' . $sub_extension;
                     }
                 }
 
-                $filetype_set[$filetype['base_extension']]['label'] .= substr($sub_extensions, 0, -2);
+                $filetype_set[$filetype['base_extension']]['label'] .= $extensions;
             }
 
             $entry_row['entry'] = array();

@@ -50,6 +50,7 @@ class OutputPostingForm extends Output
             $this->render_data['allow_multiple'] = $this->domain->setting('allow_reply_multiple');
         }
 
+        $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['use_fgsfds'] = $this->domain->setting('use_fgsfds');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
