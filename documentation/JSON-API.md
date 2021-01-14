@@ -48,8 +48,8 @@ Contains a list of boards and their basic information. Contains one `cooldowns` 
 |`max_bumps`             |`integer`|1-2147483647   |Maximum times a thread can be bumped.|
 |`max_posts`             |`integer`|1-2147483647   |Maximum number of posts in a thread.|
 |`max_filesize`          |`integer`|1-2147483647   |Maximum size of uploaded files (in kilobytes).|
-|`require_content_start` |`boolean`|true or false  |Image, file or content required for new thread.|
-|`require_content_always`|`boolean`|true or false  |Image, file or content required for any post.|
+|`require_op_upload` |`boolean`|true or false  |Image, file or content required for new thread.|
+|`require_upload_always`|`boolean`|true or false  |Image, file or content required for any post.|
 |`allow_tripcodes`        |`boolean`|true or false  |Are tripcodes allowed when posting.|
 
 ### `cooldowns`

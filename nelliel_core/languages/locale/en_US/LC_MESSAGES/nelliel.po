@@ -1140,64 +1140,64 @@ msgstr ""
 msgid "Never put anything in this field!"
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:41
+#: nelliel_core/include/Post/Uploads.php:41
 #, php-format
 msgid "You are trying to upload too many files in one post. Limit is %d"
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:47
+#: nelliel_core/include/Post/Uploads.php:47
 msgid "You cannot upload multiple files."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:52
+#: nelliel_core/include/Post/Uploads.php:52
 msgid "The OP post cannot have multiple files."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:171
+#: nelliel_core/include/Post/Uploads.php:171
 msgid "Spoon is too big."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:176
+#: nelliel_core/include/Post/Uploads.php:176
 msgid "File is bigger than the server allows."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:181
+#: nelliel_core/include/Post/Uploads.php:181
 msgid "File is bigger than submission form allows."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:186
+#: nelliel_core/include/Post/Uploads.php:186
 msgid "Only part of the file was uploaded."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:191
+#: nelliel_core/include/Post/Uploads.php:191
 msgid "File size is 0 or Candlejack stole your uplo"
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:196
+#: nelliel_core/include/Post/Uploads.php:196
 msgid "Cannot save uploaded files to server for some reason."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:201
+#: nelliel_core/include/Post/Uploads.php:201
 msgid "The uploaded file just ain't right.'"
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:237
+#: nelliel_core/include/Post/Uploads.php:237
 msgid "That file is banned."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:275
+#: nelliel_core/include/Post/Uploads.php:275
 msgid "Duplicate file detected."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:290
+#: nelliel_core/include/Post/Uploads.php:290
 msgid "Unrecognized file type."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:295
+#: nelliel_core/include/Post/Uploads.php:295
 msgid "Filetype is not allowed."
 msgstr ""
 
-#: nelliel_core/include/Post/FilesUpload.php:300
+#: nelliel_core/include/Post/Uploads.php:300
 msgid "Incorrect file type detected (does not match extension). Possible Hax."
 msgstr ""
 

@@ -51,8 +51,7 @@ class NewPost
 
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $file_handler = nel_utilities()->fileHandler();
-        $file_upload = new FilesUpload($this->domain, $_FILES, $authorization, $this->session);
-        $embed_handler = new Embeds($this->domain, [$_POST['embed_url'] ?? ''], $authorization, $this->session); // TODO: Support multiple embeds
+        $uploads_handler = new Uploads($this->domain, $_FILES, [$_POST['embed_url'] ?? ''], $authorization, $this->session);
         $data_handler = new PostData($this->domain, $authorization, $this->session);
         $post = new \Nelliel\Content\ContentPost(new \Nelliel\Content\ContentID(), $this->domain);
         $data_handler->processPostData($post);
@@ -75,33 +74,15 @@ class NewPost
         }
 
         $post->changeData('sage', $fgsfds->getCommandData('sage', 'value'));
-        $files = $file_upload->process($post);
-        $embeds = $embed_handler->process($post);
-
-        if(!empty($embeds) && $this->domain->setting('embed_replaces_file'))
-        {
-            $files = array();
-        }
-
-        $all_content = array_merge($files, $embeds);
-        $spoon = !empty($all_content);
-        $post->changeData('content_count', count($all_content));
+        $uploads = $uploads_handler->process($post);
+        $spoon = !empty($uploads);
+        $post->changeData('content_count', count($uploads));
 
         if (!$spoon)
         {
             if (!$post->data('comment'))
             {
-                nel_derp(7, _gettext('Post contains zero content. Dumbass.'), $error_data);
-            }
-
-            if ($this->domain->setting('require_content_always'))
-            {
-                nel_derp(8, _gettext('Image, file or embed is required when making a new post.'), $error_data);
-            }
-
-            if ($this->domain->setting('require_content_start') && $post->data('response_to') == 0)
-            {
-                nel_derp(9, _gettext('Image, file or embed is required to make new thread.'), $error_data);
+                nel_derp(7, _gettext('Post contains zero content. What was the point of this?'), $error_data);
             }
         }
 
@@ -120,8 +101,8 @@ class NewPost
         $post->changeData('has_content', ($post->data('content_count') > 0) ? 1 : 0);
 
         // Process if-thens for new post here
-        $if_then = new IfThen($this->domain->database(), new ConditionsPost($post, $all_content),
-                new ActionsPost($post, $all_content));
+        $if_then = new IfThen($this->domain->database(), new ConditionsPost($post, $uploads),
+                new ActionsPost($post, $uploads));
         $if_then->process($this->domain->id());
 
         $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
@@ -177,27 +158,27 @@ class NewPost
                 $preview_path = $this->domain->reference('preview_path') . $thread->contentID()->threadID() . '/' .
                         $post->contentID()->postID() . '/';
                 $gen_previews = new Previews($this->domain);
-                $all_content = $gen_previews->generate($all_content, $preview_path);
+                $uploads = $gen_previews->generate($uploads, $preview_path);
             }
 
             $order = 1;
 
-            foreach ($all_content as $file)
+            foreach ($uploads as $upload)
             {
-                $file->contentID()->changeThreadID($thread->contentID()->threadID());
-                $file->changeData('parent_thread', $thread->contentID()->threadID());
-                $file->contentID()->changePostID($post->contentID()->postID());
-                $file->changeData('post_ref', $post->contentID()->postID());
-                $file->contentID()->changeOrderID($order);
-                $file->changeData('content_order', $order);
+                $upload->contentID()->changeThreadID($thread->contentID()->threadID());
+                $upload->changeData('parent_thread', $thread->contentID()->threadID());
+                $upload->contentID()->changePostID($post->contentID()->postID());
+                $upload->changeData('post_ref', $post->contentID()->postID());
+                $upload->contentID()->changeOrderID($order);
+                $upload->changeData('content_order', $order);
 
-                if ($file->data('type') !== 'embed')
+                if ($upload->data('type') !== 'embed')
                 {
-                    $file_handler->moveFile($file->data('location'), $src_path . $file->data('fullname'), false);
-                    chmod($src_path . $file->data('fullname'), octdec(NEL_FILES_PERM));
+                    $file_handler->moveFile($upload->data('location'), $src_path . $upload->data('fullname'), false);
+                    chmod($src_path . $upload->data('fullname'), octdec(NEL_FILES_PERM));
                 }
 
-                $file->writeToDatabase();
+                $upload->writeToDatabase();
                 ++ $order;
             }
         }

@@ -33,8 +33,8 @@ class JSONBoard extends JSONOutput
         $boards_array['max_bumps'] = nel_cast_to_datatype($data['max_bumps'], 'integer');
         $boards_array['max_posts'] = nel_cast_to_datatype($data['max_posts'], 'integer');
         $boards_array['max_filesize'] = nel_cast_to_datatype($data['max_filesize'], 'integer');
-        $boards_array['require_content_start'] = nel_cast_to_datatype($data['require_content_start'], 'boolean');
-        $boards_array['require_content_always'] = nel_cast_to_datatype($data['require_content_always'], 'boolean');
+        $boards_array['require_op_upload'] = nel_cast_to_datatype($data['require_op_upload'], 'boolean');
+        $boards_array['require_upload_always'] = nel_cast_to_datatype($data['require_upload_always'], 'boolean');
         $boards_array['allow_tripcodes'] = nel_cast_to_datatype($data['allow_tripcodes'], 'boolean');
         $boards_array['threads_per_page'] = nel_cast_to_datatype($data['threads_per_page'], 'integer');
         $boards_array['cooldowns']['threads'] = nel_cast_to_datatype($data['thread_renzoku'], 'integer');

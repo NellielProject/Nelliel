@@ -68,8 +68,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['allow_op_multiple', '0', 0]);
         $this->insertDefaultRow(['allow_reply_multiple', '0', 0]);
         $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
-        $this->insertDefaultRow(['require_content_start', '1', 0]);
-        $this->insertDefaultRow(['require_content_always', '0', 0]);
+        $this->insertDefaultRow(['require_op_upload', '1', 0]);
+        $this->insertDefaultRow(['require_upload_always', '0', 0]);
         $this->insertDefaultRow(['check_thread_duplicates', '1', 0]);
         $this->insertDefaultRow(['check_op_duplicates', '1', 0]);
         $this->insertDefaultRow(['enable_spoilers', '1', 0]);
@@ -78,7 +78,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['max_subject_length', '200', 0]);
         $this->insertDefaultRow(['max_comment_length', '5000', 0]);
         $this->insertDefaultRow(['max_post_uploads', '3', 0]);
-        $this->insertDefaultRow(['max_filesize', '4096', 0]);
+        $this->insertDefaultRow(['max_filesize', '5120', 0]);
         $this->insertDefaultRow(['truncate_long_fields', '0', 0]);
         $this->insertDefaultRow(['forced_anonymous', '0', 0]);
         $this->insertDefaultRow(['allow_tripcodes', '1', 0]);
@@ -96,7 +96,6 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['png_compression', '6', 0]);
         $this->insertDefaultRow(['animated_gif_preview', '0', 0]);
         $this->insertDefaultRow(['deleted_content_placeholder', '0', 0]);
-        $this->insertDefaultRow(['file_sha512', '0', 0]);
         $this->insertDefaultRow(['thread_buffer', '50', 0]);
         $this->insertDefaultRow(['max_posts', '1000', 0]);
         $this->insertDefaultRow(['max_bumps', '1000', 0]);

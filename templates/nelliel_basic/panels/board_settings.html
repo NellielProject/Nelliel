@@ -79,12 +79,12 @@
 		{{# embed_replaces_file }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ embed_replaces_file }}
-		{{# require_content_start }}
+		{{# require_op_upload }}
 			{{> panels/pieces/settings_checkbox }}
-		{{/ require_content_start }}
-		{{# require_content_always }}
+		{{/ require_op_upload }}
+		{{# require_upload_always }}
 			{{> panels/pieces/settings_checkbox }}
-		{{/ require_content_always }}
+		{{/ require_upload_always }}
 		{{# check_thread_duplicates }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ check_thread_duplicates }}
@@ -171,9 +171,6 @@
 		{{# deleted_content_placeholder }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ deleted_content_placeholder }}
-		{{# file_sha512 }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ file_sha512 }}
 		{{# thread_buffer }}
 			{{> panels/pieces/settings_number }}
 		{{/ thread_buffer }}

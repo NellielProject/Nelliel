@@ -128,8 +128,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_op_multiple', '', '0', 'Allow mutiple uploads in OP', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_reply_multiple', '', '0', 'Allow multiple uploads in replies', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'embed_replaces_file', '', '1', 'If an embed is given along with a file, the file will be discarded', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_content_start', '', '1', 'Require an image, file or embed to start new thread', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_content_always', '', '0', 'Require an image, file or embed for all posts', '', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_op_upload', '', '1', 'Require an image, file or embed to start new thread', '', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_upload_always', '', '0', 'Require an image, file or embed for all posts', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_thread_duplicates', '', '1', 'Check for duplicates in current thread when replying', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_op_duplicates', '', '1', 'Check for duplicates in other op posts when creating new thread', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_spoilers', '', '1', 'Enable spoilers for uploads', '', '{"type":"checkbox"}']);
@@ -156,7 +156,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'png_compression', '', '6', 'PNG compression (0-9)', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'animated_gif_preview', '', '0', 'Used animated previews (requires extra libraries)', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'deleted_content_placeholder', '', '0', 'Leave a placeholder when deleting files/embeds', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'file_sha512', '', '0', 'Generate SHA512 hash for uploaded files', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_buffer', '', '50', 'Max threads in buffer', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_posts', '', '1000', 'Max posts per thread', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_bumps', '', '1000', 'Max bumps per thread', '', '{"type":"number"}']);
