@@ -19,22 +19,27 @@ class Redirect
     {
     }
 
-    public function doRedirect(bool $do_redirect)
+    public function doRedirect(bool $do_redirect): void
     {
         self::$do_redirect = $do_redirect;
     }
 
-    public function URL()
+    public function URL(): string
     {
         return self::$url;
     }
 
-    public function changeURL(string $new_url)
+    public function changeURL(string $new_url): void
     {
         self::$url = $new_url;
     }
 
-    public function go()
+    public function changeDelay(int $new_delay): void
+    {
+        self::$delay = $new_delay;
+    }
+
+    public function go(): void
     {
         if (self::$do_redirect)
         {
@@ -44,7 +49,7 @@ class Redirect
                 self::$url = $site_domain->setting('home_page');
             }
 
-            nel_redirect(self::$url, 5);
+            nel_redirect(self::$url, self::$delay);
         }
     }
 }

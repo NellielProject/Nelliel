@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Redirect;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -39,6 +40,9 @@ class Dispatch
                 $admin_handler = $this->sections($inputs, $action);
             }
         }
+
+        $redirect = new Redirect();
+        $redirect->changeDelay(0);
 
         if (is_null($admin_handler))
         {
@@ -282,6 +286,7 @@ class Dispatch
                 $session->loggedInOrError();
                 $output_board_panel = new \Nelliel\Render\OutputPanelBoard($this->domain, false);
                 $output_board_panel->render(['board_id' => $board_id], false);
+                break;
         }
 
         return $admin_handler;
