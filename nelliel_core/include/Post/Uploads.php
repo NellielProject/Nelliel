@@ -60,6 +60,11 @@ class Uploads
 
         for ($i = 0; $i < $file_count; $i ++)
         {
+            if(nel_true_empty($this->files['upload_files']['name'][$i]))
+            {
+                continue;
+            }
+
             $file_data = array();
             $file_data['name'] = $this->files['upload_files']['name'][$i];
             $file_data['type'] = $this->files['upload_files']['type'][$i];

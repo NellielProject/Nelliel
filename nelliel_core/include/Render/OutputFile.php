@@ -38,10 +38,10 @@ class OutputFile extends Output
         $this->render_data['file_container_id'] = 'file-container-' . $file_content_id->getIDString();
         $this->render_data['single_multiple'] = $multiple ? 'multiple' : 'single';
         $this->render_data['file_content_id'] = $file_content_id->getIDString();
+        $this->render_data['in_modmode'] = $session->inModmode($this->domain) && !$this->write_mode;
 
         if ($session->inModmode($this->domain))
         {
-            $this->render_data['in_modmode'] = true;
             $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
         }
