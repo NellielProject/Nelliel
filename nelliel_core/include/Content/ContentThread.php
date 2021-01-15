@@ -228,18 +228,18 @@ class ContentThread extends ContentHandler
             return false;
         }
 
-        $this->content_data['locked'] = 1;
+        $this->content_data['locked'] = ($this->content_data['locked'] == 0) ? 1 : 0;
         return $this->writeToDatabase();
     }
 
-    public function unlock()
+    public function sage()
     {
         if (!$this->dataLoaded(true))
         {
             return false;
         }
 
-        $this->content_data['locked'] = 0;
+        $this->content_data['permasage'] = ($this->content_data['permasage'] == 0) ? 1 : 0;
         return $this->writeToDatabase();
     }
 

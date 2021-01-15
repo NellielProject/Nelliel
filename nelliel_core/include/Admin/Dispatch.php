@@ -258,6 +258,14 @@ class Dispatch
                 {
                     $admin_handler->banDelete();
                 }
+                else if ($action === 'sage')
+                {
+                    $admin_handler->permasage();
+                }
+                else if ($action === 'unsage')
+                {
+                    $admin_handler->permasage();
+                }
                 else if ($action === 'expand')
                 {
                     ; // TODO: Figure this out better

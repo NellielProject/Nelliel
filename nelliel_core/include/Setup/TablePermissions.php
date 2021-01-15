@@ -66,11 +66,12 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_manage_users', 'Manage users']);
         $this->insertDefaultRow(['perm_board_delete_posts', 'Delete posts and threads']);
         $this->insertDefaultRow(['perm_board_lock_posts', 'Lock/unlock posts and threads']);
+        $this->insertDefaultRow(['perm_board_sticky_posts', 'Sticky/unsticky posts and threads']);
+        $this->insertDefaultRow(['perm_board_sage_posts', 'Sage/unsage posts and threads']);
         $this->insertDefaultRow(['perm_board_mod_comment', 'Add staff commentary to a post']);
         $this->insertDefaultRow(['perm_board_mod_mode', 'Access to Moderator Mode']);
         $this->insertDefaultRow(['perm_board_post_as_staff', 'Post as staff (displays capcode)']);
         $this->insertDefaultRow(['perm_board_post_in_locked', 'Post in locked thread']);
-        $this->insertDefaultRow(['perm_board_sticky_posts', 'Sticky/unsticky posts and threads']);
         $this->insertDefaultRow(['perm_board_transfer', 'Transfer board ownership']);
         $this->insertDefaultRow(['perm_extract_gettext', 'Extract Gettext strings']);
         $this->insertDefaultRow(['perm_regen_cache', 'Regenerate caches']);

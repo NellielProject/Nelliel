@@ -127,6 +127,22 @@ class AdminThreads extends Admin
         }
     }
 
+    public function permasage()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_sage_posts'))
+        {
+            nel_derp(354, _gettext('You are not allowed to sage threads.'));
+        }
+
+        $content_id = new ContentID($_GET['content-id']);
+
+        if ($content_id->isThread())
+        {
+            $content_id->getInstanceFromID($this->domain)->sage();
+            $this->regenThread($content_id->threadID(), true);
+        }
+    }
+
     private function regenThread($thread_id, bool $regen_index = false)
     {
         $regen = new \Nelliel\Regen();

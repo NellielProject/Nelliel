@@ -132,7 +132,7 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ($thread->data('post_count') <= $this->domain->setting('max_bumps') &&
-                    !$fgsfds->getCommandData('sage', 'value'))
+                    !$fgsfds->getCommandData('sage', 'value') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);

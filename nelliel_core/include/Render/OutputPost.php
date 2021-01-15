@@ -174,6 +174,12 @@ class OutputPost extends Output
                 $modmode_headers['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=' . $sticky_action . '&content-id=' . $thread_content_id->getIDString() .
                         '&modmode=true&goback=true';
+                $permasage = ($thread_data['permasage'] == 1);
+                $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Undo Permasage') : _gettext('Permasage Thread');
+                $permasage_action = ($permasage) ? 'unsage' : 'sage';
+                $modmode_headers['permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                '&actions=' . $permasage_action . '&content-id=' . $thread_content_id->getIDString() .
+                '&modmode=true&goback=true';
             }
 
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .

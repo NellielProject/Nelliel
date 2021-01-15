@@ -5,8 +5,9 @@
 	<span>[<a href="{{ delete_url }}" data-i18n="gettext">Delete</a>]</span>
 	<span>[<a href="{{ ban_delete_url }}" data-i18n="gettext">Ban and Delete</a>]</span>
 	{{^ response }}
-	<span>[<a href="{{ lock_url }}" data-i18n="gettext">{{ lock_text }}</a>]</span>
-	<span>[<a href="{{ sticky_url }}" data-i18n="gettext">{{ sticky_text }}</a>]</span>
+	<span>[<a href="{{ lock_url }}">{{ lock_text }}</a>]</span>
+	<span>[<a href="{{ sticky_url }}">{{ sticky_text }}</a>]</span>
+	<span>[<a href="{{ permasage_url }}">{{ permasage_text }}</a>]</span>
 	{{/ response }}
 </div>
 {{/ modmode_headers }}
