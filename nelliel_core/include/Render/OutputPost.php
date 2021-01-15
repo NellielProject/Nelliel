@@ -162,24 +162,19 @@ class OutputPost extends Output
             else
             {
                 $temp_content_id = $thread_content_id;
-                $locked = ($thread_data['locked'] == 1);
+                $locked = $thread_data['locked'] == 1;
                 $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock Thread') : _gettext('Lock Thread');
-                $lock_action = ($locked) ? 'unlock' : 'lock';
                 $modmode_headers['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                        '&actions=' . $lock_action . '&content-id=' . $thread_content_id->getIDString() .
-                        '&modmode=true&goback=true';
-                $sticky = ($thread_data['sticky'] == 1);
+                        '&actions=lock&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+                $sticky = $thread_data['sticky'] == 1;
                 $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky Thread') : _gettext('Sticky Thread');
-                $sticky_action = ($sticky) ? 'unsticky' : 'sticky';
                 $modmode_headers['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                        '&actions=' . $sticky_action . '&content-id=' . $thread_content_id->getIDString() .
-                        '&modmode=true&goback=true';
-                $permasage = ($thread_data['permasage'] == 1);
-                $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Undo Permasage') : _gettext('Permasage Thread');
-                $permasage_action = ($permasage) ? 'unsage' : 'sage';
+                        '&actions=sticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+                $permasage = $thread_data['permasage'] == 1;
+                $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Undo Permasage') : _gettext(
+                        'Permasage Thread');
                 $modmode_headers['permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=' . $permasage_action . '&content-id=' . $thread_content_id->getIDString() .
-                '&modmode=true&goback=true';
+                        '&actions=sage&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
             }
 
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .

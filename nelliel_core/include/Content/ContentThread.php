@@ -202,20 +202,7 @@ class ContentThread extends ContentHandler
             return false;
         }
 
-        $this->content_data['sticky'] = 1;
-        $success = $this->writeToDatabase();
-        $this->archive_prune->updateThreads();
-        return $success;
-    }
-
-    public function unsticky()
-    {
-        if (!$this->dataLoaded(true))
-        {
-            return false;
-        }
-
-        $this->content_data['sticky'] = 0;
+        $this->content_data['sticky'] = ($this->content_data['sticky'] == 0) ? 1 : 0;;
         $success = $this->writeToDatabase();
         $this->archive_prune->updateThreads();
         return $success;

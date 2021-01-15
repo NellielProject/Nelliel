@@ -232,17 +232,9 @@ class Dispatch
                 {
                     $admin_handler->sticky();
                 }
-                else if ($action === 'unsticky')
-                {
-                    $admin_handler->unsticky();
-                }
                 else if ($action === 'lock')
                 {
                     $admin_handler->lock();
-                }
-                else if ($action === 'unlock')
-                {
-                    $admin_handler->unlock();
                 }
                 else if ($action === 'delete')
                 {
@@ -259,10 +251,6 @@ class Dispatch
                     $admin_handler->banDelete();
                 }
                 else if ($action === 'sage')
-                {
-                    $admin_handler->permasage();
-                }
-                else if ($action === 'unsage')
                 {
                     $admin_handler->permasage();
                 }
