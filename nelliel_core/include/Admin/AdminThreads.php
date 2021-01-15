@@ -65,9 +65,9 @@ class AdminThreads extends Admin
 
     public function sticky()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_sticky_posts'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_post_status'))
         {
-            nel_derp(351, _gettext('You are not allowed to sticky or unsticky threads.'));
+            nel_derp(507, _gettext('You are not allowed to sticky or unsticky threads.'));
         }
 
         $content_id = new ContentID($_GET['content-id']);
@@ -81,9 +81,9 @@ class AdminThreads extends Admin
 
     public function lock()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_lock_posts'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_post_status'))
         {
-            nel_derp(353, _gettext('You are not allowed to lock or unlock threads.'));
+            nel_derp(508, _gettext('You are not allowed to lock or unlock threads.'));
         }
 
         $content_id = new ContentID($_GET['content-id']);
@@ -97,9 +97,9 @@ class AdminThreads extends Admin
 
     public function permasage()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_sage_posts'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_board_post_status'))
         {
-            nel_derp(354, _gettext('You are not allowed to sage or unsage threads.'));
+            nel_derp(509, _gettext('You are not allowed to sage or unsage threads.'));
         }
 
         $content_id = new ContentID($_GET['content-id']);

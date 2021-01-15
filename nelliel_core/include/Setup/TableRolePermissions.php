@@ -73,9 +73,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_templates', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_users', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_delete_posts', 1]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_lock_posts', 1]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_sticky_posts', 1]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_sage_posts', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_post_status', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_mod_comment', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_mod_mode', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_post_as_staff', 1]);
@@ -104,9 +102,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_templates', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_users', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_delete_posts', 1]);
-        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_lock_posts', 1]);
-        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_sticky_posts', 1]);
-        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_sage_posts', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_post_status', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_mod_comment', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_mod_mode', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_post_as_staff', 1]);
@@ -135,9 +131,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_manage_templates', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_manage_users', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_board_delete_posts', 1]);
-        $this->insertDefaultRow(['MODERATOR', 'perm_board_lock_posts', 1]);
-        $this->insertDefaultRow(['MODERATOR', 'perm_board_sticky_posts', 1]);
-        $this->insertDefaultRow(['MODERATOR', 'perm_board_sage_posts', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_board_post_status', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_board_mod_comment', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_board_mod_mode', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_board_post_as_staff', 1]);
@@ -166,9 +160,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_manage_templates', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_manage_users', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_delete_posts', 1]);
-        $this->insertDefaultRow(['JANITOR', 'perm_board_lock_posts', 0]);
-        $this->insertDefaultRow(['JANITOR', 'perm_board_sticky_posts', 0]);
-        $this->insertDefaultRow(['JANITOR', 'perm_board_sage_posts', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_board_post_status', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_mod_comment', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_mod_mode', 1]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_post_as_staff', 0]);
@@ -197,9 +189,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_manage_templates', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_manage_users', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_delete_posts', 0]);
-        $this->insertDefaultRow(['BASIC_USER', 'perm_board_lock_posts', 0]);
-        $this->insertDefaultRow(['BASIC_USER', 'perm_board_sticky_posts', 0]);
-        $this->insertDefaultRow(['BASIC_USER', 'perm_board_sage_posts', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_board_post_status', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_mod_comment', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_mod_mode', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_post_as_staff', 0]);

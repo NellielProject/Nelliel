@@ -172,3 +172,7 @@ Error 482: perm_manage_if_thens (modify) (Admin/AdminFiletypes.php)
 Error 483: perm_manage_if_thens (remove) (Admin/AdminFiletypes.php)  
 Error 484: perm_manage_if_thens (enable) (Admin/AdminFiletypes.php)  
 Error 485: perm_manage_if_thens (disable) (Admin/AdminFiletypes.php)  
+
+Error 507: perm_manage_news (sticky) (Admin/AdminThreads.php)  
+Error 508: perm_manage_news (lock) (Admin/AdminThreads.php)  
+Error 509: perm_manage_news (sage) (Admin/AdminThreads.php)  
