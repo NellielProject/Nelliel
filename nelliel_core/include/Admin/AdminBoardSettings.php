@@ -55,14 +55,14 @@ class AdminBoardSettings extends Admin
         {
             if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
             {
-                nel_derp(342, _gettext('You are not allowed to modify the default board settings.'));
+                nel_derp(382, _gettext('You are not allowed to modify the default board settings.'));
             }
         }
         else
         {
             if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_config'))
             {
-                nel_derp(332, _gettext('You are not allowed to modify the board settings.'));
+                nel_derp(362, _gettext('You are not allowed to modify the board settings.'));
             }
         }
 
@@ -189,14 +189,14 @@ class AdminBoardSettings extends Admin
         {
             if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
             {
-                nel_derp(340, _gettext('You are not allowed to access the board defaults panel.'));
+                nel_derp(380, _gettext('You are not allowed to access the board defaults panel.'));
             }
         }
         else
         {
             if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
             {
-                nel_derp(330, _gettext('You are not allowed to access the board settings panel.'));
+                nel_derp(360, _gettext('You are not allowed to access the board settings panel.'));
             }
         }
     }

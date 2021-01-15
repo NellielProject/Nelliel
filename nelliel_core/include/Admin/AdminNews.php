@@ -34,7 +34,7 @@ class AdminNews extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
         {
-            nel_derp(471, _gettext('You are not allowed to make news posts.'));
+            nel_derp(601, _gettext('You are not allowed to make news posts.'));
         }
 
         $news_info = array();
@@ -62,7 +62,7 @@ class AdminNews extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
         {
-            nel_derp(473, _gettext('You are not allowed to remove news posts.'));
+            nel_derp(603, _gettext('You are not allowed to remove news posts.'));
         }
 
         $entry = $_GET['entry'];
@@ -82,7 +82,7 @@ class AdminNews extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
         {
-            nel_derp(470, _gettext('You are not allowed to access the news panel.'));
+            nel_derp(600, _gettext('You are not allowed to access the news panel.'));
         }
     }
 }

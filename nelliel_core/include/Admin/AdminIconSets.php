@@ -34,7 +34,7 @@ class AdminIconSets extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
-            nel_derp(461, _gettext('You are not allowed to install icon sets.'));
+            nel_derp(581, _gettext('You are not allowed to install icon sets.'));
         }
 
         $icon_set_id = $_GET['icon-set-id'];
@@ -66,7 +66,7 @@ class AdminIconSets extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
-            nel_derp(462, _gettext('You are not allowed to uninstall icon sets.'));
+            nel_derp(582, _gettext('You are not allowed to uninstall icon sets.'));
         }
 
         $icon_set_id = $_GET['icon-set-id'];
@@ -80,7 +80,7 @@ class AdminIconSets extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
-            nel_derp(463, _gettext('You are not allowed to set the default icon set.'));
+            nel_derp(583, _gettext('You are not allowed to set the default icon set.'));
         }
 
         $icon_set_id = $_GET['icon-set-id'];
@@ -95,7 +95,7 @@ class AdminIconSets extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
-            nel_derp(460, _gettext('You are not allowed to access the icon sets panel.'));
+            nel_derp(580, _gettext('You are not allowed to access the icon sets panel.'));
         }
     }
 }

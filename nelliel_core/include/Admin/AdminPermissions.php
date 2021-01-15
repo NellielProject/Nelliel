@@ -34,7 +34,7 @@ class AdminPermissions extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_modify'))
         {
-            nel_derp(451, _gettext('You are not allowed to add permissions.'));
+            nel_derp(561, _gettext('You are not allowed to add permissions.'));
         }
 
         $permission = $_POST['permission'];
@@ -57,7 +57,7 @@ class AdminPermissions extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_modify'))
         {
-            nel_derp(453, _gettext('You are not allowed to remove permissions.'));
+            nel_derp(563, _gettext('You are not allowed to remove permissions.'));
         }
 
         $permission = $_GET['permission'];
@@ -70,7 +70,7 @@ class AdminPermissions extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_access'))
         {
-            nel_derp(450, _gettext('You are not allowed to access the permissions panel.'));
+            nel_derp(560, _gettext('You are not allowed to access the permissions panel.'));
         }
     }
 }

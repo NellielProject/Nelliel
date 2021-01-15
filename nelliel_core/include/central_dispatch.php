@@ -257,7 +257,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     case 'board-all-pages':
                         if (!$user->checkPermission($domain, 'perm_regen_pages'))
                         {
-                            nel_derp(410, _gettext('You are not allowed to regenerate board pages.'));
+                            nel_derp(480, _gettext('You are not allowed to regenerate board pages.'));
                         }
 
                         $regen->allBoardPages($domain);
@@ -269,7 +269,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     case 'board-all-caches':
                         if (!$user->checkPermission($domain, 'perm_regen_cache'))
                         {
-                            nel_derp(411, _gettext('You are not allowed to regenerate board caches.'));
+                            nel_derp(481, _gettext('You are not allowed to regenerate board caches.'));
                         }
 
                         $domain->regenCache();
@@ -279,7 +279,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     case 'site-all-caches':
                         if (!$user->checkPermission($domain, 'perm_regen_cache'))
                         {
-                            nel_derp(412, _gettext('You are not allowed to regenerate site caches.'));
+                            nel_derp(482, _gettext('You are not allowed to regenerate site caches.'));
                         }
 
                         $domain->regenCache();
@@ -289,7 +289,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     case 'overboard-all-pages':
                         if (!$user->checkPermission($domain, 'perm_regen_pages'))
                         {
-                            nel_derp(413, _gettext('You are not allowed to regenerate overboard pages.'));
+                            nel_derp(483, _gettext('You are not allowed to regenerate overboard pages.'));
                         }
 
                         $regen->overboard($domain);

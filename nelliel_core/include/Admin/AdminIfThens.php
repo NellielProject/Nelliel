@@ -38,7 +38,7 @@ class AdminIfThens extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
         {
-            nel_derp(481, _gettext('You are not allowed to add if-thens.'));
+            nel_derp(621, _gettext('You are not allowed to add if-thens.'));
         }
 
         $board_id = $_POST['board_id'] ?? '';
@@ -66,7 +66,7 @@ class AdminIfThens extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
         {
-            nel_derp(482, _gettext('You are not allowed to modify if-thens.'));
+            nel_derp(622, _gettext('You are not allowed to modify if-thens.'));
         }
 
         $ifthen_id = $_GET['ifthen-id'] ?? 0;
@@ -87,7 +87,7 @@ class AdminIfThens extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
         {
-            nel_derp(483, _gettext('You are not allowed to remove if-thens.'));
+            nel_derp(623, _gettext('You are not allowed to remove if-thens.'));
         }
 
         $ifthen_id = $_GET['ifthen-id'];
@@ -100,7 +100,7 @@ class AdminIfThens extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
         {
-            nel_derp(484, _gettext('You are not allowed to enable if-thens.'));
+            nel_derp(624, _gettext('You are not allowed to enable if-thens.'));
         }
 
         $ifthen_id = $_GET['ifthen-id'];
@@ -113,7 +113,7 @@ class AdminIfThens extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
         {
-            nel_derp(485, _gettext('You are not allowed to disable if-thens.'));
+            nel_derp(625, _gettext('You are not allowed to disable if-thens.'));
         }
 
         $ifthen_id = $_GET['ifthen-id'];
@@ -126,7 +126,7 @@ class AdminIfThens extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
         {
-            nel_derp(480, _gettext('You are not allowed to access the if-thens panel.'));
+            nel_derp(620, _gettext('You are not allowed to access the if-thens panel.'));
         }
     }
 }

@@ -42,7 +42,7 @@ class AdminSiteSettings extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
         {
-            nel_derp(361, _gettext('You are not allowed to modify the site settings.'));
+            nel_derp(421, _gettext('You are not allowed to modify the site settings.'));
         }
 
         foreach ($_POST as $key => $value)
@@ -69,7 +69,7 @@ class AdminSiteSettings extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
         {
-            nel_derp(360, _gettext('You are not allowed to access the site settings.'));
+            nel_derp(420, _gettext('You are not allowed to access the site settings.'));
         }
     }
 }

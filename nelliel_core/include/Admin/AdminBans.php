@@ -43,7 +43,7 @@ class AdminBans extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(321, _gettext('You are not allowed to issue bans.'));
+            nel_derp(341, _gettext('You are not allowed to issue bans.'));
         }
 
         $this->ban_hammer->collectFromPOST();
@@ -82,7 +82,7 @@ class AdminBans extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(322, _gettext('You are not allowed to modify bans.'));
+            nel_derp(342, _gettext('You are not allowed to modify bans.'));
         }
 
         $this->ban_hammer->collectFromPOST();
@@ -94,7 +94,7 @@ class AdminBans extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(323, _gettext('You are not allowed to modify bans.'));
+            nel_derp(343, _gettext('You are not allowed to modify bans.'));
         }
 
         $ban_id = $_GET['ban_id'] ?? '';
@@ -107,7 +107,7 @@ class AdminBans extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(320, _gettext('You are not allowed to access the bans panel.'));
+            nel_derp(340, _gettext('You are not allowed to access the bans panel.'));
         }
     }
 }

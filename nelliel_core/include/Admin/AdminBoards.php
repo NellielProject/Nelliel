@@ -44,7 +44,7 @@ class AdminBoards extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
         {
-            nel_derp(371, _gettext('You are not allowed to create boards.'));
+            nel_derp(441, _gettext('You are not allowed to create boards.'));
         }
 
         $site_domain = new DomainSite($this->database);
@@ -115,7 +115,7 @@ class AdminBoards extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
         {
-            nel_derp(373, _gettext('You are not allowed to delete boards.'));
+            nel_derp(443, _gettext('You are not allowed to delete boards.'));
         }
 
         $board_id = $_GET['board_id'];
@@ -174,7 +174,7 @@ class AdminBoards extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
         {
-            nel_derp(374, _gettext('You are not allowed to unlock this board.'));
+            nel_derp(444, _gettext('You are not allowed to unlock this board.'));
         }
 
         $board_id = $_GET['board_id'];
@@ -188,7 +188,7 @@ class AdminBoards extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
         {
-            nel_derp(375, _gettext('You are not allowed to lock this board.'));
+            nel_derp(445, _gettext('You are not allowed to lock this board.'));
         }
 
         $board_id = $_GET['board_id'];
@@ -249,7 +249,7 @@ class AdminBoards extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
         {
-            nel_derp(370, _gettext('You are not allowed to access the manage boards panel.'));
+            nel_derp(440, _gettext('You are not allowed to access the manage boards panel.'));
         }
     }
 }

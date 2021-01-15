@@ -34,7 +34,7 @@ class AdminStyles extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
         {
-            nel_derp(431, _gettext('You are not allowed to install styles.'));
+            nel_derp(541, _gettext('You are not allowed to install styles.'));
         }
 
         $style_id = $_GET['style-id'];
@@ -66,7 +66,7 @@ class AdminStyles extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
         {
-            nel_derp(433, _gettext('You are not allowed to uninstall styles.'));
+            nel_derp(543, _gettext('You are not allowed to uninstall styles.'));
         }
 
         $style_id = $_GET['style-id'];
@@ -80,7 +80,7 @@ class AdminStyles extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
         {
-            nel_derp(436, _gettext('You are not allowed to set the default style.'));
+            nel_derp(546, _gettext('You are not allowed to set the default style.'));
         }
 
         $style_id = $_GET['style-id'];
@@ -95,7 +95,7 @@ class AdminStyles extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
         {
-            nel_derp(440, _gettext('You are not allowed to access the styles panel.'));
+            nel_derp(540, _gettext('You are not allowed to access the styles panel.'));
         }
     }
 }

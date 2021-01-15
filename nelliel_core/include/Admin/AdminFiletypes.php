@@ -38,7 +38,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(431, _gettext('You are not allowed to add filetypes.'));
+            nel_derp(521, _gettext('You are not allowed to add filetypes.'));
         }
 
         $base_extension = $_POST['base_extension'] ?? null;
@@ -74,7 +74,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(432, _gettext('You are not allowed to modify filetypes.'));
+            nel_derp(522, _gettext('You are not allowed to modify filetypes.'));
         }
 
         $filetype_id = $_GET['filetype-id'];
@@ -103,7 +103,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(433, _gettext('You are not allowed to remove filetypes.'));
+            nel_derp(523, _gettext('You are not allowed to remove filetypes.'));
         }
 
         $filetype_id = $_GET['filetype-id'];
@@ -116,7 +116,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(434, _gettext('You are not allowed to enable filetypes.'));
+            nel_derp(524, _gettext('You are not allowed to enable filetypes.'));
         }
 
         $filetype_id = $_GET['filetype-id'];
@@ -129,7 +129,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(435, _gettext('You are not allowed to disable filetypes.'));
+            nel_derp(525, _gettext('You are not allowed to disable filetypes.'));
         }
 
         $filetype_id = $_GET['filetype-id'];
@@ -142,7 +142,7 @@ class AdminFiletypes extends Admin
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(430, _gettext('You are not allowed to access the filetypes panel.'));
+            nel_derp(520, _gettext('You are not allowed to access the filetypes panel.'));
         }
     }
 }
