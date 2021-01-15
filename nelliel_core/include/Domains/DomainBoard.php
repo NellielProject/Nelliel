@@ -102,7 +102,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         return new DomainMultiBoard($this->database);
     }
 
-    public function boardExists()
+    public function exists()
     {
         $prepared = $this->database->prepare('SELECT 1 FROM "nelliel_board_data" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);

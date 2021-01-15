@@ -133,6 +133,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['poster_id_colors', '1', 0]);
         $this->insertDefaultRow(['poster_id_length', '6', 0]);
         $this->insertDefaultRow(['max_cite_links', '30', 0]);
+        $this->insertDefaultRow(['max_crossboard_cite_links', '15', 0]);
         $this->insertDefaultRow(['create_url_links', '1', 0]);
         $this->insertDefaultRow(['url_protocols', 'http|https|ftp|sftp|irc|nntp', 0]);
         $this->insertDefaultRow(['url_prefix', '', 0]);

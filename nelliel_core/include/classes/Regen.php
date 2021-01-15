@@ -34,7 +34,7 @@ class Regen
         {
             $output_thread = new OutputThread($domain, $write);
             $output_thread->render(['thread_id' => $ids[$i]], false);
-            ++ $i;
+            $i ++;
         }
     }
 

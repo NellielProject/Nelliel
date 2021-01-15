@@ -75,7 +75,7 @@ abstract class Table
                 $check_pdo_types[] = $info['pdo_type'];
             }
 
-            ++ $index;
+            $index ++;
         }
 
         if ($this->database->rowExists($this->table_name, $check_columns, $check_values, $check_pdo_types))
@@ -95,16 +95,16 @@ abstract class Table
                 continue;
             }
 
-            if(!isset($values[$index]))
+            if (!isset($values[$index]))
             {
-                ++$index;
+                $index ++;
                 continue;
             }
 
             $insert_values[] = $values[$index];
             $insert_columns[] = $column_name;
             $insert_pdo_types[] = $info['pdo_type'];
-            ++ $index;
+            $index ++;
         }
 
         $this->compileExecuteInsert($this->table_name, $insert_columns, $insert_values, $insert_pdo_types);

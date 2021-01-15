@@ -179,7 +179,7 @@ class NewPost
                 }
 
                 $upload->writeToDatabase();
-                ++ $order;
+                $order ++;
             }
         }
 

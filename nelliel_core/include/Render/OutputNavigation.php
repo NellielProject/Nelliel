@@ -26,7 +26,7 @@ class OutputNavigation extends Output
         $end = $board_count - 1;
         $render_data = array();
 
-        for ($i = 0; $i < $board_count; ++ $i)
+        for ($i = 0; $i < $board_count; $i ++)
         {
             $board_info = array();
             $board_info['board_url'] = NEL_BASE_WEB_PATH . $board_data[$i]['board_id'] . '/';

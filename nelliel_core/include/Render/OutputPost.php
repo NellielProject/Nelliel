@@ -34,8 +34,8 @@ class OutputPost extends Output
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
         $thread_format = sprintf($this->site_domain->setting('thread_filename_format'), $thread_content_id->threadID());
-        $web_paths['thread_page'] = $this->domain->reference('page_web_path') . $thread_content_id->threadID() .
-                '/' . $thread_format . NEL_PAGE_EXT;
+        $web_paths['thread_page'] = $this->domain->reference('page_web_path') . $thread_content_id->threadID() . '/' .
+                $thread_format . NEL_PAGE_EXT;
         $web_paths['thread_src'] = $this->domain->reference('src_web_path') . $thread_content_id->threadID() . '/';
         $web_paths['thread_preview'] = $this->domain->reference('preview_web_path') . $thread_content_id->threadID() .
                 '/';
@@ -78,13 +78,13 @@ class OutputPost extends Output
                 {
                     $file_data = $output_file_info->render(
                             ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
-                            'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
+                                'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
                 }
                 else
                 {
                     $file_data = $output_embed_info->render(
                             ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
-                            'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
+                                'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
                 }
 
                 $content_row[]['content_data'] = $file_data;
@@ -291,7 +291,6 @@ class OutputPost extends Output
 
     private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, array $web_paths)
     {
-        $cite_match_regex = '#^\s*>>#';
         $greentext_regex = '#^\s*>[^>]#';
         $url_protocols = $this->domain->setting('url_protocols');
         $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
@@ -317,6 +316,8 @@ class OutputPost extends Output
 
             $cite_total = 0;
             $cite_link_max = $this->domain->setting('max_cite_links');
+            $crossboard_cite_total = 0;
+            $crossboard_cite_link_max = $this->domain->setting('max_crossboard_cite_links');
             $create_url_links = $this->domain->setting('create_url_links');
             $comment_lines = $this->output_filter->newlinesToArray($post_data['comment']);
             $line_count = count($comment_lines);
@@ -347,17 +348,29 @@ class OutputPost extends Output
                 foreach ($segment_chunks as $chunk)
                 {
                     $entry = array();
+                    $cite_info = $cites->citeType($chunk);
 
-                    if ($cite_total <= $cite_link_max && preg_match($cite_match_regex, $chunk) === 1)
+                    if (!empty($cite_info['type']) && $cite_total < $cite_link_max)
                     {
-                        $cite_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, true);
+                        $cite_url = '';
+
+                        if ($cite_info['type'] === 'cite')
+                        {
+                            $cite_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, $cite_info);
+                        }
+                        else if ($cite_info['type'] === 'cross-cite' &&
+                                $crossboard_cite_total < $crossboard_cite_link_max)
+                        {
+                            $cite_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, $cite_info);
+                            $crossboard_cite_total ++;
+                        }
 
                         if (!empty($cite_url))
                         {
                             $entry['cite'] = true;
                             $entry['url'] = $cite_url;
                             $entry['text'] = $chunk;
-                            ++ $cite_total;
+                            $cite_total ++;
                         }
                         else
                         {

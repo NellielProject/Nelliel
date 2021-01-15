@@ -125,7 +125,7 @@ class ArchiveAndPrune
                 }
             }
 
-            ++ $line;
+            $line ++;
         }
     }
 

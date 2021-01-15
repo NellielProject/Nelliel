@@ -121,7 +121,7 @@ class AdminBoards extends Admin
         $board_id = $_GET['board_id'];
         $domain = new DomainBoard($board_id, $this->database);
 
-        if (!$domain->boardExists())
+        if (!$domain->exists())
         {
             nel_derp(160, _gettext('Board does not appear to exist.'));
         }

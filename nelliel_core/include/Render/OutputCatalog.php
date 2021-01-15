@@ -133,7 +133,7 @@ class OutputCatalog extends Output
                 $thread_data['open_text'] = _gettext('Open thread');
             }
 
-            ++ $thread_count;
+            $thread_count ++;
             $this->render_data['catalog_entries'][] = $thread_data;
         }
 

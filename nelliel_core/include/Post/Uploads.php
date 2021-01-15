@@ -109,7 +109,7 @@ class Uploads
                 {
                     $file->changeData('filename', $file->data('filename') . '_' . $file_duplicate);
                     $file->changeData('fullname', $file->data('filename') . '.' . $file->data('extension'));
-                    ++ $file_duplicate;
+                    $file_duplicate ++;
                 }
             }
 

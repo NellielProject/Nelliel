@@ -20,7 +20,7 @@ class DomainMultiBoard extends Domain
         $this->locale();
     }
 
-    public function boardExists()
+    public function exists()
     {
         return true;
     }

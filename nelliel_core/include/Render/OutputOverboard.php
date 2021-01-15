@@ -47,7 +47,7 @@ class OutputOverboard extends Output
         $threads_on_page = 0;
         $timer_offset = $this->endTimer(false);
 
-        for ($i = 0; $i <= $thread_count; ++ $i)
+        for ($i = 0; $i <= $thread_count; $i ++)
         {
             if ($threads_on_page >= $this->site_domain->setting('overboard_threads') || $i === $thread_count)
             {

@@ -63,7 +63,7 @@ class OutputNews extends Output
             }
 
             $entry_list[] = $news_info;
-            ++ $limit_counter;
+            $limit_counter ++;
         }
 
         return $entry_list;

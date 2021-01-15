@@ -92,26 +92,58 @@ class Cites
                     $cite_data['target_board'], $cite_data['target_thread'], $cite_data['target_post']]);
     }
 
-    public function createPostLinkURL(Domain $domain, ContentID $source_content_id, string $text_input,
-            bool $add_cite = false)
+    public function citeType(string $text)
+    {
+        $return = array();
+        $matches = array();
+
+        if (preg_match('#^>>([\d]+)$#u', $text, $matches) === 1)
+        {
+            $return['matches'] = $matches;
+            $return['type'] = 'cite';
+        }
+        else if (preg_match('#>>>\/(.+?)\/([\d]+)#u', $text, $matches) === 1)
+        {
+            $return['matches'] = $matches;
+            $return['type'] = 'cross-cite';
+        }
+        else
+        {
+            $return['matches'] = $matches;
+            $return['type'] = '';
+        }
+
+        return $return;
+    }
+
+    public function createPostLinkURL(Domain $domain, ContentID $source_content_id, string $text_input,array $cite_type = array())
     {
         $cite_data = array();
-        $matches = array();
         $target_domain = null;
         $target_post = 0;
         $url = '';
 
-        if (preg_match('#^>>([\d]+)$#u', $text_input, $matches) === 1)
+        if(empty($cite_type))
+        {
+            $cite_type = $this->citeType($text_input);
+        }
+
+        if ($cite_type['type'] === 'cite')
         {
             $target_domain = $domain;
-            $target_post = $matches[1];
+            $target_post = $cite_type['matches'][1];
         }
-        else if (preg_match('#>>>\/(.+?)\/([\d]+)#u', $text_input, $matches) === 1)
+        else if ($cite_type['type'] === 'cross-cite')
         {
-            $target_domain = new DomainBoard($matches[1], $this->database);
-            $target_post = $matches[2];
+            $target_domain = new DomainBoard($cite_type['matches'][1], $this->database);
+            $target_post = $cite_type['matches'][2];
         }
         else
+        {
+            return $url;
+        }
+
+        if(!$target_domain->exists())
         {
             return $url;
         }
@@ -125,11 +157,6 @@ class Cites
             $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->threadID(),
                 'source_post' => $source_content_id->postID(), 'target_board' => $target_domain->id(),
                 'target_thread' => $parent_thread, 'target_post' => $target_post];
-
-            if ($add_cite)
-            {
-                $this->addCite($cite_data);
-            }
         }
 
         if (!empty($cite_data))
