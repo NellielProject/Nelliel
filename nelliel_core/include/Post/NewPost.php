@@ -183,8 +183,9 @@ class NewPost
             }
         }
 
-        $update_overboard = new \Nelliel\UpdateOverboard($this->database);
-        $update_overboard->addThread($thread->contentID()->threadID(), $this->domain->id());
+        $update_overboard = new \Nelliel\Overboard($this->database);
+        $thread->loadFromDatabase(); // Make sure we have any expected defaults set
+        $update_overboard->addThread($thread);
 
         // Generate response page if it doesn't exist, otherwise update
         $regen = new \Nelliel\Regen();

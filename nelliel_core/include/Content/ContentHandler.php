@@ -85,4 +85,9 @@ abstract class ContentHandler
         $this->content_data[$key] = $new_data;
         return $old_data;
     }
+
+    public function domain()
+    {
+        return $this->domain;
+    }
 }

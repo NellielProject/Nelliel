@@ -10,6 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Cites;
 use Nelliel\Domains\Domain;
 use Nelliel\Moar;
+use Nelliel\Overboard;
 use PDO;
 
 class ContentThread extends ContentHandler
@@ -21,6 +22,7 @@ class ContentThread extends ContentHandler
     protected $preview_path;
     protected $page_path;
     protected $archive_prune;
+    protected $overboard;
 
     function __construct(ContentID $content_id, Domain $domain)
     {
@@ -35,6 +37,7 @@ class ContentThread extends ContentHandler
         $this->page_path = $this->domain->reference('page_path');
         $this->archive_prune = new \Nelliel\ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->storeMoar(new Moar());
+        $this->overboard = new Overboard($this->database);
     }
 
     public function loadFromDatabase()
@@ -101,6 +104,7 @@ class ContentThread extends ContentHandler
         $prepared->bindValue(':locked', $this->contentDataOrDefault('locked', 0), PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
         $this->archive_prune->updateThreads();
+        $this->overboard->updateThread($this);
         return true;
     }
 

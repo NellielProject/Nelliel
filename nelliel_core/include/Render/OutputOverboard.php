@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Timer;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Content\ContentID;
@@ -25,20 +24,19 @@ class OutputOverboard extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
+        $this->setBodyTemplate('index/index');
         $this->render_data['page_language'] = $this->domain->locale();
-        $timer = new Timer();
-        $timer->start();
-        $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction($timer);
         $sfw = $parameters['sfw'] ?? false;
+        $uri = $sfw ? $this->site_domain->setting('sfw_overboard_uri') : $this->site_domain->setting('overboard_uri');
         $allow_nsfl = $this->site_domain->setting('nsfl_on_overboard');
-        $prefix = ($sfw) ? 'sfw_' : '';
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->site_domain, $this->file_handler);
-        $output_head = new OutputHead($this->site_domain, $this->write_mode);
+        $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
-        $output_header = new OutputHeader($this->site_domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->general([], true);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['header'] = $output_header->board(['uri' => $uri], true);
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_OVERBOARD_TABLE . '" ORDER BY "last_bump_time" DESC, "last_bump_time_milli" DESC');
+                'SELECT * FROM "' . NEL_OVERBOARD_TABLE .
+                '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');
         $thread_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $thread_count = count($thread_list);
         $threads_done = 0;
@@ -46,7 +44,6 @@ class OutputOverboard extends Output
         $gen_data['index']['thread_count'] = $thread_count;
         $gen_data['index_rendering'] = true;
         $threads_on_page = 0;
-        $timer_offset = $this->endTimer(false);
 
         for ($i = 0; $i <= $thread_count; $i ++)
         {
@@ -56,17 +53,17 @@ class OutputOverboard extends Output
                 $this->render_data['footer_form'] = true;
                 $output_footer = new OutputFooter($this->site_domain, $this->write_mode);
                 $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
-                $output = $this->output('overboard', $data_only, true, $this->render_data);
+                $output = $this->output('basic_page', $data_only, true, $this->render_data);
                 $index_filename = 'index' . NEL_PAGE_EXT;
 
                 if ($this->write_mode)
                 {
                     $this->file_handler->writeFile(
-                            NEL_BASE_PATH . $this->site_domain->setting($prefix . 'overboard_uri') . '/' .
+                            NEL_BASE_PATH . $uri . '/' .
                             $index_filename, $output, NEL_FILES_PERM, true);
                     $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
                     $json_index->writeStoredData(
-                            NEL_BASE_PATH . $this->site_domain->setting($prefix . 'overboard_uri') . '/', 'index');
+                            NEL_BASE_PATH . $uri . '/', 'index');
                 }
                 else
                 {
@@ -99,7 +96,6 @@ class OutputOverboard extends Output
                 continue;
             }
 
-            $this->startTimer($timer_offset);
             $thread_input = array();
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $thread_domain->reference('posts_table') .

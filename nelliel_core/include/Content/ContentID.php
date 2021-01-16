@@ -60,7 +60,7 @@ class ContentID
         return !$this->isContent() && $this->post_id > 0;
     }
 
-    public function isContent() // TODO: Change to specific type (file, etc)
+    public function isContent()
     {
         return $this->order_id > 0;
     }

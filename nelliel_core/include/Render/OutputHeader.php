@@ -46,6 +46,7 @@ class OutputHeader extends Output
         $this->renderSetup();
         $session = new \Nelliel\Account\Session();
         $treeline = $parameters['treeline'] ?? array();
+        $uri = $parameters['uri'] ?? $this->domain->reference('board_directory');
         $index_render = $parameters['index_render'] ?? false;
         $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
@@ -60,7 +61,7 @@ class OutputHeader extends Output
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $this->render_data['board_navigation'] = $output_navigation->boardLinks([], true);
         $this->render_data['use_board_header'] = true;
-        $this->render_data['board_uri'] = '/' . $this->domain->reference('board_directory') . '/';
+        $this->render_data['board_uri'] = '/' . $uri . '/';
         $board_name = $this->domain->setting('name');
 
         if ($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name')))
