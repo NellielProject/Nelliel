@@ -41,11 +41,7 @@ class AdminBans extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
-        {
-            nel_derp(341, _gettext('You are not allowed to issue bans.'));
-        }
-
+        $this->verifyAction();
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
 
@@ -80,11 +76,7 @@ class AdminBans extends Admin
 
     public function update()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
-        {
-            nel_derp(342, _gettext('You are not allowed to modify bans.'));
-        }
-
+        $this->verifyAction();
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
         $this->outputMain(true);
@@ -92,22 +84,26 @@ class AdminBans extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
-        {
-            nel_derp(343, _gettext('You are not allowed to modify bans.'));
-        }
-
+        $this->verifyAction();
         $ban_id = $_GET['ban_id'] ?? '';
         $this->ban_hammer->loadFromID($ban_id);
         $this->ban_hammer->remove();
         $this->outputMain(true);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {
-            nel_derp(340, _gettext('You are not allowed to access the bans panel.'));
+            nel_derp(320, _gettext('You do not have access to the Bans panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
+        {
+            nel_derp(321, _gettext('You are not allowed to manage bans.'));
         }
     }
 }

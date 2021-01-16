@@ -32,11 +32,7 @@ class AdminNews extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
-        {
-            nel_derp(601, _gettext('You are not allowed to make news posts.'));
-        }
-
+        $this->verifyAction();
         $news_info = array();
         $news_info['poster_id'] = $this->session_user->id();
         $news_info['headline'] = $_POST['headline'] ?? null;
@@ -60,11 +56,7 @@ class AdminNews extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
-        {
-            nel_derp(603, _gettext('You are not allowed to remove news posts.'));
-        }
-
+        $this->verifyAction();
         $entry = $_GET['entry'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_NEWS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$entry]);
@@ -78,11 +70,19 @@ class AdminNews extends Admin
         $regen->news($this->domain);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
         {
-            nel_derp(600, _gettext('You are not allowed to access the news panel.'));
+            nel_derp(440, _gettext('You do not have access to the News panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
+        {
+            nel_derp(441, _gettext('You are not allowed to manage news articles.'));
         }
     }
 }

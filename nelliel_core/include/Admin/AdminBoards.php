@@ -42,11 +42,7 @@ class AdminBoards extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
-        {
-            nel_derp(441, _gettext('You are not allowed to create boards.'));
-        }
-
+        $this->verifyAction();
         $site_domain = new DomainSite($this->database);
         $board_uri = trim($_POST['new_board_uri']);
 
@@ -113,11 +109,7 @@ class AdminBoards extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
-        {
-            nel_derp(443, _gettext('You are not allowed to delete boards.'));
-        }
-
+        $this->verifyAction();
         $board_id = $_GET['board_id'];
         $domain = new DomainBoard($board_id, $this->database);
 
@@ -172,11 +164,7 @@ class AdminBoards extends Admin
 
     public function unlock()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
-        {
-            nel_derp(444, _gettext('You are not allowed to unlock this board.'));
-        }
-
+        $this->verifyAction();
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
@@ -186,11 +174,7 @@ class AdminBoards extends Admin
 
     public function lock()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
-        {
-            nel_derp(445, _gettext('You are not allowed to lock this board.'));
-        }
-
+        $this->verifyAction();
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
@@ -245,11 +229,19 @@ class AdminBoards extends Admin
         return $final_id;
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
         {
-            nel_derp(440, _gettext('You are not allowed to access the manage boards panel.'));
+            nel_derp(370, _gettext('You do not have access to the Manage Boards panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
+        {
+            nel_derp(371, _gettext('You are not allowed to manage boards.'));
         }
     }
 }

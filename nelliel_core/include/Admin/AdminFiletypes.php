@@ -36,11 +36,7 @@ class AdminFiletypes extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
-        {
-            nel_derp(521, _gettext('You are not allowed to add filetypes.'));
-        }
-
+        $this->verifyAction();
         $base_extension = $_POST['base_extension'] ?? null;
         $type = $_POST['type'] ?? null;
         $format = $_POST['format'] ?? null;
@@ -72,11 +68,7 @@ class AdminFiletypes extends Admin
 
     public function update()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
-        {
-            nel_derp(522, _gettext('You are not allowed to modify filetypes.'));
-        }
-
+        $this->verifyAction();
         $filetype_id = $_GET['filetype-id'];
         $base_extension = $_POST['base_extension'] ?? null;
         $type = $_POST['type'] ?? null;
@@ -101,11 +93,7 @@ class AdminFiletypes extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
-        {
-            nel_derp(523, _gettext('You are not allowed to remove filetypes.'));
-        }
-
+        $this->verifyAction();
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILETYPES_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
@@ -114,11 +102,7 @@ class AdminFiletypes extends Admin
 
     public function enable()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
-        {
-            nel_derp(524, _gettext('You are not allowed to enable filetypes.'));
-        }
-
+        $this->verifyAction();
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 1 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
@@ -127,22 +111,26 @@ class AdminFiletypes extends Admin
 
     public function disable()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
-        {
-            nel_derp(525, _gettext('You are not allowed to disable filetypes.'));
-        }
-
+        $this->verifyAction();
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 0 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
         $this->outputMain(true);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
-            nel_derp(520, _gettext('You are not allowed to access the filetypes panel.'));
+            nel_derp(400, _gettext('You do not have access to the Filetypes panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
+        {
+            nel_derp(401, _gettext('You are not allowed to manage filetypes.'));
         }
     }
 }

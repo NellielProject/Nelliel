@@ -43,6 +43,10 @@ abstract class Admin
 
     public abstract function remove();
 
+    public abstract function verifyAccess();
+
+    public abstract function verifyAction();
+
     public function outputMain(bool $value = null)
     {
         if (!is_null($value))

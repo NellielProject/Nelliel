@@ -32,11 +32,7 @@ class AdminPermissions extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_modify'))
-        {
-            nel_derp(561, _gettext('You are not allowed to add permissions.'));
-        }
-
+        $this->verifyAction();
         $permission = $_POST['permission'];
         $description = $_POST['description'];
         $prepared = $this->database->prepare(
@@ -55,22 +51,26 @@ class AdminPermissions extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_modify'))
-        {
-            nel_derp(563, _gettext('You are not allowed to remove permissions.'));
-        }
-
+        $this->verifyAction();
         $permission = $_GET['permission'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PERMISSIONS_TABLE . '" WHERE "permission" = ?');
         $this->database->executePrepared($prepared, [$permission]);
         $this->outputMain(true);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_permissions_access'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_permissions'))
         {
-            nel_derp(560, _gettext('You are not allowed to access the permissions panel.'));
+            nel_derp(420, _gettext('You do not have access to the Permissions panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_permissions'))
+        {
+            nel_derp(421, _gettext('You are not allowed to manage permissions.'));
         }
     }
 }

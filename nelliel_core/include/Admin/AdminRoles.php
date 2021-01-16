@@ -43,11 +43,7 @@ class AdminRoles extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
-        {
-            nel_derp(321, _gettext('You are not allowed to add roles.'));
-        }
-
+        $this->verifyAction();
         $this->role_id = $_POST['role_id'];
         $this->update();
         $this->outputMain(true);
@@ -63,11 +59,7 @@ class AdminRoles extends Admin
 
     public function update()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
-        {
-            nel_derp(322, _gettext('You are not allowed to modify roles.'));
-        }
-
+        $this->verifyAction();
         $role = $this->authorization->newRole($this->role_id);
         $role->setupNew();
 
@@ -94,20 +86,24 @@ class AdminRoles extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
-        {
-            nel_derp(323, _gettext('You are not allowed to remove roles.'));
-        }
-
+        $this->verifyAction();
         $this->authorization->removeRole($this->role_id);
         $this->outputMain(true);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
         {
-            nel_derp(320, _gettext('You are not allowed to access the roles panel.'));
+            nel_derp(310, _gettext('You do not have access to the Roles panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
+        {
+            nel_derp(311, _gettext('You are not allowed to manage roles.'));
         }
     }
 }

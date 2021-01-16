@@ -65,11 +65,7 @@ class AdminThreads extends Admin
 
     public function sticky()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_post_status'))
-        {
-            nel_derp(647, _gettext('You are not allowed to sticky or unsticky threads.'));
-        }
-
+        $this->verifyAction();
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread() || $content_id->isPost())
@@ -81,11 +77,7 @@ class AdminThreads extends Admin
 
     public function lock()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_post_status'))
-        {
-            nel_derp(648, _gettext('You are not allowed to lock or unlock threads.'));
-        }
-
+        $this->verifyAction();
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread())
@@ -97,11 +89,7 @@ class AdminThreads extends Admin
 
     public function permasage()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_board_post_status'))
-        {
-            nel_derp(649, _gettext('You are not allowed to sage or unsage threads.'));
-        }
-
+        $this->verifyAction();
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread())
@@ -143,7 +131,19 @@ class AdminThreads extends Admin
         $this->outputMain(false);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_threads'))
+        {
+            nel_derp(460, _gettext('You do not have access to the Threads panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_threads'))
+        {
+            nel_derp(461, _gettext('You are not allowed to manage threads or posts.'));
+        }
     }
 }

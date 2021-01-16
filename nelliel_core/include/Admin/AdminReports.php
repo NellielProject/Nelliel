@@ -45,23 +45,26 @@ class AdminReports extends Admin
 
     public function remove()
     {
+        $this->verifyAction();
         $report_id = $_GET['report_id'];
-
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_reports'))
-        {
-            nel_derp(463, _gettext('You are not allowed to dismiss reports.'));
-        }
-
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, [$report_id]);
         $this->outputMain(true);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_reports'))
         {
-            nel_derp(460, _gettext('You are not allowed to access the reports panel.'));
+            nel_derp(380, _gettext('You do not have access to the Reports panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_reports'))
+        {
+            nel_derp(381, _gettext('You are not allowed to manage reports.'));
         }
     }
 }

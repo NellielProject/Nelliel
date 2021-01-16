@@ -32,11 +32,7 @@ class AdminFileFilters extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
-        {
-            nel_derp(401, _gettext('You are not allowed to add file filters.'));
-        }
-
+        $this->verifyAction();
         $type = $_POST['hash_type'];
         $notes = $_POST['file_notes'];
         $board_id = $_POST['board_id'];
@@ -64,22 +60,26 @@ class AdminFileFilters extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
-        {
-            nel_derp(403, _gettext('You are not allowed to remove file filters.'));
-        }
-
+        $this->verifyAction();
         $filter_id = $_GET['filter-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILES_FILTERS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
         $this->outputMain(true);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
         {
-            nel_derp(400, _gettext('You are not allowed to access the file filters.'));
+            nel_derp(350, _gettext('You do not have access to the File Filters panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
+        {
+            nel_derp(351, _gettext('You are not allowed to manage file filters.'));
         }
     }
 }

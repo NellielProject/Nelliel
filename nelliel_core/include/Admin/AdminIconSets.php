@@ -32,11 +32,7 @@ class AdminIconSets extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
-        {
-            nel_derp(581, _gettext('You are not allowed to install icon sets.'));
-        }
-
+        $this->verifyAction();
         $icon_set_id = $_GET['icon-set-id'];
         $icon_set_inis = $this->domain->frontEndData()->getIconSetInis();
 
@@ -64,11 +60,7 @@ class AdminIconSets extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
-        {
-            nel_derp(582, _gettext('You are not allowed to uninstall icon sets.'));
-        }
-
+        $this->verifyAction();
         $icon_set_id = $_GET['icon-set-id'];
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = ?');
@@ -78,11 +70,7 @@ class AdminIconSets extends Admin
 
     public function makeDefault()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
-        {
-            nel_derp(583, _gettext('You are not allowed to set the default icon set.'));
-        }
-
+        $this->verifyAction();
         $icon_set_id = $_GET['icon-set-id'];
         $this->database->exec('UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'icon-set\'');
         $prepared = $this->database->prepare(
@@ -91,11 +79,19 @@ class AdminIconSets extends Admin
         $this->outputMain(true);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
         {
-            nel_derp(580, _gettext('You are not allowed to access the icon sets panel.'));
+            nel_derp(430, _gettext('You do not have access to the Icon Sets panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
+        {
+            nel_derp(431, _gettext('You are not allowed to manage icon sets.'));
         }
     }
 }

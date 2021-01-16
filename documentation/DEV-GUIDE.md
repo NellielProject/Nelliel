@@ -69,8 +69,8 @@ Nelliel returns a numeric error id along with an error message. This keeps the b
  - 1-99: Content-related errors (upload problems, duplicate files, etc.).
  - 100-199: General system and input errors.
  - 200-299: Management-related system and input errors.
- - 300-799: Permissions errors.
- - 800-999: Reserved
+ - 300-699: Permissions errors.
+ - 700-999: Reserved
  - 1000+: Plugins and other uses
 
 

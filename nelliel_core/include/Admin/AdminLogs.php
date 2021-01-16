@@ -47,11 +47,19 @@ class AdminLogs extends Admin
     {
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_logs'))
         {
-            nel_derp(341, _gettext('You are not allowed to access the logs panel.'));
+            nel_derp(470, _gettext('You do not have access to the Logs panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_logs'))
+        {
+            nel_derp(471, _gettext('You are not allowed to manage logs.'));
         }
     }
 }

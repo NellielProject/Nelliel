@@ -36,11 +36,7 @@ class AdminIfThens extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
-        {
-            nel_derp(621, _gettext('You are not allowed to add if-thens.'));
-        }
-
+        $this->verifyAction();
         $board_id = $_POST['board_id'] ?? '';
         $if_conditions = $_POST['if_conditions'] ?? '';
         $then_actions = $_POST['then_actions'] ?? '';
@@ -64,11 +60,7 @@ class AdminIfThens extends Admin
 
     public function update()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
-        {
-            nel_derp(622, _gettext('You are not allowed to modify if-thens.'));
-        }
-
+        $this->verifyAction();
         $ifthen_id = $_GET['ifthen-id'] ?? 0;
         $board_id = $_POST['board_id'] ?? '';
         $if_conditions = $_POST['if_conditions'] ?? '';
@@ -85,11 +77,7 @@ class AdminIfThens extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
-        {
-            nel_derp(623, _gettext('You are not allowed to remove if-thens.'));
-        }
-
+        $this->verifyAction();
         $ifthen_id = $_GET['ifthen-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_IF_THENS_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$ifthen_id]);
@@ -98,11 +86,7 @@ class AdminIfThens extends Admin
 
     public function enable()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
-        {
-            nel_derp(624, _gettext('You are not allowed to enable if-thens.'));
-        }
-
+        $this->verifyAction();
         $ifthen_id = $_GET['ifthen-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_IF_THENS_TABLE . '" SET "enabled" = 1 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$ifthen_id]);
@@ -111,22 +95,26 @@ class AdminIfThens extends Admin
 
     public function disable()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
-        {
-            nel_derp(625, _gettext('You are not allowed to disable if-thens.'));
-        }
-
+        $this->verifyAction();
         $ifthen_id = $_GET['ifthen-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_IF_THENS_TABLE . '" SET "enabled" = 0 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$ifthen_id]);
         $this->outputMain(true);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
         {
-            nel_derp(620, _gettext('You are not allowed to access the if-thens panel.'));
+            nel_derp(450, _gettext('You do not have access to the If-Thens panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))
+        {
+            nel_derp(451, _gettext('You are not allowed to manage if-thens.'));
         }
     }
 }

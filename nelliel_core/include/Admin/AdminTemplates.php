@@ -32,11 +32,7 @@ class AdminTemplates extends Admin
 
     public function add()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
-        {
-            nel_derp(501, _gettext('You are not allowed to install templates.'));
-        }
-
+        $this->verifyAction();
         $template_id = $_GET['template-id'];
         $template_inis = $this->domain->frontEndData()->getTemplateInis();
         $info = '';
@@ -70,11 +66,7 @@ class AdminTemplates extends Admin
 
     public function remove()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
-        {
-            nel_derp(503, _gettext('You are not allowed to uninstall templates.'));
-        }
-
+        $this->verifyAction();
         $template_id = $_GET['template-id'];
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ? AND "type" = \'template\'');
@@ -84,11 +76,7 @@ class AdminTemplates extends Admin
 
     public function makeDefault()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
-        {
-            nel_derp(506, _gettext('You are not allowed to set the default template.'));
-        }
-
+        $this->verifyAction();
         $template_id = $_GET['template-id'];
         $this->database->exec('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 0');
         $prepared = $this->database->prepare(
@@ -97,11 +85,19 @@ class AdminTemplates extends Admin
         $this->outputMain(true);
     }
 
-    private function verifyAccess()
+    public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
-            nel_derp(500, _gettext('You are not allowed to access the templates panel.'));
+            nel_derp(390, _gettext('You do not have access to the Templates panel.'));
+        }
+    }
+
+    public function verifyAction()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
+        {
+            nel_derp(391, _gettext('You are not allowed to manage Templates.'));
         }
     }
 }
