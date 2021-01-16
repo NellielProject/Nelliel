@@ -110,7 +110,8 @@ class OutputPost extends Output
         }
 
         $this->render_data['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $web_paths);
-        $this->render_data['content_disclaimer'] = nel_site_domain()->setting('content_disclaimer');
+        $this->render_data['site_content_disclaimer'] = nel_site_domain()->setting('site_content_disclaimer');
+        $this->render_data['board_content_disclaimer'] = $this->domain->setting('board_content_disclaimer');
         $output = $this->output('thread/post', $data_only, true, $this->render_data);
         return $output;
     }

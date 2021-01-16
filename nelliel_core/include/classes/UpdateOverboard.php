@@ -41,11 +41,10 @@ class UpdateOverboard
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_OVERBOARD_TABLE .
-                    '" ("thread_id", "last_bump_time", "last_bump_time_milli", "board_id", "safety_level") VALUES
-                    (?, ?, ?, ?, ?)');
+                    '" ("thread_id", "last_bump_time", "last_bump_time_milli", "board_id") VALUES
+                    (?, ?, ?, ?)');
             $this->database->executePrepared($prepared,
-                    [$thread_id, $thread_data['last_bump_time'], $thread_data['last_bump_time_milli'], $board_id,
-                        $board_domain->setting('safety_level')]);
+                    [$thread_id, $thread_data['last_bump_time'], $thread_data['last_bump_time_milli'], $board_id]);
         }
     }
 }

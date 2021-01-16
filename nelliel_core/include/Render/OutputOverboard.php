@@ -30,6 +30,7 @@ class OutputOverboard extends Output
         $timer->start();
         $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction($timer);
         $sfw = $parameters['sfw'] ?? false;
+        $allow_nsfl = $this->site_domain->setting('nsfl_on_overboard');
         $prefix = ($sfw) ? 'sfw_' : '';
         $json_index = new \Nelliel\API\JSON\JSONIndex($this->site_domain, $this->file_handler);
         $output_head = new OutputHead($this->site_domain, $this->write_mode);
@@ -76,13 +77,19 @@ class OutputOverboard extends Output
             }
 
             $thread = $thread_list[$i];
+            $thread_domain = new DomainBoard($thread['board_id'], $this->database);
+            $board_safety_level = $thread_domain->setting('safety_level');
 
-            if ($sfw && $thread['safety_level'] !== 'SFW')
+            if ($sfw && $board_safety_level !== 'SFW')
             {
                 continue;
             }
 
-            $thread_domain = new DomainBoard($thread['board_id'], $this->database);
+            if ($board_safety_level === 'NSFL' && !$allow_nsfl)
+            {
+                continue;
+            }
+
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $thread_domain->reference('threads_table') . '" WHERE "thread_id" = ?');
             $thread_data = $this->database->executePreparedFetch($prepared, [$thread['thread_id']], PDO::FETCH_ASSOC);
