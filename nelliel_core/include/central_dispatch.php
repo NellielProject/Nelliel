@@ -248,6 +248,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
         case 'regen':
             $regen = new \Nelliel\Regen();
+            $session->init(true);
             $session->loggedInOrError();
             $user = $session->user();
             $forward = 'site';
