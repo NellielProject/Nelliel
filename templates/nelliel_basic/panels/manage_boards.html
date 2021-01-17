@@ -12,7 +12,9 @@
 	<tbody>
 {{# board_list }}
 		<tr class="{{ bgclass }}">
-			<td>{{ board_uri }}</td>
+			<td>
+				<a href="{{ board_url }}">{{ board_uri }}</a>
+			</td>
 			<td>{{ db_prefix }}</td>
 			<td>{{ status }}</td>
 			<td>
