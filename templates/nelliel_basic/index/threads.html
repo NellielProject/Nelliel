@@ -1,24 +1,24 @@
 <form class="content-page" accept-charset="utf-8" action="{{ form_action }}" method="post">
-	{{# threads }}
+{{# threads }}
 	<div id="{{ thread_corral_id }}" class="thread-corral" data-jsevents="click|mouseover|mouseout">
 	{{# op_post }}
 		{{> thread/post }}
 	{{/ op_post }}
 		<div id="{{ thread_expand_id }}">
-		{{# abbreviate }}
+	{{# abbreviate }}
 			<span class="omitted-posts">{{ omitted_count }}<span data-i18n="gettext">  posts omitted. Click Reply or Expand Thread to view.</span><br></span>
-		{{/ abbreviate }}
-		{{# thread_posts }}
+	{{/ abbreviate }}
+	{{# thread_posts }}
 			{{> thread/post }}
-		{{/ thread_posts }}
+	{{/ thread_posts }}
 		</div>
 	</div>
 	<hr class="clear">
-	{{/ threads }}
-	{{# index_navigation }}
+{{/ threads }}
+{{# index_navigation }}
 	{{> index/navigation }}
-	{{/ index_navigation }}
-	{{# footer_form }}
+{{/ index_navigation }}
+{{# footer_form }}
 	{{> thread/footer_form }}
-	{{/ footer_form }}
+{{/ footer_form }}
 </form>

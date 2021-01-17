@@ -7,15 +7,17 @@
 <hr class="clear">
 <form class="content-page" accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div id="{{ thread_corral_id }}" class="thread-corral" data-jsevents="click|mouseover|mouseout">
-	{{# op_post }}
+{{# op_post }}
 		{{> thread/post }}
-	{{/ op_post }}
+{{/ op_post }}
 		<div id="{{ thread_expand_id }}">
-		{{# thread_posts }}
+{{# thread_posts }}
 			{{> thread/post }}
-		{{/ thread_posts }}
+{{/ thread_posts }}
 		</div>
 	</div>
 	<hr class="clear">
+{{# footer_form }}
 	{{> thread/footer_form }}
+{{/ footer_form }}
 </form>

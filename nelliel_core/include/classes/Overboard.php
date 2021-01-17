@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Content\ContentThread;
 use Nelliel\Domains\DomainBoard;
+use Nelliel\Content\ContentID;
 use PDO;
 
 class Overboard
@@ -81,21 +82,24 @@ class Overboard
         $nsfl_limit = $limit;
         $board_domains = array();
 
-        foreach ($thread_list as $thread)
+        foreach ($thread_list as $thread_data)
         {
-            if (!isset($board_domains[$thread['board_id']]))
+            if (!isset($board_domains[$thread_data['board_id']]))
             {
-                $board_domains[$thread['board_id']] = new DomainBoard($thread['board_id'], $this->database);
+                $board_domains[$thread_data['board_id']] = new DomainBoard($thread_data['board_id'], $this->database);
             }
 
-            $board_domain = $board_domains[$thread['board_id']];
+            $board_domain = $board_domains[$thread_data['board_id']];
+            $thread_content_id = new ContentID();
+            $thread_content_id->changeThreadID($thread_data['thread_id']);
+            $thread = $thread_content_id->getInstanceFromID($board_domain);
             $board_safety_level = $board_domain->setting('safety_level');
 
             if ($board_safety_level === 'SFW')
             {
                 if ($sfw_total === $sfw_limit)
                 {
-                    $this->removeThread($thread['thread_id'], $thread['board_id']);
+                    $this->removeThread($thread);
                     continue;
                 }
 
@@ -105,7 +109,7 @@ class Overboard
             {
                 if ($nsfl_total === $nsfl_limit)
                 {
-                    $this->removeThread($thread['thread_id'], $thread['board_id']);
+                    $this->removeThread($thread);
                     continue;
                 }
 
@@ -115,7 +119,7 @@ class Overboard
             {
                 if ($total === $limit)
                 {
-                    $this->removeThread($thread['thread_id'], $thread['board_id']);
+                    $this->removeThread($threads);
                     continue;
                 }
 

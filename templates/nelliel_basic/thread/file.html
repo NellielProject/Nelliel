@@ -5,7 +5,9 @@
 	</div>
 	{{/ in_modmode }}
 	<div class="file-header">
+	{{^ hide_file_select }}
 		<input type="checkbox" name="{{ file_content_id }}" value="action">
+	{{/ hide_file_select }}
 		<a href="{{ file_url }}" target="_blank">{{ display_filename }}</a>
 		<span class="hide-file hidden" data-jsonly="">[<a class="toggle-file" href="#" data-command="hide-file" data-content-id="{{ file_content_id }}" data-alt-visual="Show File" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide File</a>]</span>
 		<div>{{ display_image_dimensions }}{{ display_filesize}}</div>
