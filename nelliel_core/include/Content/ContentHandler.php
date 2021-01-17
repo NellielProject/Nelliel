@@ -32,6 +32,8 @@ abstract class ContentHandler
 
     protected abstract function verifyModifyPerms();
 
+    public abstract function getParent();
+
     public function storeMoar(Moar $moar)
     {
         $this->content_moar = $moar;

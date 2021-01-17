@@ -258,6 +258,14 @@ class ContentPost extends ContentHandler
         return true;
     }
 
+    public function getParent()
+    {
+        $content_id = new \Nelliel\Content\ContentID();
+        $content_id->changeThreadID($this->content_id->threadID());
+        $parent_thread = new ContentThread($content_id, $this->domain);
+        return $parent_thread;
+    }
+
     public function convertToThread()
     {
         $time = nel_get_microtime();

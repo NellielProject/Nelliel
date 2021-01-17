@@ -82,9 +82,9 @@
 		{{# require_op_upload }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ require_op_upload }}
-		{{# require_upload_always }}
+		{{# require_reply_upload }}
 			{{> panels/pieces/settings_checkbox }}
-		{{/ require_upload_always }}
+		{{/ require_reply_upload }}
 		{{# check_thread_duplicates }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ check_thread_duplicates }}
@@ -94,6 +94,18 @@
 		{{# enable_spoilers }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ enable_spoilers }}
+		{{# limit_thread_uploads }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ limit_thread_uploads }}
+		{{# max_thread_uploads }}
+			{{> panels/pieces/settings_number }}
+		{{/ max_thread_uploads }}
+		{{# require_op_comment }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ require_op_comment }}
+		{{# require_reply_comment }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ require_reply_comment }}
 		{{# max_name_length }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_name_length }}
@@ -171,9 +183,15 @@
 		{{# deleted_content_placeholder }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ deleted_content_placeholder }}
+		{{# limit_post_count }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ limit_post_count }}
 		{{# max_posts }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_posts }}
+		{{# limit_bump_count }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ limit_bump_count }}
 		{{# max_bumps }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_bumps }}

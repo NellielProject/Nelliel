@@ -204,4 +204,13 @@ class ContentFile extends ContentHandler
         $post = new ContentPost($this->content_id, $this->domain);
         return $post->verifyModifyPerms();
     }
+
+    public function getParent()
+    {
+        $content_id = new \Nelliel\Content\ContentID();
+        $content_id->changeThreadID($this->content_id->threadID());
+        $content_id->changePostID($this->content_id->postID());
+        $parent_post = new ContentPost($content_id, $this->domain);
+        return $parent_post;
+    }
 }

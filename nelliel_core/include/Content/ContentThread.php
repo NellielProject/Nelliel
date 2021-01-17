@@ -199,6 +199,11 @@ class ContentThread extends ContentHandler
         return $post->verifyModifyPerms();
     }
 
+    public function getParent()
+    {
+        return $this;
+    }
+
     public function sticky()
     {
         if (!$this->dataLoaded(true))

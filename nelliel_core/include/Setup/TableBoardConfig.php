@@ -69,10 +69,14 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['allow_reply_multiple', '0', 0]);
         $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
         $this->insertDefaultRow(['require_op_upload', '1', 0]);
-        $this->insertDefaultRow(['require_upload_always', '0', 0]);
+        $this->insertDefaultRow(['require_reply_upload', '0', 0]);
         $this->insertDefaultRow(['check_thread_duplicates', '1', 0]);
         $this->insertDefaultRow(['check_op_duplicates', '1', 0]);
         $this->insertDefaultRow(['enable_spoilers', '1', 0]);
+        $this->insertDefaultRow(['limit_thread_uploads', '1', 0]);
+        $this->insertDefaultRow(['max_thread_uploads', '1000', 0]);
+        $this->insertDefaultRow(['require_op_comment', '0', 0]);
+        $this->insertDefaultRow(['require_reply_comment', '0', 0]);
         $this->insertDefaultRow(['max_name_length', '100', 0]);
         $this->insertDefaultRow(['max_email_length', '100', 0]);
         $this->insertDefaultRow(['max_subject_length', '200', 0]);
@@ -96,7 +100,9 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['png_compression', '6', 0]);
         $this->insertDefaultRow(['animated_gif_preview', '0', 0]);
         $this->insertDefaultRow(['deleted_content_placeholder', '0', 0]);
+        $this->insertDefaultRow(['limit_post_count', '1', 0]);
         $this->insertDefaultRow(['max_posts', '1000', 0]);
+        $this->insertDefaultRow(['limit_bump_count', '1', 0]);
         $this->insertDefaultRow(['max_bumps', '1000', 0]);
         $this->insertDefaultRow(['active_threads', '100', 0]);
         $this->insertDefaultRow(['thread_buffer', '50', 0]);

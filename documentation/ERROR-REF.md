@@ -39,6 +39,8 @@ Error 37: No uploads in OP. (Post/Uploads.php)
 Error 38: No uploads in reply. (Post/Uploads.php)  
 Error 39: No multiple uploads in OP. (Post/Uploads.php)  
 Error 40: No multiple uploads in reply. (Post/Uploads.php)   
+Error 41: Comment required for OP. (Post/PostData.php)  
+Error 42: Comment required for reply. (Post/PostData.php)  
 
 Error 60: Password does not match post. (Content/ContentPost.php)  
 Error 61: Board locked, can't remove file. (Content/ContentFile.php)  

@@ -60,7 +60,7 @@ class Uploads
 
         for ($i = 0; $i < $file_count; $i ++)
         {
-            if(nel_true_empty($this->files['upload_files']['name'][$i]))
+            if (nel_true_empty($this->files['upload_files']['name'][$i]))
             {
                 continue;
             }
@@ -352,6 +352,8 @@ class Uploads
         $embeds_count = 0;
         $files_count = 0;
         $response_to = $post->data('response_to');
+        $parent_thread = $post->getParent();
+        $parent_thread->loadFromDatabase();
 
         foreach ($this->embeds as $embed)
         {
@@ -390,12 +392,12 @@ class Uploads
 
         if ($total === 0)
         {
-            if ($this->domain->setting('require_upload_always'))
+            if ($response_to && $this->domain->setting('require_reply_upload'))
             {
-                nel_derp(8, _gettext('An image, file or embed is required when posting.'));
+                nel_derp(8, _gettext('An image, file or embed is required when replying.'));
             }
 
-            if ($this->domain->setting('require_op_upload') && !$response_to)
+            if (!$response_to && $this->domain->setting('require_op_upload'))
             {
                 nel_derp(9, _gettext('An image, file or embed is required to make new thread.'));
             }
@@ -410,6 +412,12 @@ class Uploads
                             _gettext(
                                     'You have too many uploads in one post. Received %d embeds and %d files for a total of %d uploads. Limit is %d.'),
                             $embeds_count, $files_count, $total, $this->domain->setting('max_post_uploads')));
+        }
+
+        if ($total >= 1 && $this->domain->setting('limit_thread_uploads') &&
+                $parent_thread->data('content_count') >= $this->domain->setting('max_thread_uploads'))
+        {
+            nel_derp(43, _gettext('This thread has reached the maximum number of uploads.'));
         }
 
         if ($total === 1)

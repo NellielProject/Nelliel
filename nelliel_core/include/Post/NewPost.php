@@ -51,7 +51,8 @@ class NewPost
 
         $authorization = new \Nelliel\Auth\Authorization($this->database);
         $file_handler = nel_utilities()->fileHandler();
-        $uploads_handler = new Uploads($this->domain, $_FILES, [$_POST['embed_url'] ?? ''], $authorization, $this->session);
+        $uploads_handler = new Uploads($this->domain, $_FILES, [$_POST['embed_url'] ?? ''], $authorization,
+                $this->session);
         $data_handler = new PostData($this->domain, $authorization, $this->session);
         $post = new \Nelliel\Content\ContentPost(new \Nelliel\Content\ContentID(), $this->domain);
         $data_handler->processPostData($post);
@@ -131,7 +132,8 @@ class NewPost
             $thread->changeData('last_update_milli', $time['milli']);
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
-            if ($thread->data('post_count') <= $this->domain->setting('max_bumps') &&
+            if ((!$this->domain->setting('limit_bump_count') ||
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
                     !$fgsfds->getCommandData('sage', 'value') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
@@ -260,7 +262,8 @@ class NewPost
                 nel_derp(4, _gettext('The thread you have tried posting in could not be found.'), $error_data);
             }
 
-            if ($thread_info['post_count'] >= $this->domain->setting('max_posts'))
+            if ($this->domain->setting('limit_post_count') &&
+                    $thread_info['post_count'] >= $this->domain->setting('max_posts'))
             {
                 nel_derp(5, _gettext('The thread has reached maximum posts.'), $error_data);
             }

@@ -28,7 +28,8 @@ class PostData
     {
         if (!isset($_POST['new_post']))
         {
-            nel_derp(35, "No POST data was received. The request may have been too big or server settings need to be adjusted.");
+            nel_derp(35,
+                    "No POST data was received. The request may have been too big or server settings need to be adjusted.");
         }
 
         $post->changeData('parent_thread', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
@@ -53,6 +54,23 @@ class PostData
         if (!$post->data('post_as_staff'))
         {
             $this->session->ignore(true);
+        }
+
+        $response_to = $post->data('response_to') > 0;
+
+        if (!$response_to)
+        {
+            if (nel_true_empty($post->data('comment')) && $this->domain->setting('require_op_comment'))
+            {
+                nel_derp(41, _gettext('A comment is required when starting a thread.'));
+            }
+        }
+        else
+        {
+            if (nel_true_empty($post->data('comment')) && $this->domain->setting('require_reply_comment'))
+            {
+                nel_derp(42, _gettext('A comment is required when replying.'));
+            }
         }
 
         if ($post->data('poster_name') !== '')
