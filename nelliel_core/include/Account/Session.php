@@ -17,12 +17,12 @@ class Session
     protected static $initialized = false;
     protected static $setup_done = false;
     protected static $user;
-    protected static $modmode_requested = false;
     protected $session_name = 'NellielSession';
     protected $authorization;
     protected $database;
     protected $failed = false;
     protected static $ignore = false;
+    protected $doing_login = false;
 
     function __construct()
     {
@@ -55,7 +55,7 @@ class Session
         return session_status() === PHP_SESSION_ACTIVE;
     }
 
-    protected function init(bool $do_setup)
+    public function init(bool $do_setup)
     {
         if (!$this->started())
         {
@@ -94,23 +94,28 @@ class Session
         }
         else
         {
-            return;
+            if (!$this->doing_login)
+            {
+                return;
+            }
         }
 
-        $user = $this->authorization->getUser($_SESSION['user_id'] ?? '');
-
-        if ($user->empty() || !$user->active())
+        if (!$this->doing_login)
         {
-            $this->failed = true;
-            $this->terminate();
-            nel_derp(222, _gettext('User does not exist or is inactive.'));
+            $user = $this->authorization->getUser($_SESSION['user_id'] ?? '');
+
+            if ($user->empty() || !$user->active())
+            {
+                $this->failed = true;
+                $this->terminate();
+                nel_derp(222, _gettext('User does not exist or is inactive.'));
+            }
+
+            self::$user = $user;
         }
 
-        self::$user = $user;
         $_SESSION['ignores'] = ['default' => false];
         $_SESSION['last_activity'] = time();
-        self::$modmode_requested = (isset($_GET['modmode']) && $_GET['modmode'] === 'true') ||
-                isset($_POST['in_modmode']) && $_POST['in_modmode'] === 'true';
         self::$setup_done = true;
     }
 
@@ -119,7 +124,7 @@ class Session
         $this->init(true);
         $this->terminate();
 
-        if(!empty(self::$user))
+        if (!empty(self::$user))
         {
             $log_event = new LogEvent($this->domain);
             $log_event->changeContext('event_id', 'LOGOUT_SUCCESS');
@@ -198,28 +203,29 @@ class Session
 
     public function user()
     {
-        $this->init(true);
         return self::$user;
     }
 
     public function isActive()
     {
-        if(!$this->ignore())
-        {
-            $this->init(true);
-        }
+        return !$this->ignore() && self::$setup_done;
+    }
 
-        return self::$setup_done;
+    public function modmodeRequested()
+    {
+        return (isset($_POST['modmode']) && $_POST['modmode'] === 'true') ||
+                (isset($_GET['modmode']) && $_GET['modmode'] === 'true');
     }
 
     public function inModmode(Domain $domain)
     {
-        return $this->isActive() && !$this->ignore() && self::$modmode_requested && self::$user->checkPermission($domain, 'perm_board_mod_mode');
+        return $this->isActive() && $this->modmodeRequested() &&
+                self::$user->checkPermission($domain, 'perm_board_mod_mode');
     }
 
     public function loggedInOrError()
     {
-        if (!$this->isActive() || empty(self::$user))
+        if (!$this->isActive() || (!$this->doing_login && empty(self::$user)))
         {
             $this->failed = true;
             nel_derp(224, _gettext('You must be logged in for this action.'));

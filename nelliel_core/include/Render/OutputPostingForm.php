@@ -20,14 +20,13 @@ class OutputPostingForm extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $session = new \Nelliel\Account\Session();
         $response_to = $parameters['response_to'];
         $this->render_data['allow_embeds'] = true; // TODO: Change this when we get a setting
         $this->render_data['response_to'] = $response_to;
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&actions=new-post&board-id=' .
                 $this->domain->id();
-        $this->render_data['in_modmode'] = $session->inModmode($this->domain) && !$this->write_mode;
-        $this->render_data['is_staff'] = $session->inModmode($this->domain) && !$this->write_mode;
+                $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
+                $this->render_data['is_staff'] = $this->session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
         $this->render_data['spam_target_maxlength'] = $this->domain->setting('max_email_length');
         $this->render_data['verb_maxlength'] = $this->domain->setting('max_subject_length');

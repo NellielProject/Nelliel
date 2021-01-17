@@ -137,11 +137,10 @@ class OutputPost extends Output
         $modmode_headers = array();
         $thread_headers = array();
         $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $session = new \Nelliel\Account\Session();
         $cites = new \Nelliel\Cites($this->domain->database());
         $header_data['response'] = $response;
 
-        if ($session->inModmode($this->domain) && !$this->write_mode)
+        if ($this->session->inModmode($this->domain) && !$this->write_mode)
         {
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
                     !empty($post_data['ip_address']))
@@ -206,7 +205,7 @@ class OutputPost extends Output
 
             $thread_headers['reply_to_url'] = $web_paths['thread_page'];
 
-            if ($session->inModmode($this->domain) && !$this->write_mode)
+            if ($this->session->inModmode($this->domain) && !$this->write_mode)
             {
                 $thread_headers['render'] = '-render';
                 $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

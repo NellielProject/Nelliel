@@ -76,9 +76,7 @@ function nel_dispatch_preparation()
 
     $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);
 
-    $session = new Session();
-
-    if($inputs['module'] === 'threads' || !$session->isActive())
+    if($inputs['module'] === 'threads')
     {
         $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BansAccess(nel_database()));
         $snacks->applyBan($domain);
@@ -155,6 +153,11 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'threads':
             $content_id = new \Nelliel\Content\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
+
+            if($session->modmodeRequested())
+            {
+                $session->init(true);
+            }
 
             if ($inputs['actions'][0] === 'new-post')
             {
@@ -301,12 +304,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             if ($forward === 'site')
             {
                 $output_main_panel = new \Nelliel\Render\OutputPanelMain($domain, false);
-                $output_main_panel->render(['user' => $session->user()], false);
+                $output_main_panel->render(['user' => $user], false);
             }
             else if ($forward === 'board')
             {
                 $output_board_panel = new \Nelliel\Render\OutputPanelBoard($domain, false);
-                $output_board_panel->render(['user' => $session->user(), 'board_id' => $board_id], false);
+                $output_board_panel->render(['user' => $user, 'board_id' => $board_id], false);
             }
 
             break;

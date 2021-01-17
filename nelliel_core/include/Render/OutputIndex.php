@@ -28,7 +28,6 @@ class OutputIndex extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('index/index');
-        $session = new \Nelliel\Account\Session();
         $page = 1;
         $site_domain = new DomainSite($this->database);
         $json_index = new JSONIndex($this->domain, $this->file_handler);
@@ -36,7 +35,7 @@ class OutputIndex extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
 
-        if ($session->isActive() && !$this->write_mode)
+        if ($this->session->inModmode($this->domain) && !$this->write_mode)
         {
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Index');

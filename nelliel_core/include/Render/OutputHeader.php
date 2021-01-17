@@ -20,8 +20,7 @@ class OutputHeader extends Output
     public function general(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $session = new \Nelliel\Account\Session();
-        $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
+        $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
@@ -44,11 +43,10 @@ class OutputHeader extends Output
     public function board(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $session = new \Nelliel\Account\Session();
         $treeline = $parameters['treeline'] ?? array();
         $uri = $parameters['uri'] ?? $this->domain->reference('board_directory');
         $index_render = $parameters['index_render'] ?? false;
-        $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
+        $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
@@ -96,12 +94,11 @@ class OutputHeader extends Output
     public function overboard(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $session = new \Nelliel\Account\Session();
         $treeline = $parameters['treeline'] ?? array();
         $uri = $parameters['uri'] ?? $this->domain->reference('board_directory');
         $index_render = $parameters['index_render'] ?? false;
         $this->render_data['sfw'] = $parameters['sfw'] ?? false;
-        $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
+        $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
@@ -149,9 +146,8 @@ class OutputHeader extends Output
     public function manage(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $session = new \Nelliel\Account\Session();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
-        $this->render_data['session_active'] = $session->isActive() && !$this->write_mode;
+        $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['panel'] = $parameters['panel'] ?? '';
         $this->render_data['section'] = $parameters['section'] ?? '';
         $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;

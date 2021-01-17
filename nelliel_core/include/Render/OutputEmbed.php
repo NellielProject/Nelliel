@@ -28,7 +28,6 @@ class OutputEmbed extends Output
         $json_post = $parameters['json_instances']['post'];
         $json_content = $parameters['json_instances']['content'];
         $json_post->addContentData($json_content->prepareData($file));
-        $session = new \Nelliel\Account\Session();
         $file_content_id = new ContentID();
         $file_content_id->changeThreadID($post_data['parent_thread']);
         $file_content_id->changePostID($post_data['post_number']);
@@ -55,7 +54,7 @@ class OutputEmbed extends Output
             }
         }
 
-        if ($session->inModmode($this->domain))
+        if ($this->session->inModmode($this->domain))
         {
             $this->render_data['in_modmode'] = true;
             $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .

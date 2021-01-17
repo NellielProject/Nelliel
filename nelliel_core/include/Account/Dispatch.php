@@ -22,6 +22,7 @@ class Dispatch
     {
         $this->domain = $domain;
         $this->session = $session;
+        $this->session->init(true);
     }
 
     public function dispatch(array $inputs)

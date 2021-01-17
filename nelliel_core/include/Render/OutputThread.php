@@ -24,7 +24,6 @@ class OutputThread extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('thread/thread');
-        $session = new \Nelliel\Account\Session();
         $thread_id = ($parameters['thread_id']) ?? 0;
         $command = ($parameters['command']) ?? 'view-thread';
         $thread_content_id = ContentID::createIDString($thread_id);
@@ -54,8 +53,11 @@ class OutputThread extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
 
-        if ($session->inModmode($this->domain) && !$this->write_mode)
+        if ($this->session->inModmode($this->domain) && !$this->write_mode)
         {
+            $manage_headers['header'] = _gettext('Moderator Mode');
+            $manage_headers['sub_header'] = _gettext('View Thread');
+            $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
             $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'render', 'actions' => 'view-index', 'index' => '0',
@@ -63,22 +65,11 @@ class OutputThread extends Output
         }
         else
         {
+            $this->render_data['header'] = $output_header->board([], true);
             $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
         }
 
         $this->render_data['return_url'] = $return_url;
-
-        if ($session->isActive() && !$this->write_mode)
-        {
-            $manage_headers['header'] = _gettext('Moderator Mode');
-            $manage_headers['sub_header'] = _gettext('View Thread');
-            $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
-        }
-        else
-        {
-            $this->render_data['header'] = $output_header->board([], true);
-        }
-
         $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
         $json_thread->storeData($json_thread->prepareData($thread_data), 'thread');
         $json_content = new \Nelliel\API\JSON\JSONContent($this->domain, $this->file_handler);

@@ -28,7 +28,6 @@ class OutputFile extends Output
         $json_post = $parameters['json_instances']['post'];
         $json_content = $parameters['json_instances']['content'];
         $json_post->addContentData($json_content->prepareData($file));
-        $session = new \Nelliel\Account\Session();
         $file_content_id = new ContentID();
         $file_content_id->changeThreadID($post_data['parent_thread']);
         $file_content_id->changePostID($post_data['post_number']);
@@ -38,9 +37,9 @@ class OutputFile extends Output
         $this->render_data['file_container_id'] = 'file-container-' . $file_content_id->getIDString();
         $this->render_data['single_multiple'] = $multiple ? 'multiple' : 'single';
         $this->render_data['file_content_id'] = $file_content_id->getIDString();
-        $this->render_data['in_modmode'] = $session->inModmode($this->domain) && !$this->write_mode;
+        $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
-        if ($session->inModmode($this->domain))
+        if ($this->session->inModmode($this->domain))
         {
             $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
