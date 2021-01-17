@@ -119,7 +119,7 @@ class Overboard
             {
                 if ($total === $limit)
                 {
-                    $this->removeThread($threads);
+                    $this->removeThread($thread);
                     continue;
                 }
 

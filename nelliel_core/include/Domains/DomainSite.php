@@ -17,7 +17,7 @@ class DomainSite extends Domain implements NellielCacheInterface
 
     public function __construct(NellielPDO $database)
     {
-        $this->domain_id = Domain::SITE;
+        $this->id = Domain::SITE;
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
@@ -27,22 +27,22 @@ class DomainSite extends Domain implements NellielCacheInterface
 
     protected function loadSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', 'domains/' . $this->domain_id);
+        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', 'domains/' . $this->id);
 
         if (empty($settings))
         {
             $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->domain_id);
+            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->id);
         }
 
-        $this->domain_settings = $settings;
+        $this->settings = $settings;
     }
 
     protected function loadReferences()
     {
         $new_reference = array();
         $new_reference['log_table'] = NEL_LOGS_TABLE;
-        $this->domain_references = $new_reference;
+        $this->references = $new_reference;
     }
 
     protected function loadSettingsFromDatabase()
@@ -99,7 +99,7 @@ class DomainSite extends Domain implements NellielCacheInterface
     {
         if (NEL_USE_FILE_CACHE)
         {
-            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->domain_id);
+            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->id);
         }
     }
 }

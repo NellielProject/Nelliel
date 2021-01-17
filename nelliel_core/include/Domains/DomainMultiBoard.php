@@ -14,7 +14,7 @@ class DomainMultiBoard extends Domain
 
     public function __construct(NellielPDO $database)
     {
-        $this->domain_id = Domain::MULTI_BOARD;
+        $this->id = Domain::MULTI_BOARD;
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();

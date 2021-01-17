@@ -17,7 +17,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function __construct(string $domain_id, NellielPDO $database)
     {
-        $this->domain_id = $domain_id;
+        $this->id = $domain_id;
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
@@ -28,21 +28,21 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     protected function loadSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', 'domains/' . $this->domain_id);
+        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', 'domains/' . $this->id);
 
         if (empty($settings))
         {
             $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->domain_id);
+            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->id);
         }
 
-        $this->domain_settings = $settings;
+        $this->settings = $settings;
     }
 
     protected function loadReferences()
     {
         $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
-        $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
+        $board_data = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_ASSOC);
         $new_reference = array();
         $board_path = NEL_BASE_PATH . $board_data['board_id'] . '/';
         $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($board_data['board_id']) . '/';
@@ -68,7 +68,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['content_table'] = $new_reference['db_prefix'] . '_content';
         $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
         $new_reference['log_table'] = $new_reference['db_prefix'] . '_logs';
-        $this->domain_references = $new_reference;
+        $this->references = $new_reference;
     }
 
     protected function loadSettingsFromDatabase()
@@ -76,7 +76,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $settings = array();
         $prepared = $this->database->prepare(
                 'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-        $db_prefix = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
+        $db_prefix = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_COLUMN);
         $config_table = $db_prefix . '_config';
         $config_list = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $config_table . '" ON "' . NEL_SETTINGS_TABLE .
@@ -105,7 +105,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
     public function exists()
     {
         $prepared = $this->database->prepare('SELECT 1 FROM "nelliel_board_data" WHERE "board_id" = ?');
-        $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
+        $board_data = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_COLUMN);
         return !empty($board_data);
     }
 
@@ -115,7 +115,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         {
             $this->cacheSettings();
             $filetypes = new FileTypes($this->database());
-            $filetypes->generateSettingsCache($this->domain_id);
+            $filetypes->generateSettingsCache($this->id);
         }
     }
 
@@ -123,7 +123,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
     {
         if (NEL_USE_FILE_CACHE)
         {
-            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->domain_id);
+            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->id);
         }
     }
 }

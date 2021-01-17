@@ -16,8 +16,8 @@ abstract class Domain
     const ALL_BOARDS = '_all_boards_';
     const MULTI_BOARD = '_multi_board_';
     protected $domain_id;
-    protected $domain_settings;
-    protected $domain_references;
+    protected $settings;
+    protected $references;
     protected $cache_handler;
     protected $database;
     protected $front_end_data;
@@ -59,42 +59,42 @@ abstract class Domain
 
     public function id()
     {
-        return $this->domain_id;
+        return $this->id;
     }
 
     public function setting(string $setting = null)
     {
-        if (empty($this->domain_settings))
+        if (empty($this->settings))
         {
             $this->loadSettings();
         }
 
         if (is_null($setting))
         {
-            return $this->domain_settings;
+            return $this->settings;
         }
 
-        if (!isset($this->domain_settings[$setting]))
+        if (!isset($this->settings[$setting]))
         {
             return null;
         }
 
-        return $this->domain_settings[$setting];
+        return $this->settings[$setting];
     }
 
     public function reference(string $reference = null)
     {
-        if (empty($this->domain_references))
+        if (empty($this->references))
         {
             $this->loadReferences();
         }
 
         if (is_null($reference))
         {
-            return $this->domain_references;
+            return $this->references;
         }
 
-        return $this->domain_references[$reference];
+        return $this->references[$reference];
     }
 
     public function templatePath($new_path = null)
@@ -148,6 +148,6 @@ abstract class Domain
     protected function cacheSettings()
     {
         $settings = $this->loadSettingsFromDatabase();
-        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->domain_id);
+        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->id);
     }
 }
