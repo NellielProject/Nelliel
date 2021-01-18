@@ -129,14 +129,24 @@ class Uploads
                     $file->changeData('fullname', $file->data('filename') . '.' . $file->data('extension'));
                     break;
 
-                case 'sha1':
-                    $file->changeData('filename', bin2hex($file->data('sha1')));
-                    $file->changeData('fullname', bin2hex($file->data('sha1')) . '.' . $file->data('extension'));
+                case 'md5':
+                    $file->changeData('filename', $file->data('md5'));
+                    $file->changeData('fullname', $file->data('md5') . '.' . $file->data('extension'));
                     break;
 
-                case 'md5':
-                    $file->changeData('filename', bin2hex($file->data('md5')));
-                    $file->changeData('fullname', bin2hex($file->data('md5')) . '.' . $file->data('extension'));
+                case 'sha1':
+                    $file->changeData('filename', $file->data('sha1'));
+                    $file->changeData('fullname', $file->data('sha1') . '.' . $file->data('extension'));
+                    break;
+
+                case 'sha256':
+                    $file->changeData('filename', $file->data('sha256'));
+                    $file->changeData('fullname', $file->data('sha256') . '.' . $file->data('extension'));
+                    break;
+
+                case 'sha512':
+                    $file->changeData('filename', $file->data('sha512'));
+                    $file->changeData('fullname', $file->data('sha512') . '.' . $file->data('extension'));
                     break;
 
                 default:

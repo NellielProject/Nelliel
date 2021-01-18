@@ -160,7 +160,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'reply_renzoku', '', '20', 'Cooldown for new replies (seconds)', '', '{"type":"number"}']);
 
         // Content handling
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'preferred_filename', '{"original":{"label":"Original"}, "timestamp":{"label":"Unix timestamp"}, "md5":{"label":"MD5"}, "sha1":{"label":"SHA1"}}', 'original', 'Preferred filename for uploads', '', '{"type":"select"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'preferred_filename', '{"original":{"label":"Original"}, "timestamp":{"label":"Unix timestamp"}, "md5":{"label":"MD5"}, "sha1":{"label":"SHA1"}, "sha256":{"label":"SHA256"}, "sha512":{"label":"SHA512"}}', 'original', 'Preferred filename for uploads', '', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'generate_preview', '', '1', 'Generate previews', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_width', '', '250', 'Max preview width', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_height', '', '250', 'Max preview height', '', '{"type":"number"}']);
