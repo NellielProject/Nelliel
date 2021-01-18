@@ -129,6 +129,10 @@ class ContentThread extends ContentHandler
             {
                 nel_derp(63, _gettext('Cannot remove thread. Board is locked.'));
             }
+
+            $temp_content_id = new ContentID($this->contentID()->getIDString());
+            $temp_content_id->changePostID($this->content_data['first_post']);
+            $temp_content_id->getInstanceFromID($this->domain)->remove($perm_override);
         }
 
         $this->removeFromDatabase();
@@ -211,7 +215,8 @@ class ContentThread extends ContentHandler
             return false;
         }
 
-        $this->content_data['sticky'] = ($this->content_data['sticky'] == 0) ? 1 : 0;;
+        $this->content_data['sticky'] = ($this->content_data['sticky'] == 0) ? 1 : 0;
+        ;
         $success = $this->writeToDatabase();
         $this->archive_prune->updateThreads();
         return $success;

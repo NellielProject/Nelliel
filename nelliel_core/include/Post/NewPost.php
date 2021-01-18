@@ -213,7 +213,7 @@ class NewPost
         {
             $thread_renzoku = $time - $this->domain->setting('thread_renzoku');
             $prepared = $this->database->prepare(
-                    'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
+                    'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "post_time" > ? AND "hashed_ip_address" = ?');
             $prepared->bindValue(1, $thread_renzoku, PDO::PARAM_STR);
             $prepared->bindValue(2, nel_prepare_hash_for_storage(nel_request_ip_address(true)), PDO::PARAM_LOB);
@@ -223,7 +223,7 @@ class NewPost
         {
             $reply_renzoku = $time - $this->domain->setting('reply_renzoku');
             $prepared = $this->database->prepare(
-                    'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
+                    'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? AND "post_time" > ? AND "hashed_ip_address" = ?');
             $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
             $prepared->bindValue(2, $reply_renzoku, PDO::PARAM_STR);
@@ -233,7 +233,7 @@ class NewPost
 
         if ($renzoku > 0)
         {
-            nel_derp(1, _gettext('Flood detected! You\'re posting too fast, slow the fuck down.'), $error_data);
+            nel_derp(1, _gettext("Flood detected! You're posting too fast, slow down."), $error_data);
         }
 
         if ($post->data('parent_thread') != 0)

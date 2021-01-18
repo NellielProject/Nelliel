@@ -318,8 +318,10 @@ class OutputPost extends Output
             $cite_total = 0;
             $cite_link_max = $this->domain->setting('max_cite_links');
             $crossboard_cite_total = 0;
-            $crossboard_cite_link_max = $this->domain->setting('max_crossboard_cite_links');
+            $max_crossboard_cite_links = $this->domain->setting('max_crossboard_cite_links');
             $create_url_links = $this->domain->setting('create_url_links');
+            $url_link_total = 0;
+            $max_url_links = $this->domain->setting('max_url_links');
             $comment_lines = $this->output_filter->newlinesToArray($post_data['comment']);
             $line_count = count($comment_lines);
             $stop = $line_count;
@@ -360,7 +362,7 @@ class OutputPost extends Output
                             $cite_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, $cite_info);
                         }
                         else if ($cite_info['type'] === 'cross-cite' &&
-                                $crossboard_cite_total < $crossboard_cite_link_max)
+                                $crossboard_cite_total < $max_crossboard_cite_links)
                         {
                             $cite_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, $cite_info);
                             $crossboard_cite_total ++;
@@ -378,11 +380,13 @@ class OutputPost extends Output
                             $plaintext_chunk .= $chunk;
                         }
                     }
-                    else if ($create_url_links && preg_match($url_split_regex, $chunk) === 1)
+                    else if ($create_url_links && $url_link_total < $max_url_links &&
+                            preg_match($url_split_regex, $chunk) === 1)
                     {
                         $entry['link'] = true;
                         $entry['url'] = $chunk;
                         $entry['text'] = $chunk;
+                        $url_link_total ++;
                     }
                     else if (preg_match($greentext_regex, $chunk) === 1)
                     {

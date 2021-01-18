@@ -159,6 +159,15 @@ class ContentPost extends ContentHandler
             {
                 nel_derp(62, _gettext('Cannot remove post. Board is locked.'));
             }
+
+            $delete_renzoku = $this->domain->setting('delete_content_renzoku');
+
+            if ($delete_renzoku > 0 && time() - $this->content_data['post_time'] < $delete_renzoku)
+            {
+                nel_derp(64,
+                        sprintf(_gettext('You must wait %d seconds after making a post before it can be deleted.'),
+                                $delete_renzoku));
+            }
         }
 
         $this->removeFromDatabase();

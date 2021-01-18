@@ -58,6 +58,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['locale', 'en_US', 0]);
         $this->insertDefaultRow(['exclude_from_overboards', '0', 0]);
         $this->insertDefaultRow(['user_delete_own', '1', 0]);
+        $this->insertDefaultRow(['delete_content_renzoku', '0', 0]);
         $this->insertDefaultRow(['safety_level', 'SFW', 0]);
 
         // New post
@@ -145,6 +146,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['create_url_links', '1', 0]);
         $this->insertDefaultRow(['url_protocols', 'http|https|ftp|sftp|irc|nntp', 0]);
         $this->insertDefaultRow(['url_prefix', '', 0]);
+        $this->insertDefaultRow(['max_url_links', '15', 0]);
         $this->insertDefaultRow(['display_original_name', '1', 0]);
         $this->insertDefaultRow(['board_content_disclaimer', '', 0]);
 

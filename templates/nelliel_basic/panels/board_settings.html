@@ -41,6 +41,9 @@
 		{{# user_delete_own }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ user_delete_own }}
+		{{# delete_content_renzoku }}
+			{{> panels/pieces/settings_number }}
+		{{/ delete_content_renzoku }}
 		{{# safety_level }}
 			{{> panels/pieces/settings_select }}
 		{{/ safety_level }}
@@ -326,6 +329,9 @@
 		{{# url_prefix }}
 			{{> panels/pieces/settings_text }}
 		{{/ url_prefix }}
+		{{# max_url_links }}
+			{{> panels/pieces/settings_number }}
+		{{/ max_url_links }}
 		{{# display_original_name }}
 			{{> panels/pieces/settings_text }}
 		{{/ display_original_name }}

@@ -47,6 +47,7 @@ Error 60: Password does not match post. (Content/ContentPost.php)
 Error 61: Board locked, can't remove file. (Content/ContentFile.php)  
 Error 62: Board locked, can't remove post. (Content/ContentPost.php)  
 Error 63: Board locked, can't remove thread. (Content/ContentThread.php)  
+Error 64: Delete cooldown. (Content/ContentPost.php)  
 
 Error 101: No acceptable password hashing. (crypt.php)  
 Error 102: InnoDB engine unavailable. (Setup/Setup.php)  

@@ -108,11 +108,11 @@ class TableSettings extends Table
         // Overboard
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'overboard_active', '', '0', 'Enable overboard', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'overboard_uri', '', 'overboard', 'Overboard URI', '', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'overboard_threads', '', '20', 'Max threads on overboard', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'overboard_threads', '', '20', 'Maximum threads on overboard', '', '{"type":"number"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'nsfl_on_overboard', '', '0', 'Include NSFL content on overboard', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'sfw_overboard_active', '', '0', 'Enable SFW overboard', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'sfw_overboard_uri', '', 'sfwoverboard', 'SFW overboard URI', '', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'sfw_overboard_threads', '', '20', 'Max threads on SFW overboard', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'sfw_overboard_threads', '', '20', 'Maximum threads on SFW overboard', '', '{"type":"number"}']);
 
         // Board
         // General
@@ -127,6 +127,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for the board (use ISO language + country code)', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'exclude_from_overboards', '', '0', 'Exclude threads on this board from the overboards', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'user_delete_own', '', '1', 'Let users delete own posts and content', '', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'delete_content_renzoku', '', '0', 'Cooldown after posting before user can delete content', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'safety_level', '{"SFW":{"label":"SFW - Safe For Work"}, "NSFW":{"label":"NSFW - Not Safe For Work"}, "NSFL":{"label":"NSFL - Not Safe For Life"}}', 'SFW', 'Content safety level of board', '', '{"type":"select"}']);
 
         // New post
@@ -143,15 +144,15 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_op_duplicates', '', '1', 'Check for duplicates in other op posts when creating new thread', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_spoilers', '', '1', 'Enable spoilers for uploads', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '', '1', 'Limit the number of uploads in a thread', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_thread_uploads', '', '1000', 'Max number of uploads in a thread', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_thread_uploads', '', '1000', 'Maximum number of uploads in a thread', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_op_comment', '', '0', 'Require a text comment when starting a thread', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_reply_comment', '', '0', 'Require a text comment when replying', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_name_length', '', '100', 'Max length of name', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_email_length', '', '100', 'Max length of email', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_subject_length', '', '100', 'Max length of subject', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_comment_length', '', '5000', 'Max length of comment', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_post_uploads', '', '3', 'Max number of uploads per post', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize', '', '4096', 'Max file size (KB)', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_name_length', '', '100', 'Maximum length of name', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_email_length', '', '100', 'Maximum length of email', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_subject_length', '', '100', 'Maximum length of subject', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_comment_length', '', '5000', 'Maximum length of comment', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_post_uploads', '', '3', 'Maximum number of uploads per post', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize', '', '4096', 'Maximum file size (KB)', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'truncate_long_fields', '', '0', 'Truncate fields that are too long instead of giving an error', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'forced_anonymous', '', '0', 'Force anonymous posting', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_tripcodes', '', '1', 'Allow use of tripcodes', '', '{"type":"checkbox"}']);
@@ -162,26 +163,26 @@ class TableSettings extends Table
         // Content handling
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'preferred_filename', '{"original":{"label":"Original"}, "timestamp":{"label":"Unix timestamp"}, "md5":{"label":"MD5"}, "sha1":{"label":"SHA1"}, "sha256":{"label":"SHA256"}, "sha512":{"label":"SHA512"}}', 'original', 'Preferred filename for uploads', '', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'generate_preview', '', '1', 'Generate previews', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_width', '', '250', 'Max preview width', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_height', '', '250', 'Max preview height', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_width', '', '250', 'Maximum preview width', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_height', '', '250', 'Maximum preview height', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'jpeg_quality', '', '90', 'JPEG quality (0-100)', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_png_preview', '', '0', 'Use PNG instead of JPEG for previews', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'png_compression', '', '6', 'PNG compression (0-9)', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'animated_gif_preview', '', '0', 'Used animated previews (requires extra libraries)', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'deleted_content_placeholder', '', '0', 'Leave a placeholder when deleting files/embeds', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_post_count', '', '1', 'Limit the number of posts in a thread', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_posts', '', '1000', 'Max posts per thread', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_posts', '', '1000', 'Maximum posts per thread', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_bump_count', '', '1', 'Limit the number of bumps a thread can have', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_bumps', '', '1000', 'Max bumps per thread', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_bumps', '', '1000', 'Maximum bumps per thread', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'active_threads', '', '100', 'Active threads (shown in index) before buffer', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_buffer', '', '50', 'Max threads in buffer', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_buffer', '', '50', 'Maximum threads in buffer', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'old_threads', '{"NOTHING":{"label":"Nothing"}, "PRUNE":{"label":"Prune"}, "ARCHIVE":{"label":"Archive"}}', 'ARCHIVE', 'How to handle old threads', '', '{"type":"select"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_archive_threads', '', '1000', 'Max threads kept in archive', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_archive_threads', '', '1000', 'Maximum threads kept in archive', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'do_archive_pruning', '', '1', 'Prune oldest threads in archive when limit is reached', '', '{"type":"checkbox"}']);
 
         // Page rendering
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'date_format', '', 'Y/m/d (D) H:i:s', 'Format for post time (uses PHP date() function)', '', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'abbreviate_thread', '', '5', 'Max posts in a thread before abbreviating on index page', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'abbreviate_thread', '', '5', 'Maximum posts in a thread before abbreviating on index page', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'threads_per_page', '', '10', 'Threads per page', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'comment_display_lines', '', '15', 'How many lines of comment to display when abbreviated', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'filter_combining_characters', '', '0', 'Filter Unicode combining characters', 'Combining characters are sometimes misused for things like Zalgo text. WARNING: This can break a bunch of non-English languages!', '{"type":"checkbox"}']);
@@ -192,15 +193,15 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'style_id', '', 'style-nelliel', 'ID of default style for board', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'icon_set_id', '', 'icons-nelliel-basic', 'ID of icon set for board to use', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_file_icon', '', '1', 'Use filetype icon for non-images', '', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_uploads_row', '', '3', 'Max number of uploads to display in each row', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_display_width', '', '250', 'Max display width for uploads', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_display_height', '', '250', 'Max display height for uploads', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_multi_display_width', '', '200', 'Max display width for multiple uploads', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_multi_display_height', '', '200', 'Max display height for multiple uploads', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_width', '', '120', 'Max display width for uploads in catalog', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_height', '', '120', 'Max display height for uploads in catalog', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'filename_display_length', '', '25', 'Max characters of filename to display', '', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'embed_url_display_length', '', '25', 'Max characters of embed URL to display', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_uploads_row', '', '3', 'Maximum number of uploads to display in each row', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_display_width', '', '250', 'Maximum display width for uploads', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_display_height', '', '250', 'Maximum display height for uploads', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_multi_display_width', '', '200', 'Maximum display width for multiple uploads', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_multi_display_height', '', '200', 'Maximum display height for multiple uploads', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_width', '', '120', 'Maximum display width for uploads in catalog', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_height', '', '120', 'Maximum display height for uploads in catalog', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'filename_display_length', '', '25', 'Maximum characters of filename to display', '', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'embed_url_display_length', '', '25', 'Maximum characters of embed URL to display', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'fgsfds_name', '', 'FGSFDS', 'Display name of FGSFDS field', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'indent_marker', '', '>>', 'Indent marker next to replies', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'tripcode_marker', '', '!', 'Tripcode marker', '', '{"type":"text"}']);
@@ -214,6 +215,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'create_url_links', '', '1', 'Convert URLs into links', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'url_protocols', '', 'http|https|ftp|sftp|irc|nntp', 'Protocols which will be parsed to links (must be separated with |)', '', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'url_prefix', '', '', 'Prefix that will be added to URLs', '', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_url_links', '', '15', 'Maximum URL links to generate', '', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_original_name', '', '1', '', '', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_content_disclaimer', '', '', 'Disclaimer added to the bottom of posts on this board', '', '{"type":"text"}']);
 
