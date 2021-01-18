@@ -22,7 +22,6 @@ class Dispatch
     {
         $this->domain = $domain;
         $this->session = $session;
-        $this->session->init(true);
     }
 
     public function dispatch(array $inputs)
@@ -66,6 +65,8 @@ class Dispatch
                 break;
 
             default:
+                $this->session->init(true);
+
                 if ($this->session->isActive())
                 {
                     $output_account = new OutputAccount($this->domain, false);
