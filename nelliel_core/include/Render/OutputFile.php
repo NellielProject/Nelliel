@@ -64,9 +64,9 @@ class OutputFile extends Output
             $display_extension = $moar['original_extension'] ?? $file['filename'];
         }
 
-        if (strlen($display_filename) > 32)
+        if (utf8_strlen($display_filename) > $this->domain->setting('filename_display_length'))
         {
-            $display_filename = substr($display_filename, 0, 25) . '(...)';
+            $display_filename = substr($display_filename, 0, $this->domain->setting('filename_display_length')) . '...';
         }
 
         $this->render_data['display_filename'] = $display_filename . '.' . $display_extension;

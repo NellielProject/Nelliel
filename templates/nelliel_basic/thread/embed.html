@@ -7,9 +7,9 @@
 	<div class="embed-header">
 		<input type="checkbox" name="{{ embed_content_id }}" value="action">
 		<span class="hide-embed hidden" data-jsonly="">[<a class="toggle-embed" href="#" data-command="hide-embed" data-content-id="{{ embed_content_id }}" data-alt-visual="Show Embed" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Embed</a>]</span>
-		<div>
-			<a href="{{ original_url }}" target="_blank">{{ display_url }}</a>
-		</div>
 	</div>
-	<iframe class="embed-frame" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;" src="{{ embed_url }}" allowfullscreen="true" loading="lazy"></iframe>
+	<div class="embed-info">
+		<a href="{{ original_url }}" target="_blank">{{ display_url }}</a>
+	</div>
+	<iframe class="embed-frame" style="max-width:{{ max_preview_width }}px; max-height:{{ max_preview_height }}px;" src="{{ embed_url }}" allowfullscreen="true" loading="lazy"></iframe>
 </div>

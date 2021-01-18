@@ -86,7 +86,6 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
         element = file_container.querySelector(".toggle-file");
     }
 
-    var file_info = file_container.querySelector(".file-info");
     var file_preview = file_container.querySelector(".file-preview");
 
     if (command == "hide-file") {
@@ -95,7 +94,6 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
         delete dataBin.hidden_files[content_id.id_string];
     }
 
-    nelliel.ui.toggleHidden(file_info);
     nelliel.ui.toggleHidden(file_preview);
     nelliel.core.storeInLocalStorage(dataBin.hidden_files_id, dataBin.hidden_files);
     nelliel.ui.switchDataCommand(element, "hide-file", "show-file");

@@ -188,12 +188,13 @@ form {
 /* Files */
 .single.file {
     float: left;
+    font-size: 0.95rem;
     margin: 0.15em 0.75em;
 }
 
 .multiple.file {
     float: left;
-    font-size: 0.95em;
+    font-size: 0.95rem;
     margin: 0.15em 0.25em;
 }
 
@@ -201,7 +202,21 @@ form {
     padding-left: 0.1em;
 }
 
+.file-info {
+	text-align: center;
+	font-size: 0.9em;
+}
+
+.file-preview {
+	text-align: center;
+}
+
 /* Embeds */
+.embed-info {
+	text-align: center;
+	font-size: 0.9em;
+}
+
 .embed-frame {
 	border: none;
 }

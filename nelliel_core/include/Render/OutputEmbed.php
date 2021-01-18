@@ -54,6 +54,12 @@ class OutputEmbed extends Output
             }
         }
 
+        if (utf8_strlen($this->render_data['display_url']) > $this->domain->setting('embed_url_display_length'))
+        {
+            $this->render_data['display_url'] = substr($this->render_data['display_url'], 0,
+                    $this->domain->setting('embed_url_display_length')) . '...';
+        }
+
         if ($this->session->inModmode($this->domain))
         {
             $this->render_data['in_modmode'] = true;
@@ -61,8 +67,10 @@ class OutputEmbed extends Output
                     '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
         }
 
-        $this->render_data['max_preview_width'] = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting('max_display_width');
-        $this->render_data['max_preview_height'] = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting('max_display_height');
+        $this->render_data['max_preview_width'] = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
+                'max_display_width');
+        $this->render_data['max_preview_height'] = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
+                'max_display_height');
         $output = $this->output('thread/file_info', $data_only, true, $this->render_data);
         return $output;
     }

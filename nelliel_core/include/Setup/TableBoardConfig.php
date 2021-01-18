@@ -130,6 +130,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['max_multi_display_height', '200', 0]);
         $this->insertDefaultRow(['max_catalog_display_width', '120', 0]);
         $this->insertDefaultRow(['max_catalog_display_height', '120', 0]);
+        $this->insertDefaultRow(['filename_display_length', '25', 0]);
+        $this->insertDefaultRow(['embed_url_display_length', '25', 0]);
         $this->insertDefaultRow(['fgsfds_name', 'FGSFDS', 0]);
         $this->insertDefaultRow(['indent_marker', '>>', 0]);
         $this->insertDefaultRow(['tripcode_marker', '!', 0]);
