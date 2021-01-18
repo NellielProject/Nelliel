@@ -26,7 +26,13 @@
 		<span class="posting-form-row">
 			<label class="posting-form-label" for="form-file-upload">
 				<span data-i18n="gettext">File</span>
+			{{# file_required }}
+				<br>
+				(<span data-i18n="gettext">Required</span>)
+			{{/ file_required }}
 			</label>
+			<span data-i18n="gettext">{{ file_max_message }}</span>
+			<br>
 			<input id="form-file-upload" class="posting-form-input" type="file" name="upload_files[]" {{# allow_multiple }}multiple{{/ allow_multiple }}>
 			<br>
 			{{# spoilers_enabled }}
@@ -42,7 +48,13 @@
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Embed URL</span>
 			<input class="posting-form-input" type="text" name="embed_url" size="30">
-			{{# embed_replaces }}<span data-i18n="gettext">(Embed will replace files)</span>{{/ embed_replaces }}
+			<br>
+			{{^ embed_replaces }}
+			(<span data-i18n="gettext">Embed will count as a file</span>)
+			{{/ embed_replaces }}
+			{{# embed_replaces }}
+			(<span data-i18n="gettext">Embed will replace files</span>)
+			{{/ embed_replaces }}
 		</label>
 		{{/ allow_embeds }}
 		{{# use_fgsfds }}
@@ -54,7 +66,7 @@
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="gettext">Password</span>
 			<input id="posting-form-sekrit" class="posting-form-input" data-jsevents="input" type="password" name="new_post[post_info][sekrit]" size="12" maxlength="16" value="">&nbsp;&nbsp;
-			<span data-i18n="gettext">(Password used for file deletion)</span>
+			(<span data-i18n="gettext">Used for deletion</span>)
 		</label>
 		{{# is_staff }}
 		<label class="posting-form-row">
@@ -88,12 +100,8 @@
 		{{/ use_honeypot }}
 		<div class="posting-form-row">
 			<span class="display-cell"></span>
-			<input type="submit" value="Submit" data-i18n-attributes="gettext|value">&nbsp;&nbsp;&nbsp;&nbsp;
+			<input type="submit" value="{{ posting_submit }}">&nbsp;&nbsp;&nbsp;&nbsp;
 			<input type="reset" value="Clear form" data-i18n-attributes="gettext|value">
-		</div>
-		<div class="posting-form-row">
-			<span class="display-cell"></span>
-			<span class="posting-form-input">{{ posting_mode }}</span>
 		</div>
 		{{# use_honeypot }}
 		<label id="form-user-info-3" class="posting-form-row">
