@@ -12,6 +12,7 @@ use Nelliel\Cites;
 use Nelliel\Moar;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Render\OutputPost;
 use PDO;
 
 class ContentPost extends ContentHandler
@@ -146,6 +147,26 @@ class ContentPost extends ContentHandler
                 NEL_DIRECTORY_PERM);
     }
 
+    public function addCites()
+    {
+        $cites = new Cites($this->database);
+
+        if (nel_true_empty($this->content_data['comment']))
+        {
+            return;
+        }
+
+        $cite_list = $cites->getCitesFromText($this->content_data['comment']);
+
+        foreach ($cite_list as $cite)
+        {
+            $cite_data = $cites->getCiteData($cite, $this->domain, $this->content_id);
+            $cites->addCite($cite_data);
+        }
+
+        $cites->updateForPost($this);
+    }
+
     public function remove(bool $perm_override = false)
     {
         if (!$perm_override)
@@ -170,6 +191,8 @@ class ContentPost extends ContentHandler
             }
         }
 
+        $cites = new Cites($this->database);
+        $cites->updateForPost($this);
         $this->removeFromDatabase();
         $this->removeFromDisk();
         $thread = new ContentThread($this->content_id, $this->domain);
@@ -198,7 +221,7 @@ class ContentPost extends ContentHandler
         $prepared = $this->database->prepare('DELETE FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->postID()]);
         $cites = new Cites($this->database);
-        $cites->removeForPost($this->domain, $this->content_id);
+        $cites->removeForPost($this);
         return true;
     }
 
@@ -326,9 +349,9 @@ class ContentPost extends ContentHandler
     {
         $prepared = $this->database->prepare('SELECT "cache" FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
         $cache = $this->database->executePreparedFetch($prepared, [$this->content_data['post_number']],
-                PDO::FETCH_ASSOC);
+                PDO::FETCH_COLUMN);
 
-        if ($cache !== false)
+        if (is_string($cache))
         {
             return unserialize($cache);
         }
@@ -339,17 +362,15 @@ class ContentPost extends ContentHandler
     public function storeCache(): void
     {
         $cache_array = array();
-        $cites = new Cites($this->database);
-        $cite_list = $cites->getCitesFromText($this->content_data['comment']);
 
-        foreach ($cite_list as $cite)
+        if (!nel_true_empty($this->content_data['comment']))
         {
-            $cache_array['cites'][$cite] = $cites->getCiteData($cite, $this->domain, $this->content_id);
+            $output_post = new OutputPost($this->domain, false);
+            $cache_array['comment_data'] = $output_post->parseComment($this->content_data['comment'], $this->content_id);
+            $serialized_cache = serialize($cache_array);
+            $prepared = $this->database->prepare(
+                    'UPDATE "' . $this->posts_table . '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
+            $this->database->executePrepared($prepared, [$serialized_cache, $this->content_id->postID()]);
         }
-
-        $serialized_cache = serialize($cache_array);
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->posts_table . '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
-        $this->database->executePrepared($prepared, [$serialized_cache, $this->content_id->postID()]);
     }
 }

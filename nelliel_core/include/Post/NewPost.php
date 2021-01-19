@@ -107,7 +107,6 @@ class NewPost
         $if_then->process($this->domain->id());
 
         $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
-        $post->storeCache();
         $thread = new \Nelliel\Content\ContentThread(new \Nelliel\Content\ContentID(), $this->domain);
 
         if ($post->data('response_to') == 0)
@@ -145,6 +144,8 @@ class NewPost
         }
 
         $post->writeToDatabase();
+        $post->addCites();
+        $post->storeCache();
         $post->createDirectories();
         $fgsfds->modifyCommandData('noko', 'topic', $thread->contentID()->threadID());
         $src_path = $this->domain->reference('src_path') . $thread->contentID()->threadID() . '/' .

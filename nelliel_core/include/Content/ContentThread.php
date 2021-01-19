@@ -151,7 +151,8 @@ class ContentThread extends ContentHandler
         $prepared = $this->database->prepare('DELETE FROM "' . $this->threads_table . '" WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
         $cites = new Cites($this->database);
-        $cites->removeForThread($this->domain, $this->content_id);
+        $cites->updateForThread($this);
+        $cites->removeForThread($this);
         return true;
     }
 
