@@ -321,4 +321,35 @@ class ContentPost extends ContentHandler
         $new_thread->sticky();
         return $new_thread;
     }
+
+    public function getCache(): array
+    {
+        $prepared = $this->database->prepare('SELECT "cache" FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
+        $cache = $this->database->executePreparedFetch($prepared, [$this->content_data['post_number']],
+                PDO::FETCH_ASSOC);
+
+        if ($cache !== false)
+        {
+            return unserialize($cache);
+        }
+
+        return array();
+    }
+
+    public function storeCache(): void
+    {
+        $cache_array = array();
+        $cites = new Cites($this->database);
+        $cite_list = $cites->getCitesFromText($this->content_data['comment']);
+
+        foreach ($cite_list as $cite)
+        {
+            $cache_array['cites'][$cite] = $cites->getCiteData($cite, $this->domain, $this->content_id);
+        }
+
+        $serialized_cache = serialize($cache_array);
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->posts_table . '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
+        $this->database->executePrepared($prepared, [$serialized_cache, $this->content_id->postID()]);
+    }
 }

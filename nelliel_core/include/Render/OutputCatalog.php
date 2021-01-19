@@ -48,6 +48,7 @@ class OutputCatalog extends Output
                 continue;
             }
 
+            $first_post['render_cache'] = unserialize($first_post['cache']);
             $post_content_id = new \Nelliel\Content\ContentId(
                     'cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
             $thread_page_web_path = $this->domain->reference('page_web_path') . $thread['thread_id'] . '/thread-' .
@@ -70,14 +71,32 @@ class OutputCatalog extends Output
 
                     foreach ($segments as $segment)
                     {
-                        $link_url = $cites->createPostLinkURL($this->domain, $post_content_id, $segment);
+                        $cite_info = $cites->citeType($segment);
+                        $cite_url = '';
 
-                        if (!empty($link_url))
+                        if (!empty($cite_info['type']))
+                        {
+                            if (isset($first_post['render_cache']['cites'][$segment]))
+                            {
+                                $cite_data = $first_post['render_cache']['cites'][$segment];
+                            }
+                            else
+                            {
+                                $cite_data = $cites->getCiteData($segment, $this->domain, $post_content_id);
+                            }
+
+                            if ($cite_data['exists'])
+                            {
+                                $cite_url = $cites->createPostLinkURL($cite_data, $this->domain);
+                            }
+                        }
+
+                        if (!empty($cite_url))
                         {
                             if (preg_match('#^\s*>#', $segment) === 1)
                             {
                                 $link = array();
-                                $link['link_url'] = $link_url;
+                                $link['link_url'] = $cite_url;
                                 $link['link_text'] = $segment;
                                 $line_parts[]['link'] = $link;
                             }

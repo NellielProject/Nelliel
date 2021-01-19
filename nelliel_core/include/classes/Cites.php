@@ -22,15 +22,49 @@ class Cites
         $this->database = $database;
     }
 
-    public function getCiteData(array $cite_data)
+    public function getCiteData(string $text, Domain $source_domain, ContentID $source_content_id): array
     {
-        $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_CITES_TABLE .
-                '" WHERE "source_board" = ? AND "source_thread" = ? AND "source_post" = ? AND "target_board" = ? AND "target_thread" = ? AND "target_post" = ?');
-        return $this->database->executePreparedFetch($prepared,
-                [$cite_data['source_board'], $cite_data['source_thread'], $cite_data['source_post'],
-                    $cite_data['target_board'], $cite_data['target_thread'], $cite_data['target_post']],
-                PDO::FETCH_ASSOC);
+        $cite_type = $this->citeType($text);
+
+        if ($cite_type['type'] === 'cite')
+        {
+            $target_domain = $source_domain;
+            $target_post = $cite_type['matches'][1];
+        }
+        else if ($cite_type['type'] === 'cross-cite')
+        {
+            $target_domain = new DomainBoard($cite_type['matches'][1], $this->database);
+            $target_post = $cite_type['matches'][2];
+        }
+        else
+        {
+            return array();
+        }
+
+        $cite_data = array();
+        $cite_data['source_board'] = $source_domain->id();
+        $cite_data['source_thread'] = $source_content_id->threadID();
+        $cite_data['source_post'] = $source_content_id->postID();
+        $cite_data['target_board'] = $target_domain->id();
+        $cite_data['target_post'] = $target_post;
+        $target_thread = false;
+
+        if ($target_domain->exists())
+        {
+            $prepared = $this->database->prepare(
+                    'SELECT "parent_thread" FROM "' . $target_domain->reference('posts_table') .
+                    '" WHERE "post_number" = ?');
+            $target_thread = $this->database->executePreparedFetch($prepared, [$target_post],
+                    PDO::FETCH_COLUMN);
+            $cite_data['target_thread'] = $target_thread;
+            $cite_data['exists'] = $target_thread !== false;
+        }
+        else
+        {
+            $cite_data['exists'] = false;
+        }
+
+        return $cite_data;
     }
 
     public function getByTarget($board, $post, bool $get_all = false)
@@ -92,6 +126,11 @@ class Cites
                     $cite_data['target_board'], $cite_data['target_thread'], $cite_data['target_post']]);
     }
 
+    public function isCite(string $text)
+    {
+        return preg_match('/^>>([\d]+)|>>>\/(.+?)\/([\d]+)$/u', $text) === 1;
+    }
+
     public function citeType(string $text)
     {
         $return = array();
@@ -116,54 +155,18 @@ class Cites
         return $return;
     }
 
-    public function createPostLinkURL(Domain $domain, ContentID $source_content_id, string $text_input,array $cite_type = array())
+    public function createPostLinkURL(array $cite_data, Domain $source_domain)
     {
-        $cite_data = array();
-        $target_domain = null;
-        $target_post = 0;
         $url = '';
-
-        if(empty($cite_type))
-        {
-            $cite_type = $this->citeType($text_input);
-        }
-
-        if ($cite_type['type'] === 'cite')
-        {
-            $target_domain = $domain;
-            $target_post = $cite_type['matches'][1];
-        }
-        else if ($cite_type['type'] === 'cross-cite')
-        {
-            $target_domain = new DomainBoard($cite_type['matches'][1], $this->database);
-            $target_post = $cite_type['matches'][2];
-        }
-        else
-        {
-            return $url;
-        }
-
-        if(!$target_domain->exists())
-        {
-            return $url;
-        }
-
-        $prepared = $this->database->prepare(
-                'SELECT "parent_thread" FROM "' . $target_domain->reference('posts_table') . '" WHERE "post_number" = ?');
-        $parent_thread = $this->database->executePreparedFetch($prepared, [$target_post], PDO::FETCH_COLUMN);
-
-        if (!empty($parent_thread))
-        {
-            $cite_data = ['source_board' => $domain->id(), 'source_thread' => $source_content_id->threadID(),
-                'source_post' => $source_content_id->postID(), 'target_board' => $target_domain->id(),
-                'target_thread' => $parent_thread, 'target_post' => $target_post];
-        }
 
         if (!empty($cite_data))
         {
+            $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
             $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
             $url = NEL_BASE_WEB_PATH . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
-                    $cite_data['target_thread'] . '/' . $cite_data['target_thread'] . '.html' . $p_anchor;
+                    $cite_data['target_thread'] . '/' .
+                    sprintf(nel_site_domain()->setting('thread_filename_format'), $cite_data['target_thread']) . '.html' .
+                    $p_anchor;
         }
 
         return $url;
@@ -188,5 +191,21 @@ class Cites
         $this->database->executePrepared($prepared,
                 [$domain->id(), $content_id->threadID(), $content_id->postID(), $domain->id(), $content_id->threadID(),
                     $content_id->postID()]);
+    }
+
+    public function getCitesFromText(string $text, bool $combine = true): array
+    {
+        $matches = array();
+        preg_match_all('/(>>[\d]+)/', $text, $matches, PREG_PATTERN_ORDER);
+        $cites['board'] = $matches[1];
+        preg_match_all('/(>>>\/.+?\/[\d]+)/', $text, $matches, PREG_PATTERN_ORDER);
+        $cites['crossboard'] = $matches[1];
+
+        if ($combine)
+        {
+            $cites = array_merge($cites['board'], $cites['crossboard']);
+        }
+
+        return $cites;
     }
 }

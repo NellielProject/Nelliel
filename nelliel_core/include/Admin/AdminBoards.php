@@ -110,7 +110,7 @@ class AdminBoards extends Admin
     public function remove()
     {
         $this->verifyAction();
-        $board_id = $_GET['board_id'];
+        $board_id = $_GET['board-id'];
         $domain = new DomainBoard($board_id, $this->database);
 
         if (!$domain->exists())

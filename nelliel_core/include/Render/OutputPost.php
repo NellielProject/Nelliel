@@ -27,6 +27,7 @@ class OutputPost extends Output
         $post_id = $parameters['post_id'] ?? 0;
         $json_post = $parameters['json_instances']['post'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
+        $post_data['render_cache'] = (NEL_USE_RENDER_CACHE) ? unserialize($post_data['cache']) : array();
         $in_thread_number = $parameters['in_thread_number'] ?? 0;
         $json_post->storeData($json_post->prepareData($post_data), 'post');
         $response = $post_data['op'] != 1;
@@ -315,10 +316,6 @@ class OutputPost extends Output
                 $post_data['comment'] = $this->output_filter->filterUnicodeCombiningCharacters($post_data['comment']);
             }
 
-            $cite_total = 0;
-            $cite_link_max = $this->domain->setting('max_cite_links');
-            $crossboard_cite_total = 0;
-            $max_crossboard_cite_links = $this->domain->setting('max_crossboard_cite_links');
             $create_url_links = $this->domain->setting('create_url_links');
             $url_link_total = 0;
             $max_url_links = $this->domain->setting('max_url_links');
@@ -353,19 +350,22 @@ class OutputPost extends Output
                     $entry = array();
                     $cite_info = $cites->citeType($chunk);
 
-                    if (!empty($cite_info['type']) && $cite_total < $cite_link_max)
+                    if (!empty($cite_info['type']))
                     {
+                        if (isset($post_data['render_cache']['cites'][$chunk]))
+                        {
+                            $cite_data = $post_data['render_cache']['cites'][$chunk];
+                        }
+                        else
+                        {
+                            $cite_data = $cites->getCiteData($chunk, $this->domain, $post_content_id);
+                        }
+
                         $cite_url = '';
 
-                        if ($cite_info['type'] === 'cite')
+                        if ($cite_data['exists'])
                         {
-                            $cite_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, $cite_info);
-                        }
-                        else if ($cite_info['type'] === 'cross-cite' &&
-                                $crossboard_cite_total < $max_crossboard_cite_links)
-                        {
-                            $cite_url = $cites->createPostLinkURL($this->domain, $post_content_id, $chunk, $cite_info);
-                            $crossboard_cite_total ++;
+                            $cite_url = $cites->createPostLinkURL($cite_data, $this->domain);
                         }
 
                         if (!empty($cite_url))
@@ -373,7 +373,6 @@ class OutputPost extends Output
                             $entry['cite'] = true;
                             $entry['url'] = $cite_url;
                             $entry['text'] = $chunk;
-                            $cite_total ++;
                         }
                         else
                         {

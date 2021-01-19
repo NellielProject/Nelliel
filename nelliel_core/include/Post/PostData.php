@@ -9,6 +9,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Content\ContentPost;
 use Nelliel\Domains\Domain;
 
 class PostData
@@ -24,7 +25,7 @@ class PostData
         $this->session = $session;
     }
 
-    public function processPostData($post)
+    public function processPostData(ContentPost $post)
     {
         if (!isset($_POST['new_post']))
         {
