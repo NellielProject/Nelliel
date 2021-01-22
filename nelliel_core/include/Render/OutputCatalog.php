@@ -48,7 +48,7 @@ class OutputCatalog extends Output
                 continue;
             }
 
-            $first_post['render_cache'] = unserialize($first_post['cache']);
+            $first_post['render_cache'] = json_decode($first_post['cache'], true);
             $post_content_id = new \Nelliel\Content\ContentId(
                     'cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
             $thread_page_web_path = $this->domain->reference('page_web_path') . $thread['thread_id'] . '/thread-' .

@@ -353,7 +353,7 @@ class ContentPost extends ContentHandler
 
         if (is_string($cache))
         {
-            return unserialize($cache);
+            return json_decode($cache, true);
         }
 
         return array();
@@ -367,10 +367,10 @@ class ContentPost extends ContentHandler
         {
             $output_post = new OutputPost($this->domain, false);
             $cache_array['comment_data'] = $output_post->parseComment($this->content_data['comment'], $this->content_id);
-            $serialized_cache = serialize($cache_array);
+            $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->posts_table . '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
-            $this->database->executePrepared($prepared, [$serialized_cache, $this->content_id->postID()]);
+            $this->database->executePrepared($prepared, [$encoded_cache, $this->content_id->postID()]);
         }
     }
 }

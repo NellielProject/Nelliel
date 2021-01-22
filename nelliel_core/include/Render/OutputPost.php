@@ -47,7 +47,7 @@ class OutputPost extends Output
             }
             else
             {
-                $post_data['render_cache'] = unserialize($post_data['cache']);
+                $post_data['render_cache'] = json_decode($post_data['cache'], true);
             }
         }
 
