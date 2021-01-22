@@ -110,7 +110,7 @@ class OutputPanelRoles extends Output
             }
 
             $permission_data['permission'] = $permission['permission'];
-            $permission_data['label'] = '(' . $permission['permission'] . ') - ' . $permission['description'];
+            $permission_data['perm_description'] = '(' . $permission['permission'] . ') - ' . $permission['perm_description'];
             $this->render_data['permissions_list'][] = $permission_data;
         }
 

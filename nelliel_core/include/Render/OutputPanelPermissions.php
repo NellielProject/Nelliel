@@ -42,7 +42,7 @@ class OutputPanelPermissions extends Output
             $permission_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $permission_data['permission'] = $permission['permission'];
-            $permission_data['description'] = _gettext($permission['description']);
+            $permission_data['perm_description'] = _gettext($permission['perm_description']);
             $permission_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'permissions', 'actions' => 'remove',

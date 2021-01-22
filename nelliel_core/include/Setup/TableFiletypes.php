@@ -25,7 +25,7 @@ class TableFiletypes extends Table
             'mime' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'sub_extensions' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'id_regex' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'label' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'type_label' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'type_def' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
             'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
@@ -45,7 +45,7 @@ class TableFiletypes extends Table
             mime            VARCHAR(255) DEFAULT NULL,
             sub_extensions  TEXT DEFAULT NULL,
             id_regex        TEXT DEFAULT NULL,
-            label           VARCHAR(255) DEFAULT NULL,
+            type_label      VARCHAR(255) DEFAULT NULL,
             type_def        SMALLINT NOT NULL DEFAULT 0,
             enabled         SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL

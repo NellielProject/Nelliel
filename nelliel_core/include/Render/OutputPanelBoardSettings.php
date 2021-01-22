@@ -63,7 +63,7 @@ class OutputPanelBoardSettings extends Output
         foreach ($all_types as $type)
         {
             $type_data = array();
-            $type_data['label'] = _gettext($type['label']);
+            $type_data['type_label'] = _gettext($type['type_label']);
             $type_data['type_select']['name'] = $type['type'];
             $type_data['type_select']['input_name'] = 'enabled_filetypes[types][' . $type['type'] . '][enabled]';
 
@@ -91,7 +91,7 @@ class OutputPanelBoardSettings extends Output
                 $filetype_set[$filetype['base_extension']]['format'] = $filetype['format'];
                 $filetype_set[$filetype['base_extension']]['input_name'] = 'enabled_filetypes[types][' . $type['type'] .
                         '][formats][' . $filetype['format'] . ']';
-                $filetype_set[$filetype['base_extension']]['label'] = _gettext($filetype['label']);
+                $filetype_set[$filetype['base_extension']]['type_label'] = _gettext($filetype['type_label']);
                 $filetype_set[$filetype['base_extension']]['value'] = (array_key_exists($filetype['format'],
                         $enabled_formats)) ? 'checked' : '';
                 $filetype_set[$filetype['base_extension']]['disabled'] = ($types_edit_lock) ? 'disabled' : '';
@@ -105,7 +105,7 @@ class OutputPanelBoardSettings extends Output
                     }
                 }
 
-                $filetype_set[$filetype['base_extension']]['label'] .= $extensions;
+                $filetype_set[$filetype['base_extension']]['type_label'] .= $extensions;
             }
 
             $entry_row['entry'] = array();

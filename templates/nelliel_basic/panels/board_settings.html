@@ -397,7 +397,7 @@
 				<br>
 				<input type="hidden" name="{{ input_name }}[default]" value="0">
 				<input id="{{ name }}" type="checkbox" name="{{ input_name }}[value]" value="1" {{ value }} {{ disabled }}>
-				<label for="{{ name }}" class="bold">{{ label }}</label>
+				<label for="{{ name }}" class="bold">{{ type_label }}</label>
 			</span>
 		</div>
 		{{/ type_select }}
@@ -407,7 +407,7 @@
 			<span class="display-cell">
 				<input type="hidden" name="{{ input_name }}[default]" value="0">
 				<input id="{{ format }}" type="checkbox" name="{{ input_name }}[value]" value="1" {{ value }} {{ disabled }}>
-				<label for="{{ format }}">{{ label }}</label>
+				<label for="{{ format }}">{{ type_label }}</label>
 			</span>
 			{{/ entry }}
 		</div>

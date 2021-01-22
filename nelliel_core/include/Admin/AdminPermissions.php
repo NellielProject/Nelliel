@@ -34,9 +34,9 @@ class AdminPermissions extends Admin
     {
         $this->verifyAction();
         $permission = $_POST['permission'];
-        $description = $_POST['description'];
+        $description = $_POST['perm_description'];
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_PERMISSIONS_TABLE . '" ("permission", "description") VALUES (?, ?)');
+                'INSERT INTO "' . NEL_PERMISSIONS_TABLE . '" ("permission", "perm_description") VALUES (?, ?)');
         $this->database->executePrepared($prepared, [$permission, $description]);
         $this->outputMain(true);
     }

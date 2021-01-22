@@ -61,7 +61,7 @@ class OutputPanelFiletypes extends Output
             $filetype_data['sub_extensions'] = substr($sub_extensions, 0, -1);
             $filetype_data['mime'] = $filetype['mime'];
             $filetype_data['id_regex'] = $filetype['id_regex'];
-            $filetype_data['label'] = $filetype['label'];
+            $filetype_data['type_label'] = $filetype['type_label'];
             $filetype_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'filetypes', 'actions' => 'edit',
@@ -146,7 +146,7 @@ class OutputPanelFiletypes extends Output
 
                 $this->render_data['sub_extensions'] = substr($sub_extensions, 0, -1);
                 $this->render_data['id_regex'] = $filetype_data['id_regex'];
-                $this->render_data['label'] = $filetype_data['label'];
+                $this->render_data['type_label'] = $filetype_data['type_label'];
                 $this->render_data['enabled_checked'] = $filetype_data['enabled'] == 1 ? 'checked' : '';
             }
         }
