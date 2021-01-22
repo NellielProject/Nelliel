@@ -135,7 +135,6 @@ class OutputPanelBoardSettings extends Output
         {
             $setting_data = array();
             $setting_data['setting_name'] = $setting['setting_name'];
-            $setting_data['setting_label'] = $setting['setting_label'];
             $setting_data['setting_description'] = $setting['setting_description'];
             $setting_options = json_decode($setting['setting_options'], true) ?? array();
             $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
