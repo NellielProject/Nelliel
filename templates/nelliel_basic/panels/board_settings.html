@@ -145,6 +145,12 @@
 		{{# reply_renzoku }}
 			{{> panels/pieces/settings_number }}
 		{{/ reply_renzoku }}
+		{{# max_cites }}
+			{{> panels/pieces/settings_number }}
+		{{/ max_cites }}
+		{{# max_crossboard_cites }}
+			{{> panels/pieces/settings_number }}
+		{{/ max_crossboard_cites }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}
@@ -314,12 +320,6 @@
 		{{# poster_id_length }}
 			{{> panels/pieces/settings_number }}
 		{{/ poster_id_length }}
-		{{# max_cite_links }}
-			{{> panels/pieces/settings_number }}
-		{{/ max_cite_links }}
-		{{# max_crossboard_cite_links }}
-			{{> panels/pieces/settings_number }}
-		{{/ max_crossboard_cite_links }}
 		{{# create_url_links }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ create_url_links }}

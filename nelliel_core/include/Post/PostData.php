@@ -7,6 +7,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Cites;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentPost;
@@ -90,7 +91,22 @@ class PostData
             $post->changeData('email', '');
         }
 
-        $post = nel_plugins()->processHook('nel-post-data-processed', [$this->domain], $post);
+        $cites = new Cites();
+        $cite_list = $cites->getCitesFromText($post->data('comment'), false);
+
+        if (count($cite_list['board']) > $this->domain->setting('max_cites'))
+        {
+            nel_derp(44,
+                    sprintf(_gettext('Comment contains too many cites. Maximum is %d.'),
+                            $this->domain->setting('max_cites')));
+        }
+
+        if (count($cite_list['crossboard']) > $this->domain->setting('max_crossboard_cites'))
+        {
+            nel_derp(45,
+                    sprintf(_gettext('Comment contains too many cross-board cites. Maximum is %d.'),
+                            $this->domain->setting('max_crossboard_cites')));
+        }
     }
 
     public function checkEntry($post_item, $type)

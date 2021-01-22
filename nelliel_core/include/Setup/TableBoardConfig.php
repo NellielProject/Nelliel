@@ -90,6 +90,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['use_fgsfds', '1', 0]);
         $this->insertDefaultRow(['thread_renzoku', '120', 0]);
         $this->insertDefaultRow(['reply_renzoku', '20', 0]);
+        $this->insertDefaultRow(['max_cites', '30', 0]);
+        $this->insertDefaultRow(['max_crossboard_cites', '15', 0]);
 
         // Content handling
         $this->insertDefaultRow(['preferred_filename', 'original', 0]);
@@ -141,8 +143,6 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['display_poster_id', '1', 0]);
         $this->insertDefaultRow(['poster_id_colors', '1', 0]);
         $this->insertDefaultRow(['poster_id_length', '6', 0]);
-        $this->insertDefaultRow(['max_cite_links', '30', 0]);
-        $this->insertDefaultRow(['max_crossboard_cite_links', '15', 0]);
         $this->insertDefaultRow(['create_url_links', '1', 0]);
         $this->insertDefaultRow(['url_protocols', 'http|https|ftp|sftp|irc|nntp', 0]);
         $this->insertDefaultRow(['url_prefix', '', 0]);
