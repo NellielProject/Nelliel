@@ -91,7 +91,7 @@ class PostData
             $post->changeData('email', '');
         }
 
-        $cites = new Cites();
+        $cites = new Cites($this->domain->database());
         $cite_list = $cites->getCitesFromText($post->data('comment'), false);
 
         if (count($cite_list['board']) > $this->domain->setting('max_cites'))

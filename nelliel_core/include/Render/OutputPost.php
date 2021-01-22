@@ -73,7 +73,7 @@ class OutputPost extends Output
 
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
-                $post_content_id, $web_paths, $gen_data, $in_thread_number);
+                $post, $web_paths, $gen_data, $in_thread_number);
 
         if ($post_data['has_content'] == 1)
         {
@@ -149,14 +149,14 @@ class OutputPost extends Output
     }
 
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
-            ContentID $post_content_id, array $web_paths, array $gen_data, int $in_thread_number)
+            ContentPost $post, array $web_paths, array $gen_data, int $in_thread_number)
     {
         $header_data = array();
         $modmode_headers = array();
         $thread_headers = array();
         $authorization = new \Nelliel\Auth\Authorization($this->database);
-        $cites = new \Nelliel\Cites($this->domain->database());
         $header_data['response'] = $response;
+        $post_content_id = $post->contentID();
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode)
         {
@@ -273,16 +273,12 @@ class OutputPost extends Output
         $post_headers['post_number_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
                 $post_content_id->postID();
 
-        // TODO: Combine this into Cites class?
         if ($this->domain->setting('display_post_backlinks'))
         {
-            $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
-            $cite_list = $this->database->executePreparedFetchAll($prepared,
-                    [$this->domain->id(), $post_content_id->postID()], PDO::FETCH_ASSOC);
             $cites = new Cites($this->database);
+            $cite_list = $cites->getForPost($post);
 
-            foreach ($cite_list as $cite)
+            foreach ($cite_list['sources'] as $cite)
             {
                 $backlink_data = array();
 
@@ -296,12 +292,20 @@ class OutputPost extends Output
                 }
 
                 $cite_data = $cites->getCiteData($backlink_data['backlink_text'], $this->domain, $post_content_id);
-                $link_url = $cites->createPostLinkURL($cite_data, $this->domain);
+                $cite_url = '';
 
-                if (!empty($link_url))
+                if ($cite_data['exists'])
                 {
-                    $backlink_data['backlink_url'] = $link_url;
-                    $post_headers['backlinks'][] = $backlink_data;
+                    $cite_url = $cites->createPostLinkURL($cite_data, $this->domain);
+                    $cites->addCite($cite_data);
+
+                    if (!empty($cite_url))
+                    {
+                        $backlink_data['backlink_url'] = $cite_url;
+                        $post_headers['backlinks'][] = $backlink_data;
+                    }
+
+                    $cites->addCite($cite_data);
                 }
             }
         }
@@ -329,7 +333,7 @@ class OutputPost extends Output
                 $post_data['comment'] = $this->output_filter->filterUnicodeCombiningCharacters($post_data['comment']);
             }
 
-            if(NEL_USE_RENDER_CACHE && isset($post_data['render_cache']['comment_data']))
+            if (NEL_USE_RENDER_CACHE && isset($post_data['render_cache']['comment_data']))
             {
                 $parsed_comment = $post_data['render_cache']['comment_data'];
             }
@@ -346,8 +350,8 @@ class OutputPost extends Output
                 if ($line_count > $this->domain->setting('comment_display_lines'))
                 {
                     $comment_data['long_comment'] = true;
-                    $comment_data['long_comment_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
-                            $post_content_id->postID();
+                    $comment_data['long_comment_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() .
+                            'p' . $post_content_id->postID();
                     $comment_data['comment_lines'] = array();
                     $i = 0;
                     $limit = $this->domain->setting('comment_display_lines');
@@ -421,6 +425,7 @@ class OutputPost extends Output
                     if ($cite_data['exists'])
                     {
                         $cite_url = $cites->createPostLinkURL($cite_data, $this->domain);
+                        $cites->addCite($cite_data);
                     }
 
                     if (!empty($cite_url))

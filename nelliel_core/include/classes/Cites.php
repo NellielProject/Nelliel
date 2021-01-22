@@ -14,7 +14,6 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
 
-// TODO: A lot of is is unused and probably not needed
 class Cites
 {
     private $database;
@@ -68,44 +67,63 @@ class Cites
         return $cite_data;
     }
 
-    public function getByTarget(string $board_id, string $thread_id, string $post_id, bool $get_all = false)
+    public function getForPost(ContentPost $post)
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_CITES_TABLE .
-                '" WHERE "target_board" = ? AND "target_thread" = ? AND "target_post" = ?');
-
-        if ($get_all)
-        {
-            return $this->database->executePreparedFetchAll($prepared, [$board_id, $thread_id, $post_id],
-                    PDO::FETCH_ASSOC);
-        }
-        else
-        {
-            return $this->database->executePreparedFetch($prepared, [$board_id, $thread_id, $post_id], PDO::FETCH_ASSOC);
-        }
-    }
-
-    public function getBySource(string $board_id, string $thread_id, string $post_id, bool $get_all = false)
-    {
+                'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
+        $sources = $this->database->executePreparedFetchAll($prepared,
+                [$post->domain()->id(), $post->contentID()->postID()], PDO::FETCH_ASSOC);
+        $cite_list['sources'] = (is_array($sources)) ? $sources : array();
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND "source_post" = ?');
+        $targets = $this->database->executePreparedFetchAll($prepared,
+                [$post->domain()->id(), $post->contentID()->postID()], PDO::FETCH_ASSOC);
+        $cite_list = array();
+        $cite_list['sources'] = (is_array($sources)) ? $sources : array();
+        $cite_list['targets'] = (is_array($targets)) ? $targets : array();
+        return $cite_list;
+    }
 
-        if ($get_all)
-        {
-            return $this->database->executePreparedFetchAll($prepared, [$board_id, $post_id], PDO::FETCH_ASSOC);
-        }
-        else
-        {
-            return $this->database->executePreparedFetch($prepared, [$board_id, $post_id], PDO::FETCH_ASSOC);
-        }
+    public function getForThread(ContentThread $thread)
+    {
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_thread" = ?');
+        $sources = $this->database->executePreparedFetchAll($prepared,
+                [$thread->domain()->id(), $thread->contentID()->threadID()], PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND "source_thread" = ?');
+        $targets = $this->database->executePreparedFetchAll($prepared,
+                [$thread->domain()->id(), $thread->contentID()->threadID()], PDO::FETCH_ASSOC);
+        $cite_list = array();
+        $cite_list['sources'] = (is_array($sources)) ? $sources : array();
+        $cite_list['targets'] = (is_array($targets)) ? $targets : array();
+        return $cite_list;
     }
 
     public function updateForPost(ContentPost $post)
     {
-        $cite_list_target = $this->getByTarget($post->domain()->id(), $post->contentID()->threadID(),
-                $post->contentID()->postID(), true);
+        // Update where post targets other posts (backlinks)
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND "source_post" = ?');
+        $cite_list = $this->database->executePreparedFetchAll($prepared,
+                [$post->domain()->id(), $post->contentID()->threadID()], PDO::FETCH_ASSOC);
 
-        foreach ($cite_list_target as $cite)
+        foreach ($cite_list as $cite)
+        {
+            $source_domain = new DomainBoard($cite['target_board'], $this->database);
+            $prepared = $this->database->prepare(
+                    'UPDATE "' . $source_domain->reference('posts_table') .
+                    '" SET "regen_cache" = 1 WHERE "post_number" = ?');
+            $this->database->executePrepared($prepared, [$cite['target_post']]);
+        }
+
+        // Update where other posts target this post
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
+        $cite_list = $this->database->executePreparedFetchAll($prepared,
+                [$post->domain()->id(), $post->contentID()->threadID()], PDO::FETCH_ASSOC);
+
+        foreach ($cite_list as $cite)
         {
             $source_domain = new DomainBoard($cite['source_board'], $this->database);
             $prepared = $this->database->prepare(
@@ -113,24 +131,30 @@ class Cites
                     '" SET "regen_cache" = 1 WHERE "post_number" = ?');
             $this->database->executePrepared($prepared, [$cite['source_post']]);
         }
+    }
 
-        $cite_list_source = $this->getBySource($post->domain()->id(), $post->contentID()->threadID(),
-                $post->contentID()->postID(), true);
+    public function updateForThread(ContentThread $thread)
+    {
+        // Update where posts in this thread target other posts (backlinks)
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND "source_thread" = ?');
+        $cite_list = $this->database->executePreparedFetchAll($prepared,
+                [$thread->domain()->id(), $thread->contentID()->threadID()], PDO::FETCH_ASSOC);
 
-        foreach ($cite_list_source as $cite)
+        foreach ($cite_list as $cite)
         {
-            $source_domain = new DomainBoard($cite['source_board'], $this->database);
+            $source_domain = new DomainBoard($cite['target_board'], $this->database);
             $prepared = $this->database->prepare(
                     'UPDATE "' . $source_domain->reference('posts_table') .
                     '" SET "regen_cache" = 1 WHERE "post_number" = ?');
             $this->database->executePrepared($prepared, [$cite['target_post']]);
         }
-    }
 
-    public function updateForThread(ContentThread $thread)
-    {
-        $cite_list = $this->getByTarget($thread->domain()->id(), $thread->contentID()->threadID(),
-                $thread->contentID()->postID(), true);
+        // Update where other posts target posts in this thread
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_thread" = ?');
+        $cite_list = $this->database->executePreparedFetchAll($prepared,
+                [$thread->domain()->id(), $thread->contentID()->threadID()], PDO::FETCH_ASSOC);
 
         foreach ($cite_list as $cite)
         {
@@ -145,15 +169,15 @@ class Cites
     public function removeForPost(ContentPost $post)
     {
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND "source_post" = ?');
-        $this->database->executePrepared($prepared, [$post->contentID()->threadID(), $post->contentID()->postID()]);
+                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND ("source_post" = ? OR "target_post" = ?)');
+        $this->database->executePrepared($prepared, [$post->domain()->id(), $post->contentID()->postID(), $post->contentID()->postID()]);
     }
 
     public function removeForThread(ContentThread $thread)
     {
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND "source_thread" = ?');
-        $this->database->executePrepared($prepared, [$thread->contentID()->threadID(), $thread->contentID()->threadID()]);
+                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND ("source_thread" = ? OR "target_thread" = ?)');
+        $this->database->executePrepared($prepared, [$thread->domain()->id(), $thread->contentID()->threadID(), $thread->contentID()->threadID()]);
     }
 
     public function citeExists(array $cite_data)

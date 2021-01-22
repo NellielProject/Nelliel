@@ -161,7 +161,11 @@ class ContentPost extends ContentHandler
         foreach ($cite_list as $cite)
         {
             $cite_data = $cites->getCiteData($cite, $this->domain, $this->content_id);
-            $cites->addCite($cite_data);
+
+            if ($cite_data['exists'])
+            {
+                $cites->addCite($cite_data);
+            }
         }
 
         $cites->updateForPost($this);
@@ -191,8 +195,6 @@ class ContentPost extends ContentHandler
             }
         }
 
-        $cites = new Cites($this->database);
-        $cites->updateForPost($this);
         $this->removeFromDatabase();
         $this->removeFromDisk();
         $thread = new ContentThread($this->content_id, $this->domain);
@@ -221,6 +223,7 @@ class ContentPost extends ContentHandler
         $prepared = $this->database->prepare('DELETE FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->postID()]);
         $cites = new Cites($this->database);
+        $cites->updateForPost($this);
         $cites->removeForPost($this);
         return true;
     }
