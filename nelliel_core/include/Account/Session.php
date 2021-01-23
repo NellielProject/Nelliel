@@ -187,7 +187,7 @@ class Session
 
     protected function setCookie($expiry = 0)
     {
-        setrawcookie(session_name(), session_id(), 0, '/', '', NEL_SECURE_SESSION_ONLY, true);
+        setrawcookie(session_name(), session_id(), 0, NEL_BASE_WEB_PATH, '', NEL_SECURE_SESSION_ONLY, true);
     }
 
     protected function isOld()
