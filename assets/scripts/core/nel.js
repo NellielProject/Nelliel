@@ -188,26 +188,6 @@ nelliel.events.processInput = function(event) {
     }
 }
 
-nelliel.core.setCookie = function(c_name, value, expiredays) {
-    var exdate = new Date();
-    exdate.setDate(exdate.getDate() + expiredays);
-    document.cookie = c_name + "=" + escape(value) + ((expiredays == null) ? "" : ";expires=" + exdate.toGMTString())
-            + ";path=/";
-}
-
-nelliel.core.getCookie = function(key) {
-    var csplit = document.cookie.split('; ');
-
-    for (var i = 0; i < csplit.length; i++) {
-        var s2 = csplit[i].split('=');
-        if (s2[0] == key) {
-            return s2[1];
-        }
-    }
-
-    return null;
-}
-
 nelliel.core.storeInLocalStorage = function(data_path, data) {
     data = (typeof data !== "string") ? JSON.stringify(data) : data;
     localStorage[data_path] = data;
@@ -282,9 +262,7 @@ function addNewFileMeta(element, command) {
 }
 
 function setStyle(style, update = false) {
-    if (style == null) {
-        return;
-    }
+	var empty_style = style == null || style === "";
 
     if (update) {
         nelliel.core.storeInLocalStorage("style_override", style);
@@ -298,7 +276,7 @@ function setStyle(style, update = false) {
             var style_id = allstyles[i].getAttribute("data-id");
             allstyles[i].disabled = true;
 
-            if (style === "") {
+            if (empty_style) {
                 if (allstyles[i].getAttribute("rel") === "stylesheet") {
                     allstyles[i].disabled = false;
                     menu_style = style_id;

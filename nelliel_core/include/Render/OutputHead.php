@@ -25,7 +25,6 @@ class OutputHead extends Output
         $this->render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
         $this->render_data['js_onload'] = 'window.onload = function () {nelliel.setup.doImportantStuff(\'' .
                 $this->domain->id() . '\', \'' . $this->session->inModmode($this->domain) . '\');};';
-        $this->render_data['js_set_style'] = 'setStyle(nelliel.core.getCookie("style-' . $this->domain->id() . '"));';
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['stylesheets'] = $output_menu->styles([], true);
 

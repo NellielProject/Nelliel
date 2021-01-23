@@ -14,7 +14,6 @@ use Nelliel\Auth\Authorization;
 class Session
 {
     protected $domain;
-    protected static $initialized = false;
     protected static $setup_done = false;
     protected static $user;
     protected $session_name = 'NellielSession';
@@ -23,6 +22,7 @@ class Session
     protected $failed = false;
     protected static $ignore = false;
     protected $doing_login = false;
+    protected $session_options = array();
 
     function __construct()
     {
@@ -31,23 +31,30 @@ class Session
             return;
         }
 
+        $this->session_options['use_strict_mode'] = true;
+        $this->session_options['use_cookies'] = true;
+        $this->session_options['use_only_cookies'] = true;
+        $this->session_options['cookie_httponly'] = true;
+        $this->session_options['cookie_lifetime'] = 0;
+        $this->session_options['cookie_path'] = NEL_BASE_WEB_PATH;
+
+        if (NEL_SECURE_SESSION_ONLY)
+        {
+            $this->session_options['cookie_secure'] = true;
+        }
+
+        if (version_compare(PHP_VERSION, '7.3.0', '>='))
+        {
+            $this->session_options['cookie_samesite'] = 'Strict';
+        }
+        else
+        {
+            $this->session_options['cookie_path'] = NEL_BASE_WEB_PATH . '; samesite=strict';
+        }
+
         $this->domain = nel_site_domain();
         $this->database = $this->domain->database();
         $this->authorization = new Authorization($this->database);
-
-        if (!self::$initialized)
-        {
-            ini_set('session.use_cookies', 1);
-            ini_set('session.use_only_cookies', 1);
-            ini_set('session.cookie_httponly', 1);
-
-            if (NEL_SECURE_SESSION_ONLY)
-            {
-                ini_set('session.cookie_secure', 1);
-            }
-
-            self::$initialized = true;
-        }
     }
 
     protected function started()
@@ -60,7 +67,7 @@ class Session
         if (!$this->started())
         {
             session_name($this->session_name);
-            session_start();
+            session_start($this->session_options);
         }
 
         if (!self::$setup_done && $do_setup)
@@ -158,21 +165,17 @@ class Session
         $_SESSION['login_time'] = $login_data['login_time'];
         $_SESSION['last_activity'] = $login_data['login_time'];
         session_regenerate_id();
-        $this->setCookie();
         $this->doing_login = false;
     }
 
     public function terminate()
     {
-        session_unset();
-
-        if ($this->started())
-        {
-            session_destroy();
-        }
-
+        $_SESSION = array();
+        setcookie(session_name(), '', time() - NEL_OVER_9000, NEL_BASE_WEB_PATH);
+        session_destroy();
         self::$setup_done = false;
-        $this->setCookie(time() - 7200);
+        self::$user = null;
+        self::$ignore = false;
     }
 
     public function ignore(bool $ignore = null)
@@ -183,11 +186,6 @@ class Session
         }
 
         return self::$ignore;
-    }
-
-    protected function setCookie($expiry = 0)
-    {
-        setrawcookie(session_name(), session_id(), 0, NEL_BASE_WEB_PATH, '', NEL_SECURE_SESSION_ONLY, true);
     }
 
     protected function isOld()
