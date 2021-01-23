@@ -1,5 +1,10 @@
 {{# cite }}
-{{> thread/pieces/cite_link }}
+	{{# valid }}
+{{> thread/pieces/cite }}
+	{{/ valid }}
+	{{^ valid }}
+{{> thread/pieces/invalid_cite }}
+	{{/ valid }}
 {{/ cite }}
 {{# link }}
 {{> thread/pieces/external_link }}

@@ -341,7 +341,7 @@ class OutputPost extends Output
             {
                 $parsed_comment = $this->parseComment($post_data['comment'], $post_content_id);
             }
-            //$parsed_comment = $this->parseComment($post_data['comment'], $post_content_id);
+
             $comment_data['comment_lines'] = $parsed_comment;
             $line_count = count($parsed_comment);
 
@@ -391,7 +391,7 @@ class OutputPost extends Output
         $greentext_regex = '#^\s*>[^>]#';
         $url_protocols = $this->domain->setting('url_protocols');
         $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
-        $line_split_regex = '#(>>[\d]+)|(>>>\/.+?\/[\d]+)|(\s)#';
+        $line_split_regex = '#((?:' . $url_protocols . '):\/\/[^\s]+)|(>>[\d]+)|(>>>\/.+?\/[\d]+)|(\s)#';
         $cites = new \Nelliel\Cites($this->database);
         $create_url_links = $this->domain->setting('create_url_links');
         $url_link_total = 0;
@@ -428,17 +428,10 @@ class OutputPost extends Output
                         $cites->addCite($cite_data);
                     }
 
-                    if (!empty($cite_url))
-                    {
-                        $entry['cite'] = true;
-                        $entry['url'] = $cite_url;
-                        $entry['text'] = $chunk;
-                    }
-                    else
-                    {
-                        $entry['strikethrough'] = true;
-                        $entry['text'] = $chunk;
-                    }
+                    $entry['cite'] = true;
+                    $entry['valid'] = !empty($cite_url);
+                    $entry['url'] = $cite_url;
+                    $entry['text'] = $chunk;
                 }
                 else if ($create_url_links && $url_link_total < $max_url_links &&
                         preg_match($url_split_regex, $chunk) === 1)
