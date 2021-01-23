@@ -52,13 +52,13 @@
 }
 
 .omitted-posts {
-	font-size: 1.2rem;
+	font-size: 1.12rem;
 }
 
 .op.subject {
-	font-size: 1.2rem;
+	font-size: 1.12rem;
+}
+.reply.subject {
+	font-size: 1.12rem;
 }
 
-.reply.subject {
-	font-size: 1.2rem;
-}

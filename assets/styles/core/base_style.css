@@ -231,6 +231,7 @@ form {
 .omitted-posts {
 	background: var(--omitted-background);
 	color: var(--omitted-color);
+	font-size: 1.1rem;
     font-weight: bold;
 }
 
