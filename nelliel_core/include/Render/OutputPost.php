@@ -436,7 +436,8 @@ class OutputPost extends Output
                     }
                     else
                     {
-                        $plaintext_chunk .= $chunk;
+                        $entry['strikethrough'] = true;
+                        $entry['text'] = $chunk;
                     }
                 }
                 else if ($create_url_links && $url_link_total < $max_url_links &&

@@ -1,1 +1,16 @@
-{{> thread/pieces/cite_link }}{{> thread/pieces/external_link }}{{> thread/pieces/styled }}{{# plain }}{{ text }}{{/ plain }}{{#line_break }}<br>{{/ line_break }}
+{{# cite }}
+{{> thread/pieces/cite_link }}
+{{/ cite }}
+{{# link }}
+{{> thread/pieces/external_link }}
+{{/ link }}
+{{# styled }}
+{{> thread/pieces/styled }}
+{{/ styled }}
+{{# strikethrough }}
+{{> thread/pieces/strikethrough }}
+{{/ strikethrough }}
+{{# plain }}
+{{> thread/pieces/plaintext }}
+{{/ plain }}
+{{# line_break }}<br>{{/ line_break }}
