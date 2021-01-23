@@ -391,7 +391,7 @@ class OutputPost extends Output
         $greentext_regex = '#^\s*>[^>]#';
         $url_protocols = $this->domain->setting('url_protocols');
         $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
-        $line_split_regex = '#((?:' . $url_protocols . '):\/\/[^\s]+)|(>>[\d]+)|(>>>\/.+?\/[\d]+)|(\s)#';
+        $line_split_regex = '#((?:' . $url_protocols . '):\/\/[^\s]+)|(>>[\d]+)|(>>>\/.+?\/[\d]?+)|(\s)#';
         $cites = new \Nelliel\Cites($this->database);
         $create_url_links = $this->domain->setting('create_url_links');
         $url_link_total = 0;
@@ -415,9 +415,9 @@ class OutputPost extends Output
             foreach ($segment_chunks as $chunk)
             {
                 $entry = array();
-                $cite_info = $cites->citeType($chunk);
+                $cite_type = $cites->citeType($chunk);
 
-                if (!empty($cite_info['type']))
+                if (!empty($cite_type['type']))
                 {
                     $cite_data = $cites->getCiteData($chunk, $this->domain, $post_content_id);
                     $cite_url = '';

@@ -26,13 +26,21 @@ class Cites
     public function getCiteData(string $text, Domain $source_domain, ContentID $source_content_id): array
     {
         $cite_type = $this->citeType($text);
+        $cite_data['type'] = $cite_type['type'];
 
-        if ($cite_type['type'] === 'cite')
+        if ($cite_type['type'] === 'post-cite')
         {
             $target_domain = $source_domain;
             $target_post = $cite_type['matches'][1];
         }
-        else if ($cite_type['type'] === 'cross-cite')
+        else if ($cite_type['type'] === 'board-cite')
+        {
+            $target_domain = new DomainBoard($cite_type['matches'][1], $this->database);
+            $cite_data['target_board'] = $target_domain->id();
+            $cite_data['exists'] = $target_domain->exists();
+            return $cite_data;
+        }
+        else if ($cite_type['type'] === 'crossboard-post-cite')
         {
             $target_domain = new DomainBoard($cite_type['matches'][1], $this->database);
             $target_post = $cite_type['matches'][2];
@@ -42,7 +50,6 @@ class Cites
             return array();
         }
 
-        $cite_data = array();
         $cite_data['source_board'] = $source_domain->id();
         $cite_data['source_thread'] = $source_content_id->threadID();
         $cite_data['source_post'] = $source_content_id->postID();
@@ -169,19 +176,29 @@ class Cites
     public function removeForPost(ContentPost $post)
     {
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND ("source_post" = ? OR "target_post" = ?)');
-        $this->database->executePrepared($prepared, [$post->domain()->id(), $post->contentID()->postID(), $post->contentID()->postID()]);
+                'DELETE FROM "' . NEL_CITES_TABLE .
+                '" WHERE "source_board" = ? AND ("source_post" = ? OR "target_post" = ?)');
+        $this->database->executePrepared($prepared,
+                [$post->domain()->id(), $post->contentID()->postID(), $post->contentID()->postID()]);
     }
 
     public function removeForThread(ContentThread $thread)
     {
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND ("source_thread" = ? OR "target_thread" = ?)');
-        $this->database->executePrepared($prepared, [$thread->domain()->id(), $thread->contentID()->threadID(), $thread->contentID()->threadID()]);
+                'DELETE FROM "' . NEL_CITES_TABLE .
+                '" WHERE "source_board" = ? AND ("source_thread" = ? OR "target_thread" = ?)');
+        $this->database->executePrepared($prepared,
+                [$thread->domain()->id(), $thread->contentID()->threadID(), $thread->contentID()->threadID()]);
     }
 
     public function citeExists(array $cite_data)
     {
+        if ($cite_data['type'] === 'board-cite')
+        {
+            $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
+            return $target_domain->exists();
+        }
+
         $prepared = $this->database->prepare(
                 'SELECT 1 FROM "' . NEL_CITES_TABLE .
                 '" WHERE "source_board" = ? AND "source_thread" = ? AND "source_post" = ? AND "target_board" = ? AND "target_thread" = ? AND "target_post" = ?');
@@ -222,12 +239,17 @@ class Cites
         if (preg_match('#^>>([\d]+)$#u', $text, $matches) === 1)
         {
             $return['matches'] = $matches;
-            $return['type'] = 'cite';
+            $return['type'] = 'post-cite';
         }
         else if (preg_match('#>>>\/(.+?)\/([\d]+)#u', $text, $matches) === 1)
         {
             $return['matches'] = $matches;
-            $return['type'] = 'cross-cite';
+            $return['type'] = 'crossboard-post-cite';
+        }
+        else if (preg_match('#>>>\/(.+?)\/#u', $text, $matches) === 1)
+        {
+            $return['matches'] = $matches;
+            $return['type'] = 'board-cite';
         }
         else
         {
@@ -245,11 +267,19 @@ class Cites
         if (!empty($cite_data))
         {
             $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
-            $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
-            $url = NEL_BASE_WEB_PATH . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
-                    $cite_data['target_thread'] . '/' .
-                    sprintf(nel_site_domain()->setting('thread_filename_format'), $cite_data['target_thread']) . '.html' .
-                    $p_anchor;
+
+            if ($cite_data['type'] === 'board-cite')
+            {
+                $url = NEL_BASE_WEB_PATH . $cite_data['target_board'] . '/';
+            }
+            else
+            {
+                $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
+                $url = NEL_BASE_WEB_PATH . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
+                        $cite_data['target_thread'] . '/' .
+                        sprintf(nel_site_domain()->setting('thread_filename_format'), $cite_data['target_thread']) .
+                        '.html' . $p_anchor;
+            }
         }
 
         return $url;
