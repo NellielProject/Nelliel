@@ -206,6 +206,10 @@ class Setup
         $templates_table->createTable();
         $plugins_table = new TablePlugins($this->database, $this->sql_compatibility);
         $plugins_table->createTable();
+        $staff_board_table = new TableStaffBoard($this->database, $this->sql_compatibility);
+        $staff_board_table->createTable();
+        $pms_table = new TablePMs($this->database, $this->sql_compatibility);
+        $pms_table->createTable();
 
         // NOTE: Tables must be created in order of:
         // board data -> file filters -> if thens -> overboard -> reports -> cites

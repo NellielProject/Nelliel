@@ -75,5 +75,8 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_regen_cache', 'Regenerate caches']);
         $this->insertDefaultRow(['perm_regen_pages', 'Regenerate pages']);
         $this->insertDefaultRow(['perm_view_unhashed_ip', 'View unhashed IP addresses']);
+        $this->insertDefaultRow(['perm_use_pms', 'Can use the PM system']);
+        $this->insertDefaultRow(['perm_access_staff_board', 'Can view the staff noticeboard']);
+        $this->insertDefaultRow(['perm_post_staff_board', 'Can post on the staff noticeboard']);
     }
 }
