@@ -43,6 +43,12 @@ abstract class Admin
 
     public abstract function remove();
 
+    public abstract function enable();
+
+    public abstract function disable();
+
+    public abstract function makeDefault();
+
     public abstract function verifyAccess();
 
     public abstract function verifyAction();

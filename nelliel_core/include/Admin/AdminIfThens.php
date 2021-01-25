@@ -102,6 +102,11 @@ class AdminIfThens extends Admin
         $this->outputMain(true);
     }
 
+    public function makeDefault()
+    {
+        $this->verifyAction();
+    }
+
     public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_ifthens'))

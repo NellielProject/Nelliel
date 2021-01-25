@@ -28,6 +28,7 @@ class AdminStyles extends Admin
 
     public function creator()
     {
+        $this->verifyAccess();
     }
 
     public function add()
@@ -52,10 +53,12 @@ class AdminStyles extends Admin
 
     public function editor()
     {
+        $this->verifyAccess();
     }
 
     public function update()
     {
+        $this->verifyAction();
     }
 
     public function remove()
@@ -66,6 +69,16 @@ class AdminStyles extends Admin
                 'DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$style_id]);
         $this->outputMain(true);
+    }
+
+    public function enable()
+    {
+        $this->verifyAction();
+    }
+
+    public function disable()
+    {
+        $this->verifyAction();
     }
 
     public function makeDefault()

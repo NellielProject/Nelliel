@@ -28,6 +28,7 @@ class AdminTemplates extends Admin
 
     public function creator()
     {
+        $this->verifyAccess();
     }
 
     public function add()
@@ -58,10 +59,12 @@ class AdminTemplates extends Admin
 
     public function editor()
     {
+        $this->verifyAccess();
     }
 
     public function update()
     {
+        $this->verifyAction();
     }
 
     public function remove()
@@ -72,6 +75,16 @@ class AdminTemplates extends Admin
                 'DELETE FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ? AND "type" = \'template\'');
         $this->database->executePrepared($prepared, [$template_id]);
         $this->outputMain(true);
+    }
+
+    public function enable()
+    {
+        $this->verifyAction();
+    }
+
+    public function disable()
+    {
+        $this->verifyAction();
     }
 
     public function makeDefault()

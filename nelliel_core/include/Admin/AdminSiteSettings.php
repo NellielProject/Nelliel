@@ -28,14 +28,17 @@ class AdminSiteSettings extends Admin
 
     public function creator()
     {
+        $this->verifyAccess();
     }
 
     public function add()
     {
+        $this->verifyAction();
     }
 
     public function editor()
     {
+        $this->verifyAccess();
     }
 
     public function update()
@@ -60,6 +63,22 @@ class AdminSiteSettings extends Admin
 
     public function remove()
     {
+        $this->verifyAction();
+    }
+
+    public function enable()
+    {
+        $this->verifyAction();
+    }
+
+    public function disable()
+    {
+        $this->verifyAction();
+    }
+
+    public function makeDefault()
+    {
+        $this->verifyAction();
     }
 
     public function verifyAccess()

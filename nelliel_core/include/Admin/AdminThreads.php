@@ -25,6 +25,8 @@ class AdminThreads extends Admin
 
     public function renderPanel()
     {
+        $this->verifyAccess();
+
         if (isset($_GET['actions']) && $_GET['actions'] === 'expand-thread')
         {
             $content_id = new ContentID($_GET['content-id']);
@@ -40,14 +42,17 @@ class AdminThreads extends Admin
 
     public function creator()
     {
+        $this->verifyAccess();
     }
 
     public function add()
     {
+        $this->verifyAction();
     }
 
     public function editor()
     {
+        $this->verifyAccess();
     }
 
     public function update()
@@ -61,6 +66,21 @@ class AdminThreads extends Admin
         $content_id = new ContentID($_GET['content-id']);
         $content_id->getInstanceFromID($this->domain)->remove();
         $this->regenThread($content_id->threadID(), true);
+    }
+
+    public function enable()
+    {
+        $this->verifyAction();
+    }
+
+    public function disable()
+    {
+        $this->verifyAction();
+    }
+
+    public function makeDefault()
+    {
+        $this->verifyAction();
     }
 
     public function sticky()
@@ -125,9 +145,7 @@ class AdminThreads extends Admin
         $content_instance->remove();
         $this->regenThread($content_id->threadID(), true);
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
-        $output_panel->render(
-                ['section' => 'add', 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip],
-                false);
+        $output_panel->render(['section' => 'add', 'ip_start' => $ip_start, 'hashed_ip' => $hashed_ip], false);
         $this->outputMain(false);
     }
 

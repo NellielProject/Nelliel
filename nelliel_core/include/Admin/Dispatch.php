@@ -86,52 +86,17 @@ class Dispatch
 
             case 'filetypes':
                 $admin_handler = new AdminFiletypes($this->authorization, $this->domain, $this->session, $inputs);
-
-                if ($action === 'enable')
-                {
-                    $admin_handler->enable();
-                }
-                else if ($action === 'disable')
-                {
-                    $admin_handler->disable();
-                }
-                else
-                {
-                    $this->standard($admin_handler, $action);
-                }
-
+                $this->standard($admin_handler, $action);
                 break;
 
             case 'icon-sets':
                 $admin_handler = new AdminIconSets($this->authorization, $this->domain, $this->session, $inputs);
-
-                if ($action === 'make-default')
-                {
-                    $admin_handler->makeDefault();
-                }
-                else
-                {
-                    $this->standard($admin_handler, $action);
-                }
-
+                $this->standard($admin_handler, $action);
                 break;
 
             case 'ifthens':
                 $admin_handler = new AdminIfThens($this->authorization, $this->domain, $this->session, $inputs);
-
-                if ($action === 'enable')
-                {
-                    $admin_handler->enable();
-                }
-                else if ($action === 'disable')
-                {
-                    $admin_handler->disable();
-                }
-                else
-                {
-                    $this->standard($admin_handler, $action);
-                }
-
+                $this->standard($admin_handler, $action);
                 break;
 
             case 'logs':
@@ -195,30 +160,12 @@ class Dispatch
 
             case 'styles':
                 $admin_handler = new AdminStyles($this->authorization, $this->domain, $this->session, $inputs);
-
-                if ($action === 'make-default')
-                {
-                    $admin_handler->makeDefault();
-                }
-                else
-                {
-                    $this->standard($admin_handler, $action);
-                }
-
+                $this->standard($admin_handler, $action);
                 break;
 
             case 'templates':
                 $admin_handler = new AdminTemplates($this->authorization, $this->domain, $this->session, $inputs);
-
-                if ($action === 'make-default')
-                {
-                    $admin_handler->makeDefault();
-                }
-                else
-                {
-                    $this->standard($admin_handler, $action);
-                }
-
+                $this->standard($admin_handler, $action);
                 break;
 
             case 'threads':
@@ -312,6 +259,18 @@ class Dispatch
 
             case 'remove':
                 $admin_handler->remove();
+                break;
+
+            case 'enable':
+                $admin_handler->enable();
+                break;
+
+            case 'disable':
+                $admin_handler->disable();
+                break;
+
+            case 'make-default':
+                $admin_handler->makeDefault();
                 break;
         }
     }

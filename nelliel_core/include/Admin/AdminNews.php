@@ -28,6 +28,7 @@ class AdminNews extends Admin
 
     public function creator()
     {
+        $this->verifyAccess();
     }
 
     public function add()
@@ -48,10 +49,12 @@ class AdminNews extends Admin
 
     public function editor()
     {
+        $this->verifyAccess();
     }
 
     public function update()
     {
+        $this->verifyAction();
     }
 
     public function remove()
@@ -62,6 +65,21 @@ class AdminNews extends Admin
         $this->database->executePrepared($prepared, [$entry]);
         $this->regenNews();
         $this->outputMain(true);
+    }
+
+    public function enable()
+    {
+        $this->verifyAction();
+    }
+
+    public function disable()
+    {
+        $this->verifyAction();
+    }
+
+    public function makeDefault()
+    {
+        $this->verifyAction();
     }
 
     private function regenNews()

@@ -28,6 +28,7 @@ class AdminIconSets extends Admin
 
     public function creator()
     {
+        $this->verifyAccess();
     }
 
     public function add()
@@ -52,10 +53,12 @@ class AdminIconSets extends Admin
 
     public function editor()
     {
+        $this->verifyAccess();
     }
 
     public function update()
     {
+        $this->verifyAction();
     }
 
     public function remove()
@@ -66,6 +69,16 @@ class AdminIconSets extends Admin
                 'DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = ?');
         $this->database->executePrepared($prepared, [$icon_set_id, 'icon-set']);
         $this->outputMain(true);
+    }
+
+    public function enable()
+    {
+        $this->verifyAction();
+    }
+
+    public function disable()
+    {
+        $this->verifyAction();
     }
 
     public function makeDefault()

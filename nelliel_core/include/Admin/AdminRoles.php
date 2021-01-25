@@ -91,6 +91,21 @@ class AdminRoles extends Admin
         $this->outputMain(true);
     }
 
+    public function enable()
+    {
+        $this->verifyAction();
+    }
+
+    public function disable()
+    {
+        $this->verifyAction();
+    }
+
+    public function makeDefault()
+    {
+        $this->verifyAction();
+    }
+
     public function verifyAccess()
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
