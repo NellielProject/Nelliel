@@ -30,8 +30,12 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
     nelliel.ui.toggleHidden(post_header_options);
     nelliel.ui.toggleHidden(expand_thread);
     nelliel.ui.toggleHidden(reply_thread);
-    nelliel.ui.toggleHidden(content_container);
-    nelliel.ui.toggleHidden(comment_container);
+
+	// Special case since OP is (presently) considered to be the thread
+    if (!dataBin.hidden_posts.hasOwnProperty(content_id.id_string)) {
+		nelliel.ui.hideShowPost(element, command, content_id);
+    }
+
     nelliel.ui.toggleHidden(thread_expand);
     nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
     nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
