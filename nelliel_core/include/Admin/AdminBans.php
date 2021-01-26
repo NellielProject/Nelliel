@@ -32,10 +32,9 @@ class AdminBans extends Admin
     public function creator()
     {
         $this->verifyAccess();
-        $ip_start = $_GET['ban_ip'] ?? '';
-        $hashed_ip = $_GET['ban_hashed_ip'] ?? '';
+        $ban_ip = $_GET['ban-ip'] ?? '';
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
-        $output_panel->new(['ip_start' => $ip_start, 'hashed_ip' => $hashed_ip], false);
+        $output_panel->new(['ban_ip' => $ban_ip], false);
         $this->outputMain(false);
     }
 

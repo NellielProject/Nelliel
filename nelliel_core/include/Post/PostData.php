@@ -91,21 +91,24 @@ class PostData
             $post->changeData('email', '');
         }
 
-        $cites = new Cites($this->domain->database());
-        $cite_list = $cites->getCitesFromText($post->data('comment'), false);
-
-        if (count($cite_list['board']) > $this->domain->setting('max_cites'))
+        if(!nel_true_empty($post->data('comment')))
         {
-            nel_derp(44,
-                    sprintf(_gettext('Comment contains too many cites. Maximum is %d.'),
-                            $this->domain->setting('max_cites')));
-        }
+            $cites = new Cites($this->domain->database());
+            $cite_list = $cites->getCitesFromText($post->data('comment'), false);
 
-        if (count($cite_list['crossboard']) > $this->domain->setting('max_crossboard_cites'))
-        {
-            nel_derp(45,
-                    sprintf(_gettext('Comment contains too many cross-board cites. Maximum is %d.'),
-                            $this->domain->setting('max_crossboard_cites')));
+            if (count($cite_list['board']) > $this->domain->setting('max_cites'))
+            {
+                nel_derp(44,
+                        sprintf(_gettext('Comment contains too many cites. Maximum is %d.'),
+                                $this->domain->setting('max_cites')));
+            }
+
+            if (count($cite_list['crossboard']) > $this->domain->setting('max_crossboard_cites'))
+            {
+                nel_derp(45,
+                        sprintf(_gettext('Comment contains too many cross-board cites. Maximum is %d.'),
+                                $this->domain->setting('max_crossboard_cites')));
+            }
         }
     }
 

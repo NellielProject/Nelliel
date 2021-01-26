@@ -34,13 +34,7 @@ class BanHammer
     public function collectFromPOST()
     {
         $ban_id = $_POST['ban_id'] ?? null;
-        $existing_ban = false;
-
-        if (!is_null($ban_id))
-        {
-            $existing_ban = $this->loadFromID($ban_id);
-        }
-
+        $existing_ban = (!is_null($ban_id)) ? $this->loadFromID($ban_id) : false;
         $this->ban_data['board'] = $_POST['ban_board'] ?? $this->ban_data['board'] ?? null;
         $all_boards = $_POST['ban_all_boards'] ?? null;
 
@@ -60,24 +54,17 @@ class BanHammer
         }
 
         $ip_address = $_POST['ban_ip'] ?? null;
-        $hashed_ip = $_POST['ban_hashed_ip'] ?? null;
 
-        if (empty($ip_address))
+        if (nel_true_empty($ip_address) && !$existing_ban)
         {
-            if (!$existing_ban)
-            {
-                if (empty($hashed_ip))
-                {
-                    nel_derp(155, _gettext('No IP address or hash provided.'));
-                }
-                else
-                {
-                    $this->ban_data['ip_address_start'] = null;
-                    $this->ban_data['ip_address_end'] = null;
-                    $this->ban_data['hashed_ip_address'] = $hashed_ip;
-                    $this->ban_data['ip_type'] = BansAccess::HASHED_IP;
-                }
-            }
+            nel_derp(155, _gettext('No IP address or hash provided.'));
+        }
+        else if (utf8_strlen($ip_address) === 32 && ctype_xdigit($ip_address))
+        {
+            $this->ban_data['ip_address_start'] = null;
+            $this->ban_data['ip_address_end'] = null;
+            $this->ban_data['hashed_ip_address'] = $ip_address;
+            $this->ban_data['ip_type'] = BansAccess::HASHED_IP;
         }
         else
         {
@@ -87,7 +74,7 @@ class BanHammer
             }
             catch (Exception $e)
             {
-                nel_derp(154, _gettext('IP address was invalid.'));
+                nel_derp(154, _gettext('IP address or hash is invalid.'));
             }
 
             if ((string) $range->getFirstIP() === (string) $range->getLastIP())
