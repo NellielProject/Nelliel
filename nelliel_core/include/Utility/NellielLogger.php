@@ -32,7 +32,7 @@ class NellielLogger extends AbstractLogger
         }
 
         $data = array();
-        $data['domain'] = $context['domain'] ?? nel_site_domain();
+        $data['domain'] = $context['domain'] ?? '';
         $data['level'] = $this->level_map[$level];
         $data['event_id'] = $context['event_id'] ?? 'UNKNOWN';
         $data['originator'] = $context['originator'] ?? null;

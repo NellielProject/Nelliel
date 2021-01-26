@@ -129,15 +129,15 @@ class Session
     public function logout()
     {
         $this->init(true);
-        $this->terminate();
 
         if (!empty(self::$user))
         {
-            $log_event = new LogEvent($this->domain);
+            $log_event = new LogEvent(nel_site_domain());
             $log_event->changeContext('event_id', 'LOGOUT_SUCCESS');
             $log_event->send(sprintf(_gettext("User %s logged out."), self::$user->id()));
         }
 
+        $this->terminate();
         $output_login = new \Nelliel\Render\OutputLoginPage($this->domain, false);
         $output_login->render([], false);
         nel_clean_exit(false);
@@ -159,7 +159,7 @@ class Session
 
         $_SESSION['user_id'] = $login_data['user_id'];
         self::$user = $this->authorization->getUser($login_data['user_id']);
-        $log_event = new LogEvent($this->domain);
+        $log_event = new LogEvent(nel_site_domain());
         $log_event->changeContext('event_id', 'LOGIN_SUCCESS');
         $log_event->send(sprintf(_gettext("User %s logged in."), self::$user->id()));
         $_SESSION['login_time'] = $login_data['login_time'];

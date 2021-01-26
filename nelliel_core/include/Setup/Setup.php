@@ -273,9 +273,6 @@ class Setup
         $content_table = new TableContent($this->database, $this->sql_compatibility);
         $content_table->tableName($domain->reference('content_table'));
         $content_table->createTable(['posts_table' => $domain->reference('posts_table')]);
-        $content_table = new TableLogs($this->database, $this->sql_compatibility);
-        $content_table->tableName($domain->reference('log_table'));
-        $content_table->createTable();
     }
 
     public function createBoardDirectories(string $board_id)
