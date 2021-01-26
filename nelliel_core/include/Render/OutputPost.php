@@ -196,11 +196,12 @@ class OutputPost extends Output
             }
 
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .
-            '&actions=new&ban-ip=' . $ip . '&modmode=true&goback=false';
+                    '&actions=new&ban-ip=' . $ip . '&modmode=true&goback=false';
             $modmode_headers['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true&goback=true';
             $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&ban-ip=' . $ip . '&modmode=true&goback=false';
+                    '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&ban-ip=' . $ip .
+                    '&modmode=true&goback=false';
             $header_data['modmode_headers'] = $modmode_headers;
         }
 
@@ -275,38 +276,13 @@ class OutputPost extends Output
 
         if ($this->domain->setting('display_post_backlinks'))
         {
-            $cites = new Cites($this->database);
-            $cite_list = $cites->getForPost($post);
-
-            foreach ($cite_list['sources'] as $cite)
+            if (NEL_USE_RENDER_CACHE && isset($post_data['render_cache']['backlink_data']))
             {
-                $backlink_data = array();
-
-                if ($cite['source_board'] == $this->domain->id())
-                {
-                    $backlink_data['backlink_text'] = '>>' . $cite['source_post'];
-                }
-                else
-                {
-                    $backlink_data['backlink_text'] = '>>>/' . $cite['source_board'] . '/' . $cite['source_post'];
-                }
-
-                $cite_data = $cites->getCiteData($backlink_data['backlink_text'], $this->domain, $post_content_id);
-                $cite_url = '';
-
-                if ($cite_data['exists'])
-                {
-                    $cite_url = $cites->createPostLinkURL($cite_data, $this->domain);
-                    $cites->addCite($cite_data);
-
-                    if (!empty($cite_url))
-                    {
-                        $backlink_data['backlink_url'] = $cite_url;
-                        $post_headers['backlinks'][] = $backlink_data;
-                    }
-
-                    $cites->addCite($cite_data);
-                }
+                $post_headers['backlinks'] = $post_data['render_cache']['backlink_data'];
+            }
+            else
+            {
+                $post_headers['backlinks'] = $this->generateBacklinks($post);
             }
         }
 
@@ -385,9 +361,56 @@ class OutputPost extends Output
         return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
     }
 
-    public function parseComment(string $comment_text, ContentID $post_content_id): array
+    public function generateBacklinks(ContentPost $post): array
+    {
+        $cites = new Cites($this->database);
+        $cite_list = $cites->getForPost($post);
+        $post_content_id = $post->contentID();
+        $backlinks = array();
+
+        foreach ($cite_list['sources'] as $cite)
+        {
+            $backlink_data = array();
+
+            if ($cite['source_board'] == $this->domain->id())
+            {
+                $backlink_data['backlink_text'] = '>>' . $cite['source_post'];
+            }
+            else
+            {
+                $backlink_data['backlink_text'] = '>>>/' . $cite['source_board'] . '/' . $cite['source_post'];
+            }
+
+            $cite_data = $cites->getCiteData($backlink_data['backlink_text'], $this->domain, $post_content_id);
+            $cite_url = '';
+
+            if ($cite_data['exists'])
+            {
+                $cite_url = $cites->createPostLinkURL($cite_data, $this->domain);
+                $cites->addCite($cite_data);
+
+                if (!empty($cite_url))
+                {
+                    $backlink_data['backlink_url'] = $cite_url;
+                    $backlinks[] = $backlink_data;
+                }
+
+                $cites->addCite($cite_data);
+            }
+        }
+
+        return $backlinks;
+    }
+
+    public function parseComment(?string $comment_text, ContentID $post_content_id): array
     {
         $comment_data = array();
+
+        if (nel_true_empty($comment_text))
+        {
+            return $comment_data;
+        }
+
         $greentext_regex = '#^\s*>[^>]#';
         $url_protocols = $this->domain->setting('url_protocols');
         $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';

@@ -365,15 +365,12 @@ class ContentPost extends ContentHandler
     public function storeCache(): void
     {
         $cache_array = array();
-
-        if (!nel_true_empty($this->content_data['comment']))
-        {
-            $output_post = new OutputPost($this->domain, false);
-            $cache_array['comment_data'] = $output_post->parseComment($this->content_data['comment'], $this->content_id);
-            $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
-            $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->posts_table . '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
-            $this->database->executePrepared($prepared, [$encoded_cache, $this->content_id->postID()]);
-        }
+        $output_post = new OutputPost($this->domain, false);
+        $cache_array['comment_data'] = $output_post->parseComment($this->content_data['comment'], $this->content_id);
+        $cache_array['backlink_data'] = $output_post->generateBacklinks($this);
+        $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->posts_table . '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
+        $this->database->executePrepared($prepared, [$encoded_cache, $this->content_id->postID()]);
     }
 }
