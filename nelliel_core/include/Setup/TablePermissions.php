@@ -71,12 +71,15 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_board_post_as_staff', 'Post as staff (displays capcode)']);
         $this->insertDefaultRow(['perm_board_post_in_locked', 'Post in locked thread']);
         $this->insertDefaultRow(['perm_board_transfer', 'Transfer board ownership']);
+        $this->insertDefaultRow(['perm_staff_board_access', 'Can view the staff noticeboard']);
+        $this->insertDefaultRow(['perm_staff_board_post', 'Can post on the staff noticeboard']);
+        $this->insertDefaultRow(['perm_staff_board_delete', 'Can delete posts on the staff noticeboard']);
         $this->insertDefaultRow(['perm_extract_gettext', 'Extract Gettext strings']);
         $this->insertDefaultRow(['perm_regen_cache', 'Regenerate caches']);
         $this->insertDefaultRow(['perm_regen_pages', 'Regenerate pages']);
         $this->insertDefaultRow(['perm_view_unhashed_ip', 'View unhashed IP addresses']);
         $this->insertDefaultRow(['perm_use_pms', 'Can use the PM system']);
-        $this->insertDefaultRow(['perm_access_staff_board', 'Can view the staff noticeboard']);
-        $this->insertDefaultRow(['perm_post_staff_board', 'Can post on the staff noticeboard']);
+
+
     }
 }

@@ -38,8 +38,8 @@ class TablePMs extends Table
             sender_id       VARCHAR(50) NOT NULL,
             recipient_id    VARCHAR(50) NOT NULL,
             message         TEXT NOT NULL,
-            time            BIGINT NOT NULL,
-            read            SMALLINT NOT NULL DEFAULT 0,
+            time_sent       BIGINT NOT NULL,
+            message_read    SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL
         ) " . $options . ";";
 

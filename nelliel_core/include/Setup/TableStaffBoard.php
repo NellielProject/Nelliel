@@ -39,7 +39,7 @@ class TableStaffBoard extends Table
             domain_id   VARCHAR(50) NOT NULL,
             subject     TEXT NOT NULL,
             message     TEXT NOT NULL,
-            time        BIGINT NOT NULL,
+            post_time   BIGINT NOT NULL,
             moar        TEXT DEFAULT NULL
         ) " . $options . ";";
 

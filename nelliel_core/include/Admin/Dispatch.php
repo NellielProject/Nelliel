@@ -232,6 +232,11 @@ class Dispatch
                 $output_board_panel = new \Nelliel\Render\OutputPanelBoard($this->domain, false);
                 $output_board_panel->render(['board_id' => $board_id], false);
                 break;
+
+            case 'staff-board':
+                $admin_handler = new AdminStaffBoard($this->authorization, $this->domain, $this->session, $inputs);
+                $this->standard($admin_handler, $action);
+                break;
         }
 
         return $admin_handler;
