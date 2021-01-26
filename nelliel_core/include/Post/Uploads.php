@@ -214,7 +214,7 @@ class Uploads
     private function doesFileExist($response_to, $file)
     {
         $database = $this->domain->database();
-        $snacks = new \Nelliel\Snacks($database, new \Nelliel\BansAccess($database));
+        $snacks = new \Nelliel\Snacks($this->domain, new \Nelliel\BansAccess($database));
         $error_data = ['delete_files' => true, 'bad-filename' => $file->data('name'), 'files' => $this->files,
             'board_id' => $this->domain->id()];
         $is_banned = false;

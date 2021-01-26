@@ -78,9 +78,9 @@ function nel_dispatch_preparation()
 
     if($inputs['module'] === 'threads')
     {
-        $snacks = new \Nelliel\Snacks(nel_database(), new \Nelliel\BansAccess(nel_database()));
-        $snacks->applyBan($domain);
-        //$snacks->checkHoneypot($domain);
+        $snacks = new \Nelliel\Snacks($domain, new \Nelliel\BansAccess(nel_database()));
+        $snacks->applyBan();
+        //$snacks->checkHoneypot();
     }
 
     $inputs = nel_module_dispatch($inputs, $domain);

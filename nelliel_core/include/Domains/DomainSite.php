@@ -13,7 +13,6 @@ use PDO;
 
 class DomainSite extends Domain implements NellielCacheInterface
 {
-    private $file_filters;
 
     public function __construct(NellielPDO $database)
     {
@@ -27,12 +26,14 @@ class DomainSite extends Domain implements NellielCacheInterface
 
     protected function loadSettings()
     {
-        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', 'domains/' . $this->id);
+        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
+                'domains/' . $this->id);
 
         if (empty($settings))
         {
             $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->id);
+            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
+                    'domains/' . $this->id);
         }
 
         $this->settings = $settings;
@@ -65,26 +66,6 @@ class DomainSite extends Domain implements NellielCacheInterface
     public function globalVariation()
     {
         return false;
-    }
-
-    public function fileFilters()
-    {
-        if (empty($this->file_filters))
-        {
-            $loaded = false;
-
-            if (!$loaded)
-            {
-                $filters = $this->database->executeFetchAll(
-                        'SELECT "hash_type", "file_hash" FROM "nelliel_file_filters"', PDO::FETCH_ASSOC);
-                foreach ($filters as $filter)
-                {
-                    $this->file_filters[$filter['hash_type']][] = $filter['file_hash'];
-                }
-            }
-        }
-
-        return $this->file_filters;
     }
 
     public function regenCache()
