@@ -21,22 +21,25 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
     var comment_container = post_container.querySelector(".comment-container");
     var thread_expand = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
 
-    if (command === "hide-thread") {
-        dataBin.hidden_threads[content_id.id_string] = Date.now();
-    } else if (command === "show-thread") {    
-        delete dataBin.hidden_threads[content_id.id_string];
-    }
-
     nelliel.ui.toggleHidden(post_header_options);
     nelliel.ui.toggleHidden(expand_thread);
     nelliel.ui.toggleHidden(reply_thread);
 
-	// Special case since OP is (presently) considered to be the thread
+    // Special case since OP is (presently) considered to be the thread
     if (!dataBin.hidden_posts.hasOwnProperty(content_id.id_string)) {
-		nelliel.ui.hideShowPost(element, command, content_id);
+        nelliel.ui.hideShowPost(element, command, content_id);
     }
 
     nelliel.ui.toggleHidden(thread_expand);
+
+    if (command === "hide-thread") {
+        dataBin.hidden_threads[content_id.id_string] = Date.now();
+    } else if (command === "show-thread") {    
+        delete dataBin.hidden_threads[content_id.id_string];
+    } else {
+        return;
+    }
+
     nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
     nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -50,25 +53,27 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
     if(content_id == null) {
         content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     }
-   
+
     var post_container = document.getElementById("post-container-" + content_id.id_string);
     var post_header_options = post_container.querySelector(".post-header-options");
-    
+
     if(element == null) {
         element = post_header_options.querySelector(".toggle-post");
     }
 
     var content_container = post_container.querySelector(".content-container");
     var comment_container = post_container.querySelector(".comment-container");
+    nelliel.ui.toggleHidden(content_container);
+    nelliel.ui.toggleHidden(comment_container);
 
     if (command == "hide-post") {
         dataBin.hidden_posts[content_id.id_string] = Date.now();
     } else if (command == "show-post") {
         delete dataBin.hidden_posts[content_id.id_string];
+    } else {
+        return
     }
 
-    nelliel.ui.toggleHidden(content_container);
-    nelliel.ui.toggleHidden(comment_container);
     nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
     nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -91,14 +96,16 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
     }
 
     var file_preview = file_container.querySelector(".file-preview");
+    nelliel.ui.toggleHidden(file_preview);
 
     if (command == "hide-file") {
         dataBin.hidden_files[content_id.id_string] = Date.now();
     } else if (command == "show-file") {
         delete dataBin.hidden_files[content_id.id_string];
+    } else {
+        return;
     }
 
-    nelliel.ui.toggleHidden(file_preview);
     nelliel.core.storeInLocalStorage(dataBin.hidden_files_id, dataBin.hidden_files);
     nelliel.ui.switchDataCommand(element, "hide-file", "show-file");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
@@ -120,14 +127,16 @@ nelliel.ui.hideShowEmbed = function(element, command, content_id) {
     }
 
     var embed_frame = embed_container.querySelector(".embed-frame");
+    nelliel.ui.toggleHidden(embed_frame);
 
     if (command == "hide-embed") {
         dataBin.hidden_embeds[content_id.id_string] = Date.now();
     } else if (command == "show-embed") {
         delete dataBin.hidden_embeds[content_id.id_string];
+    } else {
+        return;
     }
 
-    nelliel.ui.toggleHidden(embed_frame);
     nelliel.core.storeInLocalStorage(dataBin.hidden_embeds_id, dataBin.hidden_embeds);
     nelliel.ui.switchDataCommand(element, "hide-embed", "show-embed");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
