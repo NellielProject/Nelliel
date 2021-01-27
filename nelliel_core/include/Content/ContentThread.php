@@ -195,7 +195,7 @@ class ContentThread extends ContentHandler
         return $this;
     }
 
-    public function sticky()
+    public function sticky(): bool
     {
         if (!$this->dataLoaded(true))
         {
@@ -209,7 +209,7 @@ class ContentThread extends ContentHandler
         return $success;
     }
 
-    public function lock()
+    public function lock(): bool
     {
         if (!$this->dataLoaded(true))
         {
@@ -220,7 +220,7 @@ class ContentThread extends ContentHandler
         return $this->writeToDatabase();
     }
 
-    public function sage()
+    public function sage(): bool
     {
         if (!$this->dataLoaded(true))
         {
@@ -231,7 +231,54 @@ class ContentThread extends ContentHandler
         return $this->writeToDatabase();
     }
 
-    public function firstPost(): int
+    public function cyclic(): bool
+    {
+        if (!$this->dataLoaded(true))
+        {
+            return false;
+        }
+
+        $this->content_data['cyclic'] = ($this->content_data['cyclic'] == 0) ? 1 : 0;
+        return $this->writeToDatabase();
+    }
+
+    public function cycle(): void
+    {
+        $prepared = $this->database->prepare(
+                'SELECT "post_number", "op" FROM "' . $this->posts_table .
+                '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
+        $descending_post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
+                PDO::FETCH_ASSOC);
+
+        if ($descending_post_list === false)
+        {
+            return;
+        }
+
+        $post_count = count($descending_post_list);
+        $bump_limit = $this->domain->setting('max_posts');
+
+        if ($post_count > $bump_limit)
+        {
+            $old_post_list = array_slice($descending_post_list, $bump_limit - 1);
+
+            foreach ($old_post_list as $old_post)
+            {
+                if ($old_post['op'] == 1)
+                {
+                    continue;
+                }
+
+                $post_content_id = new ContentID(
+                        ContentID::createIDString($this->content_id->threadID(), $old_post['post_number'], 0));
+                $post = $post_content_id->getInstanceFromID($this->domain);
+                $post->loadFromDatabase();
+                $post->remove(true);
+            }
+        }
+    }
+
+    public function firstPostID(): int
     {
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "parent_thread" = ? AND "op" = 1');
@@ -240,7 +287,7 @@ class ContentThread extends ContentHandler
         return intval($first_post);
     }
 
-    public function lastPost(): int
+    public function lastPostID(): int
     {
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->posts_table .
@@ -250,7 +297,7 @@ class ContentThread extends ContentHandler
         return intval($last_post);
     }
 
-    public function lastBumpPost(): int
+    public function lastBumpPostID(): int
     {
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->posts_table .
@@ -258,6 +305,23 @@ class ContentThread extends ContentHandler
         $last_bump_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
         return intval($last_bump_post);
+    }
+
+    public function getNthPostID(int $nth_post): int
+    {
+        $prepared = $this->database->prepare(
+                'SELECT "post_number" FROM "' . $this->posts_table .
+                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+        $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
+                PDO::FETCH_COLUMN);
+        $nth_post_index = $nth_post - 1;
+
+        if ($post_list === false || !isset($post_list[$nth_post_index]))
+        {
+            return 0;
+        }
+
+        return intval($post_list[$nth_post_index]);
     }
 
     public function isArchived()

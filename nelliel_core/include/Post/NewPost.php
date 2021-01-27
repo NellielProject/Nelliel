@@ -185,8 +185,14 @@ class NewPost
             }
         }
 
-        $update_overboard = new \Nelliel\Overboard($this->database);
         $thread->loadFromDatabase(); // Make sure we have any expected defaults set
+
+        if ($thread->data('cyclic') == 1)
+        {
+            $thread->cycle();
+        }
+
+        $update_overboard = new \Nelliel\Overboard($this->database);
         $update_overboard->addThread($thread);
 
         // Generate response page if it doesn't exist, otherwise update
@@ -239,7 +245,7 @@ class NewPost
         if ($post->data('parent_thread') != 0)
         {
             $prepared = $this->database->prepare(
-                    'SELECT "post_count", "archive_status", "locked" FROM "' . $this->domain->reference('threads_table') .
+                    'SELECT * FROM "' . $this->domain->reference('threads_table') .
                     '" WHERE "thread_id" = ?');
             $thread_info = $this->database->executePreparedFetch($prepared, [$post->data('parent_thread')],
                     PDO::FETCH_ASSOC, true);
@@ -262,7 +268,7 @@ class NewPost
                 nel_derp(4, _gettext('The thread you have tried posting in could not be found.'), $error_data);
             }
 
-            if ($this->domain->setting('limit_post_count') &&
+            if ($this->domain->setting('limit_post_count') && $thread_info['cyclic'] != 1 &&
                     $thread_info['post_count'] >= $this->domain->setting('max_posts'))
             {
                 nel_derp(5, _gettext('The thread has reached maximum posts.'), $error_data);
