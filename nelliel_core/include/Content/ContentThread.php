@@ -71,26 +71,22 @@ class ContentThread extends ContentHandler
         {
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->threads_table .
-                    '" SET "first_post" = :first_post,
-                    "last_post" = :last_post, "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
-                    "content_count" = :content_count, "last_update" = :last_update, "last_update_milli" = :last_update_milli, "post_count" = :post_count,
-                    "permasage" = :permasage, "sticky" = :sticky, "archive_status" = :archive_status,
+                    '" SET "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
+                    "content_count" = :content_count, "last_update" = :last_update, "last_update_milli" = :last_update_milli,
+                    "post_count" = :post_count, "permasage" = :permasage, "sticky" = :sticky, "archive_status" = :archive_status,
                     "locked" = :locked WHERE "thread_id" = :thread_id');
         }
         else
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->threads_table .
-                    '" ("thread_id", "first_post", "last_post",
-                    "last_bump_time", "last_bump_time_milli", "content_count", "last_update", "last_update_milli",
-                    "post_count", "permasage", "sticky", "archive_status", "locked") VALUES
-                    (:thread_id, :first_post, :last_post, :last_bump_time, :last_bump_time_milli, :content_count,
+                    '" ("thread_id", "last_bump_time", "last_bump_time_milli", "content_count", "last_update",
+                    "last_update_milli", "post_count", "permasage", "sticky", "archive_status", "locked")
+                    VALUES (:thread_id, :last_bump_time, :last_bump_time_milli, :content_count,
                     :last_update, :last_update_milli, :post_count, :permasage, :sticky, :archive_status, :locked)');
         }
 
         $prepared->bindValue(':thread_id', $this->content_id->threadID(), PDO::PARAM_INT);
-        $prepared->bindValue(':first_post', $this->contentDataOrDefault('first_post', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':last_post', $this->contentDataOrDefault('last_post', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_bump_time', $this->contentDataOrDefault('last_bump_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_bump_time_milli', $this->contentDataOrDefault('last_bump_time_milli', 0),
                 PDO::PARAM_INT);
@@ -129,10 +125,6 @@ class ContentThread extends ContentHandler
             {
                 nel_derp(63, _gettext('Cannot remove thread. Board is locked.'));
             }
-
-            $temp_content_id = new ContentID($this->contentID()->getIDString());
-            $temp_content_id->changePostID($this->content_data['first_post']);
-            $temp_content_id->getInstanceFromID($this->domain)->remove($perm_override);
         }
 
         $this->removeFromDatabase();
@@ -189,12 +181,6 @@ class ContentThread extends ContentHandler
         $prepared = $this->database->prepare(
                 'UPDATE "' . $this->threads_table . '" SET "content_count" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$content_count, $this->content_id->threadID()]);
-
-        $first_post = $this->firstPost();
-        $last_post = $this->lastPost();
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->threads_table . '" SET "first_post" = ?, "last_post" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$first_post, $last_post, $this->content_id->threadID()]);
     }
 
     protected function verifyModifyPerms()
@@ -245,34 +231,33 @@ class ContentThread extends ContentHandler
         return $this->writeToDatabase();
     }
 
-    public function lastPost(bool $no_sage = false)
+    public function firstPost(): int
     {
-        if ($no_sage)
-        {
-            $prepared = $this->database->prepare(
-                    'SELECT "post_number" FROM "' . $this->posts_table .
-                    '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC');
-        }
-        else
-        {
-            $prepared = $this->database->prepare(
-                    'SELECT "post_number" FROM "' . $this->posts_table .
-                    '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
-        }
+        $prepared = $this->database->prepare(
+                'SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "parent_thread" = ? AND "op" = 1');
+        $first_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
+                PDO::FETCH_COLUMN);
+        return intval($first_post);
+    }
 
+    public function lastPost(): int
+    {
+        $prepared = $this->database->prepare(
+                'SELECT "post_number" FROM "' . $this->posts_table .
+                '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
         $last_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
         return intval($last_post);
     }
 
-    public function firstPost()
+    public function lastBumpPost(): int
     {
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->posts_table .
-                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-        $first_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
+                '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
+        $last_bump_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
-        return intval($first_post);
+        return intval($last_bump_post);
     }
 
     public function isArchived()

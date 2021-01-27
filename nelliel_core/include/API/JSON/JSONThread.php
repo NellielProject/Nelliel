@@ -24,8 +24,6 @@ class JSONThread extends JSONOutput
     {
         $thread_array = array();
         $thread_array['thread_id'] = nel_cast_to_datatype($data['thread_id'], 'integer');
-        $thread_array['first_post'] = nel_cast_to_datatype($data['first_post'], 'integer');
-        $thread_array['last_post'] = nel_cast_to_datatype($data['last_post'], 'integer');
         $thread_array['last_bump_time'] = nel_cast_to_datatype($data['last_bump_time'], 'integer');
         $thread_array['last_bump_time_milli'] = nel_cast_to_datatype($data['last_bump_time_milli'], 'integer');
         $thread_array['last_update'] = nel_cast_to_datatype($data['last_update'], 'integer');

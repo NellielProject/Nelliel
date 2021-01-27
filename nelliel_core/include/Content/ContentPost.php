@@ -309,8 +309,6 @@ class ContentPost extends ContentHandler
         $new_content_id->changePostID($this->content_id->postID());
         $new_thread = new ContentThread($new_content_id, $this->domain);
         $new_thread->content_data['thread_id'] = $this->content_id->postID();
-        $new_thread->content_data['first_post'] = $this->content_id->postID();
-        $new_thread->content_data['last_post'] = $this->content_id->postID();
         $new_thread->content_data['last_bump_time'] = $time['time'];
         $new_thread->content_data['last_bump_time_milli'] = $time['milli'];
         $new_thread->content_data['last_update'] = $time['time'];

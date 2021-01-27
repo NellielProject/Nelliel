@@ -112,8 +112,6 @@ class NewPost
         if ($post->data('response_to') == 0)
         {
             $thread->contentID()->changeThreadID($post->contentID()->postID());
-            $thread->changeData('first_post', $post->contentID()->postID());
-            $thread->changeData('last_post', $post->contentID()->postID());
             $thread->changeData('last_bump_time', $time['time']);
             $thread->changeData('last_bump_time_milli', $time['milli']);
             $thread->changeData('content_count', $post->data('content_count'));

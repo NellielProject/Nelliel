@@ -19,8 +19,6 @@ class TableThreads extends Table
         $this->table_name = '_threads';
         $this->columns_data = [
             'thread_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
-            'first_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'last_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'last_bump_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'last_bump_time_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'last_update' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
@@ -42,8 +40,6 @@ class TableThreads extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             thread_id               INTEGER PRIMARY KEY NOT NULL,
-            first_post              INTEGER DEFAULT NULL,
-            last_post               INTEGER DEFAULT NULL,
             last_bump_time          BIGINT NOT NULL,
             last_bump_time_milli    SMALLINT NOT NULL,
             last_update             BIGINT NOT NULL,
