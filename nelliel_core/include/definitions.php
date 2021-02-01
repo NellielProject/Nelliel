@@ -66,7 +66,20 @@ define('NEL_WAT_FILES_PATH', NEL_INCLUDE_PATH . 'wat/');
 define('NEL_GENERAL_FILES_PATH', NEL_BASE_PATH . NEL_GENERAL_DIR . '/');
 define('NEL_CAPTCHA_FILES_PATH', NEL_GENERAL_FILES_PATH . NEL_CAPTCHA_DIR . '/');
 
-define('NEL_BASE_WEB_PATH', pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME) . '/');
+$dirname = pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
+
+// When running at web root $dirname would result in // which has special meaning and all the URLs are fucked
+if($dirname === '/')
+{
+    define('NEL_BASE_WEB_PATH', '/');
+}
+else
+{
+    define('NEL_BASE_WEB_PATH', $dirname . '/');
+}
+
+unset($dirname);
+
 define('NEL_ASSETS_WEB_PATH', NEL_BASE_WEB_PATH . NEL_ASSETS_DIR . '/');
 define('NEL_SCRIPTS_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_SCRIPTS_DIR . '/');
 define('NEL_IMAGES_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_IMAGES_DIR . '/');
