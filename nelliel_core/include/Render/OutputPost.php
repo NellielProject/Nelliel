@@ -181,16 +181,16 @@ class OutputPost extends Output
             {
                 $temp_content_id = $thread_content_id;
                 $locked = $thread_data['locked'] == 1;
-                $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock Thread') : _gettext('Lock Thread');
+                $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock') : _gettext('Lock');
                 $modmode_headers['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=lock&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
                 $sticky = $thread_data['sticky'] == 1;
-                $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky Thread') : _gettext('Sticky Thread');
+                $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky') : _gettext('Sticky');
                 $modmode_headers['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=sticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
                 $permasage = $thread_data['permasage'] == 1;
-                $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Undo Permasage') : _gettext(
-                        'Permasage Thread');
+                $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Unsage') : _gettext(
+                        'Sage');
                 $modmode_headers['permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=sage&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
             }

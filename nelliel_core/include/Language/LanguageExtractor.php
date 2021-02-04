@@ -367,7 +367,7 @@ class LanguageExtractor
     private function parseDatabaseEntries(array $strings, string $default_category)
     {
         $database = $this->domain->database();
-        $filetype_labels = $database->executeFetchAll('SELECT "label" FROM "' . NEL_FILETYPES_TABLE . '"',
+        $filetype_labels = $database->executeFetchAll('SELECT "type_label" FROM "' . NEL_FILETYPES_TABLE . '"',
                 PDO::FETCH_COLUMN);
 
         foreach ($filetype_labels as $label)
@@ -377,7 +377,7 @@ class LanguageExtractor
                 $msgid = $label;
                 $strings[$default_category][$msgid]['msgid'] = $label;
                 $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_FILETYPES_TABLE .
-                        ' | Column: label'] = '#:';
+                        ' | Column: type_label'] = '#:';
             }
         }
 
