@@ -207,6 +207,10 @@ class Dispatch
                 {
                     $admin_handler->permasage();
                 }
+                else if ($action === 'cyclic')
+                {
+                    $admin_handler->cyclic();
+                }
                 else if ($action === 'expand')
                 {
                     ; // TODO: Figure this out better

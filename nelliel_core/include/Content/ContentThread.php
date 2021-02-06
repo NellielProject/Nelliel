@@ -73,8 +73,8 @@ class ContentThread extends ContentHandler
                     'UPDATE "' . $this->threads_table .
                     '" SET "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
                     "content_count" = :content_count, "last_update" = :last_update, "last_update_milli" = :last_update_milli,
-                    "post_count" = :post_count, "permasage" = :permasage, "sticky" = :sticky, "archive_status" = :archive_status,
-                    "locked" = :locked WHERE "thread_id" = :thread_id');
+                    "post_count" = :post_count, "permasage" = :permasage, "sticky" = :sticky, "cyclic" = :cyclic,
+                    "archive_status" = :archive_status, "locked" = :locked WHERE "thread_id" = :thread_id');
         }
         else
         {
@@ -82,8 +82,8 @@ class ContentThread extends ContentHandler
                     'INSERT INTO "' . $this->threads_table .
                     '" ("thread_id", "last_bump_time", "last_bump_time_milli", "content_count", "last_update",
                     "last_update_milli", "post_count", "permasage", "sticky", "archive_status", "locked")
-                    VALUES (:thread_id, :last_bump_time, :last_bump_time_milli, :content_count,
-                    :last_update, :last_update_milli, :post_count, :permasage, :sticky, :archive_status, :locked)');
+                    VALUES (:thread_id, :last_bump_time, :last_bump_time_milli, :content_count, :last_update,
+                    :last_update_milli, :post_count, :permasage, :sticky, :cyclic, :archive_status, :locked)');
         }
 
         $prepared->bindValue(':thread_id', $this->content_id->threadID(), PDO::PARAM_INT);
@@ -96,6 +96,7 @@ class ContentThread extends ContentHandler
         $prepared->bindValue(':post_count', $this->contentDataOrDefault('post_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':permasage', $this->contentDataOrDefault('permasage', 0), PDO::PARAM_INT);
         $prepared->bindValue(':sticky', $this->contentDataOrDefault('sticky', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':cyclic', $this->contentDataOrDefault('cyclic', 0), PDO::PARAM_INT);
         $prepared->bindValue(':archive_status', $this->contentDataOrDefault('archive_status', 0), PDO::PARAM_INT);
         $prepared->bindValue(':locked', $this->contentDataOrDefault('locked', 0), PDO::PARAM_INT);
         $this->database->executePrepared($prepared);

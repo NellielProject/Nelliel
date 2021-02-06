@@ -189,10 +189,13 @@ class OutputPost extends Output
                 $modmode_headers['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=sticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
                 $permasage = $thread_data['permasage'] == 1;
-                $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Unsage') : _gettext(
-                        'Sage');
+                $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Unsage') : _gettext('Sage');
                 $modmode_headers['permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=sage&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+                $cyclic = $thread_data['cyclic'] == 1;
+                $modmode_headers['cyclic_text'] = ($cyclic) ? _gettext('Non-cyclic') : _gettext('Cyclic');
+                $modmode_headers['cyclic_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                        '&actions=cyclic&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
             }
 
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .

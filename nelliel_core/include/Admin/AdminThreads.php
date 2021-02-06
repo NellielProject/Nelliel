@@ -119,6 +119,18 @@ class AdminThreads extends Admin
         }
     }
 
+    public function cyclic()
+    {
+        $this->verifyAction();
+        $content_id = new ContentID($_GET['content-id']);
+
+        if ($content_id->isThread())
+        {
+            $content_id->getInstanceFromID($this->domain)->cyclic();
+            $this->regenThread($content_id->threadID(), true);
+        }
+    }
+
     private function regenThread($thread_id, bool $regen_index = false)
     {
         $regen = new \Nelliel\Regen();
