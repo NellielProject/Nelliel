@@ -19,10 +19,8 @@ These requirements are well behind the leading edge and should be widely availab
 
 ## Optional Requirements
 These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not required and the software will work fine without them:
-- ImageMagick
-- Imagick (PECL extension)
-- GraphicsMagick
-- Gmagick (PECL extension)
+- ImageMagick or GraphicsMagick
+- Imagick or Gmagick (PECL extensions)
 - mbstring
 
 ## Installation

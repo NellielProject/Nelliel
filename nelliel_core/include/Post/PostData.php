@@ -139,7 +139,6 @@ class PostData
     {
         if (!$post->data('post_as_staff'))
         {
-            var_dump("1");
             return;
         }
 
@@ -147,7 +146,6 @@ class PostData
 
         if (!$this->session->isActive())
         {
-            var_dump("2");
             return;
         }
 
@@ -155,12 +153,10 @@ class PostData
 
         if (!$user->checkPermission($this->domain, 'perm_board_post_as_staff'))
         {
-            var_dump("3");
             return;
         }
 
         $role = $user->checkRole($this->domain);
-        var_dump($role);
 
         if ($role !== false)
         {
