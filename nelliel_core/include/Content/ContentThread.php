@@ -81,7 +81,7 @@ class ContentThread extends ContentHandler
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->threads_table .
                     '" ("thread_id", "last_bump_time", "last_bump_time_milli", "content_count", "last_update",
-                    "last_update_milli", "post_count", "permasage", "sticky", "archive_status", "locked")
+                    "last_update_milli", "post_count", "permasage", "sticky", "cyclic", "archive_status", "locked")
                     VALUES (:thread_id, :last_bump_time, :last_bump_time_milli, :content_count, :last_update,
                     :last_update_milli, :post_count, :permasage, :sticky, :cyclic, :archive_status, :locked)');
         }
