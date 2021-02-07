@@ -188,7 +188,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 {
                     if ($session->inModmode($domain))
                     {
-                        $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board-id=' .
+                        $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-index&index=0&board-id=' .
                                 $inputs['board_id'] . '&modmode=true';
                     }
                     else
@@ -213,7 +213,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board-id=' .
+                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-index&index=0&board-id=' .
                             $inputs['board_id'] . '&modmode=true';
                 }
                 else
@@ -231,7 +231,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
                 if ($session->inModmode($domain))
                 {
-                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&action=view-index&index=0&board-id=' .
+                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-index&index=0&board-id=' .
                             $inputs['board_id'] . '&modmode=true';
                 }
                 else
