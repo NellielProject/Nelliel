@@ -126,9 +126,9 @@ class Snacks
 
     public function checkExpired(BanHammer $ban_hammer, bool $remove): bool
     {
-        if ($ban_hammer->expired())
+        if ($ban_hammer->getData('seen') && $ban_hammer->expired())
         {
-            if ($remove)
+            if ($ban_hammer->getData('seen') && $remove)
             {
                 $ban_hammer->remove();
             }
@@ -139,8 +139,10 @@ class Snacks
         return false;
     }
 
-    public function banPage(Domain $domain, BanHammer $ban_hammer): void
+    public function banPage(BanHammer $ban_hammer): void
     {
+        $ban_hammer->modifyData('seen', 1);
+        $ban_hammer->apply();
         $output_ban_page = new \Nelliel\Render\OutputBanPage($this->domain, false);
         $output_ban_page->render(['ban_hammer' => $ban_hammer], false);
         nel_clean_exit();

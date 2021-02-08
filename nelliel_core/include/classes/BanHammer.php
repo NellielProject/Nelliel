@@ -35,7 +35,8 @@ class BanHammer
     {
         $ban_id = $_POST['ban_id'] ?? null;
         $existing_ban = (!is_null($ban_id)) ? $this->loadFromID($ban_id) : false;
-        $this->ban_data['board'] = $_POST['ban_board'] ?? $this->ban_data['board'] ?? null;
+        $this->ban_data['board_id'] = $_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null;
+        $this->ban_data['seen'] = $_POST['ban_seen'] ??  $this->ban_data['seen'] ?? 0;
         $all_boards = $_POST['ban_all_boards'] ?? null;
 
         if (is_array($all_boards))
@@ -44,7 +45,7 @@ class BanHammer
 
             if ($this->ban_data['all_boards'] > 0)
             {
-                $this->ban_data['board'] = null;
+                $this->ban_data['board_id'] = null;
             }
         }
 
@@ -191,8 +192,8 @@ class BanHammer
                 $prepared = $this->database->prepare(
                         'INSERT INTO "' . NEL_BANS_TABLE .
                         '" ("board_id", "all_boards", "ip_type", "creator", "ip_address_start", "hashed_ip_address",
-                 "ip_address_end", "reason", "length", "start_time") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
-                $prepared->bindValue(1, $this->ban_data['board'], PDO::PARAM_STR);
+                 "ip_address_end", "reason", "length", "seen", "start_time") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                $prepared->bindValue(1, $this->ban_data['board_id'], PDO::PARAM_STR);
                 $prepared->bindValue(2, $this->ban_data['all_boards'], PDO::PARAM_INT);
                 $prepared->bindValue(3, $this->ban_data['ip_type'], PDO::PARAM_INT);
                 $prepared->bindValue(4, $this->ban_data['creator'], PDO::PARAM_STR);
@@ -204,7 +205,8 @@ class BanHammer
                         PDO::PARAM_LOB);
                 $prepared->bindValue(8, $this->ban_data['reason'], PDO::PARAM_STR);
                 $prepared->bindValue(9, $this->ban_data['length'], PDO::PARAM_INT);
-                $prepared->bindValue(10, $this->ban_data['start_time'], PDO::PARAM_INT);
+                $prepared->bindValue(10, $this->ban_data['seen'], PDO::PARAM_INT);
+                $prepared->bindValue(11, $this->ban_data['start_time'], PDO::PARAM_INT);
                 $this->database->executePrepared($prepared);
             }
         }
@@ -214,9 +216,9 @@ class BanHammer
                     'UPDATE "' . NEL_BANS_TABLE .
                     '" SET "board_id" = ?, "all_boards" = ?, "ip_type" = ?, "creator" = ?,
                  "ip_address_start" = ?, "hashed_ip_address" = ?, "ip_address_end" = ?,
-                 "reason" = ?, "length" = ?, "start_time" = ?, "appeal_response" = ?,
+                 "reason" = ?, "length" = ?, "seen" = ?, "start_time" = ?, "appeal_response" = ?,
                  "appeal_status" = ? WHERE "ban_id" = ?');
-            $prepared->bindValue(1, $this->ban_data['board'], PDO::PARAM_STR);
+            $prepared->bindValue(1, $this->ban_data['board_id'], PDO::PARAM_STR);
             $prepared->bindValue(2, $this->ban_data['all_boards'], PDO::PARAM_INT);
             $prepared->bindValue(3, $this->ban_data['ip_type'], PDO::PARAM_INT);
             $prepared->bindValue(4, $this->ban_data['creator'], PDO::PARAM_STR);
@@ -227,10 +229,11 @@ class BanHammer
                     PDO::PARAM_LOB);
             $prepared->bindValue(8, $this->ban_data['reason'], PDO::PARAM_STR);
             $prepared->bindValue(9, $this->ban_data['length'], PDO::PARAM_INT);
-            $prepared->bindValue(10, $this->ban_data['start_time'], PDO::PARAM_INT);
-            $prepared->bindValue(11, $this->ban_data['appeal_response'], PDO::PARAM_STR);
-            $prepared->bindValue(12, $this->ban_data['appeal_status'], PDO::PARAM_INT);
-            $prepared->bindValue(13, $this->ban_data['ban_id'], PDO::PARAM_INT);
+            $prepared->bindValue(10, $this->ban_data['seen'], PDO::PARAM_INT);
+            $prepared->bindValue(11, $this->ban_data['start_time'], PDO::PARAM_INT);
+            $prepared->bindValue(12, $this->ban_data['appeal_response'], PDO::PARAM_STR);
+            $prepared->bindValue(13, $this->ban_data['appeal_status'], PDO::PARAM_INT);
+            $prepared->bindValue(14, $this->ban_data['ban_id'], PDO::PARAM_INT);
             $this->database->executePrepared($prepared);
         }
     }

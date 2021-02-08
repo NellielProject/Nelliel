@@ -32,8 +32,9 @@ class OutputBanPage extends Output
         $this->render_data['ban_time'] = date("F jS, Y H:i e", $ban_hammer->getData('start_time'));
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
         $ban_expire = $ban_hammer->getData('length') + $ban_hammer->getData('start_time');
+        $expire_interval = ($ban_expire - time() >= 0) ? $ban_expire - time() : 0;
         $dt = new \DateTime();
-        $dt->add(new \DateInterval('PT' . ($ban_expire - time()) . 'S'));
+        $dt->add(new \DateInterval('PT' . ($expire_interval) . 'S'));
         $interval = $dt->diff(new \DateTime());
         $duration = '';
 

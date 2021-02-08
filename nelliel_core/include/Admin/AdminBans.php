@@ -76,6 +76,7 @@ class AdminBans extends Admin
     public function update()
     {
         $this->verifyAction();
+        $this->ban_hammer->loadFromID($_POST['ban_id']);
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
         $this->outputMain(true);

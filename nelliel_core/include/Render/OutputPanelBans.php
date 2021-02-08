@@ -62,6 +62,7 @@ class OutputPanelBans extends Output
             $ban_data['board_id'] = $ban_hammer->getData('board_id');
             $ban_data['all_boards'] = $ban_hammer->getData('all_boards');
             $ban_data['reason'] = $ban_hammer->getData('reason');
+            $ban_data['seen'] = $ban_hammer->getData('seen');
             $ban_data['expiration'] = date("D F jS Y  H:i:s",
                     $ban_hammer->getData('length') + $ban_hammer->getData('start_time'));
             $ban_data['appeal'] = $ban_hammer->getData('appeal');
@@ -153,6 +154,7 @@ class OutputPanelBans extends Output
         $this->render_data['all_boards'] = ($ban_hammer->getData('all_boards') > 0) ? 'checked' : '';
         $this->render_data['start_time'] = $ban_hammer->getData('start_time');
         $this->render_data['ban_reason'] = $ban_hammer->getData('reason');
+        $this->render_data['seen'] = $ban_hammer->getData('seen');
         $this->render_data['creator'] = $ban_hammer->getData('creator');
         $this->render_data['appeal'] = $ban_hammer->getData('appeal');
         $this->render_data['appeal_response'] = $ban_hammer->getData('appeal_response');
