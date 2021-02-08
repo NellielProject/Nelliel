@@ -210,6 +210,8 @@ class Setup
         $staff_board_table->createTable();
         $pms_table = new TablePMs($this->database, $this->sql_compatibility);
         $pms_table->createTable();
+        $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
+        $blotter_table->createTable();
 
         // NOTE: Tables must be created in order of:
         // board data -> file filters -> if thens -> overboard -> reports -> cites
