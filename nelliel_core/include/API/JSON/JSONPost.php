@@ -31,8 +31,8 @@ class JSONPost extends JSONOutput
         $post_array['poster_name'] = nel_cast_to_datatype($data['poster_name'], 'string');
         $post_array['tripcode'] = nel_cast_to_datatype($data['tripcode'], 'string');
         $post_array['secure_tripcode'] = nel_cast_to_datatype($data['secure_tripcode'], 'string');
-        $capcode = (!empty($data['mod_post_id'])) ? $authorization->getRole($data['mod_post_id'])->auth_data['capcode'] : '';
-        $post_array['capcode'] = nel_cast_to_datatype($capcode, 'string');
+        //$capcode = (!empty($data['mod_post_id'])) ? $authorization->getRole($data['mod_post_id'])->auth_data['capcode'] : '';
+        //$post_array['capcode'] = nel_cast_to_datatype($capcode, 'string');
         $post_array['email'] = nel_cast_to_datatype($data['email'], 'string');
         $post_array['subject'] = nel_cast_to_datatype($data['subject'], 'string');
         $post_array['comment'] = nel_cast_to_datatype($data['comment'], 'string');
