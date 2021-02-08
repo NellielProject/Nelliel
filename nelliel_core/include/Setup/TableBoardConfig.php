@@ -152,6 +152,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['max_url_links', '15', 0]);
         $this->insertDefaultRow(['display_original_name', '1', 0]);
         $this->insertDefaultRow(['board_content_disclaimer', '', 0]);
+        $this->insertDefaultRow(['index_nav_top', '0', 0]);
+        $this->insertDefaultRow(['index_nav_bottom', '1', 0]);
 
         // Anti-spam
         $this->insertDefaultRow(['use_post_captcha', '0', 0]);

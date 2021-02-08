@@ -73,7 +73,8 @@ class OutputIndex extends Output
 
         $index_format = $site_domain->setting('index_filename_format');
         $this->render_data['catalog_url'] = 'catalog.html';
-        $this->render_data['index_navigation'] = true;
+        $this->render_data['index_navigation_top'] = $this->domain->setting('index_nav_top');
+        $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
         $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
