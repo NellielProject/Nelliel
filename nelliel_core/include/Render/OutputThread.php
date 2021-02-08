@@ -27,8 +27,19 @@ class OutputThread extends Output
         $thread_id = ($parameters['thread_id']) ?? 0;
         $command = ($parameters['command']) ?? 'view-thread';
         $thread_content_id = ContentID::createIDString($thread_id);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
-                $this->domain->id();
+        $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
+
+        if ($this->render_data['in_modmode'])
+        {
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
+                    $this->domain->id() . '&modmode=true';
+        }
+        else
+        {
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
+                    $this->domain->id();
+        }
+
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $thread_data = $this->database->executePreparedFetch($prepared, [$thread_id], PDO::FETCH_ASSOC);

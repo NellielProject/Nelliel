@@ -34,16 +34,21 @@ class OutputIndex extends Output
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
-        if ($this->session->inModmode($this->domain) && !$this->write_mode)
+        if ($this->render_data['in_modmode'])
         {
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Index');
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
+                    $this->domain->id() . '&modmode=true';
         }
         else
         {
             $this->render_data['header'] = $output_header->board([], true);
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
+                    $this->domain->id();
         }
 
         $thread_list = $this->database->executeFetchAll(
@@ -89,7 +94,6 @@ class OutputIndex extends Output
         }
 
         $gen_data['index_rendering'] = true;
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=threads&board-id=' . $this->domain->id();
         $threads_on_page = 0;
 
         foreach ($thread_list as $thread_data)
