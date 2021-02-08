@@ -61,7 +61,10 @@ Error 107: Install not done. (imgboard.php)
 Error 108: Install already done. (Setup/Setup.php)  
 Error 109: PHP version too old. (Setup/Setup.php)  
 
-Error 140: Filename purged by filter. (classes/FileHandler.php) 
+Error 130: Report item limit. (classes/Reports.php)  
+Error 131: Delete item limit. (classes/ThreadHandler.php)  
+
+Error 140: Filename purged by filter. (classes/FileHandler.php)  
 
 Error 150: Invalid ban ID. (classes/Snacks.php)  
 Error 151: Can't appeal range ban. (classes/Snacks.php)  
@@ -69,6 +72,7 @@ Error 152: IP does not match. (classes/Snacks.php)
 Error 153: Already appealed. (classes/Snacks.php)  
 Error 154: Missing or invalid IP. (classes/BanHammer.php)  
 Error 155: No IP hash. (classes/BanHammer.php)  
+Error 156: Ban appeals disabled. (classes/Snacks.php)  
 
 Error 160: Board doesn't exist. (Admin/AdminBoards.php) 
 

@@ -58,6 +58,8 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['home_page', '/', 0]);
         $this->insertDefaultRow(['locale', 'en_US', 0]);
         $this->insertDefaultRow(['only_alphanumeric_board_ids', '1', 0]);
+        $this->insertDefaultRow(['max_report_items', '5', 0]);
+        $this->insertDefaultRow(['max_delete_items', '5', 0]);
 
         // Bans
         $this->insertDefaultRow(['must_see_ban', '1', 0]);

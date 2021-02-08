@@ -71,6 +71,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'home_page', '', '/', 'Site home page', '{"type":"text"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for site (use ISO language + country code)', '{"type":"text"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'only_alphanumeric_board_ids', '', '1', 'Allow only alphanumeric board IDs', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'max_report_items', '', '5', 'Maximum items that can be reported at one time', '{"type":"number"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'max_delete_items', '', '5', 'Maximum items that can be deleted at one time', '{"type":"number"}']);
 
         // Bans
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'must_see_ban', '', '1', 'Bans must be seen at least once before expiration purge', '{"type":"checkbox"}']);
@@ -130,7 +132,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for the board (use ISO language + country code)', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'exclude_from_overboards', '', '0', 'Exclude threads on this board from the overboards', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'user_delete_own', '', '1', 'Let users delete own posts and content', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'delete_content_renzoku', '', '0', 'Cooldown after posting before user can delete content', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'delete_post_cooldown', '', '0', 'Cooldown after posting before user can delete the post', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'safety_level', '{"SFW":{"label":"SFW - Safe For Work"}, "NSFW":{"label":"NSFW - Not Safe For Work"}, "NSFL":{"label":"NSFL - Not Safe For Life"}}', 'SFW', 'Content safety level of board', '{"type":"select"}']);
 
         // New post
