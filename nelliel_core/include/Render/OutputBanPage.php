@@ -58,8 +58,20 @@ class OutputBanPage extends Output
         $this->render_data['appealed'] = $ban_hammer->getData('appeal_status') != 0;
         $this->render_data['reviewed'] = $ban_hammer->getData('appeal_status') == 1;
         $this->render_data['responded'] = $ban_hammer->getData('appeal_status') > 1;
+        $appeal_min_time = $this->site_domain->setting('min_time_before_ban_appeal');
 
-        if ($ban_hammer->getData('appeal_status') == 0 && empty($ban_hammer->getData('ip_address_end')))
+        if ($ban_hammer->getData('length') < $appeal_min_time ||
+                time() - $ban_hammer->getData('start_time') < $appeal_min_time)
+        {
+            $this->render_data['min_time_met'] = false;
+        }
+        else
+        {
+            $this->render_data['min_time_met'] = true;
+        }
+
+        if ($this->render_data['min_time_met'] && $this->site_domain->setting('allow_ban_appeals') &&
+                $ban_hammer->getData('appeal_status') == 0 && empty($ban_hammer->getData('ip_address_end')))
         {
             $this->render_data['appeal_allowed'] = true;
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

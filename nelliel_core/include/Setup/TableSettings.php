@@ -72,6 +72,11 @@ class TableSettings extends Table
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for site (use ISO language + country code)', '{"type":"text"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'only_alphanumeric_board_ids', '', '1', 'Allow only alphanumeric board IDs', '{"type":"checkbox"}']);
 
+        // Bans
+        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'must_see_ban', '', '1', 'Bans must be seen at least once before expiration purge', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'allow_ban_appeals', '', '1', 'Allow ban appeals', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'min_time_before_ban_appeal', '', '3600', 'Minimum time before a ban can be appealed (seconds)', '{"type":"number"}']);
+
         // Posts and rendering
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'index_filename_format', '', 'index%d', 'Index filename (sprintf)', '{"type":"text"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'thread_filename_format', '', '%d', 'Thread filename (sprintf)', '{"type":"text"}']);

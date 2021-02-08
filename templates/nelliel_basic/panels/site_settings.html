@@ -43,6 +43,23 @@
 	</div>
 	<div class="display-row">
 		<span class="display-cell">
+			<span class="bold" data-i18n="gettext">Bans</span>
+		</span>
+	</div>
+	{{# must_see_ban }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ must_see_ban }}
+	{{# allow_ban_appeals }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ allow_ban_appeals }}
+	{{# min_time_before_ban_appeal }}
+		{{> panels/pieces/settings_number }}
+	{{/ min_time_before_ban_appeal }}
+	<div class="display-row">
+		<hr class="display_cell">
+	</div>
+	<div class="display-row">
+		<span class="display-cell">
 			<span class="bold" data-i18n="gettext">Posts and rendering</span>
 		</span>
 	</div>

@@ -59,6 +59,11 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['locale', 'en_US', 0]);
         $this->insertDefaultRow(['only_alphanumeric_board_ids', '1', 0]);
 
+        // Bans
+        $this->insertDefaultRow(['must_see_ban', '1', 0]);
+        $this->insertDefaultRow(['allow_ban_appeals', '1', 0]);
+        $this->insertDefaultRow(['min_time_before_ban_appeal', '3600', 0]);
+
         // Posts and rendering
         $this->insertDefaultRow(['index_filename_format', 'index%d', 0]);
         $this->insertDefaultRow(['thread_filename_format', '%d', 0]);
