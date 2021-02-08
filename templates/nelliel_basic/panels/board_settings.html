@@ -151,6 +151,12 @@
 		{{# max_crossboard_cites }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_crossboard_cites }}
+		{{# trim_comment_start }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ trim_comment_start }}
+		{{# trim_comment_end }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ trim_comment_end }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}
