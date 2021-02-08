@@ -116,7 +116,8 @@ class ContentFile extends ContentHandler
         $prepared->bindValue(':embed_url', $this->contentDataOrDefault('embed_url', null), PDO::PARAM_STR);
         $prepared->bindValue(':spoiler', $this->contentDataOrDefault('spoiler', 0), PDO::PARAM_INT);
         $prepared->bindValue(':deleted', $this->contentDataOrDefault('deleted', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':exif', $this->contentDataOrDefault('exif', null), PDO::PARAM_STR);
+        $prepared->bindValue(':exif', json_encode($this->contentDataOrDefault('exif', array()), JSON_UNESCAPED_UNICODE),
+                PDO::PARAM_STR);
         $prepared->bindValue(':moar', $this->getMoar()->getJSON(), PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         return true;

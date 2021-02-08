@@ -78,6 +78,12 @@ class Uploads
             $this->checkForErrors($file_data);
             $this->doesFileExist($response_to, $file);
             $this->checkFiletype($file);
+            $exif_data = @exif_read_data($file->data('location'), null, true);
+
+            if ($this->domain->setting('store_exif_data') && $exif_data !== false)
+            {
+                $file->changeData('exif', $exif_data);
+            }
 
             if ($file->data('type') === 'graphics' || $file->data('format') === 'swf')
             {

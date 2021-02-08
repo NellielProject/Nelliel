@@ -112,6 +112,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['old_threads', 'ARCHIVE', 0]);
         $this->insertDefaultRow(['max_archive_threads', '1000', 0]);
         $this->insertDefaultRow(['do_archive_pruning', '1', 0]);
+        $this->insertDefaultRow(['store_exif_data', '1', 0]);
 
         // Page rendering
         $this->insertDefaultRow(['date_format', 'Y/m/d (D) H:i:s', 0]);
