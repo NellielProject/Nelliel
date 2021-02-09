@@ -94,6 +94,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['max_crossboard_cites', '15', 0]);
         $this->insertDefaultRow(['trim_comment_start', '0', 0]);
         $this->insertDefaultRow(['trim_comment_end', '1', 0]);
+        $this->insertDefaultRow(['anonymous_names', '["Anonymous"]', 0]);
 
         // Content handling
         $this->insertDefaultRow(['preferred_filename', 'original', 0]);

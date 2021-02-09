@@ -40,8 +40,32 @@ class PostData
         $post->changeData('ip_address', nel_request_ip_address());
         $post->changeData('hashed_ip_address', nel_request_ip_address(true));
         $poster_name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
+
+        if (nel_true_empty($poster_name) || $this->domain->setting('forced_anonymous'))
+        {
+            $name_choices = json_decode($this->domain->setting('anonymous_names'), true);
+
+            if (!is_null($name_choices))
+            {
+                $poster_name = $name_choices[mt_rand(0, count($name_choices) - 1)];
+            }
+            else
+            {
+                $poster_name = 'Anonymous';
+            }
+        }
+
         $post->changeData('poster_name', $this->fieldMaxCheck('poster_name', $poster_name));
-        $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
+
+        if ($this->domain->setting('forced_anonymous'))
+        {
+            $email = '';
+        }
+        else
+        {
+            $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
+        }
+
         $post->changeData('email', $this->fieldMaxCheck('email', $email));
         $subject = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
         $post->changeData('subject', $this->fieldMaxCheck('subject', $subject));
@@ -95,12 +119,6 @@ class PostData
         else
         {
             $post->changeData('poster_name', _gettext('Anonymous'));
-        }
-
-        if ($this->domain->setting('forced_anonymous'))
-        {
-            $post->changeData('poster_name', _gettext('Anonymous'));
-            $post->changeData('email', '');
         }
 
         if (!nel_true_empty($post->data('comment')))
