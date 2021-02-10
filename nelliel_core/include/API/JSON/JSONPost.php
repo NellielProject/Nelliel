@@ -7,7 +7,6 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Utility\FileHandler;
 
@@ -23,16 +22,14 @@ class JSONPost extends JSONOutput
 
     public function prepareData(array $data)
     {
-        $authorization = new Authorization($this->domain->database());
         $post_array = array();
         $post_array['post_number'] = nel_cast_to_datatype($data['post_number'], 'integer');
         $post_array['parent_thread'] = nel_cast_to_datatype($data['parent_thread'], 'integer');
         $post_array['reply_to'] = nel_cast_to_datatype($data['reply_to'], 'integer');
         $post_array['poster_name'] = nel_cast_to_datatype($data['poster_name'], 'string');
+        $post_array['capcode'] = nel_cast_to_datatype($data['capcode'], 'string');
         $post_array['tripcode'] = nel_cast_to_datatype($data['tripcode'], 'string');
         $post_array['secure_tripcode'] = nel_cast_to_datatype($data['secure_tripcode'], 'string');
-        //$capcode = (!empty($data['mod_post_id'])) ? $authorization->getRole($data['mod_post_id'])->auth_data['capcode'] : '';
-        //$post_array['capcode'] = nel_cast_to_datatype($capcode, 'string');
         $post_array['email'] = nel_cast_to_datatype($data['email'], 'string');
         $post_array['subject'] = nel_cast_to_datatype($data['subject'], 'string');
         $post_array['comment'] = nel_cast_to_datatype($data['comment'], 'string');

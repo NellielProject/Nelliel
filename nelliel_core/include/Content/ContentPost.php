@@ -72,10 +72,10 @@ class ContentPost extends ContentHandler
                     'UPDATE "' . $this->posts_table .
                     '" SET "parent_thread" = :parent_thread,
                     "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
-                    "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "email" = :email,
+                    "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "capcode" = :capcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address, "hashed_ip_address" = :hashed_ip_address,
                     "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_content" = :has_content, "content_count" = :content_count,
-                    "op" = :op, "sage" = :sage, "mod_post_id" = :mod_post_id, "mod_comment" = :mod_comment
+                    "op" = :op, "sage" = :sage, "staff_post_id" = :staff_post_id, "mod_comment" = :mod_comment
                     WHERE "post_number" = :post_number');
             $prepared->bindValue(':post_number', $this->content_id->postID(), PDO::PARAM_INT);
         }
@@ -83,10 +83,10 @@ class ContentPost extends ContentHandler
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->posts_table .
-                    '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "email",
-                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_content", "content_count", "op", "sage", "mod_post_id", "mod_comment") VALUES
-                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :email, :subject, :comment, :ip_address, :hashed_ip_address, :post_time, :post_time_milli, :has_content, :content_count,
-                    :op, :sage, :mod_post_id, :mod_comment)');
+                    '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "capcode", "email",
+                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_content", "content_count", "op", "sage", "staff_post_id", "mod_comment") VALUES
+                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address, :hashed_ip_address, :post_time, :post_time_milli, :has_content, :content_count,
+                    :op, :sage, :staff_post_id, :mod_comment)');
         }
 
         $prepared->bindValue(':parent_thread',
@@ -95,6 +95,7 @@ class ContentPost extends ContentHandler
                 PDO::PARAM_INT);
         $prepared->bindValue(':poster_name', $this->contentDataOrDefault('poster_name', null), PDO::PARAM_STR);
         $prepared->bindValue(':post_password', $this->contentDataOrDefault('post_password', null), PDO::PARAM_STR);
+        $prepared->bindValue(':capcode', $this->contentDataOrDefault('capcode', null), PDO::PARAM_STR);
         $prepared->bindValue(':tripcode', $this->contentDataOrDefault('tripcode', null), PDO::PARAM_STR);
         $prepared->bindValue(':secure_tripcode', $this->contentDataOrDefault('secure_tripcode', null), PDO::PARAM_STR);
         $prepared->bindValue(':email', $this->contentDataOrDefault('email', null), PDO::PARAM_STR);
@@ -110,7 +111,7 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':content_count', $this->contentDataOrDefault('content_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':op', $this->contentDataOrDefault('op', 0), PDO::PARAM_INT);
         $prepared->bindValue(':sage', $this->contentDataOrDefault('sage', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':mod_post_id', $this->contentDataOrDefault('mod_post_id', null), PDO::PARAM_STR);
+        $prepared->bindValue(':staff_post_id', $this->contentDataOrDefault('staff_post_id', null), PDO::PARAM_STR);
         $prepared->bindValue(':mod_comment', $this->contentDataOrDefault('mod_comment', null), PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         $this->archive_prune->updateThreads();
@@ -264,10 +265,10 @@ class ContentPost extends ContentHandler
         {
             if ($user->checkPermission($this->domain, 'perm_board_delete_posts'))
             {
-                if (!empty($this->content_data['mod_post_id']) &&
-                        $this->authorization->userExists($this->content_data['mod_post_id']))
+                if (!empty($this->content_data['staff_post_id']) &&
+                        $this->authorization->userExists($this->content_data['staff_post_id']))
                 {
-                    $mod_post_user = $this->authorization->getUser($this->content_data['mod_post_id']);
+                    $mod_post_user = $this->authorization->getUser($this->content_data['staff_post_id']);
                     $flag = $this->authorization->roleLevelCheck($user->checkRole($this->domain),
                             $mod_post_user->checkRole($this->domain));
                 }

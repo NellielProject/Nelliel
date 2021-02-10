@@ -73,7 +73,7 @@ class ConditionsPost implements Conditions
                     break;
 
                 case 'staff_post':
-                    $met = $condition === !nel_true_empty($this->post->data('mod_post_id'));
+                    $met = $condition === !nel_true_empty($this->post->data('staff_post_id'));
                     break;
             }
 
