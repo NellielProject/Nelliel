@@ -239,7 +239,7 @@ class PostData
         $capcode = '';
         $matches = array();
 
-        if ($this->session->user()->checkPermission($this->domain, 'perm_use_custom_capcode') &&
+        if ($this->session->user()->checkPermission($this->domain, 'perm_staff_custom_capcode') &&
                 preg_match('/ ## (.*)/u', $text, $matches) === 1)
         {
             $capcode = $matches[1];

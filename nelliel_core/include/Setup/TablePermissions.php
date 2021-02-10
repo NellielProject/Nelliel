@@ -74,6 +74,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_staff_board_access', 'Can view the staff noticeboard']);
         $this->insertDefaultRow(['perm_staff_board_post', 'Can post on the staff noticeboard']);
         $this->insertDefaultRow(['perm_staff_board_delete', 'Can delete posts on the staff noticeboard']);
+        $this->insertDefaultRow(['perm_staff_custom_capcode', 'Can use a custom capcode']);
         $this->insertDefaultRow(['perm_extract_gettext', 'Extract Gettext strings']);
         $this->insertDefaultRow(['perm_regen_cache', 'Regenerate caches']);
         $this->insertDefaultRow(['perm_regen_pages', 'Regenerate pages']);
