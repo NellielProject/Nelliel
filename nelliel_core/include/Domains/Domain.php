@@ -30,11 +30,11 @@ abstract class Domain
     protected $language;
     protected $global_variation = null;
 
-    protected abstract function loadSettings();
+    protected abstract function loadSettings(): void;
 
-    protected abstract function loadReferences();
+    protected abstract function loadReferences(): void;
 
-    protected abstract function loadSettingsFromDatabase();
+    protected abstract function loadSettingsFromDatabase(): array;
 
     public abstract function globalVariation();
 
@@ -120,7 +120,7 @@ abstract class Domain
         }
 
         // Convert underscore notation to hyphen for HTML
-        if($html_format)
+        if ($html_format)
         {
             return str_replace('_', '-', $this->locale());
         }
@@ -148,6 +148,13 @@ abstract class Domain
     protected function cacheSettings()
     {
         $settings = $this->loadSettingsFromDatabase();
-        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->id);
+        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
+                'domains/' . $this->id);
+    }
+
+    public function reload(): void
+    {
+        $this->loadSettings();
+        $this->loadReferences();
     }
 }

@@ -25,17 +25,17 @@ class DomainAllBoards extends Domain
         return true;
     }
 
-    protected function loadSettings()
+    protected function loadSettings(): void
     {
-        return array();
+        ;
     }
 
-    protected function loadReferences()
+    protected function loadReferences(): void
     {
-        return array();
+        ;
     }
 
-    protected function loadSettingsFromDatabase()
+    protected function loadSettingsFromDatabase(): array
     {
         return array();
     }

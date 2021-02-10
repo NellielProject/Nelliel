@@ -58,6 +58,7 @@ class AdminSiteSettings extends Admin
         }
 
         $this->domain->regenCache();
+        $this->domain->reload();
         $this->outputMain(true);
     }
 

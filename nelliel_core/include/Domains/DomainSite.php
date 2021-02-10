@@ -24,7 +24,7 @@ class DomainSite extends Domain implements NellielCacheInterface
                 NEL_TEMPLATES_FILES_PATH . $this->front_end_data->template($this->setting('template_id'))['directory']);
     }
 
-    protected function loadSettings()
+    protected function loadSettings(): void
     {
         $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
                 'domains/' . $this->id);
@@ -39,14 +39,14 @@ class DomainSite extends Domain implements NellielCacheInterface
         $this->settings = $settings;
     }
 
-    protected function loadReferences()
+    protected function loadReferences(): void
     {
         $new_reference = array();
         $new_reference['log_table'] = NEL_LOGS_TABLE;
         $this->references = $new_reference;
     }
 
-    protected function loadSettingsFromDatabase()
+    protected function loadSettingsFromDatabase(): array
     {
         $settings = array();
         $config_list = $this->database->executeFetchAll(
