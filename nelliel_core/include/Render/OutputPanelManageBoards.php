@@ -98,6 +98,7 @@ class OutputPanelManageBoards extends Output
                         ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',
                             'action-confirmed' => 'true', 'board-id' => $board_id]);
         $parameters['extra_url_break'] = true;
+        $parameters['page_title'] = $this->domain->reference('title');
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
         echo $output_interstitial->render($parameters, $data_only, $messages, [$link, $link2]);
     }

@@ -43,6 +43,8 @@ class DomainSite extends Domain implements NellielCacheInterface
     {
         $new_reference = array();
         $new_reference['log_table'] = NEL_LOGS_TABLE;
+        $new_reference['title'] = (!nel_true_empty($this->setting('name'))) ? $this->setting('name') : _gettext(
+                'Nelliel Imageboard');
         $this->references = $new_reference;
     }
 

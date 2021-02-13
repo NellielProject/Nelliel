@@ -60,8 +60,19 @@ class OutputThread extends Output
         }
 
         $thread_format = sprintf($this->site_domain->setting('thread_filename_format'), $thread_id);
+        $page_title = $this->domain->reference('board_uri');
+
+        if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
+        {
+            $page_title .=' - Thread #' . $treeline[0]['post_number'];
+        }
+        else
+        {
+            $page_title .=' - ' . $treeline[0]['subject'];
+        }
+
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render([], true);
+        $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode)

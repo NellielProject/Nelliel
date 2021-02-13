@@ -31,8 +31,9 @@ class OutputIndex extends Output
         $page = 1;
         $site_domain = new DomainSite($this->database);
         $json_index = new JSONIndex($this->domain, $this->file_handler);
+        $page_title = $this->domain->reference('board_uri') . ' - ' . $this->domain->reference('title');
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render([], true);
+        $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
