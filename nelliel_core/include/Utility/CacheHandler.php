@@ -59,6 +59,9 @@ class CacheHandler
 
             $exported_array = "\n$" . $array_variable . " = " . var_export($array, true) . ";\n";
             $file_handler->writeFile($file_path, $this->header . $exported_array, NEL_FILES_PERM, true);
+            // Make certain further cache loads use the new cache
+            clearstatcache(true, $file_path);
+            opcache_invalidate($file_path);
         }
     }
 

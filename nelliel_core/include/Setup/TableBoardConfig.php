@@ -144,8 +144,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['tripcode_marker', '!', 0]);
         $this->insertDefaultRow(['no_comment_text', '(no comment)', 0]);
         $this->insertDefaultRow(['display_post_backlinks', '1', 0]);
-        $this->insertDefaultRow(['display_poster_id', '1', 0]);
-        $this->insertDefaultRow(['poster_id_colors', '1', 0]);
+        $this->insertDefaultRow(['display_poster_id', '0', 0]);
+        $this->insertDefaultRow(['poster_id_colors', '0', 0]);
         $this->insertDefaultRow(['poster_id_length', '6', 0]);
         $this->insertDefaultRow(['create_url_links', '1', 0]);
         $this->insertDefaultRow(['url_protocols', 'http|https|ftp|sftp|irc|nntp', 0]);

@@ -26,27 +26,32 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $this->global_variation = new DomainAllBoards($this->database);
     }
 
-    protected function loadSettings()
+    protected function loadSettings(): void
     {
-        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php', 'domains/' . $this->id);
+        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
+                'domains/' . $this->id);
 
         if (empty($settings))
         {
             $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->id);
+            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
+                    'domains/' . $this->id);
         }
 
         $this->settings = $settings;
     }
 
-    protected function loadReferences()
+    protected function loadReferences(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_ASSOC);
         $new_reference = array();
         $board_path = NEL_BASE_PATH . $board_data['board_id'] . '/';
         $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($board_data['board_id']) . '/';
+        $new_reference['title'] = (!nel_true_empty($this->setting('name'))) ? $this->setting('name') : _gettext(
+                'Nelliel Imageboard');
         $new_reference['board_directory'] = $board_data['board_id'];
+        $new_reference['board_uri'] = '/' . $board_data['board_id'] . '/';
         $new_reference['db_prefix'] = $board_data['db_prefix'];
         $new_reference['locked'] = (bool) $board_data['locked'];
         $new_reference['src_dir'] = 'src';
@@ -71,7 +76,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $this->references = $new_reference;
     }
 
-    protected function loadSettingsFromDatabase()
+    protected function loadSettingsFromDatabase(): array
     {
         $settings = array();
         $prepared = $this->database->prepare(

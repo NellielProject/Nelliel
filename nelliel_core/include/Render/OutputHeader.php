@@ -35,7 +35,6 @@ class OutputHeader extends Output
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting('description') : '';
         $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
-        $this->render_data['page_title'] = $this->domain->setting('name');
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -43,9 +42,7 @@ class OutputHeader extends Output
     public function board(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $treeline = $parameters['treeline'] ?? array();
         $uri = $parameters['uri'] ?? $this->domain->reference('board_directory');
-        $index_render = $parameters['index_render'] ?? false;
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
@@ -69,24 +66,6 @@ class OutputHeader extends Output
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting('description') : '';
         $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
-
-        if (!$index_render && !empty($treeline))
-        {
-            if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
-            {
-                $this->render_data['page_title'] = $this->domain->setting('name') . ' > Thread #' .
-                        $treeline[0]['post_number'];
-            }
-            else
-            {
-                $this->render_data['page_title'] = $this->domain->setting('name') . ' > ' . $treeline[0]['subject'];
-            }
-        }
-        else
-        {
-            $this->render_data['page_title'] = $this->domain->setting('name');
-        }
-
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -121,24 +100,6 @@ class OutputHeader extends Output
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting('description') : '';
         $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
-
-        if (!$index_render && !empty($treeline))
-        {
-            if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
-            {
-                $this->render_data['page_title'] = $this->domain->setting('name') . ' > Thread #' .
-                        $treeline[0]['post_number'];
-            }
-            else
-            {
-                $this->render_data['page_title'] = $this->domain->setting('name') . ' > ' . $treeline[0]['subject'];
-            }
-        }
-        else
-        {
-            $this->render_data['page_title'] = $this->domain->setting('name');
-        }
-
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -171,7 +132,6 @@ class OutputHeader extends Output
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
-        $this->render_data['page_title'] = $site_domain->setting('name');
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }

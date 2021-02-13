@@ -20,6 +20,7 @@ class OutputHead extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $page_title = $parameters['page_title'] ?? $this->domain->reference('title');
         $this->render_data['main_js_file'] = NEL_SCRIPTS_WEB_PATH . 'core/nel.js';
         $this->render_data['js_ui_url'] = NEL_SCRIPTS_WEB_PATH . 'core/ui.js';
         $this->render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
@@ -36,7 +37,7 @@ class OutputHead extends Output
 
         $this->render_data['show_favicon'] = $this->domain->setting('show_favicon');
         $this->render_data['favicon_url'] = $this->domain->setting('favicon') ?? '';
-        $this->render_data['page_title'] = $parameters['page_title'] ?? 'Nelliel Imageboard';
+        $this->render_data['page_title'] = $page_title;
         return $this->output('head', $data_only, true, $this->render_data);
     }
 }
