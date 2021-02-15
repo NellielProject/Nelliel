@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel;
 
 if (!defined('NELLIEL_VERSION'))
@@ -205,8 +207,8 @@ class FileTypes
     {
         $file_length = filesize($file_path);
         $end_offset = ($file_length < 65535) ? $file_length : $file_length - 65535;
-        $file_test_begin = file_get_contents($file_path, null, null, 0, 65535);
-        $file_test_end = file_get_contents($file_path, null, null, $end_offset);
+        $file_test_begin = file_get_contents($file_path, false, null, 0, 65535);
+        $file_test_end = file_get_contents($file_path, false, null, $end_offset);
         $extension_data = $this->extensionData($extension);
         return preg_match('/' . $extension_data['id_regex'] . '/s', $file_test_begin) ||
                 preg_match('/' . $extension_data['id_regex'] . '/s', $file_test_end);

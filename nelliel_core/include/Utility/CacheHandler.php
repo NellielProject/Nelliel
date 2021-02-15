@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace Nelliel\Utility;
 
 if (!defined('NELLIEL_VERSION'))
@@ -10,7 +13,10 @@ if (!defined('NELLIEL_VERSION'))
 class CacheHandler
 {
     private static $hashes;
-    private $header = "<?php if(!defined('NELLIEL_VERSION')){die('NOPE.AVI');}\n";
+    private $header = "<?php
+
+declare(strict_types=1);
+ if(!defined('NELLIEL_VERSION')){die('NOPE.AVI');}\n";
 
     function __construct(bool $hash_load = true)
     {

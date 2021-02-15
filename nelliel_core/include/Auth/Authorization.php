@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Auth;
 
 if (!defined('NELLIEL_VERSION'))

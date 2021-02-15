@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Admin;
 
 use Nelliel\Account\Session;

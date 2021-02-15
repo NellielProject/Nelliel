@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Auth;
 
 if (!defined('NELLIEL_VERSION'))
@@ -15,7 +17,7 @@ abstract class AuthHandler
     public $authorization;
     protected $empty;
 
-    public function authDataOrDefault(string $data_name, ?string $default = null)
+    public function authDataOrDefault(string $data_name, $default = null)
     {
         return $this->auth_data[$data_name] ?? $default;
     }

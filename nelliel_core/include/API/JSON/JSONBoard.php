@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\API\JSON;
 
 if (!defined('NELLIEL_VERSION'))

@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace Nelliel\Utility;
 
 if (!defined('NELLIEL_VERSION'))
@@ -60,7 +63,10 @@ class FileHandler
     {
         if ($use_header)
         {
-            $output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} ' . $output;
+            $output = '<?php
+
+declare(strict_types=1);
+ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} ' . $output;
         }
 
         return $this->writeFile($file, $output, NEL_FILES_PERM, true, NEL_DIRECTORY_PERM, $temp_move);
