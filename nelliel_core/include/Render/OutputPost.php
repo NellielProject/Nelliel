@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -274,7 +275,7 @@ class OutputPost extends Output
             $post_headers['capcode'] = ' ## ' . $post_data['capcode'];
         }
 
-        $post_headers['post_time'] = date($this->domain->setting('date_format'), $post_data['post_time']);
+        $post_headers['post_time'] = date($this->domain->setting('date_format'), (int) $post_data['post_time']);
         $post_headers['post_number'] = $post_data['post_number'];
         $post_headers['post_number_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
                 $post_content_id->postID();
@@ -301,7 +302,6 @@ class OutputPost extends Output
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
         $comment_data['noreferrer_nofollow'] = $this->site_domain->setting('noreferrer_nofollow');
-        $post_data['comment'] = trim($post_data['comment']);
 
         if (nel_true_empty($post_data['comment']))
         {
@@ -309,9 +309,11 @@ class OutputPost extends Output
         }
         else
         {
+            $comment = trim($post_data['comment']);
+
             if ($this->domain->setting('filter_combining_characters'))
             {
-                $post_data['comment'] = $this->output_filter->filterUnicodeCombiningCharacters($post_data['comment']);
+                $comment = $this->output_filter->filterUnicodeCombiningCharacters($comment);
             }
 
             if (NEL_USE_RENDER_CACHE && isset($post_data['render_cache']['comment_data']))
@@ -320,7 +322,7 @@ class OutputPost extends Output
             }
             else
             {
-                $parsed_comment = $this->parseComment($post_data['comment'], $post_content_id);
+                $parsed_comment = $this->parseComment($comment, $post_content_id);
             }
 
             $comment_data['comment_lines'] = $parsed_comment;
@@ -438,7 +440,7 @@ class OutputPost extends Output
 
             // Split the line on spaces or embedded post cites, preserving the delimiters
             // URLs and greentext match until a line split point or line break so they don't need to be in this part
-            $segment_chunks = preg_split($line_split_regex, $line, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            $segment_chunks = preg_split($line_split_regex, $line, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
             $line_parts = array();
             $plaintext_chunk = ''; // Plain text chunks can be recombined, only special cases need be separate
 

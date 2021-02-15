@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Language;
 
 if (!defined('NELLIEL_VERSION'))

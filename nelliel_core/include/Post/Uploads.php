@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Post;
 
 if (!defined('NELLIEL_VERSION'))
@@ -78,7 +80,7 @@ class Uploads
             $this->checkForErrors($file_data);
             $this->doesFileExist($response_to, $file);
             $this->checkFiletype($file);
-            $exif_data = @exif_read_data($file->data('location'), null, true);
+            $exif_data = @exif_read_data($file->data('location'), '', true);
 
             if ($this->domain->setting('store_exif_data') && $exif_data !== false)
             {

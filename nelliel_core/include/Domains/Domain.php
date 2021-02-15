@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Domains;
 
 if (!defined('NELLIEL_VERSION'))

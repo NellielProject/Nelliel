@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Render;
 
 if (!defined('NELLIEL_VERSION'))
@@ -67,7 +69,7 @@ class OutputCatalog extends Output
                 foreach ($this->output_filter->newlinesToArray($first_post['comment']) as $line)
                 {
                     $line_parts = array();
-                    $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
+                    $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, -1, PREG_SPLIT_DELIM_CAPTURE);
 
                     foreach ($segments as $segment)
                     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Post;
 
 if (!defined('NELLIEL_VERSION'))
@@ -78,14 +80,17 @@ class PostData
         $post->changeData('subject', $this->fieldMaxCheck('subject', $subject));
         $comment = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
 
-        if ($this->domain->setting('trim_comment_start'))
+        if(!nel_true_empty($comment))
         {
-            $comment = ltrim($comment);
-        }
+            if ($this->domain->setting('trim_comment_start'))
+            {
+                $comment = ltrim($comment);
+            }
 
-        if ($this->domain->setting('trim_comment_end'))
-        {
-            $comment = rtrim($comment);
+            if ($this->domain->setting('trim_comment_end'))
+            {
+                $comment = rtrim($comment);
+            }
         }
 
         $post->changeData('comment', $this->fieldMaxCheck('comment', $comment));
