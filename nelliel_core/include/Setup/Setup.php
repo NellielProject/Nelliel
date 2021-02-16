@@ -263,7 +263,7 @@ class Setup
         $config_table = new TableBoardConfig($this->database, $this->sql_compatibility);
         $config_table->tableName($db_prefix . '_config');
         $config_table->createTable();
-        $config_table->copyFrom(NEL_BOARD_DEFAULTS_TABLE);
+        $config_table->copyFrom(NEL_BOARD_DEFAULTS_TABLE, ['setting_name', 'setting_value']);
 
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
 

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Content;
 
@@ -188,13 +187,13 @@ class ContentPost extends ContentHandler
                 nel_derp(62, _gettext('Cannot remove post. Board is locked.'));
             }
 
-            $delete_renzoku = $this->domain->setting('delete_post_cooldown');
+            $delete_post_cooldown = $this->domain->setting('delete_post_cooldown');
 
-            if ($delete_renzoku > 0 && time() - $this->content_data['post_time'] < $delete_renzoku)
+            if ($delete_post_cooldown > 0 && time() - $this->content_data['post_time'] < $delete_post_cooldown)
             {
                 nel_derp(64,
                         sprintf(_gettext('You must wait %d seconds after making a post before it can be deleted.'),
-                                $delete_renzoku));
+                                $delete_post_cooldown));
             }
         }
 

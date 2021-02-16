@@ -34,7 +34,7 @@ class AdminBoards extends Admin
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new OutputPanelManageBoards($this->domain, false);
+        $output_panel = new OutputPanelManageBoards($this->site_domain, false);
         $output_panel->main([], false);
     }
 

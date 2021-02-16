@@ -108,7 +108,7 @@ declare(strict_types=1);
                 }
                 else
                 {
-                    $success = @mkdir($current_path, null, false);
+                    $success = @mkdir($current_path, 0777, false);
                     $success = chmod($current_path, octdec($chmod));
                 }
             }
