@@ -266,6 +266,10 @@ form {
 	text-decoration: none;
 }
 
+.plaintext {
+	white-space: pre-wrap;
+}
+
 /* OP post */
 .op.post-header-info {
     margin-left: 1.5em;
