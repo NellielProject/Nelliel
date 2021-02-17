@@ -302,20 +302,14 @@ class OutputPost extends Output
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
         $comment_data['noreferrer_nofollow'] = $this->site_domain->setting('noreferrer_nofollow');
+        $comment = $post_data['comment'];
 
-        if (nel_true_empty($post_data['comment']))
+        if (nel_true_empty($comment))
         {
             $comment_data['comment_lines'][]['line']['text'] = $this->domain->setting('no_comment_text');
         }
         else
         {
-            $comment = trim($post_data['comment']);
-
-            if ($this->domain->setting('filter_combining_characters'))
-            {
-                $comment = $this->output_filter->filterUnicodeCombiningCharacters($comment);
-            }
-
             if (NEL_USE_RENDER_CACHE && isset($post_data['render_cache']['comment_data']))
             {
                 $parsed_comment = $post_data['render_cache']['comment_data'];
@@ -420,6 +414,23 @@ class OutputPost extends Output
             return $comment_data;
         }
 
+        $comment = $comment_text;
+
+        if ($this->domain->setting('trim_comment_newlines_start'))
+        {
+            $comment = ltrim($comment, "\n\r");
+        }
+
+        if ($this->domain->setting('trim_comment_newlines_end'))
+        {
+            $comment = rtrim($comment, "\n\r");
+        }
+
+        if ($this->domain->setting('filter_combining_characters'))
+        {
+            $comment = $this->output_filter->filterUnicodeCombiningCharacters($comment);
+        }
+
         $greentext_regex = '#^\s*>[^>]#';
         $url_protocols = $this->domain->setting('url_protocols');
         $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
@@ -428,7 +439,7 @@ class OutputPost extends Output
         $create_url_links = $this->domain->setting('create_url_links');
         $url_link_total = 0;
         $max_url_links = $this->domain->setting('max_url_links');
-        $comment_lines = $this->output_filter->newlinesToArray($comment_text);
+        $comment_lines = $this->output_filter->newlinesToArray($comment);
         $line_count = count($comment_lines);
         $last_i = $line_count - 1;
         $i = 0;

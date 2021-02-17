@@ -97,8 +97,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['reply_renzoku', '20', 0, '']);
         $this->insertDefaultRow(['max_cites', '30', 0, '']);
         $this->insertDefaultRow(['max_crossboard_cites', '15', 0, '']);
-        $this->insertDefaultRow(['trim_comment_start', '0', 0, '']);
-        $this->insertDefaultRow(['trim_comment_end', '1', 0, '']);
+        $this->insertDefaultRow(['trim_comment_newlines_start', '0', 0, '']);
+        $this->insertDefaultRow(['trim_comment_newlines_end', '1', 0, '']);
         $this->insertDefaultRow(['anonymous_names', '["Anonymous"]', 0, '']);
 
         // Content handling

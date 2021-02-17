@@ -79,20 +79,6 @@ class PostData
         $subject = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
         $post->changeData('subject', $this->fieldMaxCheck('subject', $subject));
         $comment = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
-
-        if(!nel_true_empty($comment))
-        {
-            if ($this->domain->setting('trim_comment_start'))
-            {
-                $comment = ltrim($comment);
-            }
-
-            if ($this->domain->setting('trim_comment_end'))
-            {
-                $comment = rtrim($comment);
-            }
-        }
-
         $post->changeData('comment', $this->fieldMaxCheck('comment', $comment));
         $post->changeData('fgsfds', $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string'));
         $post->changeData('post_password', $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string'));
