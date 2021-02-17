@@ -124,7 +124,8 @@ class TableBoardConfig extends Table
 
         // Page rendering
         $this->insertDefaultRow(['date_format', 'Y/m/d (D) H:i:s', 0, '']);
-        $this->insertDefaultRow(['abbreviate_thread', '5', 0, '']);
+        $this->insertDefaultRow(['index_thread_replies', '5', 0, '']);
+        $this->insertDefaultRow(['index_sticky_replies', '1', 0, '']);
         $this->insertDefaultRow(['threads_per_page', '10', 0, '']);
         $this->insertDefaultRow(['comment_display_lines', '15', 0, '']);
         $this->insertDefaultRow(['filter_combining_characters', '0', 0, '']);

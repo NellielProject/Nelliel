@@ -1,7 +1,5 @@
 <?php
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
@@ -41,8 +39,12 @@ class RateLimit
         $prepared = $this->database->prepare(
                 'SELECT "record" FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "rate_id" = :rate_id');
         $prepared->bindValue(':rate_id', nel_prepare_hash_for_storage($rate_id), PDO::PARAM_LOB);
-        $this->records[$rate_id] = unserialize(
-                $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN));
+        $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+        if (!empty($result))
+        {
+            $this->records[$rate_id] = unserialize($result);
+        }
     }
 
     private function storeRecord(string $rate_id)

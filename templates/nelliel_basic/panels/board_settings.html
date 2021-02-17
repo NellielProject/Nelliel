@@ -248,9 +248,12 @@
 		{{# date_format }}
 			{{> panels/pieces/settings_text }}
 		{{/ date_format }}
-		{{# abbreviate_thread }}
+		{{# index_thread_replies }}
 			{{> panels/pieces/settings_number }}
-		{{/ abbreviate_thread }}
+		{{/ index_thread_replies }}
+		{{# index_sticky_replies }}
+			{{> panels/pieces/settings_number }}
+		{{/ index_sticky_replies }}
 		{{# threads_per_page }}
 			{{> panels/pieces/settings_number }}
 		{{/ threads_per_page }}
