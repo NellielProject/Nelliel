@@ -115,9 +115,11 @@ class OutputPanelUsers extends Output
 
             $domain_list = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
                     PDO::FETCH_ASSOC);
+            array_unshift($domain_list, ['board_id' => Domain::ALL_BOARDS]); // For all boards
             array_unshift($domain_list, ['board_id' => Domain::SITE]); // For site domain
-            $query = 'SELECT "role_id", "role_title" FROM "' . NEL_ROLES_TABLE . '"';
+            $query = 'SELECT "role_id", "role_title", "role_level" FROM "' . NEL_ROLES_TABLE . '" ORDER BY "role_level" ASC';
             $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+
 
             foreach ($domain_list as $domain)
             {
