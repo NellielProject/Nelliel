@@ -208,6 +208,8 @@ class OutputPost extends Output
             $header_data['modmode_headers'] = $modmode_headers;
         }
 
+        $header_data['thread_page'] = sprintf($this->site_domain->setting('thread_filename_format'), $thread_content_id->threadID()) . NEL_PAGE_EXT;
+
         if (!$response)
         {
             $thread_headers['thread_content_id'] = $thread_content_id->getIDString();
