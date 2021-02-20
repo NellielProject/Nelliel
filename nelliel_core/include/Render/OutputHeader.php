@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -23,19 +22,15 @@ class OutputHeader extends Output
     {
         $this->renderSetup();
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
-        $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
+        $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
-
-        if ($this->render_data['show_styles'])
-        {
-            $this->render_data['styles'] = $output_menu->styles([], true);
-        }
-
+        $this->render_data['styles'] = $output_menu->styles([], true);
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $this->render_data['use_site_header'] = true;
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
-        $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting('description') : '';
+        $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
+                'description') : '';
         $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
@@ -46,14 +41,9 @@ class OutputHeader extends Output
         $this->renderSetup();
         $uri = $parameters['uri'] ?? $this->domain->reference('board_directory');
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
-        $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
+        $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
-
-        if ($this->render_data['show_styles'])
-        {
-            $this->render_data['styles'] = $output_menu->styles([], true);
-        }
-
+        $this->render_data['styles'] = $output_menu->styles([], true);
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $this->render_data['board_navigation'] = $output_navigation->boardLinks([], true);
@@ -66,7 +56,8 @@ class OutputHeader extends Output
             $this->render_data['name'] = ' - ' . $board_name;
         }
 
-        $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting('description') : '';
+        $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
+                'description') : '';
         $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
@@ -80,14 +71,9 @@ class OutputHeader extends Output
         $index_render = $parameters['index_render'] ?? false;
         $this->render_data['sfw'] = $parameters['sfw'] ?? false;
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
-        $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
+        $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
-
-        if ($this->render_data['show_styles'])
-        {
-            $this->render_data['styles'] = $output_menu->styles([], true);
-        }
-
+        $this->render_data['styles'] = $output_menu->styles([], true);
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $this->render_data['board_navigation'] = $output_navigation->boardLinks([], true);
@@ -100,7 +86,8 @@ class OutputHeader extends Output
             $this->render_data['name'] = ' - ' . $board_name;
         }
 
-        $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting('description') : '';
+        $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
+                'description') : '';
         $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
@@ -113,7 +100,7 @@ class OutputHeader extends Output
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['panel'] = $parameters['panel'] ?? '';
         $this->render_data['section'] = $parameters['section'] ?? '';
-        $this->render_data['show_styles'] = $parameters['show_styles'] ?? true;
+        $this->render_data['show_styles'] = true;
         $this->render_data['is_panel'] = $parameters['is_panel'] ?? false;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
@@ -127,11 +114,7 @@ class OutputHeader extends Output
             $this->render_data['area'] = $parameters['area'] ?? _gettext('Board Management');
         }
 
-        if ($this->render_data['show_styles'])
-        {
-            $this->render_data['styles'] = $output_menu->styles([], true);
-        }
-
+        $this->render_data['styles'] = $output_menu->styles([], true);
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $output = $this->output('header', $data_only, true, $this->render_data);

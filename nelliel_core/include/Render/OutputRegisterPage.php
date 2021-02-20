@@ -53,7 +53,7 @@ class OutputRegisterPage extends Output
         $this->render_data['use_register_recaptcha'] = $this->domain->setting('use_register_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -70,7 +70,7 @@ class OutputRegisterPage extends Output
         $this->render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'account', 'section' => 'login']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

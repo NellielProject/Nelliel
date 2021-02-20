@@ -84,6 +84,9 @@ class OutputIndex extends Output
                 '?module=captcha&actions=generate&no-display';
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
+        $this->render_data['show_styles'] = true;
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['styles'] = $output_menu->styles([], true);
         $index_basename = 'index';
 
         if (empty($thread_list))
@@ -197,7 +200,7 @@ class OutputIndex extends Output
     private function doOutput(array $gen_data, string $index_basename, bool $data_only, JSONIndex $json_index)
     {
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
         if ($this->write_mode)

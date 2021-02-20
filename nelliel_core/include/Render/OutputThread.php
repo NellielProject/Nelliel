@@ -113,6 +113,9 @@ class OutputThread extends Output
         $this->render_data['thread_info_id'] = 'thread-header-info-' . $thread_content_id;
         $this->render_data['thread_options_id'] = 'thread-header-options-' . $thread_content_id;
         $this->render_data['board_id'] = $this->domain->id();
+        $this->render_data['show_styles'] = true;
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['styles'] = $output_menu->styles([], true);
 
         foreach ($treeline as $post_data)
         {

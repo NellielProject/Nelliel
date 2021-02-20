@@ -47,6 +47,9 @@ class OutputOverboard extends Output
         $gen_data['index_rendering'] = true;
         $this->render_data['hide_post_select'] = true;
         $this->render_data['hide_file_select'] = true;
+        $this->render_data['show_styles'] = true;
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['styles'] = $output_menu->styles([], true);
         $threads_on_page = 0;
 
         for ($i = 0; $i <= $thread_count; $i ++)
@@ -55,7 +58,7 @@ class OutputOverboard extends Output
             {
                 $this->render_data['index_navigation'] = false;
                 $output_footer = new OutputFooter($this->site_domain, $this->write_mode);
-                $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
+                $this->render_data['footer'] = $output_footer->render([], true);
                 $output = $this->output('basic_page', $data_only, true, $this->render_data);
                 $index_filename = 'index' . NEL_PAGE_EXT;
 
