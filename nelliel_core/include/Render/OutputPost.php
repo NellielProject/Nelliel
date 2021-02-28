@@ -439,8 +439,6 @@ class OutputPost extends Output
         $line_split_regex = '#((?:' . $url_protocols . '):\/\/[^\s]+)|(>>[\d]+)|(>>>\/.+?\/[\d]?+)|(\s)#';
         $cites = new \Nelliel\Cites($this->database);
         $create_url_links = $this->domain->setting('create_url_links');
-        $url_link_total = 0;
-        $max_url_links = $this->domain->setting('max_url_links');
         $comment_lines = $this->output_filter->newlinesToArray($comment);
         $line_count = count($comment_lines);
         $last_i = $line_count - 1;
@@ -478,13 +476,11 @@ class OutputPost extends Output
                     $entry['url'] = $cite_url;
                     $entry['text'] = $chunk;
                 }
-                else if ($create_url_links && $url_link_total < $max_url_links &&
-                        preg_match($url_split_regex, $chunk) === 1)
+                else if ($create_url_links && preg_match($url_split_regex, $chunk) === 1)
                 {
                     $entry['link'] = true;
                     $entry['url'] = $chunk;
                     $entry['text'] = $chunk;
-                    $url_link_total ++;
                 }
                 else if (preg_match($greentext_regex, $chunk) === 1)
                 {

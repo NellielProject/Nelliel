@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Post;
 
@@ -127,6 +126,16 @@ class PostData
                 nel_derp(45,
                         sprintf(_gettext('Comment contains too many cross-board cites. Maximum is %d.'),
                                 $this->domain->setting('max_crossboard_cites')));
+            }
+
+            $url_protocols = $this->domain->setting('url_protocols');
+            $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
+
+            if (preg_match_all($url_split_regex, $post->data('comment')) > $this->domain->setting('max_comment_urls'))
+            {
+                nel_derp(46,
+                        sprintf(_gettext('Comment contains too many URLs. Maximum is %d.'),
+                                $this->domain->setting('max_comment_urls')));
             }
         }
     }

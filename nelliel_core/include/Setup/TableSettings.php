@@ -228,7 +228,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'create_url_links', '', '1', 'Convert URLs into links', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'url_protocols', '', 'http|https|ftp|sftp|irc|nntp', 'Protocols which will be parsed to links (must be separated with |)', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'url_prefix', '', '', 'Prefix that will be added to URLs', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_url_links', '', '15', 'Maximum URL links to generate', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_comment_urls', '', '15', 'Maximum URL links to generate', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_original_name', '', '1', 'Display the original file name', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_content_disclaimer', '', '', 'Disclaimer added to the bottom of posts on this board', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_top', '', '1', 'Display index navigation at top of page', '{"type":"checkbox"}']);
