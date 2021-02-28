@@ -140,6 +140,58 @@ class PostData
         }
     }
 
+    // Most of this is based on vichan's slugify
+    public function generateSlug(ContentPost $post): string
+    {
+        $slug = '';
+        //$max_length = $this->domain->setting('max_slug_length');
+        $max_length = 30;
+
+        if (!nel_true_empty($post->data('subject')))
+        {
+            $base_text = $post->data('subject');
+        }
+        else if (!nel_true_empty($post->data('comment')))
+        {
+            $base_text = $post->data('comment');
+        }
+        else
+        {
+            $base_text = '';
+        }
+
+        // Convert non-ASCII to ASCII equivalents if possible
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $base_text);
+
+        // Only keep alphanumeric characters
+        $slug = preg_replace('/[^a-zA-Z0-9]/', '-', $slug);
+
+        // Replace multiple dashes with single ones
+        $slug = preg_replace('/-+/', '-', $slug);
+
+        // Strip dashes at the beginning and at the end
+        $slug = preg_replace('/^-|-$/', '', $slug);
+
+        // Limit slug length, attempting to not break words
+        $matches = array();
+        preg_match('/^(.{0,' . $max_length . '})\b(?=\W|$)/', $slug, $matches);
+
+        // If the base text is actually one really long word or something, just truncate it
+        if (empty($matches))
+        {
+            $slug = substr($slug, 0, $max_length);
+        }
+        else
+        {
+            $slug = $matches[1];
+        }
+
+        // Make lowercase
+        $slug = strtolower($slug);
+
+        return $slug;
+    }
+
     public function checkEntry($post_item, $type)
     {
         if ($type === "integer" || $type === "int")
