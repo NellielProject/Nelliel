@@ -143,10 +143,10 @@ class ContentPost extends ContentHandler
     {
         $file_handler = nel_utilities()->fileHandler();
         $file_handler->createDirectory(
-                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM);
+                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM, true);
         $file_handler->createDirectory(
                 $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
-                NEL_DIRECTORY_PERM);
+                NEL_DIRECTORY_PERM, true);
     }
 
     public function addCites()

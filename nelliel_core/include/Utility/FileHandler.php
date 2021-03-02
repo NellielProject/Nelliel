@@ -1,7 +1,5 @@
 <?php
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
@@ -86,7 +84,11 @@ declare(strict_types=1);
         if (!$recursive)
         {
             $success = @mkdir($directory, 0777, false);
-            $success = chmod($directory, octdec($chmod));
+
+            if ($success)
+            {
+                $success = chmod($directory, octdec($chmod));
+            }
         }
         else
         {
@@ -109,7 +111,11 @@ declare(strict_types=1);
                 else
                 {
                     $success = @mkdir($current_path, 0777, false);
-                    $success = chmod($current_path, octdec($chmod));
+
+                    if ($success)
+                    {
+                        $success = chmod($current_path, octdec($chmod));
+                    }
                 }
             }
         }

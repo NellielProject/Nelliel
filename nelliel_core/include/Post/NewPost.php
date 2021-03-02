@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Post;
 
@@ -120,6 +119,7 @@ class NewPost
             $thread->changeData('last_update', $time['time']);
             $thread->changeData('last_update_milli', $time['milli']);
             $thread->changeData('post_count', 1);
+            $thread->changeData('slug', $thread->generateSlug($post));
             $thread->writeToDatabase();
             $thread->createDirectories();
         }
@@ -247,8 +247,7 @@ class NewPost
         if ($post->data('parent_thread') != 0)
         {
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . $this->domain->reference('threads_table') .
-                    '" WHERE "thread_id" = ?');
+                    'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
             $thread_info = $this->database->executePreparedFetch($prepared, [$post->data('parent_thread')],
                     PDO::FETCH_ASSOC, true);
 

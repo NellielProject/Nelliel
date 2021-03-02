@@ -11,6 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Cites;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\ContentPost;
+use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -37,6 +38,8 @@ class OutputPost extends Output
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
         $post = new ContentPost($post_content_id, $this->domain);
+        $thread = new ContentThread($thread_content_id, $this->domain);
+        $thread->loadFromDatabase();
         $post->loadFromDatabase();
 
         if (NEL_USE_RENDER_CACHE)
@@ -52,9 +55,7 @@ class OutputPost extends Output
             }
         }
 
-        $thread_format = sprintf($this->site_domain->setting('thread_filename_format'), $thread_content_id->threadID());
-        $web_paths['thread_page'] = $this->domain->reference('page_web_path') . $thread_content_id->threadID() . '/' .
-                $thread_format . NEL_PAGE_EXT;
+        $web_paths['thread_page'] = $thread->getURL();
         $web_paths['thread_src'] = $this->domain->reference('src_web_path') . $thread_content_id->threadID() . '/';
         $web_paths['thread_preview'] = $this->domain->reference('preview_web_path') . $thread_content_id->threadID() .
                 '/';

@@ -231,6 +231,12 @@
 		{{# store_exif_data }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ store_exif_data }}
+		{{# max_slug_length }}
+			{{> panels/pieces/settings_number }}
+		{{/ max_slug_length }}
+		{{# slugify_thread_url }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ slugify_thread_url }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}

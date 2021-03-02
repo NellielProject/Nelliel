@@ -149,7 +149,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_op_upload', '', '1', 'Require a file or embed to start new thread', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_reply_upload', '', '0', 'Require a file or embed for all posts', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_thread_duplicates', '', '1', 'Check for duplicates in current thread when replying', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_op_duplicates', '', '1', 'Check for duplicates in other op posts when creating new thread', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_op_duplicates', '', '1', 'Check for duplicates in other OPs when creating new thread', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_spoilers', '', '1', 'Enable spoilers for uploads', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '', '1', 'Limit the number of uploads in a thread', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_thread_uploads', '', '1000', 'Maximum number of uploads in a thread', '{"type":"number"}']);
@@ -193,6 +193,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_archive_threads', '', '1000', 'Maximum threads kept in archive', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'do_archive_pruning', '', '1', 'Prune oldest threads in archive when limit is reached', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'store_exif_data', '', '1', 'Store EXIF data from images (if present)', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_slug_length', '', '80', 'Maximum characters in the thread URL slug', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'slugify_thread_url', '', '0', 'Use semantic URL (slug) for thread', '{"type":"checkbox"}']);
 
         // Page rendering
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'date_format', '', 'Y/m/d (D) H:i:s', 'Format for post time (uses PHP date() function)', '{"type":"text"}']);
