@@ -287,7 +287,7 @@ class Setup
         $this->file_handler->createDirectory($references['src_path'], NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory($references['preview_path'], NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory($references['page_path'], NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($references['banner_path'], NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($references['banners_path'], NEL_DIRECTORY_PERM, true);
     }
 
     public function installCoreTemplates()

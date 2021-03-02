@@ -59,7 +59,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['src_dir'] = 'src';
         $new_reference['preview_dir'] = 'preview';
         $new_reference['page_dir'] = 'threads';
-        $new_reference['banner_dir'] = 'banners';
+        $new_reference['banners_dir'] = 'banners';
         $new_reference['board_path'] = $board_path;
         $new_reference['board_web_path'] = $board_web_path;
         $new_reference['src_path'] = $board_path . $new_reference['src_dir'] . '/';
@@ -68,8 +68,8 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['preview_web_path'] = $board_web_path . rawurlencode($new_reference['preview_dir']) . '/';
         $new_reference['page_path'] = $board_path . $new_reference['page_dir'] . '/';
         $new_reference['page_web_path'] = $board_web_path . rawurlencode($new_reference['page_dir']) . '/';
-        $new_reference['banner_path'] = $board_path . $new_reference['banner_dir'] . '/';
-        $new_reference['banner_web_path'] = $board_web_path . rawurlencode($new_reference['banner_dir']) . '/';
+        $new_reference['banners_path'] = $board_path . $new_reference['banners_dir'] . '/';
+        $new_reference['banners_web_path'] = $board_web_path . rawurlencode($new_reference['banners_dir']) . '/';
         $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
         $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
         $new_reference['content_table'] = $new_reference['db_prefix'] . '_content';
