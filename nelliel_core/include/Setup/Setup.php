@@ -253,6 +253,7 @@ class Setup
         $this->file_handler->createDirectory(NEL_GENERATED_FILES_PATH, NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory(NEL_GENERAL_FILES_PATH, NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH, NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory(NEL_BANNERS_FILES_PATH, NEL_DIRECTORY_PERM, true);
         echo _gettext('Core directories created.'), '<br>';
     }
 
@@ -283,11 +284,10 @@ class Setup
     public function createBoardDirectories(string $board_id)
     {
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
-        $references = $domain->reference();
-        $this->file_handler->createDirectory($references['src_path'], NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($references['preview_path'], NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($references['page_path'], NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($references['banners_path'], NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('src_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('preview_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('page_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('banners_path'), NEL_DIRECTORY_PERM, true);
     }
 
     public function installCoreTemplates()

@@ -8,11 +8,31 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Domains\Domain;
+
 class Banners
 {
+    protected $domain;
 
-    function __construct()
+    function __construct(Domain $domain)
     {
+        $this->domain = $domain;
+    }
+
+    public function dispatch(array $inputs)
+    {
+        switch ($inputs['actions'][0])
+        {
+            case 'get-random':
+                $banner = $this->getRandomBanner($this->domain->reference('banners_path'));
+
+                if (!nel_true_empty($banner))
+                {
+                    $this->serveBanner($this->domain->reference('banners_web_path'), $banner);
+                }
+
+                break;
+        }
     }
 
     public function getRandomBanner(string $banners_path): string

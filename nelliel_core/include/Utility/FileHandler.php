@@ -259,6 +259,12 @@ declare(strict_types=1);
             bool $file_object = true)
     {
         $file_list = array();
+
+        if (!file_exists($path))
+        {
+            return $file_list;
+        }
+
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
         $iterator->setMaxDepth($recursion_depth);
 

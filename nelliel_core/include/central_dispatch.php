@@ -94,6 +94,11 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
     switch ($inputs['module'])
     {
+        case 'banners':
+            $banners = new \Nelliel\Banners($domain);
+            $banners->dispatch($inputs);
+            break;
+
         case 'captcha':
             $captcha = new \Nelliel\CAPTCHA($domain);
             $captcha->dispatch($inputs);
