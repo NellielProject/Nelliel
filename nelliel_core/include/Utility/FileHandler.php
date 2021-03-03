@@ -256,7 +256,7 @@ declare(strict_types=1);
     }
 
     public function recursiveFileList($path, int $recursion_depth = -1, bool $include_directories = false,
-            bool $file_object = true)
+            bool $names_only = false)
     {
         $file_list = array();
 
@@ -275,13 +275,13 @@ declare(strict_types=1);
                 continue;
             }
 
-            if ($file_object)
+            if ($names_only)
             {
-                $file_list[] = $file;
+                $file_list[] = $file->getFilename();
             }
             else
             {
-                $file_list[] = $file->getRealPath();
+                $file_list[] = $file;
             }
         }
 
