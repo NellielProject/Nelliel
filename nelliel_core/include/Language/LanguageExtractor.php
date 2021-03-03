@@ -134,7 +134,7 @@ class LanguageExtractor
             }
 
             // New stuff starts here
-            $contents = file_get_contents($file);
+            $contents = file_get_contents($file->getPathname());
             $parsed_tokens = token_get_all($contents);
             $function_found = false;
             $last_not_token = '';
@@ -219,11 +219,11 @@ class LanguageExtractor
 
     private function addPHPMatch(array &$strings, array $entry, int $default_category)
     {
-        $category = null;
-        $msgid = null;
-        $msgid_plural = null;
-        $domain = null;
-        $context = null;
+        $category = '';
+        $msgid = '';
+        $msgid_plural = '';
+        $domain = '';
+        $context = '';
 
         if ($entry['prefix'] === '')
         {
@@ -270,7 +270,7 @@ class LanguageExtractor
             $category = $entry[5];
         }
 
-        if (!is_null($category))
+        if ($category !== '')
         {
             $value = $this->getCategoryValue($category);
             $category = ($value !== false) ? $value : $default_category;
@@ -281,14 +281,14 @@ class LanguageExtractor
             $category = $default_category;
         }
 
-        if (!is_null($domain))
+        if ($domain !== '')
         {
             $strings[$category][$msgid]['domain'] = $domain;
         }
 
         $strings[$category][$msgid]['msgid'] = $msgid;
 
-        if (!is_null($msgid_plural))
+        if ($msgid_plural !== '')
         {
             $strings[$category][$msgid]['msgid_plural'] = $msgid_plural;
         }
@@ -303,7 +303,7 @@ class LanguageExtractor
         }
     }
 
-    private function parseHTMLFiles(array $strings, string $default_category)
+    private function parseHTMLFiles(array $strings, int $default_category)
     {
         $file_handler = nel_utilities()->fileHandler();
         $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
@@ -312,7 +312,7 @@ class LanguageExtractor
 
         foreach ($html_files as $file)
         {
-            $file_id = str_replace(NEL_BASE_PATH, '', $file);
+            $file_id = str_replace(NEL_BASE_PATH, '', $file->getPathname());
 
             if ($file->getExtension() !== 'html')
             {
@@ -366,7 +366,7 @@ class LanguageExtractor
         return $strings;
     }
 
-    private function parseDatabaseEntries(array $strings, string $default_category)
+    private function parseDatabaseEntries(array $strings, int $default_category)
     {
         $database = $this->domain->database();
         $filetype_labels = $database->executeFetchAll('SELECT "type_label" FROM "' . NEL_FILETYPES_TABLE . '"',
