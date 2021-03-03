@@ -31,7 +31,6 @@ class OutputHeader extends Output
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
                 'description') : '';
-        $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -58,7 +57,12 @@ class OutputHeader extends Output
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
                 'description') : '';
-        $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
+        $this->render_data['show_banner'] = $this->site_domain->setting('show_site_banners') ||
+                $this->site_domain->setting('show_board_banners');
+        $this->render_data['banner_display_width'] = $this->site_domain->setting('banner_display_width');
+        $this->render_data['banner_display_height'] = $this->site_domain->setting('banner_display_height');
+        $this->render_data['banner_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                http_build_query(['module' => 'banners', 'actions' => 'get-random', 'board-id' => $this->domain->id()]);
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -88,7 +92,11 @@ class OutputHeader extends Output
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
                 'description') : '';
-        $this->render_data['banner_url'] = ($this->domain->setting('show_banner')) ? $this->domain->setting('banner') : '';
+        $this->render_data['show_banner'] = $this->site_domain->setting('show_site_banners');
+        $this->render_data['banner_display_width'] = $this->site_domain->setting('banner_display_width');
+        $this->render_data['banner_display_height'] = $this->site_domain->setting('banner_display_height');
+        $this->render_data['banner_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                http_build_query(['module' => 'banners', 'actions' => 'get-random']);
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }

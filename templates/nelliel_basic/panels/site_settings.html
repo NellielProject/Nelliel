@@ -45,6 +45,26 @@
 		{{> panels/pieces/settings_number }}
 	{{/ max_delete_items }}
 	<div class="display-row">
+	<hr class="display_cell">
+	</div>
+	<div class="display-row">
+		<span class="display-cell">
+			<span class="bold" data-i18n="gettext">Baners</span>
+		</span>
+	</div>
+	{{# show_site_banners }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ show_site_banners }}
+	{{# show_board_banners }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ show_board_banners}}
+	{{# banner_display_width }}
+		{{> panels/pieces/settings_number }}
+	{{/ banner_display_width }}
+	{{# banner_display_height }}
+		{{> panels/pieces/settings_number }}
+	{{/ banner_display_height }}
+	<div class="display-row">
 		<hr class="display_cell">
 	</div>
 	<div class="display-row">

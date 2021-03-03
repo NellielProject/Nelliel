@@ -372,6 +372,12 @@ form {
 }
 
 /* Other */
+.header-banner {
+	clear: both;
+	margin: auto;
+	text-align: center;
+}
+
 .bold {
     font-weight: bold;
 }
