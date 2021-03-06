@@ -52,6 +52,7 @@ define('NEL_TEMPLATES_TABLE', 'nelliel_templates');
 define('NEL_USER_ROLES_TABLE', 'nelliel_user_roles');
 define('NEL_USERS_TABLE', 'nelliel_users');
 define('NEL_VERSIONS_TABLE', 'nelliel_version');
+define('NEL_WORD_FILTERS_TABLE', 'nelliel_word_filters');
 
 define('NEL_ASSETS_FILES_PATH', NEL_BASE_PATH . NEL_ASSETS_DIR . '/');
 define('NEL_CONFIG_FILES_PATH', NEL_CORE_PATH . 'configuration/');

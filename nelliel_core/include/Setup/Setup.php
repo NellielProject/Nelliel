@@ -1,7 +1,5 @@
 <?php
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Nelliel\Setup;
 
@@ -216,8 +214,8 @@ class Setup
         $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
         $blotter_table->createTable();
 
-        // NOTE: Tables must be created in order of:
-        // board data -> file filters -> if thens -> overboard -> reports -> cites
+        // NOTE: The following tables rely on the board data table
+        // Board data must be created first!
         $board_data_table = new TableBoardData($this->database, $this->sql_compatibility);
         $board_data_table->createTable();
         $file_filters_table = new TableFileFilters($this->database, $this->sql_compatibility);
@@ -230,6 +228,8 @@ class Setup
         $reports_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
         $cites_table = new TableCites($this->database, $this->sql_compatibility);
         $cites_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $word_filters_table = new TableWordFilters($this->database, $this->sql_compatibility);
+        $word_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
 
         // NOTE: Tables must be created in order of:
         // roles -> permissions -> role permissions -> users -> user roles
