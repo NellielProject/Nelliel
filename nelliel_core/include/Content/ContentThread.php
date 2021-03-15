@@ -189,7 +189,7 @@ class ContentThread extends ContentHandler
     protected function verifyModifyPerms()
     {
         $post = new ContentPost($this->content_id, $this->domain);
-        $post->content_id->changePostID($this->firstPost());
+        $post->content_id->changePostID($this->firstPostID());
         return $post->verifyModifyPerms();
     }
 
