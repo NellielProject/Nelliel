@@ -1,16 +1,18 @@
 nelliel.ui.hideShowThread = function(element, command, content_id) {
-    if(element == null && content_id == null) {
+    if (element == null && content_id == null) {
         return;
     }
+    
+    var store_update = true;
 
-    if(content_id == null) {
+    if (content_id == null) {
         content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     }
    
     var post_container = document.getElementById("post-container-" + content_id.id_string);
     var thread_header_options = post_container.querySelector(".thread-header-options");
     
-    if(element == null) {
+    if (element == null) {
         element = thread_header_options.querySelector(".toggle-thread");
     }
 
@@ -25,39 +27,45 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
     nelliel.ui.toggleHidden(expand_thread);
     nelliel.ui.toggleHidden(reply_thread);
 
-    // Special case since OP is (presently) considered to be the thread
-    if (!dataBin.hidden_posts.hasOwnProperty(content_id.id_string)) {
-        nelliel.ui.hideShowPost(element, command, content_id);
-    }
-
-    nelliel.ui.toggleHidden(thread_expand);
-
     if (command === "hide-thread") {
         dataBin.hidden_threads[content_id.id_string] = Date.now();
-    } else if (command === "show-thread") {    
+    } else if (command === "show-thread") {
         delete dataBin.hidden_threads[content_id.id_string];
+    } else if (command === "apply") {
+        store_update = false;
     } else {
         return;
     }
 
-    nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
-    nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
+    if (store_update) {
+        nelliel.core.storeInLocalStorage(dataBin.hidden_threads_id, dataBin.hidden_threads);
+    }
+
+    // Special case since OP is (presently) considered to be the thread
+    if (!dataBin.hidden_posts.hasOwnProperty(content_id.id_string)) {
+        nelliel.ui.hideShowPost(null, null, content_id);
+    }
+ 
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+    nelliel.ui.toggleHidden(thread_expand);
+    nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
 }
 
 nelliel.ui.hideShowPost = function(element, command, content_id) {
-    if(element == null && content_id == null) {
+    if (element == null && content_id == null) {
         return;
     }
+    
+    var store_update = true;
 
-    if(content_id == null) {
+    if (content_id == null) {
         content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     }
 
     var post_container = document.getElementById("post-container-" + content_id.id_string);
     var post_header_options = post_container.querySelector(".post-header-options");
 
-    if(element == null) {
+    if (element == null) {
         element = post_header_options.querySelector(".toggle-post");
     }
 
@@ -70,28 +78,33 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
         dataBin.hidden_posts[content_id.id_string] = Date.now();
     } else if (command == "show-post") {
         delete dataBin.hidden_posts[content_id.id_string];
+    } else if (command === "apply") {
+        store_update = false;
     } else {
-        return
+        return;
     }
 
-    nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
+    if (store_update) {
+        nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
+    }
+
     nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
 nelliel.ui.hideShowFile = function(element, command, content_id) {
-    if(element == null && content_id == null) {
+    if (element == null && content_id == null) {
         return;
     }
 
-    if(content_id == null) {
+    if (content_id == null) {
         content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     }
    
     var file_container = document.getElementById("file-container-" + content_id.id_string);
 
     
-    if(element == null) {
+    if (element == null) {
         element = file_container.querySelector(".toggle-file");
     }
 
@@ -112,17 +125,17 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
 }
 
 nelliel.ui.hideShowEmbed = function(element, command, content_id) {
-    if(element == null && content_id == null) {
+    if (element == null && content_id == null) {
         return;
     }
 
-    if(content_id == null) {
+    if (content_id == null) {
         content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     }
    
     var embed_container = document.getElementById("embed-container-" + content_id.id_string);
     
-    if(element == null) {
+    if (element == null) {
         element = embed_container.querySelector(".toggle-embed");
     }
 
@@ -163,7 +176,7 @@ nelliel.ui.applyHideContent = function() {
 }
 
 nelliel.ui.showHideFileMeta = function(element) {
-    if(element === null) {
+    if (element === null) {
         return;
     }
 
@@ -176,7 +189,7 @@ nelliel.ui.showHideFileMeta = function(element) {
 }
 
 nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
-    if(element === null) {
+    if (element === null) {
         return;
     }
 
@@ -191,7 +204,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
     if (dynamic) {
         var url = "imgboard.php?module=render&action=view-thread&content-id=" + content_id.id_string + "&board-id=" + dataBin.board_id + "&thread=" + content_id.thread_id;
 
-        if(dataBin.is_modmode) {
+        if (dataBin.is_modmode) {
             url = url + "&modmode=true";
         }
         
@@ -203,7 +216,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
         var command2 = "collapse-thread";
     }
 
-    if(command === "expand-thread" || command === "expand-thread-render") {
+    if (command === "expand-thread" || command === "expand-thread-render") {
         dataBin.collapsedThreads[content_id.id_string] = target_element.innerHTML;
         var request = new XMLHttpRequest();
         request.open('GET', url);
@@ -218,7 +231,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
         request.send();
     }
     
-    if(command === "collapse-thread" || command === "collapse-thread-render") {
+    if (command === "collapse-thread" || command === "collapse-thread-render") {
         target_element.innerHTML = dataBin.collapsedThreads[content_id.id_string];
     }
     
@@ -240,7 +253,7 @@ nelliel.ui.highlightPost = function(content_id) {
 }
 
 nelliel.ui.inlineExpandReduce = function(element, command) {
-    if(element === null) {
+    if (element === null) {
         return;
     }
 
@@ -262,7 +275,7 @@ nelliel.ui.inlineExpandReduce = function(element, command) {
 }
 
 nelliel.ui.showLinkedPost = function(element, event) {
-    if(element === null) {
+    if (element === null) {
         return;
     }
 
@@ -303,7 +316,7 @@ nelliel.ui.showLinkedPost = function(element, event) {
 }
 
 nelliel.ui.hideLinkedPost = function(element, event) {
-    if(element === null) {
+    if (element === null) {
         return;
     }
 
@@ -318,7 +331,7 @@ nelliel.ui.hideLinkedPost = function(element, event) {
 }
 
 nelliel.ui.citePost = function(element) {
-    if(element === null) {
+    if (element === null) {
         return;
     }
 
@@ -340,7 +353,7 @@ nelliel.ui.toggleHidden = function(element) {
 }
 
 nelliel.ui.swapContentAttribute = function(element, attribute_name) {
-    if(element === null) {
+    if (element === null) {
         return;
     }
 
@@ -350,7 +363,7 @@ nelliel.ui.swapContentAttribute = function(element, attribute_name) {
 }
 
 nelliel.ui.switchDataCommand = function(element, option_one, option_two) {
-    if(element === null) {
+    if (element === null) {
         return;
     }
 
