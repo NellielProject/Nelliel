@@ -243,7 +243,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 nelliel.ui.highlightPost = function(content_id) {
     var post_container = document.getElementById("post-container-" + content_id.id_string);
     
-    if (post_container !== null) {
+    if (post_container != null) {
         if (post_container.className.indexOf('post-hightlight') === -1) {
             post_container.className += " post-highlight";
         } else {
@@ -281,6 +281,11 @@ nelliel.ui.showLinkedPost = function(element, event) {
 
     var href = element.getAttribute("href");
     var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
+
+    if (anchor_matches == null) {
+        return;
+    }
+
     var post_id = "cid_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
 
     if (document.getElementById("post-cite-popup-" + post_id) !== null) {
@@ -322,6 +327,11 @@ nelliel.ui.hideLinkedPost = function(element, event) {
 
     var href = element.getAttribute("href");
     var anchor_matches = href.match(/#t([0-9]+)p([0-9]+)/);
+
+    if (anchor_matches == null) {
+        return;
+    }
+
     var post_id = "cid_" + anchor_matches[1] + "_" + anchor_matches[2] + "_0";
     var target_popup = document.getElementById("post-cite-popup-" + post_id);
 
@@ -330,12 +340,11 @@ nelliel.ui.hideLinkedPost = function(element, event) {
     }
 }
 
-nelliel.ui.citePost = function(element) {
-    if (element === null) {
+nelliel.ui.citePost = function(content_id) {
+    if (content_id == null) {
         return;
     }
 
-    var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
     var wordswordswords = document.getElementById("wordswordswords");
     wordswordswords.value = wordswordswords.value + '>>' + content_id.post_id + '\n';
 }
