@@ -120,7 +120,7 @@ nelliel.events.processPostClick = function(event) {
         } else if (command === "expand-thread-render" || command === "collapse-thread-render") {
             nelliel.ui.expandCollapseThread(event.target, command, true);
         } else if (command === "cite-post") {
-            nelliel.ui.citePost(event.target);
+            nelliel.ui.citePost(nelliel.core.contentID(event.target.getAttribute("data-content-id")));
         } else if (command === "show-file-meta" || command === "hide-file-meta") {
             nelliel.ui.showHideFileMeta(event.target);
         } else if (command === "add-file-meta") {
@@ -220,13 +220,18 @@ nelliel.posting_form.showNextFileInput = function (element) {
 }
 
 nelliel.core.hashHandler = function () {
-    var hash_match = location.hash.match(/#t([0-9]+)p([0-9]+)/);
+    var post_anchor_match = location.hash.match(/#t([0-9]+)p([0-9]+)/);
+    var cite_match = location.hash.match(/#cite/);
     
-    if (hash_match !== null) {
-        var content_id = nelliel.core.contentID('cid_' + hash_match[1] + '_' + hash_match[2] + '_0');
-        
-        if (hash_match[2] > 1) {
+    if (post_anchor_match != null) {
+        var content_id = nelliel.core.contentID('cid_' + post_anchor_match[1] + '_' + post_anchor_match[2] + '_0');
+
+        if (content_id.post_id != content_id.thread_id) {
             nelliel.ui.highlightPost(content_id);
+        }
+        
+        if (cite_match != null) {
+        	nelliel.ui.citePost(content_id);
         }
     }
 }
