@@ -92,7 +92,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['truncate_long_fields', '0', 0, '']);
         $this->insertDefaultRow(['forced_anonymous', '0', 0, '']);
         $this->insertDefaultRow(['allow_tripcodes', '1', 0, '']);
-        $this->insertDefaultRow(['use_fgsfds', '1', 0, '']);
+        $this->insertDefaultRow(['allow_email_commands', '1', 0, '']);
+        $this->insertDefaultRow(['allow_fgsfds_commands', '1', 0, '']);
         $this->insertDefaultRow(['thread_renzoku', '120', 0, '']);
         $this->insertDefaultRow(['reply_renzoku', '20', 0, '']);
         $this->insertDefaultRow(['max_cites', '30', 0, '']);

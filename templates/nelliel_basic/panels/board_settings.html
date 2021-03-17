@@ -136,9 +136,12 @@
 		{{# allow_tripcodes }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_tripcodes }}
-		{{# use_fgsfds }}
+		{{# allow_email_commands }}
 			{{> panels/pieces/settings_checkbox }}
-		{{/ use_fgsfds }}
+		{{/ allow_email_commands }}
+		{{# allow_fgsfds_commands }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_fgsfds_commands }}
 		{{# thread_renzoku }}
 			{{> panels/pieces/settings_number }}
 		{{/ thread_renzoku }}

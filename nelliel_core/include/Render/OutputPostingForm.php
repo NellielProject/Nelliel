@@ -74,7 +74,7 @@ class OutputPostingForm extends Output
                 'require_op_upload');
         $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
-        $this->render_data['use_fgsfds'] = $this->domain->setting('use_fgsfds');
+        $this->render_data['use_fgsfds'] = $this->domain->setting('allow_fgsfds_commands');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
         $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=captcha&actions=get';

@@ -20,9 +20,10 @@ class FGSFDS
         }
     }
 
-    public function addFromString(string $input): void
+    public function addFromString(string $input, bool $overwrite = false): bool
     {
         $commands = explode(' ', $input);
+        $commands_added = false;
 
         foreach ($commands as $command)
         {
@@ -40,8 +41,13 @@ class FGSFDS
                 $value = null;
             }
 
-            $this->addCommand($command, $value);
+            if($this->addCommand($command, $value, $overwrite))
+            {
+                $commands_added = true;
+            }
         }
+
+        return $commands_added;
     }
 
     public function addCommand(string $command, $value, bool $overwrite = false): bool

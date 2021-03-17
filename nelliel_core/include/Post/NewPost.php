@@ -65,9 +65,25 @@ class NewPost
         $this->isPostOk($post, $time['time']);
 
         // Process FGSFDS
-        $fgsfds = new \Nelliel\FGSFDS($post->data('fgsfds'));
-        $fgsfds->updateCommandData('sage', 'value', true);
-        $post->changeData('sage', $fgsfds->getCommandData('sage', 'value'));
+        $fgsfds = new \Nelliel\FGSFDS();
+
+        if ($this->domain->setting('allow_fgsfds_commands'))
+        {
+            $fgsfds_commands_added = $fgsfds->addFromString($post->data('fgsfds') ?? '');
+        }
+
+        // If there are duplicates, the FGSFDS field takes precedence
+        if ($this->domain->setting('allow_email_commands'))
+        {
+            $email_commands_added = $fgsfds->addFromString($post->data('email') ?? '');
+        }
+
+        if ($fgsfds_commands_added || $email_commands_added)
+        {
+            $post->changeData('email', '');
+        }
+
+        $post->changeData('sage', $fgsfds->commandIsSet('sage'));
         $uploads = $uploads_handler->process($post);
         $spoon = !empty($uploads);
         $post->changeData('content_count', count($uploads));
@@ -125,8 +141,8 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
-                    !$fgsfds->getCommandData('sage', 'value') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
+                            'sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
