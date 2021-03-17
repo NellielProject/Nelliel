@@ -84,7 +84,7 @@ nelliel.setup.setupListeners = function() {
         }
     }
 
-    window.addEventListener("hashchange", nelliel.hashHandler);
+    window.addEventListener("hashchange", nelliel.events.processHashchange);
 }
 
 nelliel.setup.addListenerIfElementExists = function(element, event, event_handler) {
@@ -188,6 +188,10 @@ nelliel.events.processInput = function(event) {
     }
 }
 
+nelliel.events.processHashchange = function(event) {
+	nelliel.core.hashHandler();
+}
+
 nelliel.core.storeInLocalStorage = function(data_path, data) {
     data = (typeof data !== "string") ? JSON.stringify(data) : data;
     localStorage[data_path] = data;
@@ -221,7 +225,7 @@ nelliel.posting_form.showNextFileInput = function (element) {
 
 nelliel.core.hashHandler = function () {
     var post_anchor_match = location.hash.match(/#t([0-9]+)p([0-9]+)/);
-    var cite_match = location.hash.match(/#cite/);
+    var cite_match = location.hash.match(/cite/);
     
     if (post_anchor_match != null) {
         var content_id = nelliel.core.contentID('cid_' + post_anchor_match[1] + '_' + post_anchor_match[2] + '_0');
