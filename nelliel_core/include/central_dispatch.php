@@ -60,7 +60,7 @@ function nel_dispatch_preparation()
     // Add more options here when we implement further domain types
     if (nel_true_empty($inputs['domain_id']))
     {
-        if(!nel_true_empty($inputs['board_id']))
+        if (!nel_true_empty($inputs['board_id']))
         {
             $domain = new \Nelliel\Domains\DomainBoard($inputs['board_id'], nel_database());
         }
@@ -76,7 +76,7 @@ function nel_dispatch_preparation()
 
     $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);
 
-    if($inputs['module'] === 'threads')
+    if ($inputs['module'] === 'threads')
     {
         $snacks = new \Nelliel\Snacks($domain, new \Nelliel\BansAccess(nel_database()));
         $snacks->applyBan();
@@ -159,7 +159,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $content_id = new \Nelliel\Content\ContentID($inputs['content_id']);
             $fgsfds = new \Nelliel\FGSFDS();
 
-            if($session->modmodeRequested())
+            if ($session->modmodeRequested())
             {
                 $session->init(true);
             }
@@ -185,8 +185,9 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     else
                     {
                         $url = $domain->reference('board_directory') . '/' . $domain->reference('page_dir') . '/' .
-                                $fgsfds->getCommandData('noko', 'topic') . '/thread-' .
-                                $fgsfds->getCommandData('noko', 'topic') . '.html';
+                                $fgsfds->getCommandData('noko', 'topic') . '/' .
+                                sprintf(nel_site_domain()->setting('thread_filename_format'),
+                                        $fgsfds->getCommandData('noko', 'topic')) . NEL_PAGE_EXT;
                     }
                 }
                 else
