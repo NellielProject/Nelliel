@@ -133,7 +133,7 @@ class OutputIndex extends Output
             }
 
             $thread_input['omitted_count'] = $thread_data['post_count'] - $index_replies - 1; // -1 to account for OP
-            $gen_data['abbreviate'] = $thread_data['post_count'] > $index_replies;
+            $gen_data['abbreviate'] = $thread_input['omitted_count'] > 0;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
             $abbreviate_start = $thread_data['post_count'] - $index_replies;
             $post_counter = 1;

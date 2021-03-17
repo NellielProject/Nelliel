@@ -66,15 +66,7 @@ class NewPost
 
         // Process FGSFDS
         $fgsfds = new \Nelliel\FGSFDS($post->data('fgsfds'));
-
-        if (!empty($post->data('fgsfds')))
-        {
-            if ($fgsfds->getCommand('sage') !== false)
-            {
-                $fgsfds->modifyCommandData('sage', 'value', true);
-            }
-        }
-
+        $fgsfds->updateCommandData('sage', 'value', true);
         $post->changeData('sage', $fgsfds->getCommandData('sage', 'value'));
         $uploads = $uploads_handler->process($post);
         $spoon = !empty($uploads);
@@ -147,7 +139,7 @@ class NewPost
         $post->addCites();
         $post->storeCache();
         $post->createDirectories();
-        $fgsfds->modifyCommandData('noko', 'topic', $thread->contentID()->threadID());
+        $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()->threadID());
         $src_path = $this->domain->reference('src_path') . $thread->contentID()->threadID() . '/' .
                 $post->contentID()->postID() . '/';
 

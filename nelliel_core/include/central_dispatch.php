@@ -172,7 +172,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $redirect = new \Nelliel\Redirect();
                 $redirect->doRedirect(true);
 
-                if ($fgsfds->getCommand('noko') !== false)
+                if ($fgsfds->commandIsSet('noko'))
                 {
                     if ($session->inModmode($domain))
                     {
