@@ -243,13 +243,19 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 
 nelliel.ui.highlightPost = function(content_id) {
     var post_container = document.getElementById("post-container-" + content_id.id_string);
-    
+
     if (post_container != null) {
-        if (post_container.className.indexOf('post-hightlight') === -1) {
+        if (post_container.className.indexOf('post-highlight') === -1) {
             post_container.className += " post-highlight";
-        } else {
-            post_container.className = post_container.className.replace(/\post-highlight\b/g, "");
         }
+    }
+}
+
+nelliel.ui.unhighlightPost = function(content_id) {
+    var post_container = document.getElementById("post-container-" + content_id.id_string);
+
+    if (post_container != null) {
+        post_container.className = post_container.className.replace(/\post-highlight\b/g, "");
     }
 }
 

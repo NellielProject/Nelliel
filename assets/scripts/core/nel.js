@@ -25,7 +25,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     dataBin.hidden_embeds = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_embeds_id, true);
     dataBin.collapsedThreads = [];
     nelliel.setup.setupListeners();
-    nelliel.core.hashHandler();
+    nelliel.core.hashHandler(null);
     
     if (board_id !== "") {
         nelliel.setup.fillForms(board_id);
@@ -189,7 +189,7 @@ nelliel.events.processInput = function(event) {
 }
 
 nelliel.events.processHashchange = function(event) {
-	nelliel.core.hashHandler();
+	nelliel.core.hashHandler(event);
 }
 
 nelliel.core.storeInLocalStorage = function(data_path, data) {
@@ -223,15 +223,24 @@ nelliel.posting_form.showNextFileInput = function (element) {
     next_file.className = next_file.className.replace(/\bhidden\b/g, "");
 }
 
-nelliel.core.hashHandler = function () {
+nelliel.core.hashHandler = function (event) {
     var post_anchor_match = location.hash.match(/#t([0-9]+)p([0-9]+)/);
     var cite_match = location.hash.match(/cite/);
     
     if (post_anchor_match != null) {
         var content_id = nelliel.core.contentID('cid_' + post_anchor_match[1] + '_' + post_anchor_match[2] + '_0');
 
+        // Don't highlight the post if we're doing a cite
         if (content_id.post_id != content_id.thread_id) {
-            nelliel.ui.highlightPost(content_id);
+            if (cite_match == null) {
+                nelliel.ui.highlightPost(content_id);
+            }
+
+            if (event != null) {
+                var last_anchor_match = event.oldURL.match(/#t([0-9]+)p([0-9]+)/);
+                var last_content_id = nelliel.core.contentID('cid_' + last_anchor_match[1] + '_' + last_anchor_match[2] + '_0');
+                nelliel.ui.unhighlightPost(last_content_id);
+            }
         }
         
         if (cite_match != null) {
