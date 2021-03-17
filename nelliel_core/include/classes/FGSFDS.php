@@ -26,6 +26,13 @@ class FGSFDS
 
         foreach ($commands as $command)
         {
+            $command = utf8_trim($command);
+
+            if ($command === '')
+            {
+                continue;
+            }
+
             $value = explode('=', $command);
 
             if ($value[0] === $command)
