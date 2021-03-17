@@ -41,9 +41,9 @@
 		{{# user_delete_own }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ user_delete_own }}
-		{{# delete_content_renzoku }}
+		{{# delete_post_cooldown }}
 			{{> panels/pieces/settings_number }}
-		{{/ delete_content_renzoku }}
+		{{/ delete_post_cooldown }}
 		{{# safety_level }}
 			{{> panels/pieces/settings_select }}
 		{{/ safety_level }}
@@ -136,9 +136,12 @@
 		{{# allow_tripcodes }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_tripcodes }}
-		{{# use_fgsfds }}
+		{{# allow_email_commands }}
 			{{> panels/pieces/settings_checkbox }}
-		{{/ use_fgsfds }}
+		{{/ allow_email_commands }}
+		{{# allow_fgsfds_commands }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_fgsfds_commands }}
 		{{# thread_renzoku }}
 			{{> panels/pieces/settings_number }}
 		{{/ thread_renzoku }}
@@ -151,6 +154,15 @@
 		{{# max_crossboard_cites }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_crossboard_cites }}
+		{{# trim_comment_newlines_start }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ trim_comment_newlines_start }}
+		{{# trim_comment_newlines_end }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ trim_comment_newlines_end }}
+		{{# anonymous_names }}
+			{{> panels/pieces/settings_text }}
+		{{/ anonymous_names }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}
@@ -219,6 +231,15 @@
 		{{# do_archive_pruning }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ do_archive_pruning }}
+		{{# store_exif_data }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ store_exif_data }}
+		{{# max_slug_length }}
+			{{> panels/pieces/settings_number }}
+		{{/ max_slug_length }}
+		{{# slugify_thread_url }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ slugify_thread_url }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}
@@ -236,9 +257,12 @@
 		{{# date_format }}
 			{{> panels/pieces/settings_text }}
 		{{/ date_format }}
-		{{# abbreviate_thread }}
+		{{# index_thread_replies }}
 			{{> panels/pieces/settings_number }}
-		{{/ abbreviate_thread }}
+		{{/ index_thread_replies }}
+		{{# index_sticky_replies }}
+			{{> panels/pieces/settings_number }}
+		{{/ index_sticky_replies }}
 		{{# threads_per_page }}
 			{{> panels/pieces/settings_number }}
 		{{/ threads_per_page }}
@@ -329,15 +353,21 @@
 		{{# url_prefix }}
 			{{> panels/pieces/settings_text }}
 		{{/ url_prefix }}
-		{{# max_url_links }}
+		{{# max_comment_urls }}
 			{{> panels/pieces/settings_number }}
-		{{/ max_url_links }}
+		{{/ max_comment_urls }}
 		{{# display_original_name }}
 			{{> panels/pieces/settings_text }}
 		{{/ display_original_name }}
 		{{# board_content_disclaimer }}
 			{{> panels/pieces/settings_text }}
 		{{/ board_content_disclaimer }}
+		{{# index_nav_top }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ index_nav_top }}
+		{{# index_nav_bottom }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ index_nav_bottom }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}

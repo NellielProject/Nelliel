@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace Nelliel\Setup;
 
 if (!defined('NELLIEL_VERSION'))
@@ -152,11 +155,28 @@ abstract class Table
         return $this->table_name;
     }
 
-    public function copyFrom($source_table_name)
+    public function copyFrom($source_table_name, array $columns = array())
     {
+        $column_list = '';
+
+        if(empty($columns))
+        {
+            $column_list = '*';
+        }
+        else
+        {
+            foreach($columns as $column)
+            {
+                $column_list .= '"' . $column . '",';
+            }
+
+            $column_list = rtrim($column_list, ',');
+        }
+
+
         if ($this->database->executeFetch('SELECT 1 FROM "' . $this->table_name . '"', PDO::FETCH_COLUMN) === false)
         {
-            $insert_query = 'INSERT INTO "' . $this->table_name . '" SELECT * FROM "' . $source_table_name . '"';
+            $insert_query = 'INSERT INTO "' . $this->table_name . '" SELECT ' . $column_list . ' FROM "' . $source_table_name . '"';
             $prepared = $this->database->prepare($insert_query);
             $this->database->executePrepared($prepared);
         }

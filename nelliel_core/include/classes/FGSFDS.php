@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -9,61 +10,79 @@ if (!defined('NELLIEL_VERSION'))
 
 class FGSFDS
 {
-    private static $raw_fgsfds = '';
     private static $commands = array();
 
-    function __construct(string $raw_fgsfds = null)
+    function __construct(string $input = null)
     {
-        if (!is_null($raw_fgsfds))
+        if (!is_null($input))
         {
-            self::$raw_fgsfds = $raw_fgsfds;
+            $this->addFromString($input);
+        }
+    }
 
-            foreach ($this->parseRaw($raw_fgsfds) as $command)
+    public function addFromString(string $input, bool $overwrite = false): bool
+    {
+        $commands = explode(' ', $input);
+        $commands_added = false;
+
+        foreach ($commands as $command)
+        {
+            $command = utf8_trim($command);
+
+            if ($command === '')
             {
-                $this->addCommand($command);
+                continue;
+            }
+
+            $value = explode('=', $command);
+
+            if ($value[0] === $command)
+            {
+                $value = null;
+            }
+
+            if($this->addCommand($command, $value, $overwrite))
+            {
+                $commands_added = true;
             }
         }
+
+        return $commands_added;
     }
 
-    public function parseRaw(string $raw_fgsfds)
+    public function addCommand(string $command, $value, bool $overwrite = false): bool
     {
-        return preg_split('#[\s,]#u', $raw_fgsfds);
-    }
-
-    public function getAllCommands()
-    {
-        return self::$commands;
-    }
-
-    public function getCommand(string $command)
-    {
-        return self::$commands[$command] ?? false;
-    }
-
-    public function getCommandData(string $command, $data_id)
-    {
-        return self::$commands[$command][$data_id] ?? false;
-    }
-
-    public function addCommand(string $command)
-    {
-        if (!isset(self::$commands[$command]))
+        if (!$overwrite && $this->commandIsSet($command))
         {
-            self::$commands[$command] = array();
-            return true;
+            return false;
         }
 
-        return false;
+        return $this->updateCommandData($command, 'value', $value, true);
     }
 
-    public function modifyCommandData(string $command, $data_id, $data)
+    public function commandIsSet(string $command): bool
     {
-        if (isset(self::$commands[$command]))
+        return isset(self::$commands[$command]);
+    }
+
+    public function getCommandData(string $command, string $key)
+    {
+        return self::$commands[$command][$key] ?? null;
+    }
+
+    public function updateCommandData(string $command, string $key, $value, bool $create = false): bool
+    {
+        if (!$create && !$this->commandIsSet($command))
         {
-            self::$commands[$command][$data_id] = $data;
-            return true;
+            return false;
         }
 
-        return false;
+        self::$commands[$command][$key] = $value;
+        return true;
+    }
+
+    public function removeCommand(string $command): void
+    {
+        unset(self::$commands[$command]);
     }
 }

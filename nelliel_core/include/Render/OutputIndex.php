@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -74,7 +75,8 @@ class OutputIndex extends Output
 
         $index_format = $site_domain->setting('index_filename_format');
         $this->render_data['catalog_url'] = 'catalog.html';
-        $this->render_data['index_navigation'] = true;
+        $this->render_data['index_navigation_top'] = $this->domain->setting('index_nav_top');
+        $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
         $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
@@ -82,6 +84,9 @@ class OutputIndex extends Output
                 '?module=captcha&actions=generate&no-display';
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
+        $this->render_data['show_styles'] = true;
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['styles'] = $output_menu->styles([], true);
         $index_basename = 'index';
 
         if (empty($thread_list))
@@ -120,10 +125,17 @@ class OutputIndex extends Output
             $thread_input['thread_id'] = $thread_content_id;
             $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
             $thread_input['thread_corral_id'] = 'thread-corral-' . $thread_content_id;
-            $thread_input['omitted_count'] = $thread_data['post_count'] - $this->domain->setting('abbreviate_thread');
-            $gen_data['abbreviate'] = $thread_data['post_count'] > $this->domain->setting('abbreviate_thread');
+            $index_replies = $this->domain->setting('index_thread_replies');
+
+            if ($thread_data['sticky'])
+            {
+                $index_replies = $this->domain->setting('index_sticky_replies');
+            }
+
+            $thread_input['omitted_count'] = $thread_data['post_count'] - $index_replies - 1; // -1 to account for OP
+            $gen_data['abbreviate'] = $thread_input['omitted_count'] > 0;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
-            $abbreviate_start = $thread_data['post_count'] - ($this->domain->setting('abbreviate_thread') - 1);
+            $abbreviate_start = $thread_data['post_count'] - $index_replies;
             $post_counter = 1;
 
             foreach ($treeline as $post_data)
@@ -188,7 +200,7 @@ class OutputIndex extends Output
     private function doOutput(array $gen_data, string $index_basename, bool $data_only, JSONIndex $json_index)
     {
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => true], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
         if ($this->write_mode)

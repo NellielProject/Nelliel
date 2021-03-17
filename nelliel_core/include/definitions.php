@@ -16,6 +16,7 @@ define('NEL_SCRIPTS_DIR', 'scripts');
 define('NEL_FONTS_DIR', 'fonts');
 define('NEL_GENERAL_DIR', '.nelliel');
 define('NEL_CAPTCHA_DIR', 'captchas');
+define('NEL_BANNERS_DIR', 'banners');
 
 define('NEL_MAIN_SCRIPT', 'imgboard.php');
 define('NEL_MAIN_SCRIPT_QUERY', 'imgboard.php?');
@@ -25,6 +26,7 @@ define('NEL_JSON_EXT', '.json');
 
 define('NEL_ASSETS_TABLE', 'nelliel_assets');
 define('NEL_BANS_TABLE', 'nelliel_bans');
+define('NEL_BLOTTER_TABLE', 'nelliel_blotter');
 define('NEL_BOARD_DATA_TABLE', 'nelliel_board_data');
 define('NEL_BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
 define('NEL_CAPTCHA_TABLE', 'nelliel_captcha');
@@ -50,6 +52,7 @@ define('NEL_TEMPLATES_TABLE', 'nelliel_templates');
 define('NEL_USER_ROLES_TABLE', 'nelliel_user_roles');
 define('NEL_USERS_TABLE', 'nelliel_users');
 define('NEL_VERSIONS_TABLE', 'nelliel_version');
+define('NEL_WORD_FILTERS_TABLE', 'nelliel_word_filters');
 
 define('NEL_ASSETS_FILES_PATH', NEL_BASE_PATH . NEL_ASSETS_DIR . '/');
 define('NEL_CONFIG_FILES_PATH', NEL_CORE_PATH . 'configuration/');
@@ -62,9 +65,11 @@ define('NEL_LANGUAGES_FILES_PATH', NEL_CORE_PATH . 'languages/');
 define('NEL_LOCALE_FILES_PATH', NEL_LANGUAGES_FILES_PATH . 'locale/');
 define('NEL_STYLES_FILES_PATH', NEL_ASSETS_FILES_PATH . NEL_STYLES_DIR . '/');
 define('NEL_ICON_SETS_FILES_PATH', NEL_ASSETS_FILES_PATH . NEL_ICON_SETS_DIR . '/');
+define('NEL_BANNERS_FILES_PATH', NEL_BASE_PATH . NEL_BANNERS_DIR . '/');
 define('NEL_WAT_FILES_PATH', NEL_INCLUDE_PATH . 'wat/');
 define('NEL_GENERAL_FILES_PATH', NEL_BASE_PATH . NEL_GENERAL_DIR . '/');
 define('NEL_CAPTCHA_FILES_PATH', NEL_GENERAL_FILES_PATH . NEL_CAPTCHA_DIR . '/');
+
 
 $dirname = pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
 
@@ -85,6 +90,7 @@ define('NEL_SCRIPTS_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_SCRIPTS_DIR . '/');
 define('NEL_IMAGES_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_IMAGES_DIR . '/');
 define('NEL_STYLES_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_STYLES_DIR . '/');
 define('NEL_ICON_SETS_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_ICON_SETS_DIR . '/');
+define('NEL_BANNERS_WEB_PATH', NEL_BASE_WEB_PATH . NEL_BANNERS_DIR . '/');
 define('NEL_MAIN_SCRIPT_WEB_PATH', NEL_BASE_WEB_PATH . NEL_MAIN_SCRIPT);
 define('NEL_MAIN_SCRIPT_QUERY_WEB_PATH', NEL_BASE_WEB_PATH . NEL_MAIN_SCRIPT_QUERY);
 define('NEL_GENERAL_WEB_PATH', NEL_GENERAL_DIR . '/');

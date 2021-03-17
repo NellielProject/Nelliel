@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel;
 
 if (!defined('NELLIEL_VERSION'))
@@ -38,35 +40,49 @@ class Report
             $captcha->verifyReCAPTCHA();
         }
 
-        $report_data = array();
-        $report_data['reason'] = $_POST['report_reason'] ?? null;
-
-        if (nel_site_domain()->setting('store_unhashed_ip'))
-        {
-            $report_data['reporter_ip'] = nel_request_ip_address();
-        }
-        else
-        {
-            $report_data['reporter_ip'] = '';
-        }
-
-        $report_data['hashed_reporter_ip'] = nel_request_ip_address(true);
-        $base_content_id = new ContentID();
+        $reports = array();
 
         foreach ($_POST as $name => $value)
         {
-            if ($base_content_id->isContentID($name))
-            {
-                $content_id = new ContentID($name);
-            }
-            else
-            {
-                continue;
-            }
+            $report_data = array();
 
+            if (ContentID::isContentID($name))
+            {
+                if ($value == 'action')
+                {
+                    $report_data['content_id'] = $name;
+                    $report_data['reason'] = $_POST['report_reason'] ?? null;
+
+                    if (nel_site_domain()->setting('store_unhashed_ip'))
+                    {
+                        $report_data['reporter_ip'] = nel_request_ip_address();
+                    }
+                    else
+                    {
+                        $report_data['reporter_ip'] = '';
+                    }
+
+                    $report_data['hashed_reporter_ip'] = nel_request_ip_address(true);
+                }
+
+                $reports[] = $report_data;
+            }
+        }
+
+        $report_count = count($reports);
+
+        if ($report_count > nel_site_domain()->setting('max_report_items'))
+        {
+            nel_derp(130,
+                    sprintf(_gettext('You are trying to report too many items at once. Limit is %d.'),
+                            nel_site_domain()->setting('max_report_items')));
+        }
+
+        foreach ($reports as $report_data)
+        {
             if ($value == 'action')
             {
-                $report_data['content_id'] = $content_id->getIDString();
+
                 $query = 'INSERT INTO "' . NEL_REPORTS_TABLE .
                         '" ("board_id", "content_id", "reporter_ip", "hashed_reporter_ip", "reason") VALUES (?, ?, ?, ?, ?)';
                 $prepared = $this->database->prepare($query);

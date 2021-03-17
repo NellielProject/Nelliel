@@ -1,9 +1,7 @@
 {{# post_headers }}
 <span class="{{ op_reply }} post_header_info">
 	<span class="{{ op_reply }} subject">{{ subject }}</span>
-	{{> thread/pieces/mailto }}
-	<span class="{{ op_reply }} trip-line">{{ tripline }}</span>
-	<span class="capcode">{{ capcode }}</span>
+	{{> thread/pieces/poster_name }}{{> thread/pieces/tripline }}
 	<span class="post-time">{{ post_time }}</span>
 	{{> thread/pieces/poster_id }}
 	<a href="{{ post_number_url }}" class="post-number-link" data-i18n="gettext">No.</a>

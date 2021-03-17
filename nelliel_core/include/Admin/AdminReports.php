@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Admin;
 
 if (!defined('NELLIEL_VERSION'))
@@ -46,7 +48,7 @@ class AdminReports extends Admin
     public function remove()
     {
         $this->verifyAction();
-        $report_id = $_GET['report_id'];
+        $report_id = $_GET['report-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, [$report_id]);
         $this->outputMain(true);

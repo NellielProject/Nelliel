@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Render;
 
 if (!defined('NELLIEL_VERSION'))
@@ -7,6 +9,8 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Admin\AdminBoardSettings;
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -30,6 +34,8 @@ class OutputPanelBoardSettings extends Output
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $admin_board_settings = new AdminBoardSettings(new Authorization($this->database), $this->domain, $this->session, array());
+        $defaults_list = $admin_board_settings->defaultsList();
 
         if ($defaults)
         {
@@ -54,10 +60,10 @@ class OutputPanelBoardSettings extends Output
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
         $prepared = $this->database->prepare(
-                'SELECT "setting_name","setting_value","edit_lock" FROM "' . $table_name . '" WHERE "setting_name" = ?');
+                'SELECT "setting_name","setting_value" FROM "' . $table_name . '" WHERE "setting_name" = ?');
         $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
         $enabled_array = json_decode($enabled_types['setting_value'], true);
-        $types_edit_lock = $enabled_types['edit_lock'] == 1 && !$defaults && !$user_lock_override;
+        $types_edit_lock = $defaults_list['enabled_filetypes']['edit_lock'] == 1 && !$defaults && !$user_lock_override;
         $available_formats = $filetypes->availableFormats();
 
         foreach ($all_types as $type)
@@ -139,7 +145,7 @@ class OutputPanelBoardSettings extends Output
             $setting_options = json_decode($setting['setting_options'], true) ?? array();
             $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
 
-            if ($setting['edit_lock'] == 1)
+            if ($defaults_list[$setting['setting_name']]['edit_lock'] == 1)
             {
                 $setting_data['setting_locked'] = 'checked';
 
@@ -199,7 +205,7 @@ class OutputPanelBoardSettings extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

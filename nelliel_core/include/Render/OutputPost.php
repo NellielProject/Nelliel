@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -10,6 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Cites;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\ContentPost;
+use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -36,6 +38,8 @@ class OutputPost extends Output
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
         $post = new ContentPost($post_content_id, $this->domain);
+        $thread = new ContentThread($thread_content_id, $this->domain);
+        $thread->loadFromDatabase();
         $post->loadFromDatabase();
 
         if (NEL_USE_RENDER_CACHE)
@@ -51,9 +55,7 @@ class OutputPost extends Output
             }
         }
 
-        $thread_format = sprintf($this->site_domain->setting('thread_filename_format'), $thread_content_id->threadID());
-        $web_paths['thread_page'] = $this->domain->reference('page_web_path') . $thread_content_id->threadID() . '/' .
-                $thread_format . NEL_PAGE_EXT;
+        $web_paths['thread_page'] = $thread->getURL();
         $web_paths['thread_src'] = $this->domain->reference('src_web_path') . $thread_content_id->threadID() . '/';
         $web_paths['thread_preview'] = $this->domain->reference('preview_web_path') . $thread_content_id->threadID() .
                 '/';
@@ -154,7 +156,6 @@ class OutputPost extends Output
         $header_data = array();
         $modmode_headers = array();
         $thread_headers = array();
-        $authorization = new \Nelliel\Auth\Authorization($this->database);
         $header_data['response'] = $response;
         $post_content_id = $post->contentID();
 
@@ -207,6 +208,8 @@ class OutputPost extends Output
                     '&modmode=true&goback=false';
             $header_data['modmode_headers'] = $modmode_headers;
         }
+
+        $header_data['thread_page'] = sprintf($this->site_domain->setting('thread_filename_format'), $thread_content_id->threadID()) . NEL_PAGE_EXT;
 
         if (!$response)
         {
@@ -268,11 +271,14 @@ class OutputPost extends Output
         $tripcode = (!empty($post_data['tripcode'])) ? $this->domain->setting('tripcode_marker') . $post_data['tripcode'] : '';
         $secure_tripcode = (!empty($post_data['secure_tripcode'])) ? $this->domain->setting('tripcode_marker') .
                 $this->domain->setting('tripcode_marker') . $post_data['secure_tripcode'] : '';
-        //$capcode = ($post_data['mod_post_id']) ? $authorization->getRole($post_data['mod_post_id'])->auth_data['capcode'] : '';
-        $trip_line = $tripcode . $secure_tripcode;
-        $post_headers['tripline'] = $trip_line;
-        //$post_headers['capcode'] = $capcode;
-        $post_headers['post_time'] = date($this->domain->setting('date_format'), $post_data['post_time']);
+        $post_headers['tripline'] = $tripcode . $secure_tripcode;
+
+        if (!nel_true_empty($post_data['capcode']))
+        {
+            $post_headers['capcode'] = ' ## ' . $post_data['capcode'];
+        }
+
+        $post_headers['post_time'] = date($this->domain->setting('date_format'), (int) $post_data['post_time']);
         $post_headers['post_number'] = $post_data['post_number'];
         $post_headers['post_number_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
                 $post_content_id->postID();
@@ -300,26 +306,21 @@ class OutputPost extends Output
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
         $comment_data['noreferrer_nofollow'] = $this->site_domain->setting('noreferrer_nofollow');
-        $post_data['comment'] = trim($post_data['comment']);
+        $comment = $post_data['comment'];
 
-        if (nel_true_empty($post_data['comment']))
+        if (nel_true_empty($comment))
         {
             $comment_data['comment_lines'][]['line']['text'] = $this->domain->setting('no_comment_text');
         }
         else
         {
-            if ($this->domain->setting('filter_combining_characters'))
-            {
-                $post_data['comment'] = $this->output_filter->filterUnicodeCombiningCharacters($post_data['comment']);
-            }
-
             if (NEL_USE_RENDER_CACHE && isset($post_data['render_cache']['comment_data']))
             {
                 $parsed_comment = $post_data['render_cache']['comment_data'];
             }
             else
             {
-                $parsed_comment = $this->parseComment($post_data['comment'], $post_content_id);
+                $parsed_comment = $this->parseComment($comment, $post_content_id);
             }
 
             $comment_data['comment_lines'] = $parsed_comment;
@@ -417,15 +418,30 @@ class OutputPost extends Output
             return $comment_data;
         }
 
+        $comment = $comment_text;
+
+        if ($this->domain->setting('trim_comment_newlines_start'))
+        {
+            $comment = ltrim($comment, "\n\r");
+        }
+
+        if ($this->domain->setting('trim_comment_newlines_end'))
+        {
+            $comment = rtrim($comment, "\n\r");
+        }
+
+        if ($this->domain->setting('filter_combining_characters'))
+        {
+            $comment = $this->output_filter->filterUnicodeCombiningCharacters($comment);
+        }
+
         $greentext_regex = '#^\s*>[^>]#';
         $url_protocols = $this->domain->setting('url_protocols');
         $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
         $line_split_regex = '#((?:' . $url_protocols . '):\/\/[^\s]+)|(>>[\d]+)|(>>>\/.+?\/[\d]?+)|(\s)#';
         $cites = new \Nelliel\Cites($this->database);
         $create_url_links = $this->domain->setting('create_url_links');
-        $url_link_total = 0;
-        $max_url_links = $this->domain->setting('max_url_links');
-        $comment_lines = $this->output_filter->newlinesToArray($comment_text);
+        $comment_lines = $this->output_filter->newlinesToArray($comment);
         $line_count = count($comment_lines);
         $last_i = $line_count - 1;
         $i = 0;
@@ -437,7 +453,7 @@ class OutputPost extends Output
 
             // Split the line on spaces or embedded post cites, preserving the delimiters
             // URLs and greentext match until a line split point or line break so they don't need to be in this part
-            $segment_chunks = preg_split($line_split_regex, $line, null, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
+            $segment_chunks = preg_split($line_split_regex, $line, -1, PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_NO_EMPTY);
             $line_parts = array();
             $plaintext_chunk = ''; // Plain text chunks can be recombined, only special cases need be separate
 
@@ -462,13 +478,11 @@ class OutputPost extends Output
                     $entry['url'] = $cite_url;
                     $entry['text'] = $chunk;
                 }
-                else if ($create_url_links && $url_link_total < $max_url_links &&
-                        preg_match($url_split_regex, $chunk) === 1)
+                else if ($create_url_links && preg_match($url_split_regex, $chunk) === 1)
                 {
                     $entry['link'] = true;
                     $entry['url'] = $chunk;
                     $entry['text'] = $chunk;
-                    $url_link_total ++;
                 }
                 else if (preg_match($greentext_regex, $chunk) === 1)
                 {

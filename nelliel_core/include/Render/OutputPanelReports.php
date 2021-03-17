@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Render;
 
 if (!defined('NELLIEL_VERSION'))
@@ -107,12 +109,12 @@ class OutputPanelReports extends Output
             $report_data['reason'] = $report_info['reason'];
             $report_data['reporter_ip'] = @inet_pton($report_info['reporter_ip']);
             $report_data['dismiss_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports&board-id=' .
-                    $report_info['board-id'] . '&actions=remove&report_id=' . $report_info['report_id'];
+                    $report_info['board_id'] . '&actions=remove&report-id=' . $report_info['report_id'];
             $this->render_data['reports_list'][] = $report_data;
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

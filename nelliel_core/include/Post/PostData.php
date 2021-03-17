@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel\Post;
 
@@ -40,8 +41,39 @@ class PostData
         $post->changeData('ip_address', nel_request_ip_address());
         $post->changeData('hashed_ip_address', nel_request_ip_address(true));
         $poster_name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
-        $post->changeData('poster_name', $this->fieldMaxCheck('poster_name', $poster_name));
-        $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
+
+        if (nel_true_empty($poster_name) || $this->domain->setting('forced_anonymous'))
+        {
+            $name_choices = json_decode($this->domain->setting('anonymous_names'), true);
+
+            if (!is_null($name_choices))
+            {
+                $poster_name = $name_choices[mt_rand(0, count($name_choices) - 1)];
+            }
+            else
+            {
+                $poster_name = 'Anonymous';
+            }
+        }
+
+        $name_text = $this->fieldMaxCheck('poster_name', $poster_name);
+        $post->changeData('poster_name', $this->posterName($name_text));
+
+        if ($this->domain->setting('allow_tripcodes'))
+        {
+            $post->changeData('tripcode', $this->tripcode($name_text));
+            $post->changeData('secure_tripcode', $this->secureTripcode($name_text));
+        }
+
+        if ($this->domain->setting('forced_anonymous'))
+        {
+            $email = '';
+        }
+        else
+        {
+            $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
+        }
+
         $post->changeData('email', $this->fieldMaxCheck('email', $email));
         $subject = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
         $post->changeData('subject', $this->fieldMaxCheck('subject', $subject));
@@ -75,24 +107,9 @@ class PostData
             }
         }
 
-        $this->staffPost($post);
+        $this->staffPost($post, $name_text);
 
-        if ($post->data('poster_name') !== '')
-        {
-            $this->tripcodes($post);
-        }
-        else
-        {
-            $post->changeData('poster_name', _gettext('Anonymous'));
-        }
-
-        if ($this->domain->setting('forced_anonymous'))
-        {
-            $post->changeData('poster_name', _gettext('Anonymous'));
-            $post->changeData('email', '');
-        }
-
-        if(!nel_true_empty($post->data('comment')))
+        if (!nel_true_empty($post->data('comment')))
         {
             $cites = new Cites($this->domain->database());
             $cite_list = $cites->getCitesFromText($post->data('comment'), false);
@@ -109,6 +126,16 @@ class PostData
                 nel_derp(45,
                         sprintf(_gettext('Comment contains too many cross-board cites. Maximum is %d.'),
                                 $this->domain->setting('max_crossboard_cites')));
+            }
+
+            $url_protocols = $this->domain->setting('url_protocols');
+            $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
+
+            if (preg_match_all($url_split_regex, $post->data('comment')) > $this->domain->setting('max_comment_urls'))
+            {
+                nel_derp(46,
+                        sprintf(_gettext('Comment contains too many URLs. Maximum is %d.'),
+                                $this->domain->setting('max_comment_urls')));
             }
         }
     }
@@ -135,7 +162,7 @@ class PostData
         return $post_item;
     }
 
-    public function staffPost($post)
+    public function staffPost(ContentPost $post, string $name_text): void
     {
         if (!$post->data('post_as_staff'))
         {
@@ -156,43 +183,86 @@ class PostData
             return;
         }
 
-        $role = $user->checkRole($this->domain);
-
-        if ($role !== false)
-        {
-            $post->changeData('poster_name', $user->auth_data['display_name']);
-            $post->changeData('mod_post_id', $role->id());
-        }
+        $post->changeData('capcode', $this->capcode($name_text));
+        $post->changeData('poster_name', $user->auth_data['display_name']);
+        $post->changeData('staff_post_id', $user->id());
     }
 
-    public function tripcodes($post)
+    public function posterName(string $text): string
     {
-        $site_domain = new \Nelliel\Domains\DomainSite($this->domain->database());
-        $name_pieces = array();
-        $post->changeData('poster_name', preg_replace("/#+$/", "", $post->data('poster_name')));
-        preg_match('/^([^#]*)(?:#)?([^#]*)(?:##)?(.*)$/u', $post->data('poster_name'), $name_pieces);
-        $post->changeData('poster_name', $name_pieces[1]);
-        $post->changeData('tripcode', '');
-        $post->changeData('secure_tripcode', '');
+        $matches = array();
+        $name = '';
 
-        if ($name_pieces[2] !== '' && $this->domain->setting('allow_tripcodes'))
+        if (preg_match('/([^#]*)/u', $text, $matches) === 1)
         {
-            $trip = $this->tripcodeCharsetConvert($name_pieces[2], 'SHIFT_JIS', 'UTF-8');
-            $salt = substr($trip . 'H.', 1, 2);
+            $name = $matches[1];
+        }
+
+        return $name;
+    }
+
+    public function tripcode(string $text): string
+    {
+        $matches = array();
+        $tripcode = '';
+
+        if (preg_match('/#((?:(?!##| ## ).)*)/u', $text, $matches) === 1)
+        {
+            $trip_key = $this->tripcodeCharsetConvert($matches[1], 'SHIFT_JIS', 'UTF-8');
+            $salt = substr($trip_key . 'H.', 1, 2);
             $salt = preg_replace('#[^\.-z]#', '.', $salt);
             $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
-            $post->changeData('tripcode', substr(crypt($trip, $salt), -10));
+            $tripcode = substr(crypt($trip_key, $salt), -10);
         }
 
-        if ($name_pieces[3] !== '' && $this->domain->setting('allow_tripcodes'))
+        return $tripcode;
+    }
+
+    public function secureTripcode(string $text): string
+    {
+        $matches = array();
+        $secure_tripcode = '';
+
+        if (preg_match('/##((?:(?! ## ).)*)/u', $text, $matches) === 1)
         {
-            $trip = $name_pieces[3];
-            $trip = hash($site_domain->setting('secure_tripcode_algorithm'), $trip . NEL_TRIPCODE_PEPPER);
-            $trip = base64_encode(pack("H*", $trip));
-            $post->changeData('secure_tripcode', substr($trip, 2, 10));
+            $trip_key = $matches[1];
+            $trip_code = hash(nel_site_domain()->setting('secure_tripcode_algorithm'), $trip_key . NEL_TRIPCODE_PEPPER);
+            $trip_code = base64_encode(pack("H*", $trip_code));
+            $secure_tripcode = substr($trip_code, 2, 10);
         }
 
-        $post = nel_plugins()->processHook('nel-post-tripcodes', [$this->domain, $name_pieces], $post);
+        return $secure_tripcode;
+    }
+
+    public function capcode(string $text): string
+    {
+        $capcode = '';
+        $matches = array();
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_staff_custom_capcode') &&
+                preg_match('/ ## (.*)/u', $text, $matches) === 1)
+        {
+            $capcode = $matches[1];
+        }
+        else
+        {
+            if ($this->session->user()->isSiteOwner())
+            {
+                $capcode = 'Site Owner';
+            }
+            else
+            {
+                $role = $this->session->user()->checkRole($this->domain);
+
+                if ($role != false)
+                {
+
+                    $capcode = $role->auth_data['capcode'];
+                }
+            }
+        }
+
+        return $capcode;
     }
 
     public function tripcodeCharsetConvert($text, $to, $from)

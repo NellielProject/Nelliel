@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace Nelliel\Setup;
 
 if (!defined('NELLIEL_VERSION'))
@@ -25,6 +28,7 @@ class TablePosts extends Table
             'post_password' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'tripcode' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'secure_tripcode' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'capcode' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'email' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'subject' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'comment' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
@@ -36,7 +40,7 @@ class TablePosts extends Table
             'content_count' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'op' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'sage' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'mod_post_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'staff_post_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'mod_comment' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'content_hash' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
             'regen_cache' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
@@ -58,6 +62,7 @@ class TablePosts extends Table
             post_password       VARCHAR(255) DEFAULT NULL,
             tripcode            VARCHAR(255) DEFAULT NULL,
             secure_tripcode     VARCHAR(255) DEFAULT NULL,
+            capcode             VARCHAR(255) DEFAULT NULL,
             email               VARCHAR(255) DEFAULT NULL,
             subject             VARCHAR(255) DEFAULT NULL,
             comment             TEXT DEFAULT NULL,
@@ -69,7 +74,7 @@ class TablePosts extends Table
             content_count       SMALLINT NOT NULL DEFAULT 0,
             op                  SMALLINT NOT NULL DEFAULT 0,
             sage                SMALLINT NOT NULL DEFAULT 0,
-            mod_post_id         VARCHAR(50) DEFAULT NULL,
+            staff_post_id         VARCHAR(50) DEFAULT NULL,
             mod_comment         TEXT DEFAULT NULL,
             content_hash        " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
             regen_cache         SMALLINT NOT NULL DEFAULT 0,

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Admin;
 
 if (!defined('NELLIEL_VERSION'))
@@ -13,6 +15,7 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Render\OutputPanelUsers;
+use Nelliel\Domains\DomainAllBoards;
 
 class AdminUsers extends Admin
 {
@@ -82,6 +85,10 @@ class AdminUsers extends Admin
                 if (strpos($key, Domain::SITE))
                 {
                     $domain = new DomainSite($this->database);
+                }
+                else if (strpos($key, Domain::ALL_BOARDS))
+                {
+                    $domain = new DomainAllBoards($this->database);
                 }
                 else
                 {

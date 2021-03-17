@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Post;
 
 if (!defined('NELLIEL_VERSION'))

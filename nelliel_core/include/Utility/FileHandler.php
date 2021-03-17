@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
@@ -60,7 +61,10 @@ class FileHandler
     {
         if ($use_header)
         {
-            $output = '<?php if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} ' . $output;
+            $output = '<?php
+
+declare(strict_types=1);
+ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} ' . $output;
         }
 
         return $this->writeFile($file, $output, NEL_FILES_PERM, true, NEL_DIRECTORY_PERM, $temp_move);
@@ -79,8 +83,12 @@ class FileHandler
 
         if (!$recursive)
         {
-            $success = @mkdir($directory, null, false);
-            $success = chmod($directory, octdec($chmod));
+            $success = @mkdir($directory, 0777, false);
+
+            if ($success)
+            {
+                $success = chmod($directory, octdec($chmod));
+            }
         }
         else
         {
@@ -102,8 +110,12 @@ class FileHandler
                 }
                 else
                 {
-                    $success = @mkdir($current_path, null, false);
-                    $success = chmod($current_path, octdec($chmod));
+                    $success = @mkdir($current_path, 0777, false);
+
+                    if ($success)
+                    {
+                        $success = chmod($current_path, octdec($chmod));
+                    }
                 }
             }
         }
@@ -244,9 +256,15 @@ class FileHandler
     }
 
     public function recursiveFileList($path, int $recursion_depth = -1, bool $include_directories = false,
-            bool $file_object = true)
+            bool $names_only = false): array
     {
         $file_list = array();
+
+        if (!file_exists($path))
+        {
+            return $file_list;
+        }
+
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path));
         $iterator->setMaxDepth($recursion_depth);
 
@@ -257,13 +275,13 @@ class FileHandler
                 continue;
             }
 
-            if ($file_object)
+            if ($names_only)
             {
-                $file_list[] = $file;
+                $file_list[] = $file->getFilename();
             }
             else
             {
-                $file_list[] = $file->getRealPath();
+                $file_list[] = $file;
             }
         }
 

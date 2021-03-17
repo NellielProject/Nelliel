@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Render;
 
 if (!defined('NELLIEL_VERSION'))
@@ -20,14 +22,6 @@ class OutputFooter extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->render_data['show_styles'] = ($parameters['show_styles']) ?? true;
-        $output_menu = new OutputMenu($this->domain, $this->write_mode);
-
-        if ($this->render_data['show_styles'])
-        {
-            $this->render_data['styles'] = $output_menu->styles([], true);
-        }
-
         $this->render_data['nelliel_version'] = NELLIEL_VERSION;
         $output = $this->output('footer', $data_only, true, $this->render_data);
         return $output;

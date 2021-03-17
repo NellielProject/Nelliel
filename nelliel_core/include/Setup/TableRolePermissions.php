@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace Nelliel\Setup;
 
 if (!defined('NELLIEL_VERSION'))
@@ -87,6 +90,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_staff_board_access', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_staff_board_post', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_staff_board_delete', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_staff_custom_capcode', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_bans', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_boards', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_board_config', 1]);
@@ -120,6 +124,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_staff_board_access', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_staff_board_post', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_staff_board_delete', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_staff_custom_capcode', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_manage_bans', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_manage_boards', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_manage_board_config', 0]);
@@ -153,6 +158,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_staff_board_access', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_staff_board_post', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_staff_board_delete', 0]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_staff_custom_capcode', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_manage_bans', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_manage_boards', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_manage_board_config', 0]);
@@ -186,6 +192,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_staff_board_access', 1]);
         $this->insertDefaultRow(['JANITOR', 'perm_staff_board_post', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_staff_board_delete', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_staff_custom_capcode', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_manage_bans', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_manage_boards', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_manage_board_config', 0]);
@@ -219,5 +226,6 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_staff_board_access', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_staff_board_post', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_staff_board_delete', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_staff_custom_capcode', 0]);
     }
 }

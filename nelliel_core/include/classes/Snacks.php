@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel;
 
 if (!defined('NELLIEL_VERSION'))
@@ -93,6 +95,11 @@ class Snacks
             return;
         }
 
+        if (!nel_site_domain()->setting('allow_ban_appeals'))
+        {
+            nel_derp(156, _gettext('Ban appeals are not enabled.'));
+        }
+
         $ban_hammer = new BanHammer($this->database);
 
         if (!$ban_hammer->loadFromID($ban_id))
@@ -126,9 +133,14 @@ class Snacks
 
     public function checkExpired(BanHammer $ban_hammer, bool $remove): bool
     {
-        if ($ban_hammer->getData('seen') && $ban_hammer->expired())
+        if ($ban_hammer->expired())
         {
-            if ($ban_hammer->getData('seen') && $remove)
+            if (nel_site_domain()->setting('must_see_ban') && !$ban_hammer->getData('seen'))
+            {
+                return false;
+            }
+
+            if ($remove)
             {
                 $ban_hammer->remove();
             }

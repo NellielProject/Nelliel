@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel\Setup;
 
@@ -210,9 +211,11 @@ class Setup
         $staff_board_table->createTable();
         $pms_table = new TablePMs($this->database, $this->sql_compatibility);
         $pms_table->createTable();
+        $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
+        $blotter_table->createTable();
 
-        // NOTE: Tables must be created in order of:
-        // board data -> file filters -> if thens -> overboard -> reports -> cites
+        // NOTE: The following tables rely on the board data table
+        // Board data must be created first!
         $board_data_table = new TableBoardData($this->database, $this->sql_compatibility);
         $board_data_table->createTable();
         $file_filters_table = new TableFileFilters($this->database, $this->sql_compatibility);
@@ -225,6 +228,8 @@ class Setup
         $reports_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
         $cites_table = new TableCites($this->database, $this->sql_compatibility);
         $cites_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $word_filters_table = new TableWordFilters($this->database, $this->sql_compatibility);
+        $word_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
 
         // NOTE: Tables must be created in order of:
         // roles -> permissions -> role permissions -> users -> user roles
@@ -248,6 +253,7 @@ class Setup
         $this->file_handler->createDirectory(NEL_GENERATED_FILES_PATH, NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory(NEL_GENERAL_FILES_PATH, NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH, NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory(NEL_BANNERS_FILES_PATH, NEL_DIRECTORY_PERM, true);
         echo _gettext('Core directories created.'), '<br>';
     }
 
@@ -258,7 +264,7 @@ class Setup
         $config_table = new TableBoardConfig($this->database, $this->sql_compatibility);
         $config_table->tableName($db_prefix . '_config');
         $config_table->createTable();
-        $config_table->copyFrom(NEL_BOARD_DEFAULTS_TABLE);
+        $config_table->copyFrom(NEL_BOARD_DEFAULTS_TABLE, ['setting_name', 'setting_value']);
 
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
 
@@ -278,11 +284,10 @@ class Setup
     public function createBoardDirectories(string $board_id)
     {
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
-        $references = $domain->reference();
-        $this->file_handler->createDirectory($references['src_path'], NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($references['preview_path'], NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($references['page_path'], NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($references['banner_path'], NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('src_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('preview_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('page_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('banners_path'), NEL_DIRECTORY_PERM, true);
     }
 
     public function installCoreTemplates()

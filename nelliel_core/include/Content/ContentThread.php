@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel\Content;
 
@@ -74,16 +75,16 @@ class ContentThread extends ContentHandler
                     '" SET "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
                     "content_count" = :content_count, "last_update" = :last_update, "last_update_milli" = :last_update_milli,
                     "post_count" = :post_count, "permasage" = :permasage, "sticky" = :sticky, "cyclic" = :cyclic,
-                    "archive_status" = :archive_status, "locked" = :locked WHERE "thread_id" = :thread_id');
+                    "archive_status" = :archive_status, "locked" = :locked, "slug" = :slug WHERE "thread_id" = :thread_id');
         }
         else
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->threads_table .
                     '" ("thread_id", "last_bump_time", "last_bump_time_milli", "content_count", "last_update",
-                    "last_update_milli", "post_count", "permasage", "sticky", "cyclic", "archive_status", "locked")
+                    "last_update_milli", "post_count", "permasage", "sticky", "cyclic", "archive_status", "locked", "slug")
                     VALUES (:thread_id, :last_bump_time, :last_bump_time_milli, :content_count, :last_update,
-                    :last_update_milli, :post_count, :permasage, :sticky, :cyclic, :archive_status, :locked)');
+                    :last_update_milli, :post_count, :permasage, :sticky, :cyclic, :archive_status, :locked, :slug)');
         }
 
         $prepared->bindValue(':thread_id', $this->content_id->threadID(), PDO::PARAM_INT);
@@ -99,6 +100,7 @@ class ContentThread extends ContentHandler
         $prepared->bindValue(':cyclic', $this->contentDataOrDefault('cyclic', 0), PDO::PARAM_INT);
         $prepared->bindValue(':archive_status', $this->contentDataOrDefault('archive_status', 0), PDO::PARAM_INT);
         $prepared->bindValue(':locked', $this->contentDataOrDefault('locked', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':slug', $this->contentDataOrDefault('slug', 0), PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
         $this->archive_prune->updateThreads();
         $this->overboard->updateThread($this);
@@ -108,9 +110,9 @@ class ContentThread extends ContentHandler
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->src_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM);
-        $file_handler->createDirectory($this->preview_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM);
-        $file_handler->createDirectory($this->page_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->src_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->preview_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->page_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM, true);
     }
 
     public function remove(bool $perm_override = false)
@@ -328,5 +330,79 @@ class ContentThread extends ContentHandler
     public function isArchived()
     {
         return $this->content_data['archive_status'] == 2;
+    }
+
+    // Most of this is based on vichan's slugify
+    public function generateSlug(ContentPost $post): string
+    {
+        $slug = '';
+        $max_length = $this->domain->setting('max_slug_length');
+
+        if (!nel_true_empty($post->data('subject')))
+        {
+            $base_text = $post->data('subject');
+        }
+        else if (!nel_true_empty($post->data('comment')))
+        {
+            $base_text = $post->data('comment');
+        }
+        else
+        {
+            $base_text = '';
+        }
+
+        // Convert non-ASCII to ASCII equivalents if possible
+        $slug = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $base_text);
+
+        // Only keep alphanumeric characters
+        $slug = preg_replace('/[^a-zA-Z0-9]/', '-', $slug);
+
+        // Replace multiple dashes with single ones
+        $slug = preg_replace('/-+/', '-', $slug);
+
+        // Strip dashes at the beginning and at the end
+        $slug = preg_replace('/^-|-$/', '', $slug);
+
+        // Limit slug length, attempting to not break words
+        $matches = array();
+        preg_match('/^(.{0,' . $max_length . '})\b(?=\W|$)/', $slug, $matches);
+
+        // If the base text is actually one really long word or something, just truncate it
+        if (empty($matches))
+        {
+            $slug = substr($slug, 0, $max_length);
+        }
+        else
+        {
+            $slug = $matches[1];
+        }
+
+        // Make lowercase
+        $slug = strtolower($slug);
+
+        return $slug;
+    }
+
+    public function pageBasename(): string
+    {
+        $page_filename = '';
+        $slug = $this->content_data['slug'] ?? '';
+
+        if ($this->domain->setting('slugify_thread_url') && !nel_true_empty($slug))
+        {
+            $page_filename = $this->content_data['slug'];
+        }
+        else
+        {
+            $page_filename = sprintf(nel_site_domain()->setting('thread_filename_format'), $this->content_id->threadID());
+        }
+
+        return $page_filename;
+    }
+
+    public function getURL(): string
+    {
+        $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
+        return $base_path . $this->pageBasename() . NEL_PAGE_EXT;
     }
 }

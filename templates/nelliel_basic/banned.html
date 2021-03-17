@@ -31,6 +31,9 @@
 {{# is_range }}
 <p data-i18n="gettext">This is part of a range ban. You cannot appeal it.</p>
 {{/ is_range }}
+{{^ min_time_met }}
+<p data-i18n="gettext">The minimum time before appealing has not elapsed or the ban is too short to appeal.</p>
+{{/ min_time_met }}
 {{# appealed }}
 	{{# reviewed }}
 <p data-i18n="gettext">You have already appealed this ban but the appeal has not been reviewed yet.</p>

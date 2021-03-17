@@ -1,5 +1,8 @@
 <?php
 
+declare(strict_types=1);
+
+
 namespace Nelliel\Setup;
 
 if (!defined('NELLIEL_VERSION'))
@@ -53,11 +56,22 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['show_description', '1', 0]);
         $this->insertDefaultRow(['favicon', '', 0]);
         $this->insertDefaultRow(['show_favicon', '0', 0]);
-        $this->insertDefaultRow(['banner', '', 0]);
-        $this->insertDefaultRow(['show_banner', '0', 0]);
         $this->insertDefaultRow(['home_page', '/', 0]);
         $this->insertDefaultRow(['locale', 'en_US', 0]);
         $this->insertDefaultRow(['only_alphanumeric_board_ids', '1', 0]);
+        $this->insertDefaultRow(['max_report_items', '5', 0]);
+        $this->insertDefaultRow(['max_delete_items', '5', 0]);
+
+        // Banners
+        $this->insertDefaultRow(['show_site_banners', '1', 0]);
+        $this->insertDefaultRow(['show_board_banners', '1', 0]);
+        $this->insertDefaultRow(['banner_display_width', '300', 0]);
+        $this->insertDefaultRow(['banner_display_height', '100', 0]);
+
+        // Bans
+        $this->insertDefaultRow(['must_see_ban', '1', 0]);
+        $this->insertDefaultRow(['allow_ban_appeals', '1', 0]);
+        $this->insertDefaultRow(['min_time_before_ban_appeal', '3600', 0]);
 
         // Posts and rendering
         $this->insertDefaultRow(['index_filename_format', 'index%d', 0]);

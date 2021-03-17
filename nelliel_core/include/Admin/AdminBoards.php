@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Admin;
 
 if (!defined('NELLIEL_VERSION'))
@@ -32,7 +34,7 @@ class AdminBoards extends Admin
     public function renderPanel()
     {
         $this->verifyAccess();
-        $output_panel = new OutputPanelManageBoards($this->domain, false);
+        $output_panel = new OutputPanelManageBoards($this->site_domain, false);
         $output_panel->main([], false);
     }
 
@@ -60,7 +62,7 @@ class AdminBoards extends Admin
         }
 
         if ($board_uri === Domain::SITE || $board_uri === Domain::ALL_BOARDS || $board_uri === Domain::MULTI_BOARD || $board_uri === NEL_TEMPLATES_DIR || $board_uri === NEL_ASSETS_DIR || $board_uri === 'nelliel_core' ||
-                $board_uri === 'documentation' || $board_uri === 'tests')
+                $board_uri === 'documentation' || $board_uri === 'tests' || $board_uri === 'site' || $board_uri === 'banners')
         {
             nel_derp(244, _gettext('Board URI is reserved.'));
         }

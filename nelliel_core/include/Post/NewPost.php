@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel\Post;
 
@@ -64,17 +65,25 @@ class NewPost
         $this->isPostOk($post, $time['time']);
 
         // Process FGSFDS
-        $fgsfds = new \Nelliel\FGSFDS($post->data('fgsfds'));
+        $fgsfds = new \Nelliel\FGSFDS();
 
-        if (!empty($post->data('fgsfds')))
+        if ($this->domain->setting('allow_fgsfds_commands'))
         {
-            if ($fgsfds->getCommand('sage') !== false)
-            {
-                $fgsfds->modifyCommandData('sage', 'value', true);
-            }
+            $fgsfds_commands_added = $fgsfds->addFromString($post->data('fgsfds') ?? '');
         }
 
-        $post->changeData('sage', $fgsfds->getCommandData('sage', 'value'));
+        // If there are duplicates, the FGSFDS field takes precedence
+        if ($this->domain->setting('allow_email_commands'))
+        {
+            $email_commands_added = $fgsfds->addFromString($post->data('email') ?? '');
+        }
+
+        if ($fgsfds_commands_added || $email_commands_added)
+        {
+            $post->changeData('email', '');
+        }
+
+        $post->changeData('sage', $fgsfds->commandIsSet('sage'));
         $uploads = $uploads_handler->process($post);
         $spoon = !empty($uploads);
         $post->changeData('content_count', count($uploads));
@@ -118,6 +127,7 @@ class NewPost
             $thread->changeData('last_update', $time['time']);
             $thread->changeData('last_update_milli', $time['milli']);
             $thread->changeData('post_count', 1);
+            $thread->changeData('slug', $thread->generateSlug($post));
             $thread->writeToDatabase();
             $thread->createDirectories();
         }
@@ -131,8 +141,8 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
-                    !$fgsfds->getCommandData('sage', 'value') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
+                            'sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
@@ -145,7 +155,7 @@ class NewPost
         $post->addCites();
         $post->storeCache();
         $post->createDirectories();
-        $fgsfds->modifyCommandData('noko', 'topic', $thread->contentID()->threadID());
+        $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()->threadID());
         $src_path = $this->domain->reference('src_path') . $thread->contentID()->threadID() . '/' .
                 $post->contentID()->postID() . '/';
 
@@ -245,8 +255,7 @@ class NewPost
         if ($post->data('parent_thread') != 0)
         {
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . $this->domain->reference('threads_table') .
-                    '" WHERE "thread_id" = ?');
+                    'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
             $thread_info = $this->database->executePreparedFetch($prepared, [$post->data('parent_thread')],
                     PDO::FETCH_ASSOC, true);
 

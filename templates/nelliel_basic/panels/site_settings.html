@@ -38,6 +38,49 @@
 	{{# only_alphanumeric_board_ids }}
 		{{> panels/pieces/settings_checkbox }}
 	{{/ only_alphanumeric_board_ids }}
+	{{# max_report_items }}
+		{{> panels/pieces/settings_number }}
+	{{/ max_report_items }}
+	{{# max_delete_items }}
+		{{> panels/pieces/settings_number }}
+	{{/ max_delete_items }}
+	<div class="display-row">
+	<hr class="display_cell">
+	</div>
+	<div class="display-row">
+		<span class="display-cell">
+			<span class="bold" data-i18n="gettext">Baners</span>
+		</span>
+	</div>
+	{{# show_site_banners }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ show_site_banners }}
+	{{# show_board_banners }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ show_board_banners}}
+	{{# banner_display_width }}
+		{{> panels/pieces/settings_number }}
+	{{/ banner_display_width }}
+	{{# banner_display_height }}
+		{{> panels/pieces/settings_number }}
+	{{/ banner_display_height }}
+	<div class="display-row">
+		<hr class="display_cell">
+	</div>
+	<div class="display-row">
+		<span class="display-cell">
+			<span class="bold" data-i18n="gettext">Bans</span>
+		</span>
+	</div>
+	{{# must_see_ban }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ must_see_ban }}
+	{{# allow_ban_appeals }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ allow_ban_appeals }}
+	{{# min_time_before_ban_appeal }}
+		{{> panels/pieces/settings_number }}
+	{{/ min_time_before_ban_appeal }}
 	<div class="display-row">
 		<hr class="display_cell">
 	</div>

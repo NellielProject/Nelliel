@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Render;
 
 if (!defined('NELLIEL_VERSION'))
@@ -55,7 +57,7 @@ class OutputPanelUsers extends Output
 
         $this->render_data['new_user_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=new';
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -113,9 +115,11 @@ class OutputPanelUsers extends Output
 
             $domain_list = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
                     PDO::FETCH_ASSOC);
+            array_unshift($domain_list, ['board_id' => Domain::ALL_BOARDS]); // For all boards
             array_unshift($domain_list, ['board_id' => Domain::SITE]); // For site domain
-            $query = 'SELECT "role_id", "role_title" FROM "' . NEL_ROLES_TABLE . '"';
+            $query = 'SELECT "role_id", "role_title", "role_level" FROM "' . NEL_ROLES_TABLE . '" ORDER BY "role_level" ASC';
             $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+
 
             foreach ($domain_list as $domain)
             {
@@ -148,7 +152,7 @@ class OutputPanelUsers extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

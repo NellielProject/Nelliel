@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -7,6 +8,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -49,11 +51,11 @@ class OutputCatalog extends Output
             }
 
             $first_post['render_cache'] = json_decode($first_post['cache'], true);
-            $post_content_id = new \Nelliel\Content\ContentId(
-                    'cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
-            $thread_page_web_path = $this->domain->reference('page_web_path') . $thread['thread_id'] . '/thread-' .
-                    $thread['thread_id'] . '.html';
-            $thread_data['open_url'] = $thread_page_web_path;
+            $post_content_id = new ContentId('cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
+            $thread_content_id = new ContentId(ContentID::createIDString($thread['thread_id']));
+            $thread_instance = $thread_content_id->getInstanceFromID($this->domain);
+            $thread_instance->loadFromDatabase();
+            $thread_data['open_url'] = $thread_instance->getURL();
 
             if (!empty($first_post['subject']))
             {
@@ -67,7 +69,7 @@ class OutputCatalog extends Output
                 foreach ($this->output_filter->newlinesToArray($first_post['comment']) as $line)
                 {
                     $line_parts = array();
-                    $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, null, PREG_SPLIT_DELIM_CAPTURE);
+                    $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, -1, PREG_SPLIT_DELIM_CAPTURE);
 
                     foreach ($segments as $segment)
                     {
@@ -157,7 +159,7 @@ class OutputCatalog extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render(['show_styles' => false], true);
+        $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
         if ($this->write_mode)

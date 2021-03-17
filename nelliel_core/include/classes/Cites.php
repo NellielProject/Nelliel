@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -274,11 +275,11 @@ class Cites
             }
             else
             {
+                $content_id = new ContentID(
+                        ContentID::createIDString($cite_data['target_thread'], $cite_data['target_post']));
+                $thread = new ContentThread($content_id, $target_domain);
                 $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
-                $url = NEL_BASE_WEB_PATH . $cite_data['target_board'] . '/' . $target_domain->reference('page_dir') . '/' .
-                        $cite_data['target_thread'] . '/' .
-                        sprintf(nel_site_domain()->setting('thread_filename_format'), $cite_data['target_thread']) .
-                        '.html' . $p_anchor;
+                $url = $thread->getURL() . $p_anchor;
             }
         }
 

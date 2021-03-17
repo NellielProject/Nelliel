@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Nelliel\Render;
 
 if (!defined('NELLIEL_VERSION'))
@@ -26,7 +28,7 @@ class OutputThread extends Output
         $this->setBodyTemplate('thread/thread');
         $thread_id = ($parameters['thread_id']) ?? 0;
         $command = ($parameters['command']) ?? 'view-thread';
-        $thread_content_id = ContentID::createIDString($thread_id);
+        $thread_content_id = new ContentID(ContentID::createIDString($thread_id));
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->render_data['in_modmode'])
@@ -59,7 +61,8 @@ class OutputThread extends Output
             return;
         }
 
-        $thread_format = sprintf($this->site_domain->setting('thread_filename_format'), $thread_id);
+        $thread = $thread_content_id->getInstanceFromID($this->domain);
+        $thread->loadFromDatabase();
         $page_title = $this->domain->reference('board_uri');
 
         if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
@@ -105,12 +108,15 @@ class OutputThread extends Output
         $output_post = new OutputPost($this->domain, $this->write_mode);
         $this->render_data['op_post'] = array();
         $this->render_data['thread_posts'] = array();
-        $this->render_data['thread_id'] = $thread_content_id;
-        $this->render_data['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
-        $this->render_data['thread_corral_id'] = 'thread-corral-' . $thread_content_id;
-        $this->render_data['thread_info_id'] = 'thread-header-info-' . $thread_content_id;
-        $this->render_data['thread_options_id'] = 'thread-header-options-' . $thread_content_id;
+        $this->render_data['thread_id'] = $thread_content_id->getIDString();
+        $this->render_data['thread_expand_id'] = 'thread-expand-' . $thread_content_id->getIDString();
+        $this->render_data['thread_corral_id'] = 'thread-corral-' . $thread_content_id->getIDString();
+        $this->render_data['thread_info_id'] = 'thread-header-info-' . $thread_content_id->getIDString();
+        $this->render_data['thread_options_id'] = 'thread-header-options-' . $thread_content_id->getIDString();
         $this->render_data['board_id'] = $this->domain->id();
+        $this->render_data['show_styles'] = true;
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['styles'] = $output_menu->styles([], true);
 
         foreach ($treeline as $post_data)
         {
@@ -148,9 +154,9 @@ class OutputThread extends Output
         if ($this->write_mode)
         {
             $this->file_handler->writeFile(
-                    $this->domain->reference('page_path') . $thread_id . '/' . $thread_format . NEL_PAGE_EXT, $output,
+                    $this->domain->reference('page_path') . $thread_id . '/' . $thread->pageBasename() . NEL_PAGE_EXT, $output,
                     NEL_FILES_PERM, true);
-            $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/', $thread_format);
+            $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/', $thread->pageBasename());
         }
         else
         {
