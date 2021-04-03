@@ -61,6 +61,7 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['only_alphanumeric_board_ids', '1', 0]);
         $this->insertDefaultRow(['max_report_items', '5', 0]);
         $this->insertDefaultRow(['max_delete_items', '5', 0]);
+        $this->insertDefaultRow(['global_announcement', '', 0]);
 
         // Banners
         $this->insertDefaultRow(['show_site_banners', '1', 0]);

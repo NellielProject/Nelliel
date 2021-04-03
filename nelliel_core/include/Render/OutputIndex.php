@@ -73,6 +73,8 @@ class OutputIndex extends Output
             $page_count = (int) ceil($thread_count / $this->domain->setting('threads_per_page'));
         }
 
+        $this->render_data['show_global_announcement'] = !nel_true_empty($site_domain->setting('global_announcement'));
+        $this->render_data['global_announcement_text'] = $site_domain->setting('global_announcement');
         $index_format = $site_domain->setting('index_filename_format');
         $this->render_data['catalog_url'] = 'catalog.html';
         $this->render_data['index_navigation_top'] = $this->domain->setting('index_nav_top');

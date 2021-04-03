@@ -74,6 +74,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'only_alphanumeric_board_ids', '', '1', 'Allow only alphanumeric board IDs', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'integer', 'max_report_items', '', '5', 'Maximum items that can be reported at one time', '{"type":"number"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'integer', 'max_delete_items', '', '5', 'Maximum items that can be deleted at one time', '{"type":"number"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'string', 'global_announcement', '', '', 'Global announcement shown on all boards', '{"type":"text"}']);
 
         // Banners
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'show_site_banners', '', '1', 'Show site banners', '{"type":"checkbox"}']);
