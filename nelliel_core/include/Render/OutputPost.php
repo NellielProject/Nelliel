@@ -174,13 +174,8 @@ class OutputPost extends Output
             $modmode_headers['ip_address'] = $ip;
 
             // TODO: Change display according to user perms
-            if ($response)
+            if (!$response)
             {
-                $temp_content_id = $post_content_id;
-            }
-            else
-            {
-                $temp_content_id = $thread_content_id;
                 $locked = $thread_data['locked'] == 1;
                 $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock') : _gettext('Lock');
                 $modmode_headers['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
@@ -202,7 +197,9 @@ class OutputPost extends Output
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .
                     '&actions=new&ban-ip=' . $ip . '&modmode=true&goback=false';
             $modmode_headers['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=delete&content-id=' . $temp_content_id->getIDString() . '&modmode=true&goback=true';
+                    '&actions=delete&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
+            $modmode_headers['delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+            '&actions=delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
             $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&ban-ip=' . $ip .
                     '&modmode=true&goback=false';

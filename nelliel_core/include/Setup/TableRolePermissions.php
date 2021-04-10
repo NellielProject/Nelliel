@@ -81,6 +81,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_access_users', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_manage_users', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_delete_posts', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_delete_by_ip', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_status', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_mod_comment', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_mod_mode', 1]);
@@ -122,6 +123,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_access_users', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_manage_users', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_delete_posts', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_delete_by_ip', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_status', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_mod_comment', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_mod_mode', 1]);
@@ -163,6 +165,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_access_users', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_manage_users', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_delete_posts', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_delete_by_ip', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_post_status', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_mod_comment', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_mod_mode', 1]);
@@ -204,6 +207,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_access_users', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_manage_users', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_delete_posts', 1]);
+        $this->insertDefaultRow(['JANITOR', 'perm_delete_by_ip', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_post_status', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_mod_comment', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_mod_mode', 1]);
@@ -245,6 +249,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_access_users', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_manage_users', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_delete_posts', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_delete_by_ip', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_post_status', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_mod_comment', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_mod_mode', 0]);

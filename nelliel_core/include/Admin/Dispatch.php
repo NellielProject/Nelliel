@@ -195,6 +195,10 @@ class Dispatch
                 {
                     $admin_handler->remove();
                 }
+                else if ($action === 'delete-by-ip')
+                {
+                    $admin_handler->removeByIP();
+                }
                 else if ($action === 'ban')
                 {
                     $admin_handler = new \Nelliel\Admin\AdminBans($this->authorization, $this->domain, $this->session,

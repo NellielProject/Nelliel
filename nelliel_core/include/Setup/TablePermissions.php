@@ -72,7 +72,8 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_manage_templates', 'Manage templates']);
         $this->insertDefaultRow(['perm_access_users', 'Access the users panel']);
         $this->insertDefaultRow(['perm_manage_users', 'Manage users']);
-        $this->insertDefaultRow(['perm_delete_posts', 'Delete posts and threads']);
+        $this->insertDefaultRow(['perm_delete_posts', 'Delete single posts and threads']);
+        $this->insertDefaultRow(['perm_delete_by_ip', 'Delete all content from a specific IP']);
         $this->insertDefaultRow(['perm_post_status', 'Change the status of a thread or post']);
         $this->insertDefaultRow(['perm_mod_comment', 'Add staff commentary to a post']);
         $this->insertDefaultRow(['perm_mod_mode', 'Access to Moderator Mode']);
