@@ -141,7 +141,7 @@ class AdminUsers extends Admin
 
     public function verifyAccess()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_access_users'))
         {
             nel_derp(300, _gettext('You do not have access to the Users panel.'));
         }

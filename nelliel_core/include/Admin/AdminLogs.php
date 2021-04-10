@@ -71,7 +71,7 @@ class AdminLogs extends Admin
 
     public function verifyAccess()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_logs'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_access_logs'))
         {
             nel_derp(470, _gettext('You do not have access to the Logs panel.'));
         }

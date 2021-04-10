@@ -264,7 +264,7 @@ class ContentPost extends ContentHandler
 
         if ($session->isActive())
         {
-            if ($user->checkPermission($this->domain, 'perm_board_delete_posts'))
+            if ($user->checkPermission($this->domain, 'perm_delete_posts'))
             {
                 if (!empty($this->content_data['staff_post_id']) &&
                         $this->authorization->userExists($this->content_data['staff_post_id']))

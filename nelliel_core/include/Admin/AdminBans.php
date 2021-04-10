@@ -110,7 +110,7 @@ class AdminBans extends Admin
 
     public function verifyAccess()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_access_bans'))
         {
             nel_derp(320, _gettext('You do not have access to the Bans panel.'));
         }

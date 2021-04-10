@@ -247,7 +247,7 @@ class NewPost
             $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }
 
-        if ($renzoku > 0)
+        if ($renzoku > 0 && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
         {
             nel_derp(1, _gettext("Flood detected! You're posting too fast, slow down."), $error_data);
         }

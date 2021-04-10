@@ -248,7 +248,7 @@ class AdminBoards extends Admin
 
     public function verifyAccess()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_access_boards'))
         {
             nel_derp(370, _gettext('You do not have access to the Manage Boards panel.'));
         }
