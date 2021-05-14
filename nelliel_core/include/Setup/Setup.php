@@ -213,6 +213,8 @@ class Setup
         $pms_table->createTable();
         $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
         $blotter_table->createTable();
+        $dnsbl_table = new TableDNSBL($this->database, $this->sql_compatibility);
+        $dnsbl_table->createTable();
 
         // NOTE: The following tables rely on the board data table
         // Board data must be created first!
