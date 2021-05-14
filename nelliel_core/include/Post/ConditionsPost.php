@@ -73,10 +73,6 @@ class ConditionsPost implements Conditions
                 case 'is_saged':
                     $met = $condition === ($this->post->data('sage') == 1);
                     break;
-
-                case 'staff_post':
-                    $met = $condition === !nel_true_empty($this->post->data('staff_post_id'));
-                    break;
             }
 
             // If any condition is not met (including unhandled ones) we stop early

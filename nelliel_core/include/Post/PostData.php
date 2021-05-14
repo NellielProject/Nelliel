@@ -185,7 +185,7 @@ class PostData
 
         $post->changeData('capcode', $this->capcode($name_text));
         $post->changeData('poster_name', $user->auth_data['display_name']);
-        $post->changeData('staff_post_id', $user->id());
+        $post->changeData('account_id', $user->id());
     }
 
     public function posterName(string $text): string
