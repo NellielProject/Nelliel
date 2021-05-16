@@ -24,6 +24,7 @@ class TableDNSBL extends Table
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'service_url' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
             'return_codes' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -35,8 +36,9 @@ class TableDNSBL extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            service_url     TEXT DEFAULT NULL,
-            return_codes    TEXT DEFAULT NULL,
+            service_url     TEXT NOT NULL,
+            return_codes    TEXT NOT NULL,
+            enabled         SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL
         ) " . $options . ";";
 

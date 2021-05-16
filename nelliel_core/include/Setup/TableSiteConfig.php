@@ -90,6 +90,8 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['login_delay', '3', 0]);
         $this->insertDefaultRow(['session_length', '10800', 0]);
         $this->insertDefaultRow(['store_unhashed_ip', '1', 0]);
+        $this->insertDefaultRow(['use_dnsbl', '1', 0]);
+        $this->insertDefaultRow(['dnsbl_exceptions', '', 0]);
 
         // CAPTCHA
         $this->insertDefaultRow(['captcha_width', '250', 0]);

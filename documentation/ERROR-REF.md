@@ -74,6 +74,7 @@ Error 153: Already appealed. (classes/Snacks.php)
 Error 154: Missing or invalid IP. (classes/BanHammer.php)  
 Error 155: No IP hash. (classes/BanHammer.php)  
 Error 156: Ban appeals disabled. (classes/Snacks.php)  
+Error 157: DNSBL (classes/DNSBL.php)  
 
 Error 160: Board doesn't exist. (Admin/AdminBoards.php) 
 
