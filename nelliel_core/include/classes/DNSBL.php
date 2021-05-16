@@ -41,7 +41,7 @@ class DNSBL
 
         foreach ($services as $service)
         {
-            $lookup_result = $this->lookup($reverse_ip . '.' . $service['service_url']);
+            $lookup_result = $this->lookup($reverse_ip . '.' . $service['service_domain']);
             $return_codes = json_decode($service['return_codes'], true);
 
             if (empty($lookup_result) || !is_array($return_codes))
@@ -58,7 +58,7 @@ class DNSBL
 
                 if (in_array($entry['ip'], $return_codes['block']))
                 {
-                    nel_derp(157, sprintf(_gettext('Your IP was found on a DNS blacklist: %s'), $service['service_url']));
+                    nel_derp(157, sprintf(_gettext('Your IP was found on a DNS blacklist: %s'), $service['service_domain']));
                 }
             }
         }

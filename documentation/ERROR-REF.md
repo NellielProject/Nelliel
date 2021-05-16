@@ -159,6 +159,9 @@ Error 462: perm_delete_by_ip (Admin/AdminThreads.php)
 Error 470: perm_manage_logs (access) (Admin/AdminLogs.php)  
 Error 471: perm_manage_logs (action) (Admin/AdminLogs.php)  
 
+Error 480: perm_manage_dnsbl (access) (Admin/AdminDNSBL.php)  
+Error 481: perm_manage_dnsbl (action) (Admin/AdminDNSBL.php)  
+
 Error 550: perm_regen_pages (central_dispatch.php)  
 Error 551: perm_regen_caches (board) (central_dispatch.php)  
 Error 552: perm_regen_caches (site) (central_dispatch.php)  

@@ -81,6 +81,8 @@ function nel_dispatch_preparation()
         $snacks = new \Nelliel\Snacks($domain, new \Nelliel\BansAccess(nel_database()));
         $snacks->applyBan();
         //$snacks->checkHoneypot();
+        $dnsbl = new \Nelliel\DNSBL(nel_database());
+        $dnsbl->checkIP(nel_request_ip_address());
     }
 
     $inputs = nel_module_dispatch($inputs, $domain);

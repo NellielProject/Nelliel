@@ -247,6 +247,11 @@ class Dispatch
                 $admin_handler = new AdminStaffBoard($this->authorization, $this->domain, $this->session, $inputs);
                 $this->standard($admin_handler, $action);
                 break;
+
+            case 'dnsbl':
+                $admin_handler = new AdminDNSBL($this->authorization, $this->domain, $this->session, $inputs);
+                $this->standard($admin_handler, $action);
+                break;
         }
 
         return $admin_handler;
