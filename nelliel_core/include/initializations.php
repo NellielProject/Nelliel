@@ -20,9 +20,6 @@ define('NEL_BASE_HONEYPOT_FIELD3', 'website'); // Honeypot field name
 define('NEL_DEFAULT_TEXTDOMAIN_BIND', NEL_LANGUAGES_FILES_PATH . 'locale');
 
 // Set default values here in case the config is missing something
-$base_config['defaultadmin'] = '';
-$base_config['defaultadmin_pass'] = '';
-$base_config['tripcode_pepper'] = 'sodiumz';
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
 $base_config['use_file_cache'] = true;
