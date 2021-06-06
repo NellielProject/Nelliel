@@ -13,6 +13,7 @@ use Nelliel\Content\ContentID;
 use Nelliel\Content\ContentPost;
 use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
+use Nelliel\Render\Markdown\ImageboardMarkdown;
 use PDO;
 
 class OutputPost extends Output
@@ -313,10 +314,14 @@ class OutputPost extends Output
         {
             if (NEL_USE_RENDER_CACHE && isset($post_data['render_cache']['comment_data']))
             {
+                $markdown = new ImageboardMarkdown($this->domain);
+                $comment_data['comment_markdown'] = $markdown->parse($comment);
                 $parsed_comment = $post_data['render_cache']['comment_data'];
             }
             else
             {
+                $markdown = new ImageboardMarkdown($this->domain);
+                $comment_data['comment_markdown'] = $markdown->parse($comment);
                 $parsed_comment = $this->parseComment($comment, $post_content_id);
             }
 
