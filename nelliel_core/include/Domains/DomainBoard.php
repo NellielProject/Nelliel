@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Domains;
 
@@ -23,8 +22,18 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
-        $this->templatePath(
-                NEL_TEMPLATES_FILES_PATH . $this->front_end_data->template($this->setting('template_id'))['directory']);
+
+        // TODO: Fix this better
+        if(isset($this->front_end_data->template($this->setting('template_id'))['directory']))
+        {
+            $this->templatePath(
+                    NEL_TEMPLATES_FILES_PATH . $this->front_end_data->template($this->setting('template_id'))['directory']);
+        }
+        else
+        {
+            $this->templatePath();
+        }
+
         $this->global_variation = new DomainAllBoards($this->database);
     }
 
@@ -85,15 +94,19 @@ class DomainBoard extends Domain implements NellielCacheInterface
                 'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $db_prefix = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_COLUMN);
         $config_table = $db_prefix . '_config';
-        $config_list = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $config_table . '" ON "' . NEL_SETTINGS_TABLE .
-                '"."setting_name" = "' . $config_table . '"."setting_name" WHERE "setting_category" = \'board\'',
-                PDO::FETCH_ASSOC);
 
-        foreach ($config_list as $config)
+        if ($this->database->tableExists($config_table))
         {
-            $config['setting_value'] = nel_cast_to_datatype($config['setting_value'], $config['data_type'], false);
-            $settings[$config['setting_name']] = $config['setting_value'];
+            $config_list = $this->database->executeFetchAll(
+                    'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $config_table . '" ON "' .
+                    NEL_SETTINGS_TABLE . '"."setting_name" = "' . $config_table .
+                    '"."setting_name" WHERE "setting_category" = \'board\'', PDO::FETCH_ASSOC);
+
+            foreach ($config_list as $config)
+            {
+                $config['setting_value'] = nel_cast_to_datatype($config['setting_value'], $config['data_type'], false);
+                $settings[$config['setting_name']] = $config['setting_value'];
+            }
         }
 
         return $settings;

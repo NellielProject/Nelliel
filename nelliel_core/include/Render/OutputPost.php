@@ -45,7 +45,7 @@ class OutputPost extends Output
 
         if (NEL_USE_RENDER_CACHE)
         {
-            if ($post_data['regen_cache'])
+            if ($post_data['regen_cache'] || empty($post_data['cache']))
             {
                 $post->storeCache();
                 $post_data['render_cache'] = $post->getCache();
