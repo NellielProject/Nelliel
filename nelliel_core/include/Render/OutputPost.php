@@ -88,6 +88,7 @@ class OutputPost extends Output
             $output_file_info = new OutputFile($this->domain, $this->write_mode);
             $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
             $content_row = array();
+            $this->render_data['has_file'] = count($file_list) === 1;
             $this->render_data['multi_file'] = count($file_list) > 1;
 
             foreach ($file_list as $file)

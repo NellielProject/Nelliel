@@ -257,9 +257,9 @@ form {
 	border-radius: 3px;
 }
 
-.greentext {
-	background: var(--greentext-background);
-    color: var(--greentext-color);
+.quote {
+	background: var(--quote-background);
+    color: var(--quote-color);
 }
 
 .post-number-link {
@@ -299,8 +299,10 @@ form {
 }
 
 .op.post-comments {
+	font-family: inherit;
 	color: var(--op-post-comments-color, var(--post-comments-color));
     word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 /* Reply post */
@@ -333,8 +335,10 @@ form {
 }
 
 .reply.post-comments {
+	font-family: inherit;
 	color: var(--reply-post-comments-color, var(--post-comments-color));
     word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 .indents {

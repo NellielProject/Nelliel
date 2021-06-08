@@ -137,14 +137,14 @@ class ImageboardMarkdown extends Parser
      * Parses quotes and content cites
      * @marker >
      */
-    protected function parseGreentextAndContentCite(string $text): array
+    protected function parseQuoteAndContentCite(string $text): array
     {
-        $greentext_regex = '/^>(?:(?!>\d+|>>\/\w+\/))(.*)/iu';
+        $quote_regex = '/^>(?:(?!>\d+|>>\/\w+\/))(.*)/iu';
         $matches = array();
 
-        if (preg_match($greentext_regex, $text, $matches) === 1)
+        if (preg_match($quote_regex, $text, $matches) === 1)
         {
-            return [['greentext', $this->parseInline($matches[1])], utf8_strlen($matches[0])];
+            return [['quote', $this->parseInline($matches[1])], utf8_strlen($matches[0])];
         }
         else
         {
@@ -159,9 +159,9 @@ class ImageboardMarkdown extends Parser
         }
     }
 
-    protected function renderGreentext(array $block): string
+    protected function renderQuote(array $block): string
     {
-        return '<span class="greentext">>' . $this->renderAbsy($block[1]) . '</span>';
+        return '<span class="quote">>' . $this->renderAbsy($block[1]) . '</span>';
     }
 
     protected function renderContentCite(array $block): string
