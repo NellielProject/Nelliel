@@ -244,7 +244,7 @@ class Cites
             $return['type'] = 'post-cite';
         }
 
-        if (preg_match('/>>>\/(.+?)\/([\d]*)/u', $text, $matches) === 1)
+        if (preg_match('/^>>>\/(.+?)\/([\d]*)/u', $text, $matches) === 1)
         {
             $return['matches'] = $matches;
 

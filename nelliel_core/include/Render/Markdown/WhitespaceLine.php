@@ -27,7 +27,7 @@ trait WhitespaceLine
     protected function renderWhitespaceLine(array $block): string
     {
         $content = preg_replace('/^&(.*)\n/ui', "$1", $this->renderAbsy($block['content']));
-        return '<span class="plaintext">' . $content . '</span><br>';
+        return $content;
     }
 
     abstract protected function parseInline($text);

@@ -18,7 +18,6 @@ use Nelliel\Cites;
 class ImageboardMarkdown extends Parser
 {
     use StrikeoutTrait;
-    use Greentext;
     use WhitespaceLine;
     use URL;
     protected $domain;
@@ -77,8 +76,7 @@ class ImageboardMarkdown extends Parser
             // Adapted from GithubMarkdown
             // Without this only some blocks will be parsed before it collapses the remaining lines
             // Don't ask how long I spent losing sanity before realizing what 'break paragraphs' meant
-            if ($line === '' || ltrim($lines[$i]) === '' || $this->identifyGreentext($line, $lines, $i) ||
-                    $this->identifyWhitespaceLine($line, $lines, $i))
+            if ($line === '' || ltrim($lines[$i]) === '' || $this->identifyWhitespaceLine($line, $lines, $i))
             {
                 break;
             }
@@ -95,7 +93,7 @@ class ImageboardMarkdown extends Parser
     // Use line breaks instead of p tags
     protected function renderParagraph($block)
     {
-        return '<span class="plaintext">' . $this->renderAbsy($block['content']) . '</span><br>';
+        return $this->renderAbsy($block['content']);
     }
 
     protected function inlineMarkers()
@@ -136,22 +134,34 @@ class ImageboardMarkdown extends Parser
     }
 
     /**
-     * ContentCite
-     * @marker >>
-     * @marker >>>
+     * Parses quotes and content cites
+     * @marker >
      */
-    protected function parseContentCite(string $text): array
+    protected function parseGreentextAndContentCite(string $text): array
     {
-        $cite_type = $this->cites->citeType($text);
+        $greentext_regex = '/^>(?:(?!>\d+|>>\/\w+\/))(.*)/iu';
+        $matches = array();
 
-        if ($cite_type['type'] !== 'not-cite')
+        if (preg_match($greentext_regex, $text, $matches) === 1)
         {
-            return [['contentcite', $cite_type['matches'][0]], utf8_strlen($cite_type['matches'][0])];
+            return [['greentext', $this->parseInline($matches[1])], utf8_strlen($matches[0])];
         }
         else
         {
-            return [['text', '>>'], 2];
+            $cite_type = $this->cites->citeType($text);
+
+            if ($cite_type['type'] !== 'not-cite')
+            {
+                return [['contentcite', $cite_type['matches'][0]], utf8_strlen($cite_type['matches'][0])];
+            }
+
+            return [['text', '>'], 1];
         }
+    }
+
+    protected function renderGreentext(array $block): string
+    {
+        return '<span class="greentext">>' . $this->renderAbsy($block[1]) . '</span>';
     }
 
     protected function renderContentCite(array $block): string
