@@ -14,6 +14,7 @@ use Nelliel\Content\ContentPost;
 use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
 use Nelliel\Render\Markdown\ImageboardMarkdown;
+use cebe\markdown\GithubMarkdown;
 use PDO;
 
 class OutputPost extends Output

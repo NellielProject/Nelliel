@@ -10,11 +10,15 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domains\Domain;
 use cebe\markdown\Parser;
+use cebe\markdown\block\HeadlineTrait;
+use cebe\markdown\inline\StrikeoutTrait;
 use ReflectionMethod;
 
 class ImageboardMarkdown extends Parser
 {
-    use \cebe\markdown\inline\StrikeoutTrait;
+    use StrikeoutTrait;
+    use Greentext;
+    use WhitespaceLine;
     protected $domain;
 
     function __construct(Domain $domain, string $input = null)
@@ -27,7 +31,70 @@ class ImageboardMarkdown extends Parser
         }
     }
 
-    // Custom method needed as protocols are variable and can't be done in annotation form
+    public function parse($text)
+    {
+        $this->prepare();
+
+        if (ltrim($text) === '')
+        {
+            return '';
+        }
+
+        $text = str_replace(["\r\n", "\n\r", "\r"], "\n", $text);
+
+        $this->prepareMarkers($text);
+        $blocks = explode("\n", $text);
+
+        // We have to enclose empty and whitespace lines so the parser doesn't purge them
+        // Newlines were removed from user input during the explode function
+        // So we can use those to identify internal modifications
+        for ($i = 0; $i < count($blocks); $i ++)
+        {
+            if (trim($blocks[$i]) === '')
+            {
+                $blocks[$i] = '&' . $blocks[$i] . "\n";
+            }
+        }
+
+        $absy = $this->parseBlocks($blocks);
+        $markup = $this->renderAbsy($absy);
+
+        $this->cleanup();
+        return $markup;
+    }
+
+    protected function consumeParagraph($lines, $current)
+    {
+        // consume until newline
+        $content = [];
+        for ($i = $current, $count = count($lines); $i < $count; $i ++)
+        {
+            $line = $lines[$i];
+
+            // Adapted from GithubMarkdown
+            // Without this only some blocks will be parsed before it collapses the remaining lines
+            // Don't ask how long I spent losing sanity before realizing what 'break paragraphs' meant
+            if ($line === '' || ltrim($lines[$i]) === '' || $this->identifyGreentext($line, $lines, $i) ||
+                    $this->identifyWhitespaceLine($line, $lines, $i) || $this->identifyHeadline($line, $lines, $i))
+            {
+                break;
+            }
+            else
+            {
+                $content[] = $line;
+            }
+        }
+
+        $block = ['paragraph', 'content' => $this->parseInline(implode("\n", $content))];
+        return [$block, -- $i];
+    }
+
+    // Use line breaks instead of p tags
+    protected function renderParagraph($block)
+    {
+        return '<span class="plaintext">' . $this->renderAbsy($block['content']) . '</span><br>';
+    }
+
     protected function inlineMarkers()
     {
         $markers = [];
@@ -39,6 +106,7 @@ class ImageboardMarkdown extends Parser
             $methodName = $method->getName();
             $matches = array();
 
+            // Extra check needed since we're in strict mode
             if ($method->getDocComment() !== false && strncmp($methodName, 'parse', 5) === 0)
             {
                 preg_match_all('/@marker ([^\s]+)/', $method->getDocComment(), $matches);
@@ -50,6 +118,7 @@ class ImageboardMarkdown extends Parser
             }
         }
 
+        // Available protocols depend on an external setting so markers can't be collected from annotations
         $protocols_list = explode('|', $this->domain->setting('url_protocols'));
 
         if (is_array($protocols_list))
@@ -60,36 +129,10 @@ class ImageboardMarkdown extends Parser
             }
         }
 
-        //$markers['>>'] = 'parseCite'; // remove this and just use annotation (since we probably can do that)?
         return $markers;
     }
 
-    protected function consumeParagraph($lines, $current)
-    {
-        // consume until newline
-        $content = [];
-        for ($i = $current, $count = count($lines); $i < $count; $i ++)
-        {
-            // We want to preserve empty lines so that check was removed
-            $content[] = $lines[$i];
-        }
-        $block = ['paragraph', 'content' => $this->parseInline(implode("\n", $content))];
-        return [$block, -- $i];
-    }
-
-    // Comment will only be a single paragraph so we leave that to the template
-    protected function renderParagraph($block)
-    {
-        return $this->renderAbsy($block['content']);
-    }
-
-    // Only need a standard <br> for newlines
-    protected function renderText($text)
-    {
-        return str_replace("\n", '<br>', $text[1]);
-    }
-
-    protected function parseURL($text): array
+    protected function parseURL(string $text): array
     {
         $url_protocols = $this->domain->setting('url_protocols');
         $url_regex = '#(' . $url_protocols . ')(:\/\/)[^\s]+#';
@@ -107,7 +150,7 @@ class ImageboardMarkdown extends Parser
         }
     }
 
-    protected function renderURL($block): string
+    protected function renderURL(array $block): string
     {
         $rel = (nel_site_domain()->setting('noreferrer_nofollow')) ? 'rel="noreferrer nofollow"' : '';
         $open_tag = '<a href="' . $block[1] . '" ' . $rel . ' class="external-link">';
