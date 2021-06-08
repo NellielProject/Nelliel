@@ -8,10 +8,12 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use cebe\markdown\Parser;
 use cebe\markdown\inline\StrikeoutTrait;
 use ReflectionMethod;
+use Nelliel\Cites;
 
 class ImageboardMarkdown extends Parser
 {
@@ -21,11 +23,15 @@ class ImageboardMarkdown extends Parser
     use URL;
     protected $domain;
     protected $url_protocols;
+    protected $cites;
+    protected $post_content_id;
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, ContentID $post_content_id)
     {
         $this->domain = $domain;
         $this->url_protocols = $this->domain->setting('url_protocols');
+        $this->cites = new Cites($domain->database());
+        $this->post_content_id = $post_content_id;
     }
 
     public function parse($text)
@@ -127,5 +133,40 @@ class ImageboardMarkdown extends Parser
         }
 
         return $markers;
+    }
+
+    /**
+     * ContentCite
+     * @marker >>
+     * @marker >>>
+     */
+    protected function parseContentCite(string $text): array
+    {
+        $cite_type = $this->cites->citeType($text);
+
+        if ($cite_type['type'] !== 'not-cite')
+        {
+            return [['contentcite', $cite_type['matches'][0]], utf8_strlen($cite_type['matches'][0])];
+        }
+        else
+        {
+            return [['text', '>>'], 2];
+        }
+    }
+
+    protected function renderContentCite(array $block): string
+    {
+        $cite_data = $this->cites->getCiteData($block[1], $this->domain, $this->post_content_id);
+
+        if (isset($cite_data['exists']) && $cite_data['exists'])
+        {
+            $cite_url = $this->cites->createPostLinkURL($cite_data, $this->domain);
+            $this->cites->addCite($cite_data);
+            return '<a href="' . $cite_url . '" class="post-cite" data-command="show-linked-post">' . $block[1] . '</a>';
+        }
+        else
+        {
+            return '<s class="invalid-cite">' . $block[1] . '</s>';
+        }
     }
 }

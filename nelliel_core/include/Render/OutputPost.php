@@ -14,7 +14,6 @@ use Nelliel\Content\ContentPost;
 use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
 use Nelliel\Render\Markdown\ImageboardMarkdown;
-use cebe\markdown\GithubMarkdown;
 use PDO;
 
 class OutputPost extends Output
@@ -315,15 +314,17 @@ class OutputPost extends Output
         {
             if (NEL_USE_RENDER_CACHE && isset($post_data['render_cache']['comment_data']))
             {
-                $markdown = new ImageboardMarkdown($this->domain);
+                $markdown = new ImageboardMarkdown($this->domain, $post_content_id);
                 $comment_data['comment_markdown'] = $markdown->parse($comment);
-                $parsed_comment = $post_data['render_cache']['comment_data'];
+                //$parsed_comment = $post_data['render_cache']['comment_data'];
+                $parsed_comment = array();
             }
             else
             {
-                $markdown = new ImageboardMarkdown($this->domain);
+                $markdown = new ImageboardMarkdown($this->domain, $post_content_id);
                 $comment_data['comment_markdown'] = $markdown->parse($comment);
-                $parsed_comment = $this->parseComment($comment, $post_content_id);
+                //$parsed_comment = $this->parseComment($comment, $post_content_id);
+                $parsed_comment = array();
             }
 
             $comment_data['comment_lines'] = $parsed_comment;

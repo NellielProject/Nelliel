@@ -22,13 +22,16 @@ trait Greentext
 
     protected function consumeGreentext(array $lines, int $current): array
     {
-        $block = ['greentext', 'content' => $this->parseInline($lines[$current])];
+        $greentext_regex = '/^>((?!>\d+|>>\/\w+\/).*)/iu';
+        $matches = array();
+        preg_match($greentext_regex, $lines[$current], $matches);
+        $block = ['greentext', 'content' => $this->parseInline($matches[1])];
         return [$block, $current];
     }
 
     protected function renderGreentext(array $block): string
     {
-        return '<span class="greentext">' . $this->renderAbsy($block['content']) . '</span><br>';
+        return '<span class="greentext">>' . $this->renderAbsy($block['content']) . '</span><br>';
     }
 
     abstract protected function parseInline($text);

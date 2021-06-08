@@ -48,7 +48,7 @@ class Cites
         }
         else
         {
-            return array();
+            return array('exists' => false);
         }
 
         $cite_data['source_board'] = $source_domain->id();
@@ -229,33 +229,34 @@ class Cites
 
     public function isCite(string $text)
     {
-        return preg_match('/^>>([\d]+)|>>>\/(.+?)\/([\d]+)$/u', $text) === 1;
+        return preg_match('/^>>([\d]+)|>>>\/(.+?)\/([\d]*)$/u', $text) === 1;
     }
 
     public function citeType(string $text)
     {
         $return = array();
         $matches = array();
+        $return['type'] = 'not-cite';
 
-        if (preg_match('#^>>([\d]+)$#u', $text, $matches) === 1)
+        if (preg_match('/^>>([\d]+)/u', $text, $matches) === 1)
         {
             $return['matches'] = $matches;
             $return['type'] = 'post-cite';
         }
-        else if (preg_match('#>>>\/(.+?)\/([\d]+)#u', $text, $matches) === 1)
+
+        if (preg_match('/>>>\/(.+?)\/([\d]*)/u', $text, $matches) === 1)
         {
             $return['matches'] = $matches;
-            $return['type'] = 'crossboard-post-cite';
-        }
-        else if (preg_match('#>>>\/(.+?)\/#u', $text, $matches) === 1)
-        {
-            $return['matches'] = $matches;
-            $return['type'] = 'board-cite';
-        }
-        else
-        {
-            $return['matches'] = $matches;
-            $return['type'] = '';
+
+            if($matches[2] !== '')
+            {
+                $return['type'] = 'crossboard-post-cite';
+            }
+            else
+            {
+                $return['type'] = 'board-cite';
+            }
+
         }
 
         return $return;
