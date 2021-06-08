@@ -10,7 +10,6 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domains\Domain;
 use cebe\markdown\Parser;
-use cebe\markdown\block\HeadlineTrait;
 use cebe\markdown\inline\StrikeoutTrait;
 use ReflectionMethod;
 
@@ -19,16 +18,14 @@ class ImageboardMarkdown extends Parser
     use StrikeoutTrait;
     use Greentext;
     use WhitespaceLine;
+    use URL;
     protected $domain;
+    protected $url_protocols;
 
-    function __construct(Domain $domain, string $input = null)
+    function __construct(Domain $domain)
     {
         $this->domain = $domain;
-
-        if (!is_null($input))
-        {
-            $this->addFromString($input);
-        }
+        $this->url_protocols = $this->domain->setting('url_protocols');
     }
 
     public function parse($text)
@@ -75,7 +72,7 @@ class ImageboardMarkdown extends Parser
             // Without this only some blocks will be parsed before it collapses the remaining lines
             // Don't ask how long I spent losing sanity before realizing what 'break paragraphs' meant
             if ($line === '' || ltrim($lines[$i]) === '' || $this->identifyGreentext($line, $lines, $i) ||
-                    $this->identifyWhitespaceLine($line, $lines, $i) || $this->identifyHeadline($line, $lines, $i))
+                    $this->identifyWhitespaceLine($line, $lines, $i))
             {
                 break;
             }
@@ -118,8 +115,8 @@ class ImageboardMarkdown extends Parser
             }
         }
 
-        // Available protocols depend on an external setting so markers can't be collected from annotations
-        $protocols_list = explode('|', $this->domain->setting('url_protocols'));
+        // Available protocols depend on a dynamic external setting so markers can't be collected from annotations
+        $protocols_list = explode('|', $this->url_protocols);
 
         if (is_array($protocols_list))
         {
@@ -130,30 +127,5 @@ class ImageboardMarkdown extends Parser
         }
 
         return $markers;
-    }
-
-    protected function parseURL(string $text): array
-    {
-        $url_protocols = $this->domain->setting('url_protocols');
-        $url_regex = '#(' . $url_protocols . ')(:\/\/)[^\s]+#';
-        $matches = array();
-
-        if (preg_match($url_regex, $text, $matches) === 1)
-        {
-            // Provides the suffix for the render function (i.e. render<suffix>)
-            // Also provides string length as an offset so this isn't reparsed
-            return [['url', $matches[0]], utf8_strlen($matches[0])];
-        }
-        else
-        {
-            return [['text', substr($text, 0, 3)], 4]; // needs to be better
-        }
-    }
-
-    protected function renderURL(array $block): string
-    {
-        $rel = (nel_site_domain()->setting('noreferrer_nofollow')) ? 'rel="noreferrer nofollow"' : '';
-        $open_tag = '<a href="' . $block[1] . '" ' . $rel . ' class="external-link">';
-        return $open_tag . $block[1] . '</a>';
     }
 }

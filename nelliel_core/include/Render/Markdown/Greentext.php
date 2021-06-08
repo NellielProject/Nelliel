@@ -14,13 +14,13 @@ trait Greentext
      * Greentext
      * @marker >
      */
-    protected function identifyGreentext($line, $lines, $current): bool
+    protected function identifyGreentext(string $line, array $lines, int $current): bool
     {
         $greentext_regex = '/^>(?!>\d+|>>\/\w+\/)/iu';
         return preg_match($greentext_regex, $line) === 1;
     }
 
-    protected function consumeGreentext($lines, $current): array
+    protected function consumeGreentext(array $lines, int $current): array
     {
         $block = ['greentext', 'content' => $this->parseInline($lines[$current])];
         return [$block, $current];

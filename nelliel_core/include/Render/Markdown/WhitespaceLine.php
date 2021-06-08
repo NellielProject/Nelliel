@@ -13,12 +13,12 @@ trait WhitespaceLine
     /**
      * WhitespaceLine
      */
-    protected function identifyWhitespaceLine($line, $lines, $current): bool
+    protected function identifyWhitespaceLine(string $line, array $lines, int $current): bool
     {
         return preg_match('/^&.*?\n/ui', $line) === 1;
     }
 
-    protected function consumeWhitespaceLine($lines, $current): array
+    protected function consumeWhitespaceLine(array $lines, int $current): array
     {
         $block = ['whitespaceline', 'content' => $this->parseInline($lines[$current])];
         return [$block, $current];
