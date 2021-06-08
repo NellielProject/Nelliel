@@ -64,52 +64,15 @@ class OutputCatalog extends Output
 
             if (!empty($first_post['comment']))
             {
-                $first_post['comment'] = trim($first_post['comment']);
+                $output_post = new OutputPost($this->domain, false);
 
-                foreach ($this->output_filter->newlinesToArray($first_post['comment']) as $line)
+                if (NEL_USE_RENDER_CACHE && isset($first_post['render_cache']['comment_data']))
                 {
-                    $line_parts = array();
-                    $segments = preg_split('#(>>[0-9]+)|(>>>\/.+\/[0-9]+)#', $line, -1, PREG_SPLIT_DELIM_CAPTURE);
-
-                    foreach ($segments as $segment)
-                    {
-                        $cite_info = $cites->citeType($segment);
-                        $cite_url = '';
-
-                        if (!empty($cite_info['type']))
-                        {
-                            if (isset($first_post['render_cache']['cites'][$segment]))
-                            {
-                                $cite_data = $first_post['render_cache']['cites'][$segment];
-                            }
-                            else
-                            {
-                                $cite_data = $cites->getCiteData($segment, $this->domain, $post_content_id);
-                            }
-
-                            if ($cite_data['exists'])
-                            {
-                                $cite_url = $cites->createPostLinkURL($cite_data, $this->domain);
-                            }
-                        }
-
-                        if (!empty($cite_url))
-                        {
-                            if (preg_match('#^\s*>#', $segment) === 1)
-                            {
-                                $link = array();
-                                $link['link_url'] = $cite_url;
-                                $link['link_text'] = $segment;
-                                $line_parts[]['link'] = $link;
-                            }
-                        }
-                        else
-                        {
-                            $line_parts[]['text'] = $segment;
-                        }
-                    }
-
-                    $thread_data['comment_lines'][]['line'] = $line_parts;
+                    $thread_data['comment_markdown'] = $first_post['render_cache']['comment_data'];
+                }
+                else
+                {
+                    $thread_data['comment_markdown'] = $output_post->parseComment($first_post['comment'], $post_content_id);
                 }
             }
 
