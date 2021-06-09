@@ -30,15 +30,12 @@ abstract class Domain
     protected $translator;
     protected $locale;
     protected $language;
-    protected $global_variation = null;
 
     protected abstract function loadSettings(): void;
 
     protected abstract function loadReferences(): void;
 
     protected abstract function loadSettingsFromDatabase(): array;
-
-    public abstract function globalVariation();
 
     protected function utilitySetup()
     {

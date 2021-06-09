@@ -70,11 +70,6 @@ class DomainSite extends Domain implements NellielCacheInterface
         return $settings;
     }
 
-    public function globalVariation()
-    {
-        return false;
-    }
-
     public function regenCache()
     {
         if (NEL_USE_FILE_CACHE)

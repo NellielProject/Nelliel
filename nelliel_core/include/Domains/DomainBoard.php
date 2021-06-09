@@ -33,8 +33,6 @@ class DomainBoard extends Domain implements NellielCacheInterface
         {
             $this->templatePath();
         }
-
-        $this->global_variation = new DomainAllBoards($this->database);
     }
 
     protected function loadSettings(): void
@@ -110,16 +108,6 @@ class DomainBoard extends Domain implements NellielCacheInterface
         }
 
         return $settings;
-    }
-
-    public function globalVariation()
-    {
-        return new DomainAllBoards($this->database);
-    }
-
-    public function multiVariation()
-    {
-        return new DomainMultiBoard($this->database);
     }
 
     public function exists()
