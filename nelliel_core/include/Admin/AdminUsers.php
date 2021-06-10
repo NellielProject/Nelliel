@@ -86,10 +86,6 @@ class AdminUsers extends Admin
                 {
                     $domain = new DomainSite($this->database);
                 }
-                else if (strpos($key, Domain::ALL_BOARDS))
-                {
-                    $domain = new DomainAllBoards($this->database);
-                }
                 else
                 {
                     $domain = new DomainBoard(substr($key, 12), $this->database);

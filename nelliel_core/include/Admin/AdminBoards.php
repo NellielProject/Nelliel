@@ -61,7 +61,7 @@ class AdminBoards extends Admin
             }
         }
 
-        if ($board_uri === Domain::SITE || $board_uri === Domain::ALL_BOARDS || $board_uri === Domain::MULTI_BOARD || $board_uri === NEL_TEMPLATES_DIR || $board_uri === NEL_ASSETS_DIR || $board_uri === 'nelliel_core' ||
+        if ($board_uri === Domain::SITE || $board_uri === NEL_TEMPLATES_DIR || $board_uri === NEL_ASSETS_DIR || $board_uri === 'nelliel_core' ||
                 $board_uri === 'documentation' || $board_uri === 'tests' || $board_uri === 'site' || $board_uri === 'banners')
         {
             nel_derp(244, _gettext('Board URI is reserved.'));

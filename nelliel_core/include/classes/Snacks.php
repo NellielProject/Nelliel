@@ -66,8 +66,8 @@ class Snacks
             if (!$loaded)
             {
                 $prepared = $this->database->prepare(
-                        'SELECT "hash_type", "file_hash" FROM "nelliel_file_filters" WHERE "board_id" = ? OR "board_id" = ?');
-                $filters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id(), Domain::ALL_BOARDS],
+                        'SELECT "hash_type", "file_hash" FROM "nelliel_file_filters" WHERE "board_id" = ? OR "all_boards" = 1');
+                $filters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()],
                         PDO::FETCH_ASSOC);
 
                 foreach ($filters as $filter)
@@ -171,9 +171,7 @@ class Snacks
                 continue;
             }
 
-            $board_id = $ban_hammer->getData('board_id');
-
-            if ($board_id === Domain::ALL_BOARDS || $board_id === $this->domain->id())
+            if ($ban_hammer->getData('all_boards') > 0 || $ban_hammer->getData('board_id') === $this->domain->id())
             {
                 $range = new Range(new IP($ban_hammer->getData('ip_address_start')),
                         new IP($ban_hammer->getData('ip_address_end')));
@@ -208,9 +206,7 @@ class Snacks
                 continue;
             }
 
-            $board_id = $ban_hammer->getData('board_id');
-
-            if ($board_id === Domain::ALL_BOARDS || $board_id === $this->domain->id())
+            if ($ban_hammer->getData('all_boards') > 0|| $ban_hammer->getData('board_id') === $this->domain->id())
             {
                 if (empty($longest) || $ban_hammer->timeToExpiration() > $longest->timeToExpiration())
                 {
