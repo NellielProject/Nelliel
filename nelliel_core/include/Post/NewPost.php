@@ -66,21 +66,27 @@ class NewPost
 
         // Process FGSFDS
         $fgsfds = new \Nelliel\FGSFDS();
+        $post_fgsfds = $post->data('fgsfds') ?? '';
 
         if ($this->domain->setting('allow_fgsfds_commands'))
         {
-            $fgsfds_commands_added = $fgsfds->addFromString($post->data('fgsfds') ?? '');
+            $fgsfds_commands_added = $fgsfds->addFromString($post_fgsfds);
         }
+
+        $post_email = $post->data('email') ?? '';
 
         // If there are duplicates, the FGSFDS field takes precedence
         if ($this->domain->setting('allow_email_commands'))
         {
-            $email_commands_added = $fgsfds->addFromString($post->data('email') ?? '');
-        }
+            $email_parts = explode(' ', $post_email);
+            $email_commands_added = false;
 
-        if ($fgsfds_commands_added || $email_commands_added)
-        {
-            $post->changeData('email', '');
+            if ($email_parts !== false &&
+                    (count($email_parts) > 1 || preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1))
+            {
+                $email_commands_added = $fgsfds->addFromString($post_email);
+                $post->changeData('email', null);
+            }
         }
 
         $post->changeData('sage', $fgsfds->commandIsSet('sage'));
@@ -141,8 +147,8 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
-                            'sage') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
+                    !$fgsfds->commandIsSet('sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
