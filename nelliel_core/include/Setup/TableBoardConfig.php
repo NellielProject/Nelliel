@@ -91,6 +91,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['max_filesize', '5120', 0, '']);
         $this->insertDefaultRow(['truncate_long_fields', '0', 0, '']);
         $this->insertDefaultRow(['forced_anonymous', '0', 0, '']);
+        $this->insertDefaultRow(['allow_sage', '1', 0, '']);
         $this->insertDefaultRow(['allow_tripcodes', '1', 0, '']);
         $this->insertDefaultRow(['allow_email_commands', '1', 0, '']);
         $this->insertDefaultRow(['allow_fgsfds_commands', '1', 0, '']);

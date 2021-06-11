@@ -89,7 +89,13 @@ class NewPost
             }
         }
 
-        $post->changeData('sage', $fgsfds->commandIsSet('sage'));
+        $post->changeData('sage', false);
+
+        if($this->domain->setting('allow_sage'))
+        {
+            $post->changeData('sage', $fgsfds->commandIsSet('sage'));
+        }
+
         $uploads = $uploads_handler->process($post);
         $spoon = !empty($uploads);
         $post->changeData('content_count', count($uploads));
