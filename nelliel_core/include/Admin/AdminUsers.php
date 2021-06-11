@@ -15,7 +15,6 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Render\OutputPanelUsers;
-use Nelliel\Domains\DomainAllBoards;
 
 class AdminUsers extends Admin
 {
