@@ -102,6 +102,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['trim_comment_newlines_start', '0', 0, '']);
         $this->insertDefaultRow(['trim_comment_newlines_end', '1', 0, '']);
         $this->insertDefaultRow(['anonymous_names', '["Anonymous"]', 0, '']);
+        $this->insertDefaultRow(['always_noko', '0', 0, '']);
 
         // Content handling
         $this->insertDefaultRow(['preferred_filename', 'original', 0, '']);
