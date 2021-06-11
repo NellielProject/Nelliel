@@ -143,7 +143,8 @@ class ContentPost extends ContentHandler
     {
         $file_handler = nel_utilities()->fileHandler();
         $file_handler->createDirectory(
-                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM, true);
+                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM,
+                true);
         $file_handler->createDirectory(
                 $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
                 NEL_DIRECTORY_PERM, true);
@@ -187,13 +188,22 @@ class ContentPost extends ContentHandler
                 nel_derp(62, _gettext('Cannot remove post. Board is locked.'));
             }
 
-            $delete_post_cooldown = $this->domain->setting('delete_post_cooldown');
+            $session = new \Nelliel\Account\Session();
+            $user = $session->user();
+            $bypass = false;
 
-            if ($delete_post_cooldown > 0 && time() - $this->content_data['post_time'] < $delete_post_cooldown)
+            if ($user && $this->$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
+            {
+                $bypass = true;
+            }
+
+            $delete_post_renzoku = $this->domain->setting('delete_post_renzoku');
+
+            if (!$bypass && $delete_post_renzoku > 0 && time() - $this->content_data['post_time'] < $delete_post_renzoku)
             {
                 nel_derp(64,
                         sprintf(_gettext('You must wait %d seconds after making a post before it can be deleted.'),
-                                $delete_post_cooldown));
+                                $delete_post_renzoku));
             }
         }
 
