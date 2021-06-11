@@ -144,6 +144,7 @@ form {
 	padding: 3px;
 	width: 14rem;
 	height: 14rem;
+	overflow-x: hidden;
 }
 
 .catalog-open-link {
@@ -270,6 +271,12 @@ form {
 	white-space: pre-wrap;
 }
 
+.post-comments {
+	font-family: inherit;
+	word-wrap: break-word;
+    white-space: pre-wrap;
+}
+
 /* OP post */
 .op.post-header-info {
     margin-left: 1.5em;
@@ -299,10 +306,7 @@ form {
 }
 
 .op.post-comments {
-	font-family: inherit;
 	color: var(--op-post-comments-color, var(--post-comments-color));
-    word-wrap: break-word;
-    white-space: pre-wrap;
 }
 
 /* Reply post */
@@ -335,10 +339,7 @@ form {
 }
 
 .reply.post-comments {
-	font-family: inherit;
 	color: var(--reply-post-comments-color, var(--post-comments-color));
-    word-wrap: break-word;
-    white-space: pre-wrap;
 }
 
 .indents {
