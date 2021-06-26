@@ -64,7 +64,8 @@ class FileHandler
             $output = '<?php
 
 declare(strict_types=1);
- if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");} ' . $output;
+if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
+' . $output;
         }
 
         return $this->writeFile($file, $output, NEL_FILES_PERM, true, NEL_DIRECTORY_PERM, $temp_move);

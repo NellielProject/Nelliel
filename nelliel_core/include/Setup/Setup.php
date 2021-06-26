@@ -63,7 +63,7 @@ class Setup
         //$regen = new \Nelliel\Regen();
         $site_domain->regenCache();
         //$regen->news($site_domain);
-        $generate_files->installDone(false);
+        $generate_files->installDone();
 
         if ($this->ownerCreated())
         {
@@ -100,7 +100,8 @@ class Setup
     <input type="submit" value="Submit" data-i18n-attributes="gettext|value">
 </div>';
             echo '</form></body></html>';
-            $generate_files->ownerCreate($install_id, false);
+            $generate_files->ownerCreate($install_id);
+            $generate_files->versions();
             die();
         }
     }
