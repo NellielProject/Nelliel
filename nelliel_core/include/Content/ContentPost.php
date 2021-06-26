@@ -165,7 +165,7 @@ class ContentPost extends ContentHandler
         {
             $cite_data = $cites->getCiteData($cite, $this->domain, $this->content_id);
 
-            if ($cite_data['exists'])
+            if ($cite_data['exists'] || $cite_data['future'])
             {
                 $cites->addCite($cite_data);
             }
