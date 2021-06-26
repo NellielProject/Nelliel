@@ -246,6 +246,7 @@ form {
     display: block;
     background: var(--reply-post-background);
     border: var(--reply-post-border);
+    white-space: normal;
 }
 
 .poster-id-style {
