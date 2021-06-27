@@ -104,15 +104,18 @@
 	{{# graphics_handler }}
 		{{> panels/pieces/settings_select }}
 	{{/ graphics_handler }}
-	{{# noreferrer_nofollow }}
-		{{> panels/pieces/settings_checkbox }}
-	{{/ noreferrer_nofollow }}
 	{{# display_render_timer }}
 		{{> panels/pieces/settings_checkbox }}
 	{{/ display_render_timer }}
 	{{# site_content_disclaimer }}
 		{{> panels/pieces/settings_text }}
 	{{/ site_content_disclaimer }}
+	{{# site_referrer_policy }}
+		{{> panels/pieces/settings_select }}
+	{{/ site_referrer_policy }}
+	{{# nofollow_external_links }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ nofollow_external_links }}
 	<div class="display-row">
 		<hr class="display_cell">
 	</div>

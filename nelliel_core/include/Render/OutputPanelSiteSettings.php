@@ -69,7 +69,7 @@ class OutputPanelSiteSettings extends Output
                     {
                         $options = array();
                         $options['option_name'] = $option;
-                        $options['option_label'] = $values['label'];
+                        $options['option_label'] = $values['label'] ?? $options['option_name'];
                         $options['option_key'] = $setting_data['setting_name'] . '_' . $option;
 
                         if ($setting['setting_value'] === $option)

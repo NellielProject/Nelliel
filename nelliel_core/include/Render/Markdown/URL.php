@@ -34,7 +34,7 @@ trait URL
 
     protected function renderURL(array $block): string
     {
-        $rel = (nel_site_domain()->setting('noreferrer_nofollow')) ? 'rel="noreferrer nofollow"' : '';
+        $rel = (nel_site_domain()->setting('nofollow_external_links')) ? 'rel="nofollow"' : '';
         $open_tag = '<a href="' . $block[1] . '" ' . $rel . ' class="external-link">';
         return $open_tag . $block[1] . '</a>';
     }

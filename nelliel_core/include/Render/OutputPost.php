@@ -305,7 +305,7 @@ class OutputPost extends Output
         $comment_data = array();
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
         $comment_data['mod_comment'] = $post_data['mod_comment'] ?? null;
-        $comment_data['noreferrer_nofollow'] = $this->site_domain->setting('noreferrer_nofollow');
+        $comment_data['nofollow_external_links'] = $this->site_domain->setting('nofollow_external_links');
         $comment = $post_data['comment'];
 
         if (nel_true_empty($comment))
