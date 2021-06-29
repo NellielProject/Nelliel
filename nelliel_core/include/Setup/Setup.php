@@ -108,11 +108,10 @@ class Setup
 
     public function checkPHP()
     {
-        $minimum_version = '7.1.0';
-        echo _gettext('Minimum PHP version required: ' . $minimum_version), '<br>';
+        echo _gettext('Minimum PHP version required: ' . NELLIEL_PHP_MINIMUM), '<br>';
         echo _gettext('PHP version detected: ' . PHP_VERSION), '<br>';
 
-        if (version_compare(PHP_VERSION, $minimum_version, '<='))
+        if (version_compare(PHP_VERSION, NELLIEL_PHP_MINIMUM, '<='))
         {
             nel_derp(109, _gettext('This version of PHP is too old! Upgrade to a version supported by Nelliel.'));
         }
