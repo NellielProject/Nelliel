@@ -41,9 +41,9 @@
 		{{# user_delete_own }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ user_delete_own }}
-		{{# delete_post_cooldown }}
+		{{# delete_post_renzoku }}
 			{{> panels/pieces/settings_number }}
-		{{/ delete_post_cooldown }}
+		{{/ delete_post_renzoku }}
 		{{# safety_level }}
 			{{> panels/pieces/settings_select }}
 		{{/ safety_level }}
@@ -133,6 +133,9 @@
 		{{# forced_anonymous }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ forced_anonymous }}
+		{{# allow_sage }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ allow_sage }}
 		{{# allow_tripcodes }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_tripcodes }}
@@ -163,6 +166,9 @@
 		{{# anonymous_names }}
 			{{> panels/pieces/settings_text }}
 		{{/ anonymous_names }}
+		{{# always_noko }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ always_noko }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}

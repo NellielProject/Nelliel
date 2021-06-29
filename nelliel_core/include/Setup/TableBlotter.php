@@ -34,10 +34,10 @@ class TableBlotter extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            time            BIGINT NOT NULL,
-            text            TEXT NOT NULL,
-            moar            TEXT DEFAULT NULL
+            entry   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            time    BIGINT NOT NULL,
+            text    TEXT NOT NULL,
+            moar    TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

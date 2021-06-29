@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Auth;
 
@@ -79,7 +78,8 @@ class AuthUser extends AuthHandler
                     'INSERT INTO "' . NEL_USERS_TABLE .
                     '" ("user_id", "display_name", "user_password", "hashed_user_id", "active", "owner", "last_login") VALUES
                     (:user_id, :display_name, :user_password, :hashed_user_id, :active, :owner, :last_login)');
-            $prepared->bindValue(':hashed_user_id', nel_prepare_hash_for_storage($this->auth_data['hashed_user_id']), PDO::PARAM_LOB);
+            $prepared->bindValue(':hashed_user_id', nel_prepare_hash_for_storage($this->auth_data['hashed_user_id']),
+                    PDO::PARAM_LOB);
         }
 
         $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->id()), PDO::PARAM_STR);
@@ -205,17 +205,11 @@ class AuthUser extends AuthHandler
             return true;
         }
 
-        // Check if there is a global variation which may have permission set
-        $global_domain = $domain->globalVariation();
+        $site_role = $this->checkRole(nel_site_domain());
 
-        if ($global_domain)
+        if ($site_role && $site_role->checkPermission($permission))
         {
-            $role = $this->checkRole($global_domain);
-
-            if ($role && $role->checkPermission($permission))
-            {
-                return true;
-            }
+            return true;
         }
 
         return false;

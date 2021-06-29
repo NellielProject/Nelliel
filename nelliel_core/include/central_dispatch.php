@@ -81,6 +81,8 @@ function nel_dispatch_preparation()
         $snacks = new \Nelliel\Snacks($domain, new \Nelliel\BansAccess(nel_database()));
         $snacks->applyBan();
         //$snacks->checkHoneypot();
+        $dnsbl = new \Nelliel\DNSBL(nel_database());
+        $dnsbl->checkIP(nel_request_ip_address());
     }
 
     $inputs = nel_module_dispatch($inputs, $domain);
@@ -172,7 +174,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                 $redirect = new \Nelliel\Redirect();
                 $redirect->doRedirect(true);
 
-                if ($fgsfds->commandIsSet('noko'))
+                if ($fgsfds->commandIsSet('noko') || $domain->setting('always_noko'))
                 {
                     if ($session->inModmode($domain))
                     {

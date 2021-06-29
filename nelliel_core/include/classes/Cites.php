@@ -48,7 +48,7 @@ class Cites
         }
         else
         {
-            return array();
+            return array('exists' => false);
         }
 
         $cite_data['source_board'] = $source_domain->id();
@@ -66,6 +66,7 @@ class Cites
             $target_thread = $this->database->executePreparedFetch($prepared, [$target_post], PDO::FETCH_COLUMN);
             $cite_data['target_thread'] = $target_thread;
             $cite_data['exists'] = $target_thread !== false;
+            $cite_data['future'] = $cite_data['target_post'] > $cite_data['source_post'];
         }
         else
         {
@@ -114,7 +115,7 @@ class Cites
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND "source_post" = ?');
         $cite_list = $this->database->executePreparedFetchAll($prepared,
-                [$post->domain()->id(), $post->contentID()->threadID()], PDO::FETCH_ASSOC);
+                [$post->domain()->id(), $post->contentID()->postID()], PDO::FETCH_ASSOC);
 
         foreach ($cite_list as $cite)
         {
@@ -129,7 +130,7 @@ class Cites
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
         $cite_list = $this->database->executePreparedFetchAll($prepared,
-                [$post->domain()->id(), $post->contentID()->threadID()], PDO::FETCH_ASSOC);
+                [$post->domain()->id(), $post->contentID()->postID()], PDO::FETCH_ASSOC);
 
         foreach ($cite_list as $cite)
         {
@@ -229,33 +230,34 @@ class Cites
 
     public function isCite(string $text)
     {
-        return preg_match('/^>>([\d]+)|>>>\/(.+?)\/([\d]+)$/u', $text) === 1;
+        return preg_match('/^>>([\d]+)|>>>\/(.+?)\/([\d]*)$/u', $text) === 1;
     }
 
     public function citeType(string $text)
     {
         $return = array();
         $matches = array();
+        $return['type'] = 'not-cite';
 
-        if (preg_match('#^>>([\d]+)$#u', $text, $matches) === 1)
+        if (preg_match('/^>>([\d]+)/u', $text, $matches) === 1)
         {
             $return['matches'] = $matches;
             $return['type'] = 'post-cite';
         }
-        else if (preg_match('#>>>\/(.+?)\/([\d]+)#u', $text, $matches) === 1)
+
+        if (preg_match('/^>>>\/(.+?)\/([\d]*)/u', $text, $matches) === 1)
         {
             $return['matches'] = $matches;
-            $return['type'] = 'crossboard-post-cite';
-        }
-        else if (preg_match('#>>>\/(.+?)\/#u', $text, $matches) === 1)
-        {
-            $return['matches'] = $matches;
-            $return['type'] = 'board-cite';
-        }
-        else
-        {
-            $return['matches'] = $matches;
-            $return['type'] = '';
+
+            if($matches[2] !== '')
+            {
+                $return['type'] = 'crossboard-post-cite';
+            }
+            else
+            {
+                $return['type'] = 'board-cite';
+            }
+
         }
 
         return $return;

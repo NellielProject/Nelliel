@@ -195,6 +195,10 @@ class Dispatch
                 {
                     $admin_handler->remove();
                 }
+                else if ($action === 'delete-by-ip')
+                {
+                    $admin_handler->removeByIP();
+                }
                 else if ($action === 'ban')
                 {
                     $admin_handler = new \Nelliel\Admin\AdminBans($this->authorization, $this->domain, $this->session,
@@ -241,6 +245,11 @@ class Dispatch
 
             case 'staff-board':
                 $admin_handler = new AdminStaffBoard($this->authorization, $this->domain, $this->session, $inputs);
+                $this->standard($admin_handler, $action);
+                break;
+
+            case 'dnsbl':
+                $admin_handler = new AdminDNSBL($this->authorization, $this->domain, $this->session, $inputs);
                 $this->standard($admin_handler, $action);
                 break;
         }

@@ -130,6 +130,8 @@ class OutputPanelMain extends Output
         $this->render_data['icon_sets_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=icon-sets';
         $this->render_data['module_news'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_news');
         $this->render_data['news_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=news';
+        $this->render_data['module_dnsbl'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_dnsbl');
+        $this->render_data['dnsbl_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=dnsbl';
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
                 'perm_regen_pages');
         $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

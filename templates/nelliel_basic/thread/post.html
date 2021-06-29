@@ -13,18 +13,14 @@
 		{{> thread/headers/post_info }}
 		</div>
 	{{/ headers }}
-		<div class="{{ op_reply }} content-container">
+	{{# has_file }}
+		{{> thread/content }}
+	{{/ has_file }}
 	{{# multi_file }}
 		{{> thread/content_rows }}
 	{{/ multi_file }}
-	{{^ multi_file }}
-		{{> thread/content }}
-	{{/ multi_file }}
-		</div>
-		<div class="{{ op_reply }} comment-container">
 	{{# post_comments }}
 		{{> thread/post_comments }}
 	{{/ post_comments }}
-		</div>
 	</div>
 </div>

@@ -15,7 +15,6 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Render\OutputPanelUsers;
-use Nelliel\Domains\DomainAllBoards;
 
 class AdminUsers extends Admin
 {
@@ -86,10 +85,6 @@ class AdminUsers extends Admin
                 {
                     $domain = new DomainSite($this->database);
                 }
-                else if (strpos($key, Domain::ALL_BOARDS))
-                {
-                    $domain = new DomainAllBoards($this->database);
-                }
                 else
                 {
                     $domain = new DomainBoard(substr($key, 12), $this->database);
@@ -141,7 +136,7 @@ class AdminUsers extends Admin
 
     public function verifyAccess()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_access_users'))
         {
             nel_derp(300, _gettext('You do not have access to the Users panel.'));
         }

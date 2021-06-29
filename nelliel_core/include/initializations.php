@@ -1,5 +1,4 @@
 <?php
-
 if (!defined('NELLIEL_VERSION'))
 {
     die("NOPE.AVI");
@@ -20,9 +19,6 @@ define('NEL_BASE_HONEYPOT_FIELD3', 'website'); // Honeypot field name
 define('NEL_DEFAULT_TEXTDOMAIN_BIND', NEL_LANGUAGES_FILES_PATH . 'locale');
 
 // Set default values here in case the config is missing something
-$base_config['defaultadmin'] = '';
-$base_config['defaultadmin_pass'] = '';
-$base_config['tripcode_pepper'] = 'sodiumz';
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
 $base_config['use_file_cache'] = true;
@@ -77,6 +73,10 @@ define('NEL_PASSWORD_ARGON2_MEMORY_COST', $crypt_config['password_argon2_memory_
 define('NEL_PASSWORD_ARGON2_TIME_COST', $crypt_config['password_argon2_time_cost']);
 define('NEL_PASSWORD_ARGON2_THREADS', $crypt_config['password_argon2_threads']);
 
+unset($base_config);
+unset($db_config);
+unset($crypt_config);
+
 $language = new \Nelliel\Language\Language();
 $language->loadLanguage(NEL_DEFAULT_LOCALE, 'nelliel', LC_MESSAGES);
 unset($language);
@@ -84,7 +84,8 @@ Mustache_Autoloader::register();
 
 require_once NEL_INCLUDE_PATH . 'database.php';
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
-$setup = new \Nelliel\Setup\Setup(nel_database(), new SQLCompatibility(nel_database()), new FileHandler());
+$file_handler = new FileHandler();
+$setup = new \Nelliel\Setup\Setup(nel_database(), new SQLCompatibility(nel_database()), $file_handler);
 
 if (isset($_GET['install']))
 {
@@ -95,6 +96,27 @@ if (!$setup->checkInstallDone())
 {
     nel_derp(107, _gettext('Installation has not been done yet or is not complete.'));
 }
+
+unset($setup);
+
+$upgrade = new \Nelliel\Setup\Upgrade($file_handler);
+
+if (isset($_GET['upgrade']))
+{
+    $upgrade->doUpgrades();
+    die();
+}
+else
+{
+    if ($upgrade->needsUpgrade())
+    {
+        nel_derp(110,
+                _gettext(
+                        'Versions do not match. An upgrade may be in progress or something is broken. Try again later.'));
+    }
+}
+
+unset($upgrade);
 
 if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php'))
 {
@@ -107,9 +129,6 @@ if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php'))
     unset($peppers);
 }
 
-unset($setup);
-unset($base_config);
-unset($db_config);
-unset($crypt_config);
+unset($file_handler);
 
 define('NEL_SETUP_GOOD', true);

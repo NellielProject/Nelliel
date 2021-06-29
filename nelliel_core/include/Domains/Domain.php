@@ -15,8 +15,6 @@ use Nelliel\NellielPDO;
 abstract class Domain
 {
     const SITE = '_site_';
-    const ALL_BOARDS = '_all_boards_';
-    const MULTI_BOARD = '_multi_board_';
     protected $domain_id;
     protected $settings;
     protected $references;
@@ -30,15 +28,12 @@ abstract class Domain
     protected $translator;
     protected $locale;
     protected $language;
-    protected $global_variation = null;
 
     protected abstract function loadSettings(): void;
 
     protected abstract function loadReferences(): void;
 
     protected abstract function loadSettingsFromDatabase(): array;
-
-    public abstract function globalVariation();
 
     protected function utilitySetup()
     {

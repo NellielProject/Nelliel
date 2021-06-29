@@ -110,7 +110,7 @@ class AdminRoles extends Admin
 
     public function verifyAccess()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_access_roles'))
         {
             nel_derp(310, _gettext('You do not have access to the Roles panel.'));
         }

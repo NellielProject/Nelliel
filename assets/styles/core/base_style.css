@@ -144,6 +144,7 @@ form {
 	padding: 3px;
 	width: 14rem;
 	height: 14rem;
+	overflow-x: hidden;
 }
 
 .catalog-open-link {
@@ -245,6 +246,7 @@ form {
     display: block;
     background: var(--reply-post-background);
     border: var(--reply-post-border);
+    white-space: normal;
 }
 
 .poster-id-style {
@@ -257,9 +259,9 @@ form {
 	border-radius: 3px;
 }
 
-.greentext {
-	background: var(--greentext-background);
-    color: var(--greentext-color);
+.quote {
+	background: var(--quote-background);
+    color: var(--quote-color);
 }
 
 .post-number-link {
@@ -268,6 +270,12 @@ form {
 
 .plaintext {
 	white-space: pre-wrap;
+}
+
+.post-comments {
+	font-family: inherit;
+	word-wrap: break-word;
+    white-space: pre-wrap;
 }
 
 /* OP post */
@@ -300,7 +308,6 @@ form {
 
 .op.post-comments {
 	color: var(--op-post-comments-color, var(--post-comments-color));
-    word-wrap: break-word;
 }
 
 /* Reply post */
@@ -334,7 +341,6 @@ form {
 
 .reply.post-comments {
 	color: var(--reply-post-comments-color, var(--post-comments-color));
-    word-wrap: break-word;
 }
 
 .indents {
@@ -428,4 +434,8 @@ form {
 	margin: 0.15em;
 	text-align: center;
 	font-size: 0.85rem;
+}
+
+.global-announcement{
+    text-align: center;
 }

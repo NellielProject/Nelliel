@@ -1,21 +1,15 @@
-<p class="{{ op_reply }} post-comments">
-{{# comment_lines }}
-	{{# line_parts }}{{> thread/pieces/comment_line }}{{/ line_parts }}
-{{/ comment_lines }}
-</p>
-<p class="mod-comment">
+<div class="{{ op_reply }} comment-container">
+	{{> thread/pieces/comment_markdown }}
 {{# mod_comment }}
-	{{ mod_comment }}
+	{{> thread/pieces/mod_comment }}
 {{/ mod_comment }}
-</p>
 {{# long_comment }}
-<p>
-	<span data-i18n="gettext">This is a long comment.</span>&nbsp;<a href="{{ long_comment_url }}" data-i18n="gettext">Click here for the full text</a>
-</p>
+	{{> thread/pieces/long_comment }}
 {{/ long_comment }}
-<small class="{{ op_reply }} site-post-disclaimer">
-	<i>{{ site_content_disclaimer }}</i>
-</small>
-<small class="{{ op_reply }} board-post-disclaimer">
-	<i>{{ board_content_disclaimer }}</i>
-</small>
+	<small class="{{ op_reply }} site-post-disclaimer">
+		<i>{{ site_content_disclaimer }}</i>
+	</small>
+	<small class="{{ op_reply }} board-post-disclaimer">
+		<i>{{ board_content_disclaimer }}</i>
+	</small>
+</div>

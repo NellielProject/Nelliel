@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -26,7 +25,7 @@ class OutputPanelIfThens extends Output
         $this->setupTimer();
         $this->setBodyTemplate('panels/if_thens_main');
         $parameters['is_panel'] = true;
-        $parameters['panel'] = $parameters['panel'] ?? _gettext('File Filters');
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('If-Thens');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -46,7 +45,7 @@ class OutputPanelIfThens extends Output
         }
 
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'file-filters', 'actions' => 'add']);
+                http_build_query(['module' => 'admin', 'section' => 'ifthens', 'actions' => 'add']);
         $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'admin', 'section' => 'ifthens', 'actions' => 'new']);
         $bgclass = 'row1';

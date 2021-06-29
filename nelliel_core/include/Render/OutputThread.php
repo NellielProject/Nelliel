@@ -94,6 +94,8 @@ class OutputThread extends Output
             $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
         }
 
+        $this->render_data['show_global_announcement'] = !nel_true_empty(nel_site_domain()->setting('global_announcement'));
+        $this->render_data['global_announcement_text'] = nel_site_domain()->setting('global_announcement');
         $this->render_data['return_url'] = $return_url;
         $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
         $json_thread->storeData($json_thread->prepareData($thread_data), 'thread');

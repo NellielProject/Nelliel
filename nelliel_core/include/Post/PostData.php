@@ -178,14 +178,14 @@ class PostData
 
         $user = $this->session->user();
 
-        if (!$user->checkPermission($this->domain, 'perm_board_post_as_staff'))
+        if (!$user->checkPermission($this->domain, 'perm_post_as_staff'))
         {
             return;
         }
 
         $post->changeData('capcode', $this->capcode($name_text));
         $post->changeData('poster_name', $user->auth_data['display_name']);
-        $post->changeData('staff_post_id', $user->id());
+        $post->changeData('account_id', $user->id());
     }
 
     public function posterName(string $text): string
@@ -239,7 +239,7 @@ class PostData
         $capcode = '';
         $matches = array();
 
-        if ($this->session->user()->checkPermission($this->domain, 'perm_staff_custom_capcode') &&
+        if ($this->session->user()->checkPermission($this->domain, 'perm_custom_capcode') &&
                 preg_match('/ ## (.*)/u', $text, $matches) === 1)
         {
             $capcode = $matches[1];

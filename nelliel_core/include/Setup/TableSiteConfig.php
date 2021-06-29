@@ -61,6 +61,7 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['only_alphanumeric_board_ids', '1', 0]);
         $this->insertDefaultRow(['max_report_items', '5', 0]);
         $this->insertDefaultRow(['max_delete_items', '5', 0]);
+        $this->insertDefaultRow(['global_announcement', '', 0]);
 
         // Banners
         $this->insertDefaultRow(['show_site_banners', '1', 0]);
@@ -78,9 +79,10 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['thread_filename_format', '%d', 0]);
         $this->insertDefaultRow(['template_id', 'template-nelliel-basic', 0]);
         $this->insertDefaultRow(['graphics_handler', 'GD', 0]);
-        $this->insertDefaultRow(['noreferrer_nofollow', '0', 0]);
         $this->insertDefaultRow(['display_render_timer', '1', 0]);
         $this->insertDefaultRow(['site_content_disclaimer', '', 0]);
+        $this->insertDefaultRow(['site_referrer_policy', 'strict-origin-when-cross-origin', 0]);
+        $this->insertDefaultRow(['nofollow_external_links', '1', 0]);
 
         // Hashing and security
         $this->insertDefaultRow(['post_password_algorithm', 'sha256', 0]);
@@ -89,6 +91,8 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['login_delay', '3', 0]);
         $this->insertDefaultRow(['session_length', '10800', 0]);
         $this->insertDefaultRow(['store_unhashed_ip', '1', 0]);
+        $this->insertDefaultRow(['use_dnsbl', '0', 0]);
+        $this->insertDefaultRow(['dnsbl_exceptions', '', 0]);
 
         // CAPTCHA
         $this->insertDefaultRow(['captcha_width', '250', 0]);

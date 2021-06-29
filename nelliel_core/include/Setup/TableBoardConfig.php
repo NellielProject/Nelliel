@@ -63,7 +63,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['locale', 'en_US', 0, '']);
         $this->insertDefaultRow(['exclude_from_overboards', '0', 0, '']);
         $this->insertDefaultRow(['user_delete_own', '1', 0, '']);
-        $this->insertDefaultRow(['delete_post_cooldown', '0', 0, '']);
+        $this->insertDefaultRow(['delete_post_renzoku', '0', 0, '']);
         $this->insertDefaultRow(['safety_level', 'SFW', 0, '']);
 
         // New post
@@ -91,6 +91,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['max_filesize', '5120', 0, '']);
         $this->insertDefaultRow(['truncate_long_fields', '0', 0, '']);
         $this->insertDefaultRow(['forced_anonymous', '0', 0, '']);
+        $this->insertDefaultRow(['allow_sage', '1', 0, '']);
         $this->insertDefaultRow(['allow_tripcodes', '1', 0, '']);
         $this->insertDefaultRow(['allow_email_commands', '1', 0, '']);
         $this->insertDefaultRow(['allow_fgsfds_commands', '1', 0, '']);
@@ -101,6 +102,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['trim_comment_newlines_start', '0', 0, '']);
         $this->insertDefaultRow(['trim_comment_newlines_end', '1', 0, '']);
         $this->insertDefaultRow(['anonymous_names', '["Anonymous"]', 0, '']);
+        $this->insertDefaultRow(['always_noko', '0', 0, '']);
 
         // Content handling
         $this->insertDefaultRow(['preferred_filename', 'original', 0, '']);

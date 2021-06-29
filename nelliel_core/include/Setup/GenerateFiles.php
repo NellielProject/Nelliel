@@ -1,7 +1,5 @@
 <?php
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Nelliel\Setup;
 
@@ -10,7 +8,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use \Nelliel\Utility\FileHandler;
+use Nelliel\Utility\FileHandler;
 
 class GenerateFiles
 {
@@ -32,7 +30,7 @@ class GenerateFiles
         return false;
     }
 
-    public function peppers(bool $replace = false)
+    public function peppers(bool $replace = false): bool
     {
         if (!file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php') || $replace)
         {
@@ -51,13 +49,30 @@ class GenerateFiles
         return false;
     }
 
-    public function ownerCreate(string $id, bool $replace = false)
+    public function ownerCreate(string $id, bool $replace = false): bool
     {
         if (!file_exists(NEL_GENERATED_FILES_PATH . 'create_owner.php') || $replace)
         {
-            $text = '';
-            $text .= "\n" . '$install_id = \'' . $id . '\';';
+            $text = '$install_id = \'' . $id . '\';';
             $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'create_owner.php', $text, true, false);
+            return true;
+        }
+
+        return false;
+    }
+
+    public function versions(array $versions_data = array(), bool $replace = false): bool
+    {
+        if(empty($versions_data))
+        {
+            $versions_data['original'] = NELLIEL_VERSION;
+            $versions_data['installed'] = NELLIEL_VERSION;
+        }
+
+        if (!file_exists(NEL_GENERATED_FILES_PATH . 'versions.php') || $replace)
+        {
+            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'versions.php',
+                    '$versions_data = ' . var_export($versions_data, true) . ';', true, false);
             return true;
         }
 

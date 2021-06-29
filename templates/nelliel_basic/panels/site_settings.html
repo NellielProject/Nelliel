@@ -44,6 +44,9 @@
 	{{# max_delete_items }}
 		{{> panels/pieces/settings_number }}
 	{{/ max_delete_items }}
+	{{# global_announcement }}
+		{{> panels/pieces/settings_text }}
+	{{/ global_announcement }}
 	<div class="display-row">
 	<hr class="display_cell">
 	</div>
@@ -101,15 +104,18 @@
 	{{# graphics_handler }}
 		{{> panels/pieces/settings_select }}
 	{{/ graphics_handler }}
-	{{# noreferrer_nofollow }}
-		{{> panels/pieces/settings_checkbox }}
-	{{/ noreferrer_nofollow }}
 	{{# display_render_timer }}
 		{{> panels/pieces/settings_checkbox }}
 	{{/ display_render_timer }}
 	{{# site_content_disclaimer }}
 		{{> panels/pieces/settings_text }}
 	{{/ site_content_disclaimer }}
+	{{# site_referrer_policy }}
+		{{> panels/pieces/settings_select }}
+	{{/ site_referrer_policy }}
+	{{# nofollow_external_links }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ nofollow_external_links }}
 	<div class="display-row">
 		<hr class="display_cell">
 	</div>
@@ -136,6 +142,12 @@
 	{{# store_unhashed_ip }}
 		{{> panels/pieces/settings_checkbox }}
 	{{/ store_unhashed_ip }}
+	{{# use_dnsbl }}
+		{{> panels/pieces/settings_checkbox }}
+	{{/ use_dnsbl }}
+	{{# dnsbl_exceptions }}
+		{{> panels/pieces/settings_text }}
+	{{/ dnsbl_exceptions }}
 	<div class="display-row">
 		<hr class="display_cell">
 	</div>

@@ -29,10 +29,7 @@
 		<div class="op-subject">{{ first_post_subject }}</div>
 		<p class="reply-post-text">
 			<span class="reply-post-comment">
-		{{# comment_lines }}
-			<span class="{{ post_comment_class }}">{{# line }}
-		{{# link }}<a href="{{ link_url }}" class="post-link" data-command="show-linked-post">{{ link_text }}</a>{{/ link }}{{ text }}{{/ line }}</span><br>
-		{{/ comment_lines }}
+			{{> thread/pieces/comment_markdown }}
 			</span>
 			<span class="mod-comment">{{ mod_comment }}</span>
 		</p>
