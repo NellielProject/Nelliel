@@ -167,14 +167,14 @@ class OutputFile extends Output
 
                 if ($file['spoiler'])
                 {
-                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH . 'core/covers/spoiler_alert.png';
+                    $this->render_data['preview_url'] = NEL_MEDIA_WEB_PATH . 'core/covers/spoiler_alert.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
 
                 if ($file['deleted'])
                 {
-                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH . 'core/covers/deleted_file.png';
+                    $this->render_data['preview_url'] = NEL_MEDIA_WEB_PATH . 'core/covers/deleted_file.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }

@@ -10,7 +10,7 @@ define('NEL_OVER_9000', 9001);
 define('NEL_ASSETS_DIR', 'assets');
 define('NEL_STYLES_DIR', 'styles');
 define('NEL_ICON_SETS_DIR', 'icons');
-define('NEL_IMAGES_DIR', 'imagez');
+define('NEL_MEDIA_DIR', 'media');
 define('NEL_TEMPLATES_DIR', 'templates');
 define('NEL_SCRIPTS_DIR', 'scripts');
 define('NEL_FONTS_DIR', 'fonts');
@@ -88,7 +88,7 @@ unset($dirname);
 
 define('NEL_ASSETS_WEB_PATH', NEL_BASE_WEB_PATH . NEL_ASSETS_DIR . '/');
 define('NEL_SCRIPTS_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_SCRIPTS_DIR . '/');
-define('NEL_IMAGES_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_IMAGES_DIR . '/');
+define('NEL_MEDIA_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_MEDIA_DIR . '/');
 define('NEL_STYLES_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_STYLES_DIR . '/');
 define('NEL_ICON_SETS_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_ICON_SETS_DIR . '/');
 define('NEL_BANNERS_WEB_PATH', NEL_BASE_WEB_PATH . NEL_BANNERS_DIR . '/');
