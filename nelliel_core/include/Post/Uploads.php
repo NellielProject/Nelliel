@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Post;
 
@@ -335,12 +334,15 @@ class Uploads
 
             $embed = new \Nelliel\Content\ContentFile(new \Nelliel\Content\ContentID(), $this->domain);
 
+            $checking_duplicates = false;
+
             if ($response_to === 0 && $this->domain->setting('check_op_duplicates'))
             {
                 $prepared = $this->database->prepare(
                         'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                         '" WHERE "parent_thread" = "post_ref" AND "embed_url" = ?');
                 $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
+                $checking_duplicates = true;
             }
 
             if ($response_to > 0 && $this->domain->setting('check_thread_duplicates'))
@@ -349,13 +351,17 @@ class Uploads
                         'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                         '" WHERE "parent_thread" = ? AND "embed_url" = ?');
                 $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
+                $checking_duplicates = true;
             }
 
-            $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
-
-            if ($result)
+            if ($checking_duplicates)
             {
-                nel_derp(36, _gettext('Duplicate embed detected.'));
+                $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
+
+                if ($result)
+                {
+                    nel_derp(36, _gettext('Duplicate embed detected.'));
+                }
             }
 
             $embed->changeData('type', 'embed');
