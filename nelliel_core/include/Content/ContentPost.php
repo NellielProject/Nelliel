@@ -192,7 +192,7 @@ class ContentPost extends ContentHandler
             $user = $session->user();
             $bypass = false;
 
-            if ($user && $this->$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
+            if ($user && $session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
             {
                 $bypass = true;
             }
@@ -276,12 +276,12 @@ class ContentPost extends ContentHandler
         {
             if ($user->checkPermission($this->domain, 'perm_delete_posts'))
             {
-                if (!empty($this->content_data['account_id']) &&
+                if (!$user->isSiteOwner() && !empty($this->content_data['account_id']) &&
                         $this->authorization->userExists($this->content_data['account_id']))
                 {
                     $mod_post_user = $this->authorization->getUser($this->content_data['account_id']);
-                    $flag = $this->authorization->roleLevelCheck($user->checkRole($this->domain),
-                            $mod_post_user->checkRole($this->domain));
+                    $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
+                            $mod_post_user->getDomainRole($this->domain)->id());
                 }
                 else
                 {

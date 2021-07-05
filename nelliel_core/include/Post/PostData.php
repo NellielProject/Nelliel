@@ -252,13 +252,8 @@ class PostData
             }
             else
             {
-                $role = $this->session->user()->checkRole($this->domain);
-
-                if ($role != false)
-                {
-
-                    $capcode = $role->auth_data['capcode'];
-                }
+                $role = $this->session->user()->getDomainRole($this->domain);
+                $capcode = $role->auth_data['capcode'];
             }
         }
 

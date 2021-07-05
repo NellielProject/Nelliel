@@ -19,6 +19,7 @@ class AuthRole extends AuthHandler
     function __construct(NellielPDO $database, string $role_id, bool $db_load = true)
     {
         $this->database = $database;
+        $this->empty = nel_true_empty($role_id);
         $this->auth_id = $role_id;
 
         if ($db_load)

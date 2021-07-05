@@ -141,24 +141,17 @@ class AuthUser extends AuthHandler
         $this->auth_data['user_password'] = nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM);
     }
 
-    public function checkRole(Domain $domain, bool $return_id = false)
+    public function getDomainRole(Domain $domain): AuthRole
     {
         if ($this->empty() || !isset($this->user_roles[$domain->id()]))
         {
-            return false;
+            return new AuthRole($this->database, '');
         }
 
-        if ($return_id)
-        {
-            return $this->user_roles[$domain->id()]['role_id'];
-        }
-        else
-        {
-            return $this->user_roles[$domain->id()]['role'];
-        }
+        return $this->user_roles[$domain->id()]['role'];
     }
 
-    public function modifyRole(string $domain_id, string $role_id)
+    public function modifyRole(string $domain_id, string $role_id): void
     {
         if (!isset($this->user_roles[$domain_id]))
         {
@@ -198,16 +191,16 @@ class AuthUser extends AuthHandler
             return true;
         }
 
-        $role = $this->checkRole($domain);
+        $role = $this->getDomainRole($domain);
 
-        if ($role && $role->checkPermission($permission))
+        if ($role->checkPermission($permission))
         {
             return true;
         }
 
-        $site_role = $this->checkRole(nel_site_domain());
+        $site_role = $this->getDomainRole(nel_site_domain());
 
-        if ($site_role && $site_role->checkPermission($permission))
+        if ($site_role->checkPermission($permission))
         {
             return true;
         }
