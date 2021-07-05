@@ -1,4 +1,89 @@
 # Nelliel Changelog
+## v0.9.23 (2021/6/29)
+### Breaking
+ - Database
+ - Templates
+ - Assets
+ - Minimum requirements
+
+### Added
+ - PHP version check when installing
+ - Nelliel Classic style
+ - Plugins table
+ - File hiding
+ - File caches for filetypes and front end data
+ - Board URI now used for creating board
+ - If-Then system
+ - Embeds
+ - More new post, upload and render settings
+ - Permasage
+ - SHA256 and SHA512 filename options
+ - Render cache
+ - Board cites
+ - Cyclic threads
+ - Option to extract and store EXIF
+ - Several tables for later features
+ - Report and delete limits
+ - PHP strict types
+ - More comment trimming options
+ - Slugs
+ - Basic banner support
+ - Option for old-style commands in email field
+ - Delete by IP
+ - Global announcement
+ - DNSBL
+ - Markdown support
+ - Optional always noko, disable sage
+ - Upgrade and migration system
+ - Referrer policy and nofollow settings
+
+### Changed
+ - Updated libraries
+ - Updated composer
+ - Improved `Admin` classes
+ - Improved setup process
+ - Finished moving core assets to subdirectories
+ - Better page headers
+ - Improved rendering timer
+ - CSS and template cleanup
+ - Internal code cleanup
+ - Styles menu now sorted
+ - Moved domain cache files
+ - Files now left in place when thread is archived
+ - Permissions update
+ - Moved most cookie data to local storage
+ - Updated ban check
+ - Reorganize and cleanup settings
+ - Updated overboard
+ - Overhaul of cite handling
+ - Cookies now on base path instead of /
+ - Switch back to central log table
+ - Updated FGSFDS
+
+### Fixed
+ - Comment parsing and render
+ - Page regen not being triggered when settings change
+ - Ban page
+ - Site header CSS
+ - UI Javascript
+ - `FrontEndData` caching
+ - Index navigation
+ - Video previews
+ - Filetype detection
+ - Cite parsing and display
+ - Session errors and being called too often
+ - Link regex
+ - Hide/show functions
+ - Post as staff
+ - Mod Mode redirects
+ - Capcodes
+ - Page titles
+ - Login link on default page
+ - Gtetext extractor
+ - Thread deletion
+ - hashchange event catch
+ - noko redirect
+
 ## v0.9.22 (2020/12/30)
 ### Breaking
  - Database
