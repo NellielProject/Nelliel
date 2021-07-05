@@ -31,7 +31,7 @@ class OutputBanPage extends Output
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['ban_board'] = ($ban_hammer->getData('all_boards') > 0) ? _gettext('All Boards') : $ban_hammer->getData(
                 'board_id');
-        $this->render_data['ban_time'] = date("F jS, Y H:i e", $ban_hammer->getData('start_time'));
+        $this->render_data['ban_time'] = date("F jS, Y H:i e", nel_cast_to_datatype($ban_hammer->getData('start_time'), 'integer'));
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
         $ban_expire = $ban_hammer->getData('length') + $ban_hammer->getData('start_time');
         $expire_interval = ($ban_expire - time() >= 0) ? $ban_expire - time() : 0;
