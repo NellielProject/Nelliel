@@ -109,11 +109,8 @@ class Uploads
                 $file->changeData('spoiler', $data_handler->checkEntry($spoiler, 'integer'));
             }
 
-            if (strlen($file->data('fullname')) >= 255)
-            {
-                $overage = strlen($file->data('fullname')) - 250;
-                $file->changeData('filename', substr($file->data('filename'), 0, $overage));
-            }
+            $filename_maxlength = 255 - strlen($file->data('extension')) - 1;
+            $file->changeData('filename', substr($file->data('filename'), 0, $filename_maxlength));
 
             foreach ($filenames as $filename)
             {
