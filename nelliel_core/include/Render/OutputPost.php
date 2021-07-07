@@ -56,10 +56,6 @@ class OutputPost extends Output
             }
         }
 
-        $web_paths['thread_page'] = $thread->getURL();
-        $web_paths['thread_src'] = $this->domain->reference('src_web_path') . $thread_content_id->threadID() . '/';
-        $web_paths['thread_preview'] = $this->domain->reference('preview_web_path') . $thread_content_id->threadID() .
-                '/';
         $this->render_data['post_corral_id'] = 'post-corral-' . $post_content_id->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
 
@@ -76,7 +72,7 @@ class OutputPost extends Output
 
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
-                $post, $web_paths, $gen_data, $in_thread_number);
+                $post, $thread, $gen_data, $in_thread_number);
 
         if ($post_data['has_content'] == 1)
         {
@@ -99,14 +95,12 @@ class OutputPost extends Output
                 if (nel_true_empty($file['embed_url']))
                 {
                     $file_data = $output_file_info->render(
-                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
-                                'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
+                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data, 'json_instances' => $parameters['json_instances']], true);
                 }
                 else
                 {
                     $file_data = $output_embed_info->render(
-                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
-                                'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
+                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data, 'json_instances' => $parameters['json_instances']], true);
                 }
 
                 $content_row[]['content_data'] = $file_data;
@@ -131,7 +125,7 @@ class OutputPost extends Output
             }
         }
 
-        $this->render_data['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $web_paths);
+        $this->render_data['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $thread);
         $this->render_data['site_content_disclaimer'] = nel_site_domain()->setting('site_content_disclaimer');
         $this->render_data['board_content_disclaimer'] = $this->domain->setting('board_content_disclaimer');
         $output = $this->output('thread/post', $data_only, true, $this->render_data);
@@ -153,7 +147,7 @@ class OutputPost extends Output
     }
 
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
-            ContentPost $post, array $web_paths, array $gen_data, int $in_thread_number)
+            ContentPost $post, ContentThread $thread, array $gen_data, int $in_thread_number)
     {
         $header_data = array();
         $modmode_headers = array();
@@ -228,7 +222,7 @@ class OutputPost extends Output
                 }
             }
 
-            $thread_headers['reply_to_url'] = $web_paths['thread_page'];
+            $thread_headers['reply_to_url'] = $thread->getURL();
 
             if ($this->session->inModmode($this->domain) && !$this->write_mode)
             {
@@ -280,7 +274,7 @@ class OutputPost extends Output
 
         $post_headers['post_time'] = date($this->domain->setting('date_format'), (int) $post_data['post_time']);
         $post_headers['post_number'] = $post_data['post_number'];
-        $post_headers['post_number_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
+        $post_headers['post_number_url'] = $thread->getURL() . '#t' . $post_content_id->threadID() . 'p' .
                 $post_content_id->postID();
         $post_headers['post_number_url_cite'] = $post_headers['post_number_url'] . 'cite';
 
@@ -300,7 +294,7 @@ class OutputPost extends Output
         return $header_data;
     }
 
-    private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, array $web_paths)
+    private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, ContentThread $thread)
     {
         $comment_data = array();
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
@@ -331,7 +325,7 @@ class OutputPost extends Output
                 if ($line_count > $this->domain->setting('comment_display_lines'))
                 {
                     $comment_data['long_comment'] = true;
-                    $comment_data['long_comment_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() .
+                    $comment_data['long_comment_url'] = $thread->getURL() . '#t' . $post_content_id->threadID() .
                             'p' . $post_content_id->postID();
                     $comment_data['comment_lines'] = array();
                     $i = 0;

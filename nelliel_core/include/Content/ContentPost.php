@@ -142,12 +142,8 @@ class ContentPost extends ContentHandler
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory(
-                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM,
-                true);
-        $file_handler->createDirectory(
-                $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
-                NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->src_path . $this->content_id->postID(), NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->preview_path . $this->content_id->postID(), NEL_DIRECTORY_PERM, true);
     }
 
     public function addCites()
@@ -327,16 +323,7 @@ class ContentPost extends ContentHandler
         $new_thread->content_data['last_update_milli'] = $time['milli'];
         $new_thread->writeToDatabase();
         $new_thread->loadFromDatabase();
-        $file_handler = nel_utilities()->fileHandler();
         $new_thread->createDirectories();
-        $file_handler->moveDirectory(
-                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
-                $this->src_path . '/' . $new_thread->content_id->threadID() . '/' . $this->content_id->postID(), true);
-        $file_handler->moveDirectory(
-                $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
-                $this->preview_path . '/' . $new_thread->content_id->threadID() . '/' . $this->content_id->postID(),
-                true);
-
         $prepared = $this->database->prepare('SELECT entry FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
         $prepared = $this->database->prepare(
                 'UPDATE "' . $this->content_table . '" SET "parent_thread" = ? WHERE "post_ref" = ?');

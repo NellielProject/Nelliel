@@ -72,7 +72,8 @@ class OutputCatalog extends Output
                 }
                 else
                 {
-                    $thread_data['comment_markdown'] = $output_post->parseComment($first_post['comment'], $post_content_id);
+                    $thread_data['comment_markdown'] = $output_post->parseComment($first_post['comment'],
+                            $post_content_id);
                 }
             }
 
@@ -106,8 +107,8 @@ class OutputCatalog extends Output
 
                 $thread_data['preview_width'] = $width;
                 $thread_data['preview_height'] = $height;
-                $thread_preview_web_path = $this->domain->reference('preview_web_path') . $thread['thread_id'] . '/' .
-                        $first_post['post_number'] . '/';
+                $thread_preview_web_path = $this->domain->reference('preview_web_path') . $first_post['post_number'] .
+                        '/';
                 $thread_data['preview_url'] = $thread_preview_web_path . $first_file['preview_name'] . '.' .
                         $first_file['preview_extension'];
             }
