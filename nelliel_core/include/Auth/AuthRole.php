@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Auth;
 
@@ -28,7 +27,7 @@ class AuthRole extends AuthHandler
         }
     }
 
-    public function loadFromDatabase()
+    public function loadFromDatabase(): bool
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
@@ -44,7 +43,7 @@ class AuthRole extends AuthHandler
         return true;
     }
 
-    public function writeToDatabase()
+    public function writeToDatabase(): bool
     {
         if (empty($this->auth_data))
         {
@@ -77,19 +76,19 @@ class AuthRole extends AuthHandler
         return true;
     }
 
-    public function setupNew()
+    public function setupNew(): void
     {
         $this->permissions = new AuthPermissions($this->database, $this->id());
         $this->permissions->setupNew();
     }
 
-    public function remove()
+    public function remove(): void
     {
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function checkPermission(string $permission_id)
+    public function checkPermission(string $permission_id): bool
     {
         if (isset($this->permissions->auth_data[$permission_id]))
         {

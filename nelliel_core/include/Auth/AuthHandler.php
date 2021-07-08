@@ -22,13 +22,13 @@ abstract class AuthHandler
         return $this->auth_data[$data_name] ?? $default;
     }
 
-    public abstract function loadFromDatabase();
+    public abstract function loadFromDatabase(): bool;
 
-    public abstract function writeToDatabase();
+    public abstract function writeToDatabase(): bool;
 
-    public abstract function setupNew();
+    public abstract function setupNew(): void;
 
-    public abstract function remove();
+    public abstract function remove(): void;
 
     public function getInfo(string $info_id)
     {
@@ -40,7 +40,7 @@ abstract class AuthHandler
         return $this->auth_id;
     }
 
-    public function empty()
+    public function empty(): bool
     {
         return $this->empty;
     }

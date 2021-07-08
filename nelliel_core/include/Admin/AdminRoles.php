@@ -75,7 +75,7 @@ class AdminRoles extends Admin
             if (substr($key, 0, 5) === 'perm_')
             {
                 $value = ($value == 1) ? true : false;
-                $role->permissions->auth_data[$key] = $value;
+                $role->permissions->change($key, $value);
                 continue;
             }
 
