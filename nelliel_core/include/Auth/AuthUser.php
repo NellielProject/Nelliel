@@ -78,7 +78,7 @@ class AuthUser extends AuthHandler
                     'INSERT INTO "' . NEL_USERS_TABLE .
                     '" ("user_id", "display_name", "user_password", "hashed_user_id", "active", "owner", "last_login") VALUES
                     (:user_id, :display_name, :user_password, :hashed_user_id, :active, :owner, :last_login)');
-            $prepared->bindValue(':hashed_user_id', nel_prepare_hash_for_storage($this->auth_data['hashed_user_id']),
+            $prepared->bindValue(':hashed_user_id', nel_prepare_hash_for_storage($this->getData('hashed_user_id')),
                     PDO::PARAM_LOB);
         }
 
@@ -122,7 +122,7 @@ class AuthUser extends AuthHandler
 
     public function setupNew(): void
     {
-        $this->auth_data['hashed_user_id'] = hash('sha256', $this->id());
+        $this->changeData('hashed_user_id', hash('sha256', $this->id()));
     }
 
     public function remove(): void
@@ -138,7 +138,7 @@ class AuthUser extends AuthHandler
 
     public function updatePassword(string $new_password): void
     {
-        $this->auth_data['user_password'] = nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM);
+        $this->changeData('user_password', nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM));
     }
 
     public function getDomainRole(Domain $domain): AuthRole
@@ -180,15 +180,15 @@ class AuthUser extends AuthHandler
 
     public function checkPermission(Domain $domain, string $permission): bool
     {
-        if ($this->empty())
-        {
-            return false;
-        }
-
         // Site Owner can do all the things
         if ($this->isSiteOwner())
         {
             return true;
+        }
+
+        if ($this->empty())
+        {
+            return false;
         }
 
         $role = $this->getDomainRole($domain);
@@ -217,11 +217,11 @@ class AuthUser extends AuthHandler
 
     public function active(): bool
     {
-        return $this->getInfo('active') || $this->isSiteOwner();
+        return $this->getData('active') || $this->isSiteOwner();
     }
 
     public function isSiteOwner(): bool
     {
-        return isset($this->auth_data['owner']) && $this->auth_data['owner'] == 1;
+        return $this->getData('owner') == 1;
     }
 }

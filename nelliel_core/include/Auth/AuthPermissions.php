@@ -37,7 +37,7 @@ class AuthPermissions extends AuthHandler
 
         foreach ($result as $perm)
         {
-            $this->auth_data[$perm['permission']] = (bool) $perm['perm_setting'];
+            $this->changeData($perm['permission'], boolval($perm['perm_setting']));
         }
 
         return true;
@@ -88,9 +88,14 @@ class AuthPermissions extends AuthHandler
     {
     }
 
-    public function change(string $key, bool $value): void
+    public function checkPermission(string $permission_id): bool
     {
-        $this->auth_data[$key] = $value;
+        return $this->authDataOrDefault($permission_id, false);
+    }
+
+    public function setPermission(string $key, bool $value): void
+    {
+        $this->changeData($key, $value);
     }
 }
 

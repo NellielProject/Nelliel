@@ -90,11 +90,6 @@ class AuthRole extends AuthHandler
 
     public function checkPermission(string $permission_id): bool
     {
-        if (isset($this->permissions->auth_data[$permission_id]))
-        {
-            return $this->permissions->auth_data[$permission_id];
-        }
-
-        return false;
+        return $this->permissions->checkPermission($permission_id);
     }
 }

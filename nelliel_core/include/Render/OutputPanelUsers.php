@@ -89,8 +89,8 @@ class OutputPanelUsers extends Output
         else
         {
             $edit_user = $authorization->getUser($user_id);
-            $this->render_data['user_id'] = $edit_user->auth_data['user_id'];
-            $this->render_data['display_name'] = $edit_user->auth_data['display_name'];
+            $this->render_data['user_id'] = $edit_user->getData('user_id');
+            $this->render_data['display_name'] = $edit_user->getData('display_name');
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     'module=admin&section=users&actions=update&user-id=' . $user_id;
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';

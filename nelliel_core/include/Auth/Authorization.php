@@ -22,7 +22,7 @@ class Authorization
         $this->database = $database;
     }
 
-    public function newUser(string $user_id, bool $db_load = true, bool $temp = false)
+    public function newUser(string $user_id, bool $db_load = true, bool $temp = false): AuthUser
     {
         $user_id_lower = utf8_strtolower($user_id);
         $new_user = new AuthUser($this->database, $user_id, $db_load);
@@ -36,24 +36,24 @@ class Authorization
         return $new_user;
     }
 
-    public function emptyUser()
+    public function emptyUser(): AuthUser
     {
         return new AuthUser($this->database, '');
     }
 
-    public function userExists(string $user_id)
+    public function userExists(string $user_id): bool
     {
         $user_id_lower = utf8_strtolower($user_id);
         return isset(self::$users[$user_id_lower]) || $this->newUser($user_id, false, true)->loadFromDatabase();
     }
 
-    public function userLoaded(string $user_id)
+    public function userLoaded(string $user_id): bool
     {
         $user_id_lower = utf8_strtolower($user_id);
         return isset(self::$users[$user_id_lower]);
     }
 
-    public function getUser(string $user_id)
+    public function getUser(string $user_id): AuthUser
     {
         $user_id_lower = utf8_strtolower($user_id);
 
@@ -72,7 +72,7 @@ class Authorization
         }
     }
 
-    public function removeUser(string $user_id)
+    public function removeUser(string $user_id): bool
     {
         $user_id_lower = utf8_strtolower($user_id);
 
@@ -87,20 +87,25 @@ class Authorization
         return true;
     }
 
-    public function isSiteOwner(string $user_id)
+    public function isSiteOwner(string $user_id): bool
     {
         $user_id_lower = utf8_strtolower($user_id);
         return self::$users[$user_id_lower]->isSiteOwner();
     }
 
-    public function newRole(string $role_id)
+    public function emptyRole(): AuthRole
+    {
+        return new AuthRole($this->database, '');
+    }
+
+    public function newRole(string $role_id): AuthRole
     {
         self::$roles[$role_id] = new AuthRole($this->database, $role_id);
         self::$roles[$role_id]->setupNew();
         return self::$roles[$role_id];
     }
 
-    public function roleExists(string $role_id)
+    public function roleExists(string $role_id): bool
     {
         if ($this->getRole($role_id) !== false)
         {
@@ -110,7 +115,7 @@ class Authorization
         return false;
     }
 
-    public function getRole(string $role_id)
+    public function getRole(string $role_id): AuthRole
     {
         if (isset(self::$roles[$role_id]))
         {
@@ -124,10 +129,10 @@ class Authorization
             return self::$roles[$role_id];
         }
 
-        return false;
+        return $this->emptyRole();
     }
 
-    public function removeRole(string $role_id)
+    public function removeRole(string $role_id): bool
     {
         if (!isset(self::$roles[$role_id]))
         {
@@ -139,7 +144,7 @@ class Authorization
         return true;
     }
 
-    public function roleLevelCheck(string $role1, string $role2, bool $false_if_equal = false)
+    public function roleLevelCheck(string $role1, string $role2, bool $false_if_equal = false): bool
     {
         if (!$this->roleExists($role1))
         {
@@ -151,8 +156,8 @@ class Authorization
             return true;
         }
 
-        $level1 = self::$roles[$role1]->auth_data['role_level'];
-        $level2 = self::$roles[$role2]->auth_data['role_level'];
+        $level1 = self::$roles[$role1]->getData('role_level');
+        $level2 = self::$roles[$role2]->getData('role_level');
 
         if ($false_if_equal)
         {
@@ -164,7 +169,7 @@ class Authorization
         }
     }
 
-    public function saveUsers()
+    public function saveUsers(): void
     {
         foreach (self::$users as $user)
         {
@@ -172,7 +177,7 @@ class Authorization
         }
     }
 
-    public function saveRoles()
+    public function saveRoles(): void
     {
         foreach (self::$roles as $role)
         {
