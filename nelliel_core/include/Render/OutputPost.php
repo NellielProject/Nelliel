@@ -272,7 +272,7 @@ class OutputPost extends Output
             $post_headers['capcode'] = ' ## ' . $post_data['capcode'];
         }
 
-        $post_headers['post_time'] = date($this->domain->setting('date_format'), (int) $post_data['post_time']);
+        $post_headers['post_time'] = date($this->domain->setting('date_format'), intval($post_data['post_time']));
         $post_headers['post_number'] = $post_data['post_number'];
         $post_headers['post_number_url'] = $thread->getURL() . '#t' . $post_content_id->threadID() . 'p' .
                 $post_content_id->postID();
