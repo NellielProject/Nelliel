@@ -95,12 +95,14 @@ class OutputPost extends Output
                 if (nel_true_empty($file['embed_url']))
                 {
                     $file_data = $output_file_info->render(
-                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data, 'json_instances' => $parameters['json_instances']], true);
+                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
+                                'json_instances' => $parameters['json_instances']], true);
                 }
                 else
                 {
                     $file_data = $output_embed_info->render(
-                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data, 'json_instances' => $parameters['json_instances']], true);
+                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
+                                'json_instances' => $parameters['json_instances']], true);
                 }
 
                 $content_row[]['content_data'] = $file_data;
@@ -154,6 +156,7 @@ class OutputPost extends Output
         $thread_headers = array();
         $header_data['response'] = $response;
         $post_content_id = $post->contentID();
+        $session_user = $this->session->user();
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode)
         {
@@ -169,36 +172,51 @@ class OutputPost extends Output
 
             $modmode_headers['ip_address'] = $ip;
 
-            // TODO: Change display according to user perms
             if (!$response)
             {
+                $modmode_headers['can_lock'] = $session_user->checkPermission($this->domain, 'perm_post_status');
                 $locked = $thread_data['locked'] == 1;
                 $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock') : _gettext('Lock');
                 $modmode_headers['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=lock&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+
+                $modmode_headers['can_sticky'] = $session_user->checkPermission($this->domain, 'perm_post_status');
                 $sticky = $thread_data['sticky'] == 1;
                 $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky') : _gettext('Sticky');
                 $modmode_headers['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=sticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+
+                $modmode_headers['can_sage'] = $session_user->checkPermission($this->domain, 'perm_post_status');
                 $permasage = $thread_data['permasage'] == 1;
                 $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Unsage') : _gettext('Sage');
                 $modmode_headers['permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=sage&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+
+                $modmode_headers['can_cyclic'] = $session_user->checkPermission($this->domain, 'perm_post_type');
                 $cyclic = $thread_data['cyclic'] == 1;
                 $modmode_headers['cyclic_text'] = ($cyclic) ? _gettext('Non-cyclic') : _gettext('Cyclic');
                 $modmode_headers['cyclic_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=cyclic&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
             }
 
+            $modmode_headers['can_ban'] = $session_user->checkPermission($this->domain, 'perm_manage_bans');
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .
                     '&actions=new&ban-ip=' . $ip . '&modmode=true&goback=false';
+
+            $modmode_headers['can_delete'] = $session_user->checkPermission($this->domain, 'perm_delete_posts');
             $modmode_headers['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
+
+            $modmode_headers['can_by_ip'] = $session_user->checkPermission($this->domain, 'perm_delete_by_ip');
             $modmode_headers['delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
+
+            $modmode_headers['can_ban_delete'] = $session_user->checkPermission($this->domain, 'perm_manage_bans') &&
+                    $session_user->checkPermission($this->domain, 'perm_delete_posts');
             $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&ban-ip=' . $ip .
                     '&modmode=true&goback=false';
+
             $header_data['modmode_headers'] = $modmode_headers;
         }
 
@@ -325,8 +343,8 @@ class OutputPost extends Output
                 if ($line_count > $this->domain->setting('comment_display_lines'))
                 {
                     $comment_data['long_comment'] = true;
-                    $comment_data['long_comment_url'] = $thread->getURL() . '#t' . $post_content_id->threadID() .
-                            'p' . $post_content_id->postID();
+                    $comment_data['long_comment_url'] = $thread->getURL() . '#t' . $post_content_id->threadID() . 'p' .
+                            $post_content_id->postID();
                     $comment_data['comment_lines'] = array();
                     $i = 0;
                     $reduced_lines = array();
