@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -25,8 +24,7 @@ class OutputFile extends Output
         $this->renderSetup();
         $post_data = $parameters['post_data'] ?? array();
         $file = $parameters['file_data'] ?? array();
-        $web_paths = $parameters['web_paths'] ?? array();
-        $multiple = $post_data['content_count'] > 1;
+        $multiple = $post_data['file_count'] > 1;
         $json_post = $parameters['json_instances']['post'];
         $json_content = $parameters['json_instances']['content'];
         $json_post->addContentData($json_content->prepareData($file));
@@ -54,7 +52,7 @@ class OutputFile extends Output
             $this->render_data['display_image_dimensions'] = $file['display_width'] . ' x ' . $file['display_height'];
         }
 
-        $this->render_data['file_url'] = $web_paths['thread_src'] . $post_data['post_number'] . '/' .
+        $this->render_data['file_url'] = $this->domain->reference('src_web_path') . $post_data['post_number'] . '/' .
                 rawurlencode($full_filename);
         $moar = json_decode($file['moar'], true);
         $display_filename = $file['filename'];
@@ -100,7 +98,8 @@ class OutputFile extends Output
         if ($this->domain->setting('generate_preview'))
         {
             $this->render_data['image_preview'] = true;
-            $max_width = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting('max_display_width');
+            $max_width = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
+                    'max_display_width');
             $max_height = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
                     'max_display_height');
             $this->render_data['max_width'] = $max_width;
@@ -119,8 +118,8 @@ class OutputFile extends Output
                 if (!empty($file['preview_name']) && $file['preview_width'] > 0 && $file['preview_height'] > 0)
                 {
                     $full_preview_name = $file['preview_name'] . '.' . $file['preview_extension'];
-                    $this->render_data['preview_url'] = $web_paths['thread_preview'] . $post_data['post_number'] . '/' .
-                            rawurlencode($full_preview_name);
+                    $this->render_data['preview_url'] = $this->domain->reference('preview_web_path') .
+                            $post_data['post_number'] . '/' . rawurlencode($full_preview_name);
 
                     if ($file['preview_width'] > $max_width || $file['preview_height'] > $max_height)
                     {
@@ -167,14 +166,14 @@ class OutputFile extends Output
 
                 if ($file['spoiler'])
                 {
-                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH . 'core/covers/spoiler_alert.png';
+                    $this->render_data['preview_url'] = NEL_MEDIA_WEB_PATH . 'core/covers/spoiler_alert.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
 
                 if ($file['deleted'])
                 {
-                    $this->render_data['preview_url'] = NEL_IMAGES_WEB_PATH . 'core/covers/deleted_file.png';
+                    $this->render_data['preview_url'] = NEL_MEDIA_WEB_PATH . 'core/covers/deleted_file.png';
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }

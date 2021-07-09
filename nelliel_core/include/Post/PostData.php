@@ -184,7 +184,7 @@ class PostData
         }
 
         $post->changeData('capcode', $this->capcode($name_text));
-        $post->changeData('poster_name', $user->auth_data['display_name']);
+        $post->changeData('poster_name', $user->getData('display_name'));
         $post->changeData('account_id', $user->id());
     }
 
@@ -252,13 +252,8 @@ class PostData
             }
             else
             {
-                $role = $this->session->user()->checkRole($this->domain);
-
-                if ($role != false)
-                {
-
-                    $capcode = $role->auth_data['capcode'];
-                }
+                $role = $this->session->user()->getDomainRole($this->domain);
+                $capcode = $role->getData('capcode');
             }
         }
 

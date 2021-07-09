@@ -40,10 +40,10 @@ class JSONContent extends JSONOutput
         $content_array['preview_width'] = nel_cast_to_datatype($data['preview_width'], 'integer');
         $content_array['preview_height'] = nel_cast_to_datatype($data['preview_height'], 'integer');
         $content_array['filesize'] = nel_cast_to_datatype($data['filesize'], 'integer');
-        $content_array['md5'] = bin2hex($data['md5']);
-        $content_array['sha1'] = bin2hex($data['sha1']);
-        $content_array['sha256'] = bin2hex($data['sha256']);
-        $content_array['sha512'] = bin2hex($data['sha512']);
+        $content_array['md5'] = (!is_null($data['md5'])) ? bin2hex($data['md5']) : null;
+        $content_array['sha1'] = (!is_null($data['sha1'])) ? bin2hex($data['md5']) : null;
+        $content_array['sha256'] = (!is_null($data['sha256'])) ? bin2hex($data['md5']) : null;
+        $content_array['sha512'] = (!is_null($data['sha512'])) ? bin2hex($data['md5']) : null;
         $content_array['embed_url'] = nel_cast_to_datatype($data['embed_url'], 'string');
         $content_array['spoiler'] = nel_cast_to_datatype($data['spoiler'], 'boolean');
         $content_array['deleted'] = nel_cast_to_datatype($data['deleted'], 'boolean');

@@ -75,7 +75,8 @@ class ContentPost extends ContentHandler
                     "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "capcode" = :capcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address, "hashed_ip_address" = :hashed_ip_address,
-                    "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_content" = :has_content, "content_count" = :content_count,
+                    "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_content" = :has_content,
+                    "total_content" = :total_content, "file_count" = :file_count, "embed_count" = :embed_count,
                     "op" = :op, "sage" = :sage, "account_id" = :account_id, "mod_comment" = :mod_comment
                     WHERE "post_number" = :post_number');
             $prepared->bindValue(':post_number', $this->content_id->postID(), PDO::PARAM_INT);
@@ -85,8 +86,10 @@ class ContentPost extends ContentHandler
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->posts_table .
                     '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "capcode", "email",
-                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_content", "content_count", "op", "sage", "account_id", "mod_comment") VALUES
-                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address, :hashed_ip_address, :post_time, :post_time_milli, :has_content, :content_count,
+                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_content",
+                    "total_content", "file_count", "embed_count", "op", "sage", "account_id", "mod_comment") VALUES
+                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address,
+                    :hashed_ip_address, :post_time, :post_time_milli, :has_content, :total_content, :file_count, :embed_count,
                     :op, :sage, :account_id, :mod_comment)');
         }
 
@@ -109,7 +112,9 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
         $prepared->bindValue(':has_content', $this->contentDataOrDefault('has_content', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':content_count', $this->contentDataOrDefault('content_count', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':total_content', $this->contentDataOrDefault('total_content', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':embed_count', $this->contentDataOrDefault('embed_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':op', $this->contentDataOrDefault('op', 0), PDO::PARAM_INT);
         $prepared->bindValue(':sage', $this->contentDataOrDefault('sage', 0), PDO::PARAM_INT);
         $prepared->bindValue(':account_id', $this->contentDataOrDefault('account_id', null), PDO::PARAM_STR);
@@ -142,12 +147,8 @@ class ContentPost extends ContentHandler
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory(
-                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(), NEL_DIRECTORY_PERM,
-                true);
-        $file_handler->createDirectory(
-                $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
-                NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->src_path . $this->content_id->postID(), NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->preview_path . $this->content_id->postID(), NEL_DIRECTORY_PERM, true);
     }
 
     public function addCites()
@@ -192,7 +193,7 @@ class ContentPost extends ContentHandler
             $user = $session->user();
             $bypass = false;
 
-            if ($user && $this->$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
+            if ($user && $session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
             {
                 $bypass = true;
             }
@@ -252,12 +253,25 @@ class ContentPost extends ContentHandler
     {
         $prepared = $this->database->prepare(
                 'SELECT COUNT("entry") FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
-        $content_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
+        $total_content = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
                 PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->posts_table . '" SET "content_count" = ? WHERE "post_number" = ?');
-        $this->database->executePrepared($prepared, [$content_count, $this->content_id->postID()]);
+                'SELECT COUNT("entry") FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "embed_url" IS NULL');
+        $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN,
+                true);
+
+        $prepared = $this->database->prepare(
+                'SELECT COUNT("entry") FROM "' . $this->content_table .
+                '" WHERE "post_ref" = ? AND "embed_url" IS NOT NULL');
+        $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
+                PDO::FETCH_COLUMN, true);
+
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->posts_table .
+                '" SET "total_content" = ?, "file_count" = ?, "embed_count" = ? WHERE "post_number" = ?');
+        $this->database->executePrepared($prepared,
+                [$total_content, $file_count, $embed_count, $this->content_id->postID()]);
     }
 
     protected function verifyModifyPerms()
@@ -276,12 +290,12 @@ class ContentPost extends ContentHandler
         {
             if ($user->checkPermission($this->domain, 'perm_delete_posts'))
             {
-                if (!empty($this->content_data['account_id']) &&
+                if (!$user->isSiteOwner() && !empty($this->content_data['account_id']) &&
                         $this->authorization->userExists($this->content_data['account_id']))
                 {
                     $mod_post_user = $this->authorization->getUser($this->content_data['account_id']);
-                    $flag = $this->authorization->roleLevelCheck($user->checkRole($this->domain),
-                            $mod_post_user->checkRole($this->domain));
+                    $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
+                            $mod_post_user->getDomainRole($this->domain)->id());
                 }
                 else
                 {
@@ -327,16 +341,7 @@ class ContentPost extends ContentHandler
         $new_thread->content_data['last_update_milli'] = $time['milli'];
         $new_thread->writeToDatabase();
         $new_thread->loadFromDatabase();
-        $file_handler = nel_utilities()->fileHandler();
         $new_thread->createDirectories();
-        $file_handler->moveDirectory(
-                $this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
-                $this->src_path . '/' . $new_thread->content_id->threadID() . '/' . $this->content_id->postID(), true);
-        $file_handler->moveDirectory(
-                $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID(),
-                $this->preview_path . '/' . $new_thread->content_id->threadID() . '/' . $this->content_id->postID(),
-                true);
-
         $prepared = $this->database->prepare('SELECT entry FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
         $prepared = $this->database->prepare(
                 'UPDATE "' . $this->content_table . '" SET "parent_thread" = ? WHERE "post_ref" = ?');

@@ -22,8 +22,8 @@ class NewPost
 
     function __construct(Domain $domain, Session $session)
     {
-        $this->database = $domain->database();
         $this->domain = $domain;
+        $this->database = $domain->database();
         $this->session = $session;
     }
 
@@ -70,7 +70,7 @@ class NewPost
 
         if ($this->domain->setting('allow_fgsfds_commands'))
         {
-            $fgsfds_commands_added = $fgsfds->addFromString($post_fgsfds);
+            $fgsfds_commands_added = $fgsfds->addFromString($post_fgsfds, true);
         }
 
         $post_email = $post->data('email') ?? '';
@@ -84,21 +84,26 @@ class NewPost
             if ($email_parts !== false &&
                     (count($email_parts) > 1 || preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1))
             {
-                $email_commands_added = $fgsfds->addFromString($post_email);
+                $email_commands_added = $fgsfds->addFromString($post_email, false);
                 $post->changeData('email', null);
             }
         }
 
+        if (!$fgsfds->commandIsSet('noko') && $this->domain->setting('always_noko'))
+        {
+            $fgsfds->addCommand('noko', true);
+        }
+
         $post->changeData('sage', false);
 
-        if($this->domain->setting('allow_sage'))
+        if ($this->domain->setting('allow_sage'))
         {
             $post->changeData('sage', $fgsfds->commandIsSet('sage'));
         }
 
         $uploads = $uploads_handler->process($post);
         $spoon = !empty($uploads);
-        $post->changeData('content_count', count($uploads));
+        $post->changeData('total_content', count($uploads));
 
         if (!$spoon)
         {
@@ -120,7 +125,7 @@ class NewPost
 
         // Go ahead and put post into database
         $post->changeData('op', ($post->data('parent_thread') == 0) ? 1 : 0);
-        $post->changeData('has_content', ($post->data('content_count') > 0) ? 1 : 0);
+        $post->changeData('has_content', ($post->data('total_content') > 0) ? 1 : 0);
 
         // Process if-thens for new post here
         $if_then = new IfThen($this->domain->database(), new ConditionsPost($post, $uploads),
@@ -135,7 +140,6 @@ class NewPost
             $thread->contentID()->changeThreadID($post->contentID()->postID());
             $thread->changeData('last_bump_time', $time['time']);
             $thread->changeData('last_bump_time_milli', $time['milli']);
-            $thread->changeData('content_count', $post->data('content_count'));
             $thread->changeData('last_update', $time['time']);
             $thread->changeData('last_update_milli', $time['milli']);
             $thread->changeData('post_count', 1);
@@ -147,29 +151,30 @@ class NewPost
         {
             $thread->contentID()->changeThreadID($post->data('parent_thread'));
             $thread->loadFromDatabase();
-            $thread->changeData('content_count', $thread->data('content_count') + $post->data('content_count'));
             $thread->changeData('last_update', $time['time']);
             $thread->changeData('last_update_milli', $time['milli']);
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
-                    !$fgsfds->commandIsSet('sage') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
+                            'sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
             }
-
-            $thread->writeToDatabase();
         }
 
         $post->writeToDatabase();
         $post->addCites();
         $post->storeCache();
         $post->createDirectories();
-        $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()->threadID());
-        $src_path = $this->domain->reference('src_path') . $thread->contentID()->threadID() . '/' .
-                $post->contentID()->postID() . '/';
+
+        if ($fgsfds->commandIsSet('noko'))
+        {
+            $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()->threadID());
+        }
+
+        $src_path = $this->domain->reference('src_path') . $post->contentID()->postID() . '/';
 
         clearstatcache();
 
@@ -179,8 +184,7 @@ class NewPost
             // Make previews and do final file processing
             if ($this->domain->setting('generate_preview'))
             {
-                $preview_path = $this->domain->reference('preview_path') . $thread->contentID()->threadID() . '/' .
-                        $post->contentID()->postID() . '/';
+                $preview_path = $this->domain->reference('preview_path') . $post->contentID()->postID() . '/';
                 $gen_previews = new Previews($this->domain);
                 $uploads = $gen_previews->generate($uploads, $preview_path);
             }
@@ -207,6 +211,8 @@ class NewPost
             }
         }
 
+        $thread->writeToDatabase();
+        $thread->updateCounts();
         $thread->loadFromDatabase(); // Make sure we have any expected defaults set
 
         if ($thread->data('cyclic') == 1)

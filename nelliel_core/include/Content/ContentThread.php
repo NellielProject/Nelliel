@@ -73,7 +73,8 @@ class ContentThread extends ContentHandler
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->threads_table .
                     '" SET "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
-                    "content_count" = :content_count, "last_update" = :last_update, "last_update_milli" = :last_update_milli,
+                    "total_content" = :total_content, "file_count" = :file_count, "embed_count" = :embed_count,
+                    "last_update" = :last_update, "last_update_milli" = :last_update_milli,
                     "post_count" = :post_count, "permasage" = :permasage, "sticky" = :sticky, "cyclic" = :cyclic,
                     "archive_status" = :archive_status, "locked" = :locked, "slug" = :slug WHERE "thread_id" = :thread_id');
         }
@@ -81,9 +82,9 @@ class ContentThread extends ContentHandler
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->threads_table .
-                    '" ("thread_id", "last_bump_time", "last_bump_time_milli", "content_count", "last_update",
+                    '" ("thread_id", "last_bump_time", "last_bump_time_milli", "total_content", "file_count", "embed_count", "last_update",
                     "last_update_milli", "post_count", "permasage", "sticky", "cyclic", "archive_status", "locked", "slug")
-                    VALUES (:thread_id, :last_bump_time, :last_bump_time_milli, :content_count, :last_update,
+                    VALUES (:thread_id, :last_bump_time, :last_bump_time_milli, :total_content, :file_count, :embed_count, :last_update,
                     :last_update_milli, :post_count, :permasage, :sticky, :cyclic, :archive_status, :locked, :slug)');
         }
 
@@ -91,7 +92,9 @@ class ContentThread extends ContentHandler
         $prepared->bindValue(':last_bump_time', $this->contentDataOrDefault('last_bump_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_bump_time_milli', $this->contentDataOrDefault('last_bump_time_milli', 0),
                 PDO::PARAM_INT);
-        $prepared->bindValue(':content_count', $this->contentDataOrDefault('content_count', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':total_content', $this->contentDataOrDefault('total_content', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':embed_count', $this->contentDataOrDefault('embed_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_update', $this->contentDataOrDefault('last_update', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_update_milli', $this->contentDataOrDefault('last_update_milli', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_count', $this->contentDataOrDefault('post_count', 0), PDO::PARAM_INT);
@@ -110,8 +113,6 @@ class ContentThread extends ContentHandler
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->src_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM, true);
-        $file_handler->createDirectory($this->preview_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM, true);
         $file_handler->createDirectory($this->page_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM, true);
     }
 
@@ -178,12 +179,21 @@ class ContentThread extends ContentHandler
 
         $prepared = $this->database->prepare(
                 'SELECT COUNT("entry") FROM "' . $this->content_table . '" WHERE "parent_thread" = ?');
-        $content_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
+        $total_content = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->threads_table . '" SET "content_count" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$content_count, $this->content_id->threadID()]);
+                'SELECT COUNT("entry") FROM "' . $this->content_table .
+                '" WHERE "parent_thread" = ? AND "embed_url" IS NOT NULL');
+        $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
+                PDO::FETCH_COLUMN);
+
+        $file_count = $total_content - $embed_count;
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->threads_table .
+                '" SET "total_content" = ?, "file_count" = ?, "embed_count" = ? WHERE "thread_id" = ?');
+        $this->database->executePrepared($prepared,
+                [$total_content, $file_count, $embed_count, $this->content_id->threadID()]);
     }
 
     protected function verifyModifyPerms()

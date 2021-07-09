@@ -93,7 +93,7 @@ class OutputPanelSiteSettings extends Output
                 }
             }
 
-            $this->render_data[$setting['setting_name']] = $setting_data;
+            $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

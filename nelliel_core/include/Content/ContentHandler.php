@@ -94,4 +94,9 @@ abstract class ContentHandler
     {
         return $this->domain;
     }
+
+    public function isLoaded()
+    {
+        return !empty($this->content_data);
+    }
 }

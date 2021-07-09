@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -67,11 +66,11 @@ class OutputThread extends Output
 
         if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))
         {
-            $page_title .=' - Thread #' . $treeline[0]['post_number'];
+            $page_title .= ' - Thread #' . $treeline[0]['post_number'];
         }
         else
         {
-            $page_title .=' - ' . $treeline[0]['subject'];
+            $page_title .= ' - ' . $treeline[0]['subject'];
         }
 
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -94,7 +93,8 @@ class OutputThread extends Output
             $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
         }
 
-        $this->render_data['show_global_announcement'] = !nel_true_empty(nel_site_domain()->setting('global_announcement'));
+        $this->render_data['show_global_announcement'] = !nel_true_empty(
+                nel_site_domain()->setting('global_announcement'));
         $this->render_data['global_announcement_text'] = nel_site_domain()->setting('global_announcement');
         $this->render_data['return_url'] = $return_url;
         $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
@@ -156,9 +156,10 @@ class OutputThread extends Output
         if ($this->write_mode)
         {
             $this->file_handler->writeFile(
-                    $this->domain->reference('page_path') . $thread_id . '/' . $thread->pageBasename() . NEL_PAGE_EXT, $output,
-                    NEL_FILES_PERM, true);
-            $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/', $thread->pageBasename());
+                    $this->domain->reference('page_path') . $thread_id . '/' . $thread->pageBasename() . NEL_PAGE_EXT,
+                    $output, NEL_FILES_PERM, true);
+            $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/',
+                    $thread->pageBasename());
         }
         else
         {

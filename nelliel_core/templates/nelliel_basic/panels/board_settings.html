@@ -1,4 +1,5 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
+{{# settings_data }}
 	<div class="display-table">
 		<div class="display-row">
 			<span class="display-cell">
@@ -455,4 +456,5 @@
 	<div>
 		<input type="submit" value="Update Settings" data-i18n-attributes="gettext|value">
 	</div>
+{{/ settings_data }}
 </form>

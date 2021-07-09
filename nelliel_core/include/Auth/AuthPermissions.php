@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Auth;
 
@@ -26,7 +25,7 @@ class AuthPermissions extends AuthHandler
         }
     }
 
-    public function loadFromDatabase()
+    public function loadFromDatabase(): bool
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ?');
         $result = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
@@ -38,13 +37,13 @@ class AuthPermissions extends AuthHandler
 
         foreach ($result as $perm)
         {
-            $this->auth_data[$perm['permission']] = (bool) $perm['perm_setting'];
+            $this->changeData($perm['permission'], boolval($perm['perm_setting']));
         }
 
         return true;
     }
 
-    public function writeToDatabase()
+    public function writeToDatabase(): bool
     {
         if (empty($this->auth_data))
         {
@@ -67,7 +66,8 @@ class AuthPermissions extends AuthHandler
             else
             {
                 $prepared = $this->database->prepare(
-                        'INSERT INTO "' . NEL_ROLE_PERMISSIONS_TABLE . '" ("role_id", "permission", "perm_setting") VALUES
+                        'INSERT INTO "' . NEL_ROLE_PERMISSIONS_TABLE .
+                        '" ("role_id", "permission", "perm_setting") VALUES
                     (:role_id, :permission, :perm_setting)');
             }
 
@@ -76,15 +76,26 @@ class AuthPermissions extends AuthHandler
             $prepared->bindValue(':perm_setting', intval($setting), PDO::PARAM_INT);
             $this->database->executePrepared($prepared);
         }
+
         return true;
     }
 
-    public function setupNew()
+    public function setupNew(): void
     {
     }
 
-    public function remove()
+    public function remove(): void
     {
+    }
+
+    public function checkPermission(string $permission_id): bool
+    {
+        return $this->authDataOrDefault($permission_id, false);
+    }
+
+    public function setPermission(string $key, bool $value): void
+    {
+        $this->changeData($key, $value);
     }
 }
 

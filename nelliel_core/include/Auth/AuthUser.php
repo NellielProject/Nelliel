@@ -14,7 +14,7 @@ use PDO;
 
 class AuthUser extends AuthHandler
 {
-    public $user_roles = array();
+    private $user_roles = array();
 
     function __construct(NellielPDO $database, string $user_id, bool $db_load = true)
     {
@@ -29,7 +29,7 @@ class AuthUser extends AuthHandler
         }
     }
 
-    public function loadFromDatabase()
+    public function loadFromDatabase(): bool
     {
         if ($this->empty())
         {
@@ -56,7 +56,7 @@ class AuthUser extends AuthHandler
         return true;
     }
 
-    public function writeToDatabase()
+    public function writeToDatabase(): bool
     {
         if ($this->empty() || empty($this->id()))
         {
@@ -78,7 +78,7 @@ class AuthUser extends AuthHandler
                     'INSERT INTO "' . NEL_USERS_TABLE .
                     '" ("user_id", "display_name", "user_password", "hashed_user_id", "active", "owner", "last_login") VALUES
                     (:user_id, :display_name, :user_password, :hashed_user_id, :active, :owner, :last_login)');
-            $prepared->bindValue(':hashed_user_id', nel_prepare_hash_for_storage($this->auth_data['hashed_user_id']),
+            $prepared->bindValue(':hashed_user_id', nel_prepare_hash_for_storage($this->getData('hashed_user_id')),
                     PDO::PARAM_LOB);
         }
 
@@ -120,45 +120,38 @@ class AuthUser extends AuthHandler
         return true;
     }
 
-    public function setupNew()
+    public function setupNew(): void
     {
-        $this->auth_data['hashed_user_id'] = hash('sha256', $this->id());
+        $this->changeData('hashed_user_id', hash('sha256', $this->id()));
     }
 
-    public function remove()
+    public function remove(): void
     {
         if ($this->empty())
         {
-            return false;
+            return;
         }
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function updatePassword(string $new_password)
+    public function updatePassword(string $new_password): void
     {
-        $this->auth_data['user_password'] = nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM);
+        $this->changeData('user_password', nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM));
     }
 
-    public function checkRole(Domain $domain, bool $return_id = false)
+    public function getDomainRole(Domain $domain): AuthRole
     {
         if ($this->empty() || !isset($this->user_roles[$domain->id()]))
         {
-            return false;
+            return new AuthRole($this->database, '');
         }
 
-        if ($return_id)
-        {
-            return $this->user_roles[$domain->id()]['role_id'];
-        }
-        else
-        {
-            return $this->user_roles[$domain->id()]['role'];
-        }
+        return $this->user_roles[$domain->id()]['role'];
     }
 
-    public function modifyRole(string $domain_id, string $role_id)
+    public function modifyRole(string $domain_id, string $role_id): void
     {
         if (!isset($this->user_roles[$domain_id]))
         {
@@ -172,7 +165,7 @@ class AuthUser extends AuthHandler
         }
     }
 
-    public function removeRole(string $domain_id, string $role_id)
+    public function removeRole(string $domain_id, string $role_id): void
     {
         if (!isset($this->user_roles[$domain_id]))
         {
@@ -185,29 +178,29 @@ class AuthUser extends AuthHandler
         unset($this->user_roles[$domain_id]);
     }
 
-    public function checkPermission(Domain $domain, string $permission)
+    public function checkPermission(Domain $domain, string $permission): bool
     {
-        if ($this->empty())
-        {
-            return false;
-        }
-
         // Site Owner can do all the things
         if ($this->isSiteOwner())
         {
             return true;
         }
 
-        $role = $this->checkRole($domain);
+        if ($this->empty())
+        {
+            return false;
+        }
 
-        if ($role && $role->checkPermission($permission))
+        $role = $this->getDomainRole($domain);
+
+        if ($role->checkPermission($permission))
         {
             return true;
         }
 
-        $site_role = $this->checkRole(nel_site_domain());
+        $site_role = $this->getDomainRole(nel_site_domain());
 
-        if ($site_role && $site_role->checkPermission($permission))
+        if ($site_role->checkPermission($permission))
         {
             return true;
         }
@@ -215,20 +208,20 @@ class AuthUser extends AuthHandler
         return false;
     }
 
-    private function setupAuthRole(string $role_id)
+    private function setupAuthRole(string $role_id): AuthRole
     {
         $role = new AuthRole($this->database, $role_id);
         $role->loadFromDatabase();
         return $role;
     }
 
-    public function active()
+    public function active(): bool
     {
-        return $this->getInfo('active') || $this->isSiteOwner();
+        return $this->getData('active') || $this->isSiteOwner();
     }
 
-    public function isSiteOwner()
+    public function isSiteOwner(): bool
     {
-        return isset($this->auth_data['owner']) && $this->auth_data['owner'] == 1;
+        return $this->getData('owner') == 1;
     }
 }

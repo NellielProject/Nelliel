@@ -128,7 +128,7 @@ class OutputPanelBoardSettings extends Output
             }
 
             $type_data['entry_rows'][] = $entry_row;
-            $this->render_data['file_types'][] = $type_data;
+            $this->render_data['settings_data']['file_types'][] = $type_data;
         }
 
         $this->render_data['show_lock_update'] = $defaults;
@@ -201,7 +201,7 @@ class OutputPanelBoardSettings extends Output
                 }
             }
 
-            $this->render_data[$setting['setting_name']] = $setting_data;
+            $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

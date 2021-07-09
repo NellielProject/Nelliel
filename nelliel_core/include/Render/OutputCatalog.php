@@ -72,13 +72,14 @@ class OutputCatalog extends Output
                 }
                 else
                 {
-                    $thread_data['comment_markdown'] = $output_post->parseComment($first_post['comment'], $post_content_id);
+                    $thread_data['comment_markdown'] = $output_post->parseComment($first_post['comment'],
+                            $post_content_id);
                 }
             }
 
             $thread_data['mod-comment'] = $first_post['mod_comment'];
             $thread_data['reply_count'] = $thread['post_count'] - 1;
-            $thread_data['content_count'] = $thread['content_count'];
+            $thread_data['total_content'] = $thread['total_content'];
             $index_page = ceil($thread_count / $this->domain->setting('threads_per_page'));
             $thread_data['index_page'] = $index_page;
             $thread_data['is_sticky'] = $thread['sticky'] == 1;
@@ -106,8 +107,8 @@ class OutputCatalog extends Output
 
                 $thread_data['preview_width'] = $width;
                 $thread_data['preview_height'] = $height;
-                $thread_preview_web_path = $this->domain->reference('preview_web_path') . $thread['thread_id'] . '/' .
-                        $first_post['post_number'] . '/';
+                $thread_preview_web_path = $this->domain->reference('preview_web_path') . $first_post['post_number'] .
+                        '/';
                 $thread_data['preview_url'] = $thread_preview_web_path . $first_file['preview_name'] . '.' .
                         $first_file['preview_extension'];
             }

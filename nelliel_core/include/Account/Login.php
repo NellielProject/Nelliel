@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Account;
 
@@ -73,10 +72,7 @@ class Login
 
         if (!$user->empty())
         {
-            if (isset($user->auth_data['user_password']))
-            {
-                $valid_password = nel_password_verify($form_password, $user->auth_data['user_password']);
-            }
+            $valid_password = nel_password_verify($form_password, $user->getData('user_password'));
 
             if (empty($session_user_id))
             {

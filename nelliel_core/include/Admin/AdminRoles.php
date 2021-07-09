@@ -20,9 +20,9 @@ class AdminRoles extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
     {
         parent::__construct($authorization, $domain, $session, $inputs);
-        $this->role_id = $_GET['role-id'] ?? null;
+        $this->role_id = $_GET['role-id'] ?? '';
 
-        if (!is_null($this->role_id) && !$this->authorization->roleExists($this->role_id))
+        if (!$this->authorization->roleExists($this->role_id))
         {
             nel_derp(231, _gettext('The specified role does not exist.'));
         }
@@ -46,7 +46,7 @@ class AdminRoles extends Admin
     public function add()
     {
         $this->verifyAction();
-        $this->role_id = $_POST['role_id'];
+        $this->role_id = $_POST['role_id'] ?? '';
         $this->update();
         $this->outputMain(true);
     }
@@ -75,11 +75,11 @@ class AdminRoles extends Admin
             if (substr($key, 0, 5) === 'perm_')
             {
                 $value = ($value == 1) ? true : false;
-                $role->permissions->auth_data[$key] = $value;
+                $role->permissions->changeData($key, $value);
                 continue;
             }
 
-            $role->auth_data[$key] = $value;
+            $role->changeData($key, $value);
         }
 
         $this->authorization->saveRoles();

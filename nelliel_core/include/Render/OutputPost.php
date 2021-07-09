@@ -56,10 +56,6 @@ class OutputPost extends Output
             }
         }
 
-        $web_paths['thread_page'] = $thread->getURL();
-        $web_paths['thread_src'] = $this->domain->reference('src_web_path') . $thread_content_id->threadID() . '/';
-        $web_paths['thread_preview'] = $this->domain->reference('preview_web_path') . $thread_content_id->threadID() .
-                '/';
         $this->render_data['post_corral_id'] = 'post-corral-' . $post_content_id->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post_content_id->getIDString();
 
@@ -76,7 +72,7 @@ class OutputPost extends Output
 
         $this->render_data['post_anchor_id'] = 't' . $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
-                $post, $web_paths, $gen_data, $in_thread_number);
+                $post, $thread, $gen_data, $in_thread_number);
 
         if ($post_data['has_content'] == 1)
         {
@@ -100,13 +96,13 @@ class OutputPost extends Output
                 {
                     $file_data = $output_file_info->render(
                             ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
-                                'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
+                                'json_instances' => $parameters['json_instances']], true);
                 }
                 else
                 {
                     $file_data = $output_embed_info->render(
                             ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
-                                'web_paths' => $web_paths, 'json_instances' => $parameters['json_instances']], true);
+                                'json_instances' => $parameters['json_instances']], true);
                 }
 
                 $content_row[]['content_data'] = $file_data;
@@ -131,7 +127,7 @@ class OutputPost extends Output
             }
         }
 
-        $this->render_data['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $web_paths);
+        $this->render_data['post_comments'] = $this->postComments($post_data, $post_content_id, $gen_data, $thread);
         $this->render_data['site_content_disclaimer'] = nel_site_domain()->setting('site_content_disclaimer');
         $this->render_data['board_content_disclaimer'] = $this->domain->setting('board_content_disclaimer');
         $output = $this->output('thread/post', $data_only, true, $this->render_data);
@@ -153,13 +149,14 @@ class OutputPost extends Output
     }
 
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
-            ContentPost $post, array $web_paths, array $gen_data, int $in_thread_number)
+            ContentPost $post, ContentThread $thread, array $gen_data, int $in_thread_number)
     {
         $header_data = array();
         $modmode_headers = array();
         $thread_headers = array();
         $header_data['response'] = $response;
         $post_content_id = $post->contentID();
+        $session_user = $this->session->user();
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode)
         {
@@ -175,36 +172,51 @@ class OutputPost extends Output
 
             $modmode_headers['ip_address'] = $ip;
 
-            // TODO: Change display according to user perms
             if (!$response)
             {
+                $modmode_headers['can_lock'] = $session_user->checkPermission($this->domain, 'perm_post_status');
                 $locked = $thread_data['locked'] == 1;
                 $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock') : _gettext('Lock');
                 $modmode_headers['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=lock&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+
+                $modmode_headers['can_sticky'] = $session_user->checkPermission($this->domain, 'perm_post_status');
                 $sticky = $thread_data['sticky'] == 1;
                 $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky') : _gettext('Sticky');
                 $modmode_headers['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=sticky&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+
+                $modmode_headers['can_sage'] = $session_user->checkPermission($this->domain, 'perm_post_status');
                 $permasage = $thread_data['permasage'] == 1;
                 $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Unsage') : _gettext('Sage');
                 $modmode_headers['permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=sage&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
+
+                $modmode_headers['can_cyclic'] = $session_user->checkPermission($this->domain, 'perm_post_type');
                 $cyclic = $thread_data['cyclic'] == 1;
                 $modmode_headers['cyclic_text'] = ($cyclic) ? _gettext('Non-cyclic') : _gettext('Cyclic');
                 $modmode_headers['cyclic_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                         '&actions=cyclic&content-id=' . $thread_content_id->getIDString() . '&modmode=true&goback=true';
             }
 
+            $modmode_headers['can_ban'] = $session_user->checkPermission($this->domain, 'perm_manage_bans');
             $modmode_headers['ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .
                     '&actions=new&ban-ip=' . $ip . '&modmode=true&goback=false';
+
+            $modmode_headers['can_delete'] = $session_user->checkPermission($this->domain, 'perm_delete_posts');
             $modmode_headers['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
+
+            $modmode_headers['can_by_ip'] = $session_user->checkPermission($this->domain, 'perm_delete_by_ip');
             $modmode_headers['delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
+
+            $modmode_headers['can_ban_delete'] = $session_user->checkPermission($this->domain, 'perm_manage_bans') &&
+                    $session_user->checkPermission($this->domain, 'perm_delete_posts');
             $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&ban-ip=' . $ip .
                     '&modmode=true&goback=false';
+
             $header_data['modmode_headers'] = $modmode_headers;
         }
 
@@ -228,7 +240,7 @@ class OutputPost extends Output
                 }
             }
 
-            $thread_headers['reply_to_url'] = $web_paths['thread_page'];
+            $thread_headers['reply_to_url'] = $thread->getURL();
 
             if ($this->session->inModmode($this->domain) && !$this->write_mode)
             {
@@ -278,9 +290,9 @@ class OutputPost extends Output
             $post_headers['capcode'] = ' ## ' . $post_data['capcode'];
         }
 
-        $post_headers['post_time'] = date($this->domain->setting('date_format'), (int) $post_data['post_time']);
+        $post_headers['post_time'] = date($this->domain->setting('date_format'), intval($post_data['post_time']));
         $post_headers['post_number'] = $post_data['post_number'];
-        $post_headers['post_number_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() . 'p' .
+        $post_headers['post_number_url'] = $thread->getURL() . '#t' . $post_content_id->threadID() . 'p' .
                 $post_content_id->postID();
         $post_headers['post_number_url_cite'] = $post_headers['post_number_url'] . 'cite';
 
@@ -300,7 +312,7 @@ class OutputPost extends Output
         return $header_data;
     }
 
-    private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, array $web_paths)
+    private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, ContentThread $thread)
     {
         $comment_data = array();
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
@@ -331,8 +343,8 @@ class OutputPost extends Output
                 if ($line_count > $this->domain->setting('comment_display_lines'))
                 {
                     $comment_data['long_comment'] = true;
-                    $comment_data['long_comment_url'] = $web_paths['thread_page'] . '#t' . $post_content_id->threadID() .
-                            'p' . $post_content_id->postID();
+                    $comment_data['long_comment_url'] = $thread->getURL() . '#t' . $post_content_id->threadID() . 'p' .
+                            $post_content_id->postID();
                     $comment_data['comment_lines'] = array();
                     $i = 0;
                     $reduced_lines = array();

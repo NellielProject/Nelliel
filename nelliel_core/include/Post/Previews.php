@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Post;
 
@@ -24,6 +23,7 @@ class Previews
 
     public function generate($files, $preview_path)
     {
+        $filename_suffix = '_preview';
         $file_handler = nel_utilities()->fileHandler();
         $i = 0;
         $files_count = count($files);
@@ -47,7 +47,10 @@ class Previews
                         ($ratio < 1) ? intval($ratio * $files[$i]->data('display_height')) : $files[$i]->data(
                                 'display_height'));
                 $file_handler->createDirectory($preview_path, NEL_DIRECTORY_PERM, true);
-                $files[$i]->changeData('preview_name', $files[$i]->data('filename') . '-preview');
+
+                $filename_maxlength = 255 - strlen($files[$i]->data('extension')) - 1 - strlen($filename_suffix);
+                $trimmed_filename = substr($files[$i]->data('filename'), 0, $filename_maxlength);
+                $files[$i]->changeData('preview_name', $trimmed_filename . $filename_suffix);
 
                 if ($this->domain->setting('use_png_preview'))
                 {

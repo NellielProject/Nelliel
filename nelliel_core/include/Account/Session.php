@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Account;
 
@@ -57,6 +56,11 @@ class Session
         $this->domain = nel_site_domain();
         $this->database = $this->domain->database();
         $this->authorization = new Authorization($this->database);
+
+        if (empty(self::$user))
+        {
+            self::$user = $this->authorization->emptyUser();
+        }
     }
 
     protected function started()
@@ -203,7 +207,7 @@ class Session
 
     public function user()
     {
-        return self::$user;
+        return self::$user ?? $this->authorization->emptyUser();
     }
 
     public function isActive()
@@ -219,8 +223,7 @@ class Session
 
     public function inModmode(Domain $domain)
     {
-        return $this->isActive() && $this->modmodeRequested() &&
-                self::$user->checkPermission($domain, 'perm_mod_mode');
+        return $this->isActive() && $this->modmodeRequested() && self::$user->checkPermission($domain, 'perm_mod_mode');
     }
 
     public function loggedInOrError()

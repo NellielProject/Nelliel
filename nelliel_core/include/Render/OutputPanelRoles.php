@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -47,6 +46,8 @@ class OutputPanelRoles extends Output
             $role_data['capcode'] = $role['capcode'];
             $role_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=edit&role-id=' .
                     $role['role_id'];
+            $role_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    'module=admin&section=roles&actions=remove&role-id=' . $role['role_id'];
             $this->render_data['roles_list'][] = $role_data;
         }
 
@@ -78,22 +79,18 @@ class OutputPanelRoles extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        if (empty($role_id))
+        if ($role->empty())
         {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=add';
         }
         else
         {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=roles&actions=update&role-id=' . $role_id;
-        }
-
-        if (!empty($role_id))
-        {
-            $this->render_data['role_id'] = $role->auth_data['role_id'];
-            $this->render_data['role_level'] = $role->auth_data['role_level'];
-            $this->render_data['role_title'] = $role->auth_data['role_title'];
-            $this->render_data['capcode'] = $role->auth_data['capcode'];
+                    'module=admin&section=roles&actions=update&role-id=' . $role->id();
+            $this->render_data['role_id'] = $role->getData('role_id');
+            $this->render_data['role_level'] = $role->getData('role_level');
+            $this->render_data['role_title'] = $role->getData('role_title');
+            $this->render_data['capcode'] = $role->getData('capcode');
         }
 
         $permissions_list = $this->database->executeFetchAll(
@@ -112,7 +109,8 @@ class OutputPanelRoles extends Output
             }
 
             $permission_data['permission'] = $permission['permission'];
-            $permission_data['perm_description'] = '(' . $permission['permission'] . ') - ' . $permission['perm_description'];
+            $permission_data['perm_description'] = '(' . $permission['permission'] . ') - ' .
+                    $permission['perm_description'];
             $this->render_data['permissions_list'][] = $permission_data;
         }
 

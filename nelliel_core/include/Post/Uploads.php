@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Post;
 
@@ -59,6 +58,7 @@ class Uploads
         $file_handler = nel_utilities()->fileHandler();
         $filenames = array();
         $file_duplicate = 1;
+        $total_files = 0;
 
         for ($i = 0; $i < $file_count; $i ++)
         {
@@ -110,11 +110,8 @@ class Uploads
                 $file->changeData('spoiler', $data_handler->checkEntry($spoiler, 'integer'));
             }
 
-            if (strlen($file->data('fullname')) >= 255)
-            {
-                $overage = strlen($file->data('fullname')) - 250;
-                $file->changeData('filename', substr($file->data('filename'), 0, $overage));
-            }
+            $filename_maxlength = 255 - strlen($file->data('extension')) - 1;
+            $file->changeData('filename', substr($file->data('filename'), 0, $filename_maxlength));
 
             foreach ($filenames as $filename)
             {
@@ -165,7 +162,10 @@ class Uploads
 
             array_push($filenames, $file->data('fullname'));
             $this->processed_uploads[] = $file;
+            $total_files ++;
         }
+
+        $post->changeData('file_count', $total_files);
     }
 
     private function getPathInfo($file)
@@ -323,6 +323,7 @@ class Uploads
     private function embeds(ContentPost $post)
     {
         $response_to = $post->data('response_to');
+        $total_embeds = 0;
 
         foreach ($this->embeds as $embed_url)
         {
@@ -335,12 +336,15 @@ class Uploads
 
             $embed = new \Nelliel\Content\ContentFile(new \Nelliel\Content\ContentID(), $this->domain);
 
+            $checking_duplicates = false;
+
             if ($response_to === 0 && $this->domain->setting('check_op_duplicates'))
             {
                 $prepared = $this->database->prepare(
                         'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                         '" WHERE "parent_thread" = "post_ref" AND "embed_url" = ?');
                 $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
+                $checking_duplicates = true;
             }
 
             if ($response_to > 0 && $this->domain->setting('check_thread_duplicates'))
@@ -349,20 +353,27 @@ class Uploads
                         'SELECT 1 FROM "' . $this->domain->reference('content_table') .
                         '" WHERE "parent_thread" = ? AND "embed_url" = ?');
                 $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
+                $checking_duplicates = true;
             }
 
-            $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
-
-            if ($result)
+            if ($checking_duplicates)
             {
-                nel_derp(36, _gettext('Duplicate embed detected.'));
+                $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
+
+                if ($result)
+                {
+                    nel_derp(36, _gettext('Duplicate embed detected.'));
+                }
             }
 
             $embed->changeData('type', 'embed');
             $embed->changeData('format', ''); // TODO: Maybe detect specific services
             $embed->changeData('embed_url', $embed_url);
             $this->processed_uploads[] = $embed;
+            $total_embeds ++;
         }
+
+        $post->changeData('embed_count', $total_embeds);
     }
 
     private function checkCount(ContentPost $post)
@@ -433,7 +444,7 @@ class Uploads
         }
 
         if ($total >= 1 && $this->domain->setting('limit_thread_uploads') &&
-                $parent_thread->data('content_count') >= $this->domain->setting('max_thread_uploads'))
+                $parent_thread->data('total_content') >= $this->domain->setting('max_thread_uploads'))
         {
             nel_derp(43, _gettext('This thread has reached the maximum number of uploads.'));
         }

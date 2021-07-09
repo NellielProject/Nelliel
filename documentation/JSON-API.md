@@ -80,7 +80,9 @@ Contains information about a thread.
 |`last_update`         |`integer`|64-bit Unix timestamp|Last thread update.|
 |`last_update_milli`   |`integer`|0-999                |Last thread update milliseconds. Used with `last_update` when high precision is needed.|
 |`post_count`          |`integer`|0-2147483647         |Total number of posts in the thread.|
-|`content_count`       |`integer`|0-2147483647         |Total content in the thread.|
+|`total_content`       |`integer`|0-2147483647         |Total content in the thread.|
+|`file_count`          |`integer`|0-2147483647         |Total files in the thread.|
+|`embed_count`         |`integer`|0-2147483647         |Total embeds in the thread.|
 |`permasage`           |`boolean`|true or false        |Is the thread permasaged.|
 |`sticky`              |`boolean`|true or false        |Is the thread stickied.|
 |`locked`              |`boolean`|true or false        |Is the thread locked.|
@@ -107,7 +109,9 @@ Contains information about a post.
 |`post_time_milli`|`integer`|0-999                |Post time milliseconds. Used with `post_time` when high precision is needed.|
 |`timestamp`      |`integer`|text                 |Formatted version of `post_time`|
 |`has_content`    |`boolean`|true or false        |If the post has content.|
-|`content_count`  |`integer`|0-32767              |Content count for the post.|
+|`total_content`  |`integer`|0-32767              |Total content in the post.|
+|`file_count`     |`integer`|0-32767              |Total files in the post.|
+|`embed_count`    |`integer`|0-32767              |Total embeds in the post.|
 |`op`             |`boolean`|true or false        |Is the post OP (first in thread).|
 |`sage`           |`boolean`|true or false        |Is the post saged.|
 |`mod_comment`    |`string` |text                 |Comment added by staff.|

@@ -188,7 +188,7 @@ class AdminThreads extends Admin
 
         foreach ($thread_ids as $thread_id => $value)
         {
-            $this->regenThread($thread_id, true);
+            $this->regenThread($thread_id, $value);
         }
     }
 

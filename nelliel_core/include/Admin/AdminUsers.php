@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
@@ -98,13 +97,13 @@ class AdminUsers extends Admin
             {
                 if (!empty($value))
                 {
-                    $update_user->auth_data['user_password'] = nel_password_hash($value, NEL_PASSWORD_ALGORITHM);
+                    $update_user->changeData('user_password', nel_password_hash($value, NEL_PASSWORD_ALGORITHM));
                 }
 
                 continue;
             }
 
-            $update_user->auth_data[$key] = $value;
+            $update_user->changeData($key, $value);
         }
 
         $this->authorization->saveUsers();

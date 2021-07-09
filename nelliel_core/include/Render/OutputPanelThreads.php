@@ -103,7 +103,7 @@ class OutputPanelThreads extends Output
             $thread_info['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete&content-id=' . $base_content_id;
             $thread_info['delete_text'] = _gettext('Delete Thread');
-            $thread_info['last_update'] = date($this->domain->setting('date_format'), $thread['last_update']);
+            $thread_info['last_update'] = date($this->domain->setting('date_format'), intval($thread['last_update']));
             $thread_info['subject'] = $op_post['subject'];
             $thread_info['thread_url'] = $this->domain->reference('page_dir') . '/' . $thread['thread_id'] . '/' .
                     $thread['thread_id'] . '.html';
@@ -120,7 +120,8 @@ class OutputPanelThreads extends Output
             }
 
             $thread_info['post_count'] = $thread['post_count'];
-            $thread_info['content_count'] = $thread['content_count'];
+            $thread_info['total_content'] = $thread['total_content'];
+            $thread_info['file_count'] = $thread['file_count'];
             $this->render_data['threads'][] = $thread_info;
         }
 
@@ -161,7 +162,7 @@ class OutputPanelThreads extends Output
                     '&actions=sticky&content-id=' . $base_content_id;
             $post_info['sticky_text'] = _gettext('Sticky Post');
             $post_info['parent_thread'] = $post['parent_thread'];
-            $post_info['post_time'] = date($this->domain->setting('date_format'), $post['post_time']);
+            $post_info['post_time'] = date($this->domain->setting('date_format'), intval($post['post_time']));
             $post_info['subject'] = $post['subject'];
             $post_info['thread_url'] = $this->domain->reference('page_dir') . '/' . $post['parent_thread'] . '/' .
                     $post['post_number'] . '.html';

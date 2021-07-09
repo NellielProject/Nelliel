@@ -43,7 +43,7 @@ function nel_dispatch_preparation()
     $inputs['module'] = $_GET['module'] ?? '';
     $inputs['section'] = $_GET['section'] ?? '';
     $inputs['subsection'] = $_GET['subsection'] ?? '';
-    $inputs['domain_id'] = $_GET['domain_id'] ?? '';
+    $inputs['domain_id'] = $_GET['domain-id'] ?? '';
     $inputs['board_id'] = $_GET['board-id'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';
     $inputs['modmode'] = isset($_GET['modmode']) ? true : false;
@@ -180,9 +180,9 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     {
                         $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                                 http_build_query(
-                                        ['module' => 'render', 'action' => 'view-thread',
+                                        ['module' => 'render', 'actions' => 'view-thread',
                                             'thread' => $fgsfds->getCommandData('noko', 'topic'),
-                                            'board_id' => $inputs['board_id'], 'modmode' => 'true']);
+                                            'board-id' => $inputs['board_id'], 'modmode' => 'true']);
                     }
                     else
                     {

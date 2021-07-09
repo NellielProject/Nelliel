@@ -11,38 +11,43 @@ if (!defined('NELLIEL_VERSION'))
 
 abstract class AuthHandler
 {
-    public $database;
-    public $auth_data = array();
-    public $auth_id;
-    public $authorization;
+    protected $database;
+    protected $auth_data = array();
+    protected $auth_id;
+    protected $authorization;
     protected $empty;
 
-    public function authDataOrDefault(string $data_name, $default = null)
+    public function authDataOrDefault(string $key, $default = null)
     {
-        return $this->auth_data[$data_name] ?? $default;
+        return $this->getData($key) ?? $default;
     }
 
-    public abstract function loadFromDatabase();
+    public abstract function loadFromDatabase(): bool;
 
-    public abstract function writeToDatabase();
+    public abstract function writeToDatabase(): bool;
 
-    public abstract function setupNew();
+    public abstract function setupNew(): void;
 
-    public abstract function remove();
-
-    public function getInfo(string $info_id)
-    {
-        return $this->auth_data[$info_id] ?? null;
-    }
+    public abstract function remove(): void;
 
     public function id()
     {
         return $this->auth_id;
     }
 
-    public function empty()
+    public function empty(): bool
     {
         return $this->empty;
+    }
+
+    public function getData(string $key)
+    {
+        return $this->auth_data[$key] ?? null;
+    }
+
+    public function changeData(string $key, $value): void
+    {
+        $this->auth_data[$key] = $value;
     }
 }
 

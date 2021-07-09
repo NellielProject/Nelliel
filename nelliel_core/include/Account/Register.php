@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Account;
 
@@ -50,7 +49,7 @@ class Register
 
         if ($creating_owner)
         {
-            $install_id  = '';
+            $install_id = '';
 
             include NEL_GENERATED_FILES_PATH . 'create_owner.php';
 
@@ -85,16 +84,16 @@ class Register
 
         if ($creating_owner)
         {
-            $new_user->auth_data['owner'] = 1;
+            $new_user->changeData('owner', 1);
         }
         else
         {
             $new_user->modifyRole('', 'BASIC_USER');
-            $new_user->auth_data['owner'] = 0;
+            $new_user->changeData('owner', 0);
         }
 
-        $new_user->auth_data['active'] = 1;
-        $new_user->auth_data['display_name'] = $register_user_id;
+        $new_user->changeData('active', 1);
+        $new_user->changeData('display_name', $register_user_id);
         $this->authorization->saveUsers();
 
         // Successful

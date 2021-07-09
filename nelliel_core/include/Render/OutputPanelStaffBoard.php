@@ -47,7 +47,7 @@ class OutputPanelStaffBoard extends Output
             $post_info['domain'] = $post['domain_id'];
             $post_info['subject'] = $post['subject'];
             $post_info['message'] = $post['message'];
-            $post_info['time'] = date('Y/m/d (D) H:i:s', $post['post_time']);
+            $post_info['time'] = date('Y/m/d (D) H:i:s', intval($post['post_time']));
 
             if($this->session->user()->checkPermission($this->domain, 'perm_staff_board_delete'))
             {

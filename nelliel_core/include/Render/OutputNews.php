@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -54,9 +53,9 @@ class OutputNews extends Output
 
             $news_info = array();
             $news_info['headline'] = $news_entry['headline'];
-            $poster_name = $authorization->getUser($news_entry['poster_id'])->auth_data['display_name'];
+            $poster_name = $authorization->getUser($news_entry['poster_id'])->getData('display_name');
             $news_info['poster'] = ' by ' . $poster_name;
-            $news_info['time'] = ' - ' . date('Y/m/d l H:i', $news_entry['time']);
+            $news_info['time'] = ' - ' . date('Y/m/d l H:i', intval($news_entry['time']));
             $news_info['news_lines'] = array();
 
             foreach ($this->output_filter->newlinesToArray($news_entry['text']) as $line)

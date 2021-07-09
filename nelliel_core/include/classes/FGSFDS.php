@@ -34,6 +34,7 @@ class FGSFDS
                 continue;
             }
 
+            // TODO: work on this
             $value = explode('=', $command);
 
             if ($value[0] === $command)
@@ -52,12 +53,23 @@ class FGSFDS
 
     public function addCommand(string $command, $value, bool $overwrite = false): bool
     {
-        if (!$overwrite && $this->commandIsSet($command))
+        if ($this->commandIsSet($command) && !$overwrite)
         {
             return false;
         }
 
-        return $this->updateCommandData($command, 'value', $value, true);
+        $this->setCommandValue($command, $value);
+        return true;
+    }
+
+    public function getCommandValue(string $command)
+    {
+        return self::$commands[$command]['value'] ?? null;
+    }
+
+    public function setCommandValue(string $command, $value): void
+    {
+        self::$commands[$command]['value'] = $value;
     }
 
     public function commandIsSet(string $command): bool
@@ -65,20 +77,19 @@ class FGSFDS
         return isset(self::$commands[$command]);
     }
 
-    public function getCommandData(string $command, string $key)
+    public function getCommandData(string $command, string $key = '')
     {
-        return self::$commands[$command][$key] ?? null;
-    }
-
-    public function updateCommandData(string $command, string $key, $value, bool $create = false): bool
-    {
-        if (!$create && !$this->commandIsSet($command))
+        if($key === '')
         {
-            return false;
+            return self::$commands[$command]['data'] ?? null;
         }
 
-        self::$commands[$command][$key] = $value;
-        return true;
+        return self::$commands[$command]['data'][$key] ?? null;
+    }
+
+    public function updateCommandData(string $command, string $key, $value): void
+    {
+        self::$commands[$command]['data'][$key] = $value;
     }
 
     public function removeCommand(string $command): void
