@@ -79,7 +79,7 @@ class OutputCatalog extends Output
 
             $thread_data['mod-comment'] = $first_post['mod_comment'];
             $thread_data['reply_count'] = $thread['post_count'] - 1;
-            $thread_data['content_count'] = $thread['content_count'];
+            $thread_data['total_content'] = $thread['total_content'];
             $index_page = ceil($thread_count / $this->domain->setting('threads_per_page'));
             $thread_data['index_page'] = $index_page;
             $thread_data['is_sticky'] = $thread['sticky'] == 1;

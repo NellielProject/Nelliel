@@ -37,7 +37,9 @@ class JSONPost extends JSONOutput
         $post_array['post_time_milli'] = nel_cast_to_datatype($data['post_time_milli'], 'integer');
         $post_array['timestamp'] = date($this->domain->setting('date_format'), intval($data['post_time']));
         $post_array['has_content'] = nel_cast_to_datatype($data['has_content'], 'boolean');
-        $post_array['content_count'] = nel_cast_to_datatype($data['content_count'], 'integer');
+        $post_array['total_content'] = nel_cast_to_datatype($data['total_content'], 'integer');
+        $post_array['file_count'] = nel_cast_to_datatype($data['file_count'], 'integer');
+        $post_array['embed_count'] = nel_cast_to_datatype($data['embed_count'], 'integer');
         $post_array['op'] = nel_cast_to_datatype($data['op'], 'boolean');
         $post_array['sage'] = nel_cast_to_datatype($data['sage'], 'boolean');
         $post_array['mod_comment'] = nel_cast_to_datatype($data['mod_comment'], 'string');

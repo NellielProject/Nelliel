@@ -24,7 +24,7 @@ class OutputFile extends Output
         $this->renderSetup();
         $post_data = $parameters['post_data'] ?? array();
         $file = $parameters['file_data'] ?? array();
-        $multiple = $post_data['content_count'] > 1;
+        $multiple = $post_data['file_count'] > 1;
         $json_post = $parameters['json_instances']['post'];
         $json_content = $parameters['json_instances']['content'];
         $json_post->addContentData($json_content->prepareData($file));

@@ -120,7 +120,8 @@ class OutputPanelThreads extends Output
             }
 
             $thread_info['post_count'] = $thread['post_count'];
-            $thread_info['content_count'] = $thread['content_count'];
+            $thread_info['total_content'] = $thread['total_content'];
+            $thread_info['file_count'] = $thread['file_count'];
             $this->render_data['threads'][] = $thread_info;
         }
 

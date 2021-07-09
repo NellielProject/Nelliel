@@ -53,7 +53,7 @@ class ContentFile extends ContentHandler
 
     public function writeToDatabase()
     {
-        if (empty($this->content_data) || empty($this->content_id->orderID()))
+        if (!$this->isLoaded() || empty($this->content_id->orderID()))
         {
             return false;
         }
@@ -180,7 +180,7 @@ class ContentFile extends ContentHandler
 
     protected function removeFromDisk()
     {
-        if (empty($this->content_data))
+        if (!$this->isLoaded())
         {
             $this->loadFromDatabase();
         }

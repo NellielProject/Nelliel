@@ -75,7 +75,8 @@ class ContentPost extends ContentHandler
                     "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "capcode" = :capcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address, "hashed_ip_address" = :hashed_ip_address,
-                    "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_content" = :has_content, "content_count" = :content_count,
+                    "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_content" = :has_content,
+                    "total_content" = :total_content, "file_count" = :file_count, "embed_count" = :embed_count,
                     "op" = :op, "sage" = :sage, "account_id" = :account_id, "mod_comment" = :mod_comment
                     WHERE "post_number" = :post_number');
             $prepared->bindValue(':post_number', $this->content_id->postID(), PDO::PARAM_INT);
@@ -85,8 +86,10 @@ class ContentPost extends ContentHandler
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->posts_table .
                     '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "capcode", "email",
-                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_content", "content_count", "op", "sage", "account_id", "mod_comment") VALUES
-                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address, :hashed_ip_address, :post_time, :post_time_milli, :has_content, :content_count,
+                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_content",
+                    "total_content", "file_count", "embed_count", "op", "sage", "account_id", "mod_comment") VALUES
+                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address,
+                    :hashed_ip_address, :post_time, :post_time_milli, :has_content, :total_content, :file_count, :embed_count,
                     :op, :sage, :account_id, :mod_comment)');
         }
 
@@ -109,7 +112,9 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
         $prepared->bindValue(':has_content', $this->contentDataOrDefault('has_content', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':content_count', $this->contentDataOrDefault('content_count', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':total_content', $this->contentDataOrDefault('total_content', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':embed_count', $this->contentDataOrDefault('embed_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':op', $this->contentDataOrDefault('op', 0), PDO::PARAM_INT);
         $prepared->bindValue(':sage', $this->contentDataOrDefault('sage', 0), PDO::PARAM_INT);
         $prepared->bindValue(':account_id', $this->contentDataOrDefault('account_id', null), PDO::PARAM_STR);
@@ -248,12 +253,25 @@ class ContentPost extends ContentHandler
     {
         $prepared = $this->database->prepare(
                 'SELECT COUNT("entry") FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
-        $content_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
+        $total_content = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
                 PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->posts_table . '" SET "content_count" = ? WHERE "post_number" = ?');
-        $this->database->executePrepared($prepared, [$content_count, $this->content_id->postID()]);
+                'SELECT COUNT("entry") FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "embed_url" IS NULL');
+        $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN,
+                true);
+
+        $prepared = $this->database->prepare(
+                'SELECT COUNT("entry") FROM "' . $this->content_table .
+                '" WHERE "post_ref" = ? AND "embed_url" IS NOT NULL');
+        $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
+                PDO::FETCH_COLUMN, true);
+
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->posts_table .
+                '" SET "total_content" = ?, "file_count" = ?, "embed_count" = ? WHERE "post_number" = ?');
+        $this->database->executePrepared($prepared,
+                [$total_content, $file_count, $embed_count, $this->content_id->postID()]);
     }
 
     protected function verifyModifyPerms()

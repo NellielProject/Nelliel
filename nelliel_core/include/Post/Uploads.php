@@ -58,6 +58,7 @@ class Uploads
         $file_handler = nel_utilities()->fileHandler();
         $filenames = array();
         $file_duplicate = 1;
+        $total_files = 0;
 
         for ($i = 0; $i < $file_count; $i ++)
         {
@@ -161,7 +162,10 @@ class Uploads
 
             array_push($filenames, $file->data('fullname'));
             $this->processed_uploads[] = $file;
+            $total_files ++;
         }
+
+        $post->changeData('file_count', $total_files);
     }
 
     private function getPathInfo($file)
@@ -319,6 +323,7 @@ class Uploads
     private function embeds(ContentPost $post)
     {
         $response_to = $post->data('response_to');
+        $total_embeds = 0;
 
         foreach ($this->embeds as $embed_url)
         {
@@ -365,7 +370,10 @@ class Uploads
             $embed->changeData('format', ''); // TODO: Maybe detect specific services
             $embed->changeData('embed_url', $embed_url);
             $this->processed_uploads[] = $embed;
+            $total_embeds ++;
         }
+
+        $post->changeData('embed_count', $total_embeds);
     }
 
     private function checkCount(ContentPost $post)
@@ -436,7 +444,7 @@ class Uploads
         }
 
         if ($total >= 1 && $this->domain->setting('limit_thread_uploads') &&
-                $parent_thread->data('content_count') >= $this->domain->setting('max_thread_uploads'))
+                $parent_thread->data('total_content') >= $this->domain->setting('max_thread_uploads'))
         {
             nel_derp(43, _gettext('This thread has reached the maximum number of uploads.'));
         }

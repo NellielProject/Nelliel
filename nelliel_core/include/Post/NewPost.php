@@ -22,8 +22,8 @@ class NewPost
 
     function __construct(Domain $domain, Session $session)
     {
-        $this->database = $domain->database();
         $this->domain = $domain;
+        $this->database = $domain->database();
         $this->session = $session;
     }
 
@@ -103,7 +103,7 @@ class NewPost
 
         $uploads = $uploads_handler->process($post);
         $spoon = !empty($uploads);
-        $post->changeData('content_count', count($uploads));
+        $post->changeData('total_content', count($uploads));
 
         if (!$spoon)
         {
@@ -125,7 +125,7 @@ class NewPost
 
         // Go ahead and put post into database
         $post->changeData('op', ($post->data('parent_thread') == 0) ? 1 : 0);
-        $post->changeData('has_content', ($post->data('content_count') > 0) ? 1 : 0);
+        $post->changeData('has_content', ($post->data('total_content') > 0) ? 1 : 0);
 
         // Process if-thens for new post here
         $if_then = new IfThen($this->domain->database(), new ConditionsPost($post, $uploads),
@@ -140,7 +140,6 @@ class NewPost
             $thread->contentID()->changeThreadID($post->contentID()->postID());
             $thread->changeData('last_bump_time', $time['time']);
             $thread->changeData('last_bump_time_milli', $time['milli']);
-            $thread->changeData('content_count', $post->data('content_count'));
             $thread->changeData('last_update', $time['time']);
             $thread->changeData('last_update_milli', $time['milli']);
             $thread->changeData('post_count', 1);
@@ -152,7 +151,6 @@ class NewPost
         {
             $thread->contentID()->changeThreadID($post->data('parent_thread'));
             $thread->loadFromDatabase();
-            $thread->changeData('content_count', $thread->data('content_count') + $post->data('content_count'));
             $thread->changeData('last_update', $time['time']);
             $thread->changeData('last_update_milli', $time['milli']);
             $thread->changeData('post_count', $thread->data('post_count') + 1);
@@ -164,8 +162,6 @@ class NewPost
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
             }
-
-            $thread->writeToDatabase();
         }
 
         $post->writeToDatabase();
@@ -215,6 +211,8 @@ class NewPost
             }
         }
 
+        $thread->writeToDatabase();
+        $thread->updateCounts();
         $thread->loadFromDatabase(); // Make sure we have any expected defaults set
 
         if ($thread->data('cyclic') == 1)

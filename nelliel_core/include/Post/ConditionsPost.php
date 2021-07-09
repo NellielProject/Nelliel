@@ -58,12 +58,20 @@ class ConditionsPost implements Conditions
                     $met = preg_match($condition, $this->post->data('secure_tripcode'));
                     break;
 
-                case 'has_files':
+                case 'has_content':
                     $met = $condition === ($this->post->data('has_content') == 1);
                     break;
 
+                case 'total_content':
+                    $met = $condition === $this->post->data('total_content');
+                    break;
+
                 case 'file_count':
-                    $met = $condition === $this->post->data('content_count');
+                    $met = $condition === $this->post->data('file_count');
+                    break;
+
+                case 'embed_count':
+                    $met = $condition === $this->post->data('embed_count');
                     break;
 
                 case 'is_op':
