@@ -222,8 +222,6 @@ class Setup
         $board_data_table->createTable();
         $file_filters_table = new TableFileFilters($this->database, $this->sql_compatibility);
         $file_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
-        $if_thens_table = new TableIfThens($this->database, $this->sql_compatibility);
-        $if_thens_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
         $overboard_table = new TableOverboard($this->database, $this->sql_compatibility);
         $overboard_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
         $reports_table = new TableReports($this->database, $this->sql_compatibility);

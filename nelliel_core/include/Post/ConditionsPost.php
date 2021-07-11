@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Post;
 
@@ -34,7 +33,19 @@ class ConditionsPost implements Conditions
 
             switch ($key)
             {
-                case 'poster_name':
+                case 'function-post':
+                    if (is_callable($condition))
+                    {
+                        $met = $condition($this->post, $this->files);
+                    }
+
+                    break;
+
+                case 'board_id':
+                    $met = $condition === $this->post->domain()->id();
+                    break;
+
+                case 'name':
                     $met = preg_match($condition, $this->post->data('poster_name'));
                     break;
 
@@ -51,35 +62,35 @@ class ConditionsPost implements Conditions
                     break;
 
                 case 'tripcode':
-                    $met = preg_match($condition, $this->post->data('tripcode'));
+                    $met = $condition === $this->post->data('tripcode');
                     break;
 
                 case 'secure_tripcode':
-                    $met = preg_match($condition, $this->post->data('secure_tripcode'));
+                    $met = $condition === $this->post->data('secure_tripcode');
                     break;
 
                 case 'has_content':
-                    $met = $condition === ($this->post->data('has_content') == 1);
+                    $met = $condition === boolval($this->post->data('has_content'));
                     break;
 
                 case 'total_content':
-                    $met = $condition === $this->post->data('total_content');
+                    $met = $condition === intval($this->post->data('total_content'));
                     break;
 
                 case 'file_count':
-                    $met = $condition === $this->post->data('file_count');
+                    $met = $condition === intval($this->post->data('file_count'));
                     break;
 
                 case 'embed_count':
-                    $met = $condition === $this->post->data('embed_count');
+                    $met = $condition === intval($this->post->data('embed_count'));
                     break;
 
                 case 'is_op':
-                    $met = $condition === ($this->post->data('op') == 1);
+                    $met = $condition === boolval($this->post->data('op'));
                     break;
 
                 case 'is_saged':
-                    $met = $condition === ($this->post->data('sage') == 1);
+                    $met = $condition === boolval($this->post->data('sage'));
                     break;
             }
 
