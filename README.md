@@ -10,12 +10,14 @@ These are only the bare minimum requirements for Nelliel to function. Even if an
 Required:
 - PHP 7.2+
 - MySQL 5.7+, MariaDB 10.2+, PostgreSQL 10+ or SQLite 3.22+
-- PHP PDO with MySQL, MariaDB, PostgreSQL or SQLite support
+- PHP PDO with corresponding support of your database choice
 - PHP GD
 - PHP DOM
-- iconv
+- PHP iconv
+- PHP libxml
+- PHP session
 
-These requirements are well behind the leading edge and should be widely available. If for some reason even the minimum cannot be provided, find a new host. Srsly.
+These requirements are well behind the leading edge and should be widely available. The PHP extensions required are usually included and enabled with a standard install; if not, they are almost always available in official repositories. If for some reason even the minimum cannot be provided, find a new host. Srsly.
 
 ## Optional Requirements
 These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not required and the software will work fine without them:
