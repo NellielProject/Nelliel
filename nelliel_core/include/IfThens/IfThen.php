@@ -8,36 +8,37 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\NellielPDO;
-
 class IfThen
 {
-    private $database;
     private $conditions;
     private $actions;
     private $if_thens = array();
     private $loaded = false;
 
-    function __construct(NellielPDO $database, Conditions $conditions, Actions $actions)
+    function __construct(Conditions $conditions, Actions $actions)
     {
-        $this->database = $database;
         $this->conditions = $conditions;
         $this->actions = $actions;
     }
 
-    public function getIfThens(): array
+    public function getIfThens(string $set_id = null): array
     {
         if (!$this->loaded)
         {
             $this->loadIfThens();
         }
 
+        if (!is_null($set_id))
+        {
+            return $this->if_thens[$set_id] ?? array();
+        }
+
         return $this->if_thens;
     }
 
-    public function process()
+    public function process(string $set_id): void
     {
-        $if_thens = $this->getIfThens();
+        $if_thens = $this->getIfThens($set_id);
 
         foreach ($if_thens as $if_then)
         {
@@ -52,7 +53,7 @@ class IfThen
         }
     }
 
-    private function loadIfThens(string $board_id = null)
+    private function loadIfThens(string $board_id = null): void
     {
         include NEL_CONFIG_FILES_PATH . 'if_thens.php';
 

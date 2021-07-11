@@ -128,9 +128,8 @@ class NewPost
         $post->changeData('has_content', ($post->data('total_content') > 0) ? 1 : 0);
 
         // Process if-thens for new post here
-        $if_then = new IfThen($this->domain->database(), new ConditionsPost($post, $uploads),
-                new ActionsPost($post, $uploads));
-        $if_then->process($this->domain->id());
+        $if_then = new IfThen(new ConditionsPost($post, $uploads), new ActionsPost($post, $uploads));
+        $if_then->process('new_post');
 
         $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
         $thread = new \Nelliel\Content\ContentThread(new \Nelliel\Content\ContentID(), $this->domain);
@@ -156,8 +155,8 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
-                            'sage') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
+                    !$fgsfds->commandIsSet('sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);

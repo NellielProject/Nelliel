@@ -4,4 +4,4 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-$if_thens = [];
+$if_thens = ['new_post' => array()];
