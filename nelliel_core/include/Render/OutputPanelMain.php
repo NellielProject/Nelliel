@@ -149,6 +149,8 @@ class OutputPanelMain extends Output
         $this->render_data['news_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=news';
         $this->render_data['module_dnsbl'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_dnsbl');
         $this->render_data['dnsbl_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=dnsbl';
+        $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_wordfilters');
+        $this->render_data['wordfilters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=wordfilters';
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
                 'perm_regen_pages');
         $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

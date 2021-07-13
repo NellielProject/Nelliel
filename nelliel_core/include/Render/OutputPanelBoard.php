@@ -54,6 +54,10 @@ class OutputPanelBoard extends Output
                 'perm_manage_file_filters');
         $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 'module=admin&section=file-filters&board-id=' . $board_id;
+        $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
+                'perm_manage_wordfilters');
+        $this->render_data['wordfilters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        'module=admin&section=wordfilters&board-id=' . $board_id;
         $this->render_data['regen_board_pages'] = $this->session->user()->checkPermission($this->domain,
                 'perm_regen_pages');
         $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

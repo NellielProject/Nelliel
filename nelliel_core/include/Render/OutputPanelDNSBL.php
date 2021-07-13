@@ -105,7 +105,7 @@ class OutputPanelDNSBL extends Output
         $this->render_data['submit_edit'] = $editing;
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('DNSBL');
-        $parameters['section'] = $parameters['section'] ?? _gettext('Main');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);

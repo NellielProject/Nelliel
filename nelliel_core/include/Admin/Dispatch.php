@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
@@ -245,6 +244,11 @@ class Dispatch
 
             case 'dnsbl':
                 $admin_handler = new AdminDNSBL($this->authorization, $this->domain, $this->session, $inputs);
+                $this->standard($admin_handler, $action);
+                break;
+
+            case 'wordfilters':
+                $admin_handler = new AdminWordfilters($this->authorization, $this->domain, $this->session, $inputs);
                 $this->standard($admin_handler, $action);
                 break;
         }

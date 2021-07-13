@@ -150,9 +150,6 @@ Error 431: perm_manage_icon_sets (action) (Admin/AdminIconSets.php)
 Error 440: perm_manage_news (access) (Admin/AdminNews.php)  
 Error 441: perm_manage_news (action) (Admin/AdminNews.php)  
 
-Error 450: perm_manage_if_thens (access) (Admin/AdminIfThens.php)  
-Error 451: perm_manage_if_thens (action) (Admin/AdminIfThens.php)  
-
 Error 460: perm_manage_news (access) (Admin/AdminThreads.php)  
 Error 461: perm_manage_news (action) (Admin/AdminThreads.php)  
 Error 462: perm_delete_by_ip (Admin/AdminThreads.php) 
@@ -162,6 +159,9 @@ Error 471: perm_manage_logs (action) (Admin/AdminLogs.php)
 
 Error 480: perm_manage_dnsbl (access) (Admin/AdminDNSBL.php)  
 Error 481: perm_manage_dnsbl (action) (Admin/AdminDNSBL.php)  
+
+Error 490: perm_manage_wordfilters (access) (Admin/AdminWordfilters.php)  
+Error 491: perm_manage_wordfilters (action) (Admin/AdminWordfilters.php)  
 
 Error 550: perm_regen_pages (central_dispatch.php)  
 Error 551: perm_regen_caches (board) (central_dispatch.php)  
