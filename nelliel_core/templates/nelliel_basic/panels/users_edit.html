@@ -26,6 +26,15 @@
 		<div class="display-row">
 			<span>User Roles</span>
 		</div>
+		{{# special_domain_roles }}
+		<div class="display-row">
+			<label for="{{ select_id }}" class="display-cell" data-i18n="gettext">{{ domain_name }}</label>
+			{{# roles }}
+				{{> panels/pieces/options_menu }}
+			{{/ roles }}
+		</div>
+		{{/ special_domain_roles }}
+		<hr>
 		{{# domain_roles }}
 		<div class="display-row">
 			<label for="{{ select_id }}" class="display-cell" data-i18n="gettext">{{ domain_name }}</label>

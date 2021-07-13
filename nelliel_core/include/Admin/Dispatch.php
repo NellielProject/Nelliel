@@ -96,11 +96,6 @@ class Dispatch
                 $this->standard($admin_handler, $action);
                 break;
 
-            case 'ifthens':
-                $admin_handler = new AdminIfThens($this->authorization, $this->domain, $this->session, $inputs);
-                $this->standard($admin_handler, $action);
-                break;
-
             case 'logs':
                 $admin_handler = new AdminLogs($this->authorization, $this->domain, $this->session, $inputs);
                 $this->standard($admin_handler, $action);

@@ -198,6 +198,13 @@ class AuthUser extends AuthHandler
             return true;
         }
 
+        $global_role = $this->getDomainRole(nel_global_domain());
+
+        if ($global_role->checkPermission($permission))
+        {
+            return true;
+        }
+
         $site_role = $this->getDomainRole(nel_site_domain());
 
         if ($site_role->checkPermission($permission))

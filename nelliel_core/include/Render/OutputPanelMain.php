@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -11,6 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domains\Domain;
 use PDO;
+use Nelliel\Auth\Authorization;
 
 class OutputPanelMain extends Output
 {
@@ -25,6 +25,7 @@ class OutputPanelMain extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/main');
+        $authorization = new Authorization($this->database);
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -47,6 +48,9 @@ class OutputPanelMain extends Output
         }
 
         $user_roles_list = array();
+        $has_global = false;
+        $global_role_id = '';
+        $global_role_title = '';
 
         foreach ($user_roles as $user_role)
         {
@@ -56,9 +60,16 @@ class OutputPanelMain extends Output
             {
                 $user_roles_list[$user_role['domain_id']]['role_title'] = $roles_list[$user_role['role_id']]['role_title'];
             }
+
+            if ($user_role['domain_id'] === Domain::GLOBAL)
+            {
+                $has_global = true;
+                $global_role_id = $user_role['role_id'];
+                $global_role_title = $roles_list[$user_role['role_id']]['role_title'];
+            }
         }
 
-        if ($boards !== false)
+        if (is_array($boards))
         {
             foreach ($boards as $board)
             {
@@ -67,7 +78,8 @@ class OutputPanelMain extends Output
                     continue;
                 }
 
-                if (!isset($user_roles_list[$board['board_id']]) && !$this->session->user()->isSiteOwner())
+                if (!isset($user_roles_list[$board['board_id']]) && !$this->session->user()->isSiteOwner() &&
+                        !$has_global)
                 {
                     continue;
                 }
@@ -78,7 +90,15 @@ class OutputPanelMain extends Output
 
                 if ($this->session->user()->isSiteOwner())
                 {
-                    $board_data['board_role'] = 'Site Owner';
+                    $board_data['board_role'] = _gettext('Site Owner');
+                }
+
+                $global_level_lower = $authorization->roleLevelCheck($global_role_id,
+                        $user_roles_list[$board['board_id']]['role_title'] ?? '');
+
+                if ((!isset($user_roles_list[$board['board_id']]) && $has_global) || !$global_level_lower)
+                {
+                    $board_data['board_role'] = $global_role_title;
                 }
                 else
                 {
@@ -105,9 +125,6 @@ class OutputPanelMain extends Output
         $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_file_filters');
         $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=file-filters';
-        $this->render_data['module_ifthens'] = $this->session->user()->checkPermission($this->domain,
-                'perm_manage_ifthens');
-        $this->render_data['ifthens_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=ifthens';
         $this->render_data['module_board_defaults'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_board_defaults');
         $this->render_data['board_defaults_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-defaults';

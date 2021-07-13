@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -62,7 +61,12 @@ class OutputPanelBans extends Output
             $ban_data['ip_address'] = $this->formatIP($ban_hammer) ?? nel_truncate_hash(
                     $ban_hammer->getData('hashed_ip_address'));
             $ban_data['board_id'] = $ban_hammer->getData('board_id');
-            $ban_data['all_boards'] = $ban_hammer->getData('all_boards');
+
+            if ($ban_data['board_id'] === Domain::GLOBAL)
+            {
+                $ban_data['board_id'] = 'All Boards';
+            }
+
             $ban_data['reason'] = $ban_hammer->getData('reason');
             $ban_data['seen'] = $ban_hammer->getData('seen');
             $ban_data['expiration'] = date("D F jS Y  H:i:s",
@@ -153,7 +157,7 @@ class OutputPanelBans extends Output
         $this->render_data['days'] = $times['days'];
         $this->render_data['hours'] = $times['hours'];
         $this->render_data['minutes'] = $times['minutes'];
-        $this->render_data['all_boards'] = ($ban_hammer->getData('all_boards') > 0) ? 'checked' : '';
+        $this->render_data['global'] = ($ban_hammer->getData('board_id') === Domain::GLOBAL) ? 'checked' : '';
         $this->render_data['start_time'] = $ban_hammer->getData('start_time');
         $this->render_data['ban_reason'] = $ban_hammer->getData('reason');
         $this->render_data['seen'] = $ban_hammer->getData('seen');

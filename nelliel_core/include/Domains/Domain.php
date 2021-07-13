@@ -15,6 +15,7 @@ use Nelliel\NellielPDO;
 abstract class Domain
 {
     const SITE = '_site_';
+    const GLOBAL = '_global_';
     protected $domain_id;
     protected $settings;
     protected $references;

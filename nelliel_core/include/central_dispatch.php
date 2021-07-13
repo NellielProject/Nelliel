@@ -60,7 +60,7 @@ function nel_dispatch_preparation()
     // Add more options here when we implement further domain types
     if (nel_true_empty($inputs['domain_id']))
     {
-        if (!nel_true_empty($inputs['board_id']))
+        if (!nel_true_empty($inputs['board_id']) && $inputs['board_id'] !== Domain::SITE)
         {
             $domain = new \Nelliel\Domains\DomainBoard($inputs['board_id'], nel_database());
         }

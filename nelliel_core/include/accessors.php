@@ -28,6 +28,18 @@ function nel_site_domain()
     return $site_domain;
 }
 
+function nel_global_domain()
+{
+    static $global_domain;
+
+    if (!isset($global_domain))
+    {
+        $global_domain = new \Nelliel\Domains\DomainGlobal(nel_database());
+    }
+
+    return $global_domain;
+}
+
 function nel_request_ip_address(bool $hashed = false)
 {
     static $ip_address;

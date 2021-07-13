@@ -52,7 +52,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     protected function loadReferences(): void
     {
-        $prepared = $this->database->prepare('SELECT * FROM "nelliel_board_data" WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_ASSOC);
         $new_reference = array();
         $board_path = NEL_BASE_PATH . $board_data['board_id'] . '/';

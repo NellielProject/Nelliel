@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -44,7 +43,7 @@ class OutputPanelUsers extends Output
             $user_data['display_name'] = $user_info['display_name'];
             $user_data['active'] = $user_info['active'];
 
-            if ($user_info['owner'] == 0)
+            if ($user_info['owner'] == 0 || $this->session->user()->isSiteOwner())
             {
                 $user_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         'module=admin&section=users&actions=edit&user-id=' . $user_info['user_id'];
@@ -103,22 +102,13 @@ class OutputPanelUsers extends Output
         else
         {
             $this->render_data['is_site_owner'] = false;
-            $prepared = $this->database->prepare(
-                    'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-            $site_role = $this->database->executePreparedFetch($prepared, array($user_id, Domain::SITE),
-                    PDO::FETCH_COLUMN);
-
-            if (!empty($site_role))
-            {
-                $this->render_data['site_role_id'] = $site_role;
-            }
-
             $domain_list = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
                     PDO::FETCH_ASSOC);
+            array_unshift($domain_list, ['board_id' => Domain::GLOBAL]);
             array_unshift($domain_list, ['board_id' => Domain::SITE]);
-            $query = 'SELECT "role_id", "role_title", "role_level" FROM "' . NEL_ROLES_TABLE . '" ORDER BY "role_level" ASC';
+            $query = 'SELECT "role_id", "role_title", "role_level" FROM "' . NEL_ROLES_TABLE .
+                    '" ORDER BY "role_level" ASC';
             $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
-
 
             foreach ($domain_list as $domain)
             {
@@ -146,7 +136,20 @@ class OutputPanelUsers extends Output
                     $domain_role_data['roles']['options'][] = $role_options;
                 }
 
-                $this->render_data['domain_roles'][] = $domain_role_data;
+                if ($domain['board_id'] === Domain::SITE)
+                {
+                    $domain_role_data['domain_name'] = _gettext('Site');
+                    $this->render_data['special_domain_roles'][] = $domain_role_data;
+                }
+                else if ($domain['board_id'] === Domain::GLOBAL)
+                {
+                    $domain_role_data['domain_name'] = _gettext('Global');
+                    $this->render_data['special_domain_roles'][] = $domain_role_data;
+                }
+                else
+                {
+                    $this->render_data['domain_roles'][] = $domain_role_data;
+                }
             }
         }
 

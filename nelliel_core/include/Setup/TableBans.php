@@ -23,7 +23,6 @@ class TableBans extends Table
         $this->columns_data = [
             'ban_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => true],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'all_boards' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'creator' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'ip_type' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'ip_address_start' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
@@ -48,7 +47,6 @@ class TableBans extends Table
         CREATE TABLE " . $this->table_name . " (
             ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             board_id            VARCHAR(50) DEFAULT NULL,
-            all_boards          SMALLINT NOT NULL DEFAULT 0,
             creator             VARCHAR(50) NOT NULL,
             ip_type             SMALLINT NOT NULL DEFAULT 0,
             ip_address_start    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
