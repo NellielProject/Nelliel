@@ -13,6 +13,7 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentPost;
 use Nelliel\Domains\Domain;
+use Nelliel\Wordfilters;
 
 class PostData
 {
@@ -111,6 +112,8 @@ class PostData
 
         if (!nel_true_empty($post->data('comment')))
         {
+            $wordfilters = new Wordfilters($this->domain->database());
+            $post->changeData('comment', $wordfilters->apply($post->data('comment'), $this->domain));
             $cites = new Cites($this->domain->database());
             $cite_list = $cites->getCitesFromText($post->data('comment'), false);
 

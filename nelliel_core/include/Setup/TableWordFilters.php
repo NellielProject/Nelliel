@@ -23,9 +23,10 @@ class TableWordFilters extends Table
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'text_match' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'replacement' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'is_regex' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -37,10 +38,11 @@ class TableWordFilters extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            board_id    VARCHAR(50) NOT NULL,
-            text        TEXT NOT NULL,
+            board_id    VARCHAR(50) DEFAULT NULL,
+            text_match  TEXT NOT NULL,
             replacement TEXT NOT NULL,
             is_regex    SMALLINT NOT NULL DEFAULT 0,
+            enabled     SMALLINT NOT NULL DEFAULT 0,
             moar        TEXT DEFAULT NULL,
             CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['board_data_table'] . "
             FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)

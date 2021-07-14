@@ -191,3 +191,30 @@ function nel_truncate_hash(string $hash, int $length = 12)
 {
     return substr($hash, 0, $length);
 }
+
+function nel_convert_global_ID(?string $id, bool $to_null): ?string
+{
+    if (nel_true_empty($id) || $id === \Nelliel\Domains\Domain::GLOBAL)
+    {
+        if ($to_null)
+        {
+            return null;
+        }
+        else
+        {
+            return \Nelliel\Domains\Domain::GLOBAL;
+        }
+    }
+
+    return $id;
+}
+
+function nel_filter_global_ID(?string $id, string $permission, \Nelliel\Auth\AuthUser $user): ?string
+{
+    if (!$user->checkPermission(nel_global_domain(), $permission, false))
+    {
+        nel_derp();
+    }
+
+    return nel_convert_global_ID($id, true);
+}

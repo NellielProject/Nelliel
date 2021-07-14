@@ -40,7 +40,7 @@ class TableFileFilters extends Table
             hash_type   VARCHAR(50) NOT NULL,
             file_hash   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             file_notes  VARCHAR(255) DEFAULT NULL,
-            board_id    VARCHAR(50) NOT NULL,
+            board_id    VARCHAR(50) DEFAULT NULL,
             moar        TEXT DEFAULT NULL,
             CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['board_data_table'] . "
             FOREIGN KEY (board_id) REFERENCES " . $other_tables['board_data_table'] . " (board_id)

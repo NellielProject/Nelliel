@@ -64,5 +64,20 @@ abstract class Admin
 
         return $this->output_main;
     }
+
+    public function globalIDToNull(string $id, string $permission): ?string
+    {
+        if(!nel_true_empty($id) && $id !== Domain::GLOBAL && $id !== Domain::SITE)
+        {
+            return $id;
+        }
+
+        if(!$this->session_user->checkPermission(nel_global_domain(), $permission, false))
+        {
+            nel_derp();
+        }
+
+        return null;
+    }
 }
 

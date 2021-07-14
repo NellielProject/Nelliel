@@ -36,9 +36,9 @@ class AdminFileFilters extends Admin
     public function add()
     {
         $this->verifyAction();
+        $board_id = $board_id = $this->globalIDToNull($_POST['board_id'] ?? '', 'perm_manage_file_filters');
         $type = $_POST['hash_type'];
         $notes = $_POST['file_notes'];
-        $board_id = $_POST['board_id'];
         $output_filter = new \Nelliel\Render\Filter();
         $hashes = $output_filter->newlinesToArray($_POST['file_hashes']);
 

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Domains;
 
@@ -154,5 +153,21 @@ abstract class Domain
     {
         $this->loadSettings();
         $this->loadReferences();
+    }
+
+    public static function getDomainFromID(string $id, NellielPDO $database): Domain
+    {
+        if ($id === Domain::SITE)
+        {
+            return new DomainSite($database);
+        }
+        else if ($id === Domain::GLOBAL)
+        {
+            return new DomainGlobal($database);
+        }
+        else
+        {
+            return new DomainBoard($id, $database);
+        }
     }
 }

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -46,7 +45,9 @@ class OutputPanelFileFilters extends Output
         }
 
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'file-filters', 'actions' => 'add']);
+                http_build_query(
+                        ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'add',
+                            'board-id' => $this->domain->id()]);
         $bgclass = 'row1';
 
         foreach ($filters as $filter)
@@ -62,7 +63,7 @@ class OutputPanelFileFilters extends Output
             $filter_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'remove',
-                                'filter-id' => $filter['entry']]);
+                                'board-id' => $this->domain->id(), 'filter-id' => $filter['entry']]);
             $this->render_data['filter_list'][] = $filter_data;
         }
 

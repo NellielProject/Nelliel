@@ -38,7 +38,7 @@ class AdminWordfilters extends Admin
     public function add()
     {
         $this->verifyAction();
-        $board_id = $_POST['board_id'] ?? '';
+        $board_id = nel_filter_global_ID($_POST['board_id'] ?? '', 'perm_manage_wordfilters', $this->session_user);
         $text_match = $_POST['text_match'] ?? '';
         $replacement = $_POST['replacement'] ?? '';
         $is_regex = $_POST['is_regex'] ?? 0;
@@ -63,7 +63,7 @@ class AdminWordfilters extends Admin
     {
         $this->verifyAction();
         $wordfilter_id = $_GET['wordfilter-id'] ?? 0;
-        $board_id = $_POST['board_id'] ?? '';
+        $board_id = nel_filter_global_ID($_POST['board_id'] ?? '', 'perm_manage_wordfilters', $this->session_user);
         $text_match = $_POST['text_match'] ?? '';
         $replacement = $_POST['replacement'] ?? '';
         $is_regex = $_POST['is_regex'] ?? 0;

@@ -178,7 +178,7 @@ class AuthUser extends AuthHandler
         unset($this->user_roles[$domain_id]);
     }
 
-    public function checkPermission(Domain $domain, string $permission): bool
+    public function checkPermission(Domain $domain, string $permission, bool $escalate = true): bool
     {
         // Site Owner can do all the things
         if ($this->isSiteOwner())
@@ -196,6 +196,11 @@ class AuthUser extends AuthHandler
         if ($role->checkPermission($permission))
         {
             return true;
+        }
+
+        if (!$escalate)
+        {
+            return false;
         }
 
         $global_role = $this->getDomainRole(nel_global_domain());

@@ -12,15 +12,18 @@ use Exception;
 use IPTools\Range;
 use PDO;
 use Nelliel\Domains\Domain;
+use Nelliel\Account\Session;
 
 class BanHammer
 {
     private $database;
     private $ban_data = array();
+    private $session;
 
     public function __construct(NellielPDO $database)
     {
         $this->database = $database;
+        $this->session = new Session();
     }
 
     public function getData(string $key)
@@ -37,7 +40,8 @@ class BanHammer
     {
         $ban_id = $_POST['ban_id'] ?? null;
         $existing_ban = (!is_null($ban_id)) ? $this->loadFromID($ban_id) : false;
-        $this->ban_data['board_id'] = $_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null;
+        $temp_id = $this->ban_data['board_id'] = $_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null;
+        $this->ban_data['board_id'] = nel_filter_global_ID($temp_id, 'perm_manage_bans', $this->session->user());
         $this->ban_data['seen'] = $_POST['ban_seen'] ?? $this->ban_data['seen'] ?? 0;
         $global = $_POST['ban_global'] ?? 0;
 
