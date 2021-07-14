@@ -26,6 +26,9 @@ class AdminPermissions extends Admin
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelPermissions($this->domain, false);
         $output_panel->render([], false);
+        $this->data_table = NEL_PERMISSIONS_TABLE;
+        $this->id_field = 'permission';
+        $this->id_column = 'permission';
     }
 
     public function creator()
@@ -52,15 +55,6 @@ class AdminPermissions extends Admin
     public function update()
     {
         $this->verifyAction($this->domain);
-    }
-
-    public function remove()
-    {
-        $this->verifyAction($this->domain);
-        $permission = $_GET['permission'];
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_PERMISSIONS_TABLE . '" WHERE "permission" = ?');
-        $this->database->executePrepared($prepared, [$permission]);
-        $this->outputMain(true);
     }
 
     public function enable()

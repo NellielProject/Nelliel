@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
@@ -19,6 +18,9 @@ class AdminStyles extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_ASSETS_TABLE;
+        $this->id_field = 'style-id';
+        $this->id_column = 'asset_id';
     }
 
     public function renderPanel()
@@ -35,21 +37,22 @@ class AdminStyles extends Admin
 
     public function add()
     {
-        $this->verifyAction($this->domain);
-        $style_id = $_GET['style-id'];
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
         $style_inis = $this->domain->frontEndData()->getStyleInis();
 
         foreach ($style_inis as $ini)
         {
-            if ($ini['id'] === $style_id)
+            if ($ini['id'] === $id)
             {
                 $info = json_encode($ini);
             }
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_ASSETS_TABLE . '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$style_id, 'style', 0, $info]);
+                'INSERT INTO "' . $this->data_table . '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$id, 'style', 0, $info]);
         $this->outputMain(true);
     }
 
@@ -65,11 +68,12 @@ class AdminStyles extends Admin
 
     public function remove()
     {
-        $this->verifyAction($this->domain);
-        $style_id = $_GET['style-id'];
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = \'style\'');
-        $this->database->executePrepared($prepared, [$style_id]);
+                'DELETE FROM "' . $this->data_table . '" WHERE "asset_id" = ? AND "type" = \'style\'');
+        $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 
@@ -85,12 +89,13 @@ class AdminStyles extends Admin
 
     public function makeDefault()
     {
-        $this->verifyAction($this->domain);
-        $style_id = $_GET['style-id'];
-        $this->database->exec('UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'style\'');
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $this->database->exec('UPDATE "' . $this->data_table . '" SET "is_default" = 0 WHERE "type" = \'style\'');
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'style\'');
-        $this->database->executePrepared($prepared, [$style_id]);
+                'UPDATE "' . $this->data_table . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'style\'');
+        $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 

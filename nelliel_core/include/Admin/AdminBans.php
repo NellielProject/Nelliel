@@ -22,6 +22,9 @@ class AdminBans extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->ban_hammer = new \Nelliel\BanHammer($this->database);
+        $this->data_table = NEL_BANS_TABLE;
+        $this->id_field = 'ban-id';
+        $this->id_column = 'ban_id';
     }
 
     public function renderPanel()

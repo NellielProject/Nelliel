@@ -20,6 +20,9 @@ class AdminReports extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_REPORTS_TABLE;
+        $this->id_field = 'report-id';
+        $this->id_column = 'report_id';
     }
 
     public function renderPanel()
@@ -47,10 +50,11 @@ class AdminReports extends Admin
 
     public function remove()
     {
-        $this->verifyAction($this->domain);
-        $report_id = $_GET['report-id'];
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');
-        $this->database->executePrepared($prepared, [$report_id]);
+        $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 

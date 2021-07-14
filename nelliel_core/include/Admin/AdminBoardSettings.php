@@ -29,6 +29,9 @@ class AdminBoardSettings extends Admin
         parent::__construct($authorization, $domain, $session);
         $this->domain = ($this->defaults) ? new DomainSite($this->database) : new DomainBoard($this->board_id,
                 $this->database);
+        $this->data_table = NEL_BOARD_DEFAULTS_TABLE;
+        $this->id_field = '';
+        $this->id_column = '';
     }
 
     public function renderPanel()
@@ -57,7 +60,7 @@ class AdminBoardSettings extends Admin
     {
         $this->verifyAction($this->domain);
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
-        $config_table = ($this->defaults) ? NEL_BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
+        $config_table = ($this->defaults) ? $this->data_table : $this->domain->reference('config_table');
         $defaults = $this->defaultsList();
 
         foreach ($_POST as $key => $value)
@@ -186,7 +189,7 @@ class AdminBoardSettings extends Admin
 
     public function defaultsList()
     {
-        $defaults_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DEFAULTS_TABLE . '"',
+        $defaults_data = $this->database->executeFetchAll('SELECT * FROM "' . $this->data_table . '"',
                 PDO::FETCH_ASSOC);
         $defaults = array();
 

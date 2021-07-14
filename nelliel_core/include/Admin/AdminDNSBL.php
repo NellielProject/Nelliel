@@ -1,5 +1,4 @@
 <?php
-
 declare(strict_types = 1);
 
 namespace Nelliel\Admin;
@@ -19,6 +18,9 @@ class AdminDNSBL extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_DNSBL_TABLE;
+        $this->id_field = 'dnsbl-id';
+        $this->id_column = 'entry';
     }
 
     public function renderPanel()
@@ -43,7 +45,7 @@ class AdminDNSBL extends Admin
         $return_codes = $_POST['return_codes'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_DNSBL_TABLE . '" ("service_domain", "return_codes", "enabled") VALUES (?, ?, ?)');
+                'INSERT INTO "' . $this->data_table . '" ("service_domain", "return_codes", "enabled") VALUES (?, ?, ?)');
         $this->database->executePrepared($prepared, [$service_domain, $return_codes, $enabled]);
         $this->outputMain(true);
     }
@@ -65,36 +67,9 @@ class AdminDNSBL extends Admin
         $return_codes = $_POST['return_codes'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_DNSBL_TABLE .
+                'UPDATE "' . $this->data_table .
                 '" SET "service_domain" = ?, "return_codes" = ?, "enabled" = ? WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$service_domain, $return_codes, $enabled, $dnsbl_id]);
-        $this->outputMain(true);
-    }
-
-    public function remove()
-    {
-        $this->verifyAction($this->domain);
-        $dnsbl_id = $_GET['dnsbl-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_DNSBL_TABLE . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$dnsbl_id]);
-        $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-        $dnsbl_id = $_GET['dnsbl-id'];
-        $prepared = $this->database->prepare('UPDATE "' . NEL_DNSBL_TABLE . '" SET "enabled" = 1 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$dnsbl_id]);
-        $this->outputMain(true);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-        $dnsbl_id = $_GET['dnsbl-id'];
-        $prepared = $this->database->prepare('UPDATE "' . NEL_DNSBL_TABLE . '" SET "enabled" = 0 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$dnsbl_id]);
         $this->outputMain(true);
     }
 

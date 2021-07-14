@@ -28,6 +28,9 @@ class AdminBoards extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->site_domain = new DomainSite($this->database);
+        $this->data_table = NEL_BOARD_DATA_TABLE;
+        $this->id_field = 'board-id';
+        $this->id_column = 'board_id';
     }
 
     public function renderPanel()
@@ -68,7 +71,7 @@ class AdminBoards extends Admin
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
-        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . $this->data_table . '" WHERE "board_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$board_uri], PDO::FETCH_COLUMN);
 
         if ($result)
@@ -85,7 +88,7 @@ class AdminBoards extends Admin
 
         $hashed_board_id = hash('sha256', $board_uri);
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_BOARD_DATA_TABLE .
+                'INSERT INTO "' . $this->data_table .
                 '" ("board_id", "hashed_board_id", "db_prefix") VALUES (?, ?, ?)');
         $prepared->bindValue(1, $board_uri, PDO::PARAM_STR);
         $prepared->bindValue(2, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
@@ -158,7 +161,7 @@ class AdminBoards extends Admin
 
         nel_utilities()->fileHandler()->eraserGun($domain->reference('board_path'));
         $domain->deleteCache();
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new Regen();
         $regen->boardList($this->domain);
@@ -185,7 +188,7 @@ class AdminBoards extends Admin
         $this->verifyAction($this->domain);
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
+                'UPDATE "' . $this->data_table . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $this->outputMain(true);
     }
@@ -195,7 +198,7 @@ class AdminBoards extends Admin
         $this->verifyAction($this->domain);
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
+                'UPDATE "' . $this->data_table . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $this->outputMain(true);
     }
@@ -234,7 +237,7 @@ class AdminBoards extends Admin
                 $test_id = '_board_' . strtolower($truncated_id);
             }
 
-            $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "db_prefix" = ?');
+            $prepared = $this->database->prepare('SELECT 1 FROM "' . $this->data_table . '" WHERE "db_prefix" = ?');
             $result = $this->database->executePreparedFetch($prepared, [$test_id], PDO::FETCH_COLUMN);
 
             if (!$result)

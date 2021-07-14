@@ -21,6 +21,7 @@ class AdminWordfilters extends Admin
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_WORD_FILTERS_TABLE;
         $this->id_field = 'wordfilter-id';
+        $this->id_column = 'entry';
     }
 
     public function renderPanel()

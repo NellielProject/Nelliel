@@ -19,6 +19,9 @@ class AdminTemplates extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_TEMPLATES_TABLE;
+        $this->id_field = 'template-id';
+        $this->id_column = 'template_id';
     }
 
     public function renderPanel()
@@ -51,7 +54,7 @@ class AdminTemplates extends Admin
         if ($info !== '')
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_TEMPLATES_TABLE .
+                    'INSERT INTO "' . $this->data_table .
                     '" ("template_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
             $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
         }
@@ -69,16 +72,6 @@ class AdminTemplates extends Admin
         $this->verifyAction($this->domain);
     }
 
-    public function remove()
-    {
-        $this->verifyAction($this->domain);
-        $template_id = $_GET['template-id'];
-        $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ? AND "type" = \'template\'');
-        $this->database->executePrepared($prepared, [$template_id]);
-        $this->outputMain(true);
-    }
-
     public function enable()
     {
         $this->verifyAction($this->domain);
@@ -93,9 +86,9 @@ class AdminTemplates extends Admin
     {
         $this->verifyAction($this->domain);
         $template_id = $_GET['template-id'];
-        $this->database->exec('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 0');
+        $this->database->exec('UPDATE "' . $this->data_table . '" SET "is_default" = 0');
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "template_id" = ?');
+                'UPDATE "' . $this->data_table . '" SET "is_default" = 1 WHERE "template_id" = ?');
         $this->database->executePrepared($prepared, [$template_id]);
         $this->outputMain(true);
     }

@@ -24,6 +24,7 @@ abstract class Admin
     protected $inputs;
     protected $data_table;
     protected $id_field = 'id';
+    protected $id_column = 'entry';
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
@@ -60,7 +61,8 @@ abstract class Admin
     protected function getEntryDomain($id): Domain
     {
         $entry = $this->getEntryByID($id);
-        return Domain::getDomainFromID($entry['board_id'], $this->database);
+        $domain_id = $entry['board_id'] ?? Domain::SITE;
+        return Domain::getDomainFromID($domain_id, $this->database);
     }
 
     public function outputMain(bool $value = null)

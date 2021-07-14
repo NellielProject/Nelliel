@@ -19,6 +19,8 @@ class AdminNews extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_NEWS_TABLE;
+        $this->id_field = 'entry';
     }
 
     public function renderPanel()
@@ -41,7 +43,7 @@ class AdminNews extends Admin
         $news_info['headline'] = $_POST['headline'] ?? null;
         $news_info['time'] = time();
         $news_info['text'] = $_POST['news_text'] ?? null;
-        $query = 'INSERT INTO "' . NEL_NEWS_TABLE . '" ("poster_id", "headline", "time", "text") VALUES (?, ?, ?, ?)';
+        $query = 'INSERT INTO "' . $this->data_table . '" ("poster_id", "headline", "time", "text") VALUES (?, ?, ?, ?)';
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
                 [$news_info['poster_id'], $news_info['headline'], $news_info['time'], $news_info['text']]);
@@ -61,10 +63,11 @@ class AdminNews extends Admin
 
     public function remove()
     {
-        $this->verifyAction($this->domain);
-        $entry = $_GET['entry'];
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_NEWS_TABLE . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$entry]);
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
         $this->regenNews();
         $this->outputMain(true);
     }

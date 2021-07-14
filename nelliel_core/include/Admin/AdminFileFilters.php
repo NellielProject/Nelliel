@@ -19,6 +19,9 @@ class AdminFileFilters extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_FILES_FILTERS_TABLE;
+        $this->id_field = 'filter-id';
+        $this->id_column = 'entry';
     }
 
     public function renderPanel()
@@ -45,7 +48,7 @@ class AdminFileFilters extends Admin
         foreach ($hashes as $hash)
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_FILES_FILTERS_TABLE .
+                    'INSERT INTO "' . $this->data_table .
                     '" ("hash_type", "file_hash", "file_notes", "board_id") VALUES (?, ?, ?, ?)');
             $this->database->executePrepared($prepared, [$type, pack("H*", $hash), $notes, $board_id]);
         }
@@ -61,15 +64,6 @@ class AdminFileFilters extends Admin
     public function update()
     {
         $this->verifyAction($this->domain);
-    }
-
-    public function remove()
-    {
-        $this->verifyAction($this->domain);
-        $filter_id = $_GET['filter-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILES_FILTERS_TABLE . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$filter_id]);
-        $this->outputMain(true);
     }
 
     public function enable()
