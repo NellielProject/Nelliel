@@ -20,6 +20,7 @@ class AdminWordfilters extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_WORD_FILTERS_TABLE;
+        $this->id_field = 'wordfilter-id';
     }
 
     public function renderPanel()
@@ -76,38 +77,6 @@ class AdminWordfilters extends Admin
                 '" SET "board_id" = ?, "text_match" = ?, "replacement" = ? , "is_regex" = ?, "enabled" = ? WHERE "entry" = ?');
         $this->database->executePrepared($prepared,
                 [$entry_domain->id(), $text_match, $replacement, $is_regex, $enabled, $id]);
-        $this->outputMain(true);
-    }
-
-    public function remove()
-    {
-        $id = $_GET['wordfilter-id'] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
-        $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $id = $_GET['wordfilter-id'] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
-        $this->outputMain(true);
-    }
-
-    public function disable()
-    {
-        $id = $_GET['wordfilter-id'] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 

@@ -23,6 +23,7 @@ abstract class Admin
     protected $output_main = true;
     protected $inputs;
     protected $data_table;
+    protected $id_field = 'id';
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
@@ -44,11 +45,11 @@ abstract class Admin
 
     public abstract function update();
 
-    public abstract function remove();
+    //public abstract function remove();
 
-    public abstract function enable();
+    //public abstract function enable();
 
-    public abstract function disable();
+    //public abstract function disable();
 
     public abstract function makeDefault();
 
@@ -92,6 +93,38 @@ abstract class Admin
         }
 
         return null;
+    }
+
+    public function remove()
+    {
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
+    }
+
+    public function enable()
+    {
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
+    }
+
+    public function disable()
+    {
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
     }
 }
 
