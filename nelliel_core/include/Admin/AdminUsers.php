@@ -19,9 +19,9 @@ class AdminUsers extends Admin
 {
     private $user_id;
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
         $this->user_id = $_GET['user-id'] ?? null;
 
         if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))
@@ -32,14 +32,14 @@ class AdminUsers extends Admin
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->new(['user_id' => $this->user_id], false);
         $this->outputMain(false);
@@ -47,7 +47,7 @@ class AdminUsers extends Admin
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $this->user_id = $_POST['user_id'];
         $this->update();
         $this->outputMain(true);
@@ -55,7 +55,7 @@ class AdminUsers extends Admin
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->edit(['user_id' => $this->user_id], false);
         $this->outputMain(false);
@@ -63,7 +63,7 @@ class AdminUsers extends Admin
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $update_user = $this->authorization->getUser($this->user_id);
 
         if ($update_user->empty())
@@ -113,27 +113,27 @@ class AdminUsers extends Admin
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $this->authorization->removeUser($this->user_id);
         $this->outputMain(true);
     }
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_access_users'))
         {
@@ -141,7 +141,7 @@ class AdminUsers extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
         {

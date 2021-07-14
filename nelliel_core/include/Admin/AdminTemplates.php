@@ -16,26 +16,26 @@ use Nelliel\Auth\Authorization;
 class AdminTemplates extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelTemplates($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $template_id = $_GET['template-id'];
         $template_inis = $this->domain->frontEndData()->getTemplateInis();
         $info = '';
@@ -61,17 +61,17 @@ class AdminTemplates extends Admin
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $template_id = $_GET['template-id'];
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ? AND "type" = \'template\'');
@@ -81,17 +81,17 @@ class AdminTemplates extends Admin
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $template_id = $_GET['template-id'];
         $this->database->exec('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 0');
         $prepared = $this->database->prepare(
@@ -100,7 +100,7 @@ class AdminTemplates extends Admin
         $this->outputMain(true);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {
@@ -108,7 +108,7 @@ class AdminTemplates extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
         {

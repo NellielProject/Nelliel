@@ -131,12 +131,12 @@ class OutputPanelWordfilters extends Output
 
             if ($wordfilter_data !== false)
             {
-                $entry_domain = nel_convert_global_ID($wordfilter_data['board_id'], false);
+                /*$entry_domain = nel_convert_global_ID($wordfilter_data['board_id'], false);
 
                 if (!$this->session->user()->checkPermission(Domain::getDomainFromID($entry_domain, $this->database), 'perm_manage_wordfilters'))
                 {
                     nel_derp(491, _gettext('You are not allowed to manage wordfilters.'));
-                }
+                }*/
 
                 $this->render_data['entry'] = $wordfilter_data['entry'];
                 $this->render_data['board_id'] = $wordfilter_data['board_id'];

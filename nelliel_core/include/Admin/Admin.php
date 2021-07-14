@@ -1,12 +1,12 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use PDO;
 
 if (!defined('NELLIEL_VERSION'))
 {
@@ -22,8 +22,9 @@ abstract class Admin
     protected $session_user;
     protected $output_main = true;
     protected $inputs;
+    protected $data_table;
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         $this->database = $domain->database();
         $this->authorization = $authorization;
@@ -51,9 +52,15 @@ abstract class Admin
 
     public abstract function makeDefault();
 
-    public abstract function verifyAccess();
+    public abstract function verifyAccess(Domain $domain);
 
-    public abstract function verifyAction();
+    public abstract function verifyAction(Domain $domain);
+
+    protected function getEntryDomain($id): Domain
+    {
+        $entry = $this->getEntryByID($id);
+        return Domain::getDomainFromID($entry['board_id'], $this->database);
+    }
 
     public function outputMain(bool $value = null)
     {
@@ -65,14 +72,21 @@ abstract class Admin
         return $this->output_main;
     }
 
+    protected function getEntryByID($id): array
+    {
+        $prepared = $this->database->prepare('SELECT * FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$id], PDO::FETCH_ASSOC);
+        return ($result !== false) ? $result : array();
+    }
+
     public function globalIDToNull(string $id, string $permission): ?string
     {
-        if(!nel_true_empty($id) && $id !== Domain::GLOBAL && $id !== Domain::SITE)
+        if (!nel_true_empty($id) && $id !== Domain::GLOBAL && $id !== Domain::SITE)
         {
             return $id;
         }
 
-        if(!$this->session_user->checkPermission(nel_global_domain(), $permission, false))
+        if (!$this->session_user->checkPermission(nel_global_domain(), $permission, false))
         {
             nel_derp();
         }

@@ -16,36 +16,36 @@ use Nelliel\Auth\Authorization;
 class AdminSiteSettings extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelSiteSettings($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
 
         foreach ($_POST as $key => $value)
         {
@@ -66,25 +66,25 @@ class AdminSiteSettings extends Admin
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
         {
@@ -92,7 +92,7 @@ class AdminSiteSettings extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
         {

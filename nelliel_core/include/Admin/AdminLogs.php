@@ -16,14 +16,14 @@ use Nelliel\Auth\Authorization;
 class AdminLogs extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelLogs($this->domain, false);
         $log_type = $_GET['log-type'] ?? '';
         $output_panel->render(['log_type' => $log_type], false);
@@ -31,45 +31,45 @@ class AdminLogs extends Admin
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_access_logs'))
         {
@@ -77,7 +77,7 @@ class AdminLogs extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_logs'))
         {

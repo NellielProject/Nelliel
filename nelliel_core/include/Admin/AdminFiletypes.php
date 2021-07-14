@@ -16,21 +16,21 @@ use Nelliel\Auth\Authorization;
 class AdminFiletypes extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
         $output_panel->new(['editing' => false], false);
         $this->outputMain(false);
@@ -38,7 +38,7 @@ class AdminFiletypes extends Admin
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $base_extension = $_POST['base_extension'] ?? null;
         $type = $_POST['type'] ?? null;
         $format = $_POST['format'] ?? null;
@@ -61,7 +61,7 @@ class AdminFiletypes extends Admin
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $entry = $_GET['filetype-id'] ?? 0;
         $output_panel = new \Nelliel\Render\OutputPanelFiletypes($this->domain, false);
         $output_panel->edit(['editing' => true, 'entry' => $entry], false);
@@ -70,7 +70,7 @@ class AdminFiletypes extends Admin
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $filetype_id = $_GET['filetype-id'];
         $base_extension = $_POST['base_extension'] ?? null;
         $type = $_POST['type'] ?? null;
@@ -95,7 +95,7 @@ class AdminFiletypes extends Admin
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILETYPES_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
@@ -104,7 +104,7 @@ class AdminFiletypes extends Admin
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 1 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
@@ -113,7 +113,7 @@ class AdminFiletypes extends Admin
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $filetype_id = $_GET['filetype-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "enabled" = 0 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$filetype_id]);
@@ -122,10 +122,10 @@ class AdminFiletypes extends Admin
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {
@@ -133,7 +133,7 @@ class AdminFiletypes extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_filetypes'))
         {

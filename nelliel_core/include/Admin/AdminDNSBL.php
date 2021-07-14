@@ -16,21 +16,21 @@ use Nelliel\Auth\Authorization;
 class AdminDNSBL extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelDNSBL($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelDNSBL($this->domain, false);
         $output_panel->new(['editing' => false], false);
         $this->outputMain(false);
@@ -38,7 +38,7 @@ class AdminDNSBL extends Admin
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $service_domain = $_POST['service_domain'] ?? '';
         $return_codes = $_POST['return_codes'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
@@ -50,7 +50,7 @@ class AdminDNSBL extends Admin
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $entry = $_GET['dnsbl-id'] ?? 0;
         $output_panel = new \Nelliel\Render\OutputPanelDNSBL($this->domain, false);
         $output_panel->edit(['editing' => true, 'entry' => $entry], false);
@@ -59,7 +59,7 @@ class AdminDNSBL extends Admin
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $dnsbl_id = $_GET['dnsbl-id'] ?? 0;
         $service_domain = $_POST['service_domain'] ?? '';
         $return_codes = $_POST['return_codes'] ?? '';
@@ -73,7 +73,7 @@ class AdminDNSBL extends Admin
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $dnsbl_id = $_GET['dnsbl-id'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_DNSBL_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$dnsbl_id]);
@@ -82,7 +82,7 @@ class AdminDNSBL extends Admin
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $dnsbl_id = $_GET['dnsbl-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_DNSBL_TABLE . '" SET "enabled" = 1 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$dnsbl_id]);
@@ -91,7 +91,7 @@ class AdminDNSBL extends Admin
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $dnsbl_id = $_GET['dnsbl-id'];
         $prepared = $this->database->prepare('UPDATE "' . NEL_DNSBL_TABLE . '" SET "enabled" = 0 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$dnsbl_id]);
@@ -100,10 +100,10 @@ class AdminDNSBL extends Admin
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_dnsbl'))
         {
@@ -111,7 +111,7 @@ class AdminDNSBL extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_dnsbl'))
         {

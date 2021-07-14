@@ -16,26 +16,26 @@ use Nelliel\Auth\Authorization;
 class AdminStaffBoard extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelStaffBoard($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $subject = $_POST['subject'] ?? '';
         $message = $_POST['message'] ?? '';
         $time = time();
@@ -48,17 +48,17 @@ class AdminStaffBoard extends Admin
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $entry = $_GET['entry'];
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_STAFF_BOARD_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$entry]);
@@ -67,17 +67,17 @@ class AdminStaffBoard extends Admin
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     private function regenNews()
@@ -86,7 +86,7 @@ class AdminStaffBoard extends Admin
         $regen->news($this->domain);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_staff_board_access'))
         {
@@ -94,7 +94,7 @@ class AdminStaffBoard extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_staff_board_post'))
         {

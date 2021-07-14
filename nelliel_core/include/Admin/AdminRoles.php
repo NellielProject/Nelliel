@@ -17,9 +17,9 @@ class AdminRoles extends Admin
 {
     private $role_id;
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
         $this->role_id = $_GET['role-id'] ?? '';
 
         if (!$this->authorization->roleExists($this->role_id))
@@ -30,14 +30,14 @@ class AdminRoles extends Admin
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelRoles($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelRoles($this->domain, false);
         $output_panel->new(['role_id' => $this->role_id], false);
         $this->outputMain(false);
@@ -45,7 +45,7 @@ class AdminRoles extends Admin
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $this->role_id = $_POST['role_id'] ?? '';
         $this->update();
         $this->outputMain(true);
@@ -53,7 +53,7 @@ class AdminRoles extends Admin
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelRoles($this->domain, false);
         $output_panel->edit(['role_id' => $this->role_id], false);
         $this->outputMain(false);
@@ -61,7 +61,7 @@ class AdminRoles extends Admin
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $role = $this->authorization->newRole($this->role_id);
         $role->setupNew();
 
@@ -88,27 +88,27 @@ class AdminRoles extends Admin
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $this->authorization->removeRole($this->role_id);
         $this->outputMain(true);
     }
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_access_roles'))
         {
@@ -116,7 +116,7 @@ class AdminRoles extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_roles'))
         {

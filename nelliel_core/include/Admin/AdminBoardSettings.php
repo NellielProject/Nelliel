@@ -21,41 +21,41 @@ class AdminBoardSettings extends Admin
     private $defaults = false;
     private $board_id;
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         // TODO: Something better should be possible
         $this->board_id = $_GET['board-id'] ?? '';
         $this->defaults = empty($this->board_id) ? true : false;
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
         $this->domain = ($this->defaults) ? new DomainSite($this->database) : new DomainBoard($this->board_id,
                 $this->database);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelBoardSettings($this->domain, false);
         $output_panel->render(['defaults' => $this->defaults], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
         $config_table = ($this->defaults) ? NEL_BOARD_DEFAULTS_TABLE : $this->domain->reference('config_table');
         $defaults = $this->defaultsList();
@@ -129,22 +129,22 @@ class AdminBoardSettings extends Admin
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     private function setLock($config_table, $config_name, $setting)
@@ -198,7 +198,7 @@ class AdminBoardSettings extends Admin
         return $defaults;
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if ($this->defaults)
         {
@@ -216,7 +216,7 @@ class AdminBoardSettings extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if ($this->defaults)
         {

@@ -19,15 +19,15 @@ class AdminThreads extends Admin
 {
     private $site_domain;
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
         $this->site_domain = new DomainSite($this->database);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
 
         if (isset($_GET['actions']) && $_GET['actions'] === 'expand-thread')
         {
@@ -44,17 +44,17 @@ class AdminThreads extends Admin
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function update()
@@ -72,22 +72,22 @@ class AdminThreads extends Admin
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function sticky()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread() || $content_id->isPost())
@@ -99,7 +99,7 @@ class AdminThreads extends Admin
 
     public function lock()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread())
@@ -111,7 +111,7 @@ class AdminThreads extends Admin
 
     public function permasage()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread())
@@ -123,7 +123,7 @@ class AdminThreads extends Admin
 
     public function cyclic()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread())
@@ -192,7 +192,7 @@ class AdminThreads extends Admin
         }
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_threads'))
         {
@@ -200,7 +200,7 @@ class AdminThreads extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_threads'))
         {

@@ -16,26 +16,26 @@ use Nelliel\Auth\Authorization;
 class AdminStyles extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelStyles($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $style_id = $_GET['style-id'];
         $style_inis = $this->domain->frontEndData()->getStyleInis();
 
@@ -55,17 +55,17 @@ class AdminStyles extends Admin
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $style_id = $_GET['style-id'];
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = \'style\'');
@@ -75,17 +75,17 @@ class AdminStyles extends Admin
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $style_id = $_GET['style-id'];
         $this->database->exec('UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'style\'');
         $prepared = $this->database->prepare(
@@ -94,7 +94,7 @@ class AdminStyles extends Admin
         $this->outputMain(true);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
         {
@@ -102,7 +102,7 @@ class AdminStyles extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
         {

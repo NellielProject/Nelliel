@@ -11,25 +11,27 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use PDO;
 
 class AdminWordfilters extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_WORD_FILTERS_TABLE;
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelWordfilters($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelWordfilters($this->domain, false);
         $output_panel->new(['editing' => false], false);
         $this->outputMain(false);
@@ -37,14 +39,14 @@ class AdminWordfilters extends Admin
 
     public function add()
     {
-        $this->verifyAction();
-        $board_id = nel_filter_global_ID($_POST['board_id'] ?? '', 'perm_manage_wordfilters', $this->session_user);
+        $this->verifyAction($this->domain);
+        $board_id = nel_convert_global_ID($_POST['board_id'] ?? '', true);
         $text_match = $_POST['text_match'] ?? '';
         $replacement = $_POST['replacement'] ?? '';
         $is_regex = $_POST['is_regex'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_WORD_FILTERS_TABLE .
+                'INSERT INTO "' . $this->data_table .
                 '" ("board_id", "text_match", "replacement", "is_regex", "enabled") VALUES (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$board_id, $text_match, $replacement, $is_regex, $enabled]);
         $this->outputMain(true);
@@ -52,75 +54,79 @@ class AdminWordfilters extends Admin
 
     public function editor()
     {
-        $this->verifyAccess();
-        $entry = $_GET['wordfilter-id'] ?? 0;
+        $id = $_GET['wordfilter-id'] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAccess($entry_domain);
         $output_panel = new \Nelliel\Render\OutputPanelWordfilters($this->domain, false);
-        $output_panel->edit(['editing' => true, 'entry' => $entry], false);
+        $output_panel->edit(['editing' => true, 'entry' => $id], false);
         $this->outputMain(false);
     }
 
     public function update()
     {
-        $this->verifyAction();
-        $wordfilter_id = $_GET['wordfilter-id'] ?? 0;
-        $board_id = nel_filter_global_ID($_POST['board_id'] ?? '', 'perm_manage_wordfilters', $this->session_user);
+        $id = $_GET['wordfilter-id'] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
         $text_match = $_POST['text_match'] ?? '';
         $replacement = $_POST['replacement'] ?? '';
         $is_regex = $_POST['is_regex'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_WORD_FILTERS_TABLE .
+                'UPDATE "' . $this->data_table .
                 '" SET "board_id" = ?, "text_match" = ?, "replacement" = ? , "is_regex" = ?, "enabled" = ? WHERE "entry" = ?');
         $this->database->executePrepared($prepared,
-                [$board_id, $text_match, $replacement, $is_regex, $enabled, $wordfilter_id]);
+                [$entry_domain->id(), $text_match, $replacement, $is_regex, $enabled, $id]);
         $this->outputMain(true);
     }
 
     public function remove()
     {
-        $this->verifyAction();
-        $wordfilter_id = $_GET['wordfilter-id'] ?? 0;
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_WORD_FILTERS_TABLE . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$wordfilter_id]);
+        $id = $_GET['wordfilter-id'] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 
     public function enable()
     {
-        $this->verifyAction();
-        $wordfilter_id = $_GET['wordfilter-id'] ?? 0;
+        $id = $_GET['wordfilter-id'] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_WORD_FILTERS_TABLE . '" SET "enabled" = 1 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$wordfilter_id]);
+                'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 
     public function disable()
     {
-        $this->verifyAction();
-        $wordfilter_id = $_GET['wordfilter-id'] ?? 0;
+        $id = $_GET['wordfilter-id'] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_WORD_FILTERS_TABLE . '" SET "enabled" = 0 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$wordfilter_id]);
+                'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_wordfilters'))
+        if (!$this->session_user->checkPermission($domain, 'perm_manage_wordfilters'))
         {
             nel_derp(490, _gettext('You do not have access to the Wordfilters panel.'));
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_wordfilters'))
+        if (!$this->session_user->checkPermission($domain, 'perm_manage_wordfilters'))
         {
             nel_derp(491, _gettext('You are not allowed to manage wordfilters.'));
         }

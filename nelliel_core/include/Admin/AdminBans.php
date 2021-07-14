@@ -18,22 +18,22 @@ class AdminBans extends Admin
 {
     private $ban_hammer;
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
         $this->ban_hammer = new \Nelliel\BanHammer($this->database);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $ban_ip = $_GET['ban-ip'] ?? '';
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
         $output_panel->new(['ban_ip' => $ban_ip], false);
@@ -42,7 +42,7 @@ class AdminBans extends Admin
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
 
@@ -69,7 +69,7 @@ class AdminBans extends Admin
 
     public function editor()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
         $output_panel->modify([], false);
         $this->outputMain(false);
@@ -77,7 +77,7 @@ class AdminBans extends Admin
 
     public function update()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $this->ban_hammer->loadFromID($_POST['ban_id']);
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
@@ -86,7 +86,7 @@ class AdminBans extends Admin
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $ban_id = $_GET['ban_id'] ?? '';
         $this->ban_hammer->loadFromID($ban_id);
         $this->ban_hammer->remove();
@@ -95,20 +95,20 @@ class AdminBans extends Admin
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_access_bans'))
         {
@@ -116,7 +116,7 @@ class AdminBans extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
         {

@@ -24,15 +24,15 @@ class AdminBoards extends Admin
 {
     private $site_domain;
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
         $this->site_domain = new DomainSite($this->database);
     }
 
     public function renderPanel()
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelManageBoards($this->site_domain, false);
         $output_panel->main([], false);
     }
@@ -43,7 +43,7 @@ class AdminBoards extends Admin
 
     public function add()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $site_domain = new DomainSite($this->database);
         $board_uri = trim($_POST['new_board_uri']);
 
@@ -112,7 +112,7 @@ class AdminBoards extends Admin
 
     public function remove()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $board_id = $_GET['board-id'];
         $domain = new DomainBoard($board_id, $this->database);
 
@@ -167,22 +167,22 @@ class AdminBoards extends Admin
 
     public function enable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function disable()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
     }
 
     public function unlock()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 0 WHERE "board_id" = ?');
@@ -192,7 +192,7 @@ class AdminBoards extends Admin
 
     public function lock()
     {
-        $this->verifyAction();
+        $this->verifyAction($this->domain);
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_BOARD_DATA_TABLE . '" SET "locked" = 1 WHERE "board_id" = ?');
@@ -202,7 +202,7 @@ class AdminBoards extends Admin
 
     public function createInterstitial(string $which)
     {
-        $this->verifyAccess();
+        $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelManageBoards($this->domain, false);
 
         switch ($which)
@@ -247,7 +247,7 @@ class AdminBoards extends Admin
         return $final_id;
     }
 
-    public function verifyAccess()
+    public function verifyAccess(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_access_boards'))
         {
@@ -255,7 +255,7 @@ class AdminBoards extends Admin
         }
     }
 
-    public function verifyAction()
+    public function verifyAction(Domain $domain)
     {
         if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
         {

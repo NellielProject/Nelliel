@@ -66,42 +66,42 @@ class Dispatch
         switch ($inputs['section'])
         {
             case 'bans':
-                $admin_handler = new AdminBans($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminBans($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'board-settings':
-                $admin_handler = new AdminBoardSettings($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminBoardSettings($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'board-defaults':
-                $admin_handler = new AdminBoardSettings($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminBoardSettings($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'file-filters':
-                $admin_handler = new AdminFileFilters($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminFileFilters($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'filetypes':
-                $admin_handler = new AdminFiletypes($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminFiletypes($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'icon-sets':
-                $admin_handler = new AdminIconSets($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminIconSets($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'logs':
-                $admin_handler = new AdminLogs($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminLogs($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'manage-boards':
-                $admin_handler = new AdminBoards($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminBoards($this->authorization, $this->domain, $this->session);
 
                 if ($action === 'remove')
                 {
@@ -130,42 +130,42 @@ class Dispatch
                 break;
 
             case 'news':
-                $admin_handler = new AdminNews($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminNews($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'permissions':
-                $admin_handler = new AdminPermissions($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminPermissions($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'reports':
-                $admin_handler = new AdminReports($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminReports($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'roles':
-                $admin_handler = new AdminRoles($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminRoles($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'site-settings':
-                $admin_handler = new AdminSiteSettings($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminSiteSettings($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'styles':
-                $admin_handler = new AdminStyles($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminStyles($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'templates':
-                $admin_handler = new AdminTemplates($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminTemplates($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'threads':
-                $admin_handler = new AdminThreads($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminThreads($this->authorization, $this->domain, $this->session);
 
                 // TODO: Refine this whenever we get threads panel updated
                 if ($inputs['subsection'] === 'panel')
@@ -223,7 +223,7 @@ class Dispatch
                 break;
 
             case 'users':
-                $admin_handler = new AdminUsers($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminUsers($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
@@ -238,17 +238,17 @@ class Dispatch
                 break;
 
             case 'staff-board':
-                $admin_handler = new AdminStaffBoard($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminStaffBoard($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'dnsbl':
-                $admin_handler = new AdminDNSBL($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminDNSBL($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
 
             case 'wordfilters':
-                $admin_handler = new AdminWordfilters($this->authorization, $this->domain, $this->session, $inputs);
+                $admin_handler = new AdminWordfilters($this->authorization, $this->domain, $this->session);
                 $this->standard($admin_handler, $action);
                 break;
         }
