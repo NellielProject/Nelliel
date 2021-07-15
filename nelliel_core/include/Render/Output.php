@@ -40,7 +40,7 @@ abstract class Output
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new Filter();
         $this->template_substitutes = new TemplateSubstitutes();
-        $this->session = new \Nelliel\Account\Session();
+        $this->session = new \Nelliel\Modules\Account\Session();
 
         if($this->session->modmodeRequested())
         {

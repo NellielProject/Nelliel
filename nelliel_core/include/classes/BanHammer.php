@@ -12,7 +12,7 @@ use Exception;
 use IPTools\Range;
 use PDO;
 use Nelliel\Domains\Domain;
-use Nelliel\Account\Session;
+use Nelliel\Modules\Account\Session;
 
 class BanHammer
 {

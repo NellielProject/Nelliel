@@ -40,8 +40,8 @@ abstract class Domain
         $this->front_end_data = new FrontEndData($this->database);
         $this->file_handler = nel_utilities()->fileHandler();
         $this->cache_handler = nel_utilities()->cacheHandler();
-        $this->translator = new \Nelliel\Language\Translator($this);
-        $this->language = new \Nelliel\Language\Language();
+        $this->translator = new \Nelliel\Modules\Language\Translator($this);
+        $this->language = new \Nelliel\Modules\Language\Language();
     }
 
     public function database(NellielPDO $new_database = null)

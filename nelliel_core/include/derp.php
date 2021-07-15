@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Account\Session;
+use Nelliel\Modules\Account\Session;
 use Nelliel\Domains\Domain;
 
 function nel_early_derp(int $error_id, string $error_message, array $error_data = array())

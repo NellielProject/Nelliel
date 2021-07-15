@@ -189,7 +189,7 @@ class ContentPost extends ContentHandler
                 nel_derp(62, _gettext('Cannot remove post. Board is locked.'));
             }
 
-            $session = new \Nelliel\Account\Session();
+            $session = new \Nelliel\Modules\Account\Session();
             $user = $session->user();
             $bypass = false;
 
@@ -276,7 +276,7 @@ class ContentPost extends ContentHandler
 
     protected function verifyModifyPerms()
     {
-        $session = new \Nelliel\Account\Session();
+        $session = new \Nelliel\Modules\Account\Session();
         $user = $session->user();
 
         if (empty($this->content_data))

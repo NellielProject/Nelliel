@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Admin\AdminBoardSettings;
+use Nelliel\Modules\Admin\AdminBoardSettings;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;

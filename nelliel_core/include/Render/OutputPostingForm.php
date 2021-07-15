@@ -35,12 +35,12 @@ class OutputPostingForm extends Output
         if ($this->render_data['in_modmode'])
         {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=threads&actions=new-post&board-id=' . $this->domain->id() . '&modmode=true';
+                    'module=new-post&board-id=' . $this->domain->id() . '&modmode=true';
         }
         else
         {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=threads&actions=new-post&board-id=' . $this->domain->id();
+                    'module=new-post&board-id=' . $this->domain->id();
         }
 
         if (!$response_to)

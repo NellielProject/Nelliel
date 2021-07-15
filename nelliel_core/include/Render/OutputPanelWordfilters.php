@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\Admin\AdminWordfilters;
+use Nelliel\Modules\Admin\AdminWordfilters;
 use Nelliel\Auth\Authorization;
 
 class OutputPanelWordfilters extends Output

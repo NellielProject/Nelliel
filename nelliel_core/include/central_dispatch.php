@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Account\Session;
+use Nelliel\Modules\Account\Session;
 use Nelliel\Domains\Domain;
 
 function nel_dispatch_preparation()
@@ -92,10 +92,37 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 {
     $inputs = nel_plugins()->processHook('nel-inb4-module-dispatch', [$domain], $inputs);
     $authorization = new \Nelliel\Auth\Authorization($domain->database());
-    $session = new Session();
+    $session = new \Nelliel\Modules\Account\Session();
 
     switch ($inputs['module'])
     {
+        case 'admin':
+            $admin_dispatch = new \Nelliel\Modules\Admin\Dispatch($domain, $authorization, $session);
+            $admin_dispatch->dispatch($inputs);
+            break;
+
+        case 'account':
+            $account_dispatch = new \Nelliel\Modules\Account\Dispatch($domain, $session);
+            $account_dispatch->dispatch($inputs);
+            break;
+
+        case 'language':
+            $language_dispatch = new \Nelliel\Modules\Language\Dispatch($domain, $authorization, $session);
+            $language_dispatch->dispatch($inputs);
+            break;
+
+        case 'threads':
+            $threads_dispatch = new \Nelliel\Modules\Threads\Dispatch($domain, $authorization, $session);
+            $threads_dispatch->dispatch($inputs);
+            break;
+
+        case 'new-post':
+            $new_post_dispatch = new \Nelliel\Modules\NewPost\Dispatch($domain, $authorization, $session);
+            $new_post_dispatch->dispatch($inputs);
+            break;
+
+
+
         case 'banners':
             $banners = new \Nelliel\Banners($domain);
             $banners->dispatch($inputs);
@@ -106,15 +133,7 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $captcha->dispatch($inputs);
             break;
 
-        case 'account':
-            $account_dispatch = new \Nelliel\Account\Dispatch($domain, $session);
-            $account_dispatch->dispatch($inputs);
-            break;
 
-        case 'admin':
-            $admin_dispatch = new \Nelliel\Admin\Dispatch($domain, $authorization, $session);
-            $admin_dispatch->dispatch($inputs);
-            break;
 
         case 'render':
             $inputs['index'] = $_GET['index'] ?? null;
@@ -144,112 +163,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
                     $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'collapse-thread'],
                             false);
                     break;
-            }
-
-            break;
-
-        case 'language':
-            $language_dispatch = new \Nelliel\Language\Dispatch($domain, $authorization, $session);
-            $language_dispatch->dispatch($inputs);
-            break;
-
-        case 'content':
-
-            break;
-
-        case 'threads':
-            $content_id = new \Nelliel\Content\ContentID($inputs['content_id']);
-            $fgsfds = new \Nelliel\FGSFDS();
-
-            if ($session->modmodeRequested())
-            {
-                $session->init(true);
-            }
-
-            if ($inputs['actions'][0] === 'new-post')
-            {
-                $new_post = new \Nelliel\Post\NewPost($domain, $session);
-                $new_post->processPost();
-
-                $redirect = new \Nelliel\Redirect();
-                $redirect->doRedirect(true);
-
-                if ($fgsfds->commandIsSet('noko') || $domain->setting('always_noko'))
-                {
-                    if ($session->inModmode($domain))
-                    {
-                        $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                                http_build_query(
-                                        ['module' => 'render', 'actions' => 'view-thread',
-                                            'thread' => $fgsfds->getCommandData('noko', 'topic'),
-                                            'board-id' => $inputs['board_id'], 'modmode' => 'true']);
-                    }
-                    else
-                    {
-                        $url = $domain->reference('board_directory') . '/' . $domain->reference('page_dir') . '/' .
-                                $fgsfds->getCommandData('noko', 'topic') . '/' .
-                                sprintf(nel_site_domain()->setting('thread_filename_format'),
-                                        $fgsfds->getCommandData('noko', 'topic')) . NEL_PAGE_EXT;
-                    }
-                }
-                else
-                {
-                    if ($session->inModmode($domain))
-                    {
-                        $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-index&index=0&board-id=' .
-                                $inputs['board_id'] . '&modmode=true';
-                    }
-                    else
-                    {
-                        $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
-                    }
-                }
-
-                $redirect->changeURL($url);
-                $output_post = new \Nelliel\Render\OutputPost($domain, true);
-                echo $output_post->postSuccess(['forward_url' => $url], false);
-                nel_clean_exit();
-            }
-
-            $redirect = new \Nelliel\Redirect();
-            $redirect->doRedirect(true);
-
-            if (isset($_POST['form_submit_report']))
-            {
-                $report = new \Nelliel\Report($domain);
-                $report->submit();
-
-                if ($session->inModmode($domain))
-                {
-                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-index&index=0&board-id=' .
-                            $inputs['board_id'] . '&modmode=true';
-                }
-                else
-                {
-                    $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
-                }
-
-                $redirect->changeURL($url);
-            }
-
-            if (isset($_POST['form_submit_delete']))
-            {
-                $thread_handler = new \Nelliel\ThreadHandler($domain);
-                $thread_handler->processContentDeletes();
-
-                if ($session->inModmode($domain))
-                {
-                    $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-index&index=0&board-id=' .
-                            $inputs['board_id'] . '&modmode=true';
-                }
-                else
-                {
-                    $url = $domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
-                }
-
-                $redirect->changeURL($url);
-                $output_post = new \Nelliel\Render\OutputPost($domain, true);
-                echo $output_post->contentDeleted(['forward_url' => $url], false);
             }
 
             break;
