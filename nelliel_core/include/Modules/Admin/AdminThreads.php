@@ -27,7 +27,61 @@ class AdminThreads extends Admin
 
     public function dispatch(array $inputs): void
     {
+        if ($inputs['subsection'] === 'panel')
+        {
+            $this->outputMain(true);
+        }
+        else
+        {
+            $this->outputMain(false);
+        }
+
         parent::dispatch($inputs);
+
+        // TODO: Refine this whenever we get threads panel updated
+        foreach ($inputs['actions'] as $action)
+        {
+            switch ($action)
+            {
+                case 'sticky':
+                    $this->sticky();
+                    break;
+
+                case 'lock':
+                    $this->lock();
+                    break;
+
+                case 'delete':
+                    $this->remove();
+                    break;
+
+                case 'delete-by-ip':
+                    $this->removeByIP();
+                    break;
+
+                case 'ban':
+                    $admin_bans = new \Nelliel\Modules\Admin\AdminBans($this->authorization, $this->domain,
+                            $this->session, $inputs);
+                    $admin_bans->creator();
+                    break;
+
+                case 'sage':
+                    $this->permasage();
+                    break;
+
+                case 'cyclic':
+                    $this->cyclic();
+                    break;
+
+                case 'expand':
+                    ; // TODO: Figure this out better
+                    break;
+
+                case 'bandelete':
+                    $this->banDelete();
+                    break;
+            }
+        }
     }
 
     public function panel()

@@ -122,60 +122,7 @@ class Dispatch
 
             case 'threads':
                 $admin_handler = new AdminThreads($this->authorization, $this->domain, $this->session);
-
-                // TODO: Refine this whenever we get threads panel updated
-                if ($inputs['subsection'] === 'panel')
-                {
-                    $admin_handler->outputMain(true);
-                }
-                else
-                {
-                    $admin_handler->outputMain(false);
-                }
-
-                if ($action === 'sticky')
-                {
-                    $admin_handler->sticky();
-                }
-                else if ($action === 'lock')
-                {
-                    $admin_handler->lock();
-                }
-                else if ($action === 'delete')
-                {
-                    $admin_handler->remove();
-                }
-                else if ($action === 'delete-by-ip')
-                {
-                    $admin_handler->removeByIP();
-                }
-                else if ($action === 'ban')
-                {
-                    $admin_handler = new \Nelliel\Modules\Admin\AdminBans($this->authorization, $this->domain,
-                            $this->session, $inputs);
-                    $admin_handler->creator();
-                }
-                else if ($action === 'bandelete')
-                {
-                    $admin_handler->banDelete();
-                }
-                else if ($action === 'sage')
-                {
-                    $admin_handler->permasage();
-                }
-                else if ($action === 'cyclic')
-                {
-                    $admin_handler->cyclic();
-                }
-                else if ($action === 'expand')
-                {
-                    ; // TODO: Figure this out better
-                }
-                else
-                {
-                    $admin_handler->dispatch($inputs);
-                }
-
+                $admin_handler->dispatch($inputs);
                 break;
 
             case 'users':

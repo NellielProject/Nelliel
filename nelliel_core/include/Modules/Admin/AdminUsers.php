@@ -21,13 +21,14 @@ class AdminUsers extends Admin
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session);
         $this->user_id = $_GET['user-id'] ?? null;
 
         if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))
         {
             nel_derp(230, _gettext('The specified user does not exist.'));
         }
+
+        parent::__construct($authorization, $domain, $session);
     }
 
     public function dispatch(array $inputs): void

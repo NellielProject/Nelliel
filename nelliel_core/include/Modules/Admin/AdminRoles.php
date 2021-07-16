@@ -19,13 +19,14 @@ class AdminRoles extends Admin
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session);
         $this->role_id = $_GET['role-id'] ?? '';
 
         if (!$this->authorization->roleExists($this->role_id))
         {
             nel_derp(231, _gettext('The specified role does not exist.'));
         }
+
+        parent::__construct($authorization, $domain, $session);
     }
 
     public function dispatch(array $inputs): void

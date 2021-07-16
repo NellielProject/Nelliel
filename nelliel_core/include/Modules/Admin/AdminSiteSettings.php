@@ -21,16 +21,16 @@ class AdminSiteSettings extends Admin
         parent::__construct($authorization, $domain, $session);
     }
 
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
     public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelSiteSettings($this->domain, false);
         $output_panel->render([], false);
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function creator()
