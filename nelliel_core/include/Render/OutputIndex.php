@@ -81,9 +81,9 @@ class OutputIndex extends Output
         $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=captcha&actions=get';
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=anti-spam&section=captcha&actions=get';
         $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
-                '?module=captcha&actions=generate&no-display';
+                '?module=anti-spam&section=captcha&actions=generate&no-display';
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['show_styles'] = true;

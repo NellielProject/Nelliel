@@ -26,7 +26,7 @@ class Register
 
     public function new()
     {
-        $captcha = new \Nelliel\CAPTCHA($this->domain);
+        $captcha = new \Nelliel\Modules\AntiSpam\CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_register_captcha'))
         {

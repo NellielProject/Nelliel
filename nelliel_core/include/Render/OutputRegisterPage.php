@@ -47,9 +47,9 @@ class OutputRegisterPage extends Output
         $this->render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'account', 'actions' => 'login']);
         $this->render_data['use_register_captcha'] = $this->domain->setting('use_register_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=captcha&actions=get';
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=anti-spam&section=captcha&actions=get';
         $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=captcha&actions=generate&no-display';
+                'module=anti-spam&section=captcha&actions=generate&no-display';
         $this->render_data['use_register_recaptcha'] = $this->domain->setting('use_register_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

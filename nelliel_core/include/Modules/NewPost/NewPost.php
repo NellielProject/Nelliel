@@ -31,7 +31,7 @@ class NewPost
     {
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $error_data = ['board_id' => $this->domain->id()];
-        $captcha = new \Nelliel\CAPTCHA($this->domain);
+        $captcha = new \Nelliel\Modules\AntiSpam\CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_post_captcha'))
         {

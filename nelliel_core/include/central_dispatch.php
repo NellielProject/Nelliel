@@ -96,14 +96,24 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
     switch ($inputs['module'])
     {
+        case 'account':
+            $account_dispatch = new \Nelliel\Modules\Account\Dispatch($domain, $session);
+            $account_dispatch->dispatch($inputs);
+            break;
+
         case 'admin':
             $admin_dispatch = new \Nelliel\Modules\Admin\Dispatch($domain, $authorization, $session);
             $admin_dispatch->dispatch($inputs);
             break;
 
-        case 'account':
-            $account_dispatch = new \Nelliel\Modules\Account\Dispatch($domain, $session);
-            $account_dispatch->dispatch($inputs);
+        case 'banners':
+            $banners = new \Nelliel\Modules\Banners\Dispatch($domain, $authorization, $session);
+            $banners->dispatch($inputs);
+            break;
+
+        case 'anti-spam':
+            $anti_spam_dispatch = new \Nelliel\Modules\AntiSpam\Dispatch($domain, $authorization, $session);
+            $anti_spam_dispatch->dispatch($inputs);
             break;
 
         case 'language':
@@ -119,18 +129,6 @@ function nel_module_dispatch(array $inputs, Domain $domain)
         case 'new-post':
             $new_post_dispatch = new \Nelliel\Modules\NewPost\Dispatch($domain, $authorization, $session);
             $new_post_dispatch->dispatch($inputs);
-            break;
-
-
-
-        case 'banners':
-            $banners = new \Nelliel\Banners($domain);
-            $banners->dispatch($inputs);
-            break;
-
-        case 'captcha':
-            $captcha = new \Nelliel\CAPTCHA($domain);
-            $captcha->dispatch($inputs);
             break;
 
 

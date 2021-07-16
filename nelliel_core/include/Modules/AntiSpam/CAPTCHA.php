@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nelliel;
+namespace Nelliel\Modules\AntiSpam;
 
 if (!defined('NELLIEL_VERSION'))
 {

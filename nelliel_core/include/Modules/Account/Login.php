@@ -26,7 +26,7 @@ class Login
 
     public function validate()
     {
-        $captcha = new \Nelliel\CAPTCHA($this->domain);
+        $captcha = new \Nelliel\Modules\AntiSpam\CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_login_captcha'))
         {

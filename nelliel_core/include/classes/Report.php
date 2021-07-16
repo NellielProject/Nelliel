@@ -26,7 +26,7 @@ class Report
 
     public function submit()
     {
-        $captcha = new \Nelliel\CAPTCHA($this->domain);
+        $captcha = new \Nelliel\Modules\AntiSpam\CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_report_captcha'))
         {
