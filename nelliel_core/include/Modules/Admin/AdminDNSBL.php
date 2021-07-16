@@ -23,7 +23,12 @@ class AdminDNSBL extends Admin
         $this->id_column = 'entry';
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelDNSBL($this->domain, false);
@@ -73,9 +78,34 @@ class AdminDNSBL extends Admin
         $this->outputMain(true);
     }
 
-    public function makeDefault()
+    public function remove()
     {
-        $this->verifyAction($this->domain);
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
+    }
+
+    public function enable()
+    {
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
+    }
+
+    public function disable()
+    {
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
     }
 
     public function verifyAccess(Domain $domain)

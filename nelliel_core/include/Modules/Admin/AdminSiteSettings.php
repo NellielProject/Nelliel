@@ -21,26 +21,28 @@ class AdminSiteSettings extends Admin
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function renderPanel()
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelSiteSettings($this->domain, false);
         $output_panel->render([], false);
     }
 
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
     public function creator()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction($this->domain);
     }
 
     public function editor()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function update()
@@ -66,22 +68,6 @@ class AdminSiteSettings extends Admin
 
     public function remove()
     {
-        $this->verifyAction($this->domain);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
     }
 
     public function verifyAccess(Domain $domain)

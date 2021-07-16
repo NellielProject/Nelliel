@@ -34,7 +34,12 @@ class AdminBoardSettings extends Admin
         $this->id_column = '';
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelBoardSettings($this->domain, false);
@@ -43,17 +48,14 @@ class AdminBoardSettings extends Admin
 
     public function creator()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction($this->domain);
     }
 
     public function editor()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function update()
@@ -132,22 +134,6 @@ class AdminBoardSettings extends Admin
 
     public function remove()
     {
-        $this->verifyAction($this->domain);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
     }
 
     private function setLock($config_table, $config_name, $setting)

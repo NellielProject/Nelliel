@@ -21,7 +21,12 @@ class AdminLogs extends Admin
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelLogs($this->domain, false);
@@ -31,42 +36,22 @@ class AdminLogs extends Admin
 
     public function creator()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction($this->domain);
     }
 
     public function editor()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction($this->domain);
     }
 
     public function remove()
     {
-        $this->verifyAction($this->domain);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
     }
 
     public function verifyAccess(Domain $domain)

@@ -28,7 +28,12 @@ class AdminRoles extends Admin
         }
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelRoles($this->domain, false);
@@ -91,21 +96,6 @@ class AdminRoles extends Admin
         $this->verifyAction($this->domain);
         $this->authorization->removeRole($this->role_id);
         $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
     }
 
     public function verifyAccess(Domain $domain)

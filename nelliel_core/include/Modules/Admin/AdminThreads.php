@@ -25,7 +25,12 @@ class AdminThreads extends Admin
         $this->site_domain = new DomainSite($this->database);
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
 
@@ -44,17 +49,14 @@ class AdminThreads extends Admin
 
     public function creator()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function add()
     {
-        $this->verifyAction($this->domain);
     }
 
     public function editor()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function update()
@@ -68,21 +70,6 @@ class AdminThreads extends Admin
         $content_id = new ContentID($_GET['content-id']);
         $content_id->getInstanceFromID($this->domain)->remove();
         $this->regenThread($content_id->threadID(), true);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
     }
 
     public function sticky()

@@ -21,7 +21,12 @@ class AdminPermissions extends Admin
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelPermissions($this->domain, false);
@@ -33,7 +38,6 @@ class AdminPermissions extends Admin
 
     public function creator()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function add()
@@ -49,27 +53,20 @@ class AdminPermissions extends Admin
 
     public function editor()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction($this->domain);
     }
 
-    public function enable()
+    public function remove()
     {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
     }
 
     public function verifyAccess(Domain $domain)

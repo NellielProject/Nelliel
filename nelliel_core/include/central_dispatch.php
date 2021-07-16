@@ -47,7 +47,6 @@ function nel_dispatch_preparation()
     $inputs['board_id'] = $_GET['board-id'] ?? '';
     $inputs['content_id'] = $_GET['content-id'] ?? '';
     $inputs['modmode'] = isset($_GET['modmode']) ? true : false;
-    $inputs['action-confirmed'] = isset($_GET['action-confirmed']) ? true : false;
     $goback = isset($_GET['goback']) ? $_GET['goback'] === 'true' : false;
 
     if ($goback)

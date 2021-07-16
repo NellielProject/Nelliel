@@ -23,7 +23,12 @@ class AdminIconSets extends Admin
         $this->id_column = 'asset_id';
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelIconSets($this->domain, false);
@@ -32,7 +37,6 @@ class AdminIconSets extends Admin
 
     public function creator()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function add()
@@ -58,12 +62,10 @@ class AdminIconSets extends Admin
 
     public function editor()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction($this->domain);
     }
 
     public function remove()
@@ -79,12 +81,22 @@ class AdminIconSets extends Admin
 
     public function enable()
     {
-        $this->verifyAction($this->domain);
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
     }
 
     public function disable()
     {
-        $this->verifyAction($this->domain);
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyAction($entry_domain);
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
     }
 
     public function makeDefault()

@@ -27,7 +27,12 @@ class AdminBans extends Admin
         $this->id_column = 'ban_id';
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
@@ -94,21 +99,6 @@ class AdminBans extends Admin
         $this->ban_hammer->loadFromID($ban_id);
         $this->ban_hammer->remove();
         $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
     }
 
     public function verifyAccess(Domain $domain)

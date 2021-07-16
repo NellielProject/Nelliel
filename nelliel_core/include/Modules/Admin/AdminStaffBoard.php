@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Modules\Admin;
 
@@ -21,7 +20,12 @@ class AdminStaffBoard extends Admin
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelStaffBoard($this->domain, false);
@@ -30,7 +34,6 @@ class AdminStaffBoard extends Admin
 
     public function creator()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function add()
@@ -39,21 +42,19 @@ class AdminStaffBoard extends Admin
         $subject = $_POST['subject'] ?? '';
         $message = $_POST['message'] ?? '';
         $time = time();
-        $query = 'INSERT INTO "' . NEL_STAFF_BOARD_TABLE . '" ("user_id", "subject", "message", "post_time") VALUES (?, ?, ?, ?)';
+        $query = 'INSERT INTO "' . NEL_STAFF_BOARD_TABLE .
+                '" ("user_id", "subject", "message", "post_time") VALUES (?, ?, ?, ?)';
         $prepared = $this->database->prepare($query);
-        $this->database->executePrepared($prepared,
-                [$this->session_user->id(), $subject, $message, $time]);
+        $this->database->executePrepared($prepared, [$this->session_user->id(), $subject, $message, $time]);
         $this->outputMain(true);
     }
 
     public function editor()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction($this->domain);
     }
 
     public function remove()
@@ -63,21 +64,6 @@ class AdminStaffBoard extends Admin
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_STAFF_BOARD_TABLE . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$entry]);
         $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
     }
 
     private function regenNews()

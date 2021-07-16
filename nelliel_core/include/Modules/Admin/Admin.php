@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace Nelliel\Modules\Admin;
 
+use Nelliel\Modules\DispatchErrors;
 use Nelliel\Modules\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -26,6 +27,8 @@ abstract class Admin
     protected $id_field = 'id';
     protected $id_column = 'entry';
 
+    use DispatchErrors;
+
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         $this->database = $domain->database();
@@ -36,23 +39,50 @@ abstract class Admin
         $this->session_user = $session->user();
     }
 
-    public abstract function renderPanel();
+    public function dispatch(array $inputs): void
+    {
+        foreach ($inputs['actions'] as $action)
+        {
+            switch ($action)
+            {
+                case 'panel':
+                    $this->panel();
+                    break;
 
-    public abstract function creator();
+                case 'new':
+                    $this->creator();
+                    break;
 
-    public abstract function add();
+                case 'add':
+                    $this->add();
+                    break;
 
-    public abstract function editor();
+                case 'edit':
+                    $this->editor();
+                    break;
 
-    public abstract function update();
+                case 'update':
+                    $this->update();
+                    break;
 
-    //public abstract function remove();
+                case 'remove':
+                    $this->remove();
+                    break;
+            }
+        }
+    }
 
-    //public abstract function enable();
+    public abstract function panel(): void;
 
-    //public abstract function disable();
+    public abstract function creator(): void;
 
-    public abstract function makeDefault();
+    public abstract function add(): void;
+
+    public abstract function editor(): void;
+
+    public abstract function update(): void;
+
+    public abstract function remove(): void;
 
     public abstract function verifyAccess(Domain $domain);
 
@@ -95,38 +125,6 @@ abstract class Admin
         }
 
         return null;
-    }
-
-    public function remove()
-    {
-        $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
-        $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
-        $this->outputMain(true);
-    }
-
-    public function disable()
-    {
-        $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
-        $this->outputMain(true);
     }
 }
 

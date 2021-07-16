@@ -25,7 +25,12 @@ class AdminReports extends Admin
         $this->id_column = 'report_id';
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelReports($this->domain, false);
@@ -56,21 +61,6 @@ class AdminReports extends Admin
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
     }
 
     public function verifyAccess(Domain $domain)

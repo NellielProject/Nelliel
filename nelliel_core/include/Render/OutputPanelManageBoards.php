@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -97,8 +96,8 @@ class OutputPanelManageBoards extends Output
         $link2['text'] = _gettext('Confirmed. Delete the board.');
         $link2['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
-                        ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove',
-                            'action-confirmed' => 'true', 'board-id' => $board_id]);
+                        ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove-confirmed',
+                            'board-id' => $board_id]);
         $parameters['extra_url_break'] = true;
         $parameters['page_title'] = $this->domain->reference('title');
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);

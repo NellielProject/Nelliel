@@ -23,6 +23,7 @@ use PDO;
 class AdminBoards extends Admin
 {
     private $site_domain;
+    private $remove_confirmed = false;
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
@@ -33,7 +34,31 @@ class AdminBoards extends Admin
         $this->id_column = 'board_id';
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+
+        foreach ($inputs['actions'] as $action)
+        {
+            switch ($action)
+            {
+                case 'lock':
+                    $this->lock();
+                    break;
+
+                case 'unlock':
+                    $this->unlock();
+                    break;
+
+                case 'remove-confirmed':
+                    $this->remove_confirmed = true;
+                    $this->remove();
+                    break;
+            }
+        }
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelManageBoards($this->site_domain, false);
@@ -88,8 +113,7 @@ class AdminBoards extends Admin
 
         $hashed_board_id = hash('sha256', $board_uri);
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . $this->data_table .
-                '" ("board_id", "hashed_board_id", "db_prefix") VALUES (?, ?, ?)');
+                'INSERT INTO "' . $this->data_table . '" ("board_id", "hashed_board_id", "db_prefix") VALUES (?, ?, ?)');
         $prepared->bindValue(1, $board_uri, PDO::PARAM_STR);
         $prepared->bindValue(2, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
         $prepared->bindValue(3, $db_prefix, PDO::PARAM_STR);
@@ -122,6 +146,11 @@ class AdminBoards extends Admin
         if (!$domain->exists())
         {
             nel_derp(160, _gettext('Board does not appear to exist.'));
+        }
+
+        if (!$this->remove_confirmed)
+        {
+            $this->createInterstitial('remove_warning');
         }
 
         if ($this->database->tableExists($domain->reference('config_table')) . '"')
@@ -187,8 +216,7 @@ class AdminBoards extends Admin
     {
         $this->verifyAction($this->domain);
         $board_id = $_GET['board_id'];
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->data_table . '" SET "locked" = 0 WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $this->outputMain(true);
     }
@@ -197,8 +225,7 @@ class AdminBoards extends Admin
     {
         $this->verifyAction($this->domain);
         $board_id = $_GET['board_id'];
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->data_table . '" SET "locked" = 1 WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $this->outputMain(true);
     }

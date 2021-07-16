@@ -23,7 +23,12 @@ class AdminNews extends Admin
         $this->id_field = 'entry';
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelNews($this->domain, false);
@@ -32,7 +37,6 @@ class AdminNews extends Admin
 
     public function creator()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function add()
@@ -53,12 +57,10 @@ class AdminNews extends Admin
 
     public function editor()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction($this->domain);
     }
 
     public function remove()
@@ -70,21 +72,6 @@ class AdminNews extends Admin
         $this->database->executePrepared($prepared, [$id]);
         $this->regenNews();
         $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
     }
 
     private function regenNews()

@@ -23,7 +23,12 @@ class AdminStyles extends Admin
         $this->id_column = 'asset_id';
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
+    {
+        parent::dispatch($inputs);
+    }
+
+    public function panel()
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Render\OutputPanelStyles($this->domain, false);
@@ -58,12 +63,10 @@ class AdminStyles extends Admin
 
     public function editor()
     {
-        $this->verifyAccess($this->domain);
     }
 
     public function update()
     {
-        $this->verifyAction($this->domain);
     }
 
     public function remove()
@@ -75,16 +78,6 @@ class AdminStyles extends Admin
                 'DELETE FROM "' . $this->data_table . '" WHERE "asset_id" = ? AND "type" = \'style\'');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction($this->domain);
-    }
-
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
     }
 
     public function makeDefault()
