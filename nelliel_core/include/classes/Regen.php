@@ -13,11 +13,11 @@ use Nelliel\API\JSON\JSONBoard;
 use Nelliel\API\JSON\JSONBoardList;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
-use Nelliel\Render\OutputCatalog;
-use Nelliel\Render\OutputIndex;
-use Nelliel\Render\OutputNews;
-use Nelliel\Render\OutputOverboard;
-use Nelliel\Render\OutputThread;
+use Nelliel\Modules\Output\OutputCatalog;
+use Nelliel\Modules\Output\OutputIndex;
+use Nelliel\Modules\Output\OutputNews;
+use Nelliel\Modules\Output\OutputOverboard;
+use Nelliel\Modules\Output\OutputThread;
 use PDO;
 
 class Regen

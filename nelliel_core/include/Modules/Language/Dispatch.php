@@ -12,7 +12,7 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\Modules\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Render\OutputPanelMain;
+use Nelliel\Modules\Output\OutputPanelMain;
 
 class Dispatch
 {

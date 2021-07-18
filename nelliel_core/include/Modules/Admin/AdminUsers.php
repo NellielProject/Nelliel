@@ -13,7 +13,7 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
-use Nelliel\Render\OutputPanelUsers;
+use Nelliel\Modules\Output\OutputPanelUsers;
 
 class AdminUsers extends Admin
 {

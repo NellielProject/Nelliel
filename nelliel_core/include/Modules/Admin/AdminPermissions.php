@@ -29,7 +29,7 @@ class AdminPermissions extends Admin
     public function panel()
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Render\OutputPanelPermissions($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelPermissions($this->domain, false);
         $output_panel->render([], false);
         $this->data_table = NEL_PERMISSIONS_TABLE;
         $this->id_field = 'permission';

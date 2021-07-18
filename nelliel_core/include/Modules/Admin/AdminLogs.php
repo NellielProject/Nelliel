@@ -29,7 +29,7 @@ class AdminLogs extends Admin
     public function panel()
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Render\OutputPanelLogs($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelLogs($this->domain, false);
         $log_type = $_GET['log-type'] ?? '';
         $output_panel->render(['log_type' => $log_type], false);
     }

@@ -11,9 +11,9 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Render\OutputLoginPage;
-use Nelliel\Render\OutputAccount;
-use Nelliel\Render\OutputRegisterPage;
+use Nelliel\Modules\Output\OutputLoginPage;
+use Nelliel\Modules\Output\OutputAccount;
+use Nelliel\Modules\Output\OutputRegisterPage;
 
 class Dispatch
 {

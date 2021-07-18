@@ -42,7 +42,7 @@ class AdminBoardSettings extends Admin
     public function panel()
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Render\OutputPanelBoardSettings($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelBoardSettings($this->domain, false);
         $output_panel->render(['defaults' => $this->defaults], false);
     }
 

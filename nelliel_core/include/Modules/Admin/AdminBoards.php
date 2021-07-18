@@ -15,7 +15,7 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
-use Nelliel\Render\OutputPanelManageBoards;
+use Nelliel\Modules\Output\OutputPanelManageBoards;
 use Nelliel\Setup\Setup;
 use Nelliel\Utility\FileHandler;
 use PDO;

@@ -144,7 +144,7 @@ class Session
         }
 
         $this->terminate();
-        $output_login = new \Nelliel\Render\OutputLoginPage($this->domain, false);
+        $output_login = new \Nelliel\Modules\Output\OutputLoginPage($this->domain, false);
         $output_login->render([], false);
         nel_clean_exit(false);
     }

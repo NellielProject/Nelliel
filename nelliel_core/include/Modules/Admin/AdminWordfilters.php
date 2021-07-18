@@ -32,14 +32,14 @@ class AdminWordfilters extends Admin
     public function panel()
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Render\OutputPanelWordfilters($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelWordfilters($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator()
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Render\OutputPanelWordfilters($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelWordfilters($this->domain, false);
         $output_panel->new(['editing' => false], false);
         $this->outputMain(false);
     }
@@ -64,7 +64,7 @@ class AdminWordfilters extends Admin
         $id = $_GET['wordfilter-id'] ?? 0;
         $entry_domain = $this->getEntryDomain($id);
         $this->verifyAccess($entry_domain);
-        $output_panel = new \Nelliel\Render\OutputPanelWordfilters($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelWordfilters($this->domain, false);
         $output_panel->edit(['editing' => true, 'entry' => $id], false);
         $this->outputMain(false);
     }

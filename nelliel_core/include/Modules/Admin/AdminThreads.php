@@ -91,12 +91,12 @@ class AdminThreads extends Admin
         if (isset($_GET['actions']) && $_GET['actions'] === 'expand-thread')
         {
             $content_id = new ContentID($_GET['content-id']);
-            $output_panel = new \Nelliel\Render\OutputPanelThreads($this->domain, false);
+            $output_panel = new \Nelliel\Modules\Output\OutputPanelThreads($this->domain, false);
             $output_panel->render(['section' => 'expanded_thread', 'thread_id' => $content_id->threadID()], false);
         }
         else
         {
-            $output_panel = new \Nelliel\Render\OutputPanelThreads($this->domain, false);
+            $output_panel = new \Nelliel\Modules\Output\OutputPanelThreads($this->domain, false);
             $output_panel->render(['section' => 'panel'], false);
         }
     }
@@ -198,7 +198,7 @@ class AdminThreads extends Admin
         $content_instance->remove();
         $this->regenThread($content_id->threadID(), true);
         $ban_ip = $_GET['ban-ip'] ?? '';
-        $output_panel = new \Nelliel\Render\OutputPanelBans($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelBans($this->domain, false);
         $output_panel->new(['ban_ip' => $ban_ip], false);
         $this->outputMain(false);
     }

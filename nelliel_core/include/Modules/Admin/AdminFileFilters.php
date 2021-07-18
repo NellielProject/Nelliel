@@ -32,7 +32,7 @@ class AdminFileFilters extends Admin
     public function panel()
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Render\OutputPanelFileFilters($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelFileFilters($this->domain, false);
         $output_panel->render([], false);
     }
 

@@ -44,7 +44,7 @@ class Dispatch
 
             if ($this->session->inModmode($this->domain))
             {
-                $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-index&index=0&board-id=' .
+                $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=output&section=index&actions=view&index=0&board-id=' .
                         $inputs['board_id'] . '&modmode=true';
             }
             else
@@ -62,7 +62,7 @@ class Dispatch
 
             if ($this->session->inModmode($this->domain))
             {
-                $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=render&actions=view-index&index=0&board-id=' .
+                $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=output&section=index&actions=view&index=0&board-id=' .
                         $inputs['board_id'] . '&modmode=true';
             }
             else
@@ -71,7 +71,7 @@ class Dispatch
             }
 
             $redirect->changeURL($url);
-            $output_post = new \Nelliel\Render\OutputPost($this->domain, true);
+            $output_post = new \Nelliel\Modules\Output\OutputPost($this->domain, true);
             echo $output_post->contentDeleted(['forward_url' => $url], false);
         }
 

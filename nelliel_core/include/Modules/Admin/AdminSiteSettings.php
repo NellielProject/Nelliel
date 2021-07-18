@@ -29,7 +29,7 @@ class AdminSiteSettings extends Admin
     public function panel()
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Render\OutputPanelSiteSettings($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelSiteSettings($this->domain, false);
         $output_panel->render([], false);
     }
 

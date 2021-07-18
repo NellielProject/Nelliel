@@ -68,7 +68,7 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
         $domain = new \Nelliel\Domains\DomainSite(nel_database());
     }
 
-    $output_derp = new \Nelliel\Render\OutputDerp($domain, false);
+    $output_derp = new \Nelliel\Modules\Output\OutputDerp($domain, false);
     echo $output_derp->render(['diagnostic' => $diagnostic], false);
 
     nel_clean_exit(false);

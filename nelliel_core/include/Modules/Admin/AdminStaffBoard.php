@@ -28,7 +28,7 @@ class AdminStaffBoard extends Admin
     public function panel()
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Render\OutputPanelStaffBoard($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelStaffBoard($this->domain, false);
         $output_panel->render([], false);
     }
 

@@ -13,7 +13,7 @@ use Nelliel\Cites;
 use Nelliel\Moar;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Render\OutputPost;
+use Nelliel\Modules\Output\OutputPost;
 use PDO;
 
 class ContentPost extends ContentHandler

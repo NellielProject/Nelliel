@@ -18,7 +18,7 @@ function nel_dispatch_preparation()
 
     if (isset($_GET['about_nelliel']))
     {
-        $about_nelliel = new Nelliel\Render\OutputAboutNelliel(nel_site_domain(), false);
+        $about_nelliel = new Nelliel\Modules\Output\OutputAboutNelliel(nel_site_domain(), false);
         $about_nelliel->render([], false);
     }
 
@@ -130,38 +130,9 @@ function nel_module_dispatch(array $inputs, Domain $domain)
             $new_post_dispatch->dispatch($inputs);
             break;
 
-
-
-        case 'render':
-            $inputs['index'] = $_GET['index'] ?? null;
-            $inputs['thread'] = $_GET['thread'] ?? null;
-
-            switch ($inputs['actions'][0])
-            {
-                case 'view-index':
-                    $output_index = new \Nelliel\Render\OutputIndex($domain, false);
-                    $output_index->render(['thread_id' => 0], false);
-                    break;
-
-                case 'view-thread':
-                    $output_thread = new \Nelliel\Render\OutputThread($domain, false);
-                    $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'view-thread'],
-                            false);
-                    break;
-
-                case 'expand-thread':
-                    $output_thread = new \Nelliel\Render\OutputThread($domain, false);
-                    $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'expand-thread'],
-                            false);
-                    break;
-
-                case 'collapse-thread':
-                    $output_thread = new \Nelliel\Render\OutputThread($domain, false);
-                    $output_thread->render(['thread_id' => intval($inputs['thread']), 'command' => 'collapse-thread'],
-                            false);
-                    break;
-            }
-
+        case 'output':
+            $out_dispatch = new \Nelliel\Modules\Output\Dispatch($domain, $authorization, $session);
+            $out_dispatch->dispatch($inputs);
             break;
 
         case 'regen':
@@ -222,12 +193,12 @@ function nel_module_dispatch(array $inputs, Domain $domain)
 
             if ($forward === 'site')
             {
-                $output_main_panel = new \Nelliel\Render\OutputPanelMain($domain, false);
+                $output_main_panel = new \Nelliel\Modules\Output\OutputPanelMain($domain, false);
                 $output_main_panel->render(['user' => $user], false);
             }
             else if ($forward === 'board')
             {
-                $output_board_panel = new \Nelliel\Render\OutputPanelBoard($domain, false);
+                $output_board_panel = new \Nelliel\Modules\Output\OutputPanelBoard($domain, false);
                 $output_board_panel->render(['user' => $user, 'board_id' => $board_id], false);
             }
 

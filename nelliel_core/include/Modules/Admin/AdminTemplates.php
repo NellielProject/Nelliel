@@ -32,7 +32,7 @@ class AdminTemplates extends Admin
     public function panel()
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Render\OutputPanelTemplates($this->domain, false);
+        $output_panel = new \Nelliel\Modules\Output\OutputPanelTemplates($this->domain, false);
         $output_panel->render([], false);
     }
 
