@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Render\Markdown;
+namespace Nelliel\Markdown;
 
 if (!defined('NELLIEL_VERSION'))
 {

@@ -9,9 +9,10 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Modules\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Modules\Output\Filter;
 
 class AdminFileFilters extends Admin
 {
@@ -46,7 +47,7 @@ class AdminFileFilters extends Admin
         $board_id = $board_id = $this->globalIDToNull($_POST['board_id'] ?? '', 'perm_manage_file_filters');
         $type = $_POST['hash_type'];
         $notes = $_POST['file_notes'];
-        $output_filter = new \Nelliel\Render\Filter();
+        $output_filter = new Filter();
         $hashes = $output_filter->newlinesToArray($_POST['file_hashes']);
 
         foreach ($hashes as $hash)

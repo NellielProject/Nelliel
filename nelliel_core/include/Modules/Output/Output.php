@@ -11,7 +11,7 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\Timer;
 use Nelliel\Domains\Domain;
-use Nelliel\Render\Filter;
+use Nelliel\Modules\Output\Filter;
 use Nelliel\Render\RenderCoreDOM;
 use Nelliel\Render\RenderCoreMustache;
 use Nelliel\Render\TemplateSubstitutes;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nelliel\Render;
+namespace Nelliel\Modules\Output;
 
 if (!defined('NELLIEL_VERSION'))
 {

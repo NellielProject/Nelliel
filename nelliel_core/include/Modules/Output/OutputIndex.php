@@ -14,7 +14,7 @@ use Nelliel\API\JSON\JSONThread;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainSite;
-use Nelliel\Render\Pagination;
+use Nelliel\Modules\Output\Pagination;
 use PDO;
 
 class OutputIndex extends Output

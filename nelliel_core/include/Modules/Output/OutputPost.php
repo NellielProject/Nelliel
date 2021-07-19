@@ -13,7 +13,7 @@ use Nelliel\Content\ContentID;
 use Nelliel\Content\ContentPost;
 use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
-use Nelliel\Render\Markdown\ImageboardMarkdown;
+use Nelliel\Markdown\ImageboardMarkdown;
 use PDO;
 
 class OutputPost extends Output

@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domains\Domain;
-use Nelliel\Render\Pagination;
+use Nelliel\Modules\Output\Pagination;
 use PDO;
 
 class OutputPanelLogs extends Output
