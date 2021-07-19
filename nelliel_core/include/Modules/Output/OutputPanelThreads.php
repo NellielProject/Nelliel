@@ -107,7 +107,7 @@ class OutputPanelThreads extends Output
             $thread_info['subject'] = $op_post['subject'];
             $thread_info['thread_url'] = $this->domain->reference('page_dir') . '/' . $thread['thread_id'] . '/' .
                     $thread['thread_id'] . '.html';
-            $thread_info['op_name'] = $op_post['poster_name'];
+            $thread_info['op_name'] = $op_post['name'];
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
                     !empty($post_data['ip_address']))
@@ -166,7 +166,7 @@ class OutputPanelThreads extends Output
             $post_info['subject'] = $post['subject'];
             $post_info['thread_url'] = $this->domain->reference('page_dir') . '/' . $post['parent_thread'] . '/' .
                     $post['post_number'] . '.html';
-            $post_info['poster_name'] = $post['poster_name'];
+            $post_info['name'] = $post['name'];
             $post_info['poster_ip'] = @inet_ntop($post['ip_address']);
             $post_info['email'] = $post['email'];
             $post_info['comment'] = $post['comment'];

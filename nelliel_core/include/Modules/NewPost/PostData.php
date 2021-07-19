@@ -41,24 +41,24 @@ class PostData
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
         $post->changeData('ip_address', nel_request_ip_address());
         $post->changeData('hashed_ip_address', nel_request_ip_address(true));
-        $poster_name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
+        $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
 
-        if (nel_true_empty($poster_name) || $this->domain->setting('forced_anonymous'))
+        if (nel_true_empty($name) || $this->domain->setting('forced_anonymous'))
         {
             $name_choices = json_decode($this->domain->setting('anonymous_names'), true);
 
             if (!is_null($name_choices))
             {
-                $poster_name = $name_choices[mt_rand(0, count($name_choices) - 1)];
+                $name = $name_choices[mt_rand(0, count($name_choices) - 1)];
             }
             else
             {
-                $poster_name = 'Anonymous';
+                $name = 'Anonymous';
             }
         }
 
-        $name_text = $this->fieldMaxCheck('poster_name', $poster_name);
-        $post->changeData('poster_name', $this->posterName($name_text));
+        $name_text = $this->fieldMaxCheck('name', $name);
+        $post->changeData('name', $this->posterName($name_text));
 
         if ($this->domain->setting('allow_tripcodes'))
         {
@@ -187,7 +187,7 @@ class PostData
         }
 
         $post->changeData('capcode', $this->capcode($name_text));
-        $post->changeData('poster_name', $user->getData('display_name'));
+        $post->changeData('name', $user->getData('display_name'));
         $post->changeData('account_id', $user->id());
     }
 
@@ -288,7 +288,7 @@ class PostData
 
         switch ($field_name)
         {
-            case 'poster_name':
+            case 'name':
                 if (utf8_strlen($text) > $this->domain->setting('max_name_length'))
                 {
                     if ($this->domain_setting('truncate_long_fields'))

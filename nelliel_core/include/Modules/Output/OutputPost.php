@@ -262,7 +262,7 @@ class OutputPost extends Output
         }
 
         $post_headers['subject'] = $post_data['subject'];
-        $post_headers['poster_name'] = $post_data['poster_name'];
+        $post_headers['name'] = $post_data['name'];
 
         if ($this->domain->setting('display_poster_id'))
         {

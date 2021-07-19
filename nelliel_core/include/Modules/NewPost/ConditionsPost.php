@@ -46,7 +46,7 @@ class ConditionsPost implements Conditions
                     break;
 
                 case 'name':
-                    $met = preg_match($condition, $this->post->data('poster_name'));
+                    $met = preg_match($condition, $this->post->data('name'));
                     break;
 
                 case 'email':

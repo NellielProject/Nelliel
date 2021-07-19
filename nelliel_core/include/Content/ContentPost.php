@@ -72,7 +72,7 @@ class ContentPost extends ContentHandler
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->posts_table .
                     '" SET "parent_thread" = :parent_thread,
-                    "poster_name" = :poster_name, "reply_to" = :reply_to, "post_password" = :post_password,
+                    "name" = :name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "capcode" = :capcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address, "hashed_ip_address" = :hashed_ip_address,
                     "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_content" = :has_content,
@@ -85,10 +85,10 @@ class ContentPost extends ContentHandler
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->posts_table .
-                    '" ("parent_thread", "poster_name", "reply_to", "post_password", "tripcode", "secure_tripcode", "capcode", "email",
+                    '" ("parent_thread", "name", "reply_to", "post_password", "tripcode", "secure_tripcode", "capcode", "email",
                     "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_content",
                     "total_content", "file_count", "embed_count", "op", "sage", "account_id", "mod_comment") VALUES
-                    (:parent_thread, :poster_name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address,
+                    (:parent_thread, :name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address,
                     :hashed_ip_address, :post_time, :post_time_milli, :has_content, :total_content, :file_count, :embed_count,
                     :op, :sage, :account_id, :mod_comment)');
         }
@@ -97,7 +97,7 @@ class ContentPost extends ContentHandler
                 $this->contentDataOrDefault('parent_thread', $this->content_id->threadID()), PDO::PARAM_INT);
         $prepared->bindValue(':reply_to', $this->contentDataOrDefault('reply_to', $this->content_id->threadID()),
                 PDO::PARAM_INT);
-        $prepared->bindValue(':poster_name', $this->contentDataOrDefault('poster_name', null), PDO::PARAM_STR);
+        $prepared->bindValue(':name', $this->contentDataOrDefault('name', null), PDO::PARAM_STR);
         $prepared->bindValue(':post_password', $this->contentDataOrDefault('post_password', null), PDO::PARAM_STR);
         $prepared->bindValue(':capcode', $this->contentDataOrDefault('capcode', null), PDO::PARAM_STR);
         $prepared->bindValue(':tripcode', $this->contentDataOrDefault('tripcode', null), PDO::PARAM_STR);

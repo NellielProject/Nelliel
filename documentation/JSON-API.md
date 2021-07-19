@@ -98,7 +98,7 @@ Contains information about a post.
 |`post_number`    |`integer`|0-2147483647         |Post ID.|
 |`parent_thread`  |`integer`|0-2147483647         |ID of the parent thread.|
 |`reply_to`       |`integer`|0-2147483647         |ID of the post being replied to.|
-|`poster_name`    |`string` |text                 |Name of the poster.|
+|`name`    |`string` |text                 |Name of the poster.|
 |`tripcode`       |`string` |text                 |Tripcode.|
 |`secure_tripcode`|`string` |text                 |Secure tripcode.|
 |`capcode`        |`string` |text                 |Capcode. May contain HTML.|
