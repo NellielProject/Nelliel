@@ -1,8 +1,8 @@
 <?php
 
-namespace NellielTemplates;
+namespace Nelliel\Render;
 
-class TemplateCore
+class NellielTemplatesDOM
 {
     private $render_instance;
     private $templates = array();

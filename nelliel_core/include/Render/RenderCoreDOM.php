@@ -18,7 +18,7 @@ class RenderCoreDOM extends RenderCore
 
     function __construct()
     {
-        $this->template_instance = new \NellielTemplates\TemplateCore($this);
+        $this->template_instance = new NellielTemplatesDOM($this);
         $this->template_loaders['file'] = $this->template_instance;
         $this->template_loaders['string'] = $this->template_instance;
         libxml_use_internal_errors(true);
