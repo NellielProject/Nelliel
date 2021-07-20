@@ -19,14 +19,13 @@ class AdminRoles extends Admin
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
+        parent::__construct($authorization, $domain, $session);
         $this->role_id = $_GET['role-id'] ?? '';
 
         if (!$this->authorization->roleExists($this->role_id))
         {
             nel_derp(231, _gettext('The specified role does not exist.'));
         }
-
-        parent::__construct($authorization, $domain, $session);
     }
 
     public function dispatch(array $inputs): void
@@ -34,14 +33,14 @@ class AdminRoles extends Admin
         parent::dispatch($inputs);
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelRoles($this->domain, false);
         $output_panel->main([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelRoles($this->domain, false);
@@ -49,7 +48,7 @@ class AdminRoles extends Admin
         $this->outputMain(false);
     }
 
-    public function add()
+    public function add(): void
     {
         $this->verifyAction($this->domain);
         $this->role_id = $_POST['role_id'] ?? '';
@@ -57,7 +56,7 @@ class AdminRoles extends Admin
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelRoles($this->domain, false);
@@ -65,7 +64,7 @@ class AdminRoles extends Admin
         $this->outputMain(false);
     }
 
-    public function update()
+    public function update(): void
     {
         $this->verifyAction($this->domain);
         $role = $this->authorization->newRole($this->role_id);
@@ -92,7 +91,7 @@ class AdminRoles extends Admin
         $this->outputMain(true);
     }
 
-    public function remove()
+    public function remove(): void
     {
         $this->verifyAction($this->domain);
         $this->authorization->removeRole($this->role_id);

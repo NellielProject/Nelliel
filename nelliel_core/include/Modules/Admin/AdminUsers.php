@@ -21,14 +21,13 @@ class AdminUsers extends Admin
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
+        parent::__construct($authorization, $domain, $session);
         $this->user_id = $_GET['user-id'] ?? null;
 
         if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))
         {
             nel_derp(230, _gettext('The specified user does not exist.'));
         }
-
-        parent::__construct($authorization, $domain, $session);
     }
 
     public function dispatch(array $inputs): void
@@ -36,14 +35,14 @@ class AdminUsers extends Admin
         parent::dispatch($inputs);
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->main([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelUsers($this->domain, false);
@@ -51,7 +50,7 @@ class AdminUsers extends Admin
         $this->outputMain(false);
     }
 
-    public function add()
+    public function add(): void
     {
         $this->verifyAction($this->domain);
         $this->user_id = $_POST['user_id'];
@@ -59,7 +58,7 @@ class AdminUsers extends Admin
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelUsers($this->domain, false);
@@ -67,7 +66,7 @@ class AdminUsers extends Admin
         $this->outputMain(false);
     }
 
-    public function update()
+    public function update(): void
     {
         $this->verifyAction($this->domain);
         $update_user = $this->authorization->getUser($this->user_id);
@@ -117,7 +116,7 @@ class AdminUsers extends Admin
         $this->outputMain(true);
     }
 
-    public function remove()
+    public function remove(): void
     {
         $this->verifyAction($this->domain);
         $this->authorization->removeUser($this->user_id);

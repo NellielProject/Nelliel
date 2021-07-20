@@ -51,7 +51,10 @@ class Register
         {
             $install_id = '';
 
-            include NEL_GENERATED_FILES_PATH . 'create_owner.php';
+            if (file_exists(NEL_GENERATED_FILES_PATH . 'create_owner.php'))
+            {
+                include NEL_GENERATED_FILES_PATH . 'create_owner.php';
+            }
 
             if ($install_id != $_GET['create_owner'])
             {

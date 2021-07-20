@@ -84,7 +84,7 @@ class AdminThreads extends Admin
         }
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
 
@@ -101,25 +101,25 @@ class AdminThreads extends Admin
         }
     }
 
-    public function creator()
+    public function creator(): void
     {
     }
 
-    public function add()
+    public function add(): void
     {
     }
 
-    public function editor()
+    public function editor(): void
     {
     }
 
-    public function update()
+    public function update(): void
     {
         $thread_handler = new \Nelliel\ThreadHandler($this->database, $this->domain);
         $thread_handler->processContentDeletes();
     }
 
-    public function remove()
+    public function remove(): void
     {
         $content_id = new ContentID($_GET['content-id']);
         $content_id->getInstanceFromID($this->domain)->remove();

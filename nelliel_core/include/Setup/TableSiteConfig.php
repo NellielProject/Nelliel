@@ -64,8 +64,8 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['global_announcement', '', 0]);
 
         // Banners
-        $this->insertDefaultRow(['show_site_banners', '1', 0]);
-        $this->insertDefaultRow(['show_board_banners', '1', 0]);
+        $this->insertDefaultRow(['show_site_banners', '0', 0]);
+        $this->insertDefaultRow(['show_board_banners', '0', 0]);
         $this->insertDefaultRow(['banner_display_width', '300', 0]);
         $this->insertDefaultRow(['banner_display_height', '100', 0]);
 

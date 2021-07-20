@@ -28,18 +28,18 @@ class AdminIconSets extends Admin
         parent::dispatch($inputs);
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelIconSets($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
     }
 
-    public function add()
+    public function add(): void
     {
         $id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($id);
@@ -60,15 +60,15 @@ class AdminIconSets extends Admin
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
     }
 
-    public function update()
+    public function update(): void
     {
     }
 
-    public function remove()
+    public function remove(): void
     {
         $id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($id);
@@ -76,26 +76,6 @@ class AdminIconSets extends Admin
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . $this->data_table . '" WHERE "asset_id" = ? AND "type" = ?');
         $this->database->executePrepared($prepared, [$id, 'icon-set']);
-        $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
-        $this->outputMain(true);
-    }
-
-    public function disable()
-    {
-        $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 

@@ -13,7 +13,7 @@ if (!defined('NELLIEL_VERSION'))
 
 class AuthRole extends AuthHandler
 {
-    private $permissions;
+    public $permissions;
 
     function __construct(NellielPDO $database, string $role_id, bool $db_load = true)
     {

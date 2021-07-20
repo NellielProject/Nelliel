@@ -9,9 +9,9 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Modules\Account\Session;
+use Nelliel\Auth\Authorization;
 use Nelliel\Modules\Output\Filter;
 
 class AdminFileFilters extends Admin
@@ -30,18 +30,18 @@ class AdminFileFilters extends Admin
         parent::dispatch($inputs);
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelFileFilters($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
     }
 
-    public function add()
+    public function add(): void
     {
         $this->verifyAction($this->domain);
         $board_id = $board_id = $this->globalIDToNull($_POST['board_id'] ?? '', 'perm_manage_file_filters');
@@ -61,15 +61,15 @@ class AdminFileFilters extends Admin
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
     }
 
-    public function update()
+    public function update(): void
     {
     }
 
-    public function remove()
+    public function remove(): void
     {
         $id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($id);

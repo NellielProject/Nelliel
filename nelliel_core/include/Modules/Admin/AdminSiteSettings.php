@@ -26,26 +26,26 @@ class AdminSiteSettings extends Admin
         parent::dispatch($inputs);
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelSiteSettings($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
     }
 
-    public function add()
+    public function add(): void
     {
     }
 
-    public function editor()
+    public function editor(): void
     {
     }
 
-    public function update()
+    public function update(): void
     {
         $this->verifyAction($this->domain);
 
@@ -66,7 +66,7 @@ class AdminSiteSettings extends Admin
         $this->outputMain(true);
     }
 
-    public function remove()
+    public function remove(): void
     {
     }
 

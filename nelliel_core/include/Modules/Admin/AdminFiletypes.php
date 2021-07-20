@@ -26,16 +26,30 @@ class AdminFiletypes extends Admin
     public function dispatch(array $inputs): void
     {
         parent::dispatch($inputs);
+
+        foreach ($inputs['actions'] as $action)
+        {
+            switch ($action)
+            {
+                case 'disable':
+                    $this->disable();
+                    break;
+
+                case 'enable':
+                    $this->enable();
+                    break;
+            }
+        }
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelFiletypes($this->domain, false);
         $output_panel->main([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelFiletypes($this->domain, false);
@@ -43,7 +57,7 @@ class AdminFiletypes extends Admin
         $this->outputMain(false);
     }
 
-    public function add()
+    public function add(): void
     {
         $this->verifyAction($this->domain);
         $base_extension = $_POST['base_extension'] ?? null;
@@ -66,7 +80,7 @@ class AdminFiletypes extends Admin
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
         $this->verifyAccess($this->domain);
         $entry = $_GET['filetype-id'] ?? 0;
@@ -75,7 +89,7 @@ class AdminFiletypes extends Admin
         $this->outputMain(false);
     }
 
-    public function update()
+    public function update(): void
     {
         $this->verifyAction($this->domain);
         $filetype_id = $_GET['filetype-id'];
@@ -100,7 +114,7 @@ class AdminFiletypes extends Admin
         $this->outputMain(true);
     }
 
-    public function remove()
+    public function remove(): void
     {
         $id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($id);

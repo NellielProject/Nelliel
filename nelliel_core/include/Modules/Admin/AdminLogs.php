@@ -26,7 +26,7 @@ class AdminLogs extends Admin
         parent::dispatch($inputs);
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelLogs($this->domain, false);
@@ -34,23 +34,23 @@ class AdminLogs extends Admin
         $output_panel->render(['log_type' => $log_type], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
     }
 
-    public function add()
+    public function add(): void
     {
     }
 
-    public function editor()
+    public function editor(): void
     {
     }
 
-    public function update()
+    public function update(): void
     {
     }
 
-    public function remove()
+    public function remove(): void
     {
     }
 

@@ -28,19 +28,19 @@ class AdminStyles extends Admin
         parent::dispatch($inputs);
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelStyles($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
         $this->verifyAccess($this->domain);
     }
 
-    public function add()
+    public function add(): void
     {
         $id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($id);
@@ -61,15 +61,15 @@ class AdminStyles extends Admin
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
     }
 
-    public function update()
+    public function update(): void
     {
     }
 
-    public function remove()
+    public function remove(): void
     {
         $id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($id);

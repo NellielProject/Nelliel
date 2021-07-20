@@ -25,18 +25,18 @@ class AdminStaffBoard extends Admin
         parent::dispatch($inputs);
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelStaffBoard($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
     }
 
-    public function add()
+    public function add(): void
     {
         $this->verifyAction($this->domain);
         $subject = $_POST['subject'] ?? '';
@@ -49,15 +49,15 @@ class AdminStaffBoard extends Admin
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
     }
 
-    public function update()
+    public function update(): void
     {
     }
 
-    public function remove()
+    public function remove(): void
     {
         $this->verifyAction($this->domain);
         $entry = $_GET['entry'];

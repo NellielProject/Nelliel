@@ -87,18 +87,16 @@ class OutputPanelMain extends Output
                 $board_data['board_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         'module=admin&section=board-main-panel&board-id=' . $board['board_id'];
                 $board_data['board_id'] = '/' . $board['board_id'] . '/';
+                $global_level_lower = $authorization->roleLevelCheck($global_role_id,
+                        $user_roles_list[$board['board_id']]['role_title'] ?? '');
 
                 if ($this->session->user()->isSiteOwner())
                 {
                     $board_data['board_role'] = _gettext('Site Owner');
                 }
-
-                $global_level_lower = $authorization->roleLevelCheck($global_role_id,
-                        $user_roles_list[$board['board_id']]['role_title'] ?? '');
-
-                if ((!isset($user_roles_list[$board['board_id']]) && $has_global) || !$global_level_lower)
+                else if (!isset($user_roles_list[$board['board_id']]) || !$global_level_lower)
                 {
-                    $board_data['board_role'] = $global_role_title;
+                    $board_data['board_role'] = ($has_global) ? $global_role_title : '';
                 }
                 else
                 {
@@ -149,7 +147,8 @@ class OutputPanelMain extends Output
         $this->render_data['news_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=news';
         $this->render_data['module_dnsbl'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_dnsbl');
         $this->render_data['dnsbl_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=dnsbl';
-        $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_wordfilters');
+        $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
+                'perm_manage_wordfilters');
         $this->render_data['wordfilters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=wordfilters';
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
                 'perm_regen_pages');

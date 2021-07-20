@@ -32,14 +32,14 @@ class AdminBans extends Admin
         parent::dispatch($inputs);
     }
 
-    public function panel()
+    public function panel(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelBans($this->domain, false);
         $output_panel->main([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
         $this->verifyAccess($this->domain);
         $ban_ip = $_GET['ban-ip'] ?? '';
@@ -48,7 +48,7 @@ class AdminBans extends Admin
         $this->outputMain(false);
     }
 
-    public function add()
+    public function add(): void
     {
         $this->verifyAction($this->domain);
         $this->ban_hammer->collectFromPOST();
@@ -75,7 +75,7 @@ class AdminBans extends Admin
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
         $this->verifyAccess($this->domain);
         $output_panel = new \Nelliel\Modules\Output\OutputPanelBans($this->domain, false);
@@ -83,7 +83,7 @@ class AdminBans extends Admin
         $this->outputMain(false);
     }
 
-    public function update()
+    public function update(): void
     {
         $this->verifyAction($this->domain);
         $this->ban_hammer->loadFromID($_POST['ban_id']);
@@ -92,7 +92,7 @@ class AdminBans extends Admin
         $this->outputMain(true);
     }
 
-    public function remove()
+    public function remove(): void
     {
         $this->verifyAction($this->domain);
         $ban_id = $_GET['ban_id'] ?? '';
