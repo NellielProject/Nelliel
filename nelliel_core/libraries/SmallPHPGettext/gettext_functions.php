@@ -1,6 +1,8 @@
 <?php
 
-function access_small_php_gettext($instance = null)
+use SmallPHPGettext\SmallPHPGettext;
+
+function access_small_php_gettext(?SmallPHPGettext $instance = null)
 {
     static $current_instance;
 

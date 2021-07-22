@@ -39,7 +39,7 @@ class Dispatch
                 case 'extract-gettext':
                     $language = new Language();
                     $language->extractLanguageStrings($this->domain, $this->session->user(), 'nelliel',
-                            LC_MESSAGES);
+                            'LC_MESSAGES');
                     break;
             }
         }

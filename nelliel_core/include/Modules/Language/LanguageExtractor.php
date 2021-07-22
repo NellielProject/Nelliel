@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Modules\Language;
 
@@ -10,22 +9,21 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domains\Domain;
+use SmallPHPGettext\SmallPHPGettext;
 use PDO;
 
 class LanguageExtractor
 {
     private $domain;
-    private $language;
-    private $gettext_helpers;
+    private $gettext;
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, SmallPHPGettext $gettext)
     {
         $this->domain = $domain;
-        $this->language = new Language();
-        $this->gettext_helpers = new \SmallPHPGettext\Helpers();
+        $this->gettext = $gettext;
     }
 
-    public function assemblePoString(string $default_textdomain, int $default_category)
+    public function assemblePoString(string $default_textdomain, string $default_category)
     {
         $outputs = array();
         $strings = array();
@@ -35,7 +33,7 @@ class LanguageExtractor
 
         foreach ($strings as $category => $entries)
         {
-            $output_category = $this->gettext_helpers->categoryToString($category);
+            $output_category = $category;
 
             if (!isset($outputs[$output_category]))
             {
@@ -56,20 +54,19 @@ class LanguageExtractor
 
                 if (isset($data['msgctxt']))
                 {
-                    $output_string .= 'msgctxt "' . $this->gettext_helpers->stringToPo($data['msgctxt']) . '"' . "\n";
+                    $output_string .= 'msgctxt "' . $this->gettext->poEncode($data['msgctxt']) . '"' . "\n";
                 }
 
                 if (isset($data['msgid']))
                 {
 
-                    $message = $this->gettext_helpers->stringToPo($data['msgid']);
+                    $message = $this->gettext->poEncode($data['msgid']);
                     $output_string .= 'msgid "' . $this->wrapLine($message, 79, '') . '"' . "\n";
                 }
 
                 if (isset($data['msgid_plural']))
                 {
-                    $output_string .= 'msgid_plural "' . $this->gettext_helpers->stringToPo($data['msgid_plural']) . '"' .
-                            "\n";
+                    $output_string .= 'msgid_plural "' . $this->gettext->poEncode($data['msgid_plural']) . '"' . "\n";
                     $output_string .= 'msgstr[0] ""' . "\n";
                     $output_string .= 'msgstr[1] ""' . "\n";
                 }
@@ -118,7 +115,7 @@ class LanguageExtractor
         return $headers;
     }
 
-    private function parseSiteFiles(array $strings, int $default_category)
+    private function parseSiteFiles(array $strings, string $default_category)
     {
         $file_handler = nel_utilities()->fileHandler();
         $php_files = $file_handler->recursiveFileList(NEL_BASE_PATH, 0);
@@ -198,26 +195,7 @@ class LanguageExtractor
         return $strings;
     }
 
-    private function getCategoryValue($category)
-    {
-        if (is_numeric($category))
-        {
-            $value = intval($category);
-        }
-        else
-        {
-            $value = $this->gettext_helpers->categoryFromString($category);
-        }
-
-        if ($value !== false && $value > 1 && $value < 7)
-        {
-            return $value;
-        }
-
-        return false;
-    }
-
-    private function addPHPMatch(array &$strings, array $entry, int $default_category)
+    private function addPHPMatch(array &$strings, array $entry, string $default_category)
     {
         $category = '';
         $msgid = '';
@@ -272,8 +250,6 @@ class LanguageExtractor
 
         if ($category !== '')
         {
-            $value = $this->getCategoryValue($category);
-            $category = ($value !== false) ? $value : $default_category;
             $strings[$category][$msgid]['category'] = $category;
         }
         else
@@ -303,7 +279,7 @@ class LanguageExtractor
         }
     }
 
-    private function parseHTMLFiles(array $strings, int $default_category)
+    private function parseHTMLFiles(array $strings, string $default_category)
     {
         $file_handler = nel_utilities()->fileHandler();
         $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
@@ -366,7 +342,7 @@ class LanguageExtractor
         return $strings;
     }
 
-    private function parseDatabaseEntries(array $strings, int $default_category)
+    private function parseDatabaseEntries(array $strings, string $default_category)
     {
         $database = $this->domain->database();
         $filetype_labels = $database->executeFetchAll('SELECT "type_label" FROM "' . NEL_FILETYPES_TABLE . '"',
@@ -397,8 +373,8 @@ class LanguageExtractor
             }
         }
 
-        $setting_descriptions = $database->executeFetchAll('SELECT "setting_description" FROM "' . NEL_SETTINGS_TABLE . '"',
-                PDO::FETCH_COLUMN);
+        $setting_descriptions = $database->executeFetchAll(
+                'SELECT "setting_description" FROM "' . NEL_SETTINGS_TABLE . '"', PDO::FETCH_COLUMN);
 
         foreach ($setting_descriptions as $label)
         {

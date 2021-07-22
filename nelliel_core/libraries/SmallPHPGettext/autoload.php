@@ -3,7 +3,7 @@
 spl_autoload_register(function ($class)
 {
     $prefix = 'SmallPHPGettext\\';
-    $base_dir = __DIR__ . '/src/';
+    $base_dir = __DIR__ . '/';
     $len = strlen($prefix);
 
     if (strncmp($prefix, $class, $len) !== 0)
