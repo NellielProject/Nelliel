@@ -10,7 +10,7 @@ if (!defined('NELLIEL_VERSION'))
 }
 
 use Nelliel\Domains\Domain;
-use Nelliel\Modules\Output\Filter;
+use Nelliel\Output\Filter;
 
 class RenderCoreMustache extends RenderCore
 {

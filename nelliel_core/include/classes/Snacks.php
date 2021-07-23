@@ -155,7 +155,7 @@ class Snacks
     {
         $ban_hammer->modifyData('seen', 1);
         $ban_hammer->apply();
-        $output_ban_page = new \Nelliel\Modules\Output\OutputBanPage($this->domain, false);
+        $output_ban_page = new \Nelliel\Output\OutputBanPage($this->domain, false);
         $output_ban_page->render(['ban_hammer' => $ban_hammer], false);
         nel_clean_exit();
     }

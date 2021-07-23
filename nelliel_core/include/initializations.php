@@ -77,7 +77,7 @@ unset($base_config);
 unset($db_config);
 unset($crypt_config);
 
-$language = new \Nelliel\Modules\Language\Language();
+$language = new \Nelliel\Language\Language();
 $language->loadLanguage(NEL_DEFAULT_LOCALE, 'nelliel', 'LC_MESSAGES');
 unset($language);
 Mustache_Autoloader::register();

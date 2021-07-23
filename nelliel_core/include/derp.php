@@ -4,7 +4,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Modules\Account\Session;
+use Nelliel\Account\Session;
 use Nelliel\Domains\Domain;
 
 function nel_early_derp(int $error_id, string $error_message, array $error_data = array())
@@ -68,7 +68,7 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
         $domain = new \Nelliel\Domains\DomainSite(nel_database());
     }
 
-    $output_derp = new \Nelliel\Modules\Output\OutputDerp($domain, false);
+    $output_derp = new \Nelliel\Output\OutputDerp($domain, false);
     echo $output_derp->render(['diagnostic' => $diagnostic], false);
 
     nel_clean_exit(false);

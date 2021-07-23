@@ -13,7 +13,7 @@ use Nelliel\Cites;
 use Nelliel\Moar;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Modules\Output\OutputPost;
+use Nelliel\Output\OutputPost;
 use PDO;
 
 class ContentPost extends ContentHandler
@@ -189,7 +189,7 @@ class ContentPost extends ContentHandler
                 nel_derp(62, _gettext('Cannot remove post. Board is locked.'));
             }
 
-            $session = new \Nelliel\Modules\Account\Session();
+            $session = new \Nelliel\Account\Session();
             $user = $session->user();
             $bypass = false;
 
@@ -276,7 +276,7 @@ class ContentPost extends ContentHandler
 
     protected function verifyModifyPerms()
     {
-        $session = new \Nelliel\Modules\Account\Session();
+        $session = new \Nelliel\Account\Session();
         $user = $session->user();
 
         if (empty($this->content_data))

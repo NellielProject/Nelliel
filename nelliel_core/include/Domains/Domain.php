@@ -10,6 +10,8 @@ if (!defined('NELLIEL_VERSION'))
 
 use Nelliel\FrontEndData;
 use Nelliel\NellielPDO;
+use Nelliel\Language\Language;
+use Nelliel\Language\Translator;
 
 abstract class Domain
 {
@@ -40,8 +42,8 @@ abstract class Domain
         $this->front_end_data = new FrontEndData($this->database);
         $this->file_handler = nel_utilities()->fileHandler();
         $this->cache_handler = nel_utilities()->cacheHandler();
-        $this->translator = new \Nelliel\Modules\Language\Translator($this);
-        $this->language = new \Nelliel\Modules\Language\Language();
+        $this->translator = new Translator($this);
+        $this->language = new Language();
     }
 
     public function database(NellielPDO $new_database = null)

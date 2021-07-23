@@ -9,7 +9,7 @@ if (!defined('NELLIEL_VERSION'))
     die("NOPE.AVI");
 }
 
-use Nelliel\Modules\Output\Filter;
+use Nelliel\Output\Filter;
 
 class RenderCoreDOM extends RenderCore
 {

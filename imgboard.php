@@ -34,7 +34,6 @@ nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 // IT'S GO TIME!
 ignore_user_abort(true);
 
-require_once NEL_INCLUDE_PATH . 'central_dispatch.php';
-
-nel_dispatch_preparation();
+$dispatch_preparation = new \Nelliel\Dispatch\Preparation();
+$dispatch_preparation->prepare();
 nel_clean_exit();
