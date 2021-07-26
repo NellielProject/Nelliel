@@ -1,4 +1,9 @@
 # SmallPHPGettext Changelog
+## v2.1.1 (2021/07/21)
+- Fixed category handling
+- Shift things back into src/
+- Added method to get standard Po file path
+
 ## v2.1 (2021/07/21)
 - Cleaned up code and API
 - Added more doc comments

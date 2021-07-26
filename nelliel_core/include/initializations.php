@@ -16,8 +16,6 @@ define('NEL_BASE_HONEYPOT_FIELD1', 'display_signature'); // Honeypot field name
 define('NEL_BASE_HONEYPOT_FIELD2', 'signature'); // Honeypot field name
 define('NEL_BASE_HONEYPOT_FIELD3', 'website'); // Honeypot field name
 
-define('NEL_DEFAULT_TEXTDOMAIN_BIND', NEL_LANGUAGES_FILES_PATH . 'locale');
-
 // Set default values here in case the config is missing something
 $base_config['directory_perm'] = '0775';
 $base_config['file_perm'] = '0664';
@@ -78,7 +76,7 @@ unset($db_config);
 unset($crypt_config);
 
 $language = new \Nelliel\Language\Language();
-$language->loadLanguage(NEL_DEFAULT_LOCALE, 'nelliel', 'LC_MESSAGES');
+$language->loadLanguage(NEL_DEFAULT_LOCALE, 'nelliel', LC_MESSAGES);
 unset($language);
 Mustache_Autoloader::register();
 

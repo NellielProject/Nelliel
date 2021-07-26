@@ -27,43 +27,54 @@ class Language
         {
             self::$gettext = new \SmallPHPGettext\SmallPHPGettext();
             self::$gettext->textdomain('nelliel');
-            self::$gettext->bindtextdomain('nelliel', NEL_DEFAULT_TEXTDOMAIN_BIND);
+            self::$gettext->bindtextdomain('nelliel', NEL_LANGUAGES_FILES_PATH);
             self::$gettext->registerFunctions();
         }
     }
 
-    public function loadLanguage(string $locale, string $domain, string $category): bool
+    public function loadLanguage(string $locale, string $domain, int $category): bool
     {
-        $file = '/' . $locale . '/' . $category . '/' . $domain . '.po';
-        $full_path = self::$gettext->bindtextdomain($domain) . $file;
-        $cache_file = 'language/' . $file . '.php';
-        $cache_handler = new CacheHandler();
-        $translation_array = array();
-        $hash = '';
-
-        if (file_exists($full_path))
+        if (self::$gettext->translationLoaded($domain, $category, false))
         {
-            $hash = md5_file($full_path);
+            return true;
         }
 
-        if (NEL_USE_FILE_CACHE && $cache_handler->checkHash($file, $hash))
+        $po_absolute_path = self::$gettext->getStandardPath($locale, $domain, $category, false);
+
+        if (NEL_USE_FILE_CACHE)
         {
-            if (file_exists(NEL_CACHE_FILES_PATH . $cache_file))
+            $po_relative_path = self::$gettext->getStandardPath($locale, $domain, $category, true);
+            $cache_file = str_replace('.po', '.php', $po_relative_path);
+            $cache_handler = new CacheHandler();
+            $translation_array = array();
+            $hash = '';
+
+            if (file_exists($po_absolute_path))
+            {
+                $hash = md5_file($po_absolute_path);
+            }
+
+            if ($cache_handler->checkHash($po_relative_path, $hash) && file_exists(NEL_CACHE_FILES_PATH . $cache_file))
             {
                 include NEL_CACHE_FILES_PATH . $cache_file;
                 return self::$gettext->addTranslationFromArray($translation_array, $domain, $category);
             }
+            else
+            {
+                // No valid Po file or cache file to work with
+                if ($hash === '')
+                {
+                    return false;
+                }
+
+                $translation_array = self::$gettext->getTranslationFromFile($po_absolute_path, $domain, $category);
+                $cache_handler->updateHash($po_relative_path, $hash);
+                $cache_handler->writeArrayToFile('translation_array', $translation_array, $cache_file);
+                return self::$gettext->addTranslationFromArray($translation_array, $domain, $category);
+            }
         }
 
-        $translation_array = self::$gettext->getTranslation($domain, $category);
-
-        if (NEL_USE_FILE_CACHE)
-        {
-            $cache_handler->updateHash($file, $hash);
-            $cache_handler->writeArrayToFile('translation_array', $translation_array, $cache_file);
-        }
-
-        return self::$gettext->translationLoaded($domain, $category);
+        return self::$gettext->addTranslationFromFile($po_absolute_path, $domain, $category);
     }
 
     public function extractLanguageStrings(Domain $domain, AuthUser $user, string $default_textdomain,

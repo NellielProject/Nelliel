@@ -14,6 +14,11 @@ function access_small_php_gettext(?SmallPHPGettext $instance = null)
     return $current_instance;
 }
 
+function __(string $msgid)
+{
+    return access_small_php_gettext()->gettext($msgid);
+}
+
 function _gettext(string $msgid)
 {
     return access_small_php_gettext()->gettext($msgid);

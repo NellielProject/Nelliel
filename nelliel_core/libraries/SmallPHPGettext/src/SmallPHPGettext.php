@@ -12,15 +12,26 @@ class SmallPHPGettext
     private $default_locale_directory = '';
     private $default_plural_rule = '$plurals=2;$plural=$n!=1';
     private $locale = 'en_US';
-    private $default_category = 'LC_MESSAGES';
+    private $default_category;
     private $default_domain = 'messages';
     private $domain;
     private $domain_directories = array();
     private $translations = array();
-    private $version = '2.1';
+    private $version = '2.1.1';
+    private $category_to_string = [0 => 'LC_ALL', 1 => 'LC_COLLATE', 2 => 'LC_CTYPE', 3 => 'LC_MONETARY',
+        4 => 'LC_NUMERIC', 5 => 'LC_TIME', 6 => 'LC_MESSAGES'];
+    private $string_to_category = ['LC_ALL' => 0, 'LC_COLLATE' => 1, 'LC_CTYPE' => 2, 'LC_MONETARY' => 3,
+        'LC_NUMERIC' => 4, 'LC_TIME' => 5, 'LC_MESSAGES' => 6];
 
     function __construct()
     {
+        // LC_MESSAGES may not be present if PHP is not compiled with libintl
+        if (!defined('LC_MESSAGES'))
+        {
+            define('LC_MESSAGES', 5);
+        }
+
+        $this->default_category = LC_MESSAGES;
         $this->domain = $this->default_domain;
         $this->domain_directories[$this->domain] = '';
         $this->domain_codesets[$this->domain] = $this->default_codeset;
@@ -75,6 +86,17 @@ class SmallPHPGettext
     public function dcngettext(string $domain, string $msgid1, string $msgid2, int $n, int $category): string
     {
         return $this->pluralMessage($msgid1, $msgid2, $n, $domain, $category, null);
+    }
+
+    /**
+     * Converts integer form of the LC_* constants to string
+     *
+     * @param int $category The category integer value.
+     * @return string The category string value.
+     */
+    public function categoryToString(int $category): string
+    {
+        return $this->category_to_string[$category] ?? '';
     }
 
     /**
@@ -153,30 +175,31 @@ class SmallPHPGettext
     /**
      * Stores a set of translations from the given array for the specified category.
      *
-     * @param array $translations Array of translations.
-     * @param int $category The category for the translations.
+     * @param array $translation Array of translations.
+     * @param string $domain The domain to use.
+     * @param int $category The category to use.
      * @return bool True if sucessfully stored, false if something went wrong.
      */
-    public function addTranslationFromArray(array $translations, string $domain, string $category): bool
+    public function addTranslationFromArray(array $translation, string $domain, int $category): bool
     {
-        // Re-parse to be safe since this method can accept data from outside
-        $translations['plural_rule'] = $this->parsePluralRule($translations['headers']['Plural-Forms'] ?? '');
-        $this->translations[$category][$domain] = $translations;
+        // Parse the plural rule here instead of trusting an outside version
+        $translation['plural_rule'] = $this->parsePluralRule($translation['headers']['Plural-Forms'] ?? '');
+        $this->translations[$category][$domain] = $translation;
         return isset($this->translations[$category][$domain]);
     }
 
     /**
-     * Stores a set of translations from the given .po file for the specified category.
+     * Stores a translation from the given .po file for the specified category.
      *
      * @param string $file Path to the file.
-     * @param int $category The category for the translations.
+     * @param string $domain The domain to use.
+     * @param int $category The category to use.
      * @return bool True if sucessfully stored, false if something went wrong.
      */
-    public function addTranslationFromFile(string $file, string $domain, string $category): bool
+    public function addTranslationFromFile(string $file, string $domain, int $category): bool
     {
-        $po = new ParsePo();
-        $translations = $po->parseFile($file, $domain);
-        return $this->addTranslationFromArray($translations, $domain, $category);
+        $translation = $this->getTranslationFromFile($file, $domain, $category);
+        return $this->addTranslationFromArray($translation, $domain, $category);
     }
 
     /**
@@ -184,9 +207,10 @@ class SmallPHPGettext
      *
      * @param string $domain The domain to check.
      * @param int $category The category to check.
+     * @param bool $load If true, attempts to load translation if it is not already loaded, then checks again.
      * @return bool True if loaded, false if not.
      */
-    public function translationLoaded(string $domain, string $category, bool $load = false): bool
+    public function translationLoaded(string $domain, int $category, bool $load = false): bool
     {
         $loaded = isset($this->translations[$category][$domain]) && is_array($this->translations[$category][$domain]);
 
@@ -203,9 +227,9 @@ class SmallPHPGettext
      *
      * @param string $domain The domain to check.
      * @param int $category The category to check.
-     * @return array The translation array. If nothing has been loaded, will return an empty array.
+     * @return array The translation array. If nothing available, will return an empty array.
      */
-    public function getTranslation(string $domain, string $category): array
+    public function getTranslation(string $domain, int $category): array
     {
         if (!$this->translationLoaded($domain, $category))
         {
@@ -220,18 +244,55 @@ class SmallPHPGettext
         return array();
     }
 
-    private function loadTranslation(string $domain, string $category): bool
+    /**
+     * Parses a Po file and returns the translation array.
+     *
+     * @param string $file Path to the file.
+     * @param string $domain The domain to use.
+     * @param int $category The category to use.
+     * @return array The translation array. If nothing was parsed from file, will return an empty array.
+     */
+    public function getTranslationFromFile(string $file, string $domain, int $category): array
+    {
+        $po = new ParsePo();
+        $translation = $po->parseFile($file, $domain);
+        return $translation;
+    }
+
+    /**
+     * Get the standard path for a Po file.
+     *
+     * @param string $file Path to the file.
+     * @param string $domain The domain to use.
+     * @param int $category The category to use.
+     * @return array The translation array. If nothing was parsed from file, will return an empty array.
+     */
+    public function getStandardPath(string $locale, string $domain, int $category, bool $relative): string
+    {
+        $base_directory = '';
+
+        if (!$relative)
+        {
+            $base_directory = $this->domain_directories[$domain] ?? $this->default_locale_directory;
+        }
+
+        return $base_directory . '/' . 'locale/' . $locale . '/' . $this->category_to_string[$category] . '/' . $domain .
+                '.po';
+    }
+
+    private function loadTranslation(string $domain, int $category): bool
     {
         if (isset($this->domain_directories[$domain]) && file_exists($this->domain_directories[$domain]))
         {
-            $file = $this->domain_directories[$domain] . '/' . $this->locale . '/' . $category . '/' . $domain . '.po';
+            $file = $this->domain_directories[$domain] . '/' . $this->locale . '/' . $this->category_to_string[$category] .
+                    '/' . $domain . '.po';
             return $this->addTranslationFromFile($file, $domain, $category);
         }
 
         return false;
     }
 
-    private function singularMessage(string $msgid, string $domain, string $category, string $context = null): string
+    private function singularMessage(string $msgid, string $domain, int $category, string $context = null): string
     {
         $po_msgid = $this->poEncode($msgid);
         $valid = $this->translationLoaded($domain, $category, true);
@@ -259,7 +320,7 @@ class SmallPHPGettext
         }
     }
 
-    private function pluralMessage(string $msgid1, string $msgid2, int $n, string $domain, string $category,
+    private function pluralMessage(string $msgid1, string $msgid2, int $n, string $domain, int $category,
             string $context = null): string
     {
         $po_msgid1 = $this->poEncode($msgid1);

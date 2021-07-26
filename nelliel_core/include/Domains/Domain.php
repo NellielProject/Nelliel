@@ -133,9 +133,9 @@ abstract class Domain
         $this->language->accessGettext()->locale($this->locale);
         $this->language->accessGettext()->textdomain('nelliel');
 
-        if (!$this->language->accessGettext()->translationLoaded('nelliel', 'LC_MESSAGES'))
+        if (!$this->language->accessGettext()->translationLoaded('nelliel', LC_MESSAGES))
         {
-            $this->language->loadLanguage($locale, 'nelliel', 'LC_MESSAGES');
+            $this->language->loadLanguage($locale, 'nelliel', LC_MESSAGES);
         }
     }
 
