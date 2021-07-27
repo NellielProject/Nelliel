@@ -39,6 +39,7 @@ class Preparation
         {
             $about_nelliel = new OutputAboutNelliel(nel_site_domain(), false);
             $about_nelliel->render([], false);
+            nel_clean_exit();
         }
 
         if (isset($_GET['blank']) || isset($_GET['tpilb']))
