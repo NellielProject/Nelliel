@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Nelliel v0.9.23\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-07-22 00:55:48 UTC +0000\n"
+"POT-Creation-Date: 2021-07-27 03:48:57 UTC +0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,1094 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+
+#: nelliel_core/include/Domains/DomainSite.php:51
+#: nelliel_core/include/Domains/DomainBoard.php:60
+msgid "Nelliel Imageboard"
+msgstr ""
+
+#: nelliel_core/include/classes/DNSBL.php:61
+#, php-format
+msgid "Your IP was found on a DNS blacklist: %s"
+msgstr ""
+
+#: nelliel_core/include/classes/Snacks.php:100
+msgid "Ban appeals are not enabled."
+msgstr ""
+
+#: nelliel_core/include/classes/Snacks.php:107
+msgid "Invalid ban ID given."
+msgstr ""
+
+#: nelliel_core/include/classes/Snacks.php:112
+msgid "You cannot appeal a range ban."
+msgstr ""
+
+#: nelliel_core/include/classes/Snacks.php:118
+msgid "Your IP address does not match the one on the ban."
+msgstr ""
+
+#: nelliel_core/include/classes/Snacks.php:123
+msgid "You have already appealed your ban."
+msgstr ""
+
+#: nelliel_core/include/classes/ThreadHandler.php:59
+#, php-format
+msgid "You are trying to delete too many items at once. Limit is %d."
+msgstr ""
+
+#: nelliel_core/include/classes/Report.php:77
+#, php-format
+msgid "You are trying to report too many items at once. Limit is %d."
+msgstr ""
+
+#: nelliel_core/include/classes/BanHammer.php:67
+msgid "No IP address or hash provided."
+msgstr ""
+
+#: nelliel_core/include/classes/BanHammer.php:84
+msgid "IP address or hash is invalid."
+msgstr ""
+
+#: nelliel_core/include/Dispatch/DispatchModules.php:86
+msgid "You are not allowed to regenerate board pages."
+msgstr ""
+
+#: nelliel_core/include/Dispatch/DispatchModules.php:98
+msgid "You are not allowed to regenerate board caches."
+msgstr ""
+
+#: nelliel_core/include/Dispatch/DispatchModules.php:108
+msgid "You are not allowed to regenerate site caches."
+msgstr ""
+
+#: nelliel_core/include/Dispatch/DispatchModules.php:118
+msgid "You are not allowed to regenerate overboard pages."
+msgstr ""
+
+#: nelliel_core/include/Dispatch/DispatchModules.php:141
+msgid "The selected module is invalid."
+msgstr ""
+
+#: nelliel_core/include/Setup/Upgrade.php:28
+msgid "Already up to date!"
+msgstr ""
+
+#: nelliel_core/include/Setup/Upgrade.php:36
+#, php-format
+msgid "%d migrations have been completed."
+msgstr ""
+
+#: nelliel_core/include/Setup/Upgrade.php:40
+msgid "No migrations were needed."
+msgstr ""
+
+#: nelliel_core/include/Setup/Upgrade.php:48
+msgid "Upgrades completed!"
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:35
+msgid "Installation has already been completed!"
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:50
+msgid "Peppers file has been created."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:54
+msgid "Peppers file already present."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:70
+msgid "Site owner account already created."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:71
+msgid "Install has finished with no apparent problems! When you\\'re ready to "
+"continue, follow this link to the login page: "
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:74
+msgid "Login page"
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:81
+msgid "No problems so far! To complete setup, a site owner account needs to be "
+"created. This account will have all permissions by default. It is also "
+"necessary to use the site settings control panel."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:111
+msgid "Minimum PHP version required: "
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:112
+msgid "PHP version detected: "
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:116
+msgid "This version of PHP is too old! Upgrade to a version supported by Nelliel."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:135
+msgid "InnoDB engine is required for MySQL or MariaDB support but that engine is not "
+"available."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:139
+msgid "DB engine ok."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:147
+msgid "The core directory not writable."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:151
+msgid "The core directory is writable."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:159
+msgid "Nelliel main directory is not writable."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:163
+msgid "Main directory is writable."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:171
+msgid "Configuration directory is missing or not writable. Admin should check this "
+"out."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:175
+msgid "The configuration directory is writable."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:247
+msgid "Core database tables created."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:257
+msgid "Core directories created."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:319
+msgid "Core templates installed."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:350
+msgid "Core styles installed."
+msgstr ""
+
+#: nelliel_core/include/Setup/Setup.php:381
+msgid "Core icon sets installed."
+msgstr ""
+
+#: nelliel_core/include/Setup/Table.php:203
+#, php-format
+msgid "Creation of %s failed! Check database settings and config.php then retry "
+"installation."
+msgstr ""
+
+#: nelliel_core/include/AntiSpam/CAPTCHA.php:80
+msgid "Requesting new CAPTCHAs too fast. Wait a minute."
+msgstr ""
+
+#: nelliel_core/include/AntiSpam/CAPTCHA.php:254
+msgid "CAPTCHA test failed."
+msgstr ""
+
+#: nelliel_core/include/AntiSpam/CAPTCHA.php:311
+msgid "reCAPTCHA test failed."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminStaffBoard.php:79
+msgid "You do not have access to the Staff Board panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminRoles.php:27
+msgid "The specified role does not exist."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminRoles.php:105
+msgid "You do not have access to the Roles panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminRoles.php:113
+msgid "You are not allowed to manage roles."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminStyles.php:99
+msgid "You do not have access to the Styles panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminStyles.php:107
+msgid "You are not allowed to manage styles."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminFiletypes.php:151
+msgid "You do not have access to the Filetypes panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminFiletypes.php:159
+msgid "You are not allowed to manage filetypes."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminDNSBL.php:129
+msgid "You do not have access to the DNSBL panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminDNSBL.php:137
+msgid "You are not allowed to manage DNSBL entries."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoards.php:80
+msgid "No board URI provided."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoards.php:87
+msgid "Board URI contains invalid characters. Must be alphanumeric only."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoards.php:96
+msgid "Board URI is reserved."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoards.php:104
+msgid "There is already a board with the URI "
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoards.php:111
+msgid "Had trouble registering the board URI "
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoards.php:148
+msgid "Board does not appear to exist."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoards.php:284
+msgid "You do not have access to the Manage Boards panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoards.php:292
+msgid "You are not allowed to manage boards."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminLogs.php:61
+msgid "You do not have access to the Logs panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminLogs.php:69
+msgid "You are not allowed to manage logs."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminIconSets.php:98
+msgid "You do not have access to the Icon Sets panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminIconSets.php:106
+msgid "You are not allowed to manage icon sets."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminFileFilters.php:86
+msgid "You do not have access to the File Filters panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminFileFilters.php:94
+msgid "You are not allowed to manage file filters."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminUsers.php:29
+msgid "The specified user does not exist."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminUsers.php:130
+msgid "You do not have access to the Users panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminUsers.php:138
+msgid "You are not allowed to manage users."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminThreads.php:210
+msgid "You are not allowed to delete by IP."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminThreads.php:240
+msgid "You do not have access to the Threads panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminThreads.php:248
+msgid "You are not allowed to manage threads or posts."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminSiteSettings.php:77
+msgid "You do not have access to the Site Settings panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminSiteSettings.php:85
+msgid "You are not allowed to manage site settings."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminReports.php:70
+msgid "You do not have access to the Reports panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminReports.php:78
+msgid "You are not allowed to manage reports."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoardSettings.php:196
+msgid "You do not have access to the New Board Defaults panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoardSettings.php:203
+msgid "You do not have access to the Board Settings panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoardSettings.php:214
+msgid "You are not allowed to manage board defaults."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBoardSettings.php:221
+msgid "You are not allowed to manage board settings."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminWordfilters.php:137
+msgid "You do not have access to the Wordfilters panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminWordfilters.php:145
+msgid "You are not allowed to manage wordfilters."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminNews.php:87
+msgid "You do not have access to the News panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminNews.php:95
+msgid "You are not allowed to manage news articles."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminPermissions.php:76
+msgid "You do not have access to the Permissions panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminPermissions.php:84
+msgid "You are not allowed to manage permissions."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBans.php:108
+msgid "You do not have access to the Bans panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminBans.php:116
+msgid "You are not allowed to manage bans."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminTemplates.php:102
+msgid "You do not have access to the Templates panel."
+msgstr ""
+
+#: nelliel_core/include/Admin/AdminTemplates.php:110
+msgid "You are not allowed to manage Templates."
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelRoles.php:28
+#: nelliel_core/include/Output/OutputPanelRoles.php:72
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+msgid "Roles"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelRoles.php:29
+#: nelliel_core/include/Output/OutputPanelTemplates.php:30
+#: nelliel_core/include/Output/OutputPanelIconSets.php:30
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:29
+#: nelliel_core/include/Output/OutputPanelPermissions.php:30
+#: nelliel_core/include/Output/OutputPanelDNSBL.php:29
+#: nelliel_core/include/Output/OutputPanelWordfilters.php:31
+#: nelliel_core/include/Output/OutputPanelFileFilters.php:29
+#: nelliel_core/include/Output/OutputPanelStyles.php:30
+#: nelliel_core/include/Output/OutputPanelBoard.php:28
+#: nelliel_core/include/Output/OutputPanelBoard.php:29
+#: nelliel_core/include/Output/OutputPanelLogs.php:31
+#: nelliel_core/include/Output/OutputPanelThreads.php:51
+#: nelliel_core/include/Output/OutputPanelReports.php:30
+#: nelliel_core/include/Output/OutputPanelStaffBoard.php:30
+#: nelliel_core/include/Output/OutputPanelFiletypes.php:30
+#: nelliel_core/include/Output/OutputPanelUsers.php:29
+#: nelliel_core/include/Output/OutputPanelNews.php:30
+#: nelliel_core/include/Output/OutputPanelMain.php:30
+#: nelliel_core/include/Output/OutputPanelMain.php:31
+#: nelliel_core/include/Output/OutputPanelBans.php:30
+msgid "Main"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelRoles.php:64
+#: nelliel_core/include/Output/OutputPanelDNSBL.php:93
+#: nelliel_core/include/Output/OutputPanelWordfilters.php:100
+#: nelliel_core/include/Output/OutputPanelFiletypes.php:106
+#: nelliel_core/include/Output/OutputPanelUsers.php:67
+msgid "New"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelRoles.php:73
+#: nelliel_core/include/Output/OutputPanelDNSBL.php:108
+#: nelliel_core/include/Output/OutputPanelWordfilters.php:115
+#: nelliel_core/include/Output/OutputPanelFiletypes.php:115
+#: nelliel_core/include/Output/OutputPanelUsers.php:76
+#: nelliel_core/include/Output/OutputPanelBoardSettings.php:31
+#: nelliel_core/include/Output/OutputPanelSiteSettings.php:30
+#: nelliel_core/templates/nelliel_basic/panels/roles_main.html
+#: nelliel_core/templates/nelliel_basic/panels/dnsbl_main.html
+#: nelliel_core/templates/nelliel_basic/panels/users_main.html
+#: nelliel_core/templates/nelliel_basic/panels/wordfilters_main.html
+msgid "Edit"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelTemplates.php:29
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+msgid "Templates"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPostingForm.php:72
+#, php-format
+msgid "Maximum files: %d"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPostingForm.php:90
+#: nelliel_core/templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Reply"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPostingForm.php:90
+msgid "New thread"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPostingForm.php:102
+#, php-format
+msgid "Supported %s file types: "
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPostingForm.php:120
+#, php-format
+msgid "Maximum file size allowed is %dKB"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPostingForm.php:122
+#, php-format
+msgid "Images greater than %d x %d pixels will be thumbnailed."
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelIconSets.php:29
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+msgid "Icon Sets"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:28
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:85
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+msgid "Manage Boards"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:55
+#: nelliel_core/templates/nelliel_basic/panels/users_main.html
+msgid "Active"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:56
+msgid "Lock Board"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:64
+msgid "Locked"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:65
+msgid "Unlock Board"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:86
+#: nelliel_core/templates/nelliel_basic/panels/roles_main.html
+#: nelliel_core/templates/nelliel_basic/panels/dnsbl_main.html
+#: nelliel_core/templates/nelliel_basic/panels/filetypes_main.html
+#: nelliel_core/templates/nelliel_basic/panels/staff_board.html
+#: nelliel_core/templates/nelliel_basic/panels/file_filters.html
+#: nelliel_core/templates/nelliel_basic/panels/users_main.html
+#: nelliel_core/templates/nelliel_basic/panels/news.html
+#: nelliel_core/templates/nelliel_basic/panels/bans_main.html
+#: nelliel_core/templates/nelliel_basic/panels/manage_boards.html
+#: nelliel_core/templates/nelliel_basic/panels/permissions.html
+#: nelliel_core/templates/nelliel_basic/panels/wordfilters_main.html
+msgid "Remove"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:89
+#, php-format
+msgid "You are about to delete the board: %s"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:90
+msgid "This will wipe out all posts, settings, files, everything. There is no undo or "
+"recovery."
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:92
+msgid "Are you sure?"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:93
+msgid "NOPE. Do not delete the board."
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelManageBoards.php:96
+msgid "Confirmed. Delete the board."
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelPermissions.php:29
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+msgid "Permissions"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelDNSBL.php:28
+#: nelliel_core/include/Output/OutputPanelDNSBL.php:107
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+msgid "DNSBL"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelDNSBL.php:65
+#: nelliel_core/include/Output/OutputPanelWordfilters.php:72
+#: nelliel_core/include/Output/OutputPanelFiletypes.php:78
+msgid "Disable"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelDNSBL.php:74
+#: nelliel_core/include/Output/OutputPanelWordfilters.php:81
+#: nelliel_core/include/Output/OutputPanelFiletypes.php:87
+msgid "Enable"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:179
+msgid "Unlock"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:179
+#: nelliel_core/templates/nelliel_basic/panels/pieces/settings_lock_update.html
+msgid "Lock"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:185
+msgid "Unsticky"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:185
+msgid "Sticky"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:191
+msgid "Unsage"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:191
+msgid "Sage"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:197
+msgid "Non-cyclic"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:197
+msgid "Cyclic"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:370
+msgid "Post success!"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:372
+#: nelliel_core/include/Output/OutputPost.php:382
+msgid "Click here if you are not automatically redirected"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPost.php:380
+msgid "The selected items have been deleted!"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelWordfilters.php:30
+#: nelliel_core/include/Output/OutputPanelWordfilters.php:114
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+#: nelliel_core/templates/nelliel_basic/panels/board.html
+msgid "Wordfilters"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelFileFilters.php:28
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+#: nelliel_core/templates/nelliel_basic/panels/board.html
+msgid "File Filters"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelStyles.php:29
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+msgid "Styles"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputHeader.php:117
+msgid "Site Management"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputHeader.php:122
+#: nelliel_core/include/Output/OutputPanelThreads.php:143
+msgid "Board Management"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputIndex.php:44
+#: nelliel_core/include/Output/OutputThread.php:82
+#: nelliel_core/templates/nelliel_basic/panels/board.html
+msgid "Moderator Mode"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputIndex.php:45
+msgid "View Index"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputIndex.php:195
+msgid "Previous"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputIndex.php:196
+msgid "Next"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelLogs.php:30
+msgid "Logs"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelLogs.php:84
+msgid "<<"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelLogs.php:85
+msgid ">>"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelThreads.php:50
+msgid "Threads"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelThreads.php:81
+msgid "Unsticky Thread"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelThreads.php:87
+msgid "Sticky Thread"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelThreads.php:94
+msgid "Unlock Thread"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelThreads.php:100
+msgid "Lock Thread"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelThreads.php:105
+msgid "Delete Thread"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelThreads.php:143
+msgid "Expanded Thread"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelThreads.php:160
+msgid "Delete Post"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelThreads.php:163
+msgid "Sticky Post"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelReports.php:29
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+#: nelliel_core/templates/nelliel_basic/panels/board.html
+msgid "Reports"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelStaffBoard.php:29
+msgid "Staff Board"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelFiletypes.php:29
+#: nelliel_core/include/Output/OutputPanelFiletypes.php:114
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+#: nelliel_core/templates/nelliel_basic/panels/board_settings.html
+msgid "Filetypes"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelUsers.php:28
+#: nelliel_core/include/Output/OutputPanelUsers.php:75
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+msgid "Users"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelUsers.php:141
+msgid "Site"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelUsers.php:146
+#: nelliel_core/templates/nelliel_basic/panels/bans_main.html
+msgid "Global"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelBoardSettings.php:43
+msgid "Board Default Settings"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelBoardSettings.php:50
+#: nelliel_core/templates/nelliel_basic/panels/board.html
+msgid "Board Settings"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelNews.php:29
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+#: nelliel_core/templates/nelliel_basic/navigation/site_links.html
+msgid "News"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputBanPage.php:32
+msgid "All Boards"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputThread.php:83
+msgid "View Thread"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelMain.php:95
+msgid "Site Owner"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelSiteSettings.php:29
+#: nelliel_core/templates/nelliel_basic/panels/main.html
+msgid "Site Settings"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputCatalog.php:33
+msgid "Catalog of "
+msgstr ""
+
+#: nelliel_core/include/Output/OutputCatalog.php:118
+msgid "Open thread"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelBans.php:29
+#: nelliel_core/include/Output/OutputPanelBans.php:99
+#: nelliel_core/include/Output/OutputPanelBans.php:127
+#: nelliel_core/templates/nelliel_basic/panels/site_settings.html
+msgid "Bans"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelBans.php:100
+msgid "New Ban"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputPanelBans.php:128
+msgid "Modify Ban"
+msgstr ""
+
+#: nelliel_core/include/Output/OutputAboutNelliel.php:31
+msgid "Version: "
+msgstr ""
+
+#: nelliel_core/include/Content/ContentThread.php:130
+msgid "Cannot remove thread. Board is locked."
+msgstr ""
+
+#: nelliel_core/include/Content/ContentPost.php:189
+msgid "Cannot remove post. Board is locked."
+msgstr ""
+
+#: nelliel_core/include/Content/ContentPost.php:206
+#, php-format
+msgid "You must wait %d seconds after making a post before it can be deleted."
+msgstr ""
+
+#: nelliel_core/include/Content/ContentPost.php:315
+msgid "Password is wrong or you are not allowed to delete that."
+msgstr ""
+
+#: nelliel_core/include/Content/ContentFile.php:145
+msgid "Cannot remove file. Board is locked."
+msgstr ""
+
+#: nelliel_core/include/Language/LanguageExtractor.php:25
+msgid "string"
+msgstr ""
+
+#: nelliel_core/include/Language/Language.php:85
+msgid "You are not allowed to extract the gettext strings."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:186
+msgid "Spoon is too big."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:191
+msgid "File is bigger than the server allows."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:196
+msgid "File is bigger than submission form allows."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:201
+msgid "Only part of the file was uploaded."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:206
+msgid "File size is 0 or Candlejack stole your uplo"
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:211
+msgid "Cannot save uploaded files to server for some reason."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:216
+msgid "The uploaded file just ain't right. Dunno why.'"
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:252
+msgid "That file is banned."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:289
+msgid "Duplicate file detected."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:304
+msgid "Unrecognized file type."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:309
+msgid "Filetype is not allowed."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:314
+msgid "Incorrect file type detected (does not match extension). Possible Hax."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:365
+msgid "Duplicate embed detected."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:394
+msgid "You are not allowed to post embedded content."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:409
+msgid "File uploads are not allowed."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:426
+msgid "An image, file or embed is required when replying."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:431
+msgid "An image, file or embed is required to make new thread."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:441
+#, php-format
+msgid "You have too many uploads in one post. Received %d embeds and %d files for a "
+"total of %d uploads. Limit is %d."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:449
+msgid "This thread has reached the maximum number of uploads."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:456
+msgid "The first post cannot have uploads."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:461
+msgid "Replies cannot have uploads."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:469
+msgid "The first post cannot have multiple uploads."
+msgstr ""
+
+#: nelliel_core/include/NewPost/Uploads.php:474
+msgid "You cannot have multiple uploads in a reply."
+msgstr ""
+
+#: nelliel_core/include/NewPost/PostData.php:100
+msgid "A comment is required when starting a thread."
+msgstr ""
+
+#: nelliel_core/include/NewPost/PostData.php:107
+msgid "A comment is required when replying."
+msgstr ""
+
+#: nelliel_core/include/NewPost/PostData.php:123
+#, php-format
+msgid "Comment contains too many cites. Maximum is %d."
+msgstr ""
+
+#: nelliel_core/include/NewPost/PostData.php:130
+#, php-format
+msgid "Comment contains too many cross-board cites. Maximum is %d."
+msgstr ""
+
+#: nelliel_core/include/NewPost/PostData.php:140
+#, php-format
+msgid "Comment contains too many URLs. Maximum is %d."
+msgstr ""
+
+#: nelliel_core/include/NewPost/PostData.php:300
+msgid "Name is too long."
+msgstr ""
+
+#: nelliel_core/include/NewPost/PostData.php:314
+msgid "Email is too long."
+msgstr ""
+
+#: nelliel_core/include/NewPost/PostData.php:329
+msgid "Subject is too long."
+msgstr ""
+
+#: nelliel_core/include/NewPost/PostData.php:344
+msgid "Comment is too long."
+msgstr ""
+
+#: nelliel_core/include/NewPost/NewPost.php:50
+msgid "Board is locked. Cannot make new post."
+msgstr ""
+
+#: nelliel_core/include/NewPost/NewPost.php:112
+msgid "Post contains zero content. What was the point of this?"
+msgstr ""
+
+#: nelliel_core/include/NewPost/NewPost.php:118
+msgid "Post is too long. Try looking up the word concise."
+msgstr ""
+
+#: nelliel_core/include/NewPost/NewPost.php:269
+msgid "Flood detected! You're posting too fast, slow down."
+msgstr ""
+
+#: nelliel_core/include/NewPost/NewPost.php:283
+msgid "This thread is locked."
+msgstr ""
+
+#: nelliel_core/include/NewPost/NewPost.php:288
+msgid "The thread you have tried posting in is currently inaccessible or archived."
+msgstr ""
+
+#: nelliel_core/include/NewPost/NewPost.php:294
+msgid "The thread you have tried posting in could not be found."
+msgstr ""
+
+#: nelliel_core/include/NewPost/NewPost.php:300
+msgid "The thread has reached maximum posts."
+msgstr ""
+
+#: nelliel_core/include/NewPost/NewPost.php:305
+msgid "The thread is archived or buffered and cannot be posted to."
+msgstr ""
+
+#: nelliel_core/include/initializations.php:95
+msgid "Installation has not been done yet or is not complete."
+msgstr ""
+
+#: nelliel_core/include/initializations.php:112
+msgid "Versions do not match. An upgrade may be in progress or something is broken. "
+"Try again later."
+msgstr ""
+
+#: nelliel_core/include/Account/Login.php:54
+msgid "Detecting rapid login attempts. Wait a few seconds."
+msgstr ""
+
+#: nelliel_core/include/Account/Login.php:60
+#: nelliel_core/include/Account/Register.php:67
+msgid "No user ID provided."
+msgstr ""
+
+#: nelliel_core/include/Account/Login.php:66
+#: nelliel_core/include/Account/Register.php:72
+msgid "No password provided."
+msgstr ""
+
+#: nelliel_core/include/Account/Login.php:90
+msgid "User ID or password is incorrect."
+msgstr ""
+
+#: nelliel_core/include/Account/Session.php:96
+msgid "Session requires a secure connection."
+msgstr ""
+
+#: nelliel_core/include/Account/Session.php:105
+msgid "Session has expired."
+msgstr ""
+
+#: nelliel_core/include/Account/Session.php:124
+msgid "User does not exist or is inactive."
+msgstr ""
+
+#: nelliel_core/include/Account/Session.php:143
+#, php-format
+msgid "User %s logged out."
+msgstr ""
+
+#: nelliel_core/include/Account/Session.php:163
+msgid "Login has not been validated. Cannot start session."
+msgstr ""
+
+#: nelliel_core/include/Account/Session.php:170
+#, php-format
+msgid "User %s logged in."
+msgstr ""
+
+#: nelliel_core/include/Account/Session.php:234
+msgid "You must be logged in for this action."
+msgstr ""
+
+#: nelliel_core/include/Account/Register.php:61
+msgid "Site owner cannot be created. Install ID does not match."
+msgstr ""
+
+#: nelliel_core/include/Account/Register.php:77
+msgid "User already exists."
+msgstr ""
+
+#: nelliel_core/include/Account/Register.php:82
+msgid "Passwords do not match."
+msgstr ""
+
+#: nelliel_core/include/crypt.php:68
+msgid "No acceptable password hashing algorithm has been found. We can't function like "
+"this."
+msgstr ""
+
+#: nelliel_core/include/derp.php:12
+msgid "oh god how did this get in here"
+msgstr ""
+
+#: nelliel_core/include/derp.php:14
+msgid "Error ID: "
+msgstr ""
+
+#: nelliel_core/include/derp.php:16
+msgid "Error Message: "
+msgstr ""
+
+#: nelliel_core/include/Utility/FileHandler.php:253
+msgid "Filename was empty or was purged by filter."
+msgstr ""
+
+#: nelliel_core/include/Utility/NellielLogger.php:34
+msgid "Invalid log level. Level given: "
+msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/overboard.html
 msgid "Posted in"
@@ -166,35 +1254,6 @@ msgstr ""
 #: nelliel_core/templates/nelliel_basic/panels/wordfilters_main.html
 #: nelliel_core/templates/nelliel_basic/panels/icon_sets.html
 msgid "Actions"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/roles_main.html
-#: nelliel_core/templates/nelliel_basic/panels/dnsbl_main.html
-#: nelliel_core/templates/nelliel_basic/panels/users_main.html
-#: nelliel_core/templates/nelliel_basic/panels/wordfilters_main.html
-#: nelliel_core/include/Modules/Output/OutputPanelRoles.php:73
-#: nelliel_core/include/Modules/Output/OutputPanelDNSBL.php:108
-#: nelliel_core/include/Modules/Output/OutputPanelWordfilters.php:115
-#: nelliel_core/include/Modules/Output/OutputPanelFiletypes.php:115
-#: nelliel_core/include/Modules/Output/OutputPanelUsers.php:76
-#: nelliel_core/include/Modules/Output/OutputPanelBoardSettings.php:31
-#: nelliel_core/include/Modules/Output/OutputPanelSiteSettings.php:30
-msgid "Edit"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/roles_main.html
-#: nelliel_core/templates/nelliel_basic/panels/dnsbl_main.html
-#: nelliel_core/templates/nelliel_basic/panels/filetypes_main.html
-#: nelliel_core/templates/nelliel_basic/panels/staff_board.html
-#: nelliel_core/templates/nelliel_basic/panels/file_filters.html
-#: nelliel_core/templates/nelliel_basic/panels/users_main.html
-#: nelliel_core/templates/nelliel_basic/panels/news.html
-#: nelliel_core/templates/nelliel_basic/panels/bans_main.html
-#: nelliel_core/templates/nelliel_basic/panels/manage_boards.html
-#: nelliel_core/templates/nelliel_basic/panels/permissions.html
-#: nelliel_core/templates/nelliel_basic/panels/wordfilters_main.html
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:86
-msgid "Remove"
 msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/roles_main.html
@@ -379,13 +1438,6 @@ msgid "Banners"
 msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/site_settings.html
-#: nelliel_core/include/Modules/Output/OutputPanelBans.php:29
-#: nelliel_core/include/Modules/Output/OutputPanelBans.php:99
-#: nelliel_core/include/Modules/Output/OutputPanelBans.php:127
-msgid "Bans"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/site_settings.html
 msgid "Posts and rendering"
 msgstr ""
 
@@ -461,11 +1513,6 @@ msgid "{{ option_label }}"
 msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/pieces/settings_lock_update.html
-#: nelliel_core/include/Modules/Output/OutputPost.php:179
-msgid "Lock"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/pieces/settings_lock_update.html
 msgid "Force Update"
 msgstr ""
 
@@ -483,11 +1530,6 @@ msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/users_main.html
 msgid "Display Name"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/users_main.html
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:55
-msgid "Active"
 msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/users_main.html
@@ -653,11 +1695,6 @@ msgid "Board"
 msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/bans_main.html
-#: nelliel_core/include/Modules/Output/OutputPanelUsers.php:146
-msgid "Global"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/bans_main.html
 #: nelliel_core/templates/nelliel_basic/panels/reports.html
 msgid "Reason"
 msgstr ""
@@ -684,35 +1721,6 @@ msgid "Add New Ban"
 msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:28
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:85
-msgid "Manage Boards"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/include/Modules/Output/OutputPanelUsers.php:28
-#: nelliel_core/include/Modules/Output/OutputPanelUsers.php:75
-msgid "Users"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/include/Modules/Output/OutputPanelRoles.php:28
-#: nelliel_core/include/Modules/Output/OutputPanelRoles.php:72
-msgid "Roles"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/include/Modules/Output/OutputPanelSiteSettings.php:29
-msgid "Site Settings"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/templates/nelliel_basic/panels/board.html
-#: nelliel_core/include/Modules/Output/OutputPanelFileFilters.php:28
-msgid "File Filters"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
 msgid "If-Thens"
 msgstr ""
 
@@ -723,58 +1731,6 @@ msgstr ""
 #: nelliel_core/templates/nelliel_basic/panels/main.html
 #: nelliel_core/templates/nelliel_basic/panels/board.html
 msgid "Ban Controls"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/templates/nelliel_basic/panels/board.html
-#: nelliel_core/include/Modules/Output/OutputPanelReports.php:29
-msgid "Reports"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/include/Modules/Output/OutputPanelTemplates.php:29
-msgid "Templates"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/templates/nelliel_basic/panels/board_settings.html
-#: nelliel_core/include/Modules/Output/OutputPanelFiletypes.php:29
-#: nelliel_core/include/Modules/Output/OutputPanelFiletypes.php:114
-msgid "Filetypes"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/include/Modules/Output/OutputPanelStyles.php:29
-msgid "Styles"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/include/Modules/Output/OutputPanelPermissions.php:29
-msgid "Permissions"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/include/Modules/Output/OutputPanelIconSets.php:29
-msgid "Icon Sets"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/templates/nelliel_basic/navigation/site_links.html
-#: nelliel_core/include/Modules/Output/OutputPanelNews.php:29
-msgid "News"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/include/Modules/Output/OutputPanelDNSBL.php:28
-#: nelliel_core/include/Modules/Output/OutputPanelDNSBL.php:107
-msgid "DNSBL"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/main.html
-#: nelliel_core/templates/nelliel_basic/panels/board.html
-#: nelliel_core/include/Modules/Output/OutputPanelWordfilters.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelWordfilters.php:114
-msgid "Wordfilters"
 msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/main.html
@@ -798,18 +1754,7 @@ msgid "Extract Gettext Strings"
 msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/board.html
-#: nelliel_core/include/Modules/Output/OutputPanelBoardSettings.php:50
-msgid "Board Settings"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/board.html
 msgid "Thread Management"
-msgstr ""
-
-#: nelliel_core/templates/nelliel_basic/panels/board.html
-#: nelliel_core/include/Modules/Output/OutputIndex.php:44
-#: nelliel_core/include/Modules/Output/OutputThread.php:82
-msgid "Moderator Mode"
 msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/panels/board.html
@@ -1198,11 +2143,6 @@ msgstr ""
 msgid "Hide Thread"
 msgstr ""
 
-#: nelliel_core/templates/nelliel_basic/thread/headers/thread_options.html
-#: nelliel_core/include/Modules/Output/OutputPostingForm.php:90
-msgid "Reply"
-msgstr ""
-
 #: nelliel_core/templates/nelliel_basic/thread/file.html
 msgid "Show File"
 msgstr ""
@@ -1293,956 +2233,6 @@ msgstr ""
 
 #: nelliel_core/templates/nelliel_basic/thread/posting_form.html
 msgid "Never put anything in this field!"
-msgstr ""
-
-#: imgboard.php:39
-msgid "dd"
-msgid_plural "ee"
-msgstr[0] ""
-msgstr[1] ""
-
-#: nelliel_core/include/Domains/DomainSite.php:51
-#: nelliel_core/include/Domains/DomainBoard.php:60
-msgid "Nelliel Imageboard"
-msgstr ""
-
-#: nelliel_core/include/classes/DNSBL.php:61
-#, php-format
-msgid "Your IP was found on a DNS blacklist: %s"
-msgstr ""
-
-#: nelliel_core/include/classes/Snacks.php:100
-msgid "Ban appeals are not enabled."
-msgstr ""
-
-#: nelliel_core/include/classes/Snacks.php:107
-msgid "Invalid ban ID given."
-msgstr ""
-
-#: nelliel_core/include/classes/Snacks.php:112
-msgid "You cannot appeal a range ban."
-msgstr ""
-
-#: nelliel_core/include/classes/Snacks.php:118
-msgid "Your IP address does not match the one on the ban."
-msgstr ""
-
-#: nelliel_core/include/classes/Snacks.php:123
-msgid "You have already appealed your ban."
-msgstr ""
-
-#: nelliel_core/include/classes/ThreadHandler.php:59
-#, php-format
-msgid "You are trying to delete too many items at once. Limit is %d."
-msgstr ""
-
-#: nelliel_core/include/classes/Report.php:77
-#, php-format
-msgid "You are trying to report too many items at once. Limit is %d."
-msgstr ""
-
-#: nelliel_core/include/classes/BanHammer.php:67
-msgid "No IP address or hash provided."
-msgstr ""
-
-#: nelliel_core/include/classes/BanHammer.php:84
-msgid "IP address or hash is invalid."
-msgstr ""
-
-#: nelliel_core/include/Setup/Upgrade.php:28
-msgid "Already up to date!"
-msgstr ""
-
-#: nelliel_core/include/Setup/Upgrade.php:36
-#, php-format
-msgid "%d migrations have been completed."
-msgstr ""
-
-#: nelliel_core/include/Setup/Upgrade.php:40
-msgid "No migrations were needed."
-msgstr ""
-
-#: nelliel_core/include/Setup/Upgrade.php:48
-msgid "Upgrades completed!"
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:35
-msgid "Installation has already been completed!"
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:50
-msgid "Peppers file has been created."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:54
-msgid "Peppers file already present."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:70
-msgid "Site owner account already created."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:71
-msgid "Install has finished with no apparent problems! When you\\'re ready to "
-"continue, follow this link to the login page: "
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:74
-msgid "Login page"
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:81
-msgid "No problems so far! To complete setup, a site owner account needs to be "
-"created. This account will have all permissions by default. It is also "
-"necessary to use the site settings control panel."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:111
-msgid "Minimum PHP version required: "
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:112
-msgid "PHP version detected: "
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:116
-msgid "This version of PHP is too old! Upgrade to a version supported by Nelliel."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:135
-msgid "InnoDB engine is required for MySQL or MariaDB support but that engine is not "
-"available."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:139
-msgid "DB engine ok."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:147
-msgid "The core directory not writable."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:151
-msgid "The core directory is writable."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:159
-msgid "Nelliel main directory is not writable."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:163
-msgid "Main directory is writable."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:171
-msgid "Configuration directory is missing or not writable. Admin should check this "
-"out."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:175
-msgid "The configuration directory is writable."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:247
-msgid "Core database tables created."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:257
-msgid "Core directories created."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:319
-msgid "Core templates installed."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:350
-msgid "Core styles installed."
-msgstr ""
-
-#: nelliel_core/include/Setup/Setup.php:381
-msgid "Core icon sets installed."
-msgstr ""
-
-#: nelliel_core/include/Setup/Table.php:203
-#, php-format
-msgid "Creation of %s failed! Check database settings and config.php then retry "
-"installation."
-msgstr ""
-
-#: nelliel_core/include/Content/ContentThread.php:130
-msgid "Cannot remove thread. Board is locked."
-msgstr ""
-
-#: nelliel_core/include/Content/ContentPost.php:189
-msgid "Cannot remove post. Board is locked."
-msgstr ""
-
-#: nelliel_core/include/Content/ContentPost.php:206
-#, php-format
-msgid "You must wait %d seconds after making a post before it can be deleted."
-msgstr ""
-
-#: nelliel_core/include/Content/ContentPost.php:315
-msgid "Password is wrong or you are not allowed to delete that."
-msgstr ""
-
-#: nelliel_core/include/Content/ContentFile.php:145
-msgid "Cannot remove file. Board is locked."
-msgstr ""
-
-#: nelliel_core/include/initializations.php:97
-msgid "Installation has not been done yet or is not complete."
-msgstr ""
-
-#: nelliel_core/include/initializations.php:114
-msgid "Versions do not match. An upgrade may be in progress or something is broken. "
-"Try again later."
-msgstr ""
-
-#: nelliel_core/include/crypt.php:68
-msgid "No acceptable password hashing algorithm has been found. We can't function like "
-"this."
-msgstr ""
-
-#: nelliel_core/include/Modules/AntiSpam/CAPTCHA.php:80
-msgid "Requesting new CAPTCHAs too fast. Wait a minute."
-msgstr ""
-
-#: nelliel_core/include/Modules/AntiSpam/CAPTCHA.php:254
-msgid "CAPTCHA test failed."
-msgstr ""
-
-#: nelliel_core/include/Modules/AntiSpam/CAPTCHA.php:311
-msgid "reCAPTCHA test failed."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminStaffBoard.php:79
-msgid "You do not have access to the Staff Board panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminRoles.php:27
-msgid "The specified role does not exist."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminRoles.php:105
-msgid "You do not have access to the Roles panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminRoles.php:113
-msgid "You are not allowed to manage roles."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminStyles.php:99
-msgid "You do not have access to the Styles panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminStyles.php:107
-msgid "You are not allowed to manage styles."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminFiletypes.php:151
-msgid "You do not have access to the Filetypes panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminFiletypes.php:159
-msgid "You are not allowed to manage filetypes."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminDNSBL.php:129
-msgid "You do not have access to the DNSBL panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminDNSBL.php:137
-msgid "You are not allowed to manage DNSBL entries."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoards.php:80
-msgid "No board URI provided."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoards.php:87
-msgid "Board URI contains invalid characters. Must be alphanumeric only."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoards.php:96
-msgid "Board URI is reserved."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoards.php:104
-msgid "There is already a board with the URI "
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoards.php:111
-msgid "Had trouble registering the board URI "
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoards.php:148
-msgid "Board does not appear to exist."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoards.php:284
-msgid "You do not have access to the Manage Boards panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoards.php:292
-msgid "You are not allowed to manage boards."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminLogs.php:61
-msgid "You do not have access to the Logs panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminLogs.php:69
-msgid "You are not allowed to manage logs."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminIconSets.php:98
-msgid "You do not have access to the Icon Sets panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminIconSets.php:106
-msgid "You are not allowed to manage icon sets."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminFileFilters.php:86
-msgid "You do not have access to the File Filters panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminFileFilters.php:94
-msgid "You are not allowed to manage file filters."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminUsers.php:29
-msgid "The specified user does not exist."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminUsers.php:130
-msgid "You do not have access to the Users panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminUsers.php:138
-msgid "You are not allowed to manage users."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminThreads.php:210
-msgid "You are not allowed to delete by IP."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminThreads.php:240
-msgid "You do not have access to the Threads panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminThreads.php:248
-msgid "You are not allowed to manage threads or posts."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminSiteSettings.php:77
-msgid "You do not have access to the Site Settings panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminSiteSettings.php:85
-msgid "You are not allowed to manage site settings."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminReports.php:70
-msgid "You do not have access to the Reports panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminReports.php:78
-msgid "You are not allowed to manage reports."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoardSettings.php:196
-msgid "You do not have access to the New Board Defaults panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoardSettings.php:203
-msgid "You do not have access to the Board Settings panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoardSettings.php:214
-msgid "You are not allowed to manage board defaults."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBoardSettings.php:221
-msgid "You are not allowed to manage board settings."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminWordfilters.php:137
-msgid "You do not have access to the Wordfilters panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminWordfilters.php:145
-msgid "You are not allowed to manage wordfilters."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminNews.php:87
-msgid "You do not have access to the News panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminNews.php:95
-msgid "You are not allowed to manage news articles."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminPermissions.php:76
-msgid "You do not have access to the Permissions panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminPermissions.php:84
-msgid "You are not allowed to manage permissions."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBans.php:108
-msgid "You do not have access to the Bans panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminBans.php:116
-msgid "You are not allowed to manage bans."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminTemplates.php:102
-msgid "You do not have access to the Templates panel."
-msgstr ""
-
-#: nelliel_core/include/Modules/Admin/AdminTemplates.php:110
-msgid "You are not allowed to manage Templates."
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelRoles.php:29
-#: nelliel_core/include/Modules/Output/OutputPanelTemplates.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelIconSets.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:29
-#: nelliel_core/include/Modules/Output/OutputPanelPermissions.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelDNSBL.php:29
-#: nelliel_core/include/Modules/Output/OutputPanelWordfilters.php:31
-#: nelliel_core/include/Modules/Output/OutputPanelFileFilters.php:29
-#: nelliel_core/include/Modules/Output/OutputPanelStyles.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelBoard.php:28
-#: nelliel_core/include/Modules/Output/OutputPanelBoard.php:29
-#: nelliel_core/include/Modules/Output/OutputPanelLogs.php:31
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:51
-#: nelliel_core/include/Modules/Output/OutputPanelReports.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelStaffBoard.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelFiletypes.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelUsers.php:29
-#: nelliel_core/include/Modules/Output/OutputPanelNews.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelMain.php:30
-#: nelliel_core/include/Modules/Output/OutputPanelMain.php:31
-#: nelliel_core/include/Modules/Output/OutputPanelBans.php:30
-msgid "Main"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelRoles.php:64
-#: nelliel_core/include/Modules/Output/OutputPanelDNSBL.php:93
-#: nelliel_core/include/Modules/Output/OutputPanelWordfilters.php:100
-#: nelliel_core/include/Modules/Output/OutputPanelFiletypes.php:106
-#: nelliel_core/include/Modules/Output/OutputPanelUsers.php:67
-msgid "New"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPostingForm.php:72
-#, php-format
-msgid "Maximum files: %d"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPostingForm.php:90
-msgid "New thread"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPostingForm.php:102
-#, php-format
-msgid "Supported %s file types: "
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPostingForm.php:120
-#, php-format
-msgid "Maximum file size allowed is %dKB"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPostingForm.php:122
-#, php-format
-msgid "Images greater than %d x %d pixels will be thumbnailed."
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:56
-msgid "Lock Board"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:64
-msgid "Locked"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:65
-msgid "Unlock Board"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:89
-#, php-format
-msgid "You are about to delete the board: %s"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:90
-msgid "This will wipe out all posts, settings, files, everything. There is no undo or "
-"recovery."
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:92
-msgid "Are you sure?"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:93
-msgid "NOPE. Do not delete the board."
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelManageBoards.php:96
-msgid "Confirmed. Delete the board."
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelDNSBL.php:65
-#: nelliel_core/include/Modules/Output/OutputPanelWordfilters.php:72
-#: nelliel_core/include/Modules/Output/OutputPanelFiletypes.php:78
-msgid "Disable"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelDNSBL.php:74
-#: nelliel_core/include/Modules/Output/OutputPanelWordfilters.php:81
-#: nelliel_core/include/Modules/Output/OutputPanelFiletypes.php:87
-msgid "Enable"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:179
-msgid "Unlock"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:185
-msgid "Unsticky"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:185
-msgid "Sticky"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:191
-msgid "Unsage"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:191
-msgid "Sage"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:197
-msgid "Non-cyclic"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:197
-msgid "Cyclic"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:370
-msgid "Post success!"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:372
-#: nelliel_core/include/Modules/Output/OutputPost.php:382
-msgid "Click here if you are not automatically redirected"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPost.php:380
-msgid "The selected items have been deleted!"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputHeader.php:117
-msgid "Site Management"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputHeader.php:122
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:143
-msgid "Board Management"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputIndex.php:45
-msgid "View Index"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputIndex.php:195
-msgid "Previous"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputIndex.php:196
-msgid "Next"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelLogs.php:30
-msgid "Logs"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelLogs.php:84
-msgid "<<"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelLogs.php:85
-msgid ">>"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:50
-msgid "Threads"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:81
-msgid "Unsticky Thread"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:87
-msgid "Sticky Thread"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:94
-msgid "Unlock Thread"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:100
-msgid "Lock Thread"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:105
-msgid "Delete Thread"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:143
-msgid "Expanded Thread"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:160
-msgid "Delete Post"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelThreads.php:163
-msgid "Sticky Post"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelStaffBoard.php:29
-msgid "Staff Board"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelUsers.php:141
-msgid "Site"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelBoardSettings.php:43
-msgid "Board Default Settings"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputBanPage.php:32
-msgid "All Boards"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputThread.php:83
-msgid "View Thread"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelMain.php:95
-msgid "Site Owner"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputCatalog.php:33
-msgid "Catalog of "
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputCatalog.php:118
-msgid "Open thread"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelBans.php:100
-msgid "New Ban"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputPanelBans.php:128
-msgid "Modify Ban"
-msgstr ""
-
-#: nelliel_core/include/Modules/Output/OutputAboutNelliel.php:31
-msgid "Version: "
-msgstr ""
-
-#: nelliel_core/include/Modules/Language/Language.php:74
-msgid "You are not allowed to extract the gettext strings."
-msgstr ""
-
-#: nelliel_core/include/Modules/DispatchErrors.php:16
-msgid "The selected module is invalid."
-msgstr ""
-
-#: nelliel_core/include/Modules/DispatchErrors.php:21
-msgid "Section is invalid for this module."
-msgstr ""
-
-#: nelliel_core/include/Modules/DispatchErrors.php:26
-msgid "Action is invalid for this module."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:186
-msgid "Spoon is too big."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:191
-msgid "File is bigger than the server allows."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:196
-msgid "File is bigger than submission form allows."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:201
-msgid "Only part of the file was uploaded."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:206
-msgid "File size is 0 or Candlejack stole your uplo"
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:211
-msgid "Cannot save uploaded files to server for some reason."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:216
-msgid "The uploaded file just ain't right. Dunno why.'"
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:252
-msgid "That file is banned."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:289
-msgid "Duplicate file detected."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:304
-msgid "Unrecognized file type."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:309
-msgid "Filetype is not allowed."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:314
-msgid "Incorrect file type detected (does not match extension). Possible Hax."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:365
-msgid "Duplicate embed detected."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:394
-msgid "You are not allowed to post embedded content."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:409
-msgid "File uploads are not allowed."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:426
-msgid "An image, file or embed is required when replying."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:431
-msgid "An image, file or embed is required to make new thread."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:441
-#, php-format
-msgid "You have too many uploads in one post. Received %d embeds and %d files for a "
-"total of %d uploads. Limit is %d."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:449
-msgid "This thread has reached the maximum number of uploads."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:456
-msgid "The first post cannot have uploads."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:461
-msgid "Replies cannot have uploads."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:469
-msgid "The first post cannot have multiple uploads."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/Uploads.php:474
-msgid "You cannot have multiple uploads in a reply."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/PostData.php:100
-msgid "A comment is required when starting a thread."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/PostData.php:107
-msgid "A comment is required when replying."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/PostData.php:123
-#, php-format
-msgid "Comment contains too many cites. Maximum is %d."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/PostData.php:130
-#, php-format
-msgid "Comment contains too many cross-board cites. Maximum is %d."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/PostData.php:140
-#, php-format
-msgid "Comment contains too many URLs. Maximum is %d."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/PostData.php:300
-msgid "Name is too long."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/PostData.php:314
-msgid "Email is too long."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/PostData.php:329
-msgid "Subject is too long."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/PostData.php:344
-msgid "Comment is too long."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/NewPost.php:50
-msgid "Board is locked. Cannot make new post."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/NewPost.php:112
-msgid "Post contains zero content. What was the point of this?"
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/NewPost.php:118
-msgid "Post is too long. Try looking up the word concise."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/NewPost.php:269
-msgid "Flood detected! You're posting too fast, slow down."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/NewPost.php:283
-msgid "This thread is locked."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/NewPost.php:288
-msgid "The thread you have tried posting in is currently inaccessible or archived."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/NewPost.php:294
-msgid "The thread you have tried posting in could not be found."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/NewPost.php:300
-msgid "The thread has reached maximum posts."
-msgstr ""
-
-#: nelliel_core/include/Modules/NewPost/NewPost.php:305
-msgid "The thread is archived or buffered and cannot be posted to."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Login.php:54
-msgid "Detecting rapid login attempts. Wait a few seconds."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Login.php:60
-#: nelliel_core/include/Modules/Account/Register.php:67
-msgid "No user ID provided."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Login.php:66
-#: nelliel_core/include/Modules/Account/Register.php:72
-msgid "No password provided."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Login.php:90
-msgid "User ID or password is incorrect."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Session.php:96
-msgid "Session requires a secure connection."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Session.php:105
-msgid "Session has expired."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Session.php:124
-msgid "User does not exist or is inactive."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Session.php:143
-#, php-format
-msgid "User %s logged out."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Session.php:163
-msgid "Login has not been validated. Cannot start session."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Session.php:170
-#, php-format
-msgid "User %s logged in."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Session.php:234
-msgid "You must be logged in for this action."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Register.php:61
-msgid "Site owner cannot be created. Install ID does not match."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Register.php:77
-msgid "User already exists."
-msgstr ""
-
-#: nelliel_core/include/Modules/Account/Register.php:82
-msgid "Passwords do not match."
-msgstr ""
-
-#: nelliel_core/include/central_dispatch.php:153
-msgid "You are not allowed to regenerate board pages."
-msgstr ""
-
-#: nelliel_core/include/central_dispatch.php:165
-msgid "You are not allowed to regenerate board caches."
-msgstr ""
-
-#: nelliel_core/include/central_dispatch.php:175
-msgid "You are not allowed to regenerate site caches."
-msgstr ""
-
-#: nelliel_core/include/central_dispatch.php:185
-msgid "You are not allowed to regenerate overboard pages."
-msgstr ""
-
-#: nelliel_core/include/derp.php:12
-msgid "oh god how did this get in here"
-msgstr ""
-
-#: nelliel_core/include/derp.php:14
-msgid "Error ID: "
-msgstr ""
-
-#: nelliel_core/include/derp.php:16
-msgid "Error Message: "
-msgstr ""
-
-#: nelliel_core/include/Utility/FileHandler.php:253
-msgid "Filename was empty or was purged by filter."
-msgstr ""
-
-#: nelliel_core/include/Utility/NellielLogger.php:34
-msgid "Invalid log level. Level given: "
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: type_label
