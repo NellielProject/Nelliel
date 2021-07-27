@@ -1,8 +1,5 @@
 <?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 define('NEL_LIBRARY_PATH', NEL_CORE_PATH . 'libraries/'); // Libraries path
 

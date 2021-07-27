@@ -1,8 +1,5 @@
 <?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 spl_autoload_register(function ($class)
 {

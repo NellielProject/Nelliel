@@ -1,8 +1,5 @@
 <?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 function nel_clean_exit()
 {

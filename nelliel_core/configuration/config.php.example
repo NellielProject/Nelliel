@@ -1,8 +1,5 @@
 <?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 //
 // This file has only the very basic configuration needed to function and do setup.

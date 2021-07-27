@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Nelliel\NewPost;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Cites;
 use Nelliel\Account\Session;

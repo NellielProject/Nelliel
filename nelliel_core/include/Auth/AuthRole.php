@@ -6,10 +6,7 @@ namespace Nelliel\Auth;
 use PDO;
 use Nelliel\NellielPDO;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class AuthRole extends AuthHandler
 {

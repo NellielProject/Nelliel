@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Nelliel\IfThens;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class IfThen
 {

@@ -8,10 +8,7 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 abstract class Admin
 {
