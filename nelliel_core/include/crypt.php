@@ -106,11 +106,12 @@ function nel_password_needs_rehash(string $password, int $algorithm, array $opti
 
 function nel_ip_hash(string $ip_address)
 {
-    $hashed_ip = hash('sha256', $ip_address . NEL_IP_ADDRESS_PEPPER);
+    $hashed_ip = hash_hmac('sha256', $ip_address, NEL_IP_ADDRESS_PEPPER);
     return substr($hashed_ip, 0, 32);
 }
 
 function nel_post_password_hash(string $post_password)
 {
-    return hash('sha256', $post_password . NEL_POST_PASSWORD_PEPPER);
+    $hashed_password = hash_hmac('sha256', $post_password, NEL_POST_PASSWORD_PEPPER);
+    return $hashed_password;
 }

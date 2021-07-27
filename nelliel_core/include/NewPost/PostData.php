@@ -226,7 +226,7 @@ class PostData
         if (preg_match('/##((?:(?! ## ).)*)/u', $text, $matches) === 1)
         {
             $trip_key = $matches[1];
-            $trip_code = hash(nel_site_domain()->setting('secure_tripcode_algorithm'), $trip_key . NEL_TRIPCODE_PEPPER);
+            $trip_code = hash_hmac(nel_site_domain()->setting('secure_tripcode_algorithm'), $trip_key, NEL_TRIPCODE_PEPPER);
             $trip_code = base64_encode(pack("H*", $trip_code));
             $secure_tripcode = substr($trip_code, 2, 10);
         }

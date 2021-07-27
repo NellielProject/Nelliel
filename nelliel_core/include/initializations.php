@@ -103,10 +103,10 @@ if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php'))
 {
     $peppers = array();
     include_once NEL_GENERATED_FILES_PATH . 'peppers.php';
-    define('NEL_TRIPCODE_PEPPER', $peppers['tripcode_pepper']);
-    define('NEL_IP_ADDRESS_PEPPER', $peppers['ip_address_pepper']);
-    define('NEL_POSTER_ID_PEPPER', $peppers['poster_id_pepper']);
-    define('NEL_POST_PASSWORD_PEPPER', $peppers['post_password_pepper']);
+    define('NEL_TRIPCODE_PEPPER', hex2bin($peppers['tripcode_pepper']));
+    define('NEL_IP_ADDRESS_PEPPER', hex2bin($peppers['ip_address_pepper']));
+    define('NEL_POSTER_ID_PEPPER', hex2bin($peppers['poster_id_pepper']));
+    define('NEL_POST_PASSWORD_PEPPER', hex2bin($peppers['post_password_pepper']));
     unset($peppers);
 }
 

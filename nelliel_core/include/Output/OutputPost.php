@@ -243,8 +243,9 @@ class OutputPost extends Output
             {
                 $thread_headers['output'] = '-render';
                 $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                        'module=output&section=thread&actions=view&content-id=' . $thread_content_id->getIDString() . '&thread=' .
-                        $thread_content_id->threadID() . '&board-id=' . $this->domain->id() . '&modmode=true';
+                        'module=output&section=thread&actions=view&content-id=' . $thread_content_id->getIDString() .
+                        '&thread=' . $thread_content_id->threadID() . '&board-id=' . $this->domain->id() .
+                        '&modmode=true';
             }
 
             $header_data['thread_headers'] = $thread_headers;
@@ -263,8 +264,8 @@ class OutputPost extends Output
 
         if ($this->domain->setting('display_poster_id'))
         {
-            $raw_poster_id = hash('sha256',
-                    NEL_POSTER_ID_PEPPER . @inet_ntop($post_data['ip_address']) . $this->domain->id() .
+            $raw_poster_id = hash_hmac('sha256',
+                    @inet_ntop($post_data['ip_address'], NEL_POSTER_ID_PEPPER) . $this->domain->id() .
                     $thread_data['thread_id']);
             $poster_id = substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
             $post_headers['id_color_code'] = '#' . substr($raw_poster_id, 0, 6);
