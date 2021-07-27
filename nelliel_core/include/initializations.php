@@ -7,11 +7,6 @@ if (!defined('NELLIEL_VERSION'))
 use Nelliel\SQLCompatibility;
 use Nelliel\Utility\FileHandler;
 
-if (ini_get('date.timezone') === '')
-{
-    date_default_timezone_set('UTC');
-}
-
 define('NEL_BASE_HONEYPOT_FIELD1', 'display_signature'); // Honeypot field name
 define('NEL_BASE_HONEYPOT_FIELD2', 'signature'); // Honeypot field name
 define('NEL_BASE_HONEYPOT_FIELD3', 'website'); // Honeypot field name
@@ -23,6 +18,8 @@ $crypt_config = array();
 
 require_once NEL_CONFIG_FILES_PATH . 'config.php';
 
+define('NEL_DEFAULT_TIME_ZONE', $base_config['default_time_zone'] ?? 'UTC');
+date_default_timezone_set(NEL_DEFAULT_TIME_ZONE);
 define('NEL_DIRECTORY_PERM', $base_config['directory_perm'] ?? '0775');
 define('NEL_FILES_PERM', $base_config['file_perm'] ?? '0664');
 define('NEL_USE_FILE_CACHE', $base_config['use_file_cache'] ?? true);
