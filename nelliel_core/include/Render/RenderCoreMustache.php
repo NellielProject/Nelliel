@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
@@ -60,6 +59,11 @@ class RenderCoreMustache extends RenderCore
                 {
                     return $this->escapeString($value, 'css');
                 }]);
+
+        $this->mustache_engine->addHelper('gettext', function ($msgid)
+        {
+            return _gettext($msgid);
+        });
     }
 
     public function renderEngine()

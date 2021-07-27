@@ -78,7 +78,7 @@ class Language
     }
 
     public function extractLanguageStrings(Domain $domain, AuthUser $user, string $default_textdomain,
-            string $default_category)
+            int $default_category)
     {
         if (!$user->checkPermission($domain, 'perm_extract_gettext'))
         {
@@ -89,11 +89,12 @@ class Language
         $file_handler = nel_utilities()->fileHandler();
         $extracted = $extractor->assemblePoString($default_textdomain, $default_category);
 
-        foreach ($extracted as $category_str => $domain_output)
+        foreach ($extracted as $category_id => $domain_output)
         {
             foreach ($domain_output as $out_domain => $output)
             {
-                $directory = NEL_LANGUAGES_FILES_PATH . 'extracted/' . date('Y-m-d_H-i-s') . '/' . $category_str;
+                $directory = NEL_LANGUAGES_FILES_PATH . 'extracted/' . date('Y-m-d_H-i-s') . '/' .
+                        self::$gettext->categoryToString($category_id);
                 $file_handler->createDirectory($directory, NEL_DIRECTORY_PERM, true);
                 $file = $directory . '/' . $out_domain . '.pot';
                 $file_handler->writeFile($file, $output);
