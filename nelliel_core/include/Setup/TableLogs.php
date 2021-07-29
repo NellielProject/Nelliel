@@ -46,7 +46,11 @@ class TableLogs extends Table
             hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
             time                BIGINT NOT NULL,
             message             TEXT DEFAULT NULL,
-            moar                TEXT DEFAULT NULL
+            moar                TEXT DEFAULT NULL,
+            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            FOREIGN KEY (domain_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
         ) " . $options . ";";
 
         return $schema;

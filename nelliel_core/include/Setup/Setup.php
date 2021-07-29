@@ -179,10 +179,6 @@ class Setup
         $versions_table->createTable();
         $assets_table = new TableAssets($this->database, $this->sql_compatibility);
         $assets_table->createTable();
-        $bans_table = new TableBans($this->database, $this->sql_compatibility);
-        $bans_table->createTable();
-        $captcha_table = new TableCaptcha($this->database, $this->sql_compatibility);
-        $captcha_table->createTable();
         $settings_table = new TableSettings($this->database, $this->sql_compatibility);
         $settings_table->createTable();
         $board_defaults_table = new TableBoardConfig($this->database, $this->sql_compatibility);
@@ -198,35 +194,43 @@ class Setup
         $rate_limit_table->createTable();
         $site_config_table = new TableSiteConfig($this->database, $this->sql_compatibility);
         $site_config_table->createTable();
-        $logs_table = new TableLogs($this->database, $this->sql_compatibility);
-        $logs_table->createTable();
         $templates_table = new TableTemplates($this->database, $this->sql_compatibility);
         $templates_table->createTable();
         $plugins_table = new TablePlugins($this->database, $this->sql_compatibility);
         $plugins_table->createTable();
-        $staff_board_table = new TableStaffBoard($this->database, $this->sql_compatibility);
-        $staff_board_table->createTable();
         $pms_table = new TablePMs($this->database, $this->sql_compatibility);
         $pms_table->createTable();
         $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
         $blotter_table->createTable();
         $dnsbl_table = new TableDNSBL($this->database, $this->sql_compatibility);
         $dnsbl_table->createTable();
+        $noticeboard_table = new TableNoticeboard($this->database, $this->sql_compatibility);
+        $noticeboard_table->createTable();
+        $ip_notes_table = new TableIPNotes($this->database, $this->sql_compatibility);
+        $ip_notes_table->createTable();
 
-        // NOTE: The following tables rely on the board data table
-        // Board data must be created first!
+        // NOTE: The following tables rely on the domain registry table
+        // Domain registry must be created first!
+        $domain_registry_table = new TableDomainRegistry($this->database, $this->sql_compatibility);
+        $domain_registry_table->createTable();
         $board_data_table = new TableBoardData($this->database, $this->sql_compatibility);
         $board_data_table->createTable();
         $file_filters_table = new TableFileFilters($this->database, $this->sql_compatibility);
-        $file_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $file_filters_table->createTable();
         $overboard_table = new TableOverboard($this->database, $this->sql_compatibility);
-        $overboard_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $overboard_table->createTable();
         $reports_table = new TableReports($this->database, $this->sql_compatibility);
-        $reports_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $reports_table->createTable();
         $cites_table = new TableCites($this->database, $this->sql_compatibility);
-        $cites_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $cites_table->createTable();
         $word_filters_table = new TableWordFilters($this->database, $this->sql_compatibility);
-        $word_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $word_filters_table->createTable();
+        $logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $logs_table->createTable();
+        $bans_table = new TableBans($this->database, $this->sql_compatibility);
+        $bans_table->createTable();
+        $captcha_table = new TableCaptcha($this->database, $this->sql_compatibility);
+        $captcha_table->createTable();
 
         // NOTE: Tables must be created in order of:
         // roles -> permissions -> role permissions -> users -> user roles
@@ -235,12 +239,11 @@ class Setup
         $permissions_table = new TablePermissions($this->database, $this->sql_compatibility);
         $permissions_table->createTable();
         $role_permissions_table = new TableRolePermissions($this->database, $this->sql_compatibility);
-        $role_permissions_table->createTable(
-                ['roles_table' => NEL_ROLES_TABLE, 'permissions_table' => NEL_PERMISSIONS_TABLE]);
+        $role_permissions_table->createTable();
         $users_table = new TableUsers($this->database, $this->sql_compatibility);
         $users_table->createTable();
         $user_roles_table = new TableUserRoles($this->database, $this->sql_compatibility);
-        $user_roles_table->createTable(['users_table' => NEL_USERS_TABLE, 'roles_table' => NEL_ROLES_TABLE]);
+        $user_roles_table->createTable();
         echo _gettext('Core database tables created.'), '<br>';
     }
 

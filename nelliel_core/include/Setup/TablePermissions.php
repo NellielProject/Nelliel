@@ -81,9 +81,9 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_post_in_locked', 'Post in a locked thread']);
         $this->insertDefaultRow(['perm_edit_posts', 'Edit posts made by others']);
         $this->insertDefaultRow(['perm_move_posts', 'Move posts or threads']);
-        $this->insertDefaultRow(['perm_staff_board_access', 'Can view the staff noticeboard']);
-        $this->insertDefaultRow(['perm_staff_board_post', 'Can post on the staff noticeboard']);
-        $this->insertDefaultRow(['perm_staff_board_delete', 'Can delete posts on the staff noticeboard']);
+        $this->insertDefaultRow(['perm_noticeboard_access', 'Can view the staff noticeboard']);
+        $this->insertDefaultRow(['perm_noticeboard_post', 'Can post on the staff noticeboard']);
+        $this->insertDefaultRow(['perm_noticeboard_delete', 'Can delete posts on the staff noticeboard']);
         $this->insertDefaultRow(['perm_custom_capcode', 'Can use a custom capcode']);
         $this->insertDefaultRow(['perm_bypass_renzoku', 'Bypass posting cooldowns']);
         $this->insertDefaultRow(['perm_extract_gettext', 'Extract Gettext strings']);

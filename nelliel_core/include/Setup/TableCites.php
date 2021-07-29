@@ -41,12 +41,12 @@ class TableCites extends Table
             target_board    VARCHAR(50) NOT NULL,
             target_thread   INTEGER DEFAULT NULL,
             target_post     INTEGER DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['board_data_table'] . "
-            FOREIGN KEY (source_board) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
+            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            FOREIGN KEY (source_board) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk2_" . $this->table_name . "_" . $other_tables['board_data_table'] . "
-            FOREIGN KEY (target_board) REFERENCES " . $other_tables['board_data_table'] . " (board_id)
+            CONSTRAINT fk2_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            FOREIGN KEY (target_board) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
         ) " . $options . ";";

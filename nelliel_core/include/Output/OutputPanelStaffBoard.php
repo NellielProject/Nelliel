@@ -46,7 +46,7 @@ class OutputPanelStaffBoard extends Output
             $post_info['message'] = $post['message'];
             $post_info['time'] = date('Y/m/d (D) H:i:s', intval($post['post_time']));
 
-            if($this->session->user()->checkPermission($this->domain, 'perm_staff_board_delete'))
+            if($this->session->user()->checkPermission($this->domain, 'perm_noticeboard_delete'))
             {
                 $post_info['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(

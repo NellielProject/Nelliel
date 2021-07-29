@@ -13,7 +13,8 @@ if(file_exists('nelliel_base.php'))
     include 'nelliel_base.php';
 }
 
-define('NEL_CORE_PATH', realpath($core_path) . '/nelliel_core/'); // Base board files path
+define('NEL_CORE_DIRECTORY', 'nelliel_core'); // Core directory name
+define('NEL_CORE_PATH', realpath($core_path) . '/' . NEL_CORE_DIRECTORY . '/'); // Base board files path
 unset($core_path);
 
 define('NEL_INCLUDE_PATH', NEL_CORE_PATH . 'include/'); // Base include files path

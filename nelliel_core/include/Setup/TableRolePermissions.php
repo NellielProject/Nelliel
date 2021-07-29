@@ -35,12 +35,12 @@ class TableRolePermissions extends Table
             role_id         VARCHAR(50) NOT NULL,
             permission      VARCHAR(50) NOT NULL,
             perm_setting    SMALLINT NOT NULL DEFAULT 0,
-            CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['roles_table'] . "
-            FOREIGN KEY (role_id) REFERENCES " . $other_tables['roles_table'] . " (role_id)
+            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_ROLES_TABLE . "
+            FOREIGN KEY (role_id) REFERENCES " . NEL_ROLES_TABLE . " (role_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk2_" . $this->table_name . "_" . $other_tables['permissions_table'] . "
-            FOREIGN KEY (permission) REFERENCES " . $other_tables['permissions_table'] . " (permission)
+            CONSTRAINT fk2_" . $this->table_name . "_" . NEL_PERMISSIONS_TABLE . "
+            FOREIGN KEY (permission) REFERENCES " . NEL_PERMISSIONS_TABLE . " (permission)
             ON UPDATE CASCADE
             ON DELETE CASCADE
         ) " . $options . ";";
@@ -89,9 +89,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_in_locked', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_edit_posts', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_move_posts', 1]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_staff_board_access', 1]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_staff_board_post', 1]);
-        $this->insertDefaultRow(['SITE_ADMIN', 'perm_staff_board_delete', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_noticeboard_access', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_noticeboard_post', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_noticeboard_delete', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_custom_capcode', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_bypass_renzoku', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_extract_gettext', 1]);
@@ -134,9 +134,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_in_locked', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_edit_posts', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_move_posts', 1]);
-        $this->insertDefaultRow(['BOARD_OWNER', 'perm_staff_board_access', 1]);
-        $this->insertDefaultRow(['BOARD_OWNER', 'perm_staff_board_post', 1]);
-        $this->insertDefaultRow(['BOARD_OWNER', 'perm_staff_board_delete', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_noticeboard_access', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_noticeboard_post', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_noticeboard_delete', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_bypass_renzoku', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_extract_gettext', 0]);
@@ -179,9 +179,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_post_in_locked', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_edit_posts', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_move_posts', 1]);
-        $this->insertDefaultRow(['MODERATOR', 'perm_staff_board_access', 1]);
-        $this->insertDefaultRow(['MODERATOR', 'perm_staff_board_post', 1]);
-        $this->insertDefaultRow(['MODERATOR', 'perm_staff_board_delete', 0]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_noticeboard_access', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_noticeboard_post', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_noticeboard_delete', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_bypass_renzoku', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_extract_gettext', 0]);
@@ -224,9 +224,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_post_in_locked', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_edit_posts', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_move_posts', 0]);
-        $this->insertDefaultRow(['JANITOR', 'perm_staff_board_access', 1]);
-        $this->insertDefaultRow(['JANITOR', 'perm_staff_board_post', 0]);
-        $this->insertDefaultRow(['JANITOR', 'perm_staff_board_delete', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_noticeboard_access', 1]);
+        $this->insertDefaultRow(['JANITOR', 'perm_noticeboard_post', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_noticeboard_delete', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_bypass_renzoku', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_extract_gettext', 0]);
@@ -269,9 +269,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_post_in_locked', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_edit_posts', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_move_posts', 0]);
-        $this->insertDefaultRow(['BASIC_USER', 'perm_staff_board_access', 0]);
-        $this->insertDefaultRow(['BASIC_USER', 'perm_staff_board_post', 0]);
-        $this->insertDefaultRow(['BASIC_USER', 'perm_staff_board_delete', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_noticeboard_access', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_noticeboard_post', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_noticeboard_delete', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_bypass_renzoku', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_extract_gettext', 0]);

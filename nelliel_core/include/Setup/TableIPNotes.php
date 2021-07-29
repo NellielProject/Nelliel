@@ -9,19 +9,20 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use PDO;
 
-class TableBoardData extends Table
+class TableIPNotes extends Table
 {
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = NEL_BOARD_DATA_TABLE;
+        $this->table_name = NEL_NOTICEBOARD_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'db_prefix' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'user_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'subject' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'message' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -32,15 +33,12 @@ class TableBoardData extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            board_id        VARCHAR(50) NOT NULL UNIQUE,
-            db_prefix       VARCHAR(20) NOT NULL UNIQUE,
-            locked          SMALLINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
-            FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
-            ON UPDATE CASCADE
-            ON DELETE CASCADE
+            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            user_id     VARCHAR(50) NOT NULL,
+            time        BIGINT NOT NULL,
+            subject     TEXT NOT NULL,
+            message     TEXT NOT NULL,
+            moar        TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

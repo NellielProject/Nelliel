@@ -35,12 +35,16 @@ class TableUserRoles extends Table
             user_id     VARCHAR(50) NOT NULL,
             role_id     VARCHAR(50) NOT NULL,
             domain_id   VARCHAR(50) NOT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['users_table'] . "
-            FOREIGN KEY (user_id) REFERENCES " . $other_tables['users_table'] . " (user_id)
+            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_USERS_TABLE . "
+            FOREIGN KEY (user_id) REFERENCES " . NEL_USERS_TABLE . " (user_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk2_" . $this->table_name . "_" . $other_tables['roles_table'] . "
-            FOREIGN KEY (role_id) REFERENCES " . $other_tables['roles_table'] . " (role_id)
+            CONSTRAINT fk2_" . $this->table_name . "_" . NEL_ROLES_TABLE . "
+            FOREIGN KEY (role_id) REFERENCES " . NEL_ROLES_TABLE . " (role_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
+            CONSTRAINT fk3_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            FOREIGN KEY (domain_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
         ) " . $options . ";";

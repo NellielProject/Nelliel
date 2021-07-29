@@ -19,8 +19,8 @@ class TablePMs extends Table
         $this->table_name = NEL_PMS_TABLE;
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'sender_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'recipient_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'sender' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'recipient' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'message' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'read' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
@@ -35,8 +35,8 @@ class TablePMs extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            sender_id       VARCHAR(50) NOT NULL,
-            recipient_id    VARCHAR(50) NOT NULL,
+            sender          VARCHAR(50) NOT NULL,
+            recipient       VARCHAR(50) NOT NULL,
             message         TEXT NOT NULL,
             time_sent       BIGINT NOT NULL,
             message_read    SMALLINT NOT NULL DEFAULT 0,

@@ -71,7 +71,7 @@ class AdminStaffBoard extends Admin
 
     public function verifyAccess(Domain $domain)
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_staff_board_access'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_noticeboard_access'))
         {
             nel_derp(480, _gettext('You do not have access to the Staff Board panel.'));
         }
@@ -79,7 +79,7 @@ class AdminStaffBoard extends Admin
 
     public function verifyAction(Domain $domain)
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_staff_board_post'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_noticeboard_post'))
         {
             //nel_derp(441, _gettext('You are not allowed to manage news articles.'));
         }

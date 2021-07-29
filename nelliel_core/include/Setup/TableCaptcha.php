@@ -42,7 +42,11 @@ class TableCaptcha extends Table
             time_created    BIGINT NOT NULL,
             seen            SMALLINT DEFAULT 0,
             solved          SMALLINT DEFAULT 0,
-            moar            TEXT DEFAULT NULL
+            moar            TEXT DEFAULT NULL,
+            CONSTRAINT fk2_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            FOREIGN KEY (domain_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
         ) " . $options . ";";
 
         return $schema;

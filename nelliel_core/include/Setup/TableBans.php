@@ -43,7 +43,7 @@ class TableBans extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            board_id            VARCHAR(50) DEFAULT NULL,
+            board_id            VARCHAR(50) NOT NULL,
             creator             VARCHAR(50) NOT NULL,
             ip_type             SMALLINT NOT NULL DEFAULT 0,
             ip_address_start    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
@@ -56,7 +56,11 @@ class TableBans extends Table
             appeal              VARCHAR(255) DEFAULT NULL,
             appeal_response     VARCHAR(255) DEFAULT NULL,
             appeal_status       SMALLINT NOT NULL DEFAULT 0,
-            moar                TEXT DEFAULT NULL
+            moar                TEXT DEFAULT NULL,
+            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
         ) " . $options . ";";
 
         return $schema;

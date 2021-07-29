@@ -85,10 +85,10 @@ class AdminBoards extends Admin
             }
         }
 
-        if ($board_uri === Domain::SITE || $board_uri === NEL_ASSETS_DIR || $board_uri === 'nelliel_core' ||
-                $board_uri === $site_domain->setting('overboard_uri') ||
-                $board_uri === $site_domain->setting('sfw_overboard_uri') || $board_uri === 'documentation' ||
-                $board_uri === 'site')
+        if ($board_uri === Domain::SITE || $board_uri === Domain::GLOBAL || $board_uri === NEL_ASSETS_DIR ||
+                $board_uri === NEL_CORE_DIRECTORY || $board_uri === $site_domain->setting('overboard_uri') ||
+                $board_uri === $site_domain->setting('sfw_overboard_uri') || $board_uri === NEL_DOCUMENTATION_DIR ||
+                $board_uri === NEL_ASSETS_DIR)
         {
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
@@ -110,11 +110,17 @@ class AdminBoards extends Admin
 
         $hashed_board_id = hash('sha256', $board_uri);
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . $this->data_table . '" ("board_id", "hashed_board_id", "db_prefix") VALUES (?, ?, ?)');
+                'INSERT INTO "' . NEL_DOMAIN_REGISTRY_TABLE . '" ("domain_id", "hashed_domain_id") VALUES (?, ?)');
         $prepared->bindValue(1, $board_uri, PDO::PARAM_STR);
         $prepared->bindValue(2, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
-        $prepared->bindValue(3, $db_prefix, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
+
+        $prepared = $this->database->prepare(
+                'INSERT INTO "' . $this->data_table . '" ("board_id", "db_prefix") VALUES (?, ?)');
+        $prepared->bindValue(1, $board_uri, PDO::PARAM_STR);
+        $prepared->bindValue(2, $db_prefix, PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
+
         $setup = new Setup($this->database, new SQLCompatibility($this->database), new FileHandler());
         $setup->createBoardTables($board_uri, $db_prefix);
         $setup->createBoardDirectories($board_uri);
@@ -148,6 +154,7 @@ class AdminBoards extends Admin
         if (!$this->remove_confirmed)
         {
             $this->createInterstitial('remove_warning');
+            return;
         }
 
         if ($this->database->tableExists($domain->reference('config_table')) . '"')
@@ -187,7 +194,7 @@ class AdminBoards extends Admin
 
         nel_utilities()->fileHandler()->eraserGun($domain->reference('board_path'));
         $domain->deleteCache();
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "board_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new Regen();
         $regen->boardList($this->domain);
