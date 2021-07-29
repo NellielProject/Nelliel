@@ -154,10 +154,8 @@ abstract class Domain
         $this->loadReferences();
     }
 
-    public static function getDomainFromID(?string $id, NellielPDO $database): Domain
+    public static function getDomainFromID(string $id, NellielPDO $database): Domain
     {
-        $id = nel_convert_global_ID($id, false);
-
         if ($id === Domain::SITE)
         {
             return new DomainSite($database);

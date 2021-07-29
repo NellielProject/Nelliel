@@ -58,7 +58,7 @@ class AdminWordfilters extends Admin
     public function add(): void
     {
         $this->verifyAction($this->domain);
-        $board_id = nel_convert_global_ID($_POST['board_id'] ?? '', true);
+        $board_id = $_POST['board_id'] ?? '';
         $text_match = $_POST['text_match'] ?? '';
         $replacement = $_POST['replacement'] ?? '';
         $is_regex = $_POST['is_regex'] ?? 0;

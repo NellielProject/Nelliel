@@ -37,8 +37,7 @@ class BanHammer
     {
         $ban_id = $_POST['ban_id'] ?? null;
         $existing_ban = (!is_null($ban_id)) ? $this->loadFromID($ban_id) : false;
-        $temp_id = $this->ban_data['board_id'] = $_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null;
-        $this->ban_data['board_id'] = nel_filter_global_ID($temp_id, 'perm_manage_bans', $this->session->user());
+        $this->ban_data['board_id'] = $_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null;
         $this->ban_data['seen'] = $_POST['ban_seen'] ?? $this->ban_data['seen'] ?? 0;
         $global = $_POST['ban_global'] ?? 0;
 
@@ -50,6 +49,11 @@ class BanHammer
         if ($global > 0)
         {
             $this->ban_data['board_id'] = Domain::GLOBAL;
+        }
+
+        if(is_null($this->ban_data['board_id']))
+        {
+            nel_derp(158, _gettext('No board or domain given for the ban.'));
         }
 
         if (empty($this->ban_data['creator']))
