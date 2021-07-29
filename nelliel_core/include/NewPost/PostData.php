@@ -76,6 +76,7 @@ class PostData
         $subject = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
         $post->changeData('subject', $this->fieldMaxCheck('subject', $subject));
         $comment = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
+        $post->changeData('original_comment', $comment);
         $post->changeData('comment', $this->fieldMaxCheck('comment', $comment));
         $post->changeData('fgsfds', $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string'));
         $post->changeData('post_password', $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string'));

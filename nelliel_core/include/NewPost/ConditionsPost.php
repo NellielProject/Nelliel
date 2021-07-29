@@ -58,12 +58,32 @@ class ConditionsPost implements Conditions
                     $met = preg_match($condition, $this->post->data('comment'));
                     break;
 
+                case 'original_comment':
+                    $met = preg_match($condition, $this->post->data('original_comment'));
+                    break;
+
                 case 'tripcode':
                     $met = $condition === $this->post->data('tripcode');
                     break;
 
                 case 'secure_tripcode':
                     $met = $condition === $this->post->data('secure_tripcode');
+                    break;
+
+                case 'ip_address':
+                    $met = preg_match($condition, $this->post->data('ip_address'));
+                    break;
+
+                case 'hashed_ip_address':
+                    $met = preg_match($condition, $this->post->data('hashed_ip_address'));
+                    break;
+
+                case 'post_time':
+                    $met = $condition === intval($this->post->data('post_time'));
+                    break;
+
+                case 'post_time_milli':
+                    $met = $condition === intval($this->post->data('post_time_milli'));
                     break;
 
                 case 'has_content':
@@ -88,6 +108,10 @@ class ConditionsPost implements Conditions
 
                 case 'is_saged':
                     $met = $condition === boolval($this->post->data('sage'));
+                    break;
+
+                case 'content_hash':
+                    $met = $condition === $this->post->data('content_hash');
                     break;
             }
 
