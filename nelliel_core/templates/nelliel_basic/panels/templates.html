@@ -1,13 +1,13 @@
 <table class="data-table">
-	<caption class="data-table-caption" data-i18n="gettext">Installed templates</caption>
+	<caption class="data-table-caption" data-gettext="">Installed templates</caption>
 	<thead class="data-table-header">
 		<tr>
-			<th data-i18n="gettext">Template ID</th>
-			<th data-i18n="gettext">Name</th>
-			<th data-i18n="gettext">Directory</th>
-			<th data-i18n="gettext">Output</th>
-			<th data-i18n="gettext">Default</th>
-			<th data-i18n="gettext">Actions</th>
+			<th data-gettext="">Template ID</th>
+			<th data-gettext="">Name</th>
+			<th data-gettext="">Directory</th>
+			<th data-gettext="">Output</th>
+			<th data-gettext="">Default</th>
+			<th data-gettext="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -19,16 +19,16 @@
 			<td>{{ output }}</td>
 			<td>
 	{{^ is_default }}
-				<span data-i18n="gettext">No</span>
+				<span data-gettext="">No</span>
 	{{/ is_default }}
 	{{# is_default }}
-				<span data-i18n="gettext">Yes</span>
+				<span data-gettext="">Yes</span>
 	{{/ is_default }}
 			</td>
 			<td>
 	{{^ is_default }}
-				<span>[<a class="display-cell" href="{{ default_url }}" data-i18n="gettext">Make Default</a>]</span>
-				<span>[<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Uninstall</a>]</span>
+				<span>[<a class="display-cell" href="{{ default_url }}" data-gettext="">Make Default</a>]</span>
+				<span>[<a class="display-cell" href="{{ remove_url }}" data-gettext="">Uninstall</a>]</span>
 	{{/ is_default }}
 			</td>
 		</tr>
@@ -37,15 +37,15 @@
 </table>
 <hr>
 <table class="data-table">
-	<caption class="data-table-caption" data-i18n="gettext">Available templates</caption>
+	<caption class="data-table-caption" data-gettext="">Available templates</caption>
 	<thead class="data-table-header">
 		<tr>
-			<th data-i18n="gettext">Template ID</th>
-			<th data-i18n="gettext">Name</th>
-			<th data-i18n="gettext">Directory</th>
-			<th data-i18n="gettext">Output</th>
-			<th data-i18n="gettext">Installed</th>
-			<th data-i18n="gettext">Actions</th>
+			<th data-gettext="">Template ID</th>
+			<th data-gettext="">Name</th>
+			<th data-gettext="">Directory</th>
+			<th data-gettext="">Output</th>
+			<th data-gettext="">Installed</th>
+			<th data-gettext="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -57,15 +57,15 @@
 			<td>{{ output }}</td>
 			<td>
 	{{^ is_installed }}
-				<span data-i18n="gettext">No</span>
+				<span data-gettext="">No</span>
 	{{/ is_installed }}
 	{{# is_installed }}
-				<span data-i18n="gettext">Yes</span>
+				<span data-gettext="">Yes</span>
 	{{/ is_installed }}
 			</td>
 			<td>
 	{{^ is_installed }}
-				<span>[<a class="display-cell" href="{{ install_url }}" data-i18n="gettext">Install</a>]</span>
+				<span>[<a class="display-cell" href="{{ install_url }}" data-gettext="">Install</a>]</span>
 	{{/ is_installed }}
 			</td>
 		</tr>

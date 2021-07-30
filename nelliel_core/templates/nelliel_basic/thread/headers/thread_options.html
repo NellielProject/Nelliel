@@ -1,11 +1,11 @@
 {{# thread_headers }}
 <span class="thread-header-options">
 	{{# index_render }}
-	<span class="hide-thread hidden" data-jsonly="">[<a class="toggle-thread" href="#" data-command="hide-thread" data-content-id="{{ post_content_id }}" data-alt-visual="Show Thread" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Hide Thread</a>]</span>
+	<span class="hide-thread hidden" data-jsonly="">[<a class="toggle-thread" href="#" data-command="hide-thread" data-content-id="{{ post_content_id }}" data-alt-visual="Show Thread" data-gettext="data-alt-visual" data-gettext="">Hide Thread</a>]</span>
 		{{# abbreviate }}
-	<span class="expand-thread hidden" data-jsonly="">[<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-thread-page="{{ thread_page }}" data-alt-visual="Collapse Thread" data-i18n-attributes="gettext|data-alt-visual" data-i18n="gettext">Expand Thread</a>]</span>
+	<span class="expand-thread hidden" data-jsonly="">[<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-thread-page="{{ thread_page }}" data-alt-visual="Collapse Thread" data-gettext="data-alt-visual" data-gettext="">Expand Thread</a>]</span>
 		{{/ abbreviate }}
-	<span class="reply-thread">[<a href="{{ reply_to_url }}" data-i18n="gettext">Reply</a>]</span>
+	<span class="reply-thread">[<a href="{{ reply_to_url }}" data-gettext="">Reply</a>]</span>
 	{{/ index_render }}
 </span>
 {{/ thread_headers }}

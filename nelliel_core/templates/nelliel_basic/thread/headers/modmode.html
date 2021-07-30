@@ -1,10 +1,10 @@
 {{# modmode_headers }}
 <div class="modmode-header">
 	<span>[<span>{{ ip_address }}</span>]</span>
-	{{# can_ban }}<span>[<a href="{{ ban_url }}" data-i18n="gettext">Ban</a>]</span>{{/ can_ban }}
-	{{# can_delete }}<span>[<a href="{{ delete_url }}" data-i18n="gettext">Delete</a>]</span>{{/ can_delete }}
-	{{# can_by_ip }}<span>[<a href="{{ delete_by_ip_url }}" data-i18n="gettext">Delete by IP</a>]</span>{{/ can_by_ip }}
-	{{# can_ban_delete }}<span>[<a href="{{ ban_delete_url }}" data-i18n="gettext">Ban and Delete</a>]</span>{{/ can_ban_delete }}
+	{{# can_ban }}<span>[<a href="{{ ban_url }}" data-gettext="">Ban</a>]</span>{{/ can_ban }}
+	{{# can_delete }}<span>[<a href="{{ delete_url }}" data-gettext="">Delete</a>]</span>{{/ can_delete }}
+	{{# can_by_ip }}<span>[<a href="{{ delete_by_ip_url }}" data-gettext="">Delete by IP</a>]</span>{{/ can_by_ip }}
+	{{# can_ban_delete }}<span>[<a href="{{ ban_delete_url }}" data-gettext="">Ban and Delete</a>]</span>{{/ can_ban_delete }}
 	{{^ response }}
 	{{# can_lock }}<span>[<a href="{{ lock_url }}">{{ lock_text }}</a>]</span>{{/ can_lock }}
 	{{# can_sticky }}<span>[<a href="{{ sticky_url }}">{{ sticky_text }}</a>]</span>{{/ can_sticky }}

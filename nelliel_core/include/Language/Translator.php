@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Language;
 
@@ -37,44 +36,32 @@ class Translator
 
     public function translateDOM($dom)
     {
-        $content_node_list = $dom->getElementsByAttributeName('data-i18n');
-        $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
-
-        foreach ($attribute_node_list as $node)
-        {
-            $split_attribute = explode('|', $node->getAttribute('data-i18n-attributes'), 2);
-
-            if ($split_attribute[0] === 'gettext')
-            {
-                $this->gettextAttribute($node);
-                $node->removeAttribute('data-i18n-attributes');
-            }
-        }
+        $content_node_list = $dom->getElementsByAttributeName('data-gettext');
 
         foreach ($content_node_list as $node)
         {
-            if ($node->getAttribute('data-i18n') === 'gettext')
+            if ($node->getAttribute('data-gettext') === '')
             {
                 $this->gettextContent($node);
-                $node->removeAttribute('data-i18n');
             }
+            else
+            {
+                $this->gettextAttribute($node);
+            }
+
+            $node->removeAttribute('data-gettext');
         }
     }
 
     private function gettextAttribute($node)
     {
-        $split_attribute = explode('|', $node->getAttribute('data-i18n-attributes'), 2);
-        $attribute_list = explode(',', $split_attribute[1]);
-        $new_text = '';
+        $attribute_list = explode('|', $node->getAttribute('data-gettext'));
 
         foreach ($attribute_list as $attribute_name)
         {
             $attribute_name = trim($attribute_name);
             $attribute_value = $node->getAttribute($attribute_name);
-            $new_text = _gettext($attribute_value);
-            $attribute_node = $node->ownerDocument->createFullAttribute($attribute_name, $new_text, 'none');
-            //$attribute_node->value = $new_text;
-            $node->setAttributeNode($attribute_node);
+            $node->modifyAttribute($attribute_name, _gettext($attribute_value));
         }
     }
 

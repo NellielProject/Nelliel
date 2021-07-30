@@ -1,28 +1,28 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="subject" class="display-cell" data-i18n="gettext">Subject</label>
+			<label for="subject" class="display-cell" data-gettext="">Subject</label>
 			<input id="subject" class="display-cell" type="text" name="subject" size="30">
 		</div>
 		<div class="display-row">
-			<label for="message" class="display-cell" data-i18n="gettext">Message</label>
+			<label for="message" class="display-cell" data-gettext="">Message</label>
 			<textarea id="message" class="display-cell" name="message" cols="80" rows="6"></textarea>
 		</div>
 		<div class="display-row">
-			<input type="submit" value="Post Notice" data-i18n-attributes="gettext|value">
+			<input type="submit" value="Post Notice" data-gettext="value">
 		</div>
 	</div>
 </form>
 <hr>
 <table class="data-table">
-	<caption class="data-table-caption" data-i18n="gettext">Staff Notices</caption>
+	<caption class="data-table-caption" data-gettext="">Staff Notices</caption>
 	<thead class="data-table-header">
 		<tr>
-			<th data-i18n="gettext">User</th>
-			<th data-i18n="gettext">Subject</th>
-			<th data-i18n="gettext">Message</th>
-			<th data-i18n="gettext">Time</th>
-			<th data-i18n="gettext">Actions</th>
+			<th data-gettext="">User</th>
+			<th data-gettext="">Subject</th>
+			<th data-gettext="">Message</th>
+			<th data-gettext="">Time</th>
+			<th data-gettext="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -33,7 +33,7 @@
 			<td>{{ message }}</td>
 			<td>{{ time }}</td>
 			<td>
-				<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove</a>
+				<a class="display-cell" href="{{ remove_url }}" data-gettext="">Remove</a>
 			</td>
 		</tr>
 {{/ board_posts }}
