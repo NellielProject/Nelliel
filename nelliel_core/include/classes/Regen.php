@@ -66,6 +66,29 @@ class Regen
         }
     }
 
+    public function allBoards(bool $pages, bool $cache)
+    {
+        $domain = nel_site_domain();
+        $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
+                PDO::FETCH_COLUMN);
+
+        foreach ($board_ids as $id)
+        {
+            $board_domain = Domain::getDomainFromID($id, $domain->database());
+
+            if($cache)
+            {
+                $board_domain->regenCache();
+            }
+
+            if($pages)
+            {
+                $this->allBoardPages($board_domain);
+            }
+        }
+    }
+
+    // TODO: Figure this out better?
     public function boardList(Domain $domain)
     {
         $board_json = new JSONBoard($domain, nel_utilities()->fileHandler());

@@ -1,16 +1,21 @@
 <div>
-	<span data-i18n="gettext">User ID:</span>&nbsp;<span>{{ user_id }}</span>
+	<span class="label" data-i18n="gettext">User ID:</span>
+	<span>{{ user_id }}</span>
 </div>
 <div>
-	<span data-i18n="gettext">Display Name:</span>&nbsp;<span>{{ display_name }}</span>
+	<span class="label" data-i18n="gettext">Display Name:</span>
+	<span>{{ display_name }}</span>
 </div>
 <div>
-	<span data-i18n="gettext">Last Login:</span>&nbsp;<span>{{ last_login }}</span>
+	<span class="label" data-i18n="gettext">Last Login:</span>
+	<span>{{ last_login }}</span>
 </div>
 <hr>
-<div><span>Boards you own or moderate:</span></div>
+<div>
+	<span data-i18n="gettext">Boards you own or moderate:</span>
+</div>
 <div>
 	{{# board_list }}
-	<div><a href="{{ board_url }}">{{ board_id }}</a> - <span>Role:</span>&nbsp;<span>{{ board_role }}</span></div>
+	<div><a href="{{ board_url }}">{{ board_id }}</a> - <span class="label" data-i18n="gettext">Role:</span><span>{{ board_role }}</span></div>
 	{{/ board_list }}
 </div>

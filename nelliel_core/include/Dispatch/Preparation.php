@@ -92,7 +92,7 @@ class Preparation
 
         $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);
 
-        if ($inputs['module'] === 'threads')
+        if ($inputs['module'] === 'new-post')
         {
             $snacks = new Snacks($domain, new BansAccess(nel_database()));
             $snacks->applyBan();

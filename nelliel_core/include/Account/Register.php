@@ -88,7 +88,7 @@ class Register
         }
         else
         {
-            $new_user->modifyRole('', 'BASIC_USER');
+            $new_user->modifyRole(Domain::SITE, 'BASIC_USER');
             $new_user->changeData('owner', 0);
         }
 

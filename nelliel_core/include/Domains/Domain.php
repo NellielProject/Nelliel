@@ -6,11 +6,12 @@ namespace Nelliel\Domains;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\FrontEndData;
+use Nelliel\NellielCacheInterface;
 use Nelliel\NellielPDO;
 use Nelliel\Language\Language;
 use Nelliel\Language\Translator;
 
-abstract class Domain
+abstract class Domain implements NellielCacheInterface
 {
     const SITE = '_site_';
     const GLOBAL = '_global_';

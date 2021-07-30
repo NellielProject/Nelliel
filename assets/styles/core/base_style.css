@@ -378,6 +378,10 @@ form {
 }
 
 /* Other */
+.label {
+	margin-right: 0.25em;
+}
+
 .header-banner {
 	clear: both;
 	margin: auto;

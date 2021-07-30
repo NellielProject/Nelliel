@@ -6,9 +6,10 @@ namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
+use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class AdminSiteSettings extends Admin
 {
@@ -60,6 +61,10 @@ class AdminSiteSettings extends Admin
 
         $this->domain->regenCache();
         $this->domain->reload();
+        $regen = new Regen();
+        $regen->allBoards(true, false);
+        $regen->overboard(nel_site_domain());
+        $regen->boardList(nel_site_domain());
         $this->outputMain(true);
     }
 
