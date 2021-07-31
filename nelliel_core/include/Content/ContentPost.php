@@ -74,7 +74,8 @@ class ContentPost extends ContentHandler
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address, "hashed_ip_address" = :hashed_ip_address,
                     "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_content" = :has_content,
                     "total_content" = :total_content, "file_count" = :file_count, "embed_count" = :embed_count,
-                    "op" = :op, "sage" = :sage, "account_id" = :account_id, "mod_comment" = :mod_comment
+                    "op" = :op, "sage" = :sage, "account_id" = :account_id, "mod_comment" = :mod_comment,
+                    "content_hash" = :content_hash, "regen_cache" = :regen_cache, "cache" = :cache
                     WHERE "post_number" = :post_number');
             $prepared->bindValue(':post_number', $this->content_id->postID(), PDO::PARAM_INT);
         }
@@ -87,7 +88,7 @@ class ContentPost extends ContentHandler
                     "total_content", "file_count", "embed_count", "op", "sage", "account_id", "mod_comment") VALUES
                     (:parent_thread, :name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address,
                     :hashed_ip_address, :post_time, :post_time_milli, :has_content, :total_content, :file_count, :embed_count,
-                    :op, :sage, :account_id, :mod_comment)');
+                    :op, :sage, :account_id, :mod_comment, :content_hash, :regen_cache, :cache)');
         }
 
         $prepared->bindValue(':parent_thread',
@@ -116,6 +117,9 @@ class ContentPost extends ContentHandler
         $prepared->bindValue(':sage', $this->contentDataOrDefault('sage', 0), PDO::PARAM_INT);
         $prepared->bindValue(':account_id', $this->contentDataOrDefault('account_id', null), PDO::PARAM_STR);
         $prepared->bindValue(':mod_comment', $this->contentDataOrDefault('mod_comment', null), PDO::PARAM_STR);
+        $prepared->bindValue(':content_hash', $this->contentDataOrDefault('content_hash', null), PDO::PARAM_STR);
+        $prepared->bindValue(':regen_cache', $this->contentDataOrDefault('regen_cache', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':cache', $this->contentDataOrDefault('cache', ''), PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         $this->archive_prune->updateThreads();
         return true;

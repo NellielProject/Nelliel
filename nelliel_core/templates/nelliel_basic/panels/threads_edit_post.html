@@ -1,0 +1,27 @@
+<form id="posting-form" class="display-table posting-form" accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data" data-jsevents="click|change">
+	<input type="hidden" name="return_url" value="{{ return_url }}">
+	<div>
+		{{^ forced_anonymous }}
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-gettext="">Name</span>
+			<input type="text" class="posting-form-input" name="not_anonymous" size="30" value="{{ not_anonymous_value }}" maxlength="255">
+		</label>
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-gettext="">E-mail</span>
+			<input class="posting-form-input" type="text" name="spam_target" size="30" value="{{ spam_target_value }}"  maxlength="255">
+		</label>
+		{{/ forced_anonymous }}
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-gettext="">Subject</span>
+			<input class="posting-form-input" type="text" name="verb" size="30" value="{{ verb_value }}"  maxlength="255">
+		</label>
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-gettext="">Comment</span>
+			<textarea id="wordswordswords" class="posting-form-input" name="wordswordswords" cols="30" rows="6">{{ wordswordswords_value }}</textarea>
+		</label>
+		<div class="posting-form-row">
+			<span class="display-cell"></span>
+			<input type="submit" value="Update Post" data-gettext="value">
+		</div>
+	</div>
+</form>

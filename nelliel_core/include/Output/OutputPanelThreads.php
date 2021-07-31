@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -8,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use PDO;
+use Nelliel\Content\ContentID;
 
 class OutputPanelThreads extends Output
 {
@@ -170,6 +170,34 @@ class OutputPanelThreads extends Output
             $this->render_data['posts'][] = $post_info;
         }
 
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
+        $this->render_data['footer'] = $output_footer->render([], true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
+        echo $output;
+        return $output;
+    }
+
+    public function editPost(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $this->setBodyTemplate('panels/threads_edit_post');
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Edit Post');
+        $post = $parameters['post'] ?? null;
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
+        $this->render_data['not_anonymous_value'] = $post->data('name');
+        $this->render_data['spam_target_value'] = $post->data('email');
+        $this->render_data['verb_value'] = $post->data('subject');
+        $this->render_data['wordswordswords_value'] = $post->data('comment');
+        $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] . '&goback=true'; // TODO: Use a standard content return url/builder
+        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                http_build_query(
+                        ['module' => 'admin', 'section' => 'threads', 'actions' => 'update-post',
+                            'board-id' => $post->domain()->id(), 'content-id' => $post->contentID()->getIDString(),
+                            'modmode' => 'true', 'goback' => 'true']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

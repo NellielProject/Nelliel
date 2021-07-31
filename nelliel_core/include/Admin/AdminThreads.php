@@ -5,11 +5,13 @@ namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Redirect;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainSite;
+use Nelliel\Output\OutputPanelThreads;
 use PDO;
 
 class AdminThreads extends Admin
@@ -64,6 +66,14 @@ class AdminThreads extends Admin
 
                 case 'sage':
                     $this->permasage();
+                    break;
+
+                case 'edit-post':
+                    $this->editPost();
+                    break;
+
+                case 'update-post':
+                    $this->updatePost();
                     break;
 
                 case 'cyclic':
@@ -228,6 +238,38 @@ class AdminThreads extends Admin
         {
             $this->regenThread($thread_id, $value);
         }
+    }
+
+    public function editPost()
+    {
+        $content_id = new ContentID($_GET['content-id']);
+        $post = $content_id->getInstanceFromID($this->domain);
+        $post->loadFromDatabase();
+        $output_panel_threads = new OutputPanelThreads($this->domain, true);
+        $output_panel_threads->editPost(['post' => $post], false);
+        $this->outputMain(false);
+    }
+
+    public function updatePost()
+    {
+        if (!$this->session_user->checkPermission($this->domain, 'perm_edit_posts'))
+        {
+            nel_derp(463, _gettext('You are not allowed to edit posts.'));
+        }
+
+        $content_id = new ContentID($_GET['content-id']);
+        $post = $content_id->getInstanceFromID($this->domain);
+        $post->loadFromDatabase();
+        $post->changeData('name', $_POST['not_anonymous'] ?? null);
+        $post->changeData('email', $_POST['spam_target'] ?? null);
+        $post->changeData('subject', $_POST['verb'] ?? null);
+        $post->changeData('comment', $_POST['wordswordswords'] ?? null);
+        $post->changeData('regen_cache', 1);
+        $post->writeToDatabase();
+        $this->regenThread($content_id->threadID(), true);
+        $redirect = new Redirect();
+        $redirect->doRedirect(true);
+        $redirect->changeURL($_POST['return_url']);
     }
 
     public function verifyAccess(Domain $domain)

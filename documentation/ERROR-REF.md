@@ -156,7 +156,8 @@ Error 441: perm_manage_news (action) (Admin/AdminNews.php)
 
 Error 460: perm_manage_news (access) (Admin/AdminThreads.php)  
 Error 461: perm_manage_news (action) (Admin/AdminThreads.php)  
-Error 462: perm_delete_by_ip (Admin/AdminThreads.php) 
+Error 462: perm_delete_by_ip (Admin/AdminThreads.php)  
+Error 463: perm_edit_posts (Admin/AdminThreads.php)  
 
 Error 470: perm_manage_logs (access) (Admin/AdminLogs.php)  
 Error 471: perm_manage_logs (action) (Admin/AdminLogs.php)  

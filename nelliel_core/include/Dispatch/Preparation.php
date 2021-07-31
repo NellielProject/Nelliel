@@ -69,7 +69,7 @@ class Preparation
         if ($goback)
         {
             $redirect = new Redirect();
-            $redirect->changeURL($_SERVER['HTTP_REFERER']);
+            $redirect->changeURL($_SERVER['HTTP_REFERER'] ?? '');
             $redirect->doRedirect(true);
         }
 
