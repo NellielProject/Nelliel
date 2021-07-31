@@ -57,9 +57,9 @@ class Setup
         $this->installCoreStyles();
         $this->installCoreIconSets();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
-        //$regen = new \Nelliel\Regen();
+        $regen = new \Nelliel\Regen();
         $site_domain->regenCache();
-        //$regen->news($site_domain);
+        $regen->news($site_domain);
         $generate_files->installDone();
 
         if ($this->ownerCreated())
