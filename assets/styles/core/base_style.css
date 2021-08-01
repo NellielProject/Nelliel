@@ -443,3 +443,7 @@ form {
 .global-announcement{
     text-align: center;
 }
+
+.thread-status-icon {
+	filter: var(--thread-status-icon-color, inherit);
+}

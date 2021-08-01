@@ -1,10 +1,13 @@
 {{# thread_headers }}
 <span class="thread-header-info">
+	{{# is_cyclic }}
+	<img src="{{ cyclic }}" width="16" height="16" alt="Cyclic icon" class="thread-status-icon">
+	{{/ is_cyclic }}
 	{{# is_sticky }}
-	<img src="{{ sticky }}" width="16" height="16" alt="Sticky icon">
+	<img src="{{ sticky }}" width="16" height="16" alt="Sticky icon" class="thread-status-icon">
 	{{/ is_sticky }}
 	{{# is_locked }}
-	<img src="{{ locked }}" width="16" height="16" alt="Lock icon">
+	<img src="{{ locked }}" width="16" height="16" alt="Lock icon" class="thread-status-icon">
 	{{/ is_locked }}
 </span>
 {{/ thread_headers }}

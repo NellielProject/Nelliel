@@ -45,4 +45,5 @@
 	--news-article-header-background: #404040;
 	--news-headline-color: inherit;
 	--news-paragraph-color: inherit;
+	--thread-status-icon-color: invert(60%) sepia(50%) saturate(2796%) hue-rotate(11deg) brightness(107%) contrast(94%);
 }

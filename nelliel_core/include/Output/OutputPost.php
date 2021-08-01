@@ -236,6 +236,8 @@ class OutputPost extends Output
             $thread_headers['sticky'] = $icon_set->getWebPath('ui', 'sticky', true);
             $thread_headers['is_locked'] = $thread_data['locked'];
             $thread_headers['locked'] = $icon_set->getWebPath('ui', 'locked', true);
+            $thread_headers['is_cyclic'] = $thread_data['cyclic'];
+            $thread_headers['cyclic'] = $icon_set->getWebPath('ui', 'cyclic', true);
 
             if ($gen_data['index_rendering'])
             {
