@@ -12,6 +12,7 @@ use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
 use Nelliel\Markdown\ImageboardMarkdown;
 use PDO;
+use Nelliel\Assets\IconSet;
 
 class OutputPost extends Output
 {
@@ -230,8 +231,11 @@ class OutputPost extends Output
         {
             $thread_headers['thread_content_id'] = $thread_content_id->getIDString();
             $thread_headers['post_content_id'] = $post_content_id->getIDString();
-            $thread_headers['sticky'] = $thread_data['sticky'];
-            $thread_headers['locked'] = $thread_data['locked'];
+            $icon_set = new IconSet($this->database, $this->domain->setting('icon_set_id'));
+            $thread_headers['is_sticky'] = $thread_data['sticky'];
+            $thread_headers['sticky'] = $icon_set->getWebPath('ui', 'sticky');
+            $thread_headers['is_locked'] = $thread_data['locked'];
+            $thread_headers['locked'] = $icon_set->getWebPath('ui', 'locked');
 
             if ($gen_data['index_rendering'])
             {

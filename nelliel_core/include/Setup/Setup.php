@@ -357,7 +357,7 @@ class Setup
 
         foreach ($icon_set_inis as $ini)
         {
-            $icon_set_id = $ini['id'];
+            $icon_set_id = $ini['set-info']['id'];
 
             if (!$front_end_data->iconSetIsCore($icon_set_id))
             {
