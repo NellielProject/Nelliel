@@ -132,9 +132,9 @@ class OutputFile extends Output
                 }
                 else if ($this->domain->setting('use_file_icon'))
                 {
-                    $icon_set = $this->domain->frontEndData()->iconSet($this->domain->setting('icon_set_id'));
-                    $icons_web_path = NEL_ICON_SETS_WEB_PATH . $icon_set['directory'] . '/';
-                    $icons_file_path = NEL_ICON_SETS_FILES_PATH . $icon_set['directory'] . '/';
+                    $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('icon_set_id'));
+                    $icons_web_path = NEL_ICON_SETS_WEB_PATH . $icon_set->getInfo('directory') . '/';
+                    $icons_file_path = NEL_ICON_SETS_FILES_PATH . $icon_set->getInfo('directory') . '/';
                     $format_icon = utf8_strtolower($file['format']) . '.png';
                     $type_icon = utf8_strtolower($file['type']) . '.png';
 

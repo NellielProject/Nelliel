@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -8,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Utility\CacheHandler;
 use PDO;
+use Nelliel\Assets\IconSet;
 
 class FrontEndData
 {
@@ -18,11 +18,11 @@ class FrontEndData
     private static $default_style = array();
     private static $templates = array();
     private static $default_template = array();
-    private static $icon_sets = array();
-    private static $default_icon_set = array();
     private $core_icon_set_ids = array();
     private $core_style_ids = array();
     private $core_template_ids = array();
+    private static $default_icon_set;
+    private static $icon_sets = array();
 
     function __construct(NellielPDO $database, bool $clear = false)
     {
@@ -30,7 +30,8 @@ class FrontEndData
         $this->ini_parser = new INIParser(nel_utilities()->fileHandler());
         $this->cache_handler = new CacheHandler();
         $this->core_icon_set_ids = ['icons-nelliel-basic'];
-        $this->core_style_ids = ['style-nelliel', 'style-nelliel-2', 'style-nelliel-classic', 'style-futaba', 'style-burichan', 'style-nigra'];
+        $this->core_style_ids = ['style-nelliel', 'style-nelliel-2', 'style-nelliel-classic', 'style-futaba',
+            'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];
 
         if ($clear)
@@ -41,8 +42,6 @@ class FrontEndData
 
     private function clearStatic()
     {
-        self::$default_icon_set = array();
-        self::$icon_sets = array();
         self::$default_style = array();
         self::$styles = array();
         self::$default_template = array();
@@ -70,30 +69,6 @@ class FrontEndData
             }
 
             self::$styles[$info['id']] = $info;
-        }
-    }
-
-    private function loadIconSetData()
-    {
-        $icon_set_data = $this->cache_handler->loadArrayFromFile('icon_set_data', 'icon_set_data.php');
-
-        if (empty($icon_set_data))
-        {
-            $icon_set_data = $this->database->executeFetchAll(
-                    'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\'', PDO::FETCH_ASSOC);
-            $this->cache_handler->writeArrayToFile('icon_set_data', $icon_set_data, 'icon_set_data.php');
-        }
-
-        foreach ($icon_set_data as $data)
-        {
-            $info = json_decode($data['info'], true);
-
-            if ($data['is_default'] == 1)
-            {
-                self::$default_icon_set = $info;
-            }
-
-            self::$icon_sets[$info['id']] = $info;
         }
     }
 
@@ -181,26 +156,6 @@ class FrontEndData
         return $this->ini_parser->parseDirectories(NEL_TEMPLATES_FILES_PATH, 'template_info.ini');
     }
 
-    public function iconSet($set = null, bool $return_default = true)
-    {
-        if (empty(self::$icon_sets))
-        {
-            $this->loadIconSetData();
-        }
-
-        if (is_null($set))
-        {
-            return self::$icon_sets;
-        }
-
-        if (!isset(self::$icon_sets[$set]) && $return_default)
-        {
-            return self::$default_icon_set;
-        }
-
-        return self::$icon_sets[$set];
-    }
-
     public function iconSetIsCore(string $id)
     {
         return in_array($id, $this->core_icon_set_ids);
@@ -209,5 +164,29 @@ class FrontEndData
     public function getIconSetInis()
     {
         return $this->ini_parser->parseDirectories(NEL_ICON_SETS_FILES_PATH, 'icons_info.ini');
+    }
+
+    public function getIconSet(string $set_id): IconSet
+    {
+        if (!isset(self::$icon_sets[$set_id]))
+        {
+            self::$icon_sets[$set_id] = new IconSet($this->database, $this, $set_id);
+        }
+
+        return self::$icon_sets[$set_id];
+    }
+
+    public function getDefaultIconSet(): IconSet
+    {
+        if (!isset(self::$default_icon_set))
+        {
+            $set_id = $this->database->executeFetch(
+                    'SELECT "asset_id" FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\' AND "is_default" = 1',
+                    PDO::FETCH_COLUMN);
+
+            self::$default_icon_set = $this->getIconSet($set_id);
+        }
+
+        return self::$default_icon_set;
     }
 }

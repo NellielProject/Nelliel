@@ -149,6 +149,7 @@ class OutputPost extends Output
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
             ContentPost $post, ContentThread $thread, array $gen_data, int $in_thread_number)
     {
+        $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('icon_set_id'));
         $header_data = array();
         $modmode_headers = array();
         $thread_headers = array();
@@ -231,11 +232,10 @@ class OutputPost extends Output
         {
             $thread_headers['thread_content_id'] = $thread_content_id->getIDString();
             $thread_headers['post_content_id'] = $post_content_id->getIDString();
-            $icon_set = new IconSet($this->database, $this->domain->setting('icon_set_id'));
             $thread_headers['is_sticky'] = $thread_data['sticky'];
-            $thread_headers['sticky'] = $icon_set->getWebPath('ui', 'sticky');
+            $thread_headers['sticky'] = $icon_set->getWebPath('ui', 'sticky', true);
             $thread_headers['is_locked'] = $thread_data['locked'];
-            $thread_headers['locked'] = $icon_set->getWebPath('ui', 'locked');
+            $thread_headers['locked'] = $icon_set->getWebPath('ui', 'locked', true);
 
             if ($gen_data['index_rendering'])
             {
