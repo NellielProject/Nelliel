@@ -133,28 +133,23 @@ class OutputFile extends Output
                 else if ($this->domain->setting('use_file_icon'))
                 {
                     $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('icon_set_id'));
-                    $icons_web_path = NEL_ICON_SETS_WEB_PATH . $icon_set->getInfo('directory') . '/';
-                    $icons_file_path = NEL_ICON_SETS_FILES_PATH . $icon_set->getInfo('directory') . '/';
-                    $format_icon = utf8_strtolower($file['format']) . '.png';
-                    $type_icon = utf8_strtolower($file['type']) . '.png';
+                    $type = utf8_strtolower($file['type']);
+                    $format = utf8_strtolower($file['format']);
+                    $web_path = $icon_set->getWebPath('filetype', $format, true);
+
+                    if ($web_path === '')
+                    {
+                        $web_path = $icon_set->getWebPath('filetype', $type . '-generic', true);
+
+                        if ($web_path === '')
+                        {
+                            $web_path = $icon_set->getWebPath('filetype', 'generic', true);
+                        }
+                    }
 
                     $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
-
-                    if (file_exists(
-                            $icons_file_path . 'filetype/' . utf8_strtolower($file['type']) . '/' . $format_icon))
-                    {
-                        $this->render_data['preview_url'] = $icons_web_path . 'filetype/' .
-                                utf8_strtolower($file['type']) . '/' . $format_icon;
-                    }
-                    else if (file_exists($icons_file_path . 'filetype/generic/' . $type_icon))
-                    {
-                        $this->render_data['preview_url'] = $icons_web_path . 'filetype/generic/' . $type_icon;
-                    }
-                    else
-                    {
-                        $this->render_data['image_preview'] = false;
-                    }
+                    $this->render_data['preview_url'] = $web_path;
                 }
                 else
                 {

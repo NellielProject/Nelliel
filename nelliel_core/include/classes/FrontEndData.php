@@ -21,7 +21,7 @@ class FrontEndData
     private $core_icon_set_ids = array();
     private $core_style_ids = array();
     private $core_template_ids = array();
-    private static $default_icon_set;
+    private $base_icon_set_id = 'icons-nelliel-basic';
     private static $icon_sets = array();
 
     function __construct(NellielPDO $database, bool $clear = false)
@@ -123,7 +123,7 @@ class FrontEndData
 
     public function getStyleInis()
     {
-        return $this->ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'style_info.ini');
+        return $this->ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'icon_info.ini');
     }
 
     public function template($template = null, bool $return_default = true)
@@ -176,17 +176,8 @@ class FrontEndData
         return self::$icon_sets[$set_id];
     }
 
-    public function getDefaultIconSet(): IconSet
+    public function getBaseIconSet(): IconSet
     {
-        if (!isset(self::$default_icon_set))
-        {
-            $set_id = $this->database->executeFetch(
-                    'SELECT "asset_id" FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\' AND "is_default" = 1',
-                    PDO::FETCH_COLUMN);
-
-            self::$default_icon_set = $this->getIconSet($set_id);
-        }
-
-        return self::$default_icon_set;
+        return $this->getIconSet($this->base_icon_set_id);
     }
 }
