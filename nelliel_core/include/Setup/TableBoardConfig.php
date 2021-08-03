@@ -64,6 +64,20 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['safety_level', 'SFW', 0, '']);
 
         // New post
+        $this->insertDefaultRow(['enable_name_field', '1', 0, '']);
+        $this->insertDefaultRow(['min_name_length', '0', 0, '']);
+        $this->insertDefaultRow(['max_name_length', '100', 0, '']);
+        $this->insertDefaultRow(['enable_email_field', '1', 0, '']);
+        $this->insertDefaultRow(['min_email_length', '0', 0, '']);
+        $this->insertDefaultRow(['max_email_length', '100', 0, '']);
+        $this->insertDefaultRow(['enable_subject_field', '1', 0, '']);
+        $this->insertDefaultRow(['min_subject_length', '0', 0, '']);
+        $this->insertDefaultRow(['max_subject_length', '200', 0, '']);
+        $this->insertDefaultRow(['enable_comment_field', '1', 0, '']);
+        $this->insertDefaultRow(['min_comment_length', '0', 0, '']);
+        $this->insertDefaultRow(['max_comment_length', '5000', 0, '']);
+        $this->insertDefaultRow(['enable_fgsfds_field', '1', 0, '']);
+        $this->insertDefaultRow(['enable_password_field', '1', 0, '']);
         $this->insertDefaultRow(['allow_files', '1', 0, '']);
         $this->insertDefaultRow(['allow_embeds', '0', 0, '']);
         $this->insertDefaultRow(['allow_op_uploads', '1', 0, '']);
@@ -80,24 +94,21 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['max_thread_uploads', '1000', 0, '']);
         $this->insertDefaultRow(['require_op_comment', '0', 0, '']);
         $this->insertDefaultRow(['require_reply_comment', '0', 0, '']);
-        $this->insertDefaultRow(['max_name_length', '100', 0, '']);
-        $this->insertDefaultRow(['max_email_length', '100', 0, '']);
-        $this->insertDefaultRow(['max_subject_length', '200', 0, '']);
-        $this->insertDefaultRow(['max_comment_length', '5000', 0, '']);
         $this->insertDefaultRow(['max_post_uploads', '3', 0, '']);
         $this->insertDefaultRow(['max_filesize', '5120', 0, '']);
         $this->insertDefaultRow(['truncate_long_fields', '0', 0, '']);
         $this->insertDefaultRow(['forced_anonymous', '0', 0, '']);
         $this->insertDefaultRow(['allow_sage', '1', 0, '']);
         $this->insertDefaultRow(['allow_tripcodes', '1', 0, '']);
+        $this->insertDefaultRow(['process_new_post_commands', '1', 0, '']);
         $this->insertDefaultRow(['allow_email_commands', '1', 0, '']);
-        $this->insertDefaultRow(['allow_fgsfds_commands', '1', 0, '']);
         $this->insertDefaultRow(['thread_renzoku', '120', 0, '']);
         $this->insertDefaultRow(['reply_renzoku', '20', 0, '']);
         $this->insertDefaultRow(['max_cites', '30', 0, '']);
         $this->insertDefaultRow(['max_crossboard_cites', '15', 0, '']);
         $this->insertDefaultRow(['trim_comment_newlines_start', '0', 0, '']);
         $this->insertDefaultRow(['trim_comment_newlines_end', '1', 0, '']);
+        $this->insertDefaultRow(['use_anonymous_names', '1', 0, '']);
         $this->insertDefaultRow(['anonymous_names', '["Anonymous"]', 0, '']);
         $this->insertDefaultRow(['always_noko', '0', 0, '']);
 
@@ -137,6 +148,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['template_id', 'template-nelliel-basic', 0, '']);
         $this->insertDefaultRow(['style_id', 'style-nelliel', 0, '']);
         $this->insertDefaultRow(['icon_set_id', 'icons-nelliel-basic', 0, '']);
+        $this->insertDefaultRow(['icon_set_fallback', '1', 0, '']);
         $this->insertDefaultRow(['use_file_icon', '1', 0, '']);
         $this->insertDefaultRow(['max_uploads_row', '3', 0, '']);
         $this->insertDefaultRow(['max_display_width', '250', 0, '']);

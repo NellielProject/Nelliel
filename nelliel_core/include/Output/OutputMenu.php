@@ -23,6 +23,7 @@ class OutputMenu extends Output
         $styles = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\'',
                 PDO::FETCH_ASSOC);
+        $render_data = array();
 
         foreach ($styles as $style)
         {

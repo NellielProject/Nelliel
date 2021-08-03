@@ -145,6 +145,20 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'safety_level', '{"SFW":{"label":"SFW - Safe For Work"}, "NSFW":{"label":"NSFW - Not Safe For Work"}, "NSFL":{"label":"NSFL - Not Safe For Life"}}', 'SFW', 'Content safety level of board', '{"type":"select"}']);
 
         // New post
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_name_field', '', '1', 'Display and process the name field', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'min_name_length', '', '0', 'Minimum length of name', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_name_length', '', '100', 'Maximum length of name', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_email_field', '', '1', 'Display and process the email field', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'min_email_length', '', '0', 'Minimum length of email', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_email_length', '', '100', 'Maximum length of email', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_subject_field', '', '1', 'Display and process the subject field', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'min_subject_length', '', '0', 'Minimum length of subject', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_subject_length', '', '100', 'Maximum length of subject', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_comment_field', '', '1', 'Display and process the comment field', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'min_comment_length', '', '0', 'Minimum length of comment', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_comment_length', '', '5000', 'Maximum length of comment', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_fgsfds_field', '', '1', 'Display the FGSFDS field', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_password_field', '', '1', 'Display and process the password field', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_files', '', '1', 'Allow users to upload files', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_embeds', '', '0', 'Allow users to post embedded content', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_op_uploads', '', '1', 'Allow files or embeds in OP', '{"type":"checkbox"}']);
@@ -161,25 +175,22 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_thread_uploads', '', '1000', 'Maximum number of uploads in a thread', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_op_comment', '', '0', 'Require a text comment when starting a thread', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_reply_comment', '', '0', 'Require a text comment when replying', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_name_length', '', '100', 'Maximum length of name', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_email_length', '', '100', 'Maximum length of email', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_subject_length', '', '100', 'Maximum length of subject', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_comment_length', '', '5000', 'Maximum length of comment', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_post_uploads', '', '3', 'Maximum number of uploads per post', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize', '', '4096', 'Maximum file size (KB)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'truncate_long_fields', '', '0', 'Truncate fields that are too long instead of giving an error', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'forced_anonymous', '', '0', 'Force anonymous posting', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_sage', '', '1', 'Allow new posts to be saged', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_tripcodes', '', '1', 'Allow use of tripcodes', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'process_new_post_commands', '', '1', 'Process user commands (noko, sage, etc) when making a new post', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_email_commands', '', '1', 'Allow commands in the email field', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_fgsfds_commands', '', '1', 'Allow commands in the FGSFDS field', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_renzoku', '', '120', 'Cooldown for new threads (seconds)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'reply_renzoku', '', '20', 'Cooldown for new replies (seconds)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_cites', '', '30', 'Maximum cite in a comment', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_crossboard_cites', '', '15', 'Maximum cross-board cites in a comment', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'trim_comment_newlines_start', '', '0', 'Trim extra newlines and whitespace at start of comment', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'trim_comment_newlines_end', '', '1', 'Trim extra new lines and whitespace at the end of comment', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'anonymous_names', '', '["Anonymous"]', 'Names that can be randomly chosen when a name is not provided for forced anonymous is on. Must be a JSON array.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'trim_comment_newlines_end', '', '1', 'Trim extra newlines and whitespace at the end of comment', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_anonymous_names', '', '1', 'Use the list of anonymous names when name field is empty or disabled', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'anonymous_names', '', '["Anonymous"]', 'Names that can be randomly chosen when a name is not provided or forced anonymous is on. Must be a JSON array.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'always_noko', '', '0', 'Always return to thread (noko) after making a post', '{"type":"checkbox"}']);
 
         // Content handling
@@ -218,8 +229,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'template_id', '', 'template-nelliel-basic', 'ID of template for board to use', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'style_id', '', 'style-nelliel', 'ID of default style for board', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'icon_set_id', '', 'icons-nelliel-basic', 'ID of icon set for board to use', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_file_icon', '', '1', 'Use filetype icon for non-images', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'icon_set_fallback', '', '1', 'If the selected icon set doesn\'t specify a file, check the base set', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_file_icon', '', '1', 'Use filetype icon for non-images', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_uploads_row', '', '3', 'Maximum number of uploads to display in each row', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_display_width', '', '250', 'Maximum display width for uploads', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_display_height', '', '250', 'Maximum display height for uploads', '{"type":"number"}']);

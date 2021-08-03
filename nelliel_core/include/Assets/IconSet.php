@@ -26,7 +26,7 @@ class IconSet
 
     public function id(): string
     {
-        return $this->icon_set_id;
+        return $this->icon_set_id ?? '';
     }
 
     public function info(string $key): string
@@ -87,7 +87,7 @@ class IconSet
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\' AND "asset_id" = ?');
-        $data = $this->database->executePreparedFetch($prepared, [$this->icon_set_id], PDO::FETCH_ASSOC);
-        $this->info = json_decode($data['info'], true);
+        $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
+        $this->info = json_decode($data['info'] ?? '', true);
     }
 }

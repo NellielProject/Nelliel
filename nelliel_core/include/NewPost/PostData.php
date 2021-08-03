@@ -38,48 +38,68 @@ class PostData
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
         $post->changeData('ip_address', nel_request_ip_address());
         $post->changeData('hashed_ip_address', nel_request_ip_address(true));
-        $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'], 'string');
 
-        if (nel_true_empty($name) || $this->domain->setting('forced_anonymous'))
+        $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'] ?? '', 'string');
+        $name = $this->fieldLengthCheck('name', $name);
+
+        if (nel_true_empty($name) || !$this->domain->setting('enable_name_field') ||
+                $this->domain->setting('forced_anonymous'))
         {
             $name_choices = json_decode($this->domain->setting('anonymous_names'), true);
 
-            if (!is_null($name_choices))
+            if ($this->domain->setting('use_anonymous_names') && !is_null($name_choices))
             {
                 $name = $name_choices[mt_rand(0, count($name_choices) - 1)];
             }
             else
             {
-                $name = 'Anonymous';
+                $name = null;
             }
-        }
-
-        $name_text = $this->fieldMaxCheck('name', $name);
-        $post->changeData('name', $this->posterName($name_text));
-
-        if ($this->domain->setting('allow_tripcodes'))
-        {
-            $post->changeData('tripcode', $this->tripcode($name_text));
-            $post->changeData('secure_tripcode', $this->secureTripcode($name_text));
-        }
-
-        if ($this->domain->setting('forced_anonymous'))
-        {
-            $email = '';
         }
         else
         {
-            $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'], 'string');
+            if ($this->domain->setting('allow_tripcodes'))
+            {
+                $post->changeData('tripcode', $this->tripcode($name));
+                $post->changeData('secure_tripcode', $this->secureTripcode($name));
+            }
+
+            $name = $this->posterName($name);
         }
 
-        $post->changeData('email', $this->fieldMaxCheck('email', $email));
-        $subject = $this->checkEntry($_POST['new_post']['post_info']['verb'], 'string');
-        $post->changeData('subject', $this->fieldMaxCheck('subject', $subject));
-        $comment = $this->checkEntry($_POST['new_post']['post_info']['wordswordswords'], 'string');
-        $post->changeData('original_comment', $comment);
-        $post->changeData('comment', $this->fieldMaxCheck('comment', $comment));
-        $post->changeData('fgsfds', $this->checkEntry($_POST['new_post']['post_info']['fgsfds'], 'string'));
-        $post->changeData('post_password', $this->checkEntry($_POST['new_post']['post_info']['sekrit'], 'string'));
+        $post->changeData('name', $name);
+
+        if ($this->domain->setting('enable_email_field') && !$this->domain->setting('forced_anonymous'))
+        {
+            $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'] ?? '', 'string');
+            $post->changeData('email', $this->fieldLengthCheck('email', $email));
+        }
+
+        if ($this->domain->setting('enable_subject_field'))
+        {
+            $subject = $this->checkEntry($_POST['new_post']['post_info']['verb'] ?? '', 'string');
+            $post->changeData('subject', $this->fieldLengthCheck('subject', $subject));
+        }
+
+        if ($this->domain->setting('enable_comment_field'))
+        {
+            $original_comment = $_POST['new_post']['post_info']['wordswordswords'] ?? '';
+            $comment = $this->checkEntry($original_comment, 'string');
+            $post->changeData('original_comment', $comment);
+            $post->changeData('comment', $this->fieldLengthCheck('comment', $comment));
+        }
+
+        if ($this->domain->setting('enable_fgsfds_field'))
+        {
+            $post->changeData('fgsfds', $this->checkEntry($_POST['new_post']['post_info']['fgsfds'] ?? '', 'string'));
+        }
+
+        if ($this->domain->setting('enable_password_field'))
+        {
+            $post->changeData('post_password',
+                    $this->checkEntry($_POST['new_post']['post_info']['sekrit'] ?? '', 'string'));
+        }
+
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
         $post->changeData('post_as_staff',
                 (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false);
@@ -106,7 +126,7 @@ class PostData
             }
         }
 
-        $this->staffPost($post, $name_text);
+        $this->staffPost($post, $name);
 
         if (!nel_true_empty($post->data('comment')))
         {
@@ -163,7 +183,7 @@ class PostData
         return $post_item;
     }
 
-    public function staffPost(ContentPost $post, string $name_text): void
+    public function staffPost(ContentPost $post, ?string $name): void
     {
         if (!$post->data('post_as_staff'))
         {
@@ -184,7 +204,7 @@ class PostData
             return;
         }
 
-        $post->changeData('capcode', $this->capcode($name_text));
+        $post->changeData('capcode', $this->capcode($name));
         $post->changeData('name', $user->getData('display_name'));
         $post->changeData('account_id', $user->id());
     }
@@ -227,7 +247,8 @@ class PostData
         if (preg_match('/##((?:(?! ## ).)*)/u', $text, $matches) === 1)
         {
             $trip_key = $matches[1];
-            $trip_code = hash_hmac(nel_site_domain()->setting('secure_tripcode_algorithm'), $trip_key, NEL_TRIPCODE_PEPPER);
+            $trip_code = hash_hmac(nel_site_domain()->setting('secure_tripcode_algorithm'), $trip_key,
+                    NEL_TRIPCODE_PEPPER);
             $trip_code = base64_encode(pack("H*", $trip_code));
             $secure_tripcode = substr($trip_code, 2, 10);
         }
@@ -277,75 +298,60 @@ class PostData
         }
     }
 
-    public function fieldMaxCheck(string $field_name, ?string $text)
+    public function fieldLengthCheck(string $field_name, ?string $text)
     {
         if (is_null($text))
         {
             return $text;
         }
 
+        $length = utf8_strlen($text);
+        $min = 0;
+        $max = 0;
+        $error_number = 0;
+        $error_message = '';
+
         switch ($field_name)
         {
             case 'name':
-                if (utf8_strlen($text) > $this->domain->setting('max_name_length'))
-                {
-                    if ($this->domain_setting('truncate_long_fields'))
-                    {
-                        $text = utf8_substr($text, 0, $this->domain->setting('max_name_length'));
-                    }
-                    else
-                    {
-                        nel_derp(30, _gettext('Name is too long.'));
-                    }
-                }
+                $min = $this->domain->setting('min_name_length');
+                $max = $this->domain->setting('max_name_length');
+                $error_number = 30;
+                $error_message = sprintf(_gettext('Name must be between %s and %s characters.'), $min, $max);
                 break;
 
             case 'email':
-                if (utf8_strlen($text) > $this->domain->setting('max_email_length'))
-                {
-                    if ($this->domain_setting('truncate_long_fields'))
-                    {
-                        $text = utf8_substr($text, 0, $this->domain->setting('max_email_length'));
-                    }
-                    else
-                    {
-                        nel_derp(31, _gettext('Email is too long.'));
-                    }
-                }
-
+                $min = $this->domain->setting('min_email_length');
+                $max = $this->domain->setting('max_email_length');
+                $error_number = 31;
+                $error_message = sprintf(_gettext('Email must be between %s and %s characters.'), $min, $max);
                 break;
 
             case 'subject':
-                if (utf8_strlen($text) > $this->domain->setting('max_subject_length'))
-                {
-                    if ($this->domain_setting('truncate_long_fields'))
-                    {
-                        $text = utf8_substr($text, 0, $this->domain->setting('max_subject_length'));
-                    }
-                    else
-                    {
-                        nel_derp(32, _gettext('Subject is too long.'));
-                    }
-                }
-
+                $min = $this->domain->setting('min_subject_length');
+                $max = $this->domain->setting('max_subject_length');
+                $error_number = 32;
+                $error_message = sprintf(_gettext('Subject must be between %s and %s characters.'), $min, $max);
                 break;
 
             case 'comment':
-                if (utf8_strlen($text) > $this->domain->setting('max_comment_length'))
-                {
-                    if ($this->domain_setting('truncate_long_fields'))
-                    {
-                        $text = utf8_substr($text, 0, $this->domain->setting('max_comment_length'));
-                    }
-                    else
-                    {
-                        nel_derp(33, _gettext('Comment is too long.'));
-                    }
-                }
-
+                $min = $this->domain->setting('min_comment_length');
+                $max = $this->domain->setting('max_comment_length');
+                $error_number = 33;
+                $error_message = sprintf(_gettext('Comment must be between %s and %s characters.'), $min, $max);
                 break;
         }
 
-        return $text;
+        if ($length >= $min && $length <= $max)
+        {
+            return $text;
+        }
+
+        if ($length > $max && $this->domain->setting('truncate_long_fields'))
+        {
+            return utf8_substr($text, 0, $max);
+        }
+
+        nel_derp($error_number, $error_message);
     }
 }

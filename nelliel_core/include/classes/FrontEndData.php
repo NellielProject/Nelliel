@@ -123,7 +123,7 @@ class FrontEndData
 
     public function getStyleInis()
     {
-        return $this->ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'icon_info.ini');
+        return $this->ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'style_info.ini');
     }
 
     public function template($template = null, bool $return_default = true)
@@ -163,7 +163,7 @@ class FrontEndData
 
     public function getIconSetInis()
     {
-        return $this->ini_parser->parseDirectories(NEL_ICON_SETS_FILES_PATH, 'icons_info.ini');
+        return $this->ini_parser->parseDirectories(NEL_ICON_SETS_FILES_PATH, 'icon_info.ini');
     }
 
     public function getIconSet(string $set_id): IconSet

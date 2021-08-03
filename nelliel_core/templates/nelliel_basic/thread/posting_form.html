@@ -5,23 +5,31 @@
 	{{/ in_modmode }}
 	<div>
 		{{^ forced_anonymous }}
+			{{# display_name_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-gettext="">Name</span>
-			<input type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" maxlength="{{ not_anonymous_maxlength }}">
+			<input type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" minlength="{{ not_anonymous_minlength }}" maxlength="{{ not_anonymous_maxlength }}">
 		</label>
+			{{/ display_name_field }}
+			{{# display_email_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-gettext="">E-mail</span>
-			<input class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength="{{ spam_target_maxlength }}">
+			<input class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength=" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}">
 		</label>
+			{{/ display_email_field }}
 		{{/ forced_anonymous }}
+		{{# display_subject_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-gettext="">Subject</span>
-			<input class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" maxlength="{{ verb_maxlength }}">
+			<input class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" minlength="{{ verb_minlength }}"  maxlength="{{ verb_maxlength }}">
 		</label>
+		{{/ display_subject_field }}
+		{{# display_comment_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-gettext="">Comment</span>
 			<textarea id="wordswordswords" class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
 		</label>
+		{{/ display_comment_field }}
 		{{# allow_files }}
 		<span class="posting-form-row">
 			<label class="posting-form-label" for="form-file-upload">
@@ -57,17 +65,19 @@
 			{{/ embed_replaces }}
 		</label>
 		{{/ allow_embeds }}
-		{{# use_fgsfds }}
+		{{# display_fgsfds_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label">{{ fgsfds_name }}</span>
 			<input class="posting-form-input" type="text" name="new_post[post_info][fgsfds]" size="30">
 		</label>
-		{{/ use_fgsfds }}
+		{{/ display_fgsfds_field }}
+		{{# display_password_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-gettext="">Password</span>
 			<input id="posting-form-sekrit" class="posting-form-input" data-jsevents="input" type="password" name="new_post[post_info][sekrit]" size="12" maxlength="16" value="">&nbsp;&nbsp;
 			(<span data-gettext="">Used for deletion</span>)
 		</label>
+		{{/ display_password_field }}
 		{{# is_staff }}
 		<label class="posting-form-row">
 			<span class="posting-form-label"></span>

@@ -156,7 +156,7 @@ class ContentPost extends ContentHandler
     {
         $cites = new Cites($this->database);
 
-        if (nel_true_empty($this->content_data['comment']))
+        if (nel_true_empty($this->data('comment')))
         {
             return;
         }
@@ -382,7 +382,7 @@ class ContentPost extends ContentHandler
     {
         $cache_array = array();
         $output_post = new OutputPost($this->domain, false);
-        $cache_array['comment_data'] = $output_post->parseComment($this->content_data['comment'], $this->content_id);
+        $cache_array['comment_data'] = $output_post->parseComment($this->data('comment'), $this->content_id);
         $cache_array['backlink_data'] = $output_post->generateBacklinks($this);
         $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
         $prepared = $this->database->prepare(

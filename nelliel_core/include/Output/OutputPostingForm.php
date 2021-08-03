@@ -24,10 +24,19 @@ class OutputPostingForm extends Output
         $this->render_data['response_to'] = $response_to;
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['is_staff'] = $this->session->inModmode($this->domain) && !$this->write_mode;
+        $this->render_data['not_anonymous_minlength'] = $this->domain->setting('min_name_length');
         $this->render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
+        $this->render_data['spam_target_minlength'] = $this->domain->setting('min_email_length');
         $this->render_data['spam_target_maxlength'] = $this->domain->setting('max_email_length');
+        $this->render_data['verb_minlength'] = $this->domain->setting('min_subject_length');
         $this->render_data['verb_maxlength'] = $this->domain->setting('max_subject_length');
         $this->render_data['forced_anonymous'] = $this->domain->setting('forced_anonymous');
+        $this->render_data['display_name_field'] = $this->domain->setting('enable_name_field');
+        $this->render_data['display_email_field'] = $this->domain->setting('enable_email_field');
+        $this->render_data['display_subject_field'] = $this->domain->setting('enable_subject_field');
+        $this->render_data['display_comment_field'] = $this->domain->setting('enable_comment_field');
+        $this->render_data['display_fgsfds_field'] = $this->domain->setting('enable_fgsfds_field');
+        $this->render_data['display_password_field'] = $this->domain->setting('enable_password_field');
 
         if ($this->render_data['in_modmode'])
         {
@@ -71,7 +80,6 @@ class OutputPostingForm extends Output
                 'require_op_upload');
         $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
-        $this->render_data['use_fgsfds'] = $this->domain->setting('allow_fgsfds_commands');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
         $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=anti-spam&section=captcha&actions=get';
