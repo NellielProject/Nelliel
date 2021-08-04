@@ -35,7 +35,7 @@ class NellielLogger extends AbstractLogger
         $data['domain'] = $context['domain'] ?? '';
         $data['level'] = $this->level_map[$level];
         $data['event_id'] = $context['event_id'] ?? 'UNKNOWN';
-        $data['originator'] = $context['originator'] ?? null;
+        $data['originator'] = $context['originator'] ?? '';
         $data['ip_address'] = $context['ip_address'] ?? null;
         $data['hashed_ip_address'] = $context['hashed_ip_address'] ?? null;
         $data['time'] = time();

@@ -20,9 +20,9 @@ class TableFileFilters extends Table
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'hash_type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'file_hash' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'file_hash' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
             'file_notes' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -37,7 +37,7 @@ class TableFileFilters extends Table
             hash_type   VARCHAR(50) NOT NULL,
             file_hash   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
             file_notes  VARCHAR(255) DEFAULT NULL,
-            board_id    VARCHAR(50) DEFAULT NULL,
+            board_id    VARCHAR(50) NOT NULL,
             moar        TEXT DEFAULT NULL,
             CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)

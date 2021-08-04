@@ -41,11 +41,11 @@ class TableLogs extends Table
             level               INTEGER NOT NULL,
             domain_id           VARCHAR(50) NOT NULL,
             event_id            VARCHAR(50) NOT NULL,
-            originator          VARCHAR(50) DEFAULT NULL,
+            originator          VARCHAR(50) NOT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
             time                BIGINT NOT NULL,
-            message             TEXT DEFAULT NULL,
+            message             TEXT NOT NULL,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (domain_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)

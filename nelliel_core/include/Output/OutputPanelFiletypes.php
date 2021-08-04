@@ -30,7 +30,7 @@ class OutputPanelFiletypes extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $filetypes = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "base_extension" <> \'\' ORDER BY "entry" ASC',
+                'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" ORDER BY "type_def", "entry" ASC',
                 PDO::FETCH_ASSOC);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'add']);

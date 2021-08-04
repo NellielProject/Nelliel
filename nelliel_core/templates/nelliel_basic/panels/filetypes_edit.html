@@ -6,7 +6,7 @@
 		</div>
 		<div class="display-row">
 			<label for="type" class="display-cell" data-gettext="">Category</label>
-			<input id="type" class="display-cell" type="text" name="type" value="{{ type }}">
+			<input id="type" class="display-cell" type="text" name="type" value="{{ type }}" required="required">
 		</div>
 		<div class="display-row">
 			<label for="format" class="display-cell" data-gettext="">Format</label>
@@ -25,10 +25,14 @@
 			<input id="regex" class="display-cell" type="text" name="id_regex" value="{{ id_regex }}">
 		</div>
 		<div class="display-row">
-			<label for="label" class="display-cell" data-gettext="">Label</label>
-			<input id="label" class="display-cell" type="text" name="label" value="{{ label }}">
+			<label for="type_label" class="display-cell" data-gettext="">Label</label>
+			<input id="type_label" class="display-cell" type="text" name="type_label" value="{{ type_label }}" required="required">
 		</div>
-			<div class="display-row">
+		<div class="display-row">
+			<label for="type_def" class="display-cell" data-gettext="">Category definition</label>
+			<input id="type_def" class="display-cell" type="checkbox" value="1" name="type_def" {{ type_def_checked }}>
+		</div>
+		<div class="display-row">
 			<label for="enabled" class="display-cell" data-gettext="">Enabled</label>
 			<input id="enabled" class="display-cell" type="checkbox" value="1" name="enabled" {{ enabled_checked }}>
 		</div>

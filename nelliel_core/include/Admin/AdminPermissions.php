@@ -58,10 +58,10 @@ class AdminPermissions extends Admin
 
     public function remove(): void
     {
-        $id = $_GET[$this->id_field] ?? 0;
+        $id = $_GET[$this->id_field] ?? '';
         $entry_domain = $this->getEntryDomain($id);
         $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "permission" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }

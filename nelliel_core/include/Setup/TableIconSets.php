@@ -31,7 +31,7 @@ class TableIconSets extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            set_id      VARCHAR(100) NOT NULL,
+            set_id      VARCHAR(100) NOT NULL UNIQUE,
             info        TEXT NOT NULL
         ) " . $options . ";";
 

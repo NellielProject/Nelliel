@@ -40,12 +40,12 @@ class TableFiletypes extends Table
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             base_extension  VARCHAR(255) NOT NULL,
-            type            VARCHAR(255) DEFAULT NULL,
+            type            VARCHAR(255) NOT NULL,
             format          VARCHAR(255) DEFAULT NULL,
             mime            VARCHAR(255) DEFAULT NULL,
             sub_extensions  TEXT DEFAULT NULL,
             id_regex        TEXT DEFAULT NULL,
-            type_label      VARCHAR(255) DEFAULT NULL,
+            type_label      VARCHAR(255) NOT NULL,
             type_def        SMALLINT NOT NULL DEFAULT 0,
             enabled         SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL

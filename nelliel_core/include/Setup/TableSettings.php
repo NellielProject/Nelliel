@@ -44,7 +44,7 @@ class TableSettings extends Table
             setting_name        VARCHAR(50) NOT NULL,
             setting_options     TEXT NOT NULL,
             default_value       TEXT NOT NULL,
-            setting_description       TEXT NOT NULL,
+            setting_description TEXT NOT NULL,
             input_attributes    TEXT NOT NULL,
             moar                TEXT DEFAULT NULL
         ) " . $options . ";";

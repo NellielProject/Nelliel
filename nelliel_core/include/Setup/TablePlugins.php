@@ -33,8 +33,8 @@ class TablePlugins extends Table
         CREATE TABLE " . $this->table_name . " (
             entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             plugin_id   VARCHAR(100) NOT NULL UNIQUE,
-            enabled     SMALLINT NOT NULL DEFAULT 0,
-            info        TEXT NOT NULL
+            info        TEXT NOT NULL,
+            enabled     SMALLINT NOT NULL DEFAULT 0
         ) " . $options . ";";
 
         return $schema;

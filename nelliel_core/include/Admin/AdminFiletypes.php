@@ -62,7 +62,7 @@ class AdminFiletypes extends Admin
         $format = $_POST['format'] ?? null;
         $mime = $_POST['mime'] ?? null;
         $id_regex = $_POST['id_regex'] ?? null;
-        $label = $_POST['type_label'] ?? null;
+        $label = $_POST['type_label'] ?? '';
         $type_def = $_POST['type_def'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
         $post_sub = $_POST['sub_extensions'] ?? '';
