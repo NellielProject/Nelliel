@@ -22,7 +22,6 @@ define('NEL_MAIN_INDEX', 'index');
 define('NEL_PAGE_EXT', '.html');
 define('NEL_JSON_EXT', '.json');
 
-define('NEL_ASSETS_TABLE', 'nelliel_assets');
 define('NEL_BANS_TABLE', 'nelliel_bans');
 define('NEL_BLOTTER_TABLE', 'nelliel_blotter');
 define('NEL_BOARD_DATA_TABLE', 'nelliel_board_data');
@@ -52,6 +51,8 @@ define('NEL_USER_ROLES_TABLE', 'nelliel_user_roles');
 define('NEL_USERS_TABLE', 'nelliel_users');
 define('NEL_VERSIONS_TABLE', 'nelliel_version');
 define('NEL_WORD_FILTERS_TABLE', 'nelliel_wordfilters');
+define('NEL_STYLES_TABLE', 'nelliel_styles');
+define('NEL_ICON_SETS_TABLE', 'nelliel_icon_sets');
 
 define('NEL_ASSETS_FILES_PATH', NEL_BASE_PATH . NEL_ASSETS_DIR . '/');
 define('NEL_CONFIG_FILES_PATH', NEL_CORE_PATH . 'configuration/');

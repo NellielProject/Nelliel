@@ -177,8 +177,10 @@ class Setup
     {
         $versions_table = new TableVersions($this->database, $this->sql_compatibility);
         $versions_table->createTable();
-        $assets_table = new TableAssets($this->database, $this->sql_compatibility);
-        $assets_table->createTable();
+        $icon_sets_table = new TableIconSets($this->database, $this->sql_compatibility);
+        $icon_sets_table->createTable();
+        $styles_table = new TableStyles($this->database, $this->sql_compatibility);
+        $styles_table->createTable();
         $settings_table = new TableSettings($this->database, $this->sql_compatibility);
         $settings_table->createTable();
         $board_defaults_table = new TableBoardConfig($this->database, $this->sql_compatibility);
@@ -290,7 +292,7 @@ class Setup
         $this->file_handler->createDirectory($domain->reference('banners_path'), NEL_DIRECTORY_PERM, true);
     }
 
-    public function installCoreTemplates()
+    public function installCoreTemplates(): void
     {
         $front_end_data = new \Nelliel\FrontEndData($this->database);
         $template_inis = $front_end_data->getTemplateInis();
@@ -319,38 +321,27 @@ class Setup
         echo _gettext('Core templates installed.'), '<br>';
     }
 
-    public function installCoreStyles()
+    public function installCoreStyles(bool $overwrite = false): void
     {
         $front_end_data = new \Nelliel\FrontEndData($this->database);
         $style_inis = $front_end_data->getStyleInis();
 
         foreach ($style_inis as $ini)
         {
-            $style_id = $ini['id'];
+            $style_id = $ini['style-info']['id'];
 
             if (!$front_end_data->styleIsCore($style_id))
             {
                 continue;
             }
 
-            if ($this->database->rowExists(NEL_ASSETS_TABLE, ['asset_id', 'type'], [$style_id, 'style'],
-                    [PDO::PARAM_STR, PDO::PARAM_STR]))
-            {
-                continue;
-            }
-
-            $info = json_encode($ini);
-            $default = ($style_id === 'style-nelliel') ? 1 : 0;
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_ASSETS_TABLE .
-                    '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$style_id, "style", $default, $info]);
+            $front_end_data->getStyle($style_id)->install($overwrite);
         }
 
         echo _gettext('Core styles installed.'), '<br>';
     }
 
-    public function installCoreIconSets()
+    public function installCoreIconSets(bool $overwrite = false): void
     {
         $front_end_data = new \Nelliel\FrontEndData($this->database);
         $icon_set_inis = $front_end_data->getIconSetInis();
@@ -364,18 +355,7 @@ class Setup
                 continue;
             }
 
-            if ($this->database->rowExists(NEL_ASSETS_TABLE, ['asset_id', 'type'], [$icon_set_id, 'icon-set'],
-                    [PDO::PARAM_STR, PDO::PARAM_STR]))
-            {
-                continue;
-            }
-
-            $info = json_encode($ini);
-            $default = ($icon_set_id === 'icons-nelliel-basic') ? 1 : 0;
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_ASSETS_TABLE .
-                    '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$icon_set_id, "icon-set", $default, $info]);
+            $front_end_data->getIconSet($icon_set_id)->install($overwrite);
         }
 
         echo _gettext('Core icon sets installed.'), '<br>';

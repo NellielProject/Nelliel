@@ -1,13 +1,11 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
-use PDO;
 
 class OutputMenu extends Output
 {
@@ -20,19 +18,16 @@ class OutputMenu extends Output
     public function styles(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $styles = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\'',
-                PDO::FETCH_ASSOC);
+        $styles = $this->domain->frontEndData()->getAllStyles();
         $render_data = array();
 
         foreach ($styles as $style)
         {
             $style_data = array();
-            $info = json_decode($style['info'], true);
-            $style_data['stylesheet'] = ($style['is_default']) ? 'stylesheet' : 'alternate stylesheet';
-            $style_data['style_id'] = $style['asset_id'];
-            $style_data['stylesheet_url'] = NEL_STYLES_WEB_PATH . $info['directory'] . '/' . $info['main_file'];
-            $style_data['style_name'] = $info['name'];
+            $style_data['stylesheet'] = ($this->domain->setting('default_style_id') === $style->id()) ? 'stylesheet' : 'alternate stylesheet';
+            $style_data['style_id'] = $style->id();
+            $style_data['stylesheet_url'] = $style->getMainFileWebPath();
+            $style_data['style_name'] = $style->info('name');
             $render_data[] = $style_data;
         }
 

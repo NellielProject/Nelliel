@@ -11,10 +11,11 @@ use PDO;
 
 class IconSet
 {
-    protected $database;
-    protected $icon_set_id;
-    protected $info = array();
-    protected $front_end_data;
+    private $database;
+    private $icon_set_id;
+    private $data = array();
+    private $info = array();
+    private $front_end_data;
 
     function __construct(NellielPDO $database, FrontEndData $front_end_data, string $icon_set_id)
     {
@@ -83,11 +84,47 @@ class IconSet
         return '';
     }
 
-    private function loadFromDB(): void
+    public function install(bool $overwrite = false): void
     {
+        $icon_set_inis = $this->front_end_data->getIconSetInis();
+
+        foreach ($icon_set_inis as $ini)
+        {
+            if ($ini['set-info']['id'] === $this->id())
+            {
+                $info = json_encode($ini);
+                break;
+            }
+        }
+
+        if ($this->database->rowExists(NEL_ICON_SETS_TABLE, ['set_id'], [$this->id()],
+                [PDO::PARAM_STR, PDO::PARAM_STR]))
+        {
+            if (!$overwrite)
+            {
+                return;
+            }
+
+            $this->uninstall();
+        }
+
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'icon-set\' AND "asset_id" = ?');
+                'INSERT INTO "' . NEL_ICON_SETS_TABLE . '" ("set_id", "info") VALUES (?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $info]);
+        $this->loadFromDB();
+    }
+
+    public function uninstall(): void
+    {
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_ICON_SETS_TABLE . '" WHERE "set_id" = ?');
+        $this->database->executePrepared($prepared, [$this->id()]);
+    }
+
+    public function loadFromDB(): void
+    {
+        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_ICON_SETS_TABLE . '" WHERE "set_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
+        $this->data = $data;
         $this->info = json_decode($data['info'] ?? '', true);
     }
 }

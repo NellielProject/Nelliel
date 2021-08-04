@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Assets\IconSet;
 
 class AdminIconSets extends Admin
 {
@@ -15,9 +16,9 @@ class AdminIconSets extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->data_table = NEL_ASSETS_TABLE;
+        $this->data_table = NEL_ICON_SETS_TABLE;
         $this->id_field = 'icon-set-id';
-        $this->id_column = 'asset_id';
+        $this->id_column = 'set_id';
     }
 
     public function dispatch(array $inputs): void
@@ -39,21 +40,8 @@ class AdminIconSets extends Admin
     public function add(): void
     {
         $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $icon_set_inis = $this->domain->frontEndData()->getIconSetInis();
-
-        foreach ($icon_set_inis as $ini)
-        {
-            if ($ini['id'] === $id)
-            {
-                $info = json_encode($ini);
-            }
-        }
-
-        $prepared = $this->database->prepare(
-                'INSERT INTO "' . $this->data_table . '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$id, 'icon-set', 0, $info]);
+        $this->verifyAction(nel_site_domain());
+        $this->domain->frontEndData()->getIconSet($id)->install();
         $this->outputMain(true);
     }
 
@@ -68,23 +56,8 @@ class AdminIconSets extends Admin
     public function remove(): void
     {
         $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare(
-                'DELETE FROM "' . $this->data_table . '" WHERE "asset_id" = ? AND "type" = ?');
-        $this->database->executePrepared($prepared, [$id, 'icon-set']);
-        $this->outputMain(true);
-    }
-
-    public function makeDefault()
-    {
-        $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $this->database->exec('UPDATE "' . $this->data_table . '" SET "is_default" = 0 WHERE "type" = \'icon-set\'');
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->data_table . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'icon-set\'');
-        $this->database->executePrepared($prepared, [$id]);
+        $this->verifyAction(nel_site_domain());
+        $this->domain->frontEndData()->getIconSet($id)->uninstall();
         $this->outputMain(true);
     }
 

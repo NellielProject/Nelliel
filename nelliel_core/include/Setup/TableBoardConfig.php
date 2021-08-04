@@ -146,7 +146,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['enable_dynamic_pages', '0', 0, '']);
         $this->insertDefaultRow(['generate_catalog', '1', 0, '']);
         $this->insertDefaultRow(['template_id', 'template-nelliel-basic', 0, '']);
-        $this->insertDefaultRow(['style_id', 'style-nelliel', 0, '']);
+        $this->insertDefaultRow(['default_style_id', 'style-nelliel', 0, '']);
         $this->insertDefaultRow(['icon_set_id', 'icons-nelliel-basic', 0, '']);
         $this->insertDefaultRow(['icon_set_fallback', '1', 0, '']);
         $this->insertDefaultRow(['use_file_icon', '1', 0, '']);

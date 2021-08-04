@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Utility\CacheHandler;
 use PDO;
 use Nelliel\Assets\IconSet;
+use Nelliel\Assets\Style;
 
 class FrontEndData
 {
@@ -15,7 +16,6 @@ class FrontEndData
     private $ini_parser;
     private $cache_handler;
     private static $styles = array();
-    private static $default_style = array();
     private static $templates = array();
     private static $default_template = array();
     private $core_icon_set_ids = array();
@@ -42,34 +42,8 @@ class FrontEndData
 
     private function clearStatic()
     {
-        self::$default_style = array();
-        self::$styles = array();
         self::$default_template = array();
         self::$templates = array();
-    }
-
-    private function loadStylesData()
-    {
-        $styles_data = $this->cache_handler->loadArrayFromFile('styles_data', 'styles_data.php');
-
-        if (empty($styles_data))
-        {
-            $styles_data = $this->database->executeFetchAll(
-                    'SELECT * FROM "' . NEL_ASSETS_TABLE . '" WHERE "type" = \'style\'', PDO::FETCH_ASSOC);
-            $this->cache_handler->writeArrayToFile('styles_data', $styles_data, 'styles_data.php');
-        }
-
-        foreach ($styles_data as $data)
-        {
-            $info = json_decode($data['info'], true);
-
-            if ($data['is_default'] == 1)
-            {
-                self::$default_style = $info;
-            }
-
-            self::$styles[$info['id']] = $info;
-        }
     }
 
     private function loadTemplateData()
@@ -94,36 +68,6 @@ class FrontEndData
 
             self::$templates[$info['id']] = $info;
         }
-    }
-
-    public function style($style = null, bool $return_default = true)
-    {
-        if (empty(self::$styles))
-        {
-            $this->loadStylesData();
-        }
-
-        if (is_null($style))
-        {
-            return self::$styles;
-        }
-
-        if (!isset(self::$styles[$style]) && $return_default)
-        {
-            return $this->default_css_style;
-        }
-
-        return self::$styles[$style];
-    }
-
-    public function styleIsCore(string $id)
-    {
-        return in_array($id, $this->core_style_ids);
-    }
-
-    public function getStyleInis()
-    {
-        return $this->ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'style_info.ini');
     }
 
     public function template($template = null, bool $return_default = true)
@@ -156,9 +100,38 @@ class FrontEndData
         return $this->ini_parser->parseDirectories(NEL_TEMPLATES_FILES_PATH, 'template_info.ini');
     }
 
-    public function iconSetIsCore(string $id)
+    public function getStyleInis()
     {
-        return in_array($id, $this->core_icon_set_ids);
+        return $this->ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'style_info.ini');
+    }
+
+    public function getStyle(string $style_id): Style
+    {
+        if (!isset(self::$styles[$style_id]))
+        {
+            self::$styles[$style_id] = new Style($this->database, $this, $style_id);
+        }
+
+        return self::$styles[$style_id];
+    }
+
+    public function getAllStyles(): array
+    {
+        $set_ids = $this->database->executeFetchAll(
+                'SELECT "style_id" FROM "' . NEL_STYLES_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
+        $sets = array();
+
+        foreach ($set_ids as $set_id)
+        {
+            $sets[$set_id] = $this->getStyle($set_id);
+        }
+
+        return $sets;
+    }
+
+    public function styleIsCore(string $id)
+    {
+        return in_array($id, $this->core_style_ids);
     }
 
     public function getIconSetInis()
@@ -176,8 +149,27 @@ class FrontEndData
         return self::$icon_sets[$set_id];
     }
 
-    public function getBaseIconSet(): IconSet
+    public function getAllIconSets(): array
     {
-        return $this->getIconSet($this->base_icon_set_id);
+        $set_ids = $this->database->executeFetchAll(
+                'SELECT "set_id" FROM "' . NEL_ICON_SETS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
+        $sets = array();
+
+        foreach ($set_ids as $set_id)
+        {
+            $sets[$set_id] = $this->getIconSet($set_id);
+        }
+
+        return $sets;
+    }
+
+    public function iconSetIsCore(string $id)
+    {
+        return in_array($id, $this->core_icon_set_ids);
+    }
+
+    public function getDefaultIconSet(): IconSet
+    {
+        return $this->getIconSet($this->default_icon_set_id);
     }
 }

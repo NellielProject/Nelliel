@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -29,33 +28,25 @@ class OutputPanelStyles extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $styles = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE .
-                '" WHERE "type" = \'style\' ORDER BY "is_default" DESC, "asset_id" ASC', PDO::FETCH_ASSOC);
+        $styles = $this->domain->frontEndData()->getAllStyles();
         $installed_ids = array();
         $bgclass = 'row1';
 
         foreach ($styles as $style)
         {
             $style_data = array();
-            $style_info = json_decode($style['info'], true);
             $style_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $installed_ids[] = $style['asset_id'];
-            $style_data['id'] = $style['asset_id'];
-            $style_data['style_type'] = strtoupper($style_info['style_type']);
-            $style_data['name'] = $style_info['name'];
-            $style_data['directory'] = $style_info['directory'];
-            $style_data['is_default'] = $style['is_default'] == 1;
-            $style_data['default_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'admin', 'section' => 'styles', 'actions' => 'make-default',
-                                'style-id' => $style['asset_id'], 'style-type' => $style_info['style_type']]);
+            $installed_ids[] = $style->id();
+            $style_data['id'] = $style->id();
+            $style_data['style_type'] = strtoupper($style->info('style_type'));
+            $style_data['name'] = $style->info('name');
+            $style_data['directory'] = $style->info('directory');
             $style_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'styles', 'actions' => 'remove',
-                                'style-id' => $style['asset_id']]);
-            $style_data['is_core'] = $this->domain->frontEndData()->styleIsCore($style['asset_id']);
+                                'style-id' => $style->id()]);
+            $style_data['is_core'] = $this->domain->frontEndData()->styleIsCore($style->id());
             $this->render_data['installed_list'][] = $style_data;
         }
 
@@ -66,15 +57,16 @@ class OutputPanelStyles extends Output
         {
             $style_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $style_data['id'] = $style['id'];
-            $style_data['style_type'] = strtoupper($style['style_type']);
-            $style_data['name'] = $style['name'];
-            $style_data['directory'] = $style['directory'];
-            $style_data['is_installed'] = in_array($style['id'], $installed_ids);
+            $style_data['id'] = $style['style-info']['id'];
+            $style_data['style_type'] = strtoupper($style['style-info']['style_type']);
+            $style_data['name'] = $style['style-info']['name'];
+            $style_data['directory'] = $style['style-info']['directory'];
+            $style_data['is_installed'] = in_array($style['style-info']['id'], $installed_ids);
             $style_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
-                            ['module' => 'admin', 'section' => 'styles', 'actions' => 'add', 'style-id' => $style['id'],
-                                'style-type' => $style['style_type']]);
+                            ['module' => 'admin', 'section' => 'styles', 'actions' => 'add',
+                                'style-id' => $style['style-info']['id'],
+                                'style-type' => $style['style-info']['style_type']]);
             $this->render_data['available_list'][] = $style_data;
         }
 

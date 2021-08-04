@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -29,32 +28,24 @@ class OutputPanelIconSets extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $icon_sets = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_ASSETS_TABLE .
-                '" WHERE "type" = \'icon-set\' ORDER BY "entry" ASC, "is_default" DESC', PDO::FETCH_ASSOC);
+        $icon_sets = $this->domain->frontEndData()->getAllIconSets();
         $installed_ids = array();
         $bgclass = 'row1';
 
         foreach ($icon_sets as $icon_set)
         {
             $set_data = array();
-            $icon_set_info = json_decode($icon_set['info'], true);
             $set_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $installed_ids[] = $icon_set['asset_id'];
-            $set_data['id'] = $icon_set['asset_id'];
-            $set_data['name'] = $icon_set_info['name'];
-            $set_data['directory'] = $icon_set_info['directory'];
-            $set_data['is_default'] = $icon_set['is_default'] == 1;
-            $set_data['default_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'make-default',
-                                'icon-set-id' => $icon_set['asset_id']]);
+            $installed_ids[] = $icon_set->id();
+            $set_data['id'] = $icon_set->id();
+            $set_data['name'] = $icon_set->info('name');
+            $set_data['directory'] = $icon_set->info('directory');
             $set_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'remove',
-                                'icon-set-id' => $icon_set['asset_id']]);
-            $set_data['is_core'] = $this->domain->frontEndData()->iconSetIsCore($icon_set['asset_id']);
+                            'icon-set-id' => $icon_set->id()]);
+            $set_data['is_core'] = $this->domain->frontEndData()->iconSetIsCore($icon_set->id());
             $this->render_data['installed_list'][] = $set_data;
         }
 
@@ -66,14 +57,14 @@ class OutputPanelIconSets extends Output
             $set_data = array();
             $set_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $set_data['id'] = $icon_set['id'];
-            $set_data['name'] = $icon_set_info['name'];
-            $set_data['directory'] = $icon_set_info['directory'];
-            $set_data['is_installed'] = in_array($icon_set['id'], $installed_ids);
+            $set_data['id'] = $icon_set['set-info']['id'];
+            $set_data['name'] = $icon_set['set-info']['name'];
+            $set_data['directory'] = $icon_set['set-info']['directory'];
+            $set_data['is_installed'] = in_array($icon_set['set-info']['id'], $installed_ids);
             $set_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                             ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'add',
-                                'icon-set-id' => $icon_set['id']]);
+                            'icon-set-id' => $icon_set['set-info']['id']]);
             $this->render_data['available_list'][] = $set_data;
         }
 
