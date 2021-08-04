@@ -20,7 +20,6 @@ class TableTemplates extends Table
         $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'template_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'is_default' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'info' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -33,7 +32,6 @@ class TableTemplates extends Table
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             template_id     VARCHAR(100) NOT NULL UNIQUE,
-            is_default      SMALLINT NOT NULL DEFAULT 0,
             info            TEXT NOT NULL
         ) " . $options . ";";
 

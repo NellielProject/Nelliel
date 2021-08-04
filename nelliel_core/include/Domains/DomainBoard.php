@@ -19,17 +19,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
-
-        // TODO: Fix this better
-        if(isset($this->front_end_data->template($this->setting('template_id'))['directory']))
-        {
-            $this->templatePath(
-                    NEL_TEMPLATES_FILES_PATH . $this->front_end_data->template($this->setting('template_id'))['directory']);
-        }
-        else
-        {
-            $this->templatePath();
-        }
+        $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))->getPath());
     }
 
     protected function loadSettings(): void

@@ -124,7 +124,7 @@ class IconSet
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_ICON_SETS_TABLE . '" WHERE "set_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
-        $this->data = $data;
+        $this->data = is_array($data) ? $data : array();
         $this->info = json_decode($data['info'] ?? '', true);
     }
 }

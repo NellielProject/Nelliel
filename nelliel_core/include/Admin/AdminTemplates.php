@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
@@ -39,27 +38,10 @@ class AdminTemplates extends Admin
 
     public function add(): void
     {
-        $this->verifyAction($this->domain);
-        $template_id = $_GET['template-id'];
-        $template_inis = $this->domain->frontEndData()->getTemplateInis();
-        $info = '';
-
-        foreach ($template_inis as $ini)
-        {
-            if ($ini['id'] === $template_id)
-            {
-                $info = json_encode($ini);
-            }
-        }
-
-        if ($info !== '')
-        {
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . $this->data_table .
-                    '" ("template_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
-        }
-
+        $id = $_GET[$this->id_field] ?? '';
+        $this->verifyAction(nel_site_domain());
+        $this->domain->frontEndData()->getTemplate($id)->install();
+        $this->domain->templatePath($this->domain->frontEndData()->getTemplate($id)->getPath());
         $this->outputMain(true);
     }
 
@@ -73,22 +55,10 @@ class AdminTemplates extends Admin
 
     public function remove(): void
     {
-        $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
-        $this->outputMain(true);
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
-        $template_id = $_GET['template-id'];
-        $this->database->exec('UPDATE "' . $this->data_table . '" SET "is_default" = 0');
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->data_table . '" SET "is_default" = 1 WHERE "template_id" = ?');
-        $this->database->executePrepared($prepared, [$template_id]);
+        $id = $_GET[$this->id_field] ?? '';
+        $this->verifyAction(nel_site_domain());
+        $this->domain->frontEndData()->getTemplate($id)->uninstall();
+        $this->domain->templatePath($this->domain->frontEndData()->getTemplate($id)->getPath());
         $this->outputMain(true);
     }
 

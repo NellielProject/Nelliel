@@ -8,7 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
-use Nelliel\Assets\IconSet;
 
 class AdminIconSets extends Admin
 {
@@ -39,7 +38,7 @@ class AdminIconSets extends Admin
 
     public function add(): void
     {
-        $id = $_GET[$this->id_field] ?? 0;
+        $id = $_GET[$this->id_field] ?? '';
         $this->verifyAction(nel_site_domain());
         $this->domain->frontEndData()->getIconSet($id)->install();
         $this->outputMain(true);
@@ -55,7 +54,7 @@ class AdminIconSets extends Admin
 
     public function remove(): void
     {
-        $id = $_GET[$this->id_field] ?? 0;
+        $id = $_GET[$this->id_field] ?? '';
         $this->verifyAction(nel_site_domain());
         $this->domain->frontEndData()->getIconSet($id)->uninstall();
         $this->outputMain(true);

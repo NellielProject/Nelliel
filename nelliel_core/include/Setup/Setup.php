@@ -292,33 +292,24 @@ class Setup
         $this->file_handler->createDirectory($domain->reference('banners_path'), NEL_DIRECTORY_PERM, true);
     }
 
-    public function installCoreTemplates(): void
+    public function installCoreTemplates($overwrite = false): void
     {
         $front_end_data = new \Nelliel\FrontEndData($this->database);
         $template_inis = $front_end_data->getTemplateInis();
 
         foreach ($template_inis as $ini)
         {
-            $template_id = $ini['id'];
+            $template_id = $ini['template-info']['id'];
 
             if (!$front_end_data->templateIsCore($template_id))
             {
                 continue;
             }
 
-            if ($this->database->rowExists(NEL_TEMPLATES_TABLE, ['template_id'], [$template_id], [PDO::PARAM_STR]))
-            {
-                continue;
-            }
-
-            $info = json_encode($ini);
-            $default = ($template_id === 'template-nelliel-basic') ? 1 : 0;
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "is_default", "info") VALUES (?, ?, ?)');
-            $this->database->executePrepared($prepared, [$template_id, $default, $info]);
+            $front_end_data->getTemplate($template_id)->install($overwrite);
         }
 
-        echo _gettext('Core templates installed.'), '<br>';
+        echo _gettext('Core templates installed.') . '<br>';
     }
 
     public function installCoreStyles(bool $overwrite = false): void
@@ -338,7 +329,7 @@ class Setup
             $front_end_data->getStyle($style_id)->install($overwrite);
         }
 
-        echo _gettext('Core styles installed.'), '<br>';
+        echo _gettext('Core styles installed.') . '<br>';
     }
 
     public function installCoreIconSets(bool $overwrite = false): void
@@ -358,7 +349,7 @@ class Setup
             $front_end_data->getIconSet($icon_set_id)->install($overwrite);
         }
 
-        echo _gettext('Core icon sets installed.'), '<br>';
+        echo _gettext('Core icon sets installed.') . '<br>';
     }
 
     private function checkForInnoDB()

@@ -40,7 +40,7 @@ class AdminStyles extends Admin
 
     public function add(): void
     {
-        $id = $_GET[$this->id_field] ?? 0;
+        $id = $_GET[$this->id_field] ?? '';
         $this->verifyAction(nel_site_domain());
         $this->domain->frontEndData()->getStyle($id)->install();
         $this->outputMain(true);
@@ -56,7 +56,7 @@ class AdminStyles extends Admin
 
     public function remove(): void
     {
-        $id = $_GET[$this->id_field] ?? 0;
+        $id = $_GET[$this->id_field] ?? '';
         $this->verifyAction(nel_site_domain());
         $this->domain->frontEndData()->getStyle($id)->uninstall();
         $this->outputMain(true);
