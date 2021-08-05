@@ -1,14 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel;
+namespace Nelliel\FrontEnd;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\NellielPDO;
 use Nelliel\Utility\CacheHandler;
 use PDO;
-use Nelliel\Assets\IconSet;
-use Nelliel\Assets\Style;
+use Nelliel\INIParser;
 
 class FrontEndData
 {

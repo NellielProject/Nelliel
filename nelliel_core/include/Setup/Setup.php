@@ -294,7 +294,7 @@ class Setup
 
     public function installCoreTemplates($overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
+        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
         $template_inis = $front_end_data->getTemplateInis();
 
         foreach ($template_inis as $ini)
@@ -314,7 +314,7 @@ class Setup
 
     public function installCoreStyles(bool $overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
+        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
         $style_inis = $front_end_data->getStyleInis();
 
         foreach ($style_inis as $ini)
@@ -334,7 +334,7 @@ class Setup
 
     public function installCoreIconSets(bool $overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
+        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
         $icon_set_inis = $front_end_data->getIconSetInis();
 
         foreach ($icon_set_inis as $ini)

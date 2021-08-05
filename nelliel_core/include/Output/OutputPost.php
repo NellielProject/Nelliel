@@ -12,7 +12,7 @@ use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
 use Nelliel\Markdown\ImageboardMarkdown;
 use PDO;
-use Nelliel\Assets\IconSet;
+use Nelliel\FrontEnd\IconSet;
 
 class OutputPost extends Output
 {
