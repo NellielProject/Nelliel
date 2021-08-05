@@ -2,7 +2,7 @@
 Basic installation guide. Should be enough to get things up and running.
 
 1. Unzip the files for Nelliel and copy them to the location desired.
-2. Make sure the PHP process has read, write and execute permissions on the main directory and the `nelliel_core` directory. On Linux this would normally be `chmod 755` or `chmod 775` depending on how your host is set up.
+2. Make sure the PHP process has read, write and execute permissions on the main directory, `assets` directory and the `nelliel_core` directory. On Linux this would normally be `chmod 755` or `chmod 775` depending on how your host is set up.
 3. If using MySQL, MariaDB or PostgreSQL you need a database and a user that has CREATE, ALTER and DROP permissions for that database.  
 For SQLite you just need the path to where you wish the database file to be stored. **This must not be a web-accessible location!**
 4. Go to the `nelliel_core/configuration` directory and rename `config.php.example` to `config.php` then open the file to edit settings. Only a few of these settings are required to be changed:

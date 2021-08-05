@@ -152,7 +152,8 @@ class LanguageExtractor
                         {
                             $entry_data = $this->getFunctionParameters($entry, $default_category);
                             $current_data = $entries[$entry_data['category']][$entry_data['msgid']] ?? array();
-                            $entries[$entry_data['category']][$entry_data['msgid']] = array_replace_recursive($current_data, $entry_data);
+                            $entries[$entry_data['category']][$entry_data['msgid']] = array_replace_recursive(
+                                    $current_data, $entry_data);
                         }
 
                         $entry = array();
@@ -327,7 +328,7 @@ class LanguageExtractor
     {
         $entries = array();
         $file_handler = nel_utilities()->fileHandler();
-        $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
+        $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/');
         $html_files = array_merge($html_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
         $render = new \Nelliel\Render\RenderCoreDOM();
 
@@ -343,16 +344,24 @@ class LanguageExtractor
             $dom = $render->newDOMDocument();
             $template = $render->loadTemplateFromFile($file->getPathname());
             $render->loadDOMFromTemplate($dom, $template);
-            $content_node_list = $dom->getElementsByAttributeName('data-i18n');
-            $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
+            $content_node_list = $dom->getElementsByAttributeName('data-gettext');
 
-            foreach ($attribute_node_list as $node)
+            foreach ($content_node_list as $node)
             {
-                $split_attribute = explode('|', $node->getAttribute('data-i18n-attributes'), 2);
-
-                if ($split_attribute[0] === 'gettext')
+                if ($node->getAttribute('data-gettext') === '')
                 {
-                    $attribute_list = explode(',', $split_attribute[1]);
+                    $msgid = $node->getContent();
+
+                    if ($msgid !== '')
+                    {
+                        $location = $file_id;
+                        $entries[$default_category][$msgid]['msgid'] = $msgid;
+                        $entries[$default_category][$msgid]['comments'][$location] = '#:';
+                    }
+                }
+                else
+                {
+                    $attribute_list = explode('|', $node->getAttribute('data-gettext'));
 
                     foreach ($attribute_list as $attribute_name)
                     {
@@ -364,21 +373,6 @@ class LanguageExtractor
                             $entries[$default_category][$msgid]['msgid'] = $msgid;
                             $entries[$default_category][$msgid]['comments'][$location] = '#:';
                         }
-                    }
-                }
-            }
-
-            foreach ($content_node_list as $node)
-            {
-                if ($node->getAttribute('data-i18n') === 'gettext')
-                {
-                    $msgid = $node->getContent();
-
-                    if ($msgid !== '')
-                    {
-                        $location = $file_id;
-                        $entries[$default_category][$msgid]['msgid'] = $msgid;
-                        $entries[$default_category][$msgid]['comments'][$location] = '#:';
                     }
                 }
             }

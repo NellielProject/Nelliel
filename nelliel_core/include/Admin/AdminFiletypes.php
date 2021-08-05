@@ -63,7 +63,7 @@ class AdminFiletypes extends Admin
         $mime = $_POST['mime'] ?? null;
         $id_regex = $_POST['id_regex'] ?? null;
         $label = $_POST['type_label'] ?? '';
-        $type_def = $_POST['type_def'] ?? 0;
+        $is_category = $_POST['is_category'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
         $post_sub = $_POST['sub_extensions'] ?? '';
         $sub_explode = explode(' ', $post_sub);
@@ -71,9 +71,9 @@ class AdminFiletypes extends Admin
 
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_FILETYPES_TABLE .
-                '" ("base_extension", "type", "format", "mime", "sub_extensions", "id_regex", "label", "type_def", "enabled") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                '" ("base_extension", "type", "format", "mime", "sub_extensions", "id_regex", "label", "is_category", "enabled") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
-                [$base_extension, $type, $format, $mime, $sub_extensions, $id_regex, $label, $type_def, $enabled]);
+                [$base_extension, $type, $format, $mime, $sub_extensions, $id_regex, $label, $is_category, $enabled]);
         $this->outputMain(true);
     }
 
@@ -96,7 +96,7 @@ class AdminFiletypes extends Admin
         $mime = $_POST['mime'] ?? null;
         $id_regex = $_POST['id_regex'] ?? null;
         $label = $_POST['type_label'] ?? null;
-        $type_def = $_POST['type_def'] ?? 0;
+        $is_category = $_POST['is_category'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
         $post_sub = $_POST['sub_extensions'] ?? '';
         $sub_explode = explode(' ', $post_sub);
@@ -104,9 +104,9 @@ class AdminFiletypes extends Admin
 
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_FILETYPES_TABLE .
-                '" SET "base_extension" = ?, "type" = ?, "format" = ?, "mime" = ?, "sub_extensions" = ?, "id_regex" = ?, "type_label" = ?, "type_def" = ?, "enabled" = ? WHERE "entry" = ?');
+                '" SET "base_extension" = ?, "type" = ?, "format" = ?, "mime" = ?, "sub_extensions" = ?, "id_regex" = ?, "type_label" = ?, "is_category" = ?, "enabled" = ? WHERE "entry" = ?');
         $this->database->executePrepared($prepared,
-                [$base_extension, $type, $format, $mime, $sub_extensions, $id_regex, $label, $type_def, $enabled,
+                [$base_extension, $type, $format, $mime, $sub_extensions, $id_regex, $label, $is_category, $enabled,
                     $filetype_id]);
         $this->outputMain(true);
     }

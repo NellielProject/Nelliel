@@ -30,7 +30,7 @@ class OutputPanelFiletypes extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $filetypes = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" ORDER BY "type_def", "entry" ASC',
+                'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" ORDER BY "is_category", "entry" ASC',
                 PDO::FETCH_ASSOC);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'add']);
@@ -146,6 +146,7 @@ class OutputPanelFiletypes extends Output
                 $this->render_data['sub_extensions'] = substr($sub_extensions, 0, -1);
                 $this->render_data['id_regex'] = $filetype_data['id_regex'];
                 $this->render_data['type_label'] = $filetype_data['type_label'];
+                $this->render_data['is_category_checked'] = $filetype_data['is_category'] == 1 ? 'checked' : '';
                 $this->render_data['enabled_checked'] = $filetype_data['enabled'] == 1 ? 'checked' : '';
             }
         }

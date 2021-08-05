@@ -42,7 +42,7 @@ class FileTypes
 
         foreach ($filetype_data as $data)
         {
-            if ($data['type_def'] == 1)
+            if ($data['is_category'] == 1)
             {
                 $types[$data['type']] = $data;
                 continue;
