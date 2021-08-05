@@ -81,6 +81,7 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['site_referrer_policy', 'strict-origin-when-cross-origin', 0]);
         $this->insertDefaultRow(['nofollow_external_links', '1', 0]);
         $this->insertDefaultRow(['base_icon_set', 'icons-nelliel-basic', 0]);
+        $this->insertDefaultRow(['default_style', 'style-nelliel', 0]);
 
         // Hashing and security
         $this->insertDefaultRow(['post_password_algorithm', 'sha256', 0]);

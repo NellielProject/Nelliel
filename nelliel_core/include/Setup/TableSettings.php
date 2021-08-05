@@ -95,6 +95,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'site_referrer_policy', '{"no-referrer": {}, "no-referrer-when-downgrade": {}, "origin": {}, "origin-when-cross-origin": {}, "same-origin": {},"strict-origin": {}, "strict-origin-when-cross-origin": {}, "unsafe-url": {}}', 'strict-origin-when-cross-origin', 'Referrer policy for the site', '{"type":"select"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'nofollow_external_links', '', '1', 'Add rel="nofollow" to external links', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'base_icon_set', '', 'icons-nelliel-basic', 'Base icon set', '{"type":"text"}']);
+        $this->insertDefaultRow(['core', 'nelliel', 'string', 'default_style', '', 'style-nelliel', 'Default style for site pages and control panels', '{"type":"text"}']);
 
         // Hashing and security
         $this->insertDefaultRow(['core', 'nelliel', 'string', 'post_password_algorithm', '', 'sha256', 'Post password hash algorithm', '{"type":"text"}']);
@@ -228,7 +229,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_dynamic_pages', '', '0', 'Allow visitors to use dynamic page rendering (Currently Unused)', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'generate_catalog', '', '1', 'Generate catalog for this board', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'template_id', '', 'template-nelliel-basic', 'ID of template for board to use', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'default_style_id', '', 'style-nelliel', 'ID of default style for board', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'default_style', '', 'style-nelliel', 'ID of default style for board', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_icon_set', '', 'icons-nelliel-basic', 'Icon set to use for UI elements', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'filetype_icon_set', '', 'icons-nelliel-basic', 'Icon set to use for filetypes', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'icon_set_fallback', '', '1', 'If a selected icon set doesn\'t have an entry for something, attempt to get it from the base icon set.', '{"type":"checkbox"}']);

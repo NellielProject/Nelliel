@@ -200,8 +200,8 @@ class OutputPanelBoardSettings extends Output
             $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
 
-        $this->render_data['settings_data']['default_style_id']['options'] = $this->stylesSelect(
-                $this->render_data['settings_data']['default_style_id']['setting_value']);
+        $this->render_data['settings_data']['default_style']['options'] = $this->stylesSelect(
+                $this->render_data['settings_data']['default_style']['setting_value']);
         $this->render_data['settings_data']['ui_icon_set']['options'] = $this->iconSetsSelect(
                 $this->render_data['settings_data']['ui_icon_set']['setting_value']);
         $this->render_data['settings_data']['filetype_icon_set']['options'] = $this->iconSetsSelect(

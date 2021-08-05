@@ -95,6 +95,7 @@ class OutputPanelSiteSettings extends Output
 
         $this->render_data['settings_data']['base_icon_set']['options'] = $this->iconSetsSelect($this->domain->setting('base_icon_set'));
         $this->render_data['settings_data']['template_id']['options'] = $this->templatesSelect($this->domain->setting('template_id'));
+        $this->render_data['settings_data']['default_style']['options'] = $this->stylesSelect($this->domain->setting('default_style'));
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

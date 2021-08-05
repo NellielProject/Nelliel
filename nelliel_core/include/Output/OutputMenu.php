@@ -24,7 +24,7 @@ class OutputMenu extends Output
         foreach ($styles as $style)
         {
             $style_data = array();
-            $style_data['stylesheet'] = ($this->domain->setting('default_style_id') === $style->id()) ? 'stylesheet' : 'alternate stylesheet';
+            $style_data['stylesheet'] = ($this->domain->setting('default_style') === $style->id()) ? 'stylesheet' : 'alternate stylesheet';
             $style_data['style_id'] = $style->id();
             $style_data['stylesheet_url'] = $style->getMainFileWebPath();
             $style_data['style_name'] = $style->info('name');
