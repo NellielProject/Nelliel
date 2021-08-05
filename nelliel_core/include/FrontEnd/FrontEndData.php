@@ -33,7 +33,7 @@ class FrontEndData
         $this->core_template_ids = ['template-nelliel-basic'];
     }
 
-    public function getIconSetInis(): array
+    public function getIconSetInis(string $directory = null): array
     {
         return $this->ini_parser->parseDirectories(NEL_ICON_SETS_FILES_PATH, 'icon_info.ini');
     }
@@ -65,11 +65,6 @@ class FrontEndData
     public function iconSetIsCore(string $id): bool
     {
         return in_array($id, $this->core_icon_set_ids);
-    }
-
-    public function getDefaultIconSet(): IconSet
-    {
-        return nel_site_domain()->setting('base_icon_set');
     }
 
     public function getStyleInis(): array

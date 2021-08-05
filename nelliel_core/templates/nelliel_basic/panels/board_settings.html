@@ -327,9 +327,12 @@
 		{{# default_style_id }}
 			{{> panels/pieces/settings_select }}
 		{{/ default_style_id }}
-		{{# icon_set_id }}
+		{{# ui_icon_set }}
 			{{> panels/pieces/settings_select }}
-		{{/ icon_set_id }}
+		{{/ ui_icon_set }}
+		{{# filetype_icon_set }}
+			{{> panels/pieces/settings_select }}
+		{{/ filetype_icon_set }}
 		{{# icon_set_fallback }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ icon_set_fallback }}
@@ -411,6 +414,12 @@
 		{{# index_nav_bottom }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ index_nav_bottom }}
+		{{# image_spoiler_cover }}
+			{{> panels/pieces/settings_text }}
+		{{/ image_spoiler_cover }}
+		{{# image_deleted_file }}
+			{{> panels/pieces/settings_text }}
+		{{/ image_deleted_file }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}

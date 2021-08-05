@@ -46,7 +46,6 @@ class OutputPanelTemplates extends Output
                     http_build_query(
                             ['module' => 'admin', 'section' => 'templates', 'actions' => 'remove',
                                 'template-id' => $template->id()]);
-            $template_data['is_core'] = $this->domain->frontEndData()->templateIsCore($template->id());
             $this->render_data['installed_list'][] = $template_data;
         }
 

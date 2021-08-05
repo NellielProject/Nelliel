@@ -46,7 +46,6 @@ class OutputPanelStyles extends Output
                     http_build_query(
                             ['module' => 'admin', 'section' => 'styles', 'actions' => 'remove',
                                 'style-id' => $style->id()]);
-            $style_data['is_core'] = $this->domain->frontEndData()->styleIsCore($style->id());
             $this->render_data['installed_list'][] = $style_data;
         }
 

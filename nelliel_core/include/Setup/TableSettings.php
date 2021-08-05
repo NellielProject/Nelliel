@@ -229,8 +229,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'generate_catalog', '', '1', 'Generate catalog for this board', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'template_id', '', 'template-nelliel-basic', 'ID of template for board to use', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'default_style_id', '', 'style-nelliel', 'ID of default style for board', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'icon_set_id', '', 'icons-nelliel-basic', 'ID of icon set for board to use', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'icon_set_fallback', '', '1', 'If the selected icon set doesn\'t specify a file, check the base set', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_icon_set', '', 'icons-nelliel-basic', 'Icon set to use for UI elements', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'filetype_icon_set', '', 'icons-nelliel-basic', 'Icon set to use for filetypes', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'icon_set_fallback', '', '1', 'If a selected icon set doesn\'t have an entry for something, attempt to get it from the base icon set.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_file_icon', '', '1', 'Use filetype icon for non-images', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_uploads_row', '', '3', 'Maximum number of uploads to display in each row', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_display_width', '', '250', 'Maximum display width for uploads', '{"type":"number"}']);
@@ -257,6 +258,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_content_disclaimer', '', '', 'Disclaimer added to the bottom of posts on this board', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_top', '', '1', 'Display index navigation at top of page', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_bottom', '', '1', 'Display index navigation at bottom of page', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_spoiler_cover', '', 'media/core/covers/spoiler.png', 'Cover image for spoilers', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_deleted_file', '', 'media/core/placeholders/deleted_file.png', 'Placeholder image for deleted filed', '{"type":"text"}']);
 
         // Anti-spam
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_post_captcha', '', '0', 'Use CAPTCHA for new posts and threads', '{"type":"checkbox"}']);

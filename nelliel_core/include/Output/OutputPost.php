@@ -12,7 +12,6 @@ use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
 use Nelliel\Markdown\ImageboardMarkdown;
 use PDO;
-use Nelliel\FrontEnd\IconSet;
 
 class OutputPost extends Output
 {
@@ -149,7 +148,7 @@ class OutputPost extends Output
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
             ContentPost $post, ContentThread $thread, array $gen_data, int $in_thread_number)
     {
-        $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('icon_set_id'));
+        $ui_icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('ui_icon_set'));
         $header_data = array();
         $modmode_headers = array();
         $thread_headers = array();
@@ -233,11 +232,11 @@ class OutputPost extends Output
             $thread_headers['thread_content_id'] = $thread_content_id->getIDString();
             $thread_headers['post_content_id'] = $post_content_id->getIDString();
             $thread_headers['is_sticky'] = $thread_data['sticky'];
-            $thread_headers['sticky'] = $icon_set->getWebPath('ui', 'sticky', true);
+            $thread_headers['sticky'] = $ui_icon_set->getWebPath('ui', 'sticky', true);
             $thread_headers['is_locked'] = $thread_data['locked'];
-            $thread_headers['locked'] = $icon_set->getWebPath('ui', 'locked', true);
+            $thread_headers['locked'] = $ui_icon_set->getWebPath('ui', 'locked', true);
             $thread_headers['is_cyclic'] = $thread_data['cyclic'];
-            $thread_headers['cyclic'] = $icon_set->getWebPath('ui', 'cyclic', true);
+            $thread_headers['cyclic'] = $ui_icon_set->getWebPath('ui', 'cyclic', true);
 
             if ($gen_data['index_rendering'])
             {

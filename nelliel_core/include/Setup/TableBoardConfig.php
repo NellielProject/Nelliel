@@ -145,7 +145,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['generate_catalog', '1', 0]);
         $this->insertDefaultRow(['template_id', 'template-nelliel-basic', 0]);
         $this->insertDefaultRow(['default_style_id', 'style-nelliel', 0]);
-        $this->insertDefaultRow(['icon_set_id', 'icons-nelliel-basic', 0]);
+        $this->insertDefaultRow(['ui_icon_set', 'icons-nelliel-basic', 0]);
+        $this->insertDefaultRow(['filetype_icon_set', 'icons-nelliel-basic', 0]);
         $this->insertDefaultRow(['icon_set_fallback', '1', 0]);
         $this->insertDefaultRow(['use_file_icon', '1', 0]);
         $this->insertDefaultRow(['max_uploads_row', '3', 0]);
@@ -173,6 +174,8 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['board_content_disclaimer', '', 0]);
         $this->insertDefaultRow(['index_nav_top', '0', 0]);
         $this->insertDefaultRow(['index_nav_bottom', '1', 0]);
+        $this->insertDefaultRow(['image_spoiler_cover', 'media/core/covers/spoiler.png', 0]);
+        $this->insertDefaultRow(['image_deleted_file', 'media/core/placeholders/deleted_file.png', 0]);
 
         // Anti-spam
         $this->insertDefaultRow(['use_post_captcha', '0', 0]);

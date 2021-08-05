@@ -200,9 +200,14 @@ class OutputPanelBoardSettings extends Output
             $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
 
-        $this->render_data['settings_data']['default_style_id']['options'] = $this->stylesSelect($this->domain->setting('default_style_id'));
-        $this->render_data['settings_data']['icon_set_id']['options'] = $this->iconSetsSelect($this->domain->setting('icon_set_id'));
-        $this->render_data['settings_data']['template_id']['options'] = $this->templatesSelect($this->domain->setting('template_id'));
+        $this->render_data['settings_data']['default_style_id']['options'] = $this->stylesSelect(
+                $this->render_data['settings_data']['default_style_id']['setting_value']);
+        $this->render_data['settings_data']['ui_icon_set']['options'] = $this->iconSetsSelect(
+                $this->render_data['settings_data']['ui_icon_set']['setting_value']);
+        $this->render_data['settings_data']['filetype_icon_set']['options'] = $this->iconSetsSelect(
+                $this->render_data['settings_data']['filetype_icon_set']['setting_value']);
+        $this->render_data['settings_data']['template_id']['options'] = $this->templatesSelect(
+                $this->render_data['settings_data']['template_id']['setting_value']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
