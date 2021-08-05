@@ -100,7 +100,7 @@
 		{{> panels/pieces/settings_text }}
 	{{/ thread_filename_format }}
 	{{# template_id }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings_select }}
 	{{/ template_id }}
 	{{# graphics_handler }}
 		{{> panels/pieces/settings_select }}
@@ -117,6 +117,9 @@
 	{{# nofollow_external_links }}
 		{{> panels/pieces/settings_checkbox }}
 	{{/ nofollow_external_links }}
+	{{# base_icon_set }}
+		{{> panels/pieces/settings_select }}
+	{{/ base_icon_set }}
 	<div class="display-row">
 		<hr class="display_cell">
 	</div>

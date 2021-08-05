@@ -69,7 +69,7 @@ class FrontEndData
 
     public function getDefaultIconSet(): IconSet
     {
-        return $this->getIconSet($this->default_icon_set_id);
+        return nel_site_domain()->setting('base_icon_set');
     }
 
     public function getStyleInis(): array

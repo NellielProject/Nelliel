@@ -93,10 +93,78 @@ class OutputPanelSiteSettings extends Output
             $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
 
+        $this->render_data['settings_data']['base_icon_set']['options'] = $this->iconSetsSelect($this->domain->setting('base_icon_set'));
+        $this->render_data['settings_data']['template_id']['options'] = $this->templatesSelect($this->domain->setting('template_id'));
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
+    }
+
+    private function stylesSelect(string $selected): array
+    {
+        $styles = $this->domain->frontEndData()->getAllStyles();
+        $options = array();
+
+        foreach ($styles as $style)
+        {
+            $option_data = array();
+            $option_data['option_name'] = $style->id();
+            $option_data['option_label'] = $style->info('name');
+
+            if ($option_data['option_name'] === $selected)
+            {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
+    }
+
+    private function iconSetsSelect(string $selected): array
+    {
+        $sets = $this->domain->frontEndData()->getAllIconSets();
+        $options = array();
+
+        foreach ($sets as $set)
+        {
+            $option_data = array();
+            $option_data['option_name'] = $set->id();
+            $option_data['option_label'] = $set->info('name');
+
+            if ($option_data['option_name'] === $selected)
+            {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
+    }
+
+    private function templatesSelect(string $selected): array
+    {
+        $templates = $this->domain->frontEndData()->getAllTemplates();
+        $options = array();
+
+        foreach ($templates as $template)
+        {
+            $option_data = array();
+            $option_data['option_name'] = $template->id();
+            $option_data['option_label'] = $template->info('name');
+
+            if ($option_data['option_name'] === $selected)
+            {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
     }
 }

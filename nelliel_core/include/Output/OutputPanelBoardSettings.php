@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -31,7 +30,8 @@ class OutputPanelBoardSettings extends Output
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $admin_board_settings = new AdminBoardSettings(new Authorization($this->database), $this->domain, $this->session, array());
+        $admin_board_settings = new AdminBoardSettings(new Authorization($this->database), $this->domain, $this->session,
+                array());
         $defaults_list = $admin_board_settings->defaultsList();
 
         if ($defaults)
@@ -52,8 +52,7 @@ class OutputPanelBoardSettings extends Output
         }
 
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $user_lock_override = $this->session->user()->checkPermission($this->domain,
-                'perm_manage_board_config_override');
+        $user_lock_override = $this->session->user()->checkPermission($this->domain, 'perm_manage_board_config_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
         $prepared = $this->database->prepare(
@@ -201,10 +200,79 @@ class OutputPanelBoardSettings extends Output
             $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
 
+        $this->render_data['settings_data']['default_style_id']['options'] = $this->stylesSelect($this->domain->setting('default_style_id'));
+        $this->render_data['settings_data']['icon_set_id']['options'] = $this->iconSetsSelect($this->domain->setting('icon_set_id'));
+        $this->render_data['settings_data']['template_id']['options'] = $this->templatesSelect($this->domain->setting('template_id'));
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
+    }
+
+    private function stylesSelect(string $selected): array
+    {
+        $styles = $this->domain->frontEndData()->getAllStyles();
+        $options = array();
+
+        foreach ($styles as $style)
+        {
+            $option_data = array();
+            $option_data['option_name'] = $style->id();
+            $option_data['option_label'] = $style->info('name');
+
+            if ($option_data['option_name'] === $selected)
+            {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
+    }
+
+    private function iconSetsSelect(string $selected): array
+    {
+        $sets = $this->domain->frontEndData()->getAllIconSets();
+        $options = array();
+
+        foreach ($sets as $set)
+        {
+            $option_data = array();
+            $option_data['option_name'] = $set->id();
+            $option_data['option_label'] = $set->info('name');
+
+            if ($option_data['option_name'] === $selected)
+            {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
+    }
+
+    private function templatesSelect(string $selected): array
+    {
+        $templates = $this->domain->frontEndData()->getAllTemplates();
+        $options = array();
+
+        foreach ($templates as $template)
+        {
+            $option_data = array();
+            $option_data['option_name'] = $template->id();
+            $option_data['option_label'] = $template->info('name');
+
+            if ($option_data['option_name'] === $selected)
+            {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
     }
 }
