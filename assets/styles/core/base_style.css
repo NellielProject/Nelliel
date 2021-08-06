@@ -187,42 +187,118 @@ form {
 }
 
 /* Files */
-.single.file {
-    float: left;
-    font-size: 0.95rem;
-    margin: 0.15em 0.75em;
-}
-
-.multiple.file {
-    float: left;
-    font-size: 0.95rem;
-    margin: 0.15em 0.25em;
-}
-
 .file-hash {
     padding-left: 0.1em;
+    display: block;
+}
+
+.file-container {
+	
+}
+
+.single.file-container {
+
+}
+
+.multiple.file-container {
+    float: left;
+    margin: 0.15em 0.25em;
+    text-align: center;
+}
+
+.file-header {
+
+}
+
+.single.file-header {
+
+}
+
+.multiple.file-header {
+    font-size: 0.95rem;
 }
 
 .file-info {
-	text-align: center;
 	font-size: 0.9em;
 }
 
-.file-preview {
-	text-align: center;
+.single.file-info {
+	margin-left: 1.0em;
+}
+
+.multiple.file-info {
+
+}
+
+.single.file-preview {
+	float: left;
+	margin: 0.35em 1.5em 0.0em 1.25em;
+}
+
+.multiple.file-preview {
+	margin: 0.35em;
 }
 
 /* Embeds */
+.embed-container {
+	
+}
+
+.single.embed-container {
+
+}
+
+.multiple.embed-container {
+    float: left;
+    margin: 0.15em 0.25em;
+}
+
+.embed-header {
+	
+}
+
+.single.embed-header {
+
+}
+
+.multiple.embed-header {
+    font-size: 0.95rem;
+}
+
 .embed-info {
-	text-align: center;
 	font-size: 0.9em;
+}
+
+.single.embed-info {
+	margin-left: 1.0em;
+}
+
+.multiple.embed-info {
+	text-align: center;
 }
 
 .embed-frame {
 	border: none;
 }
 
+.single.embed-frame {
+	float: left;
+	margin: 0.35em 1.5em 0.5em 1.25em;
+}
+
+.multiple.embed-frame {
+	margin: 0.35em;
+}
+
 /* General post */
+.single.content-row {
+
+}
+
+.multiple.content-row {
+	margin-left: 0.75em;
+}
+
 .mod-comment {
 	background: var(--mod-comment-background);
     color: var(--mod-comment-color, #FF0000);
@@ -280,7 +356,7 @@ form {
 
 /* OP post */
 .op.post-header-info {
-    margin-left: 1.5em;
+    
 }
 
 .op.post {
@@ -312,7 +388,7 @@ form {
 
 /* Reply post */
 .reply.post-header-info {
-    margin-left: 1.5em;
+    
 }
 
 .reply.post {

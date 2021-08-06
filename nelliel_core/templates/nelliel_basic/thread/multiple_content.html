@@ -1,0 +1,19 @@
+{{# content_rows }}
+	<div class="multiple content-row">
+	{{# row }}
+		{{# is_file }}
+		<div id="{{ file_container_id }}" class="multiple file-container">
+			{{> thread/files/multi_file_header }}
+			{{> thread/files/file_preview }}
+		</div>
+		{{/ is_file }}
+		{{# is_embed }}
+		<div id="{{ embed_container_id }}" class="multiple embed-container">
+			{{> thread/embeds/multiple_embed_header }}
+			{{> thread/embeds/embed_frame }}
+		</div>
+		{{/ is_embed }}
+	{{/ row }}
+	</div>
+	<div class="clear"></div>
+{{/ content_rows }}

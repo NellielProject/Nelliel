@@ -81,8 +81,9 @@ class OutputPost extends Output
             $output_file_info = new OutputFile($this->domain, $this->write_mode);
             $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
             $content_row = array();
-            $this->render_data['has_file'] = count($file_list) === 1;
+            $this->render_data['single_file'] = count($file_list) === 1;
             $this->render_data['multi_file'] = count($file_list) > 1;
+            $this->render_data['single_multiple'] = (count($file_list) > 1) ? 'multiple' : 'single';
 
             foreach ($file_list as $file)
             {
@@ -102,23 +103,16 @@ class OutputPost extends Output
                                 'json_instances' => $parameters['json_instances']], true);
                 }
 
-                $content_row[]['content_data'] = $file_data;
+                $content_row[] = $file_data;
 
-                if ($this->render_data['multi_file'])
+                if (count($content_row) == $this->domain->setting('max_uploads_row'))
                 {
-                    if (count($content_row) == $this->domain->setting('max_uploads_row'))
-                    {
-                        $this->render_data['content_rows'][]['row'] = $content_row;
-                        $content_row = array();
-                    }
-                }
-                else
-                {
-                    $this->render_data['content_data'] = $file_data;
+                    $this->render_data['content_rows'][]['row'] = $content_row;
+                    $content_row = array();
                 }
             }
 
-            if ($this->render_data['multi_file'] && !empty($content_row))
+            if (!empty($content_row))
             {
                 $this->render_data['content_rows'][]['row'] = $content_row;
             }
@@ -219,7 +213,7 @@ class OutputPost extends Output
             $modmode_headers['can_edit'] = $session_user->checkPermission($this->domain, 'perm_edit_posts');
             $modmode_headers['edit_text'] = _gettext('Edit Post');
             $modmode_headers['edit_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-            '&actions=edit-post&content-id=' . $post_content_id->getIDString();
+                    '&actions=edit-post&content-id=' . $post_content_id->getIDString();
 
             $header_data['modmode_headers'] = $modmode_headers;
         }

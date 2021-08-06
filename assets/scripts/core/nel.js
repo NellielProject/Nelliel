@@ -31,7 +31,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
         nelliel.setup.fillForms(board_id);
         nelliel.ui.applyHideContent();
     }
-    
+
     nelliel.core.unhideJSonly();
 }
 

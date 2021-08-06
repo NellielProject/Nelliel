@@ -32,7 +32,6 @@ class OutputFile extends Output
         $this->render_data['is_file'] = true;
         $full_filename = $file['filename'] . '.' . $file['extension'];
         $this->render_data['file_container_id'] = 'file-container-' . $file_content_id->getIDString();
-        $this->render_data['single_multiple'] = $multiple ? 'multiple' : 'single';
         $this->render_data['file_content_id'] = $file_content_id->getIDString();
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 

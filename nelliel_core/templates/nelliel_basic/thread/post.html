@@ -4,23 +4,23 @@
 	<div id="{{ post_container_id }}" class="{{ op_reply }} post">
 	{{# headers }}
 		{{> thread/headers/modmode }}
-		<div>
-		{{> thread/headers/post_options }}
-		{{> thread/headers/thread_options }}
-		{{> thread/headers/thread_info }}
-		</div>
-		<div>
-		{{> thread/headers/post_info }}
+		<div class="{{ op_reply }} headers-container">
+			{{> thread/headers/post_info }}
+			{{> thread/headers/thread_info }}
+			{{> thread/headers/post_options }}
+			{{> thread/headers/thread_options }}
 		</div>
 	{{/ headers }}
-	{{# has_file }}
-		{{> thread/content }}
-	{{/ has_file }}
+		<div class="{{ op_reply }} content-container">
+	{{# single_file }}
+		{{> thread/single_content }}
+	{{/ single_file }}
 	{{# multi_file }}
-		{{> thread/content_rows }}
+		{{> thread/multiple_content }}
 	{{/ multi_file }}
 	{{# post_comments }}
 		{{> thread/post_comments }}
 	{{/ post_comments }}
+		</div>
 	</div>
 </div>

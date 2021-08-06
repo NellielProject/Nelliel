@@ -1,0 +1,14 @@
+<div class="{{ op_reply }} multiple embed-header">
+	<span class="{{ op_reply }} multiple embed-info">
+		{{^ hide_file_select }}
+		<input type="checkbox" name="{{ embed_content_id }}" value="action">
+		{{/ hide_file_select }}
+		<a href="{{ original_url }}" target="_blank">{{ display_url }}</a>
+	</span>
+	<span class="{{ op_reply }} multiple embed-options">
+		<span class="hide-embed hidden" data-jsonly="">[<a class="toggle-embed" href="#" data-command="hide-embed" data-content-id="{{ embed_content_id }}" data-alt-visual="Show Embed" data-gettext="data-alt-visual" data-gettext="">Hide Embed</a>]</span>
+		{{# in_modmode }}
+		<span>[<a href="{{ delete_url }}" data-gettext="">Delete</a>]</span>
+		{{/ in_modmode }}
+	</span>
+</div>

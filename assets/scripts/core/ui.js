@@ -70,9 +70,7 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
     }
 
     var content_container = post_container.querySelector(".content-container");
-    var comment_container = post_container.querySelector(".comment-container");
     nelliel.ui.toggleHidden(content_container);
-    nelliel.ui.toggleHidden(comment_container);
 
     if (command == "hide-post") {
         dataBin.hidden_posts[content_id.id_string] = Date.now();
@@ -102,19 +100,20 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
     }
    
     var file_container = document.getElementById("file-container-" + content_id.id_string);
+	var file_preview = file_container.querySelector(".file-preview");
 
-    
     if (element == null) {
         element = file_container.querySelector(".toggle-file");
     }
 
-    var file_preview = file_container.querySelector(".file-preview");
     nelliel.ui.toggleHidden(file_preview);
 
     if (command == "hide-file") {
         dataBin.hidden_files[content_id.id_string] = Date.now();
     } else if (command == "show-file") {
         delete dataBin.hidden_files[content_id.id_string];
+    } else if (command === "apply") {
+        store_update = false;
     } else {
         return;
     }
@@ -132,20 +131,22 @@ nelliel.ui.hideShowEmbed = function(element, command, content_id) {
     if (content_id == null) {
         content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     }
-   
+
     var embed_container = document.getElementById("embed-container-" + content_id.id_string);
+	var embed_frame = embed_container.querySelector(".embed-frame");
     
     if (element == null) {
         element = embed_container.querySelector(".toggle-embed");
     }
 
-    var embed_frame = embed_container.querySelector(".embed-frame");
     nelliel.ui.toggleHidden(embed_frame);
 
     if (command == "hide-embed") {
         dataBin.hidden_embeds[content_id.id_string] = Date.now();
     } else if (command == "show-embed") {
         delete dataBin.hidden_embeds[content_id.id_string];
+    } else if (command === "apply") {
+        store_update = false;
     } else {
         return;
     }
@@ -169,7 +170,7 @@ nelliel.ui.applyHideContent = function() {
     for (var id in dataBin.hidden_files) {
         nelliel.ui.hideShowFile(null, "apply", nelliel.core.contentID(id));
     }
-    
+
     for (var id in dataBin.hidden_embeds) {
         nelliel.ui.hideShowEmbed(null, "apply", nelliel.core.contentID(id));
     }
