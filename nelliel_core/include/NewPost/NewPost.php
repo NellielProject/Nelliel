@@ -75,7 +75,6 @@ class NewPost
             {
                 $email_parts = explode(' ', $post_email);
 
-
                 if ($email_parts !== false &&
                         (count($email_parts) > 1 || preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1))
                 {
@@ -151,8 +150,8 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
-                    !$fgsfds->commandIsSet('sage') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
+                            'sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
@@ -169,7 +168,8 @@ class NewPost
             $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()->threadID());
         }
 
-        $src_path = $this->domain->reference('src_path') . $post->contentID()->postID() . '/';
+        $src_path = $this->domain->reference('src_path') . $post->contentID()->threadID() . '/' .
+                $post->contentID()->postID() . '/';
 
         clearstatcache();
 
@@ -179,7 +179,8 @@ class NewPost
             // Make previews and do final file processing
             if ($this->domain->setting('generate_preview'))
             {
-                $preview_path = $this->domain->reference('preview_path') . $post->contentID()->postID() . '/';
+                $preview_path = $this->domain->reference('preview_path') . $post->contentID()->threadID() . '/' .
+                        $post->contentID()->postID() . '/';
                 $gen_previews = new Previews($this->domain);
                 $uploads = $gen_previews->generate($uploads, $preview_path);
             }

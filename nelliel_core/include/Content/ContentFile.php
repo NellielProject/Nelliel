@@ -12,8 +12,6 @@ use PDO;
 class ContentFile extends ContentHandler
 {
     protected $content_table;
-    protected $src_path;
-    protected $preview_path;
 
     function __construct(ContentID $content_id, Domain $domain)
     {
@@ -21,8 +19,6 @@ class ContentFile extends ContentHandler
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->content_table = $this->domain->reference('content_table');
-        $this->src_path = $this->domain->reference('src_path');
-        $this->preview_path = $this->domain->reference('preview_path');
         $this->storeMoar(new Moar());
     }
 
@@ -124,8 +120,8 @@ class ContentFile extends ContentHandler
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->src_path . $this->content_id->postID(), NEL_DIRECTORY_PERM);
-        $file_handler->createDirectory($this->preview_path . $this->content_id->postID(), NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->srcPath(), NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->previewPath(), NEL_DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)
@@ -183,11 +179,9 @@ class ContentFile extends ContentHandler
         }
 
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->eraserGun($this->src_path,
-                $this->content_id->threadID() . '/' . $this->content_id->postID() . '/' . $this->content_data['filename'] .
-                '.' . $this->content_data['extension']);
-        $file_handler->eraserGun($this->preview_path,
-                $this->content_id->threadID() . '/' . $this->content_id->postID() . '/' .
+        $file_handler->eraserGun($this->srcPath(),
+                $this->content_data['filename'] . '.' . $this->content_data['extension']);
+        $file_handler->eraserGun($this->previewPath(),
                 $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
     }
 
@@ -208,5 +202,17 @@ class ContentFile extends ContentHandler
         $content_id->changePostID($this->content_id->postID());
         $parent_post = new ContentPost($content_id, $this->domain);
         return $parent_post;
+    }
+
+    public function srcPath()
+    {
+        return $this->domain->reference('src_path') . $this->content_id->threadID() . '/' . $this->content_id->postID() .
+                '/';
+    }
+
+    public function previewPath()
+    {
+        return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/' .
+                $this->content_id->postID() . '/';
     }
 }

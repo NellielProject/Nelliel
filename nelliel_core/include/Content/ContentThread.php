@@ -16,9 +16,6 @@ class ContentThread extends ContentHandler
     protected $threads_table;
     protected $posts_table;
     protected $content_table;
-    protected $src_path;
-    protected $preview_path;
-    protected $page_path;
     protected $archive_prune;
     protected $overboard;
 
@@ -30,9 +27,6 @@ class ContentThread extends ContentHandler
         $this->threads_table = $this->domain->reference('threads_table');
         $this->posts_table = $this->domain->reference('posts_table');
         $this->content_table = $this->domain->reference('content_table');
-        $this->src_path = $this->domain->reference('src_path');
-        $this->preview_path = $this->domain->reference('preview_path');
-        $this->page_path = $this->domain->reference('page_path');
         $this->archive_prune = new \Nelliel\ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->storeMoar(new Moar());
         $this->overboard = new Overboard($this->database);
@@ -110,7 +104,7 @@ class ContentThread extends ContentHandler
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->page_path . $this->content_id->threadID(), NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->pagePath(), NEL_DIRECTORY_PERM, true);
     }
 
     public function remove(bool $perm_override = false)
@@ -152,9 +146,9 @@ class ContentThread extends ContentHandler
     protected function removeFromDisk()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->eraserGun($this->src_path . $this->content_id->threadID());
-        $file_handler->eraserGun($this->preview_path . $this->content_id->threadID());
-        $file_handler->eraserGun($this->page_path . $this->content_id->threadID());
+        $file_handler->eraserGun($this->srcPath());
+        $file_handler->eraserGun($this->previewPath());
+        $file_handler->eraserGun($this->pagePath());
     }
 
     public function postCount()
@@ -411,5 +405,20 @@ class ContentThread extends ContentHandler
     {
         $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
         return $base_path . $this->pageBasename() . NEL_PAGE_EXT;
+    }
+
+    public function pagePath()
+    {
+        return $this->domain->reference('page_path') . $this->content_id->threadID() . '/';
+    }
+
+    public function srcPath()
+    {
+        return $this->domain->reference('src_path') . $this->content_id->threadID() . '/';
+    }
+
+    public function previewPath()
+    {
+        return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/';
     }
 }

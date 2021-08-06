@@ -48,8 +48,8 @@ class OutputFile extends Output
             $this->render_data['display_image_dimensions'] = $file['display_width'] . ' x ' . $file['display_height'];
         }
 
-        $this->render_data['file_url'] = $this->domain->reference('src_web_path') . $post_data['post_number'] . '/' .
-                rawurlencode($full_filename);
+        $this->render_data['file_url'] = $this->domain->reference('src_web_path') . $post_data['parent_thread'] . '/' .
+                $post_data['post_number'] . '/' . rawurlencode($full_filename);
         $moar = json_decode($file['moar'], true);
         $display_filename = $file['filename'];
         $display_extension = $file['extension'];
@@ -115,7 +115,8 @@ class OutputFile extends Output
                 {
                     $full_preview_name = $file['preview_name'] . '.' . $file['preview_extension'];
                     $this->render_data['preview_url'] = $this->domain->reference('preview_web_path') .
-                            $post_data['post_number'] . '/' . rawurlencode($full_preview_name);
+                            $post_data['parent_thread'] . '/' . $post_data['post_number'] . '/' .
+                            rawurlencode($full_preview_name);
 
                     if ($file['preview_width'] > $max_width || $file['preview_height'] > $max_height)
                     {

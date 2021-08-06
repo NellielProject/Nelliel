@@ -17,8 +17,6 @@ class ContentPost extends ContentHandler
 {
     protected $posts_table;
     protected $content_table;
-    protected $src_path;
-    protected $preview_path;
     protected $archive_prune;
 
     function __construct(ContentID $content_id, Domain $domain)
@@ -29,8 +27,6 @@ class ContentPost extends ContentHandler
         $this->authorization = new Authorization($this->database);
         $this->posts_table = $this->domain->reference('posts_table');
         $this->content_table = $this->domain->reference('content_table');
-        $this->src_path = $this->domain->reference('src_path');
-        $this->preview_path = $this->domain->reference('preview_path');
         $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->storeMoar(new Moar());
     }
@@ -141,15 +137,15 @@ class ContentPost extends ContentHandler
                 true);
         $this->content_id->changeThreadID(
                 ($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());
-        $this->content_data['parent_thread'] = ($this->content_data['parent_thread'] == 0) ? $result : $this->content_data['parent_thread'];
+        $this->content_data['parent_thread'] = $this->content_id->threadID();
         $this->content_id->changePostID($result);
     }
 
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->src_path . $this->content_id->postID(), NEL_DIRECTORY_PERM, true);
-        $file_handler->createDirectory($this->preview_path . $this->content_id->postID(), NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->srcPath(), NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->previewPath(), NEL_DIRECTORY_PERM, true);
     }
 
     public function addCites()
@@ -245,9 +241,10 @@ class ContentPost extends ContentHandler
     protected function removeFromDisk()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->eraserGun($this->src_path . $this->content_id->threadID() . '/' . $this->content_id->postID());
-        $file_handler->eraserGun(
-                $this->preview_path . $this->content_id->threadID() . '/' . $this->content_id->postID());
+        var_dump($this->srcPath());
+        var_dump($this->previewPath());
+        $file_handler->eraserGun($this->srcPath());
+        $file_handler->eraserGun($this->previewPath());
     }
 
     public function updateCounts()
@@ -388,5 +385,17 @@ class ContentPost extends ContentHandler
         $prepared = $this->database->prepare(
                 'UPDATE "' . $this->posts_table . '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$encoded_cache, $this->content_id->postID()]);
+    }
+
+    public function srcPath(): string
+    {
+        return $this->domain->reference('src_path') . $this->content_id->threadID() . '/' .
+                $this->content_id->postID() . '/';
+    }
+
+    public function previewPath(): string
+    {
+        return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/' .
+                $this->content_id->postID() . '/';
     }
 }
