@@ -23,8 +23,8 @@ class OutputHead extends Output
         $this->render_data['main_js_file'] = NEL_SCRIPTS_WEB_PATH . 'core/nel.js';
         $this->render_data['js_ui_url'] = NEL_SCRIPTS_WEB_PATH . 'core/ui.js';
         $this->render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
-        $this->render_data['js_onload'] = 'window.onload = function () {nelliel.setup.doImportantStuff(\'' .
-                $this->domain->id() . '\', \'' . $this->session->inModmode($this->domain) . '\');};';
+       $this->render_data['js_domloaded'] = 'window.addEventListener(\'DOMContentLoaded\', (event) => {nelliel.setup.doImportantStuff(\'' .
+                $this->domain->id() . '\', \'' . $this->session->inModmode($this->domain) . '\');});';
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['stylesheets'] = $output_menu->styles([], true);
 
