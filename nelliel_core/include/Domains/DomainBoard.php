@@ -89,7 +89,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
             foreach ($config_list as $config)
             {
-                $config['setting_value'] = nel_cast_to_datatype($config['setting_value'], $config['data_type'], false);
+                $config['setting_value'] = nel_cast_to_datatype($config['setting_value'], $config['data_type']);
                 $settings[$config['setting_name']] = $config['setting_value'];
             }
         }

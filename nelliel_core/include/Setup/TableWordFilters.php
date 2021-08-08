@@ -17,14 +17,22 @@ class TableWordFilters extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_WORD_FILTERS_TABLE;
-        $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'text_match' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'replacement' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'is_regex' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+        $this->column_types = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'text_match' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'replacement' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'is_regex' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->column_checks = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'board_id' => ['row_check' => false, 'auto_inc' => false],
+            'text_match' => ['row_check' => false, 'auto_inc' => false],
+            'replacement' => ['row_check' => false, 'auto_inc' => false],
+            'is_regex' => ['row_check' => false, 'auto_inc' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

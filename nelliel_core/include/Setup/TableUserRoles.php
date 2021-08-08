@@ -17,11 +17,16 @@ class TableUserRoles extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_USER_ROLES_TABLE;
-        $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'user_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'role_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false]];
+        $this->column_types = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->column_checks = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'user_id' => ['row_check' => true, 'auto_inc' => false],
+            'role_id' => ['row_check' => true, 'auto_inc' => false],
+            'domain_id' => ['row_check' => true, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

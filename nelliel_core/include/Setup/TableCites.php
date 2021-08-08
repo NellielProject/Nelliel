@@ -17,14 +17,22 @@ class TableCites extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CITES_TABLE;
-        $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'source_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'source_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
-            'source_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
-            'target_board' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'target_thread' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
-            'target_post' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false]];
+        $this->column_types = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'source_board' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'source_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'source_post' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'target_board' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'target_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'target_post' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
+        $this->column_checks = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'source_board' => ['row_check' => true, 'auto_inc' => false],
+            'source_thread' => ['row_check' => true, 'auto_inc' => false],
+            'source_post' => ['row_check' => true, 'auto_inc' => false],
+            'target_board' => ['row_check' => true, 'auto_inc' => false],
+            'target_thread' => ['row_check' => true, 'auto_inc' => false],
+            'target_post' => ['row_check' => true, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

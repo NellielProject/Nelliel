@@ -17,7 +17,12 @@ class TablePlugins extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_PLUGINS_TABLE;
-        $this->columns_data = [
+        $this->column_types = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'plugin_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'info' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT]];
+        $this->column_checks = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'plugin_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
             'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],

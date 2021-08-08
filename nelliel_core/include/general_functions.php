@@ -65,35 +65,29 @@ function nel_numeric_html_entities_to_utf8(&$input)
             }, $input);
 }
 
-function nel_cast_to_datatype($value, $datatype, $null_empty = true)
+function nel_cast_to_datatype($value, $datatype)
 {
-    if (nel_true_empty($value))
+    if ($datatype === 'bool' || $datatype === 'boolean')
     {
-        if ($null_empty)
-        {
-            return null;
-        }
-        else
-        {
-            return $value;
-        }
+        return boolval($value);
     }
-    else if ($datatype === 'bool' || $datatype === 'boolean')
-    {
-        return (bool) $value;
-    }
-    else if ($datatype === 'int' || $datatype === 'integer')
+
+    if ($datatype === 'int' || $datatype === 'integer')
     {
         return intval($value);
     }
-    else if ($datatype === 'str' || $datatype === 'string')
+
+    if ($datatype === 'str' || $datatype === 'string')
     {
-        return print_r($value, true);
+        return strval($value);
     }
-    else
+
+    if ($datatype === 'float')
     {
-        return $value;
+        return floatval($value);
     }
+
+    return $value;
 }
 
 function nel_true_empty($variable)

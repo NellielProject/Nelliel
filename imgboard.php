@@ -26,9 +26,7 @@ require_once NEL_INCLUDE_PATH . 'derp.php';
 require_once NEL_INCLUDE_PATH . 'initializations.php';
 require_once NEL_LIBRARY_PATH . 'portable-utf8/portable-utf8.php';
 
-nel_plugins()->loadPlugins();
-
-require_once NEL_INCLUDE_PATH . 'crypt.php';
+nel_plugins()->loadPlugins(); // TODO: Possibly move this up to initializations
 
 nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 

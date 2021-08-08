@@ -17,10 +17,14 @@ class TableTemplates extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_TEMPLATES_TABLE;
-        $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'template_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'info' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+        $this->column_types = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'template_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'info' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->column_checks = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'template_id' => ['row_check' => true, 'auto_inc' => false],
+            'info' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

@@ -17,17 +17,28 @@ class TableSettings extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_SETTINGS_TABLE;
-        $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'setting_category' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'setting_owner' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'data_type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'setting_name' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'setting_options' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'default_value' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'setting_description' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'input_attributes' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+        $this->column_types = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'setting_category' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'setting_owner' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'data_type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'setting_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'setting_options' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'default_value' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'setting_description' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'input_attributes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->column_checks = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'setting_category' => ['row_check' => true, 'auto_inc' => false],
+            'setting_owner' => ['row_check' => false, 'auto_inc' => false],
+            'data_type' => ['row_check' => false, 'auto_inc' => false],
+            'setting_name' => ['row_check' => true, 'auto_inc' => false],
+            'setting_options' => ['row_check' => false, 'auto_inc' => false],
+            'default_value' => ['row_check' => false, 'auto_inc' => false],
+            'setting_description' => ['row_check' => false, 'auto_inc' => false],
+            'input_attributes' => ['row_check' => false, 'auto_inc' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

@@ -18,14 +18,23 @@ class TableCaptcha extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CAPTCHA_TABLE;
         $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'captcha_key' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'captcha_text' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'domain_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'time_created' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'seen' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'solved' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'captcha_key' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'captcha_text' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'time_created' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'seen' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'solved' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->columns_data = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'captcha_key' => ['row_check' => true, 'auto_inc' => false],
+            'captcha_text' => ['row_check' => false, 'auto_inc' => false],
+            'domain_id' => ['row_check' => false, 'auto_inc' => false],
+            'time_created' => ['row_check' => false, 'auto_inc' => false],
+            'seen' => ['row_check' => false, 'auto_inc' => false],
+            'solved' => ['row_check' => false, 'auto_inc' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -36,8 +45,8 @@ class TableCaptcha extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            captcha_key     VARCHAR(64) NOT NULL UNIQUE,
-            captcha_text    VARCHAR(100) NOT NULL,
+            captcha_key     VARCHAR(100) NOT NULL UNIQUE,
+            captcha_text    VARCHAR(255) NOT NULL,
             domain_id       VARCHAR(50) DEFAULT NULL,
             time_created    BIGINT NOT NULL,
             seen            SMALLINT DEFAULT 0,

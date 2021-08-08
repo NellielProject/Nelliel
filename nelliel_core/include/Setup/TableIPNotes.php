@@ -18,6 +18,14 @@ class TableIPNotes extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_IP_NOTES_TABLE;
         $this->columns_data = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
+            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
+            'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->columns_data = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'user_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
             'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],

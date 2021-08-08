@@ -15,6 +15,8 @@ abstract class Table
     protected $sql_compatibility;
     protected $table_name;
     protected $columns_data = array();
+    protected $column_types = array(); // Stores column type data for typecasting and PDO binds
+    protected $column_checks = array(); // Stores info for table and row check functions
     protected $schema_version = 1;
 
     public abstract function buildSchema(array $other_tables = null);
@@ -61,7 +63,7 @@ abstract class Table
         $check_pdo_types = array();
         $index = 0;
 
-        foreach ($this->columns_data as $column_name => $info)
+        foreach ($this->column_checks as $column_name => $info)
         {
             if ($info['auto_inc'])
             {
@@ -72,7 +74,7 @@ abstract class Table
             {
                 $check_values[] = $values[$index];
                 $check_columns[] = $column_name;
-                $check_pdo_types[] = $info['pdo_type'];
+                $check_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
             }
 
             $index ++;
@@ -88,9 +90,9 @@ abstract class Table
         $insert_pdo_types = array();
         $index = 0;
 
-        foreach ($this->columns_data as $column_name => $info)
+        foreach ($this->column_types as $column_name => $info)
         {
-            if ($info['auto_inc'])
+            if ($this->column_checks[$column_name]['auto_inc'])
             {
                 continue;
             }
@@ -103,7 +105,7 @@ abstract class Table
 
             $insert_values[] = $values[$index];
             $insert_columns[] = $column_name;
-            $insert_pdo_types[] = $info['pdo_type'];
+            $insert_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
             $index ++;
         }
 
@@ -240,5 +242,10 @@ abstract class Table
 
         $result = $this->database->executePrepared($prepared);
         return $result;
+    }
+
+    public function columnTypes(): array
+    {
+        return $this->column_types;
     }
 }

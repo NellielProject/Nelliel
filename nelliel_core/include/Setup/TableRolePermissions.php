@@ -17,11 +17,16 @@ class TableRolePermissions extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_ROLE_PERMISSIONS_TABLE;
-        $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'role_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'permission' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'perm_setting' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+        $this->column_types = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'permission' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'perm_setting' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT]];
+        $this->column_checks = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'role_id' => ['row_check' => true, 'auto_inc' => false],
+            'permission' => ['row_check' => true, 'auto_inc' => false],
+            'perm_setting' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

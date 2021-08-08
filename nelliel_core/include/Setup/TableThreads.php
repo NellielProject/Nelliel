@@ -17,22 +17,38 @@ class TableThreads extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_threads';
-        $this->columns_data = [
-            'thread_id' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
-            'last_bump_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'last_bump_time_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'last_update' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'last_update_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'post_count' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'total_content' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'file_count' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'embed_count' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'permasage' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'sticky' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'archive_status' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'locked' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'slug' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+        $this->column_types = [
+            'thread_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'last_bump_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'last_bump_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'last_update' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'last_update_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'post_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'total_content' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'file_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'embed_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'permasage' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'sticky' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'archive_status' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'locked' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'slug' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->column_checks = [
+            'thread_id' => ['row_check' => true, 'auto_inc' => false],
+            'last_bump_time' => ['row_check' => false, 'auto_inc' => false],
+            'last_bump_time_milli' => ['row_check' => false, 'auto_inc' => false],
+            'last_update' => ['row_check' => false, 'auto_inc' => false],
+            'last_update_milli' => ['row_check' => false, 'auto_inc' => false],
+            'post_count' => ['row_check' => false, 'auto_inc' => false],
+            'total_content' => ['row_check' => false, 'auto_inc' => false],
+            'file_count' => ['row_check' => false, 'auto_inc' => false],
+            'embed_count' => ['row_check' => false, 'auto_inc' => false],
+            'permasage' => ['row_check' => false, 'auto_inc' => false],
+            'sticky' => ['row_check' => false, 'auto_inc' => false],
+            'archive_status' => ['row_check' => false, 'auto_inc' => false],
+            'locked' => ['row_check' => false, 'auto_inc' => false],
+            'slug' => ['row_check' => false, 'auto_inc' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

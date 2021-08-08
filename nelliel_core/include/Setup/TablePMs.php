@@ -18,13 +18,21 @@ class TablePMs extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_PMS_TABLE;
         $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'sender' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'recipient' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'message' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'read' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'sender' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'recipient' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'message' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'message_read' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->columns_data = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'sender' => ['row_check' => false, 'auto_inc' => false],
+            'recipient' => ['row_check' => false, 'auto_inc' => false],
+            'message' => ['row_check' => false, 'auto_inc' => false],
+            'time' => ['row_check' => false, 'auto_inc' => false],
+            'message_read' => ['row_check' => false, 'auto_inc' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

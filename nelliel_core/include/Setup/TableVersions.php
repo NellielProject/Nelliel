@@ -17,12 +17,18 @@ class TableVersions extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_VERSIONS_TABLE;
-        $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'original' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'current' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
+        $this->column_types = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'original' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'current' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
+        $this->column_checks = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'id' => ['row_check' => true, 'auto_inc' => false],
+            'type' => ['row_check' => true, 'auto_inc' => false],
+            'original' => ['row_check' => false, 'auto_inc' => false],
+            'current' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

@@ -18,9 +18,13 @@ class TableIconSets extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_ICON_SETS_TABLE;
         $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'set_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'info' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'set_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'info' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->columns_data = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'set_id' => ['row_check' => true, 'auto_inc' => false],
+            'info' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

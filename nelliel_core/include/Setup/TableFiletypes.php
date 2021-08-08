@@ -17,18 +17,30 @@ class TableFiletypes extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_FILETYPES_TABLE;
-        $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'base_extension' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'type' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'format' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'mime' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'sub_extensions' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'id_regex' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'type_label' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'is_category' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => true, 'auto_inc' => false],
-            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+        $this->column_types = [
+            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'base_extension' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'format' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'mime' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'sub_extensions' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'id_regex' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'type_label' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'is_category' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+        $this->column_checks = [
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'base_extension' => ['row_check' => true, 'auto_inc' => false],
+            'type' => ['row_check' => true, 'auto_inc' => false],
+            'format' => ['row_check' => false, 'auto_inc' => false],
+            'mime' => ['row_check' => false, 'auto_inc' => false],
+            'sub_extensions' => ['row_check' => false, 'auto_inc' => false],
+            'id_regex' => ['row_check' => false, 'auto_inc' => false],
+            'type_label' => ['row_check' => false, 'auto_inc' => false],
+            'is_category' => ['row_check' => true, 'auto_inc' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
