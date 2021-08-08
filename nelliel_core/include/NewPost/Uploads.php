@@ -70,17 +70,18 @@ class Uploads
             $file_data['tmp_name'] = $this->files['upload_files']['tmp_name'][$i];
             $file_data['error'] = $this->files['upload_files']['error'][$i];
             $file_data['size'] = $this->files['upload_files']['size'][$i];
-            $file = new \Nelliel\Content\ContentFile(new \Nelliel\Content\ContentID(), $this->domain);
+            $file = new \Nelliel\Content\ContentUpload(new \Nelliel\Content\ContentID(), $this->domain);
             $file->changeData('location', $file_data['tmp_name']);
             $file->changeData('name', $file_data['name']);
             $file_data['location'] = $file_data['tmp_name'];
             $this->checkForErrors($file_data);
             $this->doesFileExist($response_to, $file);
             $this->checkFiletype($file);
-            $exif_data = @exif_read_data($file->data('location'), '', true);
+            $exif_data = json_encode(@exif_read_data($file->data('location'), '', true));
 
-            if ($this->domain->setting('store_exif_data') && $exif_data !== false)
+            if ($this->domain->setting('store_exif_data') && is_string($exif_data))
             {
+
                 $file->changeData('exif', $exif_data);
             }
 
@@ -257,7 +258,7 @@ class Uploads
 
         if ($response_to === 0 && $this->domain->setting('check_op_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $db_md5, PDO::PARAM_LOB);
@@ -267,7 +268,7 @@ class Uploads
         }
         else if ($response_to > 0 && $this->domain->setting('check_thread_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('content_table') .
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
@@ -331,14 +332,14 @@ class Uploads
                 continue;
             }
 
-            $embed = new \Nelliel\Content\ContentFile(new \Nelliel\Content\ContentID(), $this->domain);
+            $embed = new \Nelliel\Content\ContentUpload(new \Nelliel\Content\ContentID(), $this->domain);
 
             $checking_duplicates = false;
 
             if ($response_to === 0 && $this->domain->setting('check_op_duplicates'))
             {
                 $prepared = $this->database->prepare(
-                        'SELECT 1 FROM "' . $this->domain->reference('content_table') .
+                        'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
                         '" WHERE "parent_thread" = "post_ref" AND "embed_url" = ?');
                 $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
                 $checking_duplicates = true;
@@ -347,7 +348,7 @@ class Uploads
             if ($response_to > 0 && $this->domain->setting('check_thread_duplicates'))
             {
                 $prepared = $this->database->prepare(
-                        'SELECT 1 FROM "' . $this->domain->reference('content_table') .
+                        'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
                         '" WHERE "parent_thread" = ? AND "embed_url" = ?');
                 $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
                 $checking_duplicates = true;
@@ -441,7 +442,7 @@ class Uploads
         }
 
         if ($total >= 1 && $this->domain->setting('limit_thread_uploads') &&
-                $parent_thread->data('total_content') >= $this->domain->setting('max_thread_uploads'))
+                $parent_thread->data('total_uploads') >= $this->domain->setting('max_thread_uploads'))
         {
             nel_derp(43, _gettext('This thread has reached the maximum number of uploads.'));
         }

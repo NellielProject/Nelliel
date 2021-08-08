@@ -112,7 +112,7 @@ class ContentID
         }
         else if ($this->isContent())
         {
-            return new ContentFile($this, $domain);
+            return new ContentUpload($this, $domain);
         }
     }
 }

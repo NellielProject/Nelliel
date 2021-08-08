@@ -16,6 +16,7 @@ abstract class ContentHandler
     protected $content_data = array();
     protected $content_moar;
     protected $authorization;
+    protected $main_table;
 
     public abstract function loadFromDatabase();
 
@@ -26,8 +27,6 @@ abstract class ContentHandler
     protected abstract function removeFromDatabase();
 
     protected abstract function removeFromDisk();
-
-    public abstract function updateCounts();
 
     protected abstract function verifyModifyPerms();
 
@@ -70,11 +69,6 @@ abstract class ContentHandler
         return true;
     }
 
-    public function contentID()
-    {
-        return $this->content_id;
-    }
-
     public function data(string $key)
     {
         return $this->content_data[$key] ?? null;
@@ -82,9 +76,17 @@ abstract class ContentHandler
 
     public function changeData(string $key, $new_data)
     {
+        $column_types = $this->main_table->columnTypes();
+        $type = $column_types[$key]['php_type'] ?? '';
+        $new_data = nel_cast_to_datatype($new_data, $type);
         $old_data = $this->data($key);
         $this->content_data[$key] = $new_data;
         return $old_data;
+    }
+
+    public function contentID()
+    {
+        return $this->content_id;
     }
 
     public function domain()

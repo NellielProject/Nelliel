@@ -71,50 +71,50 @@ class OutputPost extends Output
         $this->render_data['headers'] = $this->postHeaders($response, $thread_data, $post_data, $thread_content_id,
                 $post, $thread, $gen_data, $in_thread_number);
 
-        if ($post_data['has_content'] == 1)
+        if ($post_data['has_uploads'] == 1)
         {
-            $query = 'SELECT * FROM "' . $this->domain->reference('content_table') .
-                    '" WHERE "post_ref" = ? ORDER BY "content_order" ASC';
+            $query = 'SELECT * FROM "' . $this->domain->reference('upload_table') .
+                    '" WHERE "post_ref" = ? ORDER BY "upload_order" ASC';
             $prepared = $this->database->prepare($query);
             $file_list = $this->database->executePreparedFetchAll($prepared, [$post_data['post_number']],
                     PDO::FETCH_ASSOC);
             $output_file_info = new OutputFile($this->domain, $this->write_mode);
             $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
-            $content_row = array();
+            $upload_row = array();
             $this->render_data['single_file'] = count($file_list) === 1;
             $this->render_data['multi_file'] = count($file_list) > 1;
             $this->render_data['single_multiple'] = (count($file_list) > 1) ? 'multiple' : 'single';
 
             foreach ($file_list as $file)
             {
-                $json_content = new \Nelliel\API\JSON\JSONContent($this->domain, $this->file_handler);
-                $parameters['json_instances']['content'] = $json_content;
+                $json_upload = new \Nelliel\API\JSON\JSONUpload($this->domain, $this->file_handler);
+                $parameters['json_instances']['upload'] = $json_upload;
 
                 if (nel_true_empty($file['embed_url']))
                 {
                     $file_data = $output_file_info->render(
-                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
+                            ['file_data' => $file, 'upload_order' => $file['upload_order'], 'post_data' => $post_data,
                                 'json_instances' => $parameters['json_instances']], true);
                 }
                 else
                 {
                     $file_data = $output_embed_info->render(
-                            ['file_data' => $file, 'content_order' => $file['content_order'], 'post_data' => $post_data,
+                            ['file_data' => $file, 'upload_order' => $file['upload_order'], 'post_data' => $post_data,
                                 'json_instances' => $parameters['json_instances']], true);
                 }
 
-                $content_row[] = $file_data;
+                $upload_row[] = $file_data;
 
-                if (count($content_row) == $this->domain->setting('max_uploads_row'))
+                if (count($upload_row) == $this->domain->setting('max_uploads_row'))
                 {
-                    $this->render_data['content_rows'][]['row'] = $content_row;
-                    $content_row = array();
+                    $this->render_data['upload_rows'][]['row'] = $upload_row;
+                    $upload_row = array();
                 }
             }
 
-            if (!empty($content_row))
+            if (!empty($upload_row))
             {
-                $this->render_data['content_rows'][]['row'] = $content_row;
+                $this->render_data['upload_rows'][]['row'] = $upload_row;
             }
         }
 

@@ -845,7 +845,7 @@ msgstr ""
 msgid "Password is wrong or you are not allowed to delete that."
 msgstr ""
 
-#: nelliel_core/include/Content/ContentFile.php:142
+#: nelliel_core/include/Content/ContentUpload.php:142
 msgid "Cannot remove file. Board is locked."
 msgstr ""
 

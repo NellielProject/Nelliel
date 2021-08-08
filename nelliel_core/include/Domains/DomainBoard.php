@@ -66,7 +66,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['page_web_path'] = $board_web_path . rawurlencode($new_reference['page_dir']) . '/';
         $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
         $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
-        $new_reference['content_table'] = $new_reference['db_prefix'] . '_content';
+        $new_reference['upload_table'] = $new_reference['db_prefix'] . '_uploads';
         $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
         $new_reference['log_table'] = $new_reference['db_prefix'] . '_logs';
         $this->references = $new_reference;

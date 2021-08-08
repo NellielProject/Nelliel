@@ -124,7 +124,7 @@ class TableBoardConfig extends Table
         $this->insertDefaultRow(['use_png_preview', '0', 0]);
         $this->insertDefaultRow(['png_compression', '6', 0]);
         $this->insertDefaultRow(['animated_gif_preview', '0', 0]);
-        $this->insertDefaultRow(['deleted_content_placeholder', '0', 0]);
+        $this->insertDefaultRow(['deleted_upload_placeholder', '0', 0]);
         $this->insertDefaultRow(['limit_post_count', '1', 0]);
         $this->insertDefaultRow(['max_posts', '1000', 0]);
         $this->insertDefaultRow(['limit_bump_count', '1', 0]);

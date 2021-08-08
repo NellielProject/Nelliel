@@ -9,20 +9,20 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use PDO;
 
-class TableContent extends Table
+class TableUploads extends Table
 {
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = '_content';
+        $this->table_name = '_uploads';
         $this->increment_column = 'entry';
         $this->column_types = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'parent_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'post_ref' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'content_order' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'upload_order' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'format' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'mime' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
@@ -50,7 +50,7 @@ class TableContent extends Table
             'entry' => ['row_check' => false, 'auto_inc' => true],
             'parent_thread' => ['row_check' => false, 'auto_inc' => false],
             'post_ref' => ['row_check' => false, 'auto_inc' => false],
-            'content_order' => ['row_check' => false, 'auto_inc' => false],
+            'upload_order' => ['row_check' => false, 'auto_inc' => false],
             'type' => ['row_check' => false, 'auto_inc' => false],
             'format' => ['row_check' => false, 'auto_inc' => false],
             'mime' => ['row_check' => false, 'auto_inc' => false],
@@ -86,7 +86,7 @@ class TableContent extends Table
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             parent_thread       INTEGER DEFAULT NULL,
             post_ref            INTEGER DEFAULT NULL,
-            content_order       SMALLINT NOT NULL DEFAULT 0,
+            upload_order        SMALLINT NOT NULL DEFAULT 0,
             type                VARCHAR(50) NOT NULL,
             format              VARCHAR(50) NOT NULL,
             mime                VARCHAR(255) DEFAULT NULL,

@@ -98,7 +98,7 @@ class NewPost
 
         $uploads = $uploads_handler->process($post);
         $spoon = !empty($uploads);
-        $post->changeData('total_content', count($uploads));
+        $post->changeData('total_uploads', count($uploads));
 
         if (!$spoon)
         {
@@ -120,7 +120,7 @@ class NewPost
 
         // Go ahead and put post into database
         $post->changeData('op', ($post->data('parent_thread') == 0) ? 1 : 0);
-        $post->changeData('has_content', ($post->data('total_content') > 0) ? 1 : 0);
+        $post->changeData('has_uploads', ($post->data('total_uploads') > 0) ? 1 : 0);
 
         // Process if-thens for new post here
         $if_then = new IfThen(new ConditionsPost($post, $uploads), new ActionsPost($post, $uploads));
@@ -194,7 +194,7 @@ class NewPost
                 $upload->contentID()->changePostID($post->contentID()->postID());
                 $upload->changeData('post_ref', $post->contentID()->postID());
                 $upload->contentID()->changeOrderID($order);
-                $upload->changeData('content_order', $order);
+                $upload->changeData('upload_order', $order);
 
                 if ($upload->data('type') !== 'embed')
                 {

@@ -65,8 +65,13 @@ function nel_numeric_html_entities_to_utf8(&$input)
             }, $input);
 }
 
-function nel_cast_to_datatype($value, $datatype)
+function nel_cast_to_datatype($value, string $datatype, bool $empty_null = true)
 {
+    if($empty_null && nel_true_empty($value))
+    {
+        return null;
+    }
+
     if ($datatype === 'bool' || $datatype === 'boolean')
     {
         return boolval($value);

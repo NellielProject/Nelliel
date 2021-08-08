@@ -9,7 +9,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use \Nelliel\Domains\Domain;
 use \Nelliel\Utility\FileHandler;
 
-class JSONContent extends JSONOutput
+class JSONUpload extends JSONOutput
 {
 
     function __construct(Domain $domain, FileHandler $file_handler)
@@ -24,7 +24,7 @@ class JSONContent extends JSONOutput
         $content_array = array();
         $content_array['parent_thread'] = nel_cast_to_datatype($data['parent_thread'], 'integer');
         $content_array['post_ref'] = nel_cast_to_datatype($data['post_ref'], 'integer');
-        $content_array['content_order'] = nel_cast_to_datatype($data['content_order'], 'integer');
+        $content_array['upload_order'] = nel_cast_to_datatype($data['upload_order'], 'integer');
         $content_array['type'] = nel_cast_to_datatype($data['type'], 'string');
         $content_array['format'] = nel_cast_to_datatype($data['format'], 'string');
         $content_array['mime'] = nel_cast_to_datatype($data['mime'], 'string');

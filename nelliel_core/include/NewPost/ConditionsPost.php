@@ -86,12 +86,12 @@ class ConditionsPost implements Conditions
                     $met = $condition === intval($this->post->data('post_time_milli'));
                     break;
 
-                case 'has_content':
-                    $met = $condition === boolval($this->post->data('has_content'));
+                case 'has_uploads':
+                    $met = $condition === boolval($this->post->data('has_uploads'));
                     break;
 
-                case 'total_content':
-                    $met = $condition === intval($this->post->data('total_content'));
+                case 'total_uploads':
+                    $met = $condition === intval($this->post->data('total_uploads'));
                     break;
 
                 case 'file_count':

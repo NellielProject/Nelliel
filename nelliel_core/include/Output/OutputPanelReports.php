@@ -67,7 +67,7 @@ class OutputPanelReports extends Output
                                 ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
                                     'thread' => $content_id->threadID(), 'content-id' => $content_id->getIDString(),
                                     'board-id' => $report_info['board_id'], 'modmode' => 'true']);
-                $report_data['is_content'] = false;
+                $report_data['is_upload'] = false;
             }
             else if ($content_id->isPost())
             {
@@ -77,14 +77,14 @@ class OutputPanelReports extends Output
                                     'thread' => $content_id->threadID(), 'content-id' => $content_id->getIDString(),
                                     'board-id' => $report_info['board_id'], 'modmode' => 'true']);
                 $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
-                $report_data['is_content'] = false;
+                $report_data['is_upload'] = false;
             }
             else if ($content_id->isContent())
             {
-                $report_data['is_content'] = false;
+                $report_data['is_upload'] = false;
                 $prepared = $this->database->prepare(
-                        'SELECT "filename" FROM "' . $current_domain->reference('content_table') .
-                        '" WHERE "parent_thread" = ? AND post_ref = ? AND "content_order" = ?');
+                        'SELECT "filename" FROM "' . $current_domain->reference('upload_table') .
+                        '" WHERE "parent_thread" = ? AND post_ref = ? AND "upload_order" = ?');
                 $filename = $this->database->executePreparedFetch($prepared,
                         [$content_id->threadID(), $content_id->postID(), $content_id->orderID()], PDO::FETCH_COLUMN);
                 $report_data['file_url'] = $current_domain->reference('src_web_path') . $content_id->threadID() . '/' .

@@ -12,11 +12,11 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPost;
 use PDO;
+use Nelliel\SQLCompatibility;
+use Nelliel\Setup\TablePosts;
 
 class ContentPost extends ContentHandler
 {
-    protected $posts_table;
-    protected $content_table;
     protected $archive_prune;
 
     function __construct(ContentID $content_id, Domain $domain)
@@ -25,15 +25,15 @@ class ContentPost extends ContentHandler
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->authorization = new Authorization($this->database);
-        $this->posts_table = $this->domain->reference('posts_table');
-        $this->content_table = $this->domain->reference('content_table');
+        $this->main_table = new TablePosts($this->database, new SQLCompatibility($this->database));
         $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->storeMoar(new Moar());
     }
 
     public function loadFromDatabase()
     {
-        $prepared = $this->database->prepare('SELECT * FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -43,7 +43,13 @@ class ContentPost extends ContentHandler
 
         $result['ip_address'] = nel_convert_ip_from_storage($result['ip_address']);
         $result['hashed_ip_address'] = nel_convert_hash_from_storage($result['hashed_ip_address']);
-        $this->content_data = $result;
+        $column_types = $this->main_table->columnTypes();
+
+        foreach ($result as $name => $value)
+        {
+            $this->content_data[$name] = nel_cast_to_datatype($value, $column_types[$name]['php_type'] ?? '');
+        }
+
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
         return true;
@@ -57,19 +63,19 @@ class ContentPost extends ContentHandler
         }
 
         $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
+                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->posts_table .
+                    'UPDATE "' . $this->domain->reference('posts_table') .
                     '" SET "parent_thread" = :parent_thread,
                     "name" = :name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "capcode" = :capcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address, "hashed_ip_address" = :hashed_ip_address,
-                    "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_content" = :has_content,
-                    "total_content" = :total_content, "file_count" = :file_count, "embed_count" = :embed_count,
+                    "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_uploads" = :has_uploads,
+                    "total_uploads" = :total_uploads, "file_count" = :file_count, "embed_count" = :embed_count,
                     "op" = :op, "sage" = :sage, "account_id" = :account_id, "mod_comment" = :mod_comment,
                     "content_hash" = :content_hash, "regen_cache" = :regen_cache, "cache" = :cache
                     WHERE "post_number" = :post_number');
@@ -78,12 +84,12 @@ class ContentPost extends ContentHandler
         else
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . $this->posts_table .
+                    'INSERT INTO "' . $this->domain->reference('posts_table') .
                     '" ("parent_thread", "name", "reply_to", "post_password", "tripcode", "secure_tripcode", "capcode", "email",
-                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_content",
-                    "total_content", "file_count", "embed_count", "op", "sage", "account_id", "mod_comment") VALUES
+                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_uploads",
+                    "total_uploads", "file_count", "embed_count", "op", "sage", "account_id", "mod_comment") VALUES
                     (:parent_thread, :name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address,
-                    :hashed_ip_address, :post_time, :post_time_milli, :has_content, :total_content, :file_count, :embed_count,
+                    :hashed_ip_address, :post_time, :post_time_milli, :has_uploads, :total_uploads, :file_count, :embed_count,
                     :op, :sage, :account_id, :mod_comment, :content_hash, :regen_cache, :cache)');
         }
 
@@ -105,8 +111,8 @@ class ContentPost extends ContentHandler
                 nel_prepare_hash_for_storage($this->contentDataOrDefault('hashed_ip_address', null)), PDO::PARAM_LOB);
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':has_content', $this->contentDataOrDefault('has_content', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':total_content', $this->contentDataOrDefault('total_content', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':has_uploads', $this->contentDataOrDefault('has_uploads', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':total_uploads', $this->contentDataOrDefault('total_uploads', 0), PDO::PARAM_INT);
         $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':embed_count', $this->contentDataOrDefault('embed_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':op', $this->contentDataOrDefault('op', 0), PDO::PARAM_INT);
@@ -119,57 +125,6 @@ class ContentPost extends ContentHandler
         $this->database->executePrepared($prepared);
         $this->archive_prune->updateThreads();
         return true;
-    }
-
-    public function reserveDatabaseRow($post_time, $post_time_milli, $hashed_ip_address, $temp_database = null)
-    {
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare(
-                'INSERT INTO "' . $this->posts_table .
-                '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
-        $database->executePrepared($prepared,
-                [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)]);
-        $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $this->posts_table .
-                '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ?');
-        $result = $database->executePreparedFetch($prepared,
-                [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)], PDO::FETCH_COLUMN,
-                true);
-        $this->content_id->changeThreadID(
-                ($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());
-        $this->content_data['parent_thread'] = $this->content_id->threadID();
-        $this->content_id->changePostID($result);
-    }
-
-    public function createDirectories()
-    {
-        $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->srcPath(), NEL_DIRECTORY_PERM, true);
-        $file_handler->createDirectory($this->previewPath(), NEL_DIRECTORY_PERM, true);
-    }
-
-    public function addCites()
-    {
-        $cites = new Cites($this->database);
-
-        if (nel_true_empty($this->data('comment')))
-        {
-            return;
-        }
-
-        $cite_list = $cites->getCitesFromText($this->content_data['comment']);
-
-        foreach ($cite_list as $cite)
-        {
-            $cite_data = $cites->getCiteData($cite, $this->domain, $this->content_id);
-
-            if ($cite_data['exists'] || $cite_data['future'])
-            {
-                $cites->addCite($cite_data);
-            }
-        }
-
-        $cites->updateForPost($this);
     }
 
     public function remove(bool $perm_override = false)
@@ -230,7 +185,8 @@ class ContentPost extends ContentHandler
             return false;
         }
 
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
+        $prepared = $this->database->prepare(
+                'DELETE FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->postID()]);
         $cites = new Cites($this->database);
         $cites->updateForPost($this);
@@ -241,35 +197,8 @@ class ContentPost extends ContentHandler
     protected function removeFromDisk()
     {
         $file_handler = nel_utilities()->fileHandler();
-        var_dump($this->srcPath());
-        var_dump($this->previewPath());
         $file_handler->eraserGun($this->srcPath());
         $file_handler->eraserGun($this->previewPath());
-    }
-
-    public function updateCounts()
-    {
-        $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
-        $total_content = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
-                PDO::FETCH_COLUMN, true);
-
-        $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "embed_url" IS NULL');
-        $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN,
-                true);
-
-        $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->content_table .
-                '" WHERE "post_ref" = ? AND "embed_url" IS NOT NULL');
-        $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
-                PDO::FETCH_COLUMN, true);
-
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->posts_table .
-                '" SET "total_content" = ?, "file_count" = ?, "embed_count" = ? WHERE "post_number" = ?');
-        $this->database->executePrepared($prepared,
-                [$total_content, $file_count, $embed_count, $this->content_id->postID()]);
     }
 
     protected function verifyModifyPerms()
@@ -325,6 +254,52 @@ class ContentPost extends ContentHandler
         return $parent_thread;
     }
 
+    public function reserveDatabaseRow($post_time, $post_time_milli, $hashed_ip_address, $temp_database = null)
+    {
+        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
+        $prepared = $database->prepare(
+                'INSERT INTO "' . $this->domain->reference('posts_table') .
+                '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
+        $database->executePrepared($prepared,
+                [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)]);
+        $prepared = $database->prepare(
+                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ?');
+        $result = $database->executePreparedFetch($prepared,
+                [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)], PDO::FETCH_COLUMN,
+                true);
+        $this->content_id->changeThreadID(
+                ($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());
+        $this->content_data['parent_thread'] = $this->content_id->threadID();
+        $this->content_id->changePostID($result);
+    }
+
+    public function updateCounts()
+    {
+        $prepared = $this->database->prepare(
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('upload_table') . '" WHERE "post_ref" = ?');
+        $total_uploads = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
+                PDO::FETCH_COLUMN, true);
+
+        $prepared = $this->database->prepare(
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('upload_table') .
+                '" WHERE "post_ref" = ? AND "embed_url" IS NULL');
+        $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN,
+                true);
+
+        $prepared = $this->database->prepare(
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('upload_table') .
+                '" WHERE "post_ref" = ? AND "embed_url" IS NOT NULL');
+        $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
+                PDO::FETCH_COLUMN, true);
+
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->domain->reference('posts_table') .
+                '" SET "total_uploads" = ?, "file_count" = ?, "embed_count" = ? WHERE "post_number" = ?');
+        $this->database->executePrepared($prepared,
+                [$total_uploads, $file_count, $embed_count, $this->content_id->postID()]);
+    }
+
     public function convertToThread()
     {
         $time = nel_get_microtime();
@@ -340,9 +315,10 @@ class ContentPost extends ContentHandler
         $new_thread->writeToDatabase();
         $new_thread->loadFromDatabase();
         $new_thread->createDirectories();
-        $prepared = $this->database->prepare('SELECT entry FROM "' . $this->content_table . '" WHERE "post_ref" = ?');
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->content_table . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
+                'SELECT entry FROM "' . $this->domain->reference('upload_table') . '" WHERE "post_ref" = ?');
+        $prepared = $this->database->prepare(
+                'UPDATE "' . $this->domain->reference('upload_table') . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
         $this->database->executePrepared($prepared, [$new_thread->content_id->threadID(), $this->content_id->postID()]);
         $this->loadFromDatabase();
         $this->content_id->changeThreadID($new_thread->content_id->threadID());
@@ -354,6 +330,37 @@ class ContentPost extends ContentHandler
         return $new_thread;
     }
 
+    public function createDirectories()
+    {
+        $file_handler = nel_utilities()->fileHandler();
+        $file_handler->createDirectory($this->srcPath(), NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->previewPath(), NEL_DIRECTORY_PERM, true);
+    }
+
+    public function addCites()
+    {
+        $cites = new Cites($this->database);
+
+        if (nel_true_empty($this->data('comment')))
+        {
+            return;
+        }
+
+        $cite_list = $cites->getCitesFromText($this->content_data['comment']);
+
+        foreach ($cite_list as $cite)
+        {
+            $cite_data = $cites->getCiteData($cite, $this->domain, $this->content_id);
+
+            if ($cite_data['exists'] || $cite_data['future'])
+            {
+                $cites->addCite($cite_data);
+            }
+        }
+
+        $cites->updateForPost($this);
+    }
+
     public function sticky()
     {
         $new_thread = $this->convertToThread();
@@ -363,7 +370,8 @@ class ContentPost extends ContentHandler
 
     public function getCache(): array
     {
-        $prepared = $this->database->prepare('SELECT "cache" FROM "' . $this->posts_table . '" WHERE "post_number" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT "cache" FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $cache = $this->database->executePreparedFetch($prepared, [$this->content_data['post_number']],
                 PDO::FETCH_COLUMN);
 
@@ -383,14 +391,15 @@ class ContentPost extends ContentHandler
         $cache_array['backlink_data'] = $output_post->generateBacklinks($this);
         $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->posts_table . '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
+                'UPDATE "' . $this->domain->reference('posts_table') .
+                '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$encoded_cache, $this->content_id->postID()]);
     }
 
     public function srcPath(): string
     {
-        return $this->domain->reference('src_path') . $this->content_id->threadID() . '/' .
-                $this->content_id->postID() . '/';
+        return $this->domain->reference('src_path') . $this->content_id->threadID() . '/' . $this->content_id->postID() .
+                '/';
     }
 
     public function previewPath(): string

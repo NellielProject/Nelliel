@@ -47,7 +47,7 @@ Error 45: Too many cross-board cites. (Post/PostData.php)
 Error 46: Too many comment URLs. (Post/PostData.php) 
 
 Error 60: Password does not match post. (Content/ContentPost.php)  
-Error 61: Board locked, can't remove file. (Content/ContentFile.php)  
+Error 61: Board locked, can't remove file. (Content/ContentUpload.php)  
 Error 62: Board locked, can't remove post. (Content/ContentPost.php)  
 Error 63: Board locked, can't remove thread. (Content/ContentThread.php)  
 Error 64: Delete cooldown. (Content/ContentPost.php)  

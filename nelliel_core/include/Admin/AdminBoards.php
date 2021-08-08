@@ -164,11 +164,11 @@ class AdminBoards extends Admin
             $this->database->executePrepared($prepared, [$domain->reference('config_table')]);
         }
 
-        if ($this->database->tableExists($domain->reference('content_table')))
+        if ($this->database->tableExists($domain->reference('upload_table')))
         {
-            $this->database->query('DROP TABLE "' . $domain->reference('content_table') . '"');
+            $this->database->query('DROP TABLE "' . $domain->reference('upload_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
-            $this->database->executePrepared($prepared, [$domain->reference('content_table')]);
+            $this->database->executePrepared($prepared, [$domain->reference('upload_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('posts_table')))

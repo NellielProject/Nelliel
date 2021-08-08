@@ -656,7 +656,7 @@
 
 ### Added
  - Mostly finished implementing a standard ContentID
- - ContentThread, ContentPost and ContentFile objects for handling most functions of threads, posts and files respectively
+ - ContentThread, ContentPost and ContentUpload objects for handling most functions of threads, posts and files respectively
  - Add moveDirectory to FileHandler
 
 ### Changed

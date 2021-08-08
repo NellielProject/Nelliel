@@ -8,24 +8,26 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Domains\Domain;
 use Nelliel\Moar;
 use PDO;
+use Nelliel\SQLCompatibility;
+use Nelliel\Setup\TableUploads;
 
-class ContentFile extends ContentHandler
+class ContentUpload extends ContentHandler
 {
-    protected $content_table;
 
     function __construct(ContentID $content_id, Domain $domain)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
-        $this->content_table = $this->domain->reference('content_table');
+        $this->main_table = new TableUploads($this->database, new SQLCompatibility($this->database));
         $this->storeMoar(new Moar());
     }
 
     public function loadFromDatabase()
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
+                'SELECT * FROM "' . $this->domain->reference('upload_table') .
+                '" WHERE "post_ref" = ? AND "upload_order" = ?');
         $result = $this->database->executePreparedFetch($prepared,
                 [$this->content_id->postID(), $this->content_id->orderID()], PDO::FETCH_ASSOC);
 
@@ -38,7 +40,13 @@ class ContentFile extends ContentHandler
         $result['sha1'] = nel_convert_hash_from_storage($result['sha1']);
         $result['sha256'] = nel_convert_hash_from_storage($result['sha256']);
         $result['sha512'] = nel_convert_hash_from_storage($result['sha512']);
-        $this->content_data = $result;
+        $column_types = $this->main_table->columnTypes();
+
+        foreach ($result as $name => $value)
+        {
+            $this->content_data[$name] = nel_cast_to_datatype($value, $column_types[$name]['php_type'] ?? '');
+        }
+
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
         return true;
@@ -52,16 +60,17 @@ class ContentFile extends ContentHandler
         }
 
         $prepared = $this->database->prepare(
-                'SELECT "entry" FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
+                'SELECT "entry" FROM "' . $this->domain->reference('upload_table') .
+                '" WHERE "post_ref" = ? AND "upload_order" = ?');
         $result = $this->database->executePreparedFetch($prepared,
                 [$this->content_id->postID(), $this->content_id->orderID()], PDO::FETCH_COLUMN);
 
         if ($result)
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->content_table .
+                    'UPDATE "' . $this->domain->reference('upload_table') .
                     '" SET "parent_thread" = :parent_thread,
-                    "post_ref" = :post_ref, "content_order" = :content_order,
+                    "post_ref" = :post_ref, "upload_order" = :upload_order,
                     "type" = :type, "format" = :format, "mime" = :mime,
                     "filename" = :filename, "extension" = :extension,
                     "display_width" = :display_width, "display_height" = :display_height, "preview_name" = :preview_name,
@@ -74,18 +83,18 @@ class ContentFile extends ContentHandler
         else
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . $this->content_table .
-                    '" ("parent_thread", "post_ref", "content_order", "type", "format", "mime",
+                    'INSERT INTO "' . $this->domain->reference('upload_table') .
+                    '" ("parent_thread", "post_ref", "upload_order", "type", "format", "mime",
                     "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
                     "filesize", "md5", "sha1", "sha256", "sha512", "embed_url", "spoiler", "deleted", "exif", "moar") VALUES
-                    (:parent_thread, :post_ref, :content_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
+                    (:parent_thread, :post_ref, :upload_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
                     :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512, :embed_url, :spoiler,
                     :deleted, :exif, :moar)');
         }
 
         $prepared->bindValue(':parent_thread', $this->contentDataOrDefault('parent_thread', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_ref', $this->contentDataOrDefault('post_ref', null), PDO::PARAM_INT);
-        $prepared->bindValue(':content_order', $this->contentDataOrDefault('content_order', 1), PDO::PARAM_INT);
+        $prepared->bindValue(':upload_order', $this->contentDataOrDefault('upload_order', 1), PDO::PARAM_INT);
         $prepared->bindValue(':type', $this->contentDataOrDefault('type', null), PDO::PARAM_STR);
         $prepared->bindValue(':format', $this->contentDataOrDefault('format', null), PDO::PARAM_STR);
         $prepared->bindValue(':mime', $this->contentDataOrDefault('mime', null), PDO::PARAM_STR);
@@ -115,13 +124,6 @@ class ContentFile extends ContentHandler
         $prepared->bindValue(':moar', $this->getMoar()->getJSON(), PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         return true;
-    }
-
-    public function createDirectories()
-    {
-        $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->srcPath(), NEL_DIRECTORY_PERM);
-        $file_handler->createDirectory($this->previewPath(), NEL_DIRECTORY_PERM);
     }
 
     public function remove(bool $perm_override = false)
@@ -154,18 +156,19 @@ class ContentFile extends ContentHandler
             return false;
         }
 
-        if ($this->domain->setting('deleted_content_placeholder'))
+        if ($this->domain->setting('deleted_upload_placeholder'))
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->content_table .
+                    'UPDATE "' . $this->domain->reference('upload_table') .
                     '" SET "preview_name" = null, "preview_extension" = null, "preview_width" = null, "preview_height" = null,
-                    "deleted" = 1 WHERE "post_ref" = ? AND "content_order" = ?');
+                    "deleted" = 1 WHERE "post_ref" = ? AND "upload_order" = ?');
             $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'DELETE FROM "' . $this->content_table . '" WHERE "post_ref" = ? AND "content_order" = ?');
+                    'DELETE FROM "' . $this->domain->reference('upload_table') .
+                    '" WHERE "post_ref" = ? AND "upload_order" = ?');
             $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
             return true;
         }
@@ -185,10 +188,6 @@ class ContentFile extends ContentHandler
                 $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
     }
 
-    public function updateCounts()
-    {
-    }
-
     protected function verifyModifyPerms()
     {
         $post = new ContentPost($this->content_id, $this->domain);
@@ -202,6 +201,13 @@ class ContentFile extends ContentHandler
         $content_id->changePostID($this->content_id->postID());
         $parent_post = new ContentPost($content_id, $this->domain);
         return $parent_post;
+    }
+
+    public function createDirectories()
+    {
+        $file_handler = nel_utilities()->fileHandler();
+        $file_handler->createDirectory($this->srcPath(), NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->previewPath(), NEL_DIRECTORY_PERM);
     }
 
     public function srcPath()

@@ -271,16 +271,16 @@ class Setup
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
 
         // NOTE: Tables must be created in order of
-        // threads -> posts -> content
+        // threads -> posts -> uploads
         $threads_table = new TableThreads($this->database, $this->sql_compatibility);
         $threads_table->tableName($domain->reference('threads_table'));
         $threads_table->createTable();
         $posts_table = new TablePosts($this->database, $this->sql_compatibility);
         $posts_table->tableName($domain->reference('posts_table'));
         $posts_table->createTable(['threads_table' => $domain->reference('threads_table')]);
-        $content_table = new TableContent($this->database, $this->sql_compatibility);
-        $content_table->tableName($domain->reference('content_table'));
-        $content_table->createTable(['posts_table' => $domain->reference('posts_table')]);
+        $uploads_table = new TableUploads($this->database, $this->sql_compatibility);
+        $uploads_table->tableName($domain->reference('upload_table'));
+        $uploads_table->createTable(['posts_table' => $domain->reference('posts_table')]);
     }
 
     public function createBoardDirectories(string $board_id)

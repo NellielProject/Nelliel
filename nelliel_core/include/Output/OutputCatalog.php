@@ -76,14 +76,14 @@ class OutputCatalog extends Output
 
             $thread_data['mod-comment'] = $first_post['mod_comment'];
             $thread_data['reply_count'] = $thread['post_count'] - 1;
-            $thread_data['total_content'] = $thread['total_content'];
+            $thread_data['total_uploads'] = $thread['total_uploads'];
             $index_page = ceil($thread_count / $this->domain->setting('threads_per_page'));
             $thread_data['index_page'] = $index_page;
             $thread_data['is_sticky'] = $thread['sticky'] == 1;
             $thread_data['is_locked'] = $thread['locked'] == 1;
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . $this->domain->reference('content_table') .
-                    '" WHERE "post_ref" = ? AND "content_order" = 1');
+                    'SELECT * FROM "' . $this->domain->reference('upload_table') .
+                    '" WHERE "post_ref" = ? AND "upload_order" = 1');
             $first_file = $this->database->executePreparedFetch($prepared, [$first_post['post_number']],
                     PDO::FETCH_ASSOC);
 

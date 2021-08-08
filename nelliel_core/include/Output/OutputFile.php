@@ -23,12 +23,12 @@ class OutputFile extends Output
         $file = $parameters['file_data'] ?? array();
         $multiple = $post_data['file_count'] > 1;
         $json_post = $parameters['json_instances']['post'];
-        $json_content = $parameters['json_instances']['content'];
-        $json_post->addContentData($json_content->prepareData($file));
+        $json_upload = $parameters['json_instances']['upload'];
+        $json_post->addContentData($json_upload->prepareData($file));
         $file_content_id = new ContentID();
         $file_content_id->changeThreadID($post_data['parent_thread']);
         $file_content_id->changePostID($post_data['post_number']);
-        $file_content_id->changeOrderID($file['content_order']);
+        $file_content_id->changeOrderID($file['upload_order']);
         $this->render_data['is_file'] = true;
         $full_filename = $file['filename'] . '.' . $file['extension'];
         $this->render_data['file_container_id'] = 'file-container-' . $file_content_id->getIDString();

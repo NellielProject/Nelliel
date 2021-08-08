@@ -96,8 +96,8 @@ class OutputThread extends Output
         $this->render_data['return_url'] = $return_url;
         $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
         $json_thread->storeData($json_thread->prepareData($thread_data), 'thread');
-        $json_content = new \Nelliel\API\JSON\JSONContent($this->domain, $this->file_handler);
-        $json_instances = ['thread' => $json_thread, 'content' => $json_content];
+        $json_upload = new \Nelliel\API\JSON\JSONUpload($this->domain, $this->file_handler);
+        $json_instances = ['thread' => $json_thread, 'upload' => $json_upload];
         $post_counter = 1;
         $gen_data['index_rendering'] = false;
         $gen_data['abbreviate'] = false;
