@@ -8,22 +8,22 @@ A relatively lightweight, expandable Futallaby-style imageboard. Originally base
 These are only the bare minimum requirements for Nelliel to function. Even if an earlier version somehow works, you will not receive any support. **It is strongly recommended to use the latest software versions available.**
 
 Required:
-- PHP 7.2+
-- MySQL 5.7+, MariaDB 10.2+, PostgreSQL 10+ or SQLite 3.22+
-- PHP PDO with corresponding support of your database choice
-- PHP GD
-- PHP DOM
-- PHP iconv
-- PHP libxml
-- PHP session
+- [PHP](https://www.php.net/) 7.2+
+- [MySQL](https://www.mysql.com/) 5.7+, [MariaDB](https://mariadb.org/) 10.2+, [PostgreSQL](https://www.postgresql.org/) 10+ or [SQLite](https://www.sqlite.org/) 3.22+
+- [PHP PDO with corresponding support of your database choice](https://www.php.net/manual/en/book.pdo.php)
+- [PHP GD](https://www.php.net/manual/en/book.image.php)
+- [PHP DOM](https://www.php.net/manual/en/book.dom.php)
+- [PHP iconv](https://www.php.net/manual/en/iconv.requirements.php)
+- [PHP libxml](https://www.php.net/manual/en/book.libxml.php)
+- [PHP session](https://www.php.net/manual/en/book.session.php)
 
 These requirements are well behind the leading edge and should be widely available. The PHP extensions required are usually included and enabled with a standard install; if not, they are almost always available in official repositories. If for some reason even the minimum cannot be provided, find a new host. Srsly.
 
 ## Optional Requirements
 These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not required and the software will work fine without them:
-- ImageMagick or GraphicsMagick
-- Imagick or Gmagick (PECL extensions)
-- mbstring
+- [ImageMagick](https://imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/)
+- [Imagick](https://www.php.net/manual/en/book.imagick.php) or [Gmagick](https://www.php.net/manual/en/book.gmagick.php) ([PECL](https://pecl.php.net/) extensions)
+- [mbstring](https://www.php.net/manual/en/book.mbstring.php)
 
 ## Installation
 See [INSTALL.md](INSTALL.md) for installation instructions.

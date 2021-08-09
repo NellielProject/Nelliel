@@ -1,6 +1,6 @@
-# Nelliel Development Standards and Guideline
+# Nelliel Development Standards and Guidelines
 
-A guide to the development standards of Nelliel. Any contributions to the core codebase or official plugins must follow these guidelines. Pull requests not adhering to the guidelines must be fixed before acceptance.
+A guide to the basic development standards of Nelliel. Any contributions to the core codebase or official plugins must follow these guidelines. Pull requests not adhering to the guidelines must be fixed before acceptance.
  
 Developers of plugins or other unofficial contributions are not required to follow this guide.
 
@@ -16,10 +16,11 @@ In addition:
  - Constants must be ALL CAPS and prefixed with `NEL_` or `NELLIEL_`.
 
 ## Functions, Classes and Structure
- - Procedural is not evil. OOP is not the Holy Grail. Functional is fine too. Use what makes sense for a given situation.
+ - Procedural is not evil. OOP is not the Holy Grail. A functional is fine too. Use what makes sense for a given situation.
  - Function names should be prefixed with `nel_`
  - Classes should be within the `Nelliel` namespace.
  - If a class instance or mutable variable needs to be accessible in a global scope it must be encapsulated inside a function.
+ - When mutable variables are defined in global space during early initialization, they must be unset when their purpose is complete.
  
 ## SQL and Queries
 All schemas and queries should follow SQL standard (ANSI) when reasonably possible. When something is not covered in the standard then a commonly implemented alternative can be used. If there is none widely used, a RDBMS-specific option may be added to the `SQLCompatibility` class.
@@ -29,13 +30,14 @@ In cases where a data type is not fully cross-compatible or has a differing name
 On queries:
  - Queries must be done through PDO or a PDO-extending class such as NellielPDO.
  - Queries must be parameterized unless the entire query is hardcoded.
- - Identifiers must be placed in double quotes `" "`, with the exception of table or column creation.
+ - Queries should use parameter or value binding when practical.
+ - Identifiers must be placed in double quotes `" "`, except during table or column creation.
  - All identifiers should be treated as case sensitive.
  - Non-parameterized string literals must be placed inside single quotes `' '`.
  - SQL keywords should be ALL CAPS.
  
 ## Targets and Version Support
-Any core functions and features contributed to Nelliel must be fully functional with the minimum versions listed below in addition to all later versions of the software. These minimum requirements will change over time due to certain circumstances including (but not limited to):
+Any core functions and features contributed to Nelliel must be fully functional with the minimum supported versions, in addition to all later versions of the software. These minimum requirements will change over time due to circumstances including (but not limited to):
  - Usage of the minimum version becomes negligible.
  - A necessary feature or function cannot be reasonably implemented.
  - Forward compatibility becomes impractical.
@@ -43,14 +45,14 @@ Any core functions and features contributed to Nelliel must be fully functional 
 When minimum requirements are changed, a Minor release must be done.
 
 ### PHP Support
-At present Nelliel has a target version of **PHP 7.1**.
+At present Nelliel has a target version of **PHP 7.2**.
 
 ### Database Support
 Minimum supported RDBMS versions:
- - MySQL 5.6
- - MariaDB 10.1
- - PostgreSQL 9.5
- - SQLite 3.20
+ - MySQL 5.7
+ - MariaDB 10.2
+ - PostgreSQL 10
+ - SQLite 3.22
 
 ### Browser Support
 Nelliel must be fully functional with Firefox, Chrome, Safari and Edge. Maintaining compatibility with older versions of these browsers is encouraged when reasonably possible.
@@ -73,8 +75,7 @@ Nelliel returns a numeric error id along with an error message. This keeps the b
  - 700-999: Reserved
  - 1000+: Plugins and other uses
 
-
 ## Other
- - Only early loading and initialization should happen in `imgboard.php`.
+ - Only minimal early loading and initialization should happen in `imgboard.php`.
  - Configurations should be stored in the database whenever possible.
  - Nelliel should cause no PHP errors, warnings or notices when `E_ALL` and `E_STRICT` are enabled.
