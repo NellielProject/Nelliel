@@ -62,6 +62,11 @@ class FrontEndData
         return $sets;
     }
 
+    public function getBaseIconSet(): IconSet
+    {
+        return $this->getIconSet(nel_site_domain()->setting('base_icon_set'));
+    }
+
     public function iconSetIsCore(string $id): bool
     {
         return in_array($id, $this->core_icon_set_ids);

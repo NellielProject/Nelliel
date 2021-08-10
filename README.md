@@ -1,6 +1,6 @@
 # Nelliel Imageboard
 ## About
-A relatively lightweight, expandable Futallaby-style imageboard. Originally based on the [Futallaby](https://www.1chan.net/futallaby/) imageboard software.
+A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby/)-style imageboard.
 
 **WARNING: At present Nelliel is in a pre-release beta stage of development. It is still incomplete and undergoing some breaking changes. Try it out if you want but don't rely on it for long-term use yet!**
 

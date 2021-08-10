@@ -132,14 +132,14 @@ class OutputFile extends Output
                 }
                 else if ($this->domain->setting('use_file_icon'))
                 {
-                    $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('icon_set_id'));
+                    $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('filetype_icon_set'));
                     $type = utf8_strtolower($file['type']);
                     $format = utf8_strtolower($file['format']);
                     $web_path = $icon_set->getWebPath('filetype', $format, true);
 
                     if ($web_path === '')
                     {
-                        $web_path = $icon_set->getWebPath('filetype', $type . '-generic', true);
+                        $web_path = $icon_set->getWebPath('filetype', 'generic-' . $type, true);
 
                         if ($web_path === '')
                         {

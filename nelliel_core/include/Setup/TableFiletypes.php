@@ -79,12 +79,12 @@ class TableFiletypes extends Table
         $this->insertDefaultRow(['jpg', 'graphics', 'jpeg', 'image/jpeg', '["jpe","jpeg"]', '^\xFF\xD8\xFF', 'JPEG', 0, 1]);
         $this->insertDefaultRow(['gif', 'graphics', 'gif', 'image/gif', '[]', '^(?:GIF87a|GIF89a)', 'GIF', 0, 1]);
         $this->insertDefaultRow(['png', 'graphics', 'png', 'image/png', '[]', '^\x89\x50\x4E\x47\x0D\x0A\x1A\x0A', 'PNG', 0, 1]);
-        $this->insertDefaultRow(['jp2', 'graphics', 'jpeg2000', 'image/jp2', '["j2k"]', '^\x00\x00\x00\x0C\x6A\x50\x2\\x20\x0D\x0A', 'JPEG2000', 0, 1]);
+        $this->insertDefaultRow(['jp2', 'graphics', 'jpeg2000', 'image/jp2', '["j2k"]', '^\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A', 'JPEG2000', 0, 1]);
         $this->insertDefaultRow(['tiff', 'graphics', 'tiff', 'image/tiff', '["tif"]', '^I\x20?I\x2A\x00|^MM\x00[\x2A-\x2B]', 'TIFF', 0, 1]);
         $this->insertDefaultRow(['bmp', 'graphics', 'bmp', 'image/x-bmp', '[]', '^BM', 'BMP', 0, 1]);
         $this->insertDefaultRow(['ico', 'graphics', 'icon', 'image/x-icon', '[]', '^\x00\x00\x01\x00', 'Icon', 0, 1]);
-        $this->insertDefaultRow(['psd', 'graphics', 'photoshop', 'image/vnd.adobe.photoshop', '[]', '^8BPS\x00\x01', 'PSD (Photoshop)', 0, 1]);
-        $this->insertDefaultRow(['tga', 'graphics', 'targa', 'image/x-targa', '[]', '^.{1}\x00', 'Truevision TGA', 0, 1]);
+        $this->insertDefaultRow(['psd', 'graphics', 'photoshop', 'image/vnd.adobe.photoshop', '[]', '^8BPS\x00\x01', 'Photoshop', 0, 1]);
+        $this->insertDefaultRow(['tga', 'graphics', 'targa', 'image/x-targa', '[]', '', 'Truevision TARGA', 0, 1]);
         $this->insertDefaultRow(['pict', 'graphics', 'pict', 'image/x-pict', '[]', '^.{522}(?:\x11\x01|\x00\x11\x02\xFF\x0C\x00)', 'PICT', 0, 1]);
         $this->insertDefaultRow(['art', 'graphics', 'art', 'image/x-jg', '[]', '^JG[\x03-\x04]\x0E', 'AOL ART', 0, 1]);
         $this->insertDefaultRow(['cel', 'graphics', 'cel', 'application/octet-stream', '[]', '^KiSS(?:\x20\x04|\x20\x08|\x21\x20|\x20\x20)', 'Kisekae CEL', 0, 1]);
@@ -107,7 +107,7 @@ class TableFiletypes extends Table
         $this->insertDefaultRow(['m4a', 'audio', 'm4a', 'audio/m4a', '[]', '^.{4}ftypM4A', 'MPEG-4 Audio', 0, 1]);
         $this->insertDefaultRow(['flac', 'audio', 'flac', 'audio/x-flac', '[]', '^fLaC\x00\x00\x00\x22', 'FLAC', 0, 1]);
         $this->insertDefaultRow(['aac', 'audio', 'aac', 'audio/aac', '[]', '^ADIF|^\xFF(?:\xF1|\xF9)', 'AAC', 0, 1]);
-        $this->insertDefaultRow(['ogg', 'audio', 'ogg-audio', 'audio/ogg', '[]', '^OggS', 'OGG Audio', 0, 1]);
+        $this->insertDefaultRow(['ogg', 'audio', 'ogg-audio', 'audio/ogg', '["oga"]', '^OggS', 'OGG Audio', 0, 1]);
         $this->insertDefaultRow(['au', 'audio', 'au', 'audio/basic', '["snd"]', '^\.snd', 'AU', 0, 1]);
         $this->insertDefaultRow(['ac3', 'audio', 'ac3', 'audio/ac3', '[]', '^\x0B\x77', 'AC3', 0, 1]);
         $this->insertDefaultRow(['wma', 'audio', 'wma', 'audio/x-ms-wma', '[]', '^\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C', 'Windows Media Audio', 0, 1]);
@@ -149,7 +149,7 @@ class TableFiletypes extends Table
         $this->insertDefaultRow(['lzh', 'archive', 'lzh', 'application/x-lzh-compressed', '["lha"]', '^.{2}\x2D\x6C\x68', 'LZH', 0, 1]);
         $this->insertDefaultRow(['zip', 'archive', 'zip', 'application/zip', '[]', '^PK\x03\x04', 'Zip', 0, 1]);
         $this->insertDefaultRow(['rar', 'archive', 'rar', 'application/x-rar-compressed', '[]', '^Rar\x21\x1A\x07\x00', 'RAR', 0, 1]);
-        $this->insertDefaultRow(['sit', 'archive', 'stuffit', 'application/x-stuffit', '["sitx"]', '^StuffIt \(c\)1997-|StuffIt\!|^SIT\!', 'StuffIt', 0, 1]);
+        $this->insertDefaultRow(['sit', 'archive', 'stuffit', 'application/x-stuffit', '["sitx"]', '^StuffIt \(c\)1997|StuffIt[\?\!]|^SIT\!.{6}rLau', 'StuffIt', 0, 1]);
         $this->insertDefaultRow(['iso', 'archive', 'iso', 'application/x-iso-image', '[]', '^(.{32769}|.{34817}|.{36865})CD001', 'ISO Disk Image', 0, 1]);
         $this->insertDefaultRow(['dmg', 'archive', 'diskimage', 'application/x-apple-diskimage', '[]', 'koly.{508}$', 'Apple Disk Image', 0, 1]);
 
