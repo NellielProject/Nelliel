@@ -29,7 +29,8 @@ class TableThreads extends Table
             'embed_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'permasage' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'sticky' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'archive_status' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'old' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'preserve' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'locked' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'slug' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
@@ -45,7 +46,8 @@ class TableThreads extends Table
             'embed_count' => ['row_check' => false, 'auto_inc' => false],
             'permasage' => ['row_check' => false, 'auto_inc' => false],
             'sticky' => ['row_check' => false, 'auto_inc' => false],
-            'archive_status' => ['row_check' => false, 'auto_inc' => false],
+            'old' => ['row_check' => false, 'auto_inc' => false],
+            'preserve' => ['row_check' => false, 'auto_inc' => false],
             'locked' => ['row_check' => false, 'auto_inc' => false],
             'slug' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
@@ -70,7 +72,8 @@ class TableThreads extends Table
             permasage               SMALLINT NOT NULL DEFAULT 0,
             sticky                  SMALLINT NOT NULL DEFAULT 0,
             cyclic                  SMALLINT NOT NULL DEFAULT 0,
-            archive_status          SMALLINT NOT NULL DEFAULT 0,
+            old                     SMALLINT NOT NULL DEFAULT 0,
+            preserve                SMALLINT NOT NULL DEFAULT 0,
             locked                  SMALLINT NOT NULL DEFAULT 0,
             slug                    TEXT DEFAULT NULL,
             moar                    TEXT DEFAULT NULL

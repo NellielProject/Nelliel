@@ -280,7 +280,7 @@ class NewPost
                     nel_derp(2, _gettext('This thread is locked.'), $error_data);
                 }
 
-                if ($thread_info['archive_status'] != 0)
+                if ($thread_info['old'] != 0)
                 {
                     nel_derp(3, _gettext('The thread you have tried posting in is currently inaccessible or archived.'),
                             $error_data);
@@ -297,7 +297,7 @@ class NewPost
                 nel_derp(5, _gettext('The thread has reached maximum posts.'), $error_data);
             }
 
-            if ($thread_info['archive_status'] != 0)
+            if ($thread_info['old'] != 0)
             {
                 nel_derp(6, _gettext('The thread is archived or buffered and cannot be posted to.'), $error_data);
             }

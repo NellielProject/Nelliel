@@ -123,7 +123,7 @@ class Regen
     public function allBoardPages(Domain $domain)
     {
         $result = $domain->database()->query(
-                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "archive_status" = 0');
+                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $domain->database()->query(
                 'UPDATE "' . $domain->reference('posts_table') . '" SET regen_cache = 1');
@@ -134,7 +134,7 @@ class Regen
     public function postCache(Domain $domain)
     {
         $result = $domain->database()->query(
-                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "archive_status" = 0');
+                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $this->threads($domain, true, $ids);
         $this->index($domain);

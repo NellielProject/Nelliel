@@ -372,7 +372,7 @@ class ContentPost extends ContentHandler
     {
         $prepared = $this->database->prepare(
                 'SELECT "cache" FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
-        $cache = $this->database->executePreparedFetch($prepared, [$this->content_data['post_number']],
+        $cache = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
                 PDO::FETCH_COLUMN);
 
         if (is_string($cache))

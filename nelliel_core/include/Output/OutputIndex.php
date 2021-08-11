@@ -53,7 +53,7 @@ class OutputIndex extends Output
 
         $thread_list = $this->database->executeFetchAll(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') .
-                '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC',
+                '" WHERE "old" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC',
                 PDO::FETCH_ASSOC);
         $thread_count = count($thread_list);
         $threads_done = 0;

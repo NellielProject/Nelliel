@@ -52,7 +52,7 @@ class OutputPanelThreads extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $thread_data = $this->database->executeFetchAll(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') .
-                '" WHERE "archive_status" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC',
+                '" WHERE "old" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC',
                 PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 

@@ -31,7 +31,8 @@ class ContentThread extends ContentHandler
 
     public function loadFromDatabase()
     {
-        $prepared = $this->database->prepare('SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_ASSOC);
 
         if (empty($result))
@@ -70,16 +71,16 @@ class ContentThread extends ContentHandler
                     "total_uploads" = :total_uploads, "file_count" = :file_count, "embed_count" = :embed_count,
                     "last_update" = :last_update, "last_update_milli" = :last_update_milli,
                     "post_count" = :post_count, "permasage" = :permasage, "sticky" = :sticky, "cyclic" = :cyclic,
-                    "archive_status" = :archive_status, "locked" = :locked, "slug" = :slug WHERE "thread_id" = :thread_id');
+                    "old" = :old, "preserve" = :preserve, "locked" = :locked, "slug" = :slug WHERE "thread_id" = :thread_id');
         }
         else
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->domain->reference('threads_table') .
                     '" ("thread_id", "last_bump_time", "last_bump_time_milli", "total_uploads", "file_count", "embed_count", "last_update",
-                    "last_update_milli", "post_count", "permasage", "sticky", "cyclic", "archive_status", "locked", "slug")
+                    "last_update_milli", "post_count", "permasage", "sticky", "cyclic", "old", "preserve", "locked", "slug")
                     VALUES (:thread_id, :last_bump_time, :last_bump_time_milli, :total_uploads, :file_count, :embed_count, :last_update,
-                    :last_update_milli, :post_count, :permasage, :sticky, :cyclic, :archive_status, :locked, :slug)');
+                    :last_update_milli, :post_count, :permasage, :sticky, :cyclic, :old, :preserve, :locked, :slug)');
         }
 
         $prepared->bindValue(':thread_id', $this->content_id->threadID(), PDO::PARAM_INT);
@@ -95,7 +96,8 @@ class ContentThread extends ContentHandler
         $prepared->bindValue(':permasage', $this->contentDataOrDefault('permasage', 0), PDO::PARAM_INT);
         $prepared->bindValue(':sticky', $this->contentDataOrDefault('sticky', 0), PDO::PARAM_INT);
         $prepared->bindValue(':cyclic', $this->contentDataOrDefault('cyclic', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':archive_status', $this->contentDataOrDefault('archive_status', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':old', $this->contentDataOrDefault('old', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':preserve', $this->contentDataOrDefault('old', 0), PDO::PARAM_INT);
         $prepared->bindValue(':locked', $this->contentDataOrDefault('locked', 0), PDO::PARAM_INT);
         $prepared->bindValue(':slug', $this->contentDataOrDefault('slug', 0), PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
@@ -132,7 +134,8 @@ class ContentThread extends ContentHandler
             return false;
         }
 
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
+        $prepared = $this->database->prepare(
+                'DELETE FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
         $cites = new Cites($this->database);
         $cites->updateForThread($this);
@@ -163,7 +166,8 @@ class ContentThread extends ContentHandler
     public function postCount()
     {
         $prepared = $this->database->prepare(
-                'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') . '" WHERE "parent_thread" = ?');
+                'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "parent_thread" = ?');
         $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
         return $post_count;
@@ -210,7 +214,6 @@ class ContentThread extends ContentHandler
         }
 
         $this->content_data['sticky'] = ($this->content_data['sticky'] == 0) ? 1 : 0;
-        ;
         $success = $this->writeToDatabase();
         $this->archive_prune->updateThreads();
         return $success;
@@ -288,7 +291,8 @@ class ContentThread extends ContentHandler
     public function firstPostID(): int
     {
         $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') . '" WHERE "parent_thread" = ? AND "op" = 1');
+                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "parent_thread" = ? AND "op" = 1');
         $first_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
         return intval($first_post);
@@ -329,11 +333,6 @@ class ContentThread extends ContentHandler
         }
 
         return intval($post_list[$nth_post_index]);
-    }
-
-    public function isArchived()
-    {
-        return $this->content_data['archive_status'] == 2;
     }
 
     // Most of this is based on vichan's slugify
@@ -423,5 +422,21 @@ class ContentThread extends ContentHandler
     public function previewPath()
     {
         return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/';
+    }
+
+    public function markAsActive()
+    {
+        $prepared = $this->database->prepare('UPDATE "' . $this->main_table . '" SET "old" = 0 WHERE "thread_id" = ?');
+        $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
+    }
+
+    public function markAsOld()
+    {
+        $prepared = $this->database->prepare('UPDATE "' . $this->main_table . '" SET "old" = 1 WHERE "thread_id" = ?');
+        $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
+    }
+
+    public function archive()
+    {
     }
 }

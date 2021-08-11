@@ -29,15 +29,14 @@ class OutputPost extends Output
         $post_id = $parameters['post_id'] ?? 0;
         $json_post = $parameters['json_instances']['post'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
+        $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
+        $thread = $parameters['thread_instance'] ?? new ContentThread($thread_content_id, $this->domain);
         $in_thread_number = $parameters['in_thread_number'] ?? 0;
         $json_post->storeData($json_post->prepareData($post_data), 'post');
         $response = $post_data['op'] != 1;
-        $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
         $post = new ContentPost($post_content_id, $this->domain);
-        $thread = new ContentThread($thread_content_id, $this->domain);
-        $thread->loadFromDatabase();
         $post->loadFromDatabase();
 
         if (NEL_USE_RENDER_CACHE)
