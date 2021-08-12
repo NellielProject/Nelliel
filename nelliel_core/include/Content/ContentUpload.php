@@ -5,22 +5,18 @@ namespace Nelliel\Content;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
-use Nelliel\Moar;
-use PDO;
 use Nelliel\SQLCompatibility;
+use Nelliel\Domains\Domain;
 use Nelliel\Setup\TableUploads;
+use PDO;
 
 class ContentUpload extends ContentHandler
 {
 
     function __construct(ContentID $content_id, Domain $domain)
     {
-        $this->database = $domain->database();
-        $this->content_id = $content_id;
-        $this->domain = $domain;
-        $this->main_table = new TableUploads($this->database, new SQLCompatibility($this->database));
-        $this->storeMoar(new Moar());
+        $main_table = new TableUploads($this->database, new SQLCompatibility($this->database));
+        parent::__construct($content_id, $domain, $main_table);
     }
 
     public function loadFromDatabase()

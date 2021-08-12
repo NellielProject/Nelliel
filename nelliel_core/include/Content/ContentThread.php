@@ -5,27 +5,24 @@ namespace Nelliel\Content;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
-use Nelliel\Domains\Domain;
-use Nelliel\Moar;
 use Nelliel\Overboard;
-use PDO;
 use Nelliel\SQLCompatibility;
+use Nelliel\Domains\Domain;
 use Nelliel\Setup\TableThreads;
+use PDO;
 
 class ContentThread extends ContentHandler
 {
     protected $archive_prune;
     protected $overboard;
 
-    function __construct(ContentID $content_id, Domain $domain)
+    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
     {
-        $this->database = $domain->database();
-        $this->content_id = $content_id;
-        $this->domain = $domain;
-        $this->main_table = new TableThreads($this->database, new SQLCompatibility($this->database));
-        $this->archive_prune = new \Nelliel\ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
-        $this->storeMoar(new Moar());
+        $main_table = new TableThreads($this->database, new SQLCompatibility($this->database));
+        parent::__construct($content_id, $domain, $main_table);
+        $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->overboard = new Overboard($this->database);
     }
 
@@ -208,7 +205,7 @@ class ContentThread extends ContentHandler
 
     public function sticky(): bool
     {
-        if (!$this->dataLoaded(true))
+        if (!$this->isLoaded())
         {
             return false;
         }
@@ -219,36 +216,21 @@ class ContentThread extends ContentHandler
         return $success;
     }
 
-    public function lock(): bool
+    public function toggleLock(): bool
     {
-        if (!$this->dataLoaded(true))
-        {
-            return false;
-        }
-
-        $this->content_data['locked'] = ($this->content_data['locked'] == 0) ? 1 : 0;
+        $this->changeData('locked', !$this->data('locked'));
         return $this->writeToDatabase();
     }
 
-    public function sage(): bool
+    public function toggleSage(): bool
     {
-        if (!$this->dataLoaded(true))
-        {
-            return false;
-        }
-
-        $this->content_data['permasage'] = ($this->content_data['permasage'] == 0) ? 1 : 0;
+        $this->changeData('sage', !$this->data('sage'));
         return $this->writeToDatabase();
     }
 
-    public function cyclic(): bool
+    public function toggleCyclic(): bool
     {
-        if (!$this->dataLoaded(true))
-        {
-            return false;
-        }
-
-        $this->content_data['cyclic'] = ($this->content_data['cyclic'] == 0) ? 1 : 0;
+        $this->changeData('cyclic', !$this->data('cyclic'));
         return $this->writeToDatabase();
     }
 
@@ -282,7 +264,6 @@ class ContentThread extends ContentHandler
                 $post_content_id = new ContentID(
                         ContentID::createIDString($this->content_id->threadID(), $old_post['post_number'], 0));
                 $post = $post_content_id->getInstanceFromID($this->domain);
-                $post->loadFromDatabase();
                 $post->remove(true);
             }
         }
@@ -422,18 +403,6 @@ class ContentThread extends ContentHandler
     public function previewPath()
     {
         return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/';
-    }
-
-    public function markAsActive()
-    {
-        $prepared = $this->database->prepare('UPDATE "' . $this->main_table . '" SET "old" = 0 WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
-    }
-
-    public function markAsOld()
-    {
-        $prepared = $this->database->prepare('UPDATE "' . $this->main_table . '" SET "old" = 1 WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
     }
 
     public function archive()

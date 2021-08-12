@@ -51,7 +51,6 @@ class OutputCatalog extends Output
             $post_content_id = new ContentId('cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
             $thread_content_id = new ContentId(ContentID::createIDString($thread['thread_id']));
             $thread_instance = $thread_content_id->getInstanceFromID($this->domain);
-            $thread_instance->loadFromDatabase();
             $thread_data['open_url'] = $thread_instance->getURL();
 
             if (!empty($first_post['subject']))

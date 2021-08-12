@@ -1,12 +1,14 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Content;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Moar;
+use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
+use Nelliel\Setup\Table;
 
 abstract class ContentHandler
 {
@@ -17,6 +19,21 @@ abstract class ContentHandler
     protected $content_moar;
     protected $authorization;
     protected $main_table;
+
+    function __construct(ContentID $content_id, Domain $domain, Table $main_table, bool $load = true)
+    {
+        $this->database = $domain->database();
+        $this->content_id = $content_id;
+        $this->domain = $domain;
+        $this->authorization = new Authorization($this->database);
+        $this->storeMoar(new Moar());
+        $this->main_table = $main_table;
+
+        if ($load)
+        {
+            $this->loadFromDatabase();
+        }
+    }
 
     public abstract function loadFromDatabase();
 
@@ -50,23 +67,6 @@ abstract class ContentHandler
         }
 
         return $default;
-    }
-
-    protected function dataLoaded(bool $load = false)
-    {
-        if (empty($this->content_data))
-        {
-            if ($load)
-            {
-                return $this->loadFromDatabase();
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        return true;
     }
 
     public function data(string $key)

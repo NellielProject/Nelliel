@@ -152,7 +152,7 @@ class AdminThreads extends Admin
 
         if ($content_id->isThread())
         {
-            $content_id->getInstanceFromID($this->domain)->lock();
+            $content_id->getInstanceFromID($this->domain)->toggleLock();
             $this->regenThread($content_id->threadID(), true);
         }
     }
@@ -164,7 +164,7 @@ class AdminThreads extends Admin
 
         if ($content_id->isThread())
         {
-            $content_id->getInstanceFromID($this->domain)->sage();
+            $content_id->getInstanceFromID($this->domain)->toggleSage();
             $this->regenThread($content_id->threadID(), true);
         }
     }
@@ -176,7 +176,7 @@ class AdminThreads extends Admin
 
         if ($content_id->isThread())
         {
-            $content_id->getInstanceFromID($this->domain)->cyclic();
+            $content_id->getInstanceFromID($this->domain)->toggleCyclic();
             $this->regenThread($content_id->threadID(), true);
         }
     }
@@ -201,7 +201,6 @@ class AdminThreads extends Admin
     {
         $content_id = new ContentID($_GET['content-id']);
         $content_instance = $content_id->getInstanceFromID($this->domain);
-        $content_instance->loadFromDatabase();
         $content_instance->remove();
         $this->regenThread($content_id->threadID(), true);
         $ban_ip = $_GET['ban-ip'] ?? '';
@@ -219,7 +218,6 @@ class AdminThreads extends Admin
 
         $first_content_id = new ContentID($_GET['content-id']);
         $post_instance = $first_content_id->getInstanceFromID($this->domain);
-        $post_instance->loadFromDatabase();
         $prepared = $this->database->prepare(
                 'SELECT "post_number", "parent_thread" FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "hashed_ip_address" = ?');
@@ -244,7 +242,6 @@ class AdminThreads extends Admin
     {
         $content_id = new ContentID($_GET['content-id']);
         $post = $content_id->getInstanceFromID($this->domain);
-        $post->loadFromDatabase();
         $output_panel_threads = new OutputPanelThreads($this->domain, true);
         $output_panel_threads->editPost(['post' => $post], false);
         $this->outputMain(false);
@@ -259,7 +256,6 @@ class AdminThreads extends Admin
 
         $content_id = new ContentID($_GET['content-id']);
         $post = $content_id->getInstanceFromID($this->domain);
-        $post->loadFromDatabase();
         $post->changeData('name', $_POST['not_anonymous'] ?? null);
         $post->changeData('email', $_POST['spam_target'] ?? null);
         $post->changeData('subject', $_POST['verb'] ?? null);

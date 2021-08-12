@@ -37,7 +37,6 @@ class OutputPost extends Output
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
         $post = new ContentPost($post_content_id, $this->domain);
-        $post->loadFromDatabase();
 
         if (NEL_USE_RENDER_CACHE)
         {

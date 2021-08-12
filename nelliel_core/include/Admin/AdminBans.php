@@ -59,7 +59,6 @@ class AdminBans extends Admin
             if ($content_id->isPost() && !is_null($mod_post_comment))
             {
                 $content_post = $content_id->getInstanceFromID($this->domain);
-                $content_post->loadFromDatabase();
                 $content_post->changeData('mod_comment', $mod_post_comment);
                 $content_post->writeToDatabase();
                 $regen = new \Nelliel\Regen();

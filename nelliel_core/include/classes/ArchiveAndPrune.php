@@ -48,7 +48,8 @@ class ArchiveAndPrune
                 if ($thread['old'] == 1)
                 {
                     $thread = $content_id->getInstanceFromID($this->domain);
-                    $thread->markAsActive();
+                    $thread->changeData('old', false);
+                    $thread->writeToDatabase();
                 }
             }
             else if ($line <= $last_buffer) // Thread is within buffer range
@@ -56,7 +57,8 @@ class ArchiveAndPrune
                 if ($thread['old'] == 0)
                 {
                     $thread = $content_id->getInstanceFromID($this->domain);
-                    $thread->markAsOld();
+                    $thread->changeData('old', true);
+                    $thread->writeToDatabase();
                 }
             }
             else if ($line <= $last_archive) // Thread is past buffer range

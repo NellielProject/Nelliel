@@ -58,7 +58,6 @@ class OutputThread extends Output
         }
 
         $thread = $thread_content_id->getInstanceFromID($this->domain);
-        $thread->loadFromDatabase();
         $page_title = $this->domain->reference('board_uri');
 
         if (!isset($treeline[0]['subject']) || nel_true_empty($treeline[0]['subject']))

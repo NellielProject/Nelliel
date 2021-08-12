@@ -7,13 +7,11 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
-use Nelliel\Moar;
-use Nelliel\Auth\Authorization;
+use Nelliel\SQLCompatibility;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPost;
-use PDO;
-use Nelliel\SQLCompatibility;
 use Nelliel\Setup\TablePosts;
+use PDO;
 
 class ContentPost extends ContentHandler
 {
@@ -21,13 +19,9 @@ class ContentPost extends ContentHandler
 
     function __construct(ContentID $content_id, Domain $domain)
     {
-        $this->database = $domain->database();
-        $this->content_id = $content_id;
-        $this->domain = $domain;
-        $this->authorization = new Authorization($this->database);
-        $this->main_table = new TablePosts($this->database, new SQLCompatibility($this->database));
+        $main_table = new TablePosts($this->database, new SQLCompatibility($this->database));
+        parent::__construct($content_id, $domain, $main_table);
         $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
-        $this->storeMoar(new Moar());
     }
 
     public function loadFromDatabase()
@@ -372,8 +366,7 @@ class ContentPost extends ContentHandler
     {
         $prepared = $this->database->prepare(
                 'SELECT "cache" FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
-        $cache = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
-                PDO::FETCH_COLUMN);
+        $cache = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN);
 
         if (is_string($cache))
         {
