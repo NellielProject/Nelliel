@@ -122,6 +122,21 @@ class AdminBoards extends Admin
         $this->database->executePrepared($prepared);
 
         $setup = new Setup($this->database, new SQLCompatibility($this->database), new FileHandler());
+        $query = 'SELECT "setting_name", "setting_value", "edit_lock" FROM "' . NEL_BOARD_DEFAULTS_TABLE . '"';
+        $defaults = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare(
+                'INSERT INTO "' . NEL_BOARD_CONFIGS_TABLE .
+                '" ("board_id", "setting_name", "setting_value", "edit_lock") VALUES (?, ?, ?, ?)');
+
+        foreach ($defaults as $default)
+        {
+            $prepared->bindValue(1, $board_uri, PDO::PARAM_STR);
+            $prepared->bindValue(2, $default['setting_name'], PDO::PARAM_STR);
+            $prepared->bindValue(3, $default['setting_value'], PDO::PARAM_STR);
+            $prepared->bindValue(4, $default['edit_lock'], PDO::PARAM_INT);
+            $this->database->executePrepared($prepared);
+        }
+
         $setup->createBoardTables($board_uri, $db_prefix);
         $setup->createBoardDirectories($board_uri);
         $domain = new DomainBoard($board_uri, $this->database);
@@ -157,13 +172,6 @@ class AdminBoards extends Admin
             return;
         }
 
-        if ($this->database->tableExists($domain->reference('config_table')) . '"')
-        {
-            $this->database->query('DROP TABLE "' . $domain->reference('config_table') . '"');
-            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
-            $this->database->executePrepared($prepared, [$domain->reference('config_table')]);
-        }
-
         if ($this->database->tableExists($domain->reference('upload_table')))
         {
             $this->database->query('DROP TABLE "' . $domain->reference('upload_table') . '"');
@@ -185,15 +193,9 @@ class AdminBoards extends Admin
             $this->database->executePrepared($prepared, [$domain->reference('threads_table')]);
         }
 
-        if ($this->database->tableExists($domain->reference('log_table')))
-        {
-            $this->database->query('DROP TABLE "' . $domain->reference('log_table') . '"');
-            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
-            $this->database->executePrepared($prepared, [$domain->reference('log_table')]);
-        }
-
         nel_utilities()->fileHandler()->eraserGun($domain->reference('board_path'));
         $domain->deleteCache();
+        // Foreign key constraints allow this to handle any removals from site tables
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new Regen();

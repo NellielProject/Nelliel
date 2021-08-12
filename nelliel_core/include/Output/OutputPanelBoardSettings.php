@@ -56,8 +56,10 @@ class OutputPanelBoardSettings extends Output
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
         $prepared = $this->database->prepare(
-                'SELECT "setting_name","setting_value" FROM "' . $table_name . '" WHERE "setting_name" = ?');
-        $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
+                'SELECT "setting_name","setting_value" FROM "' . $table_name .
+                '" WHERE "setting_name" = ? AND "board_id" = ?');
+        $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes', $this->domain->id()],
+                PDO::FETCH_ASSOC);
         $enabled_array = json_decode($enabled_types['setting_value'], true);
         $types_edit_lock = $defaults_list['enabled_filetypes']['edit_lock'] == 1 && !$defaults && !$user_lock_override;
         $available_formats = $filetypes->availableFormats();

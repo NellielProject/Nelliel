@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -33,7 +32,7 @@ class FileTypes
             $filetype_data = $this->cache_handler->loadArrayFromFile('filetype_data', 'filetype_data.php');
         }
 
-        if(empty($filetype_data))
+        if (empty($filetype_data))
         {
             $filetype_data = $this->database->executeFetchAll('SELECT * FROM "nelliel_filetypes" ORDER BY "entry" ASC',
                     PDO::FETCH_ASSOC);
@@ -85,11 +84,10 @@ class FileTypes
 
         if (empty($settings))
         {
-            $prepared = $this->database->prepare('SELECT "db_prefix" FROM "nelliel_board_data" WHERE "board_id" = ?');
-            $db_prefix = $this->database->executePreparedFetch($prepared, [$domain_id], PDO::FETCH_COLUMN);
-            $config_table = $db_prefix . '_config';
-            $filetypes_json = $this->database->executeFetch(
-                    'SELECT "setting_value" FROM "' . $config_table . '" WHERE "setting_name" = \'enabled_filetypes\'',
+            $prepared = $this->database->prepare(
+                    'SELECT "setting_value" FROM "' . NEL_BOARD_CONFIGS_TABLE .
+                    '" WHERE "board_id" = ? AND "setting_name" = ?');
+            $filetypes_json = $this->database->executePreparedFetch($prepared, [$domain_id, 'enabled_filetypes'],
                     PDO::FETCH_COLUMN);
             $settings = json_decode($filetypes_json, true);
         }

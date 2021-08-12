@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -76,12 +75,12 @@ class Regen
         {
             $board_domain = Domain::getDomainFromID($id, $domain->database());
 
-            if($cache)
+            if ($cache)
             {
                 $board_domain->regenCache();
             }
 
-            if($pages)
+            if ($pages)
             {
                 $this->allBoardPages($board_domain);
             }
@@ -99,8 +98,10 @@ class Regen
         foreach ($board_ids as $id)
         {
             $board_domain = new DomainBoard($id, $domain->database());
-            $board_config = $domain->database()->executeFetchAll(
-                    'SELECT "setting_name", "setting_value" FROM "' . $board_domain->reference('config_table') . '"',
+            $prepared = $domain->database()->prepare(
+                    'SELECT "setting_name", "setting_value" FROM "' . $board_domain->reference('config_table') .
+                    '" WHERE "board_id" = ?');
+            $board_config = $domain->database()->executePreparedFetchAll($prepared, [$board_domain->id()],
                     PDO::FETCH_ASSOC);
             $board_data = ['board_id' => $id];
 
@@ -125,8 +126,7 @@ class Regen
         $result = $domain->database()->query(
                 'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
-        $domain->database()->query(
-                'UPDATE "' . $domain->reference('posts_table') . '" SET regen_cache = 1');
+        $domain->database()->query('UPDATE "' . $domain->reference('posts_table') . '" SET regen_cache = 1');
         $this->threads($domain, true, $ids);
         $this->index($domain);
     }

@@ -67,31 +67,25 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
         $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
         $new_reference['upload_table'] = $new_reference['db_prefix'] . '_uploads';
-        $new_reference['config_table'] = $new_reference['db_prefix'] . '_config';
-        $new_reference['log_table'] = $new_reference['db_prefix'] . '_logs';
+        $new_reference['config_table'] = NEL_BOARD_CONFIGS_TABLE;
+        $new_reference['log_table'] = NEL_LOGS_TABLE;
         $this->references = $new_reference;
     }
 
     protected function loadSettingsFromDatabase(): array
     {
         $settings = array();
-        $prepared = $this->database->prepare(
-                'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-        $db_prefix = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_COLUMN);
-        $config_table = $db_prefix . '_config';
 
-        if ($this->database->tableExists($config_table))
+        $query = 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '" ON "' .
+                NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
+                NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "setting_category" = ?';
+        $prepared = $this->database->prepare($query);
+        $config_list = $this->database->executePreparedFetchAll($prepared, [$this->id, 'board'], PDO::FETCH_ASSOC);
+
+        foreach ($config_list as $config)
         {
-            $config_list = $this->database->executeFetchAll(
-                    'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $config_table . '" ON "' .
-                    NEL_SETTINGS_TABLE . '"."setting_name" = "' . $config_table .
-                    '"."setting_name" WHERE "setting_category" = \'board\'', PDO::FETCH_ASSOC);
-
-            foreach ($config_list as $config)
-            {
-                $config['setting_value'] = nel_cast_to_datatype($config['setting_value'], $config['data_type']);
-                $settings[$config['setting_name']] = $config['setting_value'];
-            }
+            $config['setting_value'] = nel_cast_to_datatype($config['setting_value'], $config['data_type']);
+            $settings[$config['setting_name']] = $config['setting_value'];
         }
 
         return $settings;

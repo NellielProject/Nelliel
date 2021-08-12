@@ -59,7 +59,6 @@ class AdminBoardSettings extends Admin
     {
         $this->verifyAction($this->domain);
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
-        $config_table = ($this->defaults) ? $this->data_table : $this->domain->reference('config_table');
         $defaults = $this->defaultsList();
 
         foreach ($_POST as $key => $value)
@@ -69,7 +68,7 @@ class AdminBoardSettings extends Admin
             if (isset($value['lock']) && $this->defaults)
             {
                 $lock_value = nel_form_input_default($value['lock']);
-                $this->setLock($config_table, $key, $lock_value);
+                $this->setLock($this->domain, $key, $lock_value);
             }
 
             $force_update = isset($value['force_update']) && $value['force_update'] == 1 && $this->defaults;
@@ -109,11 +108,11 @@ class AdminBoardSettings extends Admin
                 {
                     foreach ($this->getBoardDomains() as $board_domain)
                     {
-                        $this->updateSetting($board_domain->reference('config_table'), $key, $value, $lock_override);
+                        $this->updateSetting($board_domain, $key, $value, $lock_override);
                     }
                 }
 
-                $this->updateSetting($config_table, $key, $value, $lock_override);
+                $this->updateSetting($this->domain, $key, $value, $lock_override);
             }
         }
 
@@ -134,27 +133,30 @@ class AdminBoardSettings extends Admin
     {
     }
 
-    private function setLock($config_table, $config_name, $setting)
+    private function setLock(DomainBoard $domain, $config_name, $setting)
     {
         $prepared = $this->database->prepare(
-                'UPDATE "' . $config_table . '" SET "edit_lock" = ? WHERE "setting_name" = ?');
-        $this->database->executePrepared($prepared, [$setting, $config_name], true);
+                'UPDATE "' . $domain->reference('config_table') .
+                '" SET "edit_lock" = ? WHERE "setting_name" = ? AND "board_id" = ?');
+        $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
     }
 
-    private function updateSetting($config_table, $config_name, $setting, $lock_override)
+    private function updateSetting(DomainBoard $domain, $config_name, $setting, $lock_override)
     {
         if ($this->defaults || $lock_override)
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $config_table . '" SET "setting_value" = ? WHERE "setting_name" = ?');
-            $this->database->executePrepared($prepared, [$setting, $config_name], true);
+                    'UPDATE "' . $domain->reference('config_table') .
+                    '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ?');
         }
         else
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $config_table . '" SET "setting_value" = ? WHERE "setting_name" = ? AND "edit_lock" = 0');
-            $this->database->executePrepared($prepared, [$setting, $config_name], true);
+                    'UPDATE "' . $domain->reference('config_table') .
+                    '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ? AND "edit_lock" = 0');
         }
+
+        $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
     }
 
     private function getBoardDomains()
@@ -173,8 +175,7 @@ class AdminBoardSettings extends Admin
 
     public function defaultsList()
     {
-        $defaults_data = $this->database->executeFetchAll('SELECT * FROM "' . $this->data_table . '"',
-                PDO::FETCH_ASSOC);
+        $defaults_data = $this->database->executeFetchAll('SELECT * FROM "' . $this->data_table . '"', PDO::FETCH_ASSOC);
         $defaults = array();
 
         foreach ($defaults_data as $data)

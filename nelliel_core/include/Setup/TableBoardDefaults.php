@@ -9,14 +9,14 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use PDO;
 
-class TableBoardConfig extends Table
+class TableBoardDefaults extends Table
 {
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = '_config';
+        $this->table_name = NEL_BOARD_DEFAULTS_TABLE;
         $this->column_types = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'setting_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],

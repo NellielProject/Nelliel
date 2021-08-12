@@ -179,13 +179,12 @@ class Setup
         $versions_table->createTable();
         $icon_sets_table = new TableIconSets($this->database, $this->sql_compatibility);
         $icon_sets_table->createTable();
+        $board_defaults_table = new TableBoardDefaults($this->database, $this->sql_compatibility);
+        $board_defaults_table->createTable();
         $styles_table = new TableStyles($this->database, $this->sql_compatibility);
         $styles_table->createTable();
         $settings_table = new TableSettings($this->database, $this->sql_compatibility);
         $settings_table->createTable();
-        $board_defaults_table = new TableBoardConfig($this->database, $this->sql_compatibility);
-        $board_defaults_table->tableName(NEL_BOARD_DEFAULTS_TABLE);
-        $board_defaults_table->createTable();
         $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
         $embeds_table->createTable();
         $filetypes_table = new TableFiletypes($this->database, $this->sql_compatibility);
@@ -233,6 +232,8 @@ class Setup
         $bans_table->createTable();
         $captcha_table = new TableCaptcha($this->database, $this->sql_compatibility);
         $captcha_table->createTable();
+        $board_configs_table = new TableBoardConfigs($this->database, $this->sql_compatibility);
+        $board_configs_table->createTable();
 
         // NOTE: Tables must be created in order of:
         // roles -> permissions -> role permissions -> users -> user roles
@@ -261,13 +262,6 @@ class Setup
 
     public function createBoardTables(string $board_id, string $db_prefix)
     {
-        // IMPORTANT: Table creation must occur in the given order so foreign keys can be created.
-        // Domain and such doesn't function without config table
-        $config_table = new TableBoardConfig($this->database, $this->sql_compatibility);
-        $config_table->tableName($db_prefix . '_config');
-        $config_table->createTable();
-        $config_table->copyFrom(NEL_BOARD_DEFAULTS_TABLE, ['setting_name', 'setting_value']);
-
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
 
         // NOTE: Tables must be created in order of
