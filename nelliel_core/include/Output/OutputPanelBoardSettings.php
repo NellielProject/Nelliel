@@ -39,7 +39,10 @@ class OutputPanelBoardSettings extends Output
             $table_name = NEL_BOARD_DEFAULTS_TABLE;
             $parameters['panel'] = $parameters['panel'] ?? _gettext('Board Default Settings');
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(['module' => 'admin', 'section' => 'board-settings', 'actions' => 'update']);
+                    http_build_query(['module' => 'admin', 'section' => 'board-defaults', 'actions' => 'update']);
+            $prepared = $this->database->prepare(
+                    'SELECT "setting_name","setting_value" FROM "' . $table_name . '" WHERE "setting_name" = ?');
+            $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
         }
         else
         {
@@ -49,17 +52,17 @@ class OutputPanelBoardSettings extends Output
                     http_build_query(
                             ['module' => 'admin', 'section' => 'board-settings', 'actions' => 'update',
                                 'board-id' => $this->domain->id()]);
+            $prepared = $this->database->prepare(
+                    'SELECT "setting_name","setting_value" FROM "' . $table_name .
+                    '" WHERE "setting_name" = ? AND "board_id" = ?');
+            $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes', $this->domain->id()],
+                    PDO::FETCH_ASSOC);
         }
 
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $user_lock_override = $this->session->user()->checkPermission($this->domain, 'perm_manage_board_config_override');
         $all_filetypes = $filetypes->allTypeData();
         $all_types = $filetypes->types();
-        $prepared = $this->database->prepare(
-                'SELECT "setting_name","setting_value" FROM "' . $table_name .
-                '" WHERE "setting_name" = ? AND "board_id" = ?');
-        $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes', $this->domain->id()],
-                PDO::FETCH_ASSOC);
         $enabled_array = json_decode($enabled_types['setting_value'], true);
         $types_edit_lock = $defaults_list['enabled_filetypes']['edit_lock'] == 1 && !$defaults && !$user_lock_override;
         $available_formats = $filetypes->availableFormats();

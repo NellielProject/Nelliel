@@ -12,16 +12,14 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
 
-class AdminBoardSettings extends Admin
+class AdminBoardDefaults extends Admin
 {
-    private $defaults = false;
     private $board_id;
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         // TODO: Something better should be possible
         $this->board_id = $_GET['board-id'] ?? '';
-        $this->defaults = empty($this->board_id) ? true : false;
         parent::__construct($authorization, $domain, $session);
         $this->domain = $domain;
         $this->data_table = NEL_BOARD_DEFAULTS_TABLE;
@@ -37,8 +35,8 @@ class AdminBoardSettings extends Admin
     public function panel(): void
     {
         $this->verifyAccess($this->domain);
-        $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain, false);
-        $output_panel->render(['defaults' => false], false);
+        $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain, false); // TODO: Maybe separate output too
+        $output_panel->render(['defaults' => true], false);
     }
 
     public function creator(): void
@@ -55,11 +53,27 @@ class AdminBoardSettings extends Admin
 
     public function update(): void
     {
+        $force_update_done = false;
         $this->verifyAction($this->domain);
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
 
         foreach ($_POST as $key => $value)
         {
+            if (isset($value['lock']))
+            {
+                $lock_value = nel_form_input_default($value['lock']);
+                $prepared = $this->database->prepare(
+                        'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "edit_lock" = ? WHERE "setting_name" = ?');
+                $this->database->executePrepared($prepared, [$lock_value, $key]);
+            }
+
+            $force_update = isset($value['force_update']) && $value['force_update'] == 1;
+
+            if ($force_update)
+            {
+                $force_update_done = true;
+            }
+
             if ($key === 'enabled_filetypes')
             {
                 $filetypes_array = array();
@@ -89,15 +103,25 @@ class AdminBoardSettings extends Admin
                 $value = nel_form_input_default($value);
             }
 
-            $this->updateSetting($this->domain, $key, $value, $lock_override);
+            if ($force_update)
+            {
+                foreach ($this->getBoardDomains() as $board_domain)
+                {
+                    $this->updateSetting($board_domain, $key, $value, $lock_override);
+                }
+            }
+
+            $prepared = $this->database->prepare(
+                    'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "setting_value" = ? WHERE "setting_name" = ?');
+            $this->database->executePrepared($prepared, [$value, $key]);
         }
 
-        $this->domain->regenCache();
-        $this->domain->reload();
-        nel_site_domain()->reload();
-        $regen = new Regen();
-        $regen->allBoardPages($this->domain);
-        $regen->boardList(nel_site_domain());
+        if ($force_update_done)
+        {
+            $regen = new Regen();
+            $regen->allBoards(true, true);
+        }
+
         $this->outputMain(true);
     }
 
@@ -131,32 +155,33 @@ class AdminBoardSettings extends Admin
         }
     }
 
-    public function defaultsList()
+    private function getBoardDomains()
     {
-        $defaults_data = $this->database->executeFetchAll('SELECT * FROM "' . $this->data_table . '"', PDO::FETCH_ASSOC);
-        $defaults = array();
+        $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
+        $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
+        $board_domains = array();
 
-        foreach ($defaults_data as $data)
+        foreach ($board_ids as $board_id)
         {
-            $defaults[$data['setting_name']] = $data;
+            $board_domains[] = new \Nelliel\Domains\DomainBoard($board_id, $this->database);
         }
 
-        return $defaults;
+        return $board_domains;
     }
 
     public function verifyAccess(Domain $domain)
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_config'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
         {
-            nel_derp(330, _gettext('You do not have access to the Board Settings panel.'));
+            nel_derp(340, _gettext('You do not have access to the New Board Defaults panel.'));
         }
     }
 
     public function verifyAction(Domain $domain)
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_config'))
+        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
         {
-            nel_derp(331, _gettext('You are not allowed to manage board settings.'));
+            nel_derp(341, _gettext('You are not allowed to manage board defaults.'));
         }
     }
 }

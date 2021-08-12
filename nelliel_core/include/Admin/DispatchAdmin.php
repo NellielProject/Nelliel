@@ -46,7 +46,7 @@ class DispatchAdmin extends Dispatch
                 break;
 
             case 'board-defaults':
-                $admin_handler = new AdminBoardSettings($this->authorization, $this->domain, $this->session);
+                $admin_handler = new AdminBoardDefaults($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
                 break;
 
