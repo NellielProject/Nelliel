@@ -5,10 +5,7 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\API\JSON\JSONBoard;
-use Nelliel\API\JSON\JSONBoardList;
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainBoard;
 use Nelliel\Output\OutputCatalog;
 use Nelliel\Output\OutputIndex;
 use Nelliel\Output\OutputNews;
@@ -85,35 +82,6 @@ class Regen
                 $this->allBoardPages($board_domain);
             }
         }
-    }
-
-    // TODO: Figure this out better?
-    public function boardList(Domain $domain)
-    {
-        $board_json = new JSONBoard($domain, nel_utilities()->fileHandler());
-        $board_list_json = new JSONBoardList($domain, nel_utilities()->fileHandler());
-        $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
-                PDO::FETCH_COLUMN);
-
-        foreach ($board_ids as $id)
-        {
-            $board_domain = new DomainBoard($id, $domain->database());
-            $prepared = $domain->database()->prepare(
-                    'SELECT "setting_name", "setting_value" FROM "' . $board_domain->reference('config_table') .
-                    '" WHERE "board_id" = ?');
-            $board_config = $domain->database()->executePreparedFetchAll($prepared, [$board_domain->id()],
-                    PDO::FETCH_ASSOC);
-            $board_data = ['board_id' => $id];
-
-            foreach ($board_config as $config)
-            {
-                $board_data[$config['setting_name']] = $config['setting_value'];
-            }
-
-            $board_list_json->addBoardData($board_json->prepareData($board_data));
-        }
-
-        $board_list_json->writeStoredData(NEL_BASE_PATH, 'boards');
     }
 
     public function allSitePages(Domain $domain)

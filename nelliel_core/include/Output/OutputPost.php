@@ -6,6 +6,7 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Cites;
+use Nelliel\API\JSON\UploadJSON;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\ContentPost;
 use Nelliel\Content\ContentThread;
@@ -27,16 +28,15 @@ class OutputPost extends Output
         $thread_data = $parameters['thread_data'] ?? array();
         $gen_data = $parameters['gen_data'] ?? array();
         $post_id = $parameters['post_id'] ?? 0;
-        $json_post = $parameters['json_instances']['post'];
+        $post_json = $parameters['post_json'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
         $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
         $thread = $parameters['thread_instance'] ?? new ContentThread($thread_content_id, $this->domain);
         $in_thread_number = $parameters['in_thread_number'] ?? 0;
-        $json_post->storeData($json_post->prepareData($post_data), 'post');
-        $response = $post_data['op'] != 1;
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
         $post = new ContentPost($post_content_id, $this->domain);
+        $response = $post_data['op'] != 1;
 
         if (NEL_USE_RENDER_CACHE)
         {
@@ -85,20 +85,24 @@ class OutputPost extends Output
 
             foreach ($file_list as $file)
             {
-                $json_upload = new \Nelliel\API\JSON\JSONUpload($this->domain, $this->file_handler);
-                $parameters['json_instances']['upload'] = $json_upload;
+                $upload_content_id = new ContentID(
+                        ContentID::createIDString($thread->contentID()->threadID(), $post->contentID()->postID(),
+                                $file['upload_order']));
+                $upload = $upload_content_id->getInstanceFromID($this->domain);
+                $upload_json = new UploadJSON($upload, $this->file_handler);
+                $post_json->addUpload($upload_json);
 
                 if (nel_true_empty($file['embed_url']))
                 {
                     $file_data = $output_file_info->render(
-                            ['file_data' => $file, 'upload_order' => $file['upload_order'], 'post_data' => $post_data,
-                                'json_instances' => $parameters['json_instances']], true);
+                            ['file_data' => $file, 'upload_order' => $file['upload_order'], 'post_data' => $post_data],
+                            true);
                 }
                 else
                 {
                     $file_data = $output_embed_info->render(
-                            ['file_data' => $file, 'upload_order' => $file['upload_order'], 'post_data' => $post_data,
-                                'json_instances' => $parameters['json_instances']], true);
+                            ['file_data' => $file, 'upload_order' => $file['upload_order'], 'post_data' => $post_data],
+                            true);
                 }
 
                 $upload_row[] = $file_data;

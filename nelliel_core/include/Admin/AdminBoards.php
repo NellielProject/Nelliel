@@ -143,7 +143,6 @@ class AdminBoards extends Admin
         $regen = new Regen();
         $domain->regenCache();
         $regen->allBoardPages($domain);
-        $regen->boardList(new DomainSite($this->database));
         $this->outputMain(true);
     }
 
@@ -199,7 +198,6 @@ class AdminBoards extends Admin
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $regen = new Regen();
-        $regen->boardList($this->domain);
         $this->outputMain(true);
     }
 

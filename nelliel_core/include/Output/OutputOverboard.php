@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -28,7 +27,6 @@ class OutputOverboard extends Output
         $sfw = $parameters['sfw'] ?? false;
         $uri = $sfw ? $this->site_domain->setting('sfw_overboard_uri') : $this->site_domain->setting('overboard_uri');
         $allow_nsfl = $this->site_domain->setting('nsfl_on_overboard');
-        $json_index = new \Nelliel\API\JSON\JSONIndex($this->site_domain, $this->file_handler);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -61,12 +59,8 @@ class OutputOverboard extends Output
 
                 if ($this->write_mode)
                 {
-                    $this->file_handler->writeFile(
-                            NEL_BASE_PATH . $uri . '/' .
-                            $index_filename, $output, NEL_FILES_PERM, true);
-                    $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
-                    $json_index->writeStoredData(
-                            NEL_BASE_PATH . $uri . '/', 'index');
+                    $this->file_handler->writeFile(NEL_BASE_PATH . $uri . '/' . $index_filename, $output, NEL_FILES_PERM,
+                            true);
                 }
                 else
                 {
@@ -105,7 +99,6 @@ class OutputOverboard extends Output
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
             $treeline = $this->database->executePreparedFetchAll($prepared, [$thread['thread_id']], PDO::FETCH_ASSOC);
             $output_post = new OutputPost($thread_domain, $this->write_mode);
-            $json_thread = new \Nelliel\API\JSON\JSONThread($thread_domain, $this->file_handler);
             $thread_content_id = ContentID::createIDString(intval($thread_data['thread_id']));
             $thread_input = array();
             $thread_input['board_id'] = $thread['board_id'];
@@ -122,29 +115,24 @@ class OutputOverboard extends Output
 
             foreach ($treeline as $post_data)
             {
-                $json_post = new \Nelliel\API\JSON\JSONPost($thread_domain, $this->file_handler);
-                $json_instances['post'] = $json_post;
                 $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data, 'gen_data' => $gen_data,
-                    'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
+                    'in_thread_number' => $post_counter];
 
                 if ($post_data['op'] == 1)
                 {
                     $thread_input['op_post'] = $output_post->render($parameters, true);
-                    $json_thread->addPostData($json_post->retrieveData());
                 }
                 else
                 {
                     if ($post_counter > $abbreviate_start)
                     {
                         $thread_input['thread_posts'][] = $output_post->render($parameters, true);
-                        $json_thread->addPostData($json_post->retrieveData());
                     }
                 }
 
                 $post_counter ++;
             }
 
-            $json_index->addThreadData($json_thread->retrieveData());
             $this->render_data['threads'][] = $thread_input;
             $threads_on_page ++;
             $threads_done ++;

@@ -5,13 +5,10 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\API\JSON\JSONIndex;
-use Nelliel\API\JSON\JSONPost;
-use Nelliel\API\JSON\JSONThread;
+use Nelliel\API\JSON\PostJSON;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainSite;
-use Nelliel\Output\Pagination;
 use PDO;
 
 class OutputIndex extends Output
@@ -29,7 +26,6 @@ class OutputIndex extends Output
         $this->setBodyTemplate('index/index');
         $page = 1;
         $site_domain = new DomainSite($this->database);
-        $json_index = new JSONIndex($this->domain, $this->file_handler);
         $page_title = $this->domain->reference('board_uri') . ' - ' . $this->domain->reference('title');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
@@ -79,7 +75,8 @@ class OutputIndex extends Output
         $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH . '?module=anti-spam&section=captcha&actions=get';
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
+                '?module=anti-spam&section=captcha&actions=get';
         $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
                 '?module=anti-spam&section=captcha&actions=generate&no-display';
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
@@ -91,7 +88,7 @@ class OutputIndex extends Output
 
         if (empty($thread_list))
         {
-            $output = $this->doOutput($gen_data, $index_basename, $data_only, $json_index);
+            $output = $this->doOutput($gen_data, $index_basename, $data_only);
 
             if (!$this->write_mode)
             {
@@ -104,6 +101,8 @@ class OutputIndex extends Output
 
         foreach ($thread_list as $thread_data)
         {
+            $thread_content_id = new ContentID(ContentID::createIDString(intval($thread_data['thread_id'])));
+            $thread = $thread_content_id->getInstanceFromID($this->domain);
             $thread_input = array();
             $index_basename = ($page == 1) ? 'index' : sprintf($index_format, ($page));
             $prepared = $this->database->prepare(
@@ -119,12 +118,10 @@ class OutputIndex extends Output
             }
 
             $output_post = new OutputPost($this->domain, $this->write_mode);
-            $json_thread = new JSONThread($this->domain, $this->file_handler);
-            $thread_content_id = ContentID::createIDString(intval($thread_data['thread_id']));
             $thread_input = array();
-            $thread_input['thread_id'] = $thread_content_id;
-            $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
-            $thread_input['thread_corral_id'] = 'thread-corral-' . $thread_content_id;
+            $thread_input['thread_id'] = $thread_content_id->getIDString();
+            $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id->getIDString();
+            $thread_input['thread_corral_id'] = 'thread-corral-' . $thread_content_id->getIDString();
             $index_replies = $this->domain->setting('index_thread_replies');
 
             if ($thread_data['sticky'])
@@ -132,7 +129,7 @@ class OutputIndex extends Output
                 $index_replies = $this->domain->setting('index_sticky_replies');
             }
 
-            $thread_input['omitted_count'] = $thread_data['post_count'] - $index_replies - 1; // -1 to account for OP
+            $thread_input['omitted_count'] = $thread_data['post_count'] - $index_replies - 1; // Subtract 1 to account for OP
             $gen_data['abbreviate'] = $thread_input['omitted_count'] > 0;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
             $abbreviate_start = $thread_data['post_count'] - $index_replies;
@@ -140,29 +137,28 @@ class OutputIndex extends Output
 
             foreach ($treeline as $post_data)
             {
-                $json_post = new JSONPost($this->domain, $this->file_handler);
-                $json_instances['post'] = $json_post;
+                $post_content_id = new ContentID(
+                        ContentID::createIDString($thread->contentID()->threadID(), $post_data['post_number']));
+                $post = $post_content_id->getInstanceFromID($this->domain);
+                $post_json = new PostJSON($post, $this->file_handler);
                 $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data, 'gen_data' => $gen_data,
-                    'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
+                    'post_json' => $post_json, 'in_thread_number' => $post_counter];
 
                 if ($post_data['op'] == 1)
                 {
                     $thread_input['op_post'] = $output_post->render($parameters, true);
-                    $json_thread->addPostData($json_post->retrieveData());
                 }
                 else
                 {
                     if ($post_counter > $abbreviate_start)
                     {
                         $thread_input['thread_posts'][] = $output_post->render($parameters, true);
-                        $json_thread->addPostData($json_post->retrieveData());
                     }
                 }
 
                 $post_counter ++;
             }
 
-            $json_index->addThreadData($json_thread->retrieveData());
             $this->render_data['threads'][] = $thread_input;
             $threads_on_page ++;
             $threads_done ++;
@@ -170,7 +166,7 @@ class OutputIndex extends Output
             if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
             {
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
-                $output = $this->doOutput($gen_data, $index_basename, $data_only, $json_index);
+                $output = $this->doOutput($gen_data, $index_basename, $data_only);
 
                 if (!$this->write_mode)
                 {
@@ -197,7 +193,7 @@ class OutputIndex extends Output
         return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 
-    private function doOutput(array $gen_data, string $index_basename, bool $data_only, JSONIndex $json_index)
+    private function doOutput(array $gen_data, string $index_basename, bool $data_only)
     {
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
@@ -207,8 +203,6 @@ class OutputIndex extends Output
         {
             $this->file_handler->writeFile($this->domain->reference('board_path') . $index_basename . NEL_PAGE_EXT,
                     $output, NEL_FILES_PERM, true);
-            $json_index->storeData($json_index->prepareData($gen_data['index']), 'index');
-            $json_index->writeStoredData($this->domain->reference('board_path'), $index_basename);
         }
         else
         {

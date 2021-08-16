@@ -5,6 +5,8 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\API\JSON\PostJSON;
+use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use PDO;
@@ -93,10 +95,7 @@ class OutputThread extends Output
                 nel_site_domain()->setting('global_announcement'));
         $this->render_data['global_announcement_text'] = nel_site_domain()->setting('global_announcement');
         $this->render_data['return_url'] = $return_url;
-        $json_thread = new \Nelliel\API\JSON\JSONThread($this->domain, $this->file_handler);
-        $json_thread->storeData($json_thread->prepareData($thread_data), 'thread');
-        $json_upload = new \Nelliel\API\JSON\JSONUpload($this->domain, $this->file_handler);
-        $json_instances = ['thread' => $json_thread, 'upload' => $json_upload];
+        $thread_json = new ThreadJSON($thread, $this->file_handler);
         $post_counter = 1;
         $gen_data['index_rendering'] = false;
         $gen_data['abbreviate'] = false;
@@ -118,10 +117,13 @@ class OutputThread extends Output
 
         foreach ($treeline as $post_data)
         {
-            $json_post = new \Nelliel\API\JSON\JSONPost($this->domain, $this->file_handler);
-            $json_instances['post'] = $json_post;
+            $post_content_id = new ContentID(
+                    ContentID::createIDString($thread->contentID()->threadID(), $post_data['post_number']));
+            $post = $post_content_id->getInstanceFromID($this->domain);
+            $post_json = new PostJSON($post, $this->file_handler);
+            $thread_json->addPost($post_json);
             $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data, 'gen_data' => $gen_data,
-                'json_instances' => $json_instances, 'in_thread_number' => $post_counter];
+                'in_thread_number' => $post_counter, 'post_json' => $post_json];
             $post_render = $output_post->render($parameters, true);
 
             if ($post_data['op'] == 1)
@@ -133,7 +135,6 @@ class OutputThread extends Output
                 $this->render_data['thread_posts'][] = $post_render;
             }
 
-            $json_thread->addPostData($json_post->retrieveData());
             $post_counter ++;
         }
 
@@ -155,8 +156,7 @@ class OutputThread extends Output
             $this->file_handler->writeFile(
                     $this->domain->reference('page_path') . $thread_id . '/' . $thread->pageBasename() . NEL_PAGE_EXT,
                     $output, NEL_FILES_PERM, true);
-            $json_thread->writeStoredData($this->domain->reference('page_path') . $thread_id . '/',
-                    $thread->pageBasename());
+            $thread_json->write();
         }
         else
         {

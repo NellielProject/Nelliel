@@ -65,7 +65,6 @@ class AdminSiteSettings extends Admin
         $regen = new Regen();
         $regen->allBoards(true, false);
         $regen->overboard($this->domain);
-        $regen->boardList($this->domain);
         $this->outputMain(true);
     }
 

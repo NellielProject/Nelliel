@@ -22,9 +22,6 @@ class OutputFile extends Output
         $post_data = $parameters['post_data'] ?? array();
         $file = $parameters['file_data'] ?? array();
         $multiple = $post_data['file_count'] > 1;
-        $json_post = $parameters['json_instances']['post'];
-        $json_upload = $parameters['json_instances']['upload'];
-        $json_post->addContentData($json_upload->prepareData($file));
         $file_content_id = new ContentID();
         $file_content_id->changeThreadID($post_data['parent_thread']);
         $file_content_id->changePostID($post_data['post_number']);
