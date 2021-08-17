@@ -6,13 +6,13 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\ContentID;
-use Nelliel\Domains\Domain;
 use PDO;
+use Nelliel\Domains\DomainBoard;
 
 class OutputCatalog extends Output
 {
 
-    function __construct(Domain $domain, bool $write_mode)
+    function __construct(DomainBoard $domain, bool $write_mode)
     {
         parent::__construct($domain, $write_mode);
     }
@@ -22,16 +22,12 @@ class OutputCatalog extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('catalog');
-        $cites = new \Nelliel\Cites($this->database);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
-        $threads = $this->database->executeFetchAll(
-                'SELECT * FROM "' . $this->domain->reference('threads_table') .
-                '" WHERE "old" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC',
-                PDO::FETCH_ASSOC);
+        $threads = $this->domain->activeThreads(true);
         $thread_count = 1;
 
         foreach ($threads as $thread)
@@ -40,7 +36,8 @@ class OutputCatalog extends Output
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? AND "op" = 1');
-            $first_post = $this->database->executePreparedFetch($prepared, [$thread['thread_id']], PDO::FETCH_ASSOC);
+            $first_post = $this->database->executePreparedFetch($prepared, [$thread->contentID()->threadID()],
+                    PDO::FETCH_ASSOC);
 
             if (empty($first_post))
             {
@@ -48,10 +45,9 @@ class OutputCatalog extends Output
             }
 
             $first_post['render_cache'] = json_decode($first_post['cache'], true);
-            $post_content_id = new ContentId('cid_' . $thread['thread_id'] . '_' . $first_post['post_number']);
-            $thread_content_id = new ContentId(ContentID::createIDString($thread['thread_id']));
-            $thread_instance = $thread_content_id->getInstanceFromID($this->domain);
-            $thread_data['open_url'] = $thread_instance->getURL();
+            $post_content_id = new ContentId(
+                    'cid_' . $thread->contentID()->threadID() . '_' . $first_post['post_number']);
+            $thread_data['open_url'] = $thread->getURL();
 
             if (!empty($first_post['subject']))
             {
@@ -74,12 +70,12 @@ class OutputCatalog extends Output
             }
 
             $thread_data['mod-comment'] = $first_post['mod_comment'];
-            $thread_data['reply_count'] = $thread['post_count'] - 1;
-            $thread_data['total_uploads'] = $thread['total_uploads'];
+            $thread_data['reply_count'] = $thread->data('post_count') - 1;
+            $thread_data['total_uploads'] = $thread->data('total_uploads');
             $index_page = ceil($thread_count / $this->domain->setting('threads_per_page'));
             $thread_data['index_page'] = $index_page;
-            $thread_data['is_sticky'] = $thread['sticky'] == 1;
-            $thread_data['is_locked'] = $thread['locked'] == 1;
+            $thread_data['is_sticky'] = $thread->data('sticky');
+            $thread_data['is_locked'] = $thread->data('locked');
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('upload_table') .
                     '" WHERE "post_ref" = ? AND "upload_order" = 1');
@@ -103,8 +99,8 @@ class OutputCatalog extends Output
 
                 $thread_data['preview_width'] = $width;
                 $thread_data['preview_height'] = $height;
-                $thread_preview_web_path = $this->domain->reference('preview_web_path') . $first_post['post_number'] .
-                        '/';
+                $thread_preview_web_path = $this->domain->reference('preview_web_path') .
+                        $thread->contentID()->threadID() . '/' . $first_post['post_number'] . '/';
                 $thread_data['preview_url'] = $thread_preview_web_path . $first_file['preview_name'] . '.' .
                         $first_file['preview_extension'];
             }

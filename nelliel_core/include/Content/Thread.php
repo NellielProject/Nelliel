@@ -221,7 +221,7 @@ class Thread
         $file_handler->createDirectory($this->pagePath(), NEL_DIRECTORY_PERM, true);
     }
 
-    public function sticky(): bool
+    public function toggleSticky(): bool
     {
         if (!$this->isLoaded())
         {

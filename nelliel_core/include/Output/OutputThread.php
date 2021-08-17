@@ -122,9 +122,9 @@ class OutputThread extends Output
             $post = $post_content_id->getInstanceFromID($this->domain);
             $post_json = new PostJSON($post, $this->file_handler);
             $thread_json->addPost($post_json);
-            $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data, 'gen_data' => $gen_data,
+            $parameters = ['thread' => $thread, 'post_data' => $post_data, 'gen_data' => $gen_data,
                 'in_thread_number' => $post_counter, 'post_json' => $post_json];
-            $post_render = $output_post->render($parameters, true);
+            $post_render = $output_post->render($post, $parameters, true);
 
             if ($post_data['op'] == 1)
             {

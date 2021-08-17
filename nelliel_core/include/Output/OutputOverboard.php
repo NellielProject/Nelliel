@@ -115,18 +115,20 @@ class OutputOverboard extends Output
 
             foreach ($treeline as $post_data)
             {
-                $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data, 'gen_data' => $gen_data,
-                    'in_thread_number' => $post_counter];
+                $post_content_id = new ContentID(
+                        ContentID::createIDString($thread['thread_id'], $post_data['post_number']));
+                $post = $post_content_id->getInstanceFromID($thread_domain);
+                $parameters = ['gen_data' => $gen_data, 'in_thread_number' => $post_counter];
 
                 if ($post_data['op'] == 1)
                 {
-                    $thread_input['op_post'] = $output_post->render($parameters, true);
+                    $thread_input['op_post'] = $output_post->render($post, $parameters, true);
                 }
                 else
                 {
                     if ($post_counter > $abbreviate_start)
                     {
-                        $thread_input['thread_posts'][] = $output_post->render($parameters, true);
+                        $thread_input['thread_posts'][] = $output_post->render($post, $parameters, true);
                     }
                 }
 

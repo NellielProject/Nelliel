@@ -9,6 +9,7 @@ use Nelliel\FileTypes;
 use Nelliel\NellielCacheInterface;
 use Nelliel\NellielPDO;
 use PDO;
+use Nelliel\Content\ContentID;
 
 class DomainBoard extends Domain implements NellielCacheInterface
 {
@@ -114,5 +115,30 @@ class DomainBoard extends Domain implements NellielCacheInterface
         {
             $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->id);
         }
+    }
+
+    public function activeThreads(bool $index_sort): array
+    {
+        $active_threads = array();
+
+        if ($index_sort)
+        {
+            $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') .
+                    '" WHERE "old" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
+        }
+        else
+        {
+            $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') . '" WHERE "old" = 0';
+        }
+
+        $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
+
+        foreach ($thread_list as $thread)
+        {
+            $content_id = new ContentID(ContentID::createIDString(intval($thread)));
+            $active_threads[] = $content_id->getInstanceFromID($this);
+        }
+
+        return $active_threads;
     }
 }

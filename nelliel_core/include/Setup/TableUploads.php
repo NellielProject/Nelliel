@@ -31,7 +31,7 @@ class TableUploads extends Table
             'display_width' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'display_height' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'preview_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'preview_extension' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_STR],
+            'preview_extension' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'preview_width' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'preview_height' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'filesize' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],

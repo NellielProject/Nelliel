@@ -374,10 +374,10 @@ class Post
         $cites->updateForPost($this);
     }
 
-    public function sticky()
+    public function toggleSticky()
     {
         $new_thread = $this->convertToThread();
-        $new_thread->sticky();
+        $new_thread->toggleSticky();
         return $new_thread;
     }
 

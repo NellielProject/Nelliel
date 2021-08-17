@@ -7,14 +7,14 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\API\JSON\PostJSON;
 use Nelliel\Content\ContentID;
-use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use PDO;
 
 class OutputIndex extends Output
 {
 
-    function __construct(Domain $domain, bool $write_mode)
+    function __construct(DomainBoard $domain, bool $write_mode)
     {
         parent::__construct($domain, $write_mode);
     }
@@ -47,11 +47,8 @@ class OutputIndex extends Output
                     $this->domain->id();
         }
 
-        $thread_list = $this->database->executeFetchAll(
-                'SELECT * FROM "' . $this->domain->reference('threads_table') .
-                '" WHERE "old" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC',
-                PDO::FETCH_ASSOC);
-        $thread_count = count($thread_list);
+        $threads = $this->domain->activeThreads(true);
+        $thread_count = count($threads);
         $threads_done = 0;
         $gen_data = array();
         $gen_data['index']['thread_count'] = $thread_count;
@@ -86,7 +83,7 @@ class OutputIndex extends Output
         $this->render_data['styles'] = $output_menu->styles([], true);
         $index_basename = 'index';
 
-        if (empty($thread_list))
+        if (empty($threads))
         {
             $output = $this->doOutput($gen_data, $index_basename, $data_only);
 
@@ -99,16 +96,14 @@ class OutputIndex extends Output
         $gen_data['index_rendering'] = true;
         $threads_on_page = 0;
 
-        foreach ($thread_list as $thread_data)
+        foreach ($threads as $thread)
         {
-            $thread_content_id = new ContentID(ContentID::createIDString(intval($thread_data['thread_id'])));
-            $thread = $thread_content_id->getInstanceFromID($this->domain);
             $thread_input = array();
             $index_basename = ($page == 1) ? 'index' : sprintf($index_format, ($page));
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-            $treeline = $this->database->executePreparedFetchAll($prepared, [$thread_data['thread_id']],
+            $treeline = $this->database->executePreparedFetchAll($prepared, [$thread->contentID()->threadID()],
                     PDO::FETCH_ASSOC);
 
             if (empty($treeline))
@@ -119,20 +114,20 @@ class OutputIndex extends Output
 
             $output_post = new OutputPost($this->domain, $this->write_mode);
             $thread_input = array();
-            $thread_input['thread_id'] = $thread_content_id->getIDString();
-            $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id->getIDString();
-            $thread_input['thread_corral_id'] = 'thread-corral-' . $thread_content_id->getIDString();
+            $thread_input['thread_id'] = $thread->contentID()->getIDString();
+            $thread_input['thread_expand_id'] = 'thread-expand-' . $thread->contentID()->getIDString();
+            $thread_input['thread_corral_id'] = 'thread-corral-' . $thread->contentID()->getIDString();
             $index_replies = $this->domain->setting('index_thread_replies');
 
-            if ($thread_data['sticky'])
+            if ($thread->data('sticky'))
             {
                 $index_replies = $this->domain->setting('index_sticky_replies');
             }
 
-            $thread_input['omitted_count'] = $thread_data['post_count'] - $index_replies - 1; // Subtract 1 to account for OP
+            $thread_input['omitted_count'] = $thread->data('post_count') - $index_replies - 1; // Subtract 1 to account for OP
             $gen_data['abbreviate'] = $thread_input['omitted_count'] > 0;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
-            $abbreviate_start = $thread_data['post_count'] - $index_replies;
+            $abbreviate_start = $thread->data('post_count') - $index_replies;
             $post_counter = 1;
 
             foreach ($treeline as $post_data)
@@ -141,18 +136,17 @@ class OutputIndex extends Output
                         ContentID::createIDString($thread->contentID()->threadID(), $post_data['post_number']));
                 $post = $post_content_id->getInstanceFromID($this->domain);
                 $post_json = new PostJSON($post, $this->file_handler);
-                $parameters = ['thread_data' => $thread_data, 'post_data' => $post_data, 'gen_data' => $gen_data,
-                    'post_json' => $post_json, 'in_thread_number' => $post_counter];
+                $parameters = ['gen_data' => $gen_data, 'post_json' => $post_json, 'in_thread_number' => $post_counter];
 
                 if ($post_data['op'] == 1)
                 {
-                    $thread_input['op_post'] = $output_post->render($parameters, true);
+                    $thread_input['op_post'] = $output_post->render($post, $parameters, true);
                 }
                 else
                 {
                     if ($post_counter > $abbreviate_start)
                     {
-                        $thread_input['thread_posts'][] = $output_post->render($parameters, true);
+                        $thread_input['thread_posts'][] = $output_post->render($post, $parameters, true);
                     }
                 }
 

@@ -5,7 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Content\ContentID;
+use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -17,21 +17,16 @@ class OutputEmbed extends Output
         parent::__construct($domain, $write_mode);
     }
 
-    public function render(array $parameters, bool $data_only)
+    public function render(Upload $embed, array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $post_data = $parameters['post_data'] ?? array();
-        $file = $parameters['file_data'] ?? array();
-        $multiple = $post_data['embed_count'] > 1;
-        $file_content_id = new ContentID();
-        $file_content_id->changeThreadID($post_data['parent_thread']);
-        $file_content_id->changePostID($post_data['post_number']);
-        $file_content_id->changeOrderID($file['upload_order']);
+        $post = $embed->getParent();
+        $multiple = $post['embed_count'] > 1;
         $this->render_data['is_embed'] = true;
-        $this->render_data['embed_container_id'] = 'embed-container-' . $file_content_id->getIDString();
-        $this->render_data['embed_content_id'] = $file_content_id->getIDString();
-        $this->render_data['original_url'] = $file['embed_url'];
-        $this->render_data['display_url'] = $file['embed_url'];
+        $this->render_data['embed_container_id'] = 'embed-container-' . $embed->contentID()->getIDString();
+        $this->render_data['embed_content_id'] = $embed->contentID()->getIDString();
+        $this->render_data['original_url'] = $embed->data('embed_url');
+        $this->render_data['display_url'] = $embed->data('embed_url');
         $embed_regexes = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_ASSOC);
 
@@ -39,9 +34,9 @@ class OutputEmbed extends Output
         {
             foreach ($embed_regexes as $regex)
             {
-                if (preg_match($regex['data_regex'], $file['embed_url']) === 1)
+                if (preg_match($regex['data_regex'], $embed->data('embed_url')) === 1)
                 {
-                    $embed_url = preg_replace($regex['data_regex'], $regex['embed_url'], $file['embed_url']);
+                    $embed_url = preg_replace($regex['data_regex'], $regex['embed_url'], $embed->data('embed_url'));
                     $this->render_data['embed_url'] = $embed_url;
                     break;
                 }
@@ -58,7 +53,7 @@ class OutputEmbed extends Output
         {
             $this->render_data['in_modmode'] = true;
             $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
+                    '&actions=delete&content-id=' . $embed->ContentID()->getIDString() . '&modmode=true&goback=true';
         }
 
         $this->render_data['max_preview_width'] = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(

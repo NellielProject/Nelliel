@@ -140,7 +140,7 @@ class AdminThreads extends Admin
 
         if ($content_id->isThread() || $content_id->isPost())
         {
-            $content_id->getInstanceFromID($this->domain)->sticky();
+            $content_id->getInstanceFromID($this->domain)->toggleSticky();
             $this->regenThread($content_id->threadID(), true);
         }
     }

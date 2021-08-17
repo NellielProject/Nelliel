@@ -5,7 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Content\ContentID;
+use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 
 class OutputFile extends Output
@@ -16,45 +16,40 @@ class OutputFile extends Output
         parent::__construct($domain, $write_mode);
     }
 
-    public function render(array $parameters, bool $data_only)
+    public function render(Upload $file, array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $post_data = $parameters['post_data'] ?? array();
-        $file = $parameters['file_data'] ?? array();
-        $multiple = $post_data['file_count'] > 1;
-        $file_content_id = new ContentID();
-        $file_content_id->changeThreadID($post_data['parent_thread']);
-        $file_content_id->changePostID($post_data['post_number']);
-        $file_content_id->changeOrderID($file['upload_order']);
+        $post = $file->getParent();
+        $multiple = $post->data('file_count') > 1;
         $this->render_data['is_file'] = true;
-        $full_filename = $file['filename'] . '.' . $file['extension'];
-        $this->render_data['file_container_id'] = 'file-container-' . $file_content_id->getIDString();
-        $this->render_data['file_content_id'] = $file_content_id->getIDString();
+        $full_filename = $file->data('filename') . '.' . $file->data('extension');
+        $this->render_data['file_container_id'] = 'file-container-' . $file->contentID()->getIDString();
+        $this->render_data['file_content_id'] = $file->contentID()->getIDString();
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->session->inModmode($this->domain))
         {
             $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=delete&content-id=' . $file_content_id->getIDString() . '&modmode=true&goback=true';
+            '&actions=delete&content-id=' . $file->contentID()->getIDString() . '&modmode=true&goback=true';
         }
 
-        $this->render_data['display_filesize'] = ' (' . round(((int) $file['filesize'] / 1024), 2) . ' KB)';
+        $this->render_data['display_filesize'] = ' (' . round(((int) $file->data('filesize') / 1024), 2) . ' KB)';
 
-        if (!empty($file['display_width']) && !empty($file['display_height']))
+        if (!empty($file->data('display_width')) && !empty($file->data('display_height')))
         {
-            $this->render_data['display_image_dimensions'] = $file['display_width'] . ' x ' . $file['display_height'];
+            $this->render_data['display_image_dimensions'] = $file->data('display_width') . ' x ' . $file->data('display_height');
         }
 
-        $this->render_data['file_url'] = $this->domain->reference('src_web_path') . $post_data['parent_thread'] . '/' .
-                $post_data['post_number'] . '/' . rawurlencode($full_filename);
-        $moar = json_decode($file['moar'], true);
-        $display_filename = $file['filename'];
-        $display_extension = $file['extension'];
+        $this->render_data['file_url'] = $this->domain->reference('src_web_path') . $post->data('parent_thread') . '/' .
+                $post->data('post_number') . '/' . rawurlencode($full_filename);
+                $moar = json_decode($file->data('moar'), true);
+                $display_filename = $file->data('filename');
+                $display_extension = $file->data('extension');
 
         if ($this->domain->setting('display_original_name') && !empty($moar['original_filename']))
         {
-            $display_filename = $moar['original_filename'] ?? $file['extension'];
-            $display_extension = $moar['original_extension'] ?? $file['filename'];
+            $display_filename = $moar['original_filename'] ?? $file->data('extension');
+            $display_extension = $moar['original_extension'] ?? $file->data('filename');
         }
 
         if (utf8_strlen($display_filename) > $this->domain->setting('filename_display_length'))
@@ -64,27 +59,27 @@ class OutputFile extends Output
 
         $this->render_data['display_filename'] = $display_filename . '.' . $display_extension;
 
-        if (!empty($file['md5']))
+        if (!empty($file->data('md5')))
         {
-            $md5_data['metadata'] = 'MD5: ' . bin2hex($file['md5']);
+            $md5_data['metadata'] = 'MD5: ' . bin2hex($file->data('md5'));
             $this->render_data['file_metadata'][] = $md5_data;
         }
 
-        if (!empty($file['sha1']))
+        if (!empty($file->data('sha1')))
         {
-            $sha1_data['metadata'] = 'SHA1: ' . bin2hex($file['sha1']);
+            $sha1_data['metadata'] = 'SHA1: ' . bin2hex($file->data('sha1'));
             $this->render_data['file_metadata'][] = $sha1_data;
         }
 
-        if (!empty($file['sha256']))
+        if (!empty($file->data('sha256')))
         {
-            $sha256_data['metadata'] = 'SHA256: ' . bin2hex($file['sha256']);
+            $sha256_data['metadata'] = 'SHA256: ' . bin2hex($file->data('sha256'));
             $this->render_data['file_metadata'][] = $sha256_data;
         }
 
-        if (!empty($file['sha512']))
+        if (!empty($file->data('sha512')))
         {
-            $sha512_data['metadata'] = 'SHA512: ' . bin2hex($file['sha512']);
+            $sha512_data['metadata'] = 'SHA512: ' . bin2hex($file->data('sha512'));
             $this->render_data['file_metadata'][] = $sha512_data;
         }
 
@@ -98,40 +93,40 @@ class OutputFile extends Output
             $this->render_data['max_width'] = $max_width;
             $this->render_data['max_height'] = $max_height;
 
-            if ($file['format'] == 'webm' || $file['format'] == 'mpeg4')
+            if ($file->data('format') == 'webm' || $file->data('format') == 'mpeg4')
             {
                 $this->render_data['video_preview'] = true;
                 $this->render_data['video_width'] = $max_width;
                 $this->render_data['video_height'] = $max_height;
-                $this->render_data['mime_type'] = $file['mime'];
+                $this->render_data['mime_type'] = $file->data('mime');
                 $this->render_data['video_url'] = $this->render_data['file_url'];
             }
             else
             {
-                if (!empty($file['preview_name']) && $file['preview_width'] > 0 && $file['preview_height'] > 0)
+                if (!empty($file->data('preview_name')) && $file->data('preview_width') > 0 && $file->data('preview_height') > 0)
                 {
-                    $full_preview_name = $file['preview_name'] . '.' . $file['preview_extension'];
+                    $full_preview_name = $file->data('preview_name') . '.' . $file->data('preview_extension');
                     $this->render_data['preview_url'] = $this->domain->reference('preview_web_path') .
-                            $post_data['parent_thread'] . '/' . $post_data['post_number'] . '/' .
+                            $post->data('parent_thread') . '/' . $post->data('post_number') . '/' .
                             rawurlencode($full_preview_name);
 
-                    if ($file['preview_width'] > $max_width || $file['preview_height'] > $max_height)
+                            if ($file->data('preview_width') > $max_width || $file->data('preview_height') > $max_height)
                     {
-                        $ratio = min(($max_height / $file['preview_height']), ($max_width / $file['preview_width']));
-                        $this->render_data['preview_width'] = intval($ratio * $file['preview_width']);
-                        $this->render_data['preview_height'] = intval($ratio * $file['preview_height']);
+                        $ratio = min(($max_height / $file->data('preview_height')), ($max_width / $file->data('preview_width')));
+                        $this->render_data['preview_width'] = intval($ratio * $file->data('preview_width'));
+                        $this->render_data['preview_height'] = intval($ratio * $file->data('preview_height'));
                     }
                     else
                     {
-                        $this->render_data['preview_width'] = $file['preview_width'];
-                        $this->render_data['preview_height'] = $file['preview_height'];
+                        $this->render_data['preview_width'] = $file->data('preview_width');
+                        $this->render_data['preview_height'] = $file->data('preview_height');
                     }
                 }
                 else if ($this->domain->setting('use_file_icon'))
                 {
                     $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('filetype_icon_set'));
-                    $type = utf8_strtolower($file['type']);
-                    $format = utf8_strtolower($file['format']);
+                    $type = utf8_strtolower($file->data('type'));
+                    $format = utf8_strtolower($file->data('format'));
                     $web_path = $icon_set->getWebPath('filetype', $format, true);
 
                     if ($web_path === '')
@@ -153,7 +148,7 @@ class OutputFile extends Output
                     $this->render_data['image_preview'] = false;
                 }
 
-                if ($file['spoiler'])
+                if ($file->data('spoiler'))
                 {
                     $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH .
                             $this->domain->setting('image_spoiler_cover');
@@ -161,7 +156,7 @@ class OutputFile extends Output
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
 
-                if ($file['deleted'])
+                if ($file->data('deleted'))
                 {
                     $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH .
                             $this->domain->setting('image_deleted_file');
@@ -169,7 +164,7 @@ class OutputFile extends Output
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
 
-                $this->render_data['other_dims'] = 'w' . $file['display_width'] . 'h' . $file['display_height'];
+                $this->render_data['other_dims'] = 'w' . $file->data('display_width') . 'h' . $file->data('display_height');
                 $this->render_data['other_loc'] = $this->render_data['file_url'];
             }
         }
