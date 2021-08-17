@@ -6,13 +6,11 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Cites;
-use Nelliel\API\JSON\UploadJSON;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use Nelliel\Markdown\ImageboardMarkdown;
-use PDO;
 
 class OutputPost extends Output
 {
@@ -27,7 +25,6 @@ class OutputPost extends Output
         $this->renderSetup();
         $thread = $post->getParent();
         $gen_data = $parameters['gen_data'] ?? array();
-        $post_json = $parameters['post_json'] ?? null;
         $in_thread_number = $parameters['in_thread_number'] ?? 0;
         $response = !$post->data('op');
 
@@ -58,31 +55,17 @@ class OutputPost extends Output
 
         if ($post->data('has_uploads'))
         {
-            $query = 'SELECT "upload_order" FROM "' . $this->domain->reference('upload_table') .
-                    '" WHERE "post_ref" = ? ORDER BY "upload_order" ASC';
-            $prepared = $this->database->prepare($query);
-            $upload_list = $this->database->executePreparedFetchAll($prepared, [$post->contentID()->postID()],
-                    PDO::FETCH_COLUMN);
+            $uploads = $post->getUploads();
             $output_file_info = new OutputFile($this->domain, $this->write_mode);
             $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
             $upload_row = array();
-            $this->render_data['single_file'] = count($upload_list) === 1;
-            $this->render_data['multi_file'] = count($upload_list) > 1;
-            $this->render_data['single_multiple'] = (count($upload_list) > 1) ? 'multiple' : 'single';
+            $this->render_data['single_file'] = count($uploads) === 1;
+            $this->render_data['multi_file'] = count($uploads) > 1;
+            $this->render_data['single_multiple'] = (count($uploads) > 1) ? 'multiple' : 'single';
 
-            foreach ($upload_list as $id)
+            foreach ($uploads as $upload)
             {
-                $upload_content_id = new ContentID(
-                        ContentID::createIDString($thread->contentID()->threadID(), $post->contentID()->postID(),
-                                intval($id)));
-                $upload = $upload_content_id->getInstanceFromID($this->domain);
-                $upload = $upload_content_id->getInstanceFromID($this->domain);
-                $upload_json = new UploadJSON($upload, $this->file_handler);
-
-                if (!is_null($post_json))
-                {
-                    $post_json->addUpload($upload_json);
-                }
+                $post->getJSON()->addUpload($upload->getJSON());
 
                 if (nel_true_empty($upload->data('embed_url')))
                 {
@@ -113,20 +96,6 @@ class OutputPost extends Output
         $this->render_data['board_content_disclaimer'] = $this->domain->setting('board_content_disclaimer');
         $output = $this->output('thread/post', $data_only, true, $this->render_data);
         return $output;
-    }
-
-    public function getPostFromDatabase($post_id)
-    {
-        $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
-        $post_data = $this->database->executePreparedFetch($prepared, [$post_id], PDO::FETCH_ASSOC);
-
-        if (empty($post_data))
-        {
-            $post_data = array();
-        }
-
-        return $post_data;
     }
 
     private function postHeaders(bool $response, Thread $thread, Post $post, array $gen_data, int $in_thread_number)

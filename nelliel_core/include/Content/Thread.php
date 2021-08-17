@@ -10,6 +10,7 @@ use Nelliel\Cites;
 use Nelliel\Moar;
 use Nelliel\Overboard;
 use Nelliel\SQLCompatibility;
+use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Setup\TableThreads;
@@ -26,8 +27,10 @@ class Thread
     protected $main_table;
     protected $archive_prune;
     protected $overboard;
+    protected $parent;
+    protected $json;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
+    function __construct(ContentID $content_id, Domain $domain, Thread $parent = null, bool $load = true)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -35,13 +38,21 @@ class Thread
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
         $this->main_table = new TableThreads($this->database, new SQLCompatibility($this->database));
+        $this->parent = $parent;
+        $this->json = new ThreadJSON($this, nel_utilities()->fileHandler());
 
         if ($load)
         {
             $this->loadFromDatabase();
         }
+
         $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->overboard = new Overboard($this->database);
+    }
+
+    public function exists()
+    {
+        return !empty($this->content_data);
     }
 
     public function loadFromDatabase()
@@ -173,7 +184,7 @@ class Thread
         return $post->verifyModifyPerms();
     }
 
-    public function getParent()
+    public function getParent(): Thread
     {
         return $this;
     }
@@ -469,5 +480,28 @@ class Thread
     public function isLoaded()
     {
         return !empty($this->content_data);
+    }
+
+    public function getPosts(): array
+    {
+        $posts = array();
+        $prepared = $this->database->prepare(
+                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+        $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
+                PDO::FETCH_COLUMN);
+
+        foreach ($post_list as $id)
+        {
+            $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), intval($id)));
+            $posts[] = $content_id->getInstanceFromID($this->domain);
+        }
+
+        return $posts;
+    }
+
+    public function getJSON(): ThreadJSON
+    {
+        return $this->json;
     }
 }

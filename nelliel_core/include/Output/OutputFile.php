@@ -30,21 +30,22 @@ class OutputFile extends Output
         if ($this->session->inModmode($this->domain))
         {
             $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-            '&actions=delete&content-id=' . $file->contentID()->getIDString() . '&modmode=true&goback=true';
+                    '&actions=delete&content-id=' . $file->contentID()->getIDString() . '&modmode=true&goback=true';
         }
 
         $this->render_data['display_filesize'] = ' (' . round(((int) $file->data('filesize') / 1024), 2) . ' KB)';
 
         if (!empty($file->data('display_width')) && !empty($file->data('display_height')))
         {
-            $this->render_data['display_image_dimensions'] = $file->data('display_width') . ' x ' . $file->data('display_height');
+            $this->render_data['display_image_dimensions'] = $file->data('display_width') . ' x ' .
+                    $file->data('display_height');
         }
 
         $this->render_data['file_url'] = $this->domain->reference('src_web_path') . $post->data('parent_thread') . '/' .
                 $post->data('post_number') . '/' . rawurlencode($full_filename);
-                $moar = json_decode($file->data('moar'), true);
-                $display_filename = $file->data('filename');
-                $display_extension = $file->data('extension');
+        $moar = json_decode($file->data('moar'), true);
+        $display_filename = $file->data('filename');
+        $display_extension = $file->data('extension');
 
         if ($this->domain->setting('display_original_name') && !empty($moar['original_filename']))
         {
@@ -61,25 +62,25 @@ class OutputFile extends Output
 
         if (!empty($file->data('md5')))
         {
-            $md5_data['metadata'] = 'MD5: ' . bin2hex($file->data('md5'));
+            $md5_data['metadata'] = 'MD5: ' . $file->data('md5');
             $this->render_data['file_metadata'][] = $md5_data;
         }
 
         if (!empty($file->data('sha1')))
         {
-            $sha1_data['metadata'] = 'SHA1: ' . bin2hex($file->data('sha1'));
+            $sha1_data['metadata'] = 'SHA1: ' . $file->data('sha1');
             $this->render_data['file_metadata'][] = $sha1_data;
         }
 
         if (!empty($file->data('sha256')))
         {
-            $sha256_data['metadata'] = 'SHA256: ' . bin2hex($file->data('sha256'));
+            $sha256_data['metadata'] = 'SHA256: ' . $file->data('sha256');
             $this->render_data['file_metadata'][] = $sha256_data;
         }
 
         if (!empty($file->data('sha512')))
         {
-            $sha512_data['metadata'] = 'SHA512: ' . bin2hex($file->data('sha512'));
+            $sha512_data['metadata'] = 'SHA512: ' . $file->data('sha512');
             $this->render_data['file_metadata'][] = $sha512_data;
         }
 
@@ -103,16 +104,18 @@ class OutputFile extends Output
             }
             else
             {
-                if (!empty($file->data('preview_name')) && $file->data('preview_width') > 0 && $file->data('preview_height') > 0)
+                if (!empty($file->data('preview_name')) && $file->data('preview_width') > 0 &&
+                        $file->data('preview_height') > 0)
                 {
                     $full_preview_name = $file->data('preview_name') . '.' . $file->data('preview_extension');
                     $this->render_data['preview_url'] = $this->domain->reference('preview_web_path') .
                             $post->data('parent_thread') . '/' . $post->data('post_number') . '/' .
                             rawurlencode($full_preview_name);
 
-                            if ($file->data('preview_width') > $max_width || $file->data('preview_height') > $max_height)
+                    if ($file->data('preview_width') > $max_width || $file->data('preview_height') > $max_height)
                     {
-                        $ratio = min(($max_height / $file->data('preview_height')), ($max_width / $file->data('preview_width')));
+                        $ratio = min(($max_height / $file->data('preview_height')),
+                                ($max_width / $file->data('preview_width')));
                         $this->render_data['preview_width'] = intval($ratio * $file->data('preview_width'));
                         $this->render_data['preview_height'] = intval($ratio * $file->data('preview_height'));
                     }
@@ -164,7 +167,8 @@ class OutputFile extends Output
                     $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 }
 
-                $this->render_data['other_dims'] = 'w' . $file->data('display_width') . 'h' . $file->data('display_height');
+                $this->render_data['other_dims'] = 'w' . $file->data('display_width') . 'h' .
+                        $file->data('display_height');
                 $this->render_data['other_loc'] = $this->render_data['file_url'];
             }
         }

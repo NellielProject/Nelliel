@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Moar;
 use Nelliel\SQLCompatibility;
+use Nelliel\API\JSON\UploadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Setup\TableUploads;
@@ -21,8 +22,10 @@ class Upload
     protected $content_moar;
     protected $authorization;
     protected $main_table;
+    protected $parent;
+    protected $json;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
+    function __construct(ContentID $content_id, Domain $domain, Post $parent = null, bool $load = true)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -30,6 +33,8 @@ class Upload
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
         $this->main_table = new TableUploads($this->database, new SQLCompatibility($this->database));
+        $this->parent = $parent;
+        $this->json = new UploadJSON($this, nel_utilities()->fileHandler());
 
         if ($load)
         {
@@ -208,13 +213,17 @@ class Upload
         return $post->verifyModifyPerms();
     }
 
-    public function getParent()
+    public function getParent(): Post
     {
-        $content_id = new \Nelliel\Content\ContentID();
-        $content_id->changeThreadID($this->content_id->threadID());
-        $content_id->changePostID($this->content_id->postID());
-        $parent_post = new Post($content_id, $this->domain);
-        return $parent_post;
+        if (is_null($this->parent))
+        {
+            $content_id = new ContentID();
+            $content_id->changeThreadID($this->content_id->threadID());
+            $content_id->changePostID($this->content_id->postID());
+            $this->parent = new Post($content_id, $this->domain);
+        }
+
+        return $this->parent;
     }
 
     public function createDirectories()
@@ -284,5 +293,10 @@ class Upload
     public function isLoaded()
     {
         return !empty($this->content_data);
+    }
+
+    public function getJSON(): UploadJSON
+    {
+        return $this->json;
     }
 }

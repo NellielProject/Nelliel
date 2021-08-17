@@ -9,6 +9,7 @@ use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Moar;
 use Nelliel\SQLCompatibility;
+use Nelliel\API\JSON\PostJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPost;
@@ -25,8 +26,10 @@ class Post
     protected $authorization;
     protected $main_table;
     protected $archive_prune;
+    protected $parent;
+    protected $json;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
+    function __construct(ContentID $content_id, Domain $domain, Thread $parent = null, bool $load = true)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -34,6 +37,8 @@ class Post
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
         $this->main_table = new TablePosts($this->database, new SQLCompatibility($this->database));
+        $this->parent = $parent;
+        $this->json = new PostJSON($this, nel_utilities()->fileHandler());
 
         if ($load)
         {
@@ -259,12 +264,16 @@ class Post
         return true;
     }
 
-    public function getParent()
+    public function getParent(): Thread
     {
-        $content_id = new \Nelliel\Content\ContentID();
-        $content_id->changeThreadID($this->content_id->threadID());
-        $parent_thread = new Thread($content_id, $this->domain);
-        return $parent_thread;
+        if (is_null($this->parent))
+        {
+            $content_id = new ContentID();
+            $content_id->changeThreadID($this->content_id->threadID());
+            $this->parent = new Thread($content_id, $this->domain);
+        }
+
+        return $this->parent;
     }
 
     public function reserveDatabaseRow($post_time, $post_time_milli, $hashed_ip_address, $temp_database = null)
@@ -468,5 +477,29 @@ class Post
     public function isLoaded()
     {
         return !empty($this->content_data);
+    }
+
+    public function getUploads(): array
+    {
+        $uploads = array();
+        $prepared = $this->database->prepare(
+                'SELECT "upload_order" FROM "' . $this->domain->reference('upload_table') .
+                '" WHERE "post_ref" = ? ORDER BY "upload_order" ASC');
+        $upload_list = $this->database->executePreparedFetchAll($prepared, [$this->contentID()->postID()],
+                PDO::FETCH_COLUMN);
+
+        foreach ($upload_list as $id)
+        {
+            $content_id = new ContentID(
+                    ContentID::createIDString($this->content_id->threadID(), $this->content_id->postID(), intval($id)));
+            $uploads[] = $content_id->getInstanceFromID($this->domain);
+        }
+
+        return $uploads;
+    }
+
+    public function getJSON(): PostJSON
+    {
+        return $this->json;
     }
 }
