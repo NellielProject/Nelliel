@@ -8,7 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Cites;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
-use Nelliel\Content\ContentPost;
+use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;
 use Nelliel\Wordfilters;
 
@@ -25,7 +25,7 @@ class PostData
         $this->session = $session;
     }
 
-    public function processPostData(ContentPost $post)
+    public function processPostData(Post $post)
     {
         if (!isset($_POST['new_post']))
         {
@@ -183,7 +183,7 @@ class PostData
         return $post_item;
     }
 
-    public function staffPost(ContentPost $post, ?string $name): void
+    public function staffPost(Post $post, ?string $name): void
     {
         if (!$post->data('post_as_staff'))
         {

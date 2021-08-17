@@ -6,14 +6,14 @@ namespace Nelliel\NewPost;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\IfThens\Conditions;
-use Nelliel\Content\ContentPost;
+use Nelliel\Content\Post;
 
 class ConditionsPost implements Conditions
 {
     private $post;
     private $files;
 
-    function __construct(ContentPost $post, array $files)
+    function __construct(Post $post, array $files)
     {
         $this->post = $post;
         $this->files = $files;

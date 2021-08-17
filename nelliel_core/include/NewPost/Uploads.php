@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
-use Nelliel\Content\ContentPost;
+use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -33,7 +33,7 @@ class Uploads
         $this->session = $session;
     }
 
-    public function process(ContentPost $post): array
+    public function process(Post $post): array
     {
         $this->checkCount($post);
         $this->embeds($post);
@@ -47,7 +47,7 @@ class Uploads
         return $this->processed_uploads;
     }
 
-    private function files(ContentPost $post)
+    private function files(Post $post)
     {
         $response_to = $post->data('response_to');
         $file_count = count($this->files['upload_files']['name']);
@@ -70,7 +70,7 @@ class Uploads
             $file_data['tmp_name'] = $this->files['upload_files']['tmp_name'][$i];
             $file_data['error'] = $this->files['upload_files']['error'][$i];
             $file_data['size'] = $this->files['upload_files']['size'][$i];
-            $file = new \Nelliel\Content\ContentUpload(new \Nelliel\Content\ContentID(), $this->domain);
+            $file = new \Nelliel\Content\Upload(new \Nelliel\Content\ContentID(), $this->domain);
             $file->changeData('location', $file_data['tmp_name']);
             $file->changeData('name', $file_data['name']);
             $file_data['location'] = $file_data['tmp_name'];
@@ -318,7 +318,7 @@ class Uploads
         $file->changeData('mime', $type_data['mime']);
     }
 
-    private function embeds(ContentPost $post)
+    private function embeds(Post $post)
     {
         $response_to = $post->data('response_to');
         $total_embeds = 0;
@@ -332,7 +332,7 @@ class Uploads
                 continue;
             }
 
-            $embed = new \Nelliel\Content\ContentUpload(new \Nelliel\Content\ContentID(), $this->domain);
+            $embed = new \Nelliel\Content\Upload(new \Nelliel\Content\ContentID(), $this->domain);
 
             $checking_duplicates = false;
 
@@ -374,7 +374,7 @@ class Uploads
         $post->changeData('embed_count', $total_embeds);
     }
 
-    private function checkCount(ContentPost $post)
+    private function checkCount(Post $post)
     {
         $embeds_count = 0;
         $files_count = 0;

@@ -4,14 +4,14 @@ namespace Nelliel\API\JSON;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Content\ContentPost;
+use Nelliel\Content\Post;
 use Nelliel\Utility\FileHandler;
 
 class PostJSON extends JSON
 {
     protected $uploads = array();
 
-    function __construct(ContentPost $post, FileHandler $file_handler)
+    function __construct(Post $post, FileHandler $file_handler)
     {
         $this->file_handler = $file_handler;
         $this->source = $post;

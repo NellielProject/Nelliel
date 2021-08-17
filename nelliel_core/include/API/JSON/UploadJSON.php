@@ -5,13 +5,13 @@ namespace Nelliel\API\JSON;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Content\ContentUpload;
+use Nelliel\Content\Upload;
 use Nelliel\Utility\FileHandler;
 
 class UploadJSON extends JSON
 {
 
-    function __construct(ContentUpload $upload, FileHandler $file_handler)
+    function __construct(Upload $upload, FileHandler $file_handler)
     {
         $this->file_handler = $file_handler;
         $this->source = $upload;

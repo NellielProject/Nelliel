@@ -52,7 +52,7 @@ class NewPost
         $uploads_handler = new Uploads($this->domain, $_FILES, [$_POST['embed_url'] ?? ''], $authorization,
                 $this->session);
         $data_handler = new PostData($this->domain, $authorization, $this->session);
-        $post = new \Nelliel\Content\ContentPost(new \Nelliel\Content\ContentID(), $this->domain);
+        $post = new \Nelliel\Content\Post(new \Nelliel\Content\ContentID(), $this->domain);
         $data_handler->processPostData($post);
         $time = nel_get_microtime();
         $post->changeData('post_time', $time['time']);
@@ -127,7 +127,7 @@ class NewPost
         $if_then->process('new_post');
 
         $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
-        $thread = new \Nelliel\Content\ContentThread(new \Nelliel\Content\ContentID(), $this->domain);
+        $thread = new \Nelliel\Content\Thread(new \Nelliel\Content\ContentID(), $this->domain);
 
         if ($post->data('response_to') == 0)
         {

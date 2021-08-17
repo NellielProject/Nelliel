@@ -6,7 +6,7 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Content\ContentThread;
+use Nelliel\Content\Thread;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Content\ContentID;
 use PDO;
@@ -20,7 +20,7 @@ class Overboard
         $this->database = $database;
     }
 
-    public function addThread(ContentThread $thread): void
+    public function addThread(Thread $thread): void
     {
         $prepared = $this->database->prepare(
                 'SELECT 1 FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "thread_id" = ? AND "board_id" = ?');
@@ -45,7 +45,7 @@ class Overboard
         $this->prune();
     }
 
-    public function updateThread(ContentThread $thread): void
+    public function updateThread(Thread $thread): void
     {
         $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_OVERBOARD_TABLE .
@@ -55,7 +55,7 @@ class Overboard
                     $thread->contentID()->threadID(), $thread->domain()->id()]);
     }
 
-    public function removeThread(ContentThread $thread): void
+    public function removeThread(Thread $thread): void
     {
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "thread_id" = ? AND "board_id" = ?');

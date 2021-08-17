@@ -6,8 +6,8 @@ namespace Nelliel;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\ContentID;
-use Nelliel\Content\ContentPost;
-use Nelliel\Content\ContentThread;
+use Nelliel\Content\Post;
+use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
@@ -73,7 +73,7 @@ class Cites
         return $cite_data;
     }
 
-    public function getForPost(ContentPost $post)
+    public function getForPost(Post $post)
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_post" = ?');
@@ -90,7 +90,7 @@ class Cites
         return $cite_list;
     }
 
-    public function getForThread(ContentThread $thread)
+    public function getForThread(Thread $thread)
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_CITES_TABLE . '" WHERE "target_board" = ? AND "target_thread" = ?');
@@ -106,7 +106,7 @@ class Cites
         return $cite_list;
     }
 
-    public function updateForPost(ContentPost $post)
+    public function updateForPost(Post $post)
     {
         // Update where post targets other posts (backlinks)
         $prepared = $this->database->prepare(
@@ -139,7 +139,7 @@ class Cites
         }
     }
 
-    public function updateForThread(ContentThread $thread)
+    public function updateForThread(Thread $thread)
     {
         // Update where posts in this thread target other posts (backlinks)
         $prepared = $this->database->prepare(
@@ -172,7 +172,7 @@ class Cites
         }
     }
 
-    public function removeForPost(ContentPost $post)
+    public function removeForPost(Post $post)
     {
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_CITES_TABLE .
@@ -181,7 +181,7 @@ class Cites
                 [$post->domain()->id(), $post->contentID()->postID(), $post->contentID()->postID()]);
     }
 
-    public function removeForThread(ContentThread $thread)
+    public function removeForThread(Thread $thread)
     {
         $prepared = $this->database->prepare(
                 'DELETE FROM "' . NEL_CITES_TABLE .
@@ -276,7 +276,7 @@ class Cites
             {
                 $content_id = new ContentID(
                         ContentID::createIDString($cite_data['target_thread'], $cite_data['target_post']));
-                $thread = new ContentThread($content_id, $target_domain);
+                $thread = new Thread($content_id, $target_domain);
                 $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
                 $url = $thread->getURL() . $p_anchor;
             }

@@ -7,21 +7,39 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
+use Nelliel\Moar;
 use Nelliel\Overboard;
 use Nelliel\SQLCompatibility;
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Setup\TableThreads;
 use PDO;
 
-class ContentThread extends ContentHandler
+class Thread
 {
+    protected $content_id;
+    protected $database;
+    protected $domain;
+    protected $content_data = array();
+    protected $content_moar;
+    protected $authorization;
+    protected $main_table;
     protected $archive_prune;
     protected $overboard;
 
     function __construct(ContentID $content_id, Domain $domain, bool $load = true)
     {
-        $main_table = new TableThreads($this->database, new SQLCompatibility($this->database));
-        parent::__construct($content_id, $domain, $main_table);
+        $this->database = $domain->database();
+        $this->content_id = $content_id;
+        $this->domain = $domain;
+        $this->authorization = new Authorization($this->database);
+        $this->storeMoar(new Moar());
+        $this->main_table = new TableThreads($this->database, new SQLCompatibility($this->database));
+
+        if ($load)
+        {
+            $this->loadFromDatabase();
+        }
         $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->overboard = new Overboard($this->database);
     }
@@ -150,7 +168,7 @@ class ContentThread extends ContentHandler
 
     protected function verifyModifyPerms()
     {
-        $post = new ContentPost($this->content_id, $this->domain);
+        $post = new Post($this->content_id, $this->domain);
         $post->content_id->changePostID($this->firstPostID());
         return $post->verifyModifyPerms();
     }
@@ -317,7 +335,7 @@ class ContentThread extends ContentHandler
     }
 
     // Most of this is based on vichan's slugify
-    public function generateSlug(ContentPost $post): string
+    public function generateSlug(Post $post): string
     {
         $slug = '';
         $max_length = $this->domain->setting('max_slug_length');
@@ -407,5 +425,55 @@ class ContentThread extends ContentHandler
 
     public function archive()
     {
+    }
+
+    public function storeMoar(Moar $moar)
+    {
+        $this->content_moar = $moar;
+    }
+
+    public function getMoar()
+    {
+        return $this->content_moar;
+    }
+
+    protected function contentDataOrDefault(string $data_name, $default)
+    {
+        if (isset($this->content_data[$data_name]))
+        {
+            return $this->content_data[$data_name];
+        }
+
+        return $default;
+    }
+
+    public function data(string $key)
+    {
+        return $this->content_data[$key] ?? null;
+    }
+
+    public function changeData(string $key, $new_data)
+    {
+        $column_types = $this->main_table->columnTypes();
+        $type = $column_types[$key]['php_type'] ?? '';
+        $new_data = nel_cast_to_datatype($new_data, $type);
+        $old_data = $this->data($key);
+        $this->content_data[$key] = $new_data;
+        return $old_data;
+    }
+
+    public function contentID()
+    {
+        return $this->content_id;
+    }
+
+    public function domain()
+    {
+        return $this->domain;
+    }
+
+    public function isLoaded()
+    {
+        return !empty($this->content_data);
     }
 }

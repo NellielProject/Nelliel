@@ -5,14 +5,14 @@ namespace Nelliel\API\JSON;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Content\ContentThread;
+use Nelliel\Content\Thread;
 use Nelliel\Utility\FileHandler;
 
 class ThreadJSON extends JSON
 {
     protected $posts = array();
 
-    function __construct(ContentThread $thread, FileHandler $file_handler)
+    function __construct(Thread $thread, FileHandler $file_handler)
     {
         $this->file_handler = $file_handler;
         $this->source = $thread;

@@ -5,18 +5,36 @@ namespace Nelliel\Content;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Moar;
 use Nelliel\SQLCompatibility;
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Setup\TableUploads;
 use PDO;
 
-class ContentUpload extends ContentHandler
+class Upload
 {
+    protected $content_id;
+    protected $database;
+    protected $domain;
+    protected $content_data = array();
+    protected $content_moar;
+    protected $authorization;
+    protected $main_table;
 
-    function __construct(ContentID $content_id, Domain $domain)
+    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
     {
-        $main_table = new TableUploads($this->database, new SQLCompatibility($this->database));
-        parent::__construct($content_id, $domain, $main_table);
+        $this->database = $domain->database();
+        $this->content_id = $content_id;
+        $this->domain = $domain;
+        $this->authorization = new Authorization($this->database);
+        $this->storeMoar(new Moar());
+        $this->main_table = new TableUploads($this->database, new SQLCompatibility($this->database));
+
+        if ($load)
+        {
+            $this->loadFromDatabase();
+        }
     }
 
     public function loadFromDatabase()
@@ -139,9 +157,9 @@ class ContentUpload extends ContentHandler
 
         $this->removeFromDisk();
         $this->removeFromDatabase();
-        $post = new ContentPost($this->content_id, $this->domain);
+        $post = new Post($this->content_id, $this->domain);
         $post->updateCounts();
-        $thread = new ContentThread($this->content_id, $this->domain);
+        $thread = new Thread($this->content_id, $this->domain);
         $thread->updateCounts();
     }
 
@@ -186,7 +204,7 @@ class ContentUpload extends ContentHandler
 
     protected function verifyModifyPerms()
     {
-        $post = new ContentPost($this->content_id, $this->domain);
+        $post = new Post($this->content_id, $this->domain);
         return $post->verifyModifyPerms();
     }
 
@@ -195,7 +213,7 @@ class ContentUpload extends ContentHandler
         $content_id = new \Nelliel\Content\ContentID();
         $content_id->changeThreadID($this->content_id->threadID());
         $content_id->changePostID($this->content_id->postID());
-        $parent_post = new ContentPost($content_id, $this->domain);
+        $parent_post = new Post($content_id, $this->domain);
         return $parent_post;
     }
 
@@ -216,5 +234,55 @@ class ContentUpload extends ContentHandler
     {
         return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/' .
                 $this->content_id->postID() . '/';
+    }
+
+    public function storeMoar(Moar $moar)
+    {
+        $this->content_moar = $moar;
+    }
+
+    public function getMoar()
+    {
+        return $this->content_moar;
+    }
+
+    protected function contentDataOrDefault(string $data_name, $default)
+    {
+        if (isset($this->content_data[$data_name]))
+        {
+            return $this->content_data[$data_name];
+        }
+
+        return $default;
+    }
+
+    public function data(string $key)
+    {
+        return $this->content_data[$key] ?? null;
+    }
+
+    public function changeData(string $key, $new_data)
+    {
+        $column_types = $this->main_table->columnTypes();
+        $type = $column_types[$key]['php_type'] ?? '';
+        $new_data = nel_cast_to_datatype($new_data, $type);
+        $old_data = $this->data($key);
+        $this->content_data[$key] = $new_data;
+        return $old_data;
+    }
+
+    public function contentID()
+    {
+        return $this->content_id;
+    }
+
+    public function domain()
+    {
+        return $this->domain;
+    }
+
+    public function isLoaded()
+    {
+        return !empty($this->content_data);
     }
 }

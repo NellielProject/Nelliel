@@ -8,8 +8,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Cites;
 use Nelliel\API\JSON\UploadJSON;
 use Nelliel\Content\ContentID;
-use Nelliel\Content\ContentPost;
-use Nelliel\Content\ContentThread;
+use Nelliel\Content\Post;
+use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use Nelliel\Markdown\ImageboardMarkdown;
 use PDO;
@@ -31,11 +31,11 @@ class OutputPost extends Output
         $post_json = $parameters['post_json'];
         $post_data = $parameters['post_data'] ?? $this->getPostFromDatabase($post_id);
         $thread_content_id = new ContentID(ContentID::createIDString($post_data['parent_thread']));
-        $thread = $parameters['thread_instance'] ?? new ContentThread($thread_content_id, $this->domain);
+        $thread = $parameters['thread_instance'] ?? new Thread($thread_content_id, $this->domain);
         $in_thread_number = $parameters['in_thread_number'] ?? 0;
         $post_content_id = new ContentID(
                 ContentID::createIDString($post_data['parent_thread'], $post_data['post_number']));
-        $post = new ContentPost($post_content_id, $this->domain);
+        $post = new Post($post_content_id, $this->domain);
         $response = $post_data['op'] != 1;
 
         if (NEL_USE_RENDER_CACHE)
@@ -142,7 +142,7 @@ class OutputPost extends Output
     }
 
     private function postHeaders(bool $response, array $thread_data, array $post_data, ContentID $thread_content_id,
-            ContentPost $post, ContentThread $thread, array $gen_data, int $in_thread_number)
+            Post $post, Thread $thread, array $gen_data, int $in_thread_number)
     {
         $ui_icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('ui_icon_set'));
         $header_data = array();
@@ -317,7 +317,7 @@ class OutputPost extends Output
         return $header_data;
     }
 
-    private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, ContentThread $thread)
+    private function postComments(array $post_data, ContentID $post_content_id, array $gen_data, Thread $thread)
     {
         $comment_data = array();
         $comment_data['post_contents_id'] = 'post-contents-' . $post_content_id->getIDString();
@@ -390,7 +390,7 @@ class OutputPost extends Output
         return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
     }
 
-    public function generateBacklinks(ContentPost $post): array
+    public function generateBacklinks(Post $post): array
     {
         $cites = new Cites($this->database);
         $cite_list = $cites->getForPost($post);

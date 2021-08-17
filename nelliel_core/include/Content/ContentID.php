@@ -103,15 +103,15 @@ class ContentID
     {
         if ($this->isThread())
         {
-            return new ContentThread($this, $domain, $load);
+            return new Thread($this, $domain, $load);
         }
         else if ($this->isPost())
         {
-            return new ContentPost($this, $domain, $load);
+            return new Post($this, $domain, $load);
         }
         else if ($this->isContent())
         {
-            return new ContentUpload($this, $domain, $load);
+            return new Upload($this, $domain, $load);
         }
     }
 }
