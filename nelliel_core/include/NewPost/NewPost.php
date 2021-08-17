@@ -150,8 +150,8 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
-                            'sage') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
+                    !$fgsfds->commandIsSet('sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
@@ -241,25 +241,22 @@ class NewPost
 
         if ($post->data('parent_thread') == 0)
         {
-            $thread_renzoku = $time - $this->domain->setting('thread_renzoku');
-            $prepared = $this->database->prepare(
-                    'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
-                    '" WHERE "post_time" > ? AND "hashed_ip_address" = ?');
-            $prepared->bindValue(1, $thread_renzoku, PDO::PARAM_STR);
-            $prepared->bindValue(2, nel_prepare_hash_for_storage(nel_request_ip_address(true)), PDO::PARAM_LOB);
-            $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+            $renzoku_setting = $time - $this->domain->setting('thread_renzoku');
+            $op_value = 1;
         }
         else
         {
-            $reply_renzoku = $time - $this->domain->setting('reply_renzoku');
-            $prepared = $this->database->prepare(
-                    'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
-                    '" WHERE "parent_thread" = ? AND "post_time" > ? AND "hashed_ip_address" = ?');
-            $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
-            $prepared->bindValue(2, $reply_renzoku, PDO::PARAM_STR);
-            $prepared->bindValue(3, nel_prepare_hash_for_storage(nel_request_ip_address(true)), PDO::PARAM_LOB);
-            $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+            $renzoku_setting = $time - $this->domain->setting('reply_renzoku');
+            $op_value = 0;
         }
+
+        $prepared = $this->database->prepare(
+                'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "post_time" > ? AND "op" = ? AND "hashed_ip_address" = ?');
+        $prepared->bindValue(1, $renzoku_setting, PDO::PARAM_STR);
+        $prepared->bindValue(2, $op_value, PDO::PARAM_INT);
+        $prepared->bindValue(3, nel_prepare_hash_for_storage(nel_request_ip_address(true)), PDO::PARAM_LOB);
+        $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if ($renzoku > 0 && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
         {
