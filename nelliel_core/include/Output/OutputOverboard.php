@@ -107,10 +107,20 @@ class OutputOverboard extends Output
             $thread_input['thread_id'] = $thread_content_id;
             $thread_input['thread_expand_id'] = 'thread-expand-' . $thread_content_id;
             $thread_input['thread_corral_id'] = 'thread-corral-' . $thread_content_id;
-            $thread_input['omitted_count'] = $thread_data['post_count'] - 5;
-            $gen_data['abbreviate'] = $thread_data['post_count'] > 5;
+
+            if ($sfw)
+            {
+                $index_replies = $this->site_domain->setting('sfw_overboard_thread_replies');
+            }
+            else
+            {
+                $index_replies = $this->site_domain->setting('overboard_thread_replies');
+            }
+
+            $thread_input['omitted_count'] = $thread_data['post_count'] - $index_replies - 1; // Subtract 1 to account for OP
+            $gen_data['abbreviate'] = $thread_input['omitted_count'] > 0;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
-            $abbreviate_start = $thread_data['post_count'] - (5 - 1);
+            $abbreviate_start = $thread_data['post_count'] - $index_replies;
             $post_counter = 1;
 
             foreach ($treeline as $post_data)

@@ -34,7 +34,7 @@ class OutputPanelSiteSettings extends Output
         $site_settings = $this->database->query(
                 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_SITE_CONFIG_TABLE . '" ON "' .
                 NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE .
-                '"."setting_name" WHERE "setting_category" = \'core\'')->fetchAll(PDO::FETCH_ASSOC);
+                '"."setting_name" WHERE "setting_category" = \'site\'')->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($site_settings as $setting)
         {

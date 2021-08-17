@@ -55,7 +55,7 @@ class DomainSite extends Domain implements NellielCacheInterface
         $config_list = $this->database->executeFetchAll(
                 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_SITE_CONFIG_TABLE . '" ON "' .
                 NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE .
-                '"."setting_name" WHERE "setting_category" = \'core\'', PDO::FETCH_ASSOC);
+                '"."setting_name" WHERE "setting_category" = \'site\'', PDO::FETCH_ASSOC);
 
         foreach ($config_list as $config)
         {

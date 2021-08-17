@@ -116,10 +116,12 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['overboard_active', '0', 0]);
         $this->insertDefaultRow(['overboard_uri', 'overboard', 0]);
         $this->insertDefaultRow(['overboard_threads', '20', 0]);
+        $this->insertDefaultRow(['overboard_thread_replies', '5', 0]);
+        $this->insertDefaultRow(['nsfl_on_overboard', '', 0]);
         $this->insertDefaultRow(['sfw_overboard_active', '0', 0]);
         $this->insertDefaultRow(['sfw_overboard_uri', 'sfwoverboard', 0]);
         $this->insertDefaultRow(['sfw_overboard_threads', '20', 0]);
-        $this->insertDefaultRow(['nsfl_on_overboard', '', 0]);
+        $this->insertDefaultRow(['sfw_overboard_thread_replies', '5', 0]);
 
         // Filetypes
         $this->insertDefaultRow(['enabled_filetypes', '{"graphics":{"enabled":true,"formats":{"jpeg":{"enabled":true},"gif":{"enabled":true},"png":{"enabled":true},"webp":{"enabled":true}}}}', 0, 0]);

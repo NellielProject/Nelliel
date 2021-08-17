@@ -213,6 +213,9 @@
 	{{# overboard_threads }}
 		{{> panels/pieces/settings_number }}
 	{{/ overboard_threads }}
+	{{# overboard_thread_replies }}
+		{{> panels/pieces/settings_number }}
+	{{/ overboard_thread_replies }}
 	{{# nsfl_on_overboard }}
 		{{> panels/pieces/settings_checkbox }}
 	{{/ nsfl_on_overboard }}
@@ -225,6 +228,9 @@
 	{{# sfw_overboard_threads }}
 		{{> panels/pieces/settings_number }}
 	{{/ sfw_overboard_threads }}
+	{{# sfw_overboard_thread_replies }}
+		{{> panels/pieces/settings_number }}
+	{{/ sfw_overboard_thread_replies }}
 	<div class="display-row">
 		<input type="submit" value="Update Settings" data-gettext="value">
 	</div>

@@ -71,75 +71,77 @@ class TableSettings extends Table
     {
         // Site
         // General
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'name', '', '', 'Site name', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'show_name', '', '1', 'Display site name in header', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'description', '', '', 'Site description', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'show_description', '', '1', 'Display site description in header', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'favicon', '', '', 'Site favicon', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'show_favicon', '', '0', 'Show site favicon', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'home_page', '', '/', 'Site home page', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for site (use ISO language + country code)', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'only_alphanumeric_board_ids', '', '1', 'Allow only alphanumeric board IDs', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'max_report_items', '', '5', 'Maximum items that can be reported at one time', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'max_delete_items', '', '5', 'Maximum items that can be deleted at one time', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'global_announcement', '', '', 'Global announcement shown on all boards', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'global_announcement', '', '', 'Global announcement shown on all boards', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'name', '', '', 'Site name', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_name', '', '1', 'Display site name in header', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'description', '', '', 'Site description', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_description', '', '1', 'Display site description in header', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'favicon', '', '', 'Site favicon', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_favicon', '', '0', 'Show site favicon', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'home_page', '', '/', 'Site home page', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for site (use ISO language + country code)', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'only_alphanumeric_board_ids', '', '1', 'Allow only alphanumeric board IDs', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_report_items', '', '5', 'Maximum items that can be reported at one time', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_delete_items', '', '5', 'Maximum items that can be deleted at one time', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'global_announcement', '', '', 'Global announcement shown on all boards', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'global_announcement', '', '', 'Global announcement shown on all boards', '{"type":"text"}']);
 
         // Banners
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'show_site_banners', '', '1', 'Show site banners', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'show_board_banners', '', '1', 'Show board-specific banners when available', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'banner_display_width', '', '300', 'Display width of banners', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'banner_display_height', '', '100', 'Display height of banners', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_site_banners', '', '1', 'Show site banners', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_board_banners', '', '1', 'Show board-specific banners when available', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'banner_display_width', '', '300', 'Display width of banners', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'banner_display_height', '', '100', 'Display height of banners', '{"type":"number"}']);
 
         // Bans
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'must_see_ban', '', '1', 'Bans must be seen at least once before expiration purge', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'allow_ban_appeals', '', '1', 'Allow ban appeals', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'min_time_before_ban_appeal', '', '3600', 'Minimum time before a ban can be appealed (seconds)', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'must_see_ban', '', '1', 'Bans must be seen at least once before expiration purge', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'allow_ban_appeals', '', '1', 'Allow ban appeals', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'min_time_before_ban_appeal', '', '3600', 'Minimum time before a ban can be appealed (seconds)', '{"type":"number"}']);
 
         // Posts and rendering
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'index_filename_format', '', 'index%d', 'Index filename (sprintf)', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'thread_filename_format', '', '%d', 'Thread filename (sprintf)', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'template_id', '', 'template-nelliel-basic', 'ID of default template for site', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'graphics_handler', '{"GD":{"label":"GD"}, "ImageMagick":{"label":"ImageMagick"}, "GraphicsMagick":{"label":"GraphicsMagick"}}', 'GD', 'Preferred graphics handler', '{"type":"select"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'display_render_timer', '', '1', 'Display rendering timer', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'site_content_disclaimer', '', '', 'Site-wide disclaimer added to the bottom of posts', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'site_referrer_policy', '{"no-referrer": {}, "no-referrer-when-downgrade": {}, "origin": {}, "origin-when-cross-origin": {}, "same-origin": {},"strict-origin": {}, "strict-origin-when-cross-origin": {}, "unsafe-url": {}}', 'strict-origin-when-cross-origin', 'Referrer policy for the site', '{"type":"select"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'nofollow_external_links', '', '1', 'Add rel="nofollow" to external links', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'base_icon_set', '', 'icons-nelliel-basic', 'Base icon set', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'default_style', '', 'style-nelliel', 'Default style for site pages and control panels', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'index_filename_format', '', 'index%d', 'Index filename (sprintf)', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'thread_filename_format', '', '%d', 'Thread filename (sprintf)', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'template_id', '', 'template-nelliel-basic', 'ID of default template for site', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', '{"GD":{"label":"GD"}, "ImageMagick":{"label":"ImageMagick"}, "GraphicsMagick":{"label":"GraphicsMagick"}}', 'GD', 'Preferred graphics handler', '{"type":"select"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'display_render_timer', '', '1', 'Display rendering timer', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_content_disclaimer', '', '', 'Site-wide disclaimer added to the bottom of posts', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_referrer_policy', '{"no-referrer": {}, "no-referrer-when-downgrade": {}, "origin": {}, "origin-when-cross-origin": {}, "same-origin": {},"strict-origin": {}, "strict-origin-when-cross-origin": {}, "unsafe-url": {}}', 'strict-origin-when-cross-origin', 'Referrer policy for the site', '{"type":"select"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'nofollow_external_links', '', '1', 'Add rel="nofollow" to external links', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'base_icon_set', '', 'icons-nelliel-basic', 'Base icon set', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'default_style', '', 'style-nelliel', 'Default style for site pages and control panels', '{"type":"text"}']);
 
         // Hashing and security
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'post_password_algorithm', '', 'sha256', 'Post password hash algorithm', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'secure_tripcode_algorithm', '', 'sha256', 'Secure tripcode hash algorithm', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'do_password_rehash', '', '0', 'Rehash account passwords', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'login_delay', '', '3', 'Delay between login attempts', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'session_length', '', '10800', 'Session timeout (seconds)', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'store_unhashed_ip', '', '1', 'Store unhashed IP addresses; (hashed IP will always be stored)', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'use_dnsbl', '', '', 'Use DNSBL to check incoming posts', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'dnsbl_exceptions', '', '', 'IPs that are exempt from DNSBL checks. Must be a JSON array.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'post_password_algorithm', '', 'sha256', 'Post password hash algorithm', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'secure_tripcode_algorithm', '', 'sha256', 'Secure tripcode hash algorithm', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'do_password_rehash', '', '0', 'Rehash account passwords', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'login_delay', '', '3', 'Delay between login attempts', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'session_length', '', '10800', 'Session timeout (seconds)', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'store_unhashed_ip', '', '1', 'Store unhashed IP addresses; (hashed IP will always be stored)', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_dnsbl', '', '', 'Use DNSBL to check incoming posts', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'dnsbl_exceptions', '', '', 'IPs that are exempt from DNSBL checks. Must be a JSON array.', '{"type":"text"}']);
 
         // CAPTCHA
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'captcha_width', '', '250', 'Width of CAPTCHA image', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'captcha_height', '', '80', 'Height of CAPTCHA image', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'captcha_character_count', '', '5', 'Number of characters in CAPTCHA', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'captcha_timeout', '', '1800', 'CAPTCHA timeout (seconds)', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'captcha_rate_limit', '', '12', 'CAPTCHA requests per IP in one minute (0 to disable check)', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'recaptcha_site_key', '', '', 'reCAPTCHA site key', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'recaptcha_sekrit_key', '', '', 'reCAPTCHA secret key', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'recaptcha_type', '{"CHECKBOX":{"label":"Checkbox"}}', 'CHECKBOX', 'reCAPTCHA type', '{"type":"select"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'use_login_captcha', '', '0', 'Use CAPTCHA for login', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'use_login_recaptcha', '', '0', 'Use reCAPTCHA for login', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'use_register_captcha', '', '0', 'Use CAPTCHA for registration', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'use_register_recaptcha', '', '0', 'Use reCAPTCHA for registration', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_width', '', '250', 'Width of CAPTCHA image', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_height', '', '80', 'Height of CAPTCHA image', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_character_count', '', '5', 'Number of characters in CAPTCHA', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_timeout', '', '1800', 'CAPTCHA timeout (seconds)', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_rate_limit', '', '12', 'CAPTCHA requests per IP in one minute (0 to disable check)', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_site_key', '', '', 'reCAPTCHA site key', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_sekrit_key', '', '', 'reCAPTCHA secret key', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_type', '{"CHECKBOX":{"label":"Checkbox"}}', 'CHECKBOX', 'reCAPTCHA type', '{"type":"select"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_captcha', '', '0', 'Use CAPTCHA for login', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_recaptcha', '', '0', 'Use reCAPTCHA for login', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_captcha', '', '0', 'Use CAPTCHA for registration', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_recaptcha', '', '0', 'Use reCAPTCHA for registration', '{"type":"checkbox"}']);
 
         // Overboard
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'overboard_active', '', '0', 'Enable overboard', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'overboard_uri', '', 'overboard', 'Overboard URI', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'overboard_threads', '', '20', 'Maximum threads on overboard', '{"type":"number"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'nsfl_on_overboard', '', '0', 'Include NSFL content on overboard', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'boolean', 'sfw_overboard_active', '', '0', 'Enable SFW overboard', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'string', 'sfw_overboard_uri', '', 'sfwoverboard', 'SFW overboard URI', '{"type":"text"}']);
-        $this->insertDefaultRow(['core', 'nelliel', 'integer', 'sfw_overboard_threads', '', '20', 'Maximum threads on SFW overboard', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'overboard_active', '', '0', 'Enable overboard', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'overboard_uri', '', 'overboard', 'Overboard URI', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'overboard_threads', '', '20', 'Maximum threads on overboard', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'overboard_thread_replies', '', '5', 'How many replies to a thread should be displayed on the overboard', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'nsfl_on_overboard', '', '0', 'Include NSFL content on overboard', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'sfw_overboard_active', '', '0', 'Enable SFW overboard', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'sfw_overboard_uri', '', 'sfwoverboard', 'SFW overboard URI', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_threads', '', '20', 'Maximum threads on SFW overboard', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_thread_replies', '', '5', 'How many replies to a thread should be displayed on the SFW overboard', '{"type":"number"}']);
 
         // Board
         // General
