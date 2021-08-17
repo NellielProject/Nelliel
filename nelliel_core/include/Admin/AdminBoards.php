@@ -171,21 +171,21 @@ class AdminBoards extends Admin
             return;
         }
 
-        if ($this->database->tableExists($domain->reference('upload_table')))
+        if ($this->database->tableExists($domain->reference('upload_table'), NEL_SQLTYPE))
         {
             $this->database->query('DROP TABLE "' . $domain->reference('upload_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('upload_table')]);
         }
 
-        if ($this->database->tableExists($domain->reference('posts_table')))
+        if ($this->database->tableExists($domain->reference('posts_table'), NEL_SQLTYPE))
         {
             $this->database->query('DROP TABLE "' . $domain->reference('posts_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('posts_table')]);
         }
 
-        if ($this->database->tableExists($domain->reference('threads_table')))
+        if ($this->database->tableExists($domain->reference('threads_table'), NEL_SQLTYPE))
         {
             $this->database->query('DROP TABLE "' . $domain->reference('threads_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\AntiSpam;
 
@@ -110,7 +109,8 @@ class CAPTCHA
 
         $captcha_image = $this->render($captcha_text);
         $captcha_key = substr(hash('sha256', (random_bytes(16))), -32);
-        setrawcookie('captcha-key', $captcha_key, time() + $this->site_domain->setting('captcha_timeout'), NEL_BASE_WEB_PATH);
+        setrawcookie('captcha-key', $captcha_key, time() + $this->site_domain->setting('captcha_timeout'),
+                NEL_BASE_WEB_PATH);
         $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH, NEL_DIRECTORY_PERM, true); // Just to be sure
         imagejpeg($captcha_image, NEL_CAPTCHA_FILES_PATH . $captcha_key . '.jpg');
         $captcha_data = array();
@@ -276,16 +276,13 @@ class CAPTCHA
                 'SELECT "captcha_key" FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "time_created" = ?');
         $result = $this->database->executePreparedFetchAll($prepared, [$expiration], PDO::FETCH_COLUMN);
 
-        if ($result !== false)
+        foreach ($result as $key)
         {
-            foreach ($result as $key)
-            {
-                $this->file_handler->eraserGun(NEL_CAPTCHA_WEB_PATH, $key . '.jpg');
-            }
-
-            $prepared = $this->database->prepare('DELETE FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "time_created" < ?');
-            $this->database->executePrepared($prepared, [$expiration]);
+            $this->file_handler->eraserGun(NEL_CAPTCHA_WEB_PATH, $key . '.jpg');
         }
+
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "time_created" < ?');
+        $this->database->executePrepared($prepared, [$expiration]);
     }
 
     public function verifyReCAPTCHA()

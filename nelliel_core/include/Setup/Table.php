@@ -118,7 +118,7 @@ abstract class Table
 
         foreach ($this->columns as $column)
         {
-            if (!$this->database->columnExists($this->table_name, $column))
+            if (!$this->database->columnExists($this->table_name, $column, NEL_SQLTYPE))
             {
                 $missing_columns[] = $column;
             }
@@ -129,7 +129,7 @@ abstract class Table
 
     public function checkAndRepair()
     {
-        if (!$this->database->tableExists($this->table_name))
+        if (!$this->database->tableExists($this->table_name, NEL_SQLTYPE))
         {
             $this->createTable();
             $this->insertDefaults();
@@ -188,7 +188,7 @@ abstract class Table
 
     public function createTableQuery($schema, $table_name)
     {
-        if ($this->database->tableExists($table_name))
+        if ($this->database->tableExists($table_name, NEL_SQLTYPE))
         {
             return false;
         }

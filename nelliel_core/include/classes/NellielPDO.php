@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -16,9 +15,9 @@ class NellielPDO extends PDO
         parent::__construct($dsn, $username, $password, $options);
     }
 
-    public function databaseExists(string $database_name)
+    public function databaseExists(string $database_name, string $sql_type)
     {
-        switch (NEL_SQLTYPE)
+        switch ($sql_type)
         {
             case 'MYSQL':
                 $prepared = $this->prepare('SELECT 1 FROM "information_schema"."schemata" WHERE "schema_name" = ?');
@@ -46,9 +45,9 @@ class NellielPDO extends PDO
         return $result !== false;
     }
 
-    public function tableExists(string $table_name)
+    public function tableExists(string $table_name, string $sql_type)
     {
-        switch (NEL_SQLTYPE)
+        switch ($sql_type)
         {
             case 'MYSQL':
                 $prepared = $this->prepare(
@@ -81,9 +80,9 @@ class NellielPDO extends PDO
         return $result !== false;
     }
 
-    public function columnExists(string $table_name, string $column_name)
+    public function columnExists(string $table_name, string $column_name, string $sql_type)
     {
-        switch (NEL_SQLTYPE)
+        switch ($sql_type)
         {
             case 'MYSQL':
                 $prepared = $this->prepare(
@@ -198,7 +197,7 @@ class NellielPDO extends PDO
         return $fetched_result;
     }
 
-    public function executeFetchAll($query, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
+    public function executeFetchAll($query, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE): array
     {
         $result = $this->query($query);
 
@@ -208,7 +207,7 @@ class NellielPDO extends PDO
         }
         else
         {
-            $fetched_result = false;
+            $fetched_result = array();
         }
 
         return $fetched_result;
@@ -255,7 +254,7 @@ class NellielPDO extends PDO
         return $fetched_result;
     }
 
-    public function executePreparedFetchAll($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
+    public function executePreparedFetchAll($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE): array
     {
         $result = $this->executePrepared($prepared, $parameters, false);
 
@@ -265,7 +264,7 @@ class NellielPDO extends PDO
         }
         else
         {
-            $fetched_result = false;
+            $fetched_result = array();
         }
 
         return $fetched_result;

@@ -259,12 +259,6 @@ class Thread
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
         $descending_post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_ASSOC);
-
-        if ($descending_post_list === false)
-        {
-            return;
-        }
-
         $post_count = count($descending_post_list);
         $bump_limit = $this->domain->setting('max_posts');
 
