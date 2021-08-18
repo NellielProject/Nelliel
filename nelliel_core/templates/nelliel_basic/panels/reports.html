@@ -1,13 +1,13 @@
 <table class="data-table">
-	<caption class="data-table-caption" data-gettext="">List of reports</caption>
+	<caption class="data-table-caption" data-i18n="">List of reports</caption>
 	<thead class="data-table-header">
 		<tr>
-			<th data-gettext="">Report ID</th>
-			<th data-gettext="">Board ID</th>
-			<th data-gettext="">Content ID</th>
-			<th data-gettext="">Reason</th>
-			<th data-gettext="">Reporter IP</th>
-			<th data-gettext="">Dismiss Report</th>
+			<th data-i18n="">Report ID</th>
+			<th data-i18n="">Board ID</th>
+			<th data-i18n="">Content ID</th>
+			<th data-i18n="">Reason</th>
+			<th data-i18n="">Reporter IP</th>
+			<th data-i18n="">Dismiss Report</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -18,13 +18,13 @@
 			<td>
 				<a href="{{ content_url }}">{{ content_id }}</a>
 	{{# is_upload }}
-				<a href="{{ file_url }}" data-gettext=""> [File Link]</a>
+				<a href="{{ file_url }}" data-i18n=""> [File Link]</a>
 	{{/ is_upload }}
 			</td>
 			<td>{{ reason }}</td>
 			<td>{{ reporter_ip }}</td>
 			<td>
-				<a href="{{ dismiss_url }}" data-gettext="">Dismiss Report</a>
+				<a href="{{ dismiss_url }}" data-i18n="">Dismiss Report</a>
 			</td>
 		</tr>
 {{/ reports_list }}

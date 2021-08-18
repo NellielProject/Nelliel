@@ -1,11 +1,11 @@
 <table class="data-table">
-	<caption class="data-table-caption" data-gettext="">List of users</caption>
+	<caption class="data-table-caption" data-i18n="">List of users</caption>
 	<thead class="data-table-header">
 		<tr>
-			<th data-gettext="">User ID</th>
-			<th data-gettext="">Display Name</th>
-			<th data-gettext="">Active</th>
-			<th data-gettext="">Actions</th>
+			<th data-i18n="">User ID</th>
+			<th data-i18n="">Display Name</th>
+			<th data-i18n="">Active</th>
+			<th data-i18n="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -16,10 +16,10 @@
 			<td>{{ active }}</td>
 			<td>
 	{{# edit_url }}
-				<span>[<a href="{{ edit_url }}" data-gettext="">Edit</a>]</span>
+				<span>[<a href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
 	{{/ edit_url }}
 	{{# remove_url }}
-				<span>[<a href="{{ remove_url }}" data-gettext="">Remove</a>]</span>
+				<span>[<a href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
 	{{/ remove_url }}
 			</td>
 		</tr>
@@ -28,5 +28,5 @@
 </table>
 <hr>
 <div>
-	<a href="{{ new_user_url }}" data-gettext="">New User</a>
+	<a href="{{ new_user_url }}" data-i18n="">New User</a>
 </div>

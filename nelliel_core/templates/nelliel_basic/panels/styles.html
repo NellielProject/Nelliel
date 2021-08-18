@@ -1,12 +1,12 @@
 <table class="data-table">
-	<caption class="data-table-caption" data-gettext="">Installed styles</caption>
+	<caption class="data-table-caption" data-i18n="">Installed styles</caption>
 	<thead class="data-table-header">
 		<tr>
-			<th data-gettext="">Style ID</th>
-			<th data-gettext="">Type</th>
-			<th data-gettext="">Name</th>
-			<th data-gettext="">Directory</th>
-			<th data-gettext="">Actions</th>
+			<th data-i18n="">Style ID</th>
+			<th data-i18n="">Type</th>
+			<th data-i18n="">Name</th>
+			<th data-i18n="">Directory</th>
+			<th data-i18n="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -17,7 +17,7 @@
 			<td>{{ name }}</td>
 			<td>{{ directory }}</td>
 			<td>
-				<span>[<a class="display-cell" href="{{ remove_url }}" data-gettext="">Uninstall</a>]</span>
+				<span>[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Uninstall</a>]</span>
 			</td>
 		</tr>
 {{/ installed_list }}
@@ -25,15 +25,15 @@
 </table>
 <hr>
 <table class="data-table">
-	<caption class="data-table-caption" data-gettext="">Available styles</caption>
+	<caption class="data-table-caption" data-i18n="">Available styles</caption>
 	<thead class="data-table-header">
 		<tr>
-			<th data-gettext="">Style ID</th>
-			<th data-gettext="">Type</th>
-			<th data-gettext="">Name</th>
-			<th data-gettext="">Directory</th>
-			<th data-gettext="">Installed</th>
-			<th data-gettext="">Actions</th>
+			<th data-i18n="">Style ID</th>
+			<th data-i18n="">Type</th>
+			<th data-i18n="">Name</th>
+			<th data-i18n="">Directory</th>
+			<th data-i18n="">Installed</th>
+			<th data-i18n="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -45,15 +45,15 @@
 			<td>{{ directory }}</td>
 			<td>
 	{{^ is_installed }}
-				<span data-gettext="">No</span>
+				<span data-i18n="">No</span>
 	{{/ is_installed }}
 	{{# is_installed }}
-				<span data-gettext="">Yes</span>
+				<span data-i18n="">Yes</span>
 	{{/ is_installed }}
 			</td>
 			<td>
 	{{^ is_installed }}
-				<span>[<a class="display-cell" href="{{ install_url }}" data-gettext="">Install Style</a>]</span>
+				<span>[<a class="display-cell" href="{{ install_url }}" data-i18n="">Install Style</a>]</span>
 	{{/ is_installed }}
 			</td>
 		</tr>

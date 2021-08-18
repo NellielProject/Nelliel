@@ -1,25 +1,25 @@
 <p>
-	<span class="label" data-gettext="">You have been banned from:</span>
+	<span class="label" data-i18n="">You have been banned from:</span>
 	<span class="bold">{{ ban_board }}</span>
 </p>
 <p>
-	<span class="label" data-gettext="">Set on:</span>
+	<span class="label" data-i18n="">Set on:</span>
 	<span class="bold">{{ ban_time }}</span>
 </p>
 <p>
-	<span class="label" data-gettext="">Expires on:</span>
+	<span class="label" data-i18n="">Expires on:</span>
 	<span class="bold">{{ ban_expiration }}</span>
 </p>
 <p>
-	<span class="label" data-gettext="">Remaining time until expiration:</span>
+	<span class="label" data-i18n="">Remaining time until expiration:</span>
 	<span class="bold">{{ ban_length }}</span>
 </p>
 <p>
-	<span class="label" data-gettext="">Your current IP:</span>
+	<span class="label" data-i18n="">Your current IP:</span>
 	<span class="bold">{{ ban_ip }}</span>
 </p>
 <p>
-	<span class="label" data-gettext="">The reason for your ban:</span>
+	<span class="label" data-i18n="">The reason for your ban:</span>
 	<span class="bold">{{ ban_reason }}</span>
 </p>
 {{# appeal_allowed }}
@@ -27,33 +27,33 @@
 <form accept-charset="utf-8" name="postingform" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="ban_id" value="{{ ban_id }}">
 	<p>
-		<label for="bawww" data-gettext="">If you wish, you may appeal this ban. Enter your reason why you should get unbanned in the box below. A staff member will (probably) review it.</label>
+		<label for="bawww" data-i18n="">If you wish, you may appeal this ban. Enter your reason why you should get unbanned in the box below. A staff member will (probably) review it.</label>
 	</p>
 	<textarea id="bawww" name="bawww" cols="30" rows="6"></textarea>
-	<input class="display-block" type="submit" value="Submit Appeal" data-gettext="value">
+	<input class="display-block" type="submit" value="Submit Appeal" data-i18n-attributes="value">
 </form>
 	{{/ appealed }}
 {{/ appeal_allowed }}
 {{# is_range }}
-<p data-gettext="">This is part of a range ban. You cannot appeal it.</p>
+<p data-i18n="">This is part of a range ban. You cannot appeal it.</p>
 {{/ is_range }}
 {{^ min_time_met }}
-<p data-gettext="">The minimum time before appealing has not elapsed or the ban is too short to appeal.</p>
+<p data-i18n="">The minimum time before appealing has not elapsed or the ban is too short to appeal.</p>
 {{/ min_time_met }}
 {{# appealed }}
 	{{# reviewed }}
-<p data-gettext="">You have already appealed this ban but the appeal has not been reviewed yet.</p>
+<p data-i18n="">You have already appealed this ban but the appeal has not been reviewed yet.</p>
 	{{/ reviewed }}
 	{{# responded }}
 		{{# appeal_denied }}
-<p data-gettext="">You appeal has been reviewed and denied. You cannot appeal again.</p>
+<p data-i18n="">You appeal has been reviewed and denied. You cannot appeal again.</p>
 		{{/ appeal_denied }}
 		{{# appeal_modified }}
-<p data-gettext="">Your appeal has been reviewed and the ban has been altered.</p>
+<p data-i18n="">Your appeal has been reviewed and the ban has been altered.</p>
 		{{/ appeal_modified }}
 		{{# show_response }}
 <p>
-	<span class="label" data-gettext="">This is the response to your appeal:</span>
+	<span class="label" data-i18n="">This is the response to your appeal:</span>
 	<span>{{ appeal_response }}</span>
 </p>
 		{{/ show_response }}

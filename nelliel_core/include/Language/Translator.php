@@ -36,26 +36,25 @@ class Translator
 
     public function translateDOM($dom)
     {
-        $content_node_list = $dom->getElementsByAttributeName('data-gettext');
+        $content_node_list = $dom->getElementsByAttributeName('data-i18n');
+        $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
 
         foreach ($content_node_list as $node)
         {
-            if ($node->getAttribute('data-gettext') === '')
-            {
-                $this->gettextContent($node);
-            }
-            else
-            {
-                $this->gettextAttribute($node);
-            }
+            $this->gettextContent($node);
+            $node->removeAttribute('data-i18n');
+        }
 
-            $node->removeAttribute('data-gettext');
+        foreach ($attribute_node_list as $node)
+        {
+            $this->gettextAttribute($node);
+            $node->removeAttribute('data-i18n-attributes');
         }
     }
 
     private function gettextAttribute($node)
     {
-        $attribute_list = explode('|', $node->getAttribute('data-gettext'));
+        $attribute_list = explode('|', $node->getAttribute('data-i18n-attributes'));
 
         foreach ($attribute_list as $attribute_name)
         {

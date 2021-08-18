@@ -1,12 +1,12 @@
 <table class="data-table">
-	<caption class="data-table-caption" data-gettext="">List of boards</caption>
+	<caption class="data-table-caption" data-i18n="">List of boards</caption>
 	<thead class="data-table-header">
 		<tr>
-			<th data-gettext="">Board URI</th>
-			<th data-gettext="">DB Prefix</th>
-			<th data-gettext="">Status</th>
-			<th data-gettext="">Lock/Unlock</th>
-			<th data-gettext="">Remove</th>
+			<th data-i18n="">Board URI</th>
+			<th data-i18n="">DB Prefix</th>
+			<th data-i18n="">Status</th>
+			<th data-i18n="">Lock/Unlock</th>
+			<th data-i18n="">Remove</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -31,16 +31,16 @@
 <form action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="new_board_uri" class="display-cell" data-gettext="">Board URI</label>
+			<label for="new_board_uri" class="display-cell" data-i18n="">Board URI</label>
 			<input id="new_board_uri" class="display-cell" type="text" name="new_board_uri" size="30" maxlength="50" value="">
 		</div>
 		{{# alphanumeric_only }}
 		<div class="display-row">
-			<span class="display-cell" data-gettext="">Only alphanumeric board URIs are allowed!</span>
+			<span class="display-cell" data-i18n="">Only alphanumeric board URIs are allowed!</span>
 		</div>
 		{{/ alphanumeric_only }}
 		<div class="display-row">
-			<input type="submit" value="Create Board" data-gettext="value">
+			<input type="submit" value="Create Board" data-i18n-attributes="value">
 		</div>
 	</div>
 </form>

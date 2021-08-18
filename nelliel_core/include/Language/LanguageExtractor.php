@@ -344,35 +344,34 @@ class LanguageExtractor
             $dom = $render->newDOMDocument();
             $template = $render->loadTemplateFromFile($file->getPathname());
             $render->loadDOMFromTemplate($dom, $template);
-            $content_node_list = $dom->getElementsByAttributeName('data-gettext');
+            $content_node_list = $dom->getElementsByAttributeName('data-i18n');
+            $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
 
             foreach ($content_node_list as $node)
             {
-                if ($node->getAttribute('data-gettext') === '')
+                $msgid = $node->getContent();
+
+                if ($msgid !== '')
                 {
-                    $msgid = $node->getContent();
+                    $location = $file_id;
+                    $entries[$default_category][$msgid]['msgid'] = $msgid;
+                    $entries[$default_category][$msgid]['comments'][$location] = '#:';
+                }
+            }
+
+            foreach ($attribute_node_list as $node)
+            {
+                $attribute_list = explode('|', $node->getAttribute('data-i18n-attributes'));
+
+                foreach ($attribute_list as $attribute_name)
+                {
+                    $msgid = $node->getAttribute(trim($attribute_name));
 
                     if ($msgid !== '')
                     {
                         $location = $file_id;
                         $entries[$default_category][$msgid]['msgid'] = $msgid;
                         $entries[$default_category][$msgid]['comments'][$location] = '#:';
-                    }
-                }
-                else
-                {
-                    $attribute_list = explode('|', $node->getAttribute('data-gettext'));
-
-                    foreach ($attribute_list as $attribute_name)
-                    {
-                        $msgid = $node->getAttribute(trim($attribute_name));
-
-                        if ($msgid !== '')
-                        {
-                            $location = $file_id;
-                            $entries[$default_category][$msgid]['msgid'] = $msgid;
-                            $entries[$default_category][$msgid]['comments'][$location] = '#:';
-                        }
                     }
                 }
             }

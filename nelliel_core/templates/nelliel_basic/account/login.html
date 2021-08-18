@@ -1,9 +1,9 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" class="display-table">
 	<div class="display-row">
-		<span class="display-cell label" data-gettext="">User ID:</span><input class="display-cell" type="text" name="user_id" size="25" maxlength="255">
+		<span class="display-cell label" data-i18n="">User ID:</span><input class="display-cell" type="text" name="user_id" size="25" maxlength="255">
 	</div>
 	<div class="display-row">
-		<span class="display-cell label" data-gettext="">Password:</span><input class="display-cell" type="password" name="super_sekrit" size="25" maxlength="255">
+		<span class="display-cell label" data-i18n="">Password:</span><input class="display-cell" type="password" name="super_sekrit" size="25" maxlength="255">
 	</div>
 	{{# use_login_captcha }}
 		{{> pieces/captcha }}
@@ -12,9 +12,9 @@
 		{{> pieces/recaptcha }}
 	{{/ use_login_recaptcha }}
 	<div class="display-row">
-		<span class="display-cell"></span><input class="display-cell" type="submit" value="Submit" data-gettext="value">
+		<span class="display-cell"></span><input class="display-cell" type="submit" value="Submit" data-i18n-attributes="value">
 	</div>
 </form>
 <div>
-	<span data-gettext="">Don't have an account yet?</span>&nbsp;<a href="{{ register_url }}" data-gettext="">Register here</a>
+	<span data-i18n="">Don't have an account yet?</span>&nbsp;<a href="{{ register_url }}" data-i18n="">Register here</a>
 </div>
