@@ -5,9 +5,14 @@ namespace Nelliel\NewPost;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\BansAccess;
+use Nelliel\FileTypes;
+use Nelliel\Snacks;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
+use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -70,7 +75,7 @@ class Uploads
             $file_data['tmp_name'] = $this->files['upload_files']['tmp_name'][$i];
             $file_data['error'] = $this->files['upload_files']['error'][$i];
             $file_data['size'] = $this->files['upload_files']['size'][$i];
-            $file = new \Nelliel\Content\Upload(new \Nelliel\Content\ContentID(), $this->domain);
+            $file = new Upload(new ContentID(), $this->domain);
             $file->changeData('location', $file_data['tmp_name']);
             $file->changeData('name', $file_data['name']);
             $file_data['location'] = $file_data['tmp_name'];
@@ -220,7 +225,7 @@ class Uploads
     private function doesFileExist($response_to, $file)
     {
         $database = $this->domain->database();
-        $snacks = new \Nelliel\Snacks($this->domain, new \Nelliel\BansAccess($database));
+        $snacks = new Snacks($this->domain, new BansAccess($database));
         $error_data = ['delete_files' => true, 'bad-filename' => $file->data('name'), 'files' => $this->files,
             'board_id' => $this->domain->id()];
         $is_banned = false;
@@ -291,7 +296,7 @@ class Uploads
 
     private function checkFiletype($file)
     {
-        $filetypes = new \Nelliel\FileTypes($this->domain->database());
+        $filetypes = new FileTypes($this->domain->database());
         $error_data = ['delete_files' => true, 'bad-filename' => $file->data('name'), 'files' => $this->files,
             'board_id' => $this->domain->id()];
         $this->getPathInfo($file);
@@ -320,7 +325,6 @@ class Uploads
 
     private function embeds(Post $post)
     {
-        $response_to = $post->data('response_to');
         $total_embeds = 0;
 
         foreach ($this->embeds as $embed_url)
@@ -332,40 +336,35 @@ class Uploads
                 continue;
             }
 
-            $embed = new \Nelliel\Content\Upload(new \Nelliel\Content\ContentID(), $this->domain);
+            $duplicates_found = false;
 
-            $checking_duplicates = false;
-
-            if ($response_to === 0 && $this->domain->setting('check_op_duplicates'))
+            if ($post->data('op') && $this->domain->setting('check_op_duplicates'))
             {
                 $prepared = $this->database->prepare(
                         'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
                         '" WHERE "parent_thread" = "post_ref" AND "embed_url" = ?');
                 $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
-                $checking_duplicates = true;
+                $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
             }
 
-            if ($response_to > 0 && $this->domain->setting('check_thread_duplicates'))
+            if (!$duplicates_found && $this->domain->setting('check_thread_duplicates'))
             {
                 $prepared = $this->database->prepare(
                         'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
                         '" WHERE "parent_thread" = ? AND "embed_url" = ?');
-                $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
-                $checking_duplicates = true;
+                $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
+                $prepared->bindValue(2, $embed_url, PDO::PARAM_STR);
+                $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
             }
 
-            if ($checking_duplicates)
+            if ($duplicates_found)
             {
-                $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
-
-                if ($result)
-                {
-                    nel_derp(36, _gettext('Duplicate embed detected.'));
-                }
+                nel_derp(36, _gettext('Duplicate embed detected.'));
             }
 
+            $embed = new Upload(new ContentID(), $this->domain);
             $embed->changeData('type', 'embed');
-            $embed->changeData('format', ''); // TODO: Maybe detect specific services
+            $embed->changeData('format', 'embed');
             $embed->changeData('embed_url', $embed_url);
             $this->processed_uploads[] = $embed;
             $total_embeds ++;

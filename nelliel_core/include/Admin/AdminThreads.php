@@ -59,8 +59,8 @@ class AdminThreads extends Admin
                     break;
 
                 case 'ban':
-                    $admin_bans = new \Nelliel\Admin\AdminBans($this->authorization, $this->domain,
-                            $this->session, $inputs);
+                    $admin_bans = new \Nelliel\Admin\AdminBans($this->authorization, $this->domain, $this->session,
+                            $inputs);
                     $admin_bans->creator();
                     break;
 
@@ -138,7 +138,14 @@ class AdminThreads extends Admin
         $this->verifyAction($this->domain);
         $content_id = new ContentID($_GET['content-id']);
 
-        if ($content_id->isThread() || $content_id->isPost())
+        if ($content_id->isPost())
+        {
+            $thread = $content_id->getInstanceFromID($this->domain)->convertToThread();
+            $thread->toggleSticky();
+            $this->regenThread($thread->contentID()->threadID(), true);
+        }
+
+        if ($content_id->isThread())
         {
             $content_id->getInstanceFromID($this->domain)->toggleSticky();
             $this->regenThread($content_id->threadID(), true);

@@ -177,7 +177,7 @@ class Thread
         $file_handler->eraserGun($this->pagePath());
     }
 
-    protected function verifyModifyPerms()
+    public function verifyModifyPerms()
     {
         $post = new Post($this->content_id, $this->domain);
         $post->content_id->changePostID($this->firstPostID());
@@ -189,19 +189,13 @@ class Thread
         return $this;
     }
 
-    public function postCount()
+    public function updateCounts()
     {
         $prepared = $this->database->prepare(
                 'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ?');
         $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
-        return $post_count;
-    }
-
-    public function updateCounts()
-    {
-        $post_count = $this->postCount();
 
         $prepared = $this->database->prepare(
                 'UPDATE "' . $this->domain->reference('threads_table') . '" SET "post_count" = ? WHERE "thread_id" = ?');

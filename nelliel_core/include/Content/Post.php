@@ -75,7 +75,7 @@ class Post
 
     public function writeToDatabase($temp_database = null)
     {
-        if (empty($this->content_data) || empty($this->content_id->postID()))
+        if (!$this->isLoaded() || empty($this->content_id->postID()))
         {
             return false;
         }
@@ -92,7 +92,7 @@ class Post
                     "name" = :name, "reply_to" = :reply_to, "post_password" = :post_password,
                     "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "capcode" = :capcode, "email" = :email,
                     "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address, "hashed_ip_address" = :hashed_ip_address,
-                    "post_time" = :post_time, "post_time_milli" = :post_time_milli, "has_uploads" = :has_uploads,
+                    "post_time" = :post_time, "post_time_milli" = :post_time_milli,
                     "total_uploads" = :total_uploads, "file_count" = :file_count, "embed_count" = :embed_count,
                     "op" = :op, "sage" = :sage, "account_id" = :account_id, "mod_comment" = :mod_comment,
                     "content_hash" = :content_hash, "regen_cache" = :regen_cache, "cache" = :cache
@@ -104,10 +104,10 @@ class Post
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->domain->reference('posts_table') .
                     '" ("parent_thread", "name", "reply_to", "post_password", "tripcode", "secure_tripcode", "capcode", "email",
-                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli", "has_uploads",
+                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli",
                     "total_uploads", "file_count", "embed_count", "op", "sage", "account_id", "mod_comment") VALUES
                     (:parent_thread, :name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address,
-                    :hashed_ip_address, :post_time, :post_time_milli, :has_uploads, :total_uploads, :file_count, :embed_count,
+                    :hashed_ip_address, :post_time, :post_time_milli, :total_uploads, :file_count, :embed_count,
                     :op, :sage, :account_id, :mod_comment, :content_hash, :regen_cache, :cache)');
         }
 
@@ -129,7 +129,6 @@ class Post
                 nel_prepare_hash_for_storage($this->contentDataOrDefault('hashed_ip_address', null)), PDO::PARAM_LOB);
         $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
         $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':has_uploads', $this->contentDataOrDefault('has_uploads', 0), PDO::PARAM_INT);
         $prepared->bindValue(':total_uploads', $this->contentDataOrDefault('total_uploads', 0), PDO::PARAM_INT);
         $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
         $prepared->bindValue(':embed_count', $this->contentDataOrDefault('embed_count', 0), PDO::PARAM_INT);
@@ -178,18 +177,15 @@ class Post
             }
         }
 
-        $this->removeFromDatabase();
-        $this->removeFromDisk();
-        $thread = new Thread($this->content_id, $this->domain);
-
-        // TODO: This is a (hopefully) temporary thing to keep normal imageboard function when deleting OP post
-        if ($thread->postCount() <= 0 || $this->content_id->threadID() == $this->content_id->postID())
+        // It's possible to have a thread with no posts but for now we don't use that capability
+        if ($this->data('op'))
         {
-            $thread->remove(true);
+            $this->getParent()->remove(true);
         }
         else
         {
-            $thread->updateCounts();
+            $this->removeFromDatabase();
+            $this->removeFromDisk();
         }
 
         $this->archive_prune->updateThreads();
@@ -219,7 +215,7 @@ class Post
         $file_handler->eraserGun($this->previewPath());
     }
 
-    protected function verifyModifyPerms()
+    public function verifyModifyPerms()
     {
         $session = new \Nelliel\Account\Session();
         $user = $session->user();
@@ -292,7 +288,7 @@ class Post
                 true);
         $this->content_id->changeThreadID(
                 ($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());
-        $this->content_data['parent_thread'] = $this->content_id->threadID();
+        $this->changeData('parent_thread', $this->content_id->threadID());
         $this->content_id->changePostID($result);
     }
 
@@ -322,30 +318,33 @@ class Post
                 [$total_uploads, $file_count, $embed_count, $this->content_id->postID()]);
     }
 
-    public function convertToThread()
+    public function convertToThread(): Thread
     {
         $time = nel_get_microtime();
-        $new_content_id = new \Nelliel\Content\ContentID();
+        $new_content_id = new ContentID();
         $new_content_id->changeThreadID($this->content_id->postID());
         $new_content_id->changePostID($this->content_id->postID());
         $new_thread = new Thread($new_content_id, $this->domain);
-        $new_thread->content_data['thread_id'] = $this->content_id->postID();
-        $new_thread->content_data['last_bump_time'] = $time['time'];
-        $new_thread->content_data['last_bump_time_milli'] = $time['milli'];
-        $new_thread->content_data['last_update'] = $time['time'];
-        $new_thread->content_data['last_update_milli'] = $time['milli'];
+        $new_thread->changeData('thread_id', $this->content_id->postID());
+        $new_thread->changeData('last_bump_time', $time['time']);
+        $new_thread->changeData('last_bump_time_milli', $time['milli']);
+        $new_thread->changeData('last_update', $time['time']);
+        $new_thread->changeData('last_update_milli', $time['milli']);
         $new_thread->writeToDatabase();
         $new_thread->loadFromDatabase();
         $new_thread->createDirectories();
-        $prepared = $this->database->prepare(
-                'SELECT entry FROM "' . $this->domain->reference('upload_table') . '" WHERE "post_ref" = ?');
-        $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('upload_table') . '" SET "parent_thread" = ? WHERE "post_ref" = ?');
-        $this->database->executePrepared($prepared, [$new_thread->content_id->threadID(), $this->content_id->postID()]);
+        $uploads = $this->getUploads();
+
+        foreach ($uploads as $upload)
+        {
+            $upload->changeData('parent_thread', $new_thread->content_id->threadID());
+            $upload->writeToDatabase();
+        }
+
         $this->loadFromDatabase();
         $this->content_id->changeThreadID($new_thread->content_id->threadID());
-        $this->content_data['parent_thread'] = $new_thread->content_id->threadID();
-        $this->content_data['op'] = 1;
+        $this->changeData('parent_thread', $this->content_id->threadID());
+        $this->changeData('op', 1);
         $this->writeToDatabase();
         $new_thread->updateCounts();
         $this->archive_prune->updateThreads();
@@ -357,37 +356,6 @@ class Post
         $file_handler = nel_utilities()->fileHandler();
         $file_handler->createDirectory($this->srcPath(), NEL_DIRECTORY_PERM, true);
         $file_handler->createDirectory($this->previewPath(), NEL_DIRECTORY_PERM, true);
-    }
-
-    public function addCites()
-    {
-        $cites = new Cites($this->database);
-
-        if (nel_true_empty($this->data('comment')))
-        {
-            return;
-        }
-
-        $cite_list = $cites->getCitesFromText($this->content_data['comment']);
-
-        foreach ($cite_list as $cite)
-        {
-            $cite_data = $cites->getCiteData($cite, $this->domain, $this->content_id);
-
-            if ($cite_data['exists'] || $cite_data['future'])
-            {
-                $cites->addCite($cite_data);
-            }
-        }
-
-        $cites->updateForPost($this);
-    }
-
-    public function toggleSticky()
-    {
-        $new_thread = $this->convertToThread();
-        $new_thread->toggleSticky();
-        return $new_thread;
     }
 
     public function getCache(): array
@@ -474,7 +442,7 @@ class Post
         return $this->domain;
     }
 
-    public function isLoaded()
+    protected function isLoaded()
     {
         return !empty($this->content_data);
     }

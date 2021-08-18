@@ -61,7 +61,6 @@ Contains information about a post.
 |`post_time`      |`integer`|64-bit Unix timestamp|Time the post was made.|
 |`post_time_milli`|`integer`|0-999                |Post time milliseconds. Used with `post_time` when high precision is needed.|
 |`formatted_time` |`string` |text                 |Formatted version of `post_time`|
-|`has_uploads`    |`boolean`|true or false        |If the post has uploads.|
 |`total_uploads`  |`integer`|0-32767              |Total uploads in the post.|
 |`file_count`     |`integer`|0-32767              |Total files in the post.|
 |`embed_count`    |`integer`|0-32767              |Total embeds in the post.|

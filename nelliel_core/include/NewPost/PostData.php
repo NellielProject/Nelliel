@@ -35,6 +35,7 @@ class PostData
 
         $post->changeData('parent_thread', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
         $post->contentID()->changeThreadID($post->data('parent_thread'));
+        $post->changeData('op', $post->data('parent_thread') === 0);
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
         $post->changeData('ip_address', nel_request_ip_address());
         $post->changeData('hashed_ip_address', nel_request_ip_address(true));

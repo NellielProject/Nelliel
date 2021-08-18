@@ -53,7 +53,7 @@ class OutputPost extends Output
         $this->render_data['post_anchor_id'] = 't' . $post->contentID()->threadID() . 'p' . $post->contentID()->postID();
         $this->render_data['headers'] = $this->postHeaders($response, $thread, $post, $gen_data, $in_thread_number);
 
-        if ($post->data('has_uploads'))
+        if ($post->data('total_uploads') > 0)
         {
             $uploads = $post->getUploads();
             $output_file_info = new OutputFile($this->domain, $this->write_mode);

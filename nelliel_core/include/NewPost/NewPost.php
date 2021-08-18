@@ -3,13 +3,22 @@ declare(strict_types = 1);
 
 namespace Nelliel\NewPost;
 
-use PDO;
-
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Cites;
+use Nelliel\FGSFDS;
+use Nelliel\Overboard;
+use Nelliel\Regen;
 use Nelliel\Account\Session;
+use Nelliel\AntiSpam\CAPTCHA;
+use Nelliel\Auth\Authorization;
+use Nelliel\Content\ContentID;
+use Nelliel\Content\Post;
+use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use Nelliel\IfThens\IfThen;
+use PDO;
 
 class NewPost
 {
@@ -26,9 +35,9 @@ class NewPost
 
     public function processPost()
     {
-        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
+        $site_domain = new DomainSite($this->database);
         $error_data = ['board_id' => $this->domain->id()];
-        $captcha = new \Nelliel\AntiSpam\CAPTCHA($this->domain);
+        $captcha = new CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_post_captcha'))
         {
@@ -47,12 +56,12 @@ class NewPost
             nel_derp(23, _gettext('Board is locked. Cannot make new post.'), $error_data);
         }
 
-        $authorization = new \Nelliel\Auth\Authorization($this->database);
+        $authorization = new Authorization($this->database);
         $file_handler = nel_utilities()->fileHandler();
         $uploads_handler = new Uploads($this->domain, $_FILES, [$_POST['embed_url'] ?? ''], $authorization,
                 $this->session);
         $data_handler = new PostData($this->domain, $authorization, $this->session);
-        $post = new \Nelliel\Content\Post(new \Nelliel\Content\ContentID(), $this->domain);
+        $post = new Post(new ContentID(), $this->domain);
         $data_handler->processPostData($post);
         $time = nel_get_microtime();
         $post->changeData('post_time', $time['time']);
@@ -64,7 +73,7 @@ class NewPost
         // Process FGSFDS
         if ($this->domain->setting('process_new_post_commands'))
         {
-            $fgsfds = new \Nelliel\FGSFDS();
+            $fgsfds = new FGSFDS();
             $post_fgsfds = $post->data('fgsfds') ?? '';
 
             $fgsfds->addFromString($post_fgsfds, true);
@@ -118,16 +127,12 @@ class NewPost
             $post->changeData('post_password', nel_post_password_hash($post->data('post_password')));
         }
 
-        // Go ahead and put post into database
-        $post->changeData('op', ($post->data('parent_thread') == 0) ? 1 : 0);
-        $post->changeData('has_uploads', ($post->data('total_uploads') > 0) ? 1 : 0);
-
         // Process if-thens for new post here
         $if_then = new IfThen(new ConditionsPost($post, $uploads), new ActionsPost($post, $uploads));
         $if_then->process('new_post');
 
         $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
-        $thread = new \Nelliel\Content\Thread(new \Nelliel\Content\ContentID(), $this->domain);
+        $thread = new Thread(new ContentID(), $this->domain);
 
         if ($post->data('response_to') == 0)
         {
@@ -159,7 +164,7 @@ class NewPost
         }
 
         $post->writeToDatabase();
-        $post->addCites();
+        $this->addCites($post);
         $post->storeCache();
         $post->createDirectories();
 
@@ -216,11 +221,11 @@ class NewPost
             $thread->cycle();
         }
 
-        $update_overboard = new \Nelliel\Overboard($this->database);
+        $update_overboard = new Overboard($this->database);
         $update_overboard->addThread($thread);
 
         // Generate response page if it doesn't exist, otherwise update
-        $regen = new \Nelliel\Regen();
+        $regen = new Regen();
         $regen->threads($this->domain, true, [$thread->contentID()->threadID()]);
         $regen->index($this->domain);
 
@@ -299,5 +304,29 @@ class NewPost
                 nel_derp(6, _gettext('The thread is archived or buffered and cannot be posted to.'), $error_data);
             }
         }
+    }
+
+    private function addCites(Post $post)
+    {
+        $cites = new Cites($this->database);
+
+        if (nel_true_empty($post->data('comment')))
+        {
+            return;
+        }
+
+        $cite_list = $cites->getCitesFromText($post->data('comment'));
+
+        foreach ($cite_list as $cite)
+        {
+            $cite_data = $cites->getCiteData($cite, $this->domain, $this->content_id);
+
+            if ($cite_data['exists'] || $cite_data['future'])
+            {
+                $cites->addCite($cite_data);
+            }
+        }
+
+        $cites->updateForPost($post);
     }
 }

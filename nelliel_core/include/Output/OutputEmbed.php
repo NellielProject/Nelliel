@@ -21,7 +21,7 @@ class OutputEmbed extends Output
     {
         $this->renderSetup();
         $post = $embed->getParent();
-        $multiple = $post['embed_count'] > 1;
+        $multiple = $post->data('embed_count') > 1;
         $this->render_data['is_embed'] = true;
         $this->render_data['embed_container_id'] = 'embed-container-' . $embed->contentID()->getIDString();
         $this->render_data['embed_content_id'] = $embed->contentID()->getIDString();

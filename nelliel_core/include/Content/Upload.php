@@ -162,10 +162,9 @@ class Upload
 
         $this->removeFromDisk();
         $this->removeFromDatabase();
-        $post = new Post($this->content_id, $this->domain);
+        $post = $this->getParent();
         $post->updateCounts();
-        $thread = new Thread($this->content_id, $this->domain);
-        $thread->updateCounts();
+        $post->getParent()->updateCounts();
     }
 
     protected function removeFromDatabase()
@@ -207,10 +206,9 @@ class Upload
                 $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
     }
 
-    protected function verifyModifyPerms()
+    public function verifyModifyPerms()
     {
-        $post = new Post($this->content_id, $this->domain);
-        return $post->verifyModifyPerms();
+        return $this->getParent()->verifyModifyPerms();
     }
 
     public function getParent(): Post
@@ -290,7 +288,7 @@ class Upload
         return $this->domain;
     }
 
-    public function isLoaded()
+    protected function isLoaded()
     {
         return !empty($this->content_data);
     }

@@ -87,7 +87,7 @@ class ConditionsPost implements Conditions
                     break;
 
                 case 'has_uploads':
-                    $met = $condition === boolval($this->post->data('has_uploads'));
+                    $met = $condition === $this->post->data('total_uploads') > 0;
                     break;
 
                 case 'total_uploads':
