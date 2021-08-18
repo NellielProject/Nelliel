@@ -20,8 +20,8 @@ class Template
     {
         $this->database = $database;
         $this->template_id = $template_id;
-        $this->loadFromDB();
         $this->front_end_data = $front_end_data;
+        $this->load();
     }
 
     public function id(): string
@@ -31,7 +31,12 @@ class Template
 
     public function info(string $key): string
     {
-        return $this->info['template-info'][$key] ?? '';
+        return $this->info[$key] ?? '';
+    }
+
+    public function data(string $section, string $key): string
+    {
+        return $this->data[$section][$key] ?? '';
     }
 
     public function getDirectory(): string
@@ -59,7 +64,7 @@ class Template
         {
             if ($ini['template-info']['id'] === $this->id())
             {
-                $info = json_encode($ini);
+                $directory = $ini['template-info']['directory'];
                 break;
             }
         }
@@ -76,9 +81,9 @@ class Template
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "info") VALUES (?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $info]);
-        $this->loadFromDB();
+                'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "directory") VALUES (?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $directory]);
+        $this->load();
     }
 
     public function uninstall(): void
@@ -87,11 +92,18 @@ class Template
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function loadFromDB(): void
+    public function load(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
-        $this->data = is_array($data) ? $data : array();
-        $this->info = json_decode($data['info'] ?? '', true);
+        $directory = $data['directory'] ?? '';
+        $file = NEL_TEMPLATES_FILES_PATH . $directory . '/template_info.ini';
+
+        if (file_exists($file))
+        {
+            $ini = parse_ini_file($file, true);
+            $this->data = $ini ?? array();
+            $this->info = $ini['template-info'] ?? array();
+        }
     }
 }

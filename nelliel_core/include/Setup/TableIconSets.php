@@ -20,11 +20,11 @@ class TableIconSets extends Table
         $this->columns_data = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'set_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'info' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+            'directory' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
             'entry' => ['row_check' => false, 'auto_inc' => true],
             'set_id' => ['row_check' => true, 'auto_inc' => false],
-            'info' => ['row_check' => false, 'auto_inc' => false]];
+            'directory' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -36,7 +36,7 @@ class TableIconSets extends Table
         CREATE TABLE " . $this->table_name . " (
             entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             set_id      VARCHAR(100) NOT NULL UNIQUE,
-            info        TEXT NOT NULL
+            directory   VARCHAR(255) NOT NULL
         ) " . $options . ";";
 
         return $schema;

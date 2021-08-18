@@ -20,8 +20,8 @@ class Style
     {
         $this->database = $database;
         $this->style_id = $style_id;
-        $this->loadFromDB();
         $this->front_end_data = $front_end_data;
+        $this->load();
     }
 
     public function id(): string
@@ -31,11 +31,17 @@ class Style
 
     public function info(string $key): string
     {
-        return $this->info['style-info'][$key] ?? '';
+        return $this->info[$key] ?? '';
+    }
+
+    public function data(string $section, string $key): string
+    {
+        return $this->data[$section][$key] ?? '';
     }
 
     public function getMainFile(): string
     {
+
         return $this->info('main_file');
     }
 
@@ -66,12 +72,13 @@ class Style
     public function install(bool $overwrite = false): void
     {
         $style_inis = $this->front_end_data->getStyleInis();
+        $directory = '';
 
         foreach ($style_inis as $ini)
         {
             if ($ini['style-info']['id'] === $this->id())
             {
-                $info = json_encode($ini);
+                $directory = $ini['style-info']['directory'];
                 break;
             }
         }
@@ -87,9 +94,9 @@ class Style
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_STYLES_TABLE . '" ("style_id", "info") VALUES (?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $info]);
-        $this->loadFromDB();
+                'INSERT INTO "' . NEL_STYLES_TABLE . '" ("style_id", "directory") VALUES (?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $directory]);
+        $this->load();
     }
 
     public function uninstall(): void
@@ -98,11 +105,18 @@ class Style
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function loadFromDB(): void
+    public function load(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_STYLES_TABLE . '" WHERE "style_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
-        $this->data = is_array($data) ? $data : array();
-        $this->info = json_decode($data['info'] ?? '', true);
+        $directory = $data['directory'] ?? '';
+        $file = NEL_STYLES_FILES_PATH . $directory . '/style_info.ini';
+
+        if (file_exists($file))
+        {
+            $ini = parse_ini_file($file, true);
+            $this->data = $ini ?? array();
+            $this->info = $ini['style-info'] ?? array();
+        }
     }
 }

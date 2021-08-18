@@ -20,8 +20,8 @@ class IconSet
     {
         $this->database = $database;
         $this->icon_set_id = $icon_set_id;
-        $this->loadFromDB();
         $this->front_end_data = $front_end_data;
+        $this->load();
     }
 
     public function id(): string
@@ -31,17 +31,17 @@ class IconSet
 
     public function info(string $key): string
     {
-        return $this->info['set-info'][$key] ?? '';
+        return $this->info[$key] ?? '';
     }
 
-    public function getSection(string $section): array
+    public function data(string $section, string $key): string
     {
-        return $this->info[$section] ?? array();
+        return $this->data[$section][$key] ?? '';
     }
 
     public function getFile(string $section, string $icon, bool $fallback): string
     {
-        if (!isset($this->info[$section][$icon]) && $fallback)
+        if ($this->data($section, $icon) === '' && $fallback)
         {
             return $this->front_end_data->getBaseIconSet()->getFile($section, $icon, false);
         }
@@ -56,7 +56,7 @@ class IconSet
             return $this->front_end_data->getBaseIconSet()->getFilePath($section, $icon, false);
         }
 
-        $icon_file = $this->info[$section][$icon] ?? '';
+        $icon_file = $this->data($section, $icon);
 
         if ($icon_file !== '')
         {
@@ -73,7 +73,7 @@ class IconSet
             return $this->front_end_data->getBaseIconSet()->getWebPath($section, $icon, false);
         }
 
-        $icon_file = $this->info[$section][$icon] ?? '';
+        $icon_file = $this->data($section, $icon);
 
         if ($icon_file !== '')
         {
@@ -91,7 +91,7 @@ class IconSet
         {
             if ($ini['set-info']['id'] === $this->id())
             {
-                $info = json_encode($ini);
+                $directory = $ini['set-info']['directory'];
                 break;
             }
         }
@@ -108,9 +108,9 @@ class IconSet
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_ICON_SETS_TABLE . '" ("set_id", "info") VALUES (?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $info]);
-        $this->loadFromDB();
+                'INSERT INTO "' . NEL_ICON_SETS_TABLE . '" ("set_id", "directory") VALUES (?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $directory]);
+        $this->load();
     }
 
     public function uninstall(): void
@@ -119,11 +119,18 @@ class IconSet
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function loadFromDB(): void
+    public function load(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_ICON_SETS_TABLE . '" WHERE "set_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
-        $this->data = is_array($data) ? $data : array();
-        $this->info = json_decode($data['info'] ?? '', true);
+        $directory = $data['directory'] ?? '';
+        $file = NEL_ICON_SETS_FILES_PATH . $directory . '/icon_info.ini';
+
+        if (file_exists($file))
+        {
+            $ini = parse_ini_file($file, true);
+            $this->data = $ini ?? array();
+            $this->info = $ini['set-info'] ?? array();
+        }
     }
 }
