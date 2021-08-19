@@ -113,7 +113,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
     {
         if (NEL_USE_FILE_CACHE)
         {
-            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->id);
+            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . 'domains/' . $this->id);
         }
     }
 
