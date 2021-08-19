@@ -290,6 +290,10 @@ form {
 	margin: 0.35em;
 }
 
+.catalog.embed-frame {
+	margin: 0.35em 1.5em 0.5em 1.25em;
+}
+
 /* General post */
 .single.upload-row {
 

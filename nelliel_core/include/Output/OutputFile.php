@@ -20,6 +20,7 @@ class OutputFile extends Output
     {
         $this->renderSetup();
         $post = $file->getParent();
+        $catalog = $parameters['catalog'] ?? false;
         $multiple = $post->data('file_count') > 1;
         $this->render_data['is_file'] = true;
         $full_filename = $file->data('filename') . '.' . $file->data('extension');
@@ -87,10 +88,21 @@ class OutputFile extends Output
         if ($this->domain->setting('generate_preview'))
         {
             $this->render_data['image_preview'] = true;
-            $max_width = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
-                    'max_display_width');
-            $max_height = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
-                    'max_display_height');
+
+            if ($catalog)
+            {
+                $max_width = $this->domain->setting('max_catalog_display_width');
+                $max_height = $this->domain->setting('max_catalog_display_height');
+                $multiple = false;
+            }
+            else
+            {
+                $max_width = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
+                        'max_display_width');
+                $max_height = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
+                        'max_display_height');
+            }
+
             $this->render_data['max_width'] = $max_width;
             $this->render_data['max_height'] = $max_height;
 

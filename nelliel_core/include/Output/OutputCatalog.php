@@ -34,75 +34,70 @@ class OutputCatalog extends Output
         {
             $thread_data = array();
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . $this->domain->reference('posts_table') .
+                    'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? AND "op" = 1');
-            $first_post = $this->database->executePreparedFetch($prepared, [$thread->contentID()->threadID()],
-                    PDO::FETCH_ASSOC);
+            $op_id = $this->database->executePreparedFetch($prepared, [$thread->contentID()->threadID()],
+                    PDO::FETCH_COLUMN);
 
-            if (empty($first_post))
+            if (empty($op_id))
             {
                 continue;
             }
 
-            $first_post['render_cache'] = json_decode($first_post['cache'], true);
-            $post_content_id = new ContentId(
-                    'cid_' . $thread->contentID()->threadID() . '_' . $first_post['post_number']);
+            $post_content_id = new ContentId('cid_' . $thread->contentID()->threadID() . '_' . $op_id . '_0');
+            $post = $post_content_id->getInstanceFromID($this->domain);
             $thread_data['open_url'] = $thread->getURL();
+            $thread_data['first_post_subject'] = $post->data('subject');
 
-            if (!empty($first_post['subject']))
-            {
-                $thread_data['first_post_subject'] = $first_post['subject'];
-            }
-
-            if (!empty($first_post['comment']))
+            if (!nel_true_empty($post->data('comment')))
             {
                 $output_post = new OutputPost($this->domain, false);
 
-                if (NEL_USE_RENDER_CACHE && isset($first_post['render_cache']['comment_data']))
+                if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data']))
                 {
-                    $thread_data['comment_markdown'] = $first_post['render_cache']['comment_data'];
+                    $thread_data['comment_markdown'] = $post->getCache()['comment_data'];
                 }
                 else
                 {
-                    $thread_data['comment_markdown'] = $output_post->parseComment($first_post['comment'],
+                    $thread_data['comment_markdown'] = $output_post->parseComment($post->data('comment'),
                             $post_content_id);
                 }
             }
 
-            $thread_data['mod-comment'] = $first_post['mod_comment'];
+            $thread_data['mod-comment'] = $post->data('mod_comment');
             $thread_data['reply_count'] = $thread->data('post_count') - 1;
             $thread_data['total_uploads'] = $thread->data('total_uploads');
             $index_page = ceil($thread_count / $this->domain->setting('threads_per_page'));
             $thread_data['index_page'] = $index_page;
+            $ui_icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('ui_icon_set'));
             $thread_data['is_sticky'] = $thread->data('sticky');
+            $thread_data['sticky'] = $ui_icon_set->getWebPath('ui', 'sticky', true);
             $thread_data['is_locked'] = $thread->data('locked');
-            $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . $this->domain->reference('upload_table') .
-                    '" WHERE "post_ref" = ? AND "upload_order" = 1');
-            $first_file = $this->database->executePreparedFetch($prepared, [$first_post['post_number']],
-                    PDO::FETCH_ASSOC);
+            $thread_data['locked'] = $ui_icon_set->getWebPath('ui', 'locked', true);
+            $thread_data['is_cyclic'] = $thread->data('cyclic');
+            $thread_data['cyclic'] = $ui_icon_set->getWebPath('ui', 'cyclic', true);
 
-            if (!empty($first_file) && !empty($first_file['preview_name']))
+            if ($post->data('total_uploads') > 0)
             {
-                $thread_data['has_preview'] = true;
-                $width = $first_file['preview_width'];
-                $height = $first_file['preview_height'];
+                $uploads = $post->getUploads();
+                $output_file_info = new OutputFile($this->domain, $this->write_mode);
+                $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
+                $thread_data['single_file'] = true;
+                $thread_data['multi_file'] = false;
+                $thread_data['single_multiple'] = 'single';
+                $upload = $uploads[0];
 
-                if ($width > $this->domain->setting('max_catalog_display_width') ||
-                        $height > $this->domain->setting('max_catalog_display_height'))
+                if (nel_true_empty($upload->data('embed_url')))
                 {
-                    $ratio = min(($this->domain->setting('max_catalog_display_height') / $height),
-                            ($this->domain->setting('max_catalog_display_width') / $width));
-                    $width = intval($ratio * $width);
-                    $height = intval($ratio * $height);
+                    $file_data = $output_file_info->render($upload, ['catalog' => true], true);
+                }
+                else
+                {
+                    $file_data = $output_embed_info->render($upload, ['catalog' => true], true);
                 }
 
-                $thread_data['preview_width'] = $width;
-                $thread_data['preview_height'] = $height;
-                $thread_preview_web_path = $this->domain->reference('preview_web_path') .
-                        $thread->contentID()->threadID() . '/' . $first_post['post_number'] . '/';
-                $thread_data['preview_url'] = $thread_preview_web_path . $first_file['preview_name'] . '.' .
-                        $first_file['preview_extension'];
+                $thread_data['preview'] = $file_data;
+                $thread_data['has_preview'] = true;
             }
             else
             {

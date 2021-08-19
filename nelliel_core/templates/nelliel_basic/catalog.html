@@ -4,12 +4,19 @@
 	<div class="catalog-entry">
 		<div class="catalog-open-link">
 			<a href="{{ open_url }}">
-		{{# has_preview }}
-			<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}">
-		{{/ has_preview }}
-		{{^ has_preview }}
+		{{# preview }}
+			{{# has_preview }}
+				{{# is_file }}
+			{{> thread/files/catalog_preview }}
+				{{/ is_file }}
+				{{# is_embed }}
+
+				{{/ is_embed }}
+			{{/ has_preview }}
+			{{^ has_preview }}
 			{{ open_text }}
-		{{/ has_preview }}
+			{{/ has_preview }}
+		{{/ preview }}
 			</a>
 		</div>
 		<div class="catalog-thread-info">
@@ -19,11 +26,14 @@
 			<span>{{ total_uploads }}</span>
 			<span> / P: </span>
 			<span>{{ index_page }}</span>
+		{{# is_cyclic }}
+			<img src="{{ cyclic }}" width="16" height="16" alt="Cyclic icon" class="thread-status-icon">
+		{{/ is_cyclic }}
 		{{# is_sticky }}
-			<span>&#128204;</span>
+			<img src="{{ sticky }}" width="16" height="16" alt="Sticky icon" class="thread-status-icon">
 		{{/ is_sticky }}
 		{{# is_locked }}
-			<span>&#128274;</span>
+			<img src="{{ locked }}" width="16" height="16" alt="Lock icon" class="thread-status-icon">
 		{{/ is_locked }}
 		</div>
 		<div class="op-subject">{{ first_post_subject }}</div>

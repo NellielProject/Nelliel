@@ -21,6 +21,7 @@ class OutputEmbed extends Output
     {
         $this->renderSetup();
         $post = $embed->getParent();
+        $catalog = $parameters['catalog'] ?? false;
         $multiple = $post->data('embed_count') > 1;
         $this->render_data['is_embed'] = true;
         $this->render_data['embed_container_id'] = 'embed-container-' . $embed->contentID()->getIDString();
@@ -56,10 +57,20 @@ class OutputEmbed extends Output
                     '&actions=delete&content-id=' . $embed->ContentID()->getIDString() . '&modmode=true&goback=true';
         }
 
-        $this->render_data['max_preview_width'] = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
-                'max_display_width');
-        $this->render_data['max_preview_height'] = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
-                'max_display_height');
+        if ($catalog)
+        {
+            $this->render_data['max_preview_width'] = $this->domain->setting('max_catalog_display_width');
+            $this->render_data['max_preview_height'] = $this->domain->setting('max_catalog_display_height');
+            $multiple = false;
+        }
+        else
+        {
+            $this->render_data['max_preview_width'] = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
+                    'max_display_width');
+            $this->render_data['max_preview_height'] = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
+                    'max_display_height');
+        }
+
         $output = $this->output('thread/file_info', $data_only, true, $this->render_data);
         return $output;
     }
