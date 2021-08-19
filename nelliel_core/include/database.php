@@ -58,8 +58,16 @@ function nel_database($input = null, $wut_do = null)
 //
 function nel_new_database_connection($dsn, $username = null, $password = null, $options = array())
 {
-    $connection = new \Nelliel\NellielPDO($dsn, $username, $password, $options);
-    return $connection;
+    // Just in case things go wrong we want to avoid sensitive info leaking
+    try
+    {
+        $connection = new \Nelliel\NellielPDO($dsn, $username, $password, $options);
+        return $connection;
+    }
+    catch (PDOException $exception)
+    {
+        nel_derp(47, _gettext('Error connecting to database.'));
+    }
 }
 
 //
@@ -80,16 +88,18 @@ function nel_default_database_connection()
             break;
 
         case 'MARIADB':
-            $dsn = 'mysql:host=' . NEL_MARIADB_HOST . ';port=' . NEL_MARIADB_PORT . ';dbname=' . NEL_MARIADB_DB . ';charset=' .
-                    NEL_MARIADB_ENCODING . ';';
+            $dsn = 'mysql:host=' . NEL_MARIADB_HOST . ';port=' . NEL_MARIADB_PORT . ';dbname=' . NEL_MARIADB_DB .
+                    ';charset=' . NEL_MARIADB_ENCODING . ';';
             $connection = nel_new_database_connection($dsn, NEL_MARIADB_USER, NEL_MARIADB_PASS, $options);
             $connection->exec("SET SESSION sql_mode='ANSI';");
             break;
 
         case 'POSTGRESQL':
-            $dsn = 'pgsql:host=' . NEL_POSTGRESQL_HOST . ';port=' . NEL_POSTGRESQL_PORT . ';dbname=' . NEL_POSTGRESQL_DB . ';';
+            $dsn = 'pgsql:host=' . NEL_POSTGRESQL_HOST . ';port=' . NEL_POSTGRESQL_PORT . ';dbname=' . NEL_POSTGRESQL_DB .
+                    ';';
             $connection = nel_new_database_connection($dsn, NEL_POSTGRESQL_USER, NEL_POSTGRESQL_PASS, $options);
-            $connection->exec("SET search_path TO " . NEL_POSTGRESQL_SCHEMA . "; SET names '" . NEL_POSTGRESQL_ENCODING . "';");
+            $connection->exec(
+                    "SET search_path TO " . NEL_POSTGRESQL_SCHEMA . "; SET names '" . NEL_POSTGRESQL_ENCODING . "';");
             break;
 
         case 'SQLITE':
