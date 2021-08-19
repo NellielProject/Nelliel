@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
@@ -41,13 +40,22 @@ class AdminNews extends Admin
         $this->verifyAction($this->domain);
         $news_info = array();
         $news_info['poster_id'] = $this->session_user->id();
+        $news_info['name'] = $_POST['name'] ?? '';
+
+        if ($news_info['name'] === '' || !$this->session_user->checkPermission($this->domain, 'perm_custom_name'))
+        {
+            $this->session_user->getData('display_name');
+        }
+
         $news_info['headline'] = $_POST['headline'] ?? null;
         $news_info['time'] = time();
         $news_info['text'] = $_POST['news_text'] ?? null;
-        $query = 'INSERT INTO "' . $this->data_table . '" ("poster_id", "headline", "time", "text") VALUES (?, ?, ?, ?)';
+        $query = 'INSERT INTO "' . $this->data_table .
+                '" ("poster_id", "name", "headline", "time", "text") VALUES (?, ?, ?, ?, ?)';
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
-                [$news_info['poster_id'], $news_info['headline'], $news_info['time'], $news_info['text']]);
+                [$news_info['poster_id'], $news_info['name'], $news_info['headline'], $news_info['time'],
+                    $news_info['text']]);
         $this->regenNews();
         $this->outputMain(true);
     }

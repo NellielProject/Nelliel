@@ -42,6 +42,7 @@ class TableNews extends Table
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             poster_id       VARCHAR(50) NOT NULL,
+            name            VARCHAR(255) NOT NULL,
             time            BIGINT NOT NULL,
             headline        VARCHAR(255) NOT NULL,
             text            TEXT NOT NULL,

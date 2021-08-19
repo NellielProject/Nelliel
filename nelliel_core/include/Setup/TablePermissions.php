@@ -89,6 +89,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_noticeboard_access', 'Can view the staff noticeboard']);
         $this->insertDefaultRow(['perm_noticeboard_post', 'Can post on the staff noticeboard']);
         $this->insertDefaultRow(['perm_noticeboard_delete', 'Can delete posts on the staff noticeboard']);
+        $this->insertDefaultRow(['perm_custom_name', 'Post as staff with a custom name']);
         $this->insertDefaultRow(['perm_custom_capcode', 'Can use a custom capcode']);
         $this->insertDefaultRow(['perm_bypass_renzoku', 'Bypass posting cooldowns']);
         $this->insertDefaultRow(['perm_extract_gettext', 'Extract Gettext strings']);

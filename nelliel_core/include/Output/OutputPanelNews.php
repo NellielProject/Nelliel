@@ -40,6 +40,7 @@ class OutputPanelNews extends Output
             $entry_info = array();
             $entry_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
+            $entry_info['name'] = $news_entry['name'];
             $entry_info['headline'] = $news_entry['headline'];
             $entry_info['time'] = date('Y/m/d (D) H:i:s', intval($news_entry['time']));
             $entry_info['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

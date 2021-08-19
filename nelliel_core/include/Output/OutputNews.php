@@ -35,7 +35,6 @@ class OutputNews extends Output
     private function newsList(int $limit = 0)
     {
         $database = $this->domain->database();
-        $authorization = new \Nelliel\Auth\Authorization($database);
         $news_entries = $database->executeFetchAll('SELECT * FROM "' . NEL_NEWS_TABLE . '" ORDER BY "time" ASC',
                 PDO::FETCH_ASSOC);
         $limit_counter = 0;
@@ -50,8 +49,8 @@ class OutputNews extends Output
 
             $news_info = array();
             $news_info['headline'] = $news_entry['headline'];
-            $name = $authorization->getUser($news_entry['poster_id'])->getData('display_name');
-            $news_info['poster'] = ' by ' . $name;
+            $news_info['name'] = $news_entry['name'];
+            $news_info['poster'] = ' ' . _gettext('by') . ' ' . $news_entry['name'];
             $news_info['time'] = ' - ' . date('Y/m/d l H:i', intval($news_entry['time']));
             $news_info['news_lines'] = array();
 

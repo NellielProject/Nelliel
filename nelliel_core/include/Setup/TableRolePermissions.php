@@ -97,6 +97,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_noticeboard_access', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_noticeboard_post', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_noticeboard_delete', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_custom_name', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_custom_capcode', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_bypass_renzoku', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_extract_gettext', 1]);
@@ -142,6 +143,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_noticeboard_access', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_noticeboard_post', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_noticeboard_delete', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_bypass_renzoku', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_extract_gettext', 0]);
@@ -187,6 +189,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_noticeboard_access', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_noticeboard_post', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_noticeboard_delete', 0]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_bypass_renzoku', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_extract_gettext', 0]);
@@ -232,6 +235,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_noticeboard_access', 1]);
         $this->insertDefaultRow(['JANITOR', 'perm_noticeboard_post', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_noticeboard_delete', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_bypass_renzoku', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_extract_gettext', 0]);
@@ -277,6 +281,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_noticeboard_access', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_noticeboard_post', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_noticeboard_delete', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_bypass_renzoku', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_extract_gettext', 0]);
