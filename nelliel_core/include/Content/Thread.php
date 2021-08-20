@@ -14,7 +14,7 @@ use Nelliel\SQLHelpers;
 use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Setup\TableThreads;
+use Nelliel\Tables\TableThreads;
 use PDO;
 
 class Thread

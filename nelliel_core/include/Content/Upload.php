@@ -11,7 +11,7 @@ use Nelliel\SQLHelpers;
 use Nelliel\API\JSON\UploadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Setup\TableUploads;
+use Nelliel\Tables\TableUploads;
 use PDO;
 
 class Upload

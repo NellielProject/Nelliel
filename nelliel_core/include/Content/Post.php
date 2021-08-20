@@ -14,7 +14,7 @@ use Nelliel\API\JSON\PostJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPost;
-use Nelliel\Setup\TablePosts;
+use Nelliel\Tables\TablePosts;
 use PDO;
 
 class Post
