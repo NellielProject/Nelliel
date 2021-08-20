@@ -66,7 +66,7 @@ function nel_new_database_connection($dsn, $username = null, $password = null, $
     }
     catch (PDOException $exception)
     {
-        nel_derp(47, _gettext('Error connecting to database.'));
+        nel_derp(49, _gettext('Error connecting to database.'));
     }
 }
 

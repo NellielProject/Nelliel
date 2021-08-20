@@ -65,6 +65,9 @@
 		{{# enable_name_field }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ enable_name_field }}
+		{{# require_name }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ require_name }}
 		{{# min_name_length }}
 			{{> panels/pieces/settings_number }}
 		{{/ min_name_length }}
@@ -74,6 +77,9 @@
 		{{# enable_email_field }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ enable_email_field }}
+		{{# require_email }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ require_email }}
 		{{# min_email_length }}
 			{{> panels/pieces/settings_number }}
 		{{/ min_email_length }}
@@ -83,6 +89,9 @@
 		{{# enable_subject_field }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ enable_subject_field }}
+		{{# require_subject }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ require_subject }}
 		{{# min_subject_length }}
 			{{> panels/pieces/settings_number }}
 		{{/ min_subject_length }}
@@ -92,6 +101,9 @@
 		{{# enable_comment_field }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ enable_comment_field }}
+		{{# require_comment }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ require_comment }}
 		{{# min_comment_length }}
 			{{> panels/pieces/settings_number }}
 		{{/ min_comment_length }}
@@ -110,6 +122,9 @@
 		{{# allow_embeds }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_embeds }}
+		{{# embed_replaces_file }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ embed_replaces_file }}
 		{{# allow_op_uploads }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_op_uploads }}
@@ -122,9 +137,6 @@
 		{{# allow_reply_multiple }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_reply_multiple }}
-		{{# embed_replaces_file }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ embed_replaces_file }}
 		{{# require_op_upload }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ require_op_upload }}
@@ -146,12 +158,6 @@
 		{{# max_thread_uploads }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_thread_uploads }}
-		{{# require_op_comment }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ require_op_comment }}
-		{{# require_reply_comment }}
-			{{> panels/pieces/settings_checkbox }}
-		{{/ require_reply_comment }}
 		{{# max_post_uploads }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_post_uploads }}
@@ -238,9 +244,9 @@
 		{{# png_compression }}
 			{{> panels/pieces/settings_number }}
 		{{/ png_compression }}
-		{{# animated_gif_preview }}
+		{{# animated_preview }}
 			{{> panels/pieces/settings_checkbox }}
-		{{/ animated_gif_preview }}
+		{{/ animated_preview }}
 		{{# deleted_upload_placeholder }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ deleted_upload_placeholder }}
@@ -306,9 +312,12 @@
 		{{# threads_per_page }}
 			{{> panels/pieces/settings_number }}
 		{{/ threads_per_page }}
-		{{# comment_display_lines }}
+		{{# max_index_comment_lines }}
 			{{> panels/pieces/settings_number }}
-		{{/ comment_display_lines }}
+		{{/ max_index_comment_lines }}
+		{{# max_index_comment_length }}
+			{{> panels/pieces/settings_number }}
+		{{/ max_index_comment_length }}
 		{{# filter_combining_characters }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ filter_combining_characters }}
@@ -420,6 +429,18 @@
 		{{# image_deleted_file }}
 			{{> panels/pieces/settings_text }}
 		{{/ image_deleted_file }}
+		{{# subject_in_title }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ subject_in_title }}
+		{{# slug_in_title }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ slug_in_title }}
+		{{# thread_number_in_title }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ thread_number_in_title }}
+		{{# prefix_board_title }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ prefix_board_title }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}

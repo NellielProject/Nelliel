@@ -68,26 +68,30 @@ class TableBoardDefaults extends Table
 
         // New post
         $this->insertDefaultRow(['enable_name_field', '1', 0]);
+        $this->insertDefaultRow(['require_name', '0', 0]);
         $this->insertDefaultRow(['min_name_length', '0', 0]);
         $this->insertDefaultRow(['max_name_length', '100', 0]);
         $this->insertDefaultRow(['enable_email_field', '1', 0]);
+        $this->insertDefaultRow(['require_email', '0', 0]);
         $this->insertDefaultRow(['min_email_length', '0', 0]);
         $this->insertDefaultRow(['max_email_length', '100', 0]);
         $this->insertDefaultRow(['enable_subject_field', '1', 0]);
+        $this->insertDefaultRow(['require_subject', '0', 0]);
         $this->insertDefaultRow(['min_subject_length', '0', 0]);
         $this->insertDefaultRow(['max_subject_length', '200', 0]);
         $this->insertDefaultRow(['enable_comment_field', '1', 0]);
+        $this->insertDefaultRow(['require_comment', '0', 0]);
         $this->insertDefaultRow(['min_comment_length', '0', 0]);
         $this->insertDefaultRow(['max_comment_length', '5000', 0]);
         $this->insertDefaultRow(['enable_fgsfds_field', '1', 0]);
         $this->insertDefaultRow(['enable_password_field', '1', 0]);
         $this->insertDefaultRow(['allow_files', '1', 0]);
         $this->insertDefaultRow(['allow_embeds', '0', 0]);
+        $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
         $this->insertDefaultRow(['allow_op_uploads', '1', 0]);
         $this->insertDefaultRow(['allow_reply_uploads', '1', 0]);
         $this->insertDefaultRow(['allow_op_multiple', '0', 0]);
         $this->insertDefaultRow(['allow_reply_multiple', '0', 0]);
-        $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
         $this->insertDefaultRow(['require_op_upload', '1', 0]);
         $this->insertDefaultRow(['require_reply_upload', '0', 0]);
         $this->insertDefaultRow(['check_thread_duplicates', '1', 0]);
@@ -95,8 +99,6 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['enable_spoilers', '1', 0]);
         $this->insertDefaultRow(['limit_thread_uploads', '1', 0]);
         $this->insertDefaultRow(['max_thread_uploads', '1000', 0]);
-        $this->insertDefaultRow(['require_op_comment', '0', 0]);
-        $this->insertDefaultRow(['require_reply_comment', '0', 0]);
         $this->insertDefaultRow(['max_post_uploads', '3', 0]);
         $this->insertDefaultRow(['max_filesize', '5120', 0]);
         $this->insertDefaultRow(['truncate_long_fields', '0', 0]);
@@ -123,7 +125,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['jpeg_quality', '90', 0]);
         $this->insertDefaultRow(['use_png_preview', '0', 0]);
         $this->insertDefaultRow(['png_compression', '6', 0]);
-        $this->insertDefaultRow(['animated_gif_preview', '0', 0]);
+        $this->insertDefaultRow(['animated_preview', '0', 0]);
         $this->insertDefaultRow(['deleted_upload_placeholder', '0', 0]);
         $this->insertDefaultRow(['limit_post_count', '1', 0]);
         $this->insertDefaultRow(['max_posts', '1000', 0]);
@@ -143,7 +145,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['index_thread_replies', '5', 0]);
         $this->insertDefaultRow(['index_sticky_replies', '1', 0]);
         $this->insertDefaultRow(['threads_per_page', '10', 0]);
-        $this->insertDefaultRow(['comment_display_lines', '15', 0]);
+        $this->insertDefaultRow(['max_index_comment_lines', '15', 0]);
         $this->insertDefaultRow(['filter_combining_characters', '0', 0]);
         $this->insertDefaultRow(['display_render_timer', '1', 0]);
         $this->insertDefaultRow(['enable_dynamic_pages', '0', 0]);
@@ -181,6 +183,10 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['index_nav_bottom', '1', 0]);
         $this->insertDefaultRow(['image_spoiler_cover', 'media/core/covers/spoiler.png', 0]);
         $this->insertDefaultRow(['image_deleted_file', 'media/core/placeholders/deleted_file.png', 0]);
+        $this->insertDefaultRow(['subject_in_title', '1', 0]);
+        $this->insertDefaultRow(['slug_in_title', '1', 0]);
+        $this->insertDefaultRow(['thread_number_in_title', '1', 0]);
+        $this->insertDefaultRow(['prefix_board_title', '1', 0]);
 
         // Anti-spam
         $this->insertDefaultRow(['use_post_captcha', '0', 0]);

@@ -37,6 +37,10 @@ class OutputPostingForm extends Output
         $this->render_data['display_comment_field'] = $this->domain->setting('enable_comment_field');
         $this->render_data['display_fgsfds_field'] = $this->domain->setting('enable_fgsfds_field');
         $this->render_data['display_password_field'] = $this->domain->setting('enable_password_field');
+        $this->render_data['require_name'] = $this->domain->setting('require_name') ? 'required' : '';
+        $this->render_data['require_email'] = $this->domain->setting('require_email') ? 'required' : '';
+        $this->render_data['require_subject'] = $this->domain->setting('require_subject') ? 'required' : '';
+        $this->render_data['require_comment'] = $this->domain->setting('require_comment') ? 'required' : '';
 
         if ($this->render_data['in_modmode'])
         {
@@ -56,6 +60,7 @@ class OutputPostingForm extends Output
             $this->render_data['allow_embeds'] = $this->domain->setting('allow_embeds') &&
                     $this->domain->setting('allow_op_uploads');
             $this->render_data['allow_multiple'] = $this->domain->setting('allow_op_multiple');
+            $this->render_data['upload_required'] = $this->domain->setting('require_op_upload');
         }
         else
         {
@@ -64,6 +69,7 @@ class OutputPostingForm extends Output
             $this->render_data['allow_embeds'] = $this->domain->setting('allow_embeds') &&
                     $this->domain->setting('allow_reply_uploads');
             $this->render_data['allow_multiple'] = $this->domain->setting('allow_reply_multiple');
+            $this->render_data['upload_required'] = $this->domain->setting('require_reply_upload');
         }
 
         if ($this->domain->setting('allow_op_multiple') || $this->domain->setting('allow_reply_multiple'))
@@ -76,8 +82,6 @@ class OutputPostingForm extends Output
         }
 
         $this->render_data['file_max_message'] = sprintf(_gettext('Maximum files: %d'), $max_files);
-        $this->render_data['file_required'] = ($response_to) ? $this->domain->setting('require_reply_upload') : $this->domain->setting(
-                'require_op_upload');
         $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');

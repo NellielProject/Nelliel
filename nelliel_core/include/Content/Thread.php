@@ -125,7 +125,7 @@ class Thread
         $prepared->bindValue(':old', $this->contentDataOrDefault('old', 0), PDO::PARAM_INT);
         $prepared->bindValue(':preserve', $this->contentDataOrDefault('old', 0), PDO::PARAM_INT);
         $prepared->bindValue(':locked', $this->contentDataOrDefault('locked', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':slug', $this->contentDataOrDefault('slug', 0), PDO::PARAM_INT);
+        $prepared->bindValue(':slug', $this->contentDataOrDefault('slug', ''), PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         $this->archive_prune->updateThreads();
         $this->overboard->updateThread($this);

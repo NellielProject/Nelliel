@@ -70,10 +70,20 @@ class PostData
 
         $post->changeData('name', $name);
 
+        if(nel_true_empty($post->data('name')) && $this->domain->setting('require_name'))
+        {
+            nel_derp(41, _gettext('A name is required to post.'));
+        }
+
         if ($this->domain->setting('enable_email_field') && !$this->domain->setting('forced_anonymous'))
         {
             $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'] ?? '', 'string');
             $post->changeData('email', $this->fieldLengthCheck('email', $email));
+        }
+
+        if(nel_true_empty($post->data('email')) && $this->domain->setting('require_email'))
+        {
+            nel_derp(42, _gettext('An email is required to post.'));
         }
 
         if ($this->domain->setting('enable_subject_field'))
@@ -82,12 +92,22 @@ class PostData
             $post->changeData('subject', $this->fieldLengthCheck('subject', $subject));
         }
 
+        if(nel_true_empty($post->data('subject')) && $this->domain->setting('require_subject'))
+        {
+            nel_derp(43, _gettext('A subject is required to post.'));
+        }
+
         if ($this->domain->setting('enable_comment_field'))
         {
             $original_comment = $_POST['new_post']['post_info']['wordswordswords'] ?? '';
             $comment = $this->checkEntry($original_comment, 'string');
             $post->changeData('original_comment', $comment);
             $post->changeData('comment', $this->fieldLengthCheck('comment', $comment));
+        }
+
+        if(nel_true_empty($post->data('comment')) && $this->domain->setting('require_comment'))
+        {
+            nel_derp(44, _gettext('A comment is required to post.'));
         }
 
         if ($this->domain->setting('enable_fgsfds_field'))
@@ -110,23 +130,6 @@ class PostData
             $this->session->ignore(true);
         }
 
-        $response_to = $post->data('response_to') > 0;
-
-        if (!$response_to)
-        {
-            if (nel_true_empty($post->data('comment')) && $this->domain->setting('require_op_comment'))
-            {
-                nel_derp(41, _gettext('A comment is required when starting a thread.'));
-            }
-        }
-        else
-        {
-            if (nel_true_empty($post->data('comment')) && $this->domain->setting('require_reply_comment'))
-            {
-                nel_derp(42, _gettext('A comment is required when replying.'));
-            }
-        }
-
         $this->staffPost($post, $name);
 
         if (!nel_true_empty($post->data('comment')))
@@ -138,14 +141,14 @@ class PostData
 
             if (count($cite_list['board']) > $this->domain->setting('max_cites'))
             {
-                nel_derp(44,
+                nel_derp(45,
                         sprintf(_gettext('Comment contains too many cites. Maximum is %d.'),
                                 $this->domain->setting('max_cites')));
             }
 
             if (count($cite_list['crossboard']) > $this->domain->setting('max_crossboard_cites'))
             {
-                nel_derp(45,
+                nel_derp(46,
                         sprintf(_gettext('Comment contains too many cross-board cites. Maximum is %d.'),
                                 $this->domain->setting('max_crossboard_cites')));
             }
@@ -155,7 +158,7 @@ class PostData
 
             if (preg_match_all($url_split_regex, $post->data('comment')) > $this->domain->setting('max_comment_urls'))
             {
-                nel_derp(46,
+                nel_derp(47,
                         sprintf(_gettext('Comment contains too many URLs. Maximum is %d.'),
                                 $this->domain->setting('max_comment_urls')));
             }

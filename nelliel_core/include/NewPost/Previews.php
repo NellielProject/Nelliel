@@ -155,7 +155,7 @@ class Previews
         $sharpen_sigma = 0.25;
         $resize_command = 'gm convert ' . escapeshellarg($file->data('location')) . ' ';
 
-        if ($file->data('format') === 'gif' && $this->domain->setting('animated_gif_preview'))
+        if ($file->data('format') === 'gif' && $this->domain->setting('animated_preview'))
         {
             $file->changeData('preview_extension', 'gif');
 
@@ -199,7 +199,7 @@ class Previews
         $image->setCompressionQuality($parameters['compression']);
         $image_count = $image->getNumberImages();
 
-        if ($file->data('format') === 'gif' && $image_count > 1 && $this->domain->setting('animated_gif_preview'))
+        if ($file->data('format') === 'gif' && $image_count > 1 && $this->domain->setting('animated_preview'))
         {
             $file->changeData('preview_extension', 'gif');
 
@@ -233,7 +233,7 @@ class Previews
         $sharpen_sigma = 0.25;
         $resize_command = 'convert ' . escapeshellarg($file->data('location')) . ' ';
 
-        if ($file->data('format') === 'gif' && $this->domain->setting('animated_gif_preview'))
+        if ($file->data('format') === 'gif' && $this->domain->setting('animated_preview'))
         {
             $file->changeData('preview_extension', 'gif');
 
@@ -270,7 +270,7 @@ class Previews
         $image->setImageCompressionQuality($parameters['compression']);
         $image_count = $image->getNumberImages();
 
-        if ($file->data('format') === 'gif' && $image_count > 1 && $this->domain->setting('animated_gif_preview'))
+        if ($file->data('format') === 'gif' && $image_count > 1 && $this->domain->setting('animated_preview'))
         {
             $file->changeData('preview_extension', 'gif');
 

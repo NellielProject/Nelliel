@@ -443,7 +443,7 @@ class Uploads
         if ($total >= 1 && $this->domain->setting('limit_thread_uploads') &&
                 $parent_thread->data('total_uploads') >= $this->domain->setting('max_thread_uploads'))
         {
-            nel_derp(43, _gettext('This thread has reached the maximum number of uploads.'));
+            nel_derp(48, _gettext('This thread has reached the maximum number of uploads.'));
         }
 
         if ($total === 1)

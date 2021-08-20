@@ -8,36 +8,32 @@
 			{{# display_name_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="">Name</span>
-			<input type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" minlength="{{ not_anonymous_minlength }}" maxlength="{{ not_anonymous_maxlength }}">
+			<input type="text" class="posting-form-input" name="new_post[post_info][not_anonymous]" size="30" minlength="{{ not_anonymous_minlength }}" maxlength="{{ not_anonymous_maxlength }}" {{require_name }}>
 		</label>
 			{{/ display_name_field }}
 			{{# display_email_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="">E-mail</span>
-			<input class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength=" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}">
+			<input class="posting-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength=" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}" {{ require_email }}>
 		</label>
 			{{/ display_email_field }}
 		{{/ forced_anonymous }}
 		{{# display_subject_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="">Subject</span>
-			<input class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" minlength="{{ verb_minlength }}"  maxlength="{{ verb_maxlength }}">
+			<input class="posting-form-input" type="text" name="new_post[post_info][verb]" size="30" minlength="{{ verb_minlength }}"  maxlength="{{ verb_maxlength }}" {{ require_subject }}>
 		</label>
 		{{/ display_subject_field }}
 		{{# display_comment_field }}
 		<label class="posting-form-row">
 			<span class="posting-form-label" data-i18n="">Comment</span>
-			<textarea id="wordswordswords" class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6"></textarea>
+			<textarea id="wordswordswords" class="posting-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6" {{ require_comment }}></textarea>
 		</label>
 		{{/ display_comment_field }}
 		{{# allow_files }}
 		<span class="posting-form-row">
 			<label class="posting-form-label" for="form-file-upload">
 				<span data-i18n="">File</span>
-			{{# file_required }}
-				<br>
-				(<span data-i18n="">Required</span>)
-			{{/ file_required }}
 			</label>
 			<span data-i18n="">{{ file_max_message }}</span>
 			<br>
@@ -120,6 +116,9 @@
 		</label>
 		{{/ use_honeypot }}
 	</div>
+	{{# upload_required }}
+	<div class="text-center" data-i18n="">At least one file or embed is required.</div>
+	{{/ upload_required }}
 	<ul class="posting-rules-list">
 	{{# posting_rules_items }}
 		<li class="posting-rules-item">{{ rules_text }}</li>

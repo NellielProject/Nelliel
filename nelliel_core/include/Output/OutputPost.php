@@ -304,7 +304,7 @@ class OutputPost extends Output
                 $comment_lines = $this->output_filter->newlinesToArray($comment_markdown);
                 $line_count = count($comment_lines);
 
-                if ($line_count > $this->domain->setting('comment_display_lines'))
+                if ($line_count > $this->domain->setting('max_index_comment_lines'))
                 {
                     $comment_data['long_comment'] = true;
                     $comment_data['long_comment_url'] = $thread->getURL() . '#t' . $post->contentID()->threadID() . 'p' .
@@ -312,7 +312,7 @@ class OutputPost extends Output
                     $comment_data['comment_lines'] = array();
                     $i = 0;
                     $reduced_lines = array();
-                    $limit = $this->domain->setting('comment_display_lines');
+                    $limit = $this->domain->setting('max_index_comment_lines');
 
                     for (; $i < $limit; $i ++)
                     {
@@ -334,7 +334,7 @@ class OutputPost extends Output
         $messages[] = _gettext('Post success!');
         $link['url'] = $parameters['forward_url'] ?? '';
         $link['text'] = _gettext('Click here if you are not automatically redirected');
-        $parameters['page_title'] = $this->domain->reference('board_uri') . ' - ' . $this->domain->reference('title');
+        $parameters['page_title'] = $this->domain->reference('title');
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
         return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
     }
@@ -344,7 +344,7 @@ class OutputPost extends Output
         $messages[] = _gettext('The selected items have been deleted!');
         $link['url'] = $parameters['forward_url'] ?? '';
         $link['text'] = _gettext('Click here if you are not automatically redirected');
-        $parameters['page_title'] = $this->domain->reference('board_uri') . ' - ' . $this->domain->reference('title');
+        $parameters['page_title'] = $this->domain->reference('title');
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
         return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
     }

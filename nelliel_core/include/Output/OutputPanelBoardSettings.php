@@ -133,10 +133,12 @@ class OutputPanelBoardSettings extends Output
         }
 
         $this->render_data['show_lock_update'] = $defaults;
-        $board_settings = $this->database->query(
-                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . $table_name . '" ON "' . NEL_SETTINGS_TABLE .
-                '"."setting_name" = "' . $table_name . '"."setting_name" WHERE "setting_category" = \'board\'')->fetchAll(
-                PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '" ON "' .
+                NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
+                NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "' . NEL_SETTINGS_TABLE .
+                '"."setting_category" = \'board\'');
+        $board_settings = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
 
         foreach ($board_settings as $setting)
         {

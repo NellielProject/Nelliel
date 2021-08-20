@@ -52,15 +52,24 @@ class OutputThread extends Output
         }
 
         $op_post = $posts[0];
-        $page_title = $this->domain->reference('board_uri');
+        $page_title = '';
 
-        if (nel_true_empty($op_post->data('subject')))
+        if ($this->domain->setting('prefix_board_title'))
         {
-            $page_title .= ' - Thread #' . $op_post->data('post_number');
+            $page_title .= $this->domain->reference('title');
         }
-        else
+
+        if ($this->domain->setting('subject_in_title') && !nel_true_empty($op_post->data('subject')))
         {
             $page_title .= ' - ' . $op_post->data('subject');
+        }
+        else if ($this->domain->setting('slug_in_title') && !nel_true_empty($thread->data('slug')))
+        {
+            $page_title .= ' - ' . $thread->data('slug');
+        }
+        else if ($this->domain->setting('thread_number_in_title'))
+        {
+            $page_title .= ' - ' . _gettext('Thread') . ' #' . $op_post->data('post_number');
         }
 
         $output_head = new OutputHead($this->domain, $this->write_mode);
