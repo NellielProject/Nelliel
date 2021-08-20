@@ -12,11 +12,9 @@ class ContentID
     protected $thread_id = 0;
     protected $post_id = 0;
     protected $order_id = 0;
-    protected $id_string = 'cid_0_0_0';
 
     function __construct(string $id_string = 'cid_0_0_0')
     {
-        $this->id_string = $id_string;
         $id_array = self::parseIDString($id_string);
         $this->thread_id = intval($id_array['thread']);
         $this->post_id = intval($id_array['post']);
@@ -105,13 +103,17 @@ class ContentID
         {
             return new Thread($this, $domain, null, $load);
         }
-        else if ($this->isPost())
+
+        if ($this->isPost())
         {
             return new Post($this, $domain, null, $load);
         }
-        else if ($this->isContent())
+
+        if ($this->isContent())
         {
             return new Upload($this, $domain, null, $load);
         }
+
+        return null;
     }
 }

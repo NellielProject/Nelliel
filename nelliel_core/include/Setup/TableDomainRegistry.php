@@ -21,7 +21,7 @@ class TableDomainRegistry extends Table
         $this->column_types = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'hashed_domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
+            'hashed_domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
@@ -41,7 +41,7 @@ class TableDomainRegistry extends Table
         CREATE TABLE " . $this->table_name . " (
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             domain_id           VARCHAR(50) NOT NULL UNIQUE,
-            hashed_domain_id    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL UNIQUE,
+            hashed_domain_id    VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL UNIQUE,
             notes               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL
         ) " . $options . ";";

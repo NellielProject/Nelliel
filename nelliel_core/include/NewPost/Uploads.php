@@ -54,7 +54,6 @@ class Uploads
 
     private function files(Post $post)
     {
-        $response_to = $post->data('response_to');
         $file_count = count($this->files['upload_files']['name']);
         $data_handler = new PostData($this->domain, $this->authorization, $this->session);
         $file_handler = nel_utilities()->fileHandler();
@@ -80,7 +79,7 @@ class Uploads
             $file->changeData('name', $file_data['name']);
             $file_data['location'] = $file_data['tmp_name'];
             $this->checkForErrors($file_data);
-            $this->doesFileExist($response_to, $file);
+            $this->doesFileExist($post, $file);
             $this->checkFiletype($file);
             $exif_data = json_encode(@exif_read_data($file->data('location'), '', true));
 
@@ -186,7 +185,7 @@ class Uploads
 
         if ($file['size'] > $this->domain->setting('max_filesize') * 1024)
         {
-            nel_derp(11, _gettext('Spoon is too big.'), $error_data);
+            nel_derp(11, _gettext('File is too big.'), $error_data);
         }
 
         if ($file['error'] === UPLOAD_ERR_INI_SIZE)
@@ -222,7 +221,7 @@ class Uploads
         nel_plugins()->processHook('nel-post-check-file-errors', [$file, $error_data]);
     }
 
-    private function doesFileExist($response_to, $file)
+    private function doesFileExist(Post $post, Upload $file)
     {
         $database = $this->domain->database();
         $snacks = new Snacks($this->domain, new BansAccess($database));
@@ -255,42 +254,37 @@ class Uploads
             nel_derp(22, _gettext('That file is banned.'), $error_data);
         }
 
-        $db_md5 = nel_prepare_hash_for_storage($file->data('md5'));
-        $db_sha1 = nel_prepare_hash_for_storage($file->data('sha1'));
-        $db_sha256 = nel_prepare_hash_for_storage($file->data('sha256'));
-        $db_sha512 = nel_prepare_hash_for_storage($file->data('sha512'));
-        $query = '';
-
-        if ($response_to === 0 && $this->domain->setting('check_op_duplicates'))
+        if ($post->data('op') && $this->domain->setting('check_op_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
-            $prepared->bindValue(1, $db_md5, PDO::PARAM_LOB);
-            $prepared->bindValue(2, $db_sha1, PDO::PARAM_LOB);
-            $prepared->bindValue(3, $db_sha256, PDO::PARAM_LOB);
-            $prepared->bindValue(4, $db_sha512, PDO::PARAM_LOB);
+            $prepared->bindValue(1, $file->data('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(2, $file->data('sha1'), PDO::PARAM_STR);
+            $prepared->bindValue(3, $file->data('sha256'), PDO::PARAM_STR);
+            $prepared->bindValue(4, $file->data('sha512'), PDO::PARAM_STR);
         }
-        else if ($response_to > 0 && $this->domain->setting('check_thread_duplicates'))
+        else if (!$post->data('op') && $this->domain->setting('check_thread_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
-            $prepared->bindValue(1, $response_to, PDO::PARAM_INT);
-            $prepared->bindValue(2, $db_md5, PDO::PARAM_LOB);
-            $prepared->bindValue(3, $db_sha1, PDO::PARAM_LOB);
-            $prepared->bindValue(4, $db_sha256, PDO::PARAM_LOB);
-            $prepared->bindValue(5, $db_sha512, PDO::PARAM_LOB);
+            $prepared->bindValue(1, $post->contentID()->threadID(), PDO::PARAM_INT);
+            $prepared->bindValue(2, $file->data('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(3, $file->data('sha1'), PDO::PARAM_STR);
+            $prepared->bindValue(4, $file->data('sha256'), PDO::PARAM_STR);
+            $prepared->bindValue(5, $file->data('sha512'), PDO::PARAM_STR);
+        }
+        else
+        {
+            return;
         }
 
-        if (!empty($query))
-        {
-            $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
+        $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 
-            if ($result)
-            {
-                nel_derp(21, _gettext('Duplicate file detected.'), $error_data);
-            }
+        if ($result)
+        {
+            nel_derp(21, _gettext('Duplicate file detected.'), $error_data);
         }
     }
 

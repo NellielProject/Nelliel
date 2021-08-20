@@ -98,6 +98,11 @@ class OutputIndex extends Output
 
         foreach ($threads as $thread)
         {
+            if (is_null($thread) || !$thread->exists())
+            {
+                continue;
+            }
+
             $thread_input = array();
             $index_basename = ($page == 1) ? 'index' : sprintf($index_format, ($page));
             $prepared = $this->database->prepare(

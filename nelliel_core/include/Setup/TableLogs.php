@@ -24,7 +24,7 @@ class TableLogs extends Table
             'event_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'originator' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
-            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
+            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'message' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
@@ -54,7 +54,7 @@ class TableLogs extends Table
             event_id            VARCHAR(50) NOT NULL,
             originator          VARCHAR(50) NOT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " DEFAULT NULL,
+            hashed_ip_address   VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,
             time                BIGINT NOT NULL,
             message             TEXT NOT NULL,
             moar                TEXT DEFAULT NULL,

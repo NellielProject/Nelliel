@@ -8,7 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Timer;
 use Nelliel\Domains\Domain;
-use Nelliel\Output\Filter;
 use Nelliel\Render\RenderCoreDOM;
 use Nelliel\Render\RenderCoreMustache;
 use Nelliel\Render\TemplateSubstitutes;

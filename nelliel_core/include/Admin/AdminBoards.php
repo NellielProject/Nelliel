@@ -112,7 +112,7 @@ class AdminBoards extends Admin
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_DOMAIN_REGISTRY_TABLE . '" ("domain_id", "hashed_domain_id") VALUES (?, ?)');
         $prepared->bindValue(1, $board_uri, PDO::PARAM_STR);
-        $prepared->bindValue(2, nel_prepare_hash_for_storage($hashed_board_id), PDO::PARAM_LOB);
+        $prepared->bindValue(2, $hashed_board_id, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
 
         $prepared = $this->database->prepare(

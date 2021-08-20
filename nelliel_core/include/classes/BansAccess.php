@@ -79,7 +79,7 @@ class BansAccess
                     'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ?');
         }
 
-        $prepared->bindValue(1, nel_prepare_hash_for_storage($hashed_ip), PDO::PARAM_LOB);
+        $prepared->bindValue(1, $hashed_ip, PDO::PARAM_STR);
         $ban_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
 
         if (is_array($ban_ids))

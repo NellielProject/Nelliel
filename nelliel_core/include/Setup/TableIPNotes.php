@@ -21,7 +21,7 @@ class TableIPNotes extends Table
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
-            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
+            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
@@ -45,7 +45,7 @@ class TableIPNotes extends Table
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             user_id             VARCHAR(50) NOT NULL,
             ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip_address   " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '64') . " NOT NULL,
+            hashed_ip_address   VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
             time                BIGINT NOT NULL,
             notes               TEXT NOT NULL,
             moar                TEXT DEFAULT NULL

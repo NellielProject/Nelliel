@@ -44,7 +44,7 @@ class OutputFile extends Output
 
         $this->render_data['file_url'] = $this->domain->reference('src_web_path') . $post->data('parent_thread') . '/' .
                 $post->data('post_number') . '/' . rawurlencode($full_filename);
-        $moar = json_decode($file->data('moar'), true);
+        $moar = json_decode($file->data('moar') ?? '', true);
         $display_filename = $file->data('filename');
         $display_extension = $file->data('extension');
 

@@ -215,7 +215,14 @@ class NellielPDO extends PDO
 
     public function executePrepared($prepared, $parameters = null, bool $close_cursor = true)
     {
-        $result = $prepared->execute($parameters);
+        if (is_null($parameters))
+        {
+            $result = $prepared->execute();
+        }
+        else
+        {
+            $result = $prepared->execute($parameters);
+        }
 
         if ($result !== false && $close_cursor)
         {

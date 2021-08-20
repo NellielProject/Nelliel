@@ -163,6 +163,10 @@ class PostData
                                 $this->domain->setting('max_comment_urls')));
             }
         }
+
+        $time = nel_get_microtime();
+        $post->changeData('post_time', $time['time']);
+        $post->changeData('post_time_milli', $time['milli']);
     }
 
     public function checkEntry($post_item, $type)

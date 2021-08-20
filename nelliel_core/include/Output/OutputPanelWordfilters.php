@@ -7,8 +7,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\Admin\AdminWordfilters;
-use Nelliel\Auth\Authorization;
 
 class OutputPanelWordfilters extends Output
 {

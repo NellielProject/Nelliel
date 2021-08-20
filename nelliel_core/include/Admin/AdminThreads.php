@@ -228,7 +228,7 @@ class AdminThreads extends Admin
         $prepared = $this->database->prepare(
                 'SELECT "post_number", "parent_thread" FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "hashed_ip_address" = ?');
-        $prepared->bindValue(1, nel_prepare_hash_for_storage($post_instance->data('hashed_ip_address')), PDO::PARAM_LOB);
+        $prepared->bindValue(1, $post_instance->data('hashed_ip_address'), PDO::PARAM_STR);
         $post_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $thread_ids = array();
 

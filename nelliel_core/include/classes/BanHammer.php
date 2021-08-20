@@ -51,7 +51,7 @@ class BanHammer
             $this->ban_data['board_id'] = Domain::GLOBAL;
         }
 
-        if(is_null($this->ban_data['board_id']))
+        if (is_null($this->ban_data['board_id']))
         {
             nel_derp(158, _gettext('No board or domain given for the ban.'));
         }
@@ -205,8 +205,7 @@ class BanHammer
                 $prepared->bindValue(3, $this->ban_data['creator'], PDO::PARAM_STR);
                 $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
                         PDO::PARAM_LOB);
-                $prepared->bindValue(5, nel_prepare_hash_for_storage($this->ban_data['hashed_ip_address']),
-                        PDO::PARAM_LOB);
+                $prepared->bindValue(5, $this->ban_data['hashed_ip_address'], PDO::PARAM_STR);
                 $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
                         PDO::PARAM_LOB);
                 $prepared->bindValue(7, $this->ban_data['reason'], PDO::PARAM_STR);
@@ -229,7 +228,7 @@ class BanHammer
             $prepared->bindValue(3, $this->ban_data['creator'], PDO::PARAM_STR);
             $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
                     PDO::PARAM_LOB);
-            $prepared->bindValue(5, nel_prepare_hash_for_storage($this->ban_data['hashed_ip_address']), PDO::PARAM_LOB);
+            $prepared->bindValue(5, $this->ban_data['hashed_ip_address'], PDO::PARAM_STR);
             $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
                     PDO::PARAM_LOB);
             $prepared->bindValue(7, $this->ban_data['reason'], PDO::PARAM_STR);

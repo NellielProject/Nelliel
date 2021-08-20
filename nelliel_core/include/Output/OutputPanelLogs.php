@@ -7,7 +7,6 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
-use Nelliel\Output\Pagination;
 use PDO;
 
 class OutputPanelLogs extends Output

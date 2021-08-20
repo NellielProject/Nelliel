@@ -64,8 +64,6 @@ class NewPost
         $post = new Post(new ContentID(), $this->domain);
         $data_handler->processPostData($post);
         $time = nel_get_microtime();
-        $post->changeData('post_time', $time['time']);
-        $post->changeData('post_time_milli', $time['milli']);
 
         // Check if post is ok
         $this->isPostOk($post, $time['time']);
@@ -84,8 +82,8 @@ class NewPost
             {
                 $email_parts = explode(' ', $post_email);
 
-                if ($email_parts !== false &&
-                        (count($email_parts) > 1 || preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1))
+                if ($email_parts !== false && count($email_parts) > 1 &&
+                        preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1)
                 {
                     $fgsfds->addFromString($post_email, false);
                     $post->changeData('email', null);
@@ -134,9 +132,10 @@ class NewPost
         $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
         $thread = new Thread(new ContentID(), $this->domain);
 
-        if ($post->data('response_to') == 0)
+        if ($post->data('op'))
         {
             $thread->contentID()->changeThreadID($post->contentID()->postID());
+            $thread->changeData('thread_id', $post->contentID()->postID());
             $thread->changeData('last_bump_time', $time['time']);
             $thread->changeData('last_bump_time_milli', $time['milli']);
             $thread->changeData('last_update', $time['time']);
@@ -155,8 +154,8 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
-                    !$fgsfds->commandIsSet('sage') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
+                            'sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
@@ -260,7 +259,7 @@ class NewPost
                 '" WHERE "post_time" > ? AND "op" = ? AND "hashed_ip_address" = ?');
         $prepared->bindValue(1, $renzoku_setting, PDO::PARAM_STR);
         $prepared->bindValue(2, $op_value, PDO::PARAM_INT);
-        $prepared->bindValue(3, nel_prepare_hash_for_storage(nel_request_ip_address(true)), PDO::PARAM_LOB);
+        $prepared->bindValue(3, nel_request_ip_address(true), PDO::PARAM_STR);
         $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if ($renzoku > 0 && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))

@@ -1,7 +1,5 @@
 <?php
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
@@ -55,8 +53,7 @@ class NellielLogger extends AbstractLogger
         $prepared->bindValue(':event_id', $data['event_id'], PDO::PARAM_STR);
         $prepared->bindValue(':originator', $data['originator'], PDO::PARAM_STR);
         $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($data['ip_address']), PDO::PARAM_LOB);
-        $prepared->bindValue(':hashed_ip_address', nel_prepare_hash_for_storage($data['hashed_ip_address']),
-                PDO::PARAM_LOB);
+        $prepared->bindValue(':hashed_ip_address', $data['hashed_ip_address'], PDO::PARAM_STR);
         $prepared->bindValue(':time', $data['time'], PDO::PARAM_INT);
         $prepared->bindValue(':message', $data['message'], PDO::PARAM_STR);
         $this->database->executePrepared($prepared);

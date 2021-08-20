@@ -26,7 +26,7 @@ class OutputThread extends Output
         $thread_content_id = new ContentID(ContentID::createIDString($thread_id));
         $thread = $thread_content_id->getInstanceFromID($this->domain);
 
-        if (!$thread->exists())
+        if (is_null($thread) || !$thread->exists())
         {
             return;
         }

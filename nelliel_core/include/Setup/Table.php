@@ -1,13 +1,12 @@
 <?php
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use PDO;
+use Nelliel\SQLHelpers;
 
 abstract class Table
 {
@@ -56,11 +55,29 @@ abstract class Table
         }
     }
 
-    protected function insertDefaultRow(array $values)
+    public function rowExists(array $data): bool
     {
         $check_values = array();
         $check_columns = array();
         $check_pdo_types = array();
+
+        foreach ($this->column_checks as $column_name => $info)
+        {
+            if ($info['row_check'] && isset($data[$column_name]))
+            {
+                $check_values[] = $data[$column_name];
+                $check_columns[] = $column_name;
+                $check_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
+            }
+        }
+
+        return $this->database->rowExists($this->table_name, $check_columns, $check_values, $check_pdo_types);
+    }
+
+    protected function insertDefaultRow(array $values)
+    {
+        $sql_helpers = new SQLHelpers($this->database);
+        $data = array();
         $index = 0;
 
         foreach ($this->column_checks as $column_name => $info)
@@ -70,19 +87,17 @@ abstract class Table
                 continue;
             }
 
-            if (!$info['auto_inc'] && $info['row_check'] && isset($values[$index]))
+            if (isset($values[$index]))
             {
-                $check_values[] = $values[$index];
-                $check_columns[] = $column_name;
-                $check_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
+                $data[$column_name] = $values[$index];
             }
 
             $index ++;
         }
 
-        if ($this->database->rowExists($this->table_name, $check_columns, $check_values, $check_pdo_types))
+        if ($this->rowExists($data))
         {
-            return false;
+            return;
         }
 
         $insert_values = array();
@@ -109,7 +124,9 @@ abstract class Table
             $index ++;
         }
 
-        $this->compileExecuteInsert($this->table_name, $insert_columns, $insert_values, $insert_pdo_types);
+        $prepared = $sql_helpers->buildPreparedInsert($this->table_name, $insert_columns);
+        $sql_helpers->bindToPrepared($prepared, $insert_columns, $insert_values, $insert_pdo_types);
+        $this->database->executePrepared($prepared);
     }
 
     public function verifyStructure()
@@ -158,13 +175,13 @@ abstract class Table
     {
         $column_list = '';
 
-        if(empty($columns))
+        if (empty($columns))
         {
             $column_list = '*';
         }
         else
         {
-            foreach($columns as $column)
+            foreach ($columns as $column)
             {
                 $column_list .= '"' . $column . '",';
             }
@@ -172,10 +189,10 @@ abstract class Table
             $column_list = rtrim($column_list, ',');
         }
 
-
         if ($this->database->executeFetch('SELECT 1 FROM "' . $this->table_name . '"', PDO::FETCH_COLUMN) === false)
         {
-            $insert_query = 'INSERT INTO "' . $this->table_name . '" SELECT ' . $column_list . ' FROM "' . $source_table_name . '"';
+            $insert_query = 'INSERT INTO "' . $this->table_name . '" SELECT ' . $column_list . ' FROM "' .
+                    $source_table_name . '"';
             $prepared = $this->database->prepare($insert_query);
             $this->database->executePrepared($prepared);
         }
@@ -207,45 +224,24 @@ abstract class Table
         return $result;
     }
 
-    public function compileExecuteInsert(string $table_name, array $columns, array $values, array $pdo_types = null)
-    {
-        $query = 'INSERT INTO "' . $table_name . '" (';
-
-        foreach ($columns as $column)
-        {
-            $query .= '"' . $column . '", ';
-        }
-
-        $query = substr($query, 0, -2) . ') VALUES (';
-
-        foreach ($columns as $column)
-        {
-            $query .= ':' . $column . ', ';
-        }
-
-        $query = substr($query, 0, -2) . ')';
-
-        $prepared = $this->database->prepare($query);
-        $count = count($columns);
-
-        for ($i = 0; $i < $count; $i ++)
-        {
-            if (!is_null($pdo_types))
-            {
-                $prepared->bindValue(':' . $columns[$i], $values[$i], $pdo_types[$i]);
-            }
-            else
-            {
-                $prepared->bindValue(':' . $columns[$i], $values[$i]);
-            }
-        }
-
-        $result = $this->database->executePrepared($prepared);
-        return $result;
-    }
-
     public function columnTypes(): array
     {
         return $this->column_types;
+    }
+
+    public function filterColumns(array $data): array
+    {
+        $keys = array_keys($data);
+        $filtered = array();
+
+        foreach ($keys as $key)
+        {
+            if (isset($this->column_checks[$key]))
+            {
+                $filtered[$key] = $data[$key];
+            }
+        }
+
+        return $filtered;
     }
 }

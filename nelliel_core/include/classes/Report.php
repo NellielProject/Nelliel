@@ -86,7 +86,7 @@ class Report
                 $prepared->bindValue(1, $this->domain->id(), PDO::PARAM_STR);
                 $prepared->bindValue(2, $report_data['content_id'], PDO::PARAM_STR);
                 $prepared->bindValue(3, nel_prepare_ip_for_storage($report_data['reporter_ip']), PDO::PARAM_LOB);
-                $prepared->bindValue(4, nel_prepare_hash_for_storage($report_data['hashed_reporter_ip']), PDO::PARAM_LOB);
+                $prepared->bindValue(4, $report_data['hashed_reporter_ip'], PDO::PARAM_STR);
                 $prepared->bindValue(5, $report_data['reason'], PDO::PARAM_STR);
                 $this->database->executePrepared($prepared);
             }

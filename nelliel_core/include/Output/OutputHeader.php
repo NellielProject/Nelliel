@@ -67,9 +67,7 @@ class OutputHeader extends Output
     public function overboard(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $treeline = $parameters['treeline'] ?? array();
         $uri = $parameters['uri'] ?? $this->domain->reference('board_directory');
-        $index_render = $parameters['index_render'] ?? false;
         $this->render_data['sfw'] = $parameters['sfw'] ?? false;
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['show_styles'] = true;
@@ -101,7 +99,6 @@ class OutputHeader extends Output
     public function manage(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['panel'] = $parameters['panel'] ?? '';
         $this->render_data['section'] = $parameters['section'] ?? '';

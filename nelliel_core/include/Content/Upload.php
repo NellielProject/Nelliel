@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Moar;
 use Nelliel\SQLCompatibility;
+use Nelliel\SQLHelpers;
 use Nelliel\API\JSON\UploadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -24,6 +25,7 @@ class Upload
     protected $main_table;
     protected $parent;
     protected $json;
+    protected $sql_helpers;
 
     function __construct(ContentID $content_id, Domain $domain, Post $parent = null, bool $load = true)
     {
@@ -33,8 +35,10 @@ class Upload
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
         $this->main_table = new TableUploads($this->database, new SQLCompatibility($this->database));
+        $this->main_table->tableName($domain->reference('upload_table'));
         $this->parent = $parent;
         $this->json = new UploadJSON($this, nel_utilities()->fileHandler());
+        $this->sql_helpers = new SQLHelpers($this->database);
 
         if ($load)
         {
@@ -55,10 +59,6 @@ class Upload
             return false;
         }
 
-        $result['md5'] = nel_convert_hash_from_storage($result['md5']);
-        $result['sha1'] = nel_convert_hash_from_storage($result['sha1']);
-        $result['sha256'] = nel_convert_hash_from_storage($result['sha256']);
-        $result['sha512'] = nel_convert_hash_from_storage($result['sha512']);
         $column_types = $this->main_table->columnTypes();
 
         foreach ($result as $name => $value)
@@ -78,70 +78,28 @@ class Upload
             return false;
         }
 
-        $prepared = $this->database->prepare(
-                'SELECT "entry" FROM "' . $this->domain->reference('upload_table') .
-                '" WHERE "post_ref" = ? AND "upload_order" = ?');
-        $result = $this->database->executePreparedFetch($prepared,
-                [$this->content_id->postID(), $this->content_id->orderID()], PDO::FETCH_COLUMN);
+        $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $column_list = array_keys($filtered_data);
+        $values = array_values($filtered_data);
 
-        if ($result)
+        if ($this->main_table->rowExists($filtered_data))
         {
-            $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->domain->reference('upload_table') .
-                    '" SET "parent_thread" = :parent_thread,
-                    "post_ref" = :post_ref, "upload_order" = :upload_order,
-                    "type" = :type, "format" = :format, "mime" = :mime,
-                    "filename" = :filename, "extension" = :extension,
-                    "display_width" = :display_width, "display_height" = :display_height, "preview_name" = :preview_name,
-                    "preview_extension" = :preview_extension, "preview_width" = :preview_width, "preview_height" = :preview_height,
-                    "filesize" = :filesize, "md5" = :md5, "sha1" = :sha1, "sha256" = :sha256, "sha512" = :sha512, "embed_url" = :embed_url,
-                    "spoiler" = :spoiler, "deleted" = :deleted, "exif" = :exif, "moar" = :moar
-                    WHERE "post_number" = :post_number');
-            $prepared->bindValue(':post_number', $this->content_id->postID(), PDO::PARAM_INT);
+            $where_columns = ['post_ref', 'upload_order'];
+            $where_keys = ['where_post_ref', 'where_upload_order'];
+            $where_values = [$this->content_id->postID(), $this->content_id->orderID()];
+            $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
+                    $where_columns, $where_keys);
+            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
+            $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
+            $this->database->executePrepared($prepared);
         }
         else
         {
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . $this->domain->reference('upload_table') .
-                    '" ("parent_thread", "post_ref", "upload_order", "type", "format", "mime",
-                    "filename", "extension", "display_width", "display_height", "preview_name", "preview_extension", "preview_width", "preview_height",
-                    "filesize", "md5", "sha1", "sha256", "sha512", "embed_url", "spoiler", "deleted", "exif", "moar") VALUES
-                    (:parent_thread, :post_ref, :upload_order, :type, :format, :mime, :filename, :extension, :display_width, :display_height,
-                    :preview_name, :preview_extension, :preview_width, :preview_height, :filesize, :md5, :sha1, :sha256, :sha512, :embed_url, :spoiler,
-                    :deleted, :exif, :moar)');
+            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
+            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
+            $this->database->executePrepared($prepared);
         }
 
-        $prepared->bindValue(':parent_thread', $this->contentDataOrDefault('parent_thread', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':post_ref', $this->contentDataOrDefault('post_ref', null), PDO::PARAM_INT);
-        $prepared->bindValue(':upload_order', $this->contentDataOrDefault('upload_order', 1), PDO::PARAM_INT);
-        $prepared->bindValue(':type', $this->contentDataOrDefault('type', null), PDO::PARAM_STR);
-        $prepared->bindValue(':format', $this->contentDataOrDefault('format', null), PDO::PARAM_STR);
-        $prepared->bindValue(':mime', $this->contentDataOrDefault('mime', null), PDO::PARAM_STR);
-        $prepared->bindValue(':filename', $this->contentDataOrDefault('filename', null), PDO::PARAM_STR);
-        $prepared->bindValue(':extension', $this->contentDataOrDefault('extension', null), PDO::PARAM_STR);
-        $prepared->bindValue(':display_width', $this->contentDataOrDefault('display_width', null), PDO::PARAM_INT);
-        $prepared->bindValue(':display_height', $this->contentDataOrDefault('display_height', null), PDO::PARAM_INT);
-        $prepared->bindValue(':preview_name', $this->contentDataOrDefault('preview_name', null), PDO::PARAM_STR);
-        $prepared->bindValue(':preview_extension', $this->contentDataOrDefault('preview_extension', null),
-                PDO::PARAM_STR);
-        $prepared->bindValue(':preview_width', $this->contentDataOrDefault('preview_width', null), PDO::PARAM_INT);
-        $prepared->bindValue(':preview_height', $this->contentDataOrDefault('preview_height', null), PDO::PARAM_INT);
-        $prepared->bindValue(':filesize', $this->contentDataOrDefault('filesize', null), PDO::PARAM_INT);
-        $prepared->bindValue(':md5', nel_prepare_hash_for_storage($this->contentDataOrDefault('md5', null)),
-                PDO::PARAM_LOB);
-        $prepared->bindValue(':sha1', nel_prepare_hash_for_storage($this->contentDataOrDefault('sha1', null)),
-                PDO::PARAM_LOB);
-        $prepared->bindValue(':sha256', nel_prepare_hash_for_storage($this->contentDataOrDefault('sha256', null)),
-                PDO::PARAM_LOB);
-        $prepared->bindValue(':sha512', nel_prepare_hash_for_storage($this->contentDataOrDefault('sha512', null)),
-                PDO::PARAM_LOB);
-        $prepared->bindValue(':embed_url', $this->contentDataOrDefault('embed_url', null), PDO::PARAM_STR);
-        $prepared->bindValue(':spoiler', $this->contentDataOrDefault('spoiler', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':deleted', $this->contentDataOrDefault('deleted', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':exif', json_encode($this->contentDataOrDefault('exif', array()), JSON_UNESCAPED_UNICODE),
-                PDO::PARAM_STR);
-        $prepared->bindValue(':moar', $this->getMoar()->getJSON(), PDO::PARAM_STR);
-        $this->database->executePrepared($prepared);
         return true;
     }
 

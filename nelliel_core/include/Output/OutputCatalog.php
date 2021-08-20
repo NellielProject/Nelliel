@@ -6,8 +6,8 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\ContentID;
-use PDO;
 use Nelliel\Domains\DomainBoard;
+use PDO;
 
 class OutputCatalog extends Output
 {
@@ -32,6 +32,11 @@ class OutputCatalog extends Output
 
         foreach ($threads as $thread)
         {
+            if (is_null($thread) || !$thread->exists())
+            {
+                continue;
+            }
+
             $thread_data = array();
             $prepared = $this->database->prepare(
                     'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
@@ -76,10 +81,10 @@ class OutputCatalog extends Output
             $thread_data['locked'] = $ui_icon_set->getWebPath('ui', 'locked', true);
             $thread_data['is_cyclic'] = $thread->data('cyclic');
             $thread_data['cyclic'] = $ui_icon_set->getWebPath('ui', 'cyclic', true);
+            $uploads = $post->getUploads();
 
-            if ($post->data('total_uploads') > 0)
+            if (count($uploads) > 0)
             {
-                $uploads = $post->getUploads();
                 $output_file_info = new OutputFile($this->domain, $this->write_mode);
                 $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
                 $thread_data['single_file'] = true;

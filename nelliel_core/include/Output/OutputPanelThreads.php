@@ -7,7 +7,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\Content\ContentID;
 
 class OutputPanelThreads extends Output
 {

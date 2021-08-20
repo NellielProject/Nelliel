@@ -6,7 +6,6 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
-use PDO;
 
 class OutputPanelStyles extends Output
 {

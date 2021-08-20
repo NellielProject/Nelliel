@@ -9,6 +9,7 @@ use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Moar;
 use Nelliel\SQLCompatibility;
+use Nelliel\SQLHelpers;
 use Nelliel\API\JSON\PostJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -28,6 +29,7 @@ class Post
     protected $archive_prune;
     protected $parent;
     protected $json;
+    protected $sql_helpers;
 
     function __construct(ContentID $content_id, Domain $domain, Thread $parent = null, bool $load = true)
     {
@@ -37,8 +39,10 @@ class Post
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
         $this->main_table = new TablePosts($this->database, new SQLCompatibility($this->database));
+        $this->main_table->tableName($domain->reference('posts_table'));
         $this->parent = $parent;
         $this->json = new PostJSON($this, nel_utilities()->fileHandler());
+        $this->sql_helpers = new SQLHelpers($this->database);
 
         if ($load)
         {
@@ -60,7 +64,6 @@ class Post
         }
 
         $result['ip_address'] = nel_convert_ip_from_storage($result['ip_address']);
-        $result['hashed_ip_address'] = nel_convert_hash_from_storage($result['hashed_ip_address']);
         $column_types = $this->main_table->columnTypes();
 
         foreach ($result as $name => $value)
@@ -80,67 +83,29 @@ class Post
             return false;
         }
 
-        $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN);
+        $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $filtered_data['ip_address'] = nel_prepare_ip_for_storage($this->data('ip_address'));
+        $column_list = array_keys($filtered_data);
+        $values = array_values($filtered_data);
 
-        if ($result)
+        if ($this->main_table->rowExists($filtered_data))
         {
-            $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->domain->reference('posts_table') .
-                    '" SET "parent_thread" = :parent_thread,
-                    "name" = :name, "reply_to" = :reply_to, "post_password" = :post_password,
-                    "tripcode" = :tripcode, "secure_tripcode" = :secure_tripcode, "capcode" = :capcode, "email" = :email,
-                    "subject" = :subject, "comment" = :comment, "ip_address" = :ip_address, "hashed_ip_address" = :hashed_ip_address,
-                    "post_time" = :post_time, "post_time_milli" = :post_time_milli,
-                    "total_uploads" = :total_uploads, "file_count" = :file_count, "embed_count" = :embed_count,
-                    "op" = :op, "sage" = :sage, "account_id" = :account_id, "mod_comment" = :mod_comment,
-                    "content_hash" = :content_hash, "regen_cache" = :regen_cache, "cache" = :cache
-                    WHERE "post_number" = :post_number');
-            $prepared->bindValue(':post_number', $this->content_id->postID(), PDO::PARAM_INT);
+            $where_columns = ['post_number'];
+            $where_keys = ['where_post_number'];
+            $where_values = [$this->content_id->postID()];
+            $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
+                    $where_columns, $where_keys);
+            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
+            $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
+            $this->database->executePrepared($prepared);
         }
         else
         {
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . $this->domain->reference('posts_table') .
-                    '" ("parent_thread", "name", "reply_to", "post_password", "tripcode", "secure_tripcode", "capcode", "email",
-                    "subject", "comment", "ip_address", "hashed_ip_address", "post_time", "post_time_milli",
-                    "total_uploads", "file_count", "embed_count", "op", "sage", "account_id", "mod_comment") VALUES
-                    (:parent_thread, :name, :tripcode, :secure_tripcode, :capcode, :email, :subject, :comment, :ip_address,
-                    :hashed_ip_address, :post_time, :post_time_milli, :total_uploads, :file_count, :embed_count,
-                    :op, :sage, :account_id, :mod_comment, :content_hash, :regen_cache, :cache)');
+            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
+            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
+            $this->database->executePrepared($prepared);
         }
 
-        $prepared->bindValue(':parent_thread',
-                $this->contentDataOrDefault('parent_thread', $this->content_id->threadID()), PDO::PARAM_INT);
-        $prepared->bindValue(':reply_to', $this->contentDataOrDefault('reply_to', $this->content_id->threadID()),
-                PDO::PARAM_INT);
-        $prepared->bindValue(':name', $this->contentDataOrDefault('name', null), PDO::PARAM_STR);
-        $prepared->bindValue(':post_password', $this->contentDataOrDefault('post_password', null), PDO::PARAM_STR);
-        $prepared->bindValue(':capcode', $this->contentDataOrDefault('capcode', null), PDO::PARAM_STR);
-        $prepared->bindValue(':tripcode', $this->contentDataOrDefault('tripcode', null), PDO::PARAM_STR);
-        $prepared->bindValue(':secure_tripcode', $this->contentDataOrDefault('secure_tripcode', null), PDO::PARAM_STR);
-        $prepared->bindValue(':email', $this->contentDataOrDefault('email', null), PDO::PARAM_STR);
-        $prepared->bindValue(':subject', $this->contentDataOrDefault('subject', null), PDO::PARAM_STR);
-        $prepared->bindValue(':comment', $this->contentDataOrDefault('comment', null), PDO::PARAM_STR);
-        $ip_address = $this->contentDataOrDefault('ip_address', null);
-        $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($ip_address), PDO::PARAM_LOB);
-        $prepared->bindValue(':hashed_ip_address',
-                nel_prepare_hash_for_storage($this->contentDataOrDefault('hashed_ip_address', null)), PDO::PARAM_LOB);
-        $prepared->bindValue(':post_time', $this->contentDataOrDefault('post_time', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':post_time_milli', $this->contentDataOrDefault('post_time_milli', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':total_uploads', $this->contentDataOrDefault('total_uploads', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':embed_count', $this->contentDataOrDefault('embed_count', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':op', $this->contentDataOrDefault('op', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':sage', $this->contentDataOrDefault('sage', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':account_id', $this->contentDataOrDefault('account_id', null), PDO::PARAM_STR);
-        $prepared->bindValue(':mod_comment', $this->contentDataOrDefault('mod_comment', null), PDO::PARAM_STR);
-        $prepared->bindValue(':content_hash', $this->contentDataOrDefault('content_hash', null), PDO::PARAM_STR);
-        $prepared->bindValue(':regen_cache', $this->contentDataOrDefault('regen_cache', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':cache', $this->contentDataOrDefault('cache', ''), PDO::PARAM_STR);
-        $this->database->executePrepared($prepared);
-        $this->archive_prune->updateThreads();
         return true;
     }
 
@@ -278,16 +243,14 @@ class Post
         $prepared = $database->prepare(
                 'INSERT INTO "' . $this->domain->reference('posts_table') .
                 '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
-        $database->executePrepared($prepared,
-                [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)]);
+        $database->executePrepared($prepared, [$post_time, $post_time_milli, $hashed_ip_address]);
         $prepared = $database->prepare(
                 'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ?');
-        $result = $database->executePreparedFetch($prepared,
-                [$post_time, $post_time_milli, nel_prepare_hash_for_storage($hashed_ip_address)], PDO::FETCH_COLUMN,
-                true);
+        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli, $hashed_ip_address],
+                PDO::FETCH_COLUMN, true);
         $this->content_id->changeThreadID(
-                ($this->content_id->threadID() == 0) ? $result : $this->content_id->threadID());
+                ($this->content_id->threadID() === 0) ? $result : $this->content_id->threadID());
         $this->changeData('parent_thread', $this->content_id->threadID());
         $this->content_id->changePostID($result);
     }

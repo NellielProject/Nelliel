@@ -35,10 +35,10 @@ class UploadJSON extends JSON
         $this->raw_data['preview_width'] = $this->source->data('preview_width');
         $this->raw_data['preview_height'] = $this->source->data('preview_height');
         $this->raw_data['filesize'] = $this->source->data('filesize');
-        $this->raw_data['md5'] = (!is_null($this->source->data('md5'))) ? bin2hex($this->source->data('md5')) : null;
-        $this->raw_data['sha1'] = (!is_null($this->source->data('sha1'))) ? bin2hex($this->source->data('sha1')) : null;
-        $this->raw_data['sha256'] = (!is_null($this->source->data('sha256'))) ? bin2hex($this->source->data('sha256')) : null;
-        $this->raw_data['sha512'] = (!is_null($this->source->data('sha512'))) ? bin2hex($this->source->data('sha512')) : null;
+        $this->raw_data['md5'] = $this->source->data('md5');
+        $this->raw_data['sha1'] = $this->source->data('sha1');
+        $this->raw_data['sha256'] = $this->source->data('sha256');
+        $this->raw_data['sha512'] = $this->source->data('sha512');
         $this->raw_data['embed_url'] = $this->source->data('embed_url');
         $this->raw_data['spoiler'] = $this->source->data('spoiler');
         $this->raw_data['deleted'] = $this->source->data('deleted');

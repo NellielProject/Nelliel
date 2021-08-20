@@ -10,6 +10,7 @@ use Nelliel\Cites;
 use Nelliel\Moar;
 use Nelliel\Overboard;
 use Nelliel\SQLCompatibility;
+use Nelliel\SQLHelpers;
 use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -29,6 +30,7 @@ class Thread
     protected $overboard;
     protected $parent;
     protected $json;
+    protected $sql_helpers;
 
     function __construct(ContentID $content_id, Domain $domain, Thread $parent = null, bool $load = true)
     {
@@ -38,8 +40,10 @@ class Thread
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
         $this->main_table = new TableThreads($this->database, new SQLCompatibility($this->database));
+        $this->main_table->tableName($domain->reference('threads_table'));
         $this->parent = $parent;
         $this->json = new ThreadJSON($this, nel_utilities()->fileHandler());
+        $this->sql_helpers = new SQLHelpers($this->database);
 
         if ($load)
         {
@@ -80,55 +84,33 @@ class Thread
 
     public function writeToDatabase()
     {
-        if (empty($this->content_data) || empty($this->content_id->threadID()))
+        if (!$this->isLoaded() || empty($this->content_id->threadID()))
         {
             return false;
         }
 
-        $prepared = $this->database->prepare(
-                'SELECT "thread_id" FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
+        $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $column_list = array_keys($filtered_data);
+        $values = array_values($filtered_data);
 
-        if ($result)
+        if ($this->main_table->rowExists($filtered_data))
         {
-            $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->domain->reference('threads_table') .
-                    '" SET "last_bump_time" = :last_bump_time, "last_bump_time_milli" = :last_bump_time_milli,
-                    "total_uploads" = :total_uploads, "file_count" = :file_count, "embed_count" = :embed_count,
-                    "last_update" = :last_update, "last_update_milli" = :last_update_milli,
-                    "post_count" = :post_count, "permasage" = :permasage, "sticky" = :sticky, "cyclic" = :cyclic,
-                    "old" = :old, "preserve" = :preserve, "locked" = :locked, "slug" = :slug WHERE "thread_id" = :thread_id');
+            $where_columns = ['thread_id'];
+            $where_keys = ['where_thread_id'];
+            $where_values = [$this->content_id->threadID()];
+            $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
+                    $where_columns, $where_keys);
+            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
+            $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
+            $this->database->executePrepared($prepared);
         }
         else
         {
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . $this->domain->reference('threads_table') .
-                    '" ("thread_id", "last_bump_time", "last_bump_time_milli", "total_uploads", "file_count", "embed_count", "last_update",
-                    "last_update_milli", "post_count", "permasage", "sticky", "cyclic", "old", "preserve", "locked", "slug")
-                    VALUES (:thread_id, :last_bump_time, :last_bump_time_milli, :total_uploads, :file_count, :embed_count, :last_update,
-                    :last_update_milli, :post_count, :permasage, :sticky, :cyclic, :old, :preserve, :locked, :slug)');
+            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
+            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
+            $this->database->executePrepared($prepared);
         }
 
-        $prepared->bindValue(':thread_id', $this->content_id->threadID(), PDO::PARAM_INT);
-        $prepared->bindValue(':last_bump_time', $this->contentDataOrDefault('last_bump_time', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':last_bump_time_milli', $this->contentDataOrDefault('last_bump_time_milli', 0),
-                PDO::PARAM_INT);
-        $prepared->bindValue(':total_uploads', $this->contentDataOrDefault('total_uploads', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':file_count', $this->contentDataOrDefault('file_count', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':embed_count', $this->contentDataOrDefault('embed_count', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':last_update', $this->contentDataOrDefault('last_update', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':last_update_milli', $this->contentDataOrDefault('last_update_milli', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':post_count', $this->contentDataOrDefault('post_count', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':permasage', $this->contentDataOrDefault('permasage', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':sticky', $this->contentDataOrDefault('sticky', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':cyclic', $this->contentDataOrDefault('cyclic', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':old', $this->contentDataOrDefault('old', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':preserve', $this->contentDataOrDefault('old', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':locked', $this->contentDataOrDefault('locked', 0), PDO::PARAM_INT);
-        $prepared->bindValue(':slug', $this->contentDataOrDefault('slug', ''), PDO::PARAM_STR);
-        $this->database->executePrepared($prepared);
-        $this->archive_prune->updateThreads();
-        $this->overboard->updateThread($this);
         return true;
     }
 
