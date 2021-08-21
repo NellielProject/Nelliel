@@ -258,18 +258,18 @@ class Post
     public function updateCounts()
     {
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('upload_table') . '" WHERE "post_ref" = ?');
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') . '" WHERE "post_ref" = ?');
         $total_uploads = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
                 PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('upload_table') .
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "post_ref" = ? AND "embed_url" IS NULL');
         $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN,
                 true);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('upload_table') .
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "post_ref" = ? AND "embed_url" IS NOT NULL');
         $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
                 PDO::FETCH_COLUMN, true);
@@ -414,7 +414,7 @@ class Post
     {
         $uploads = array();
         $prepared = $this->database->prepare(
-                'SELECT "upload_order" FROM "' . $this->domain->reference('upload_table') .
+                'SELECT "upload_order" FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "post_ref" = ? ORDER BY "upload_order" ASC');
         $upload_list = $this->database->executePreparedFetchAll($prepared, [$this->contentID()->postID()],
                 PDO::FETCH_COLUMN);

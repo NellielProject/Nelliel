@@ -45,6 +45,7 @@ use Nelliel\Tables\TableUserRoles;
 use Nelliel\Tables\TableThreads;
 use Nelliel\Tables\TablePosts;
 use Nelliel\Tables\TableUploads;
+use Nelliel\Tables\TableThreadArchives;
 
 class Setup
 {
@@ -300,6 +301,10 @@ class Setup
     {
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
 
+        $archives_table = new TableThreadArchives($this->database, $this->sql_compatibility);
+        $archives_table->tableName($domain->reference('archives_table'));
+        $archives_table->createTable();
+
         // NOTE: Tables must be created in order of
         // threads -> posts -> uploads
         $threads_table = new TableThreads($this->database, $this->sql_compatibility);
@@ -309,7 +314,7 @@ class Setup
         $posts_table->tableName($domain->reference('posts_table'));
         $posts_table->createTable(['threads_table' => $domain->reference('threads_table')]);
         $uploads_table = new TableUploads($this->database, $this->sql_compatibility);
-        $uploads_table->tableName($domain->reference('upload_table'));
+        $uploads_table->tableName($domain->reference('uploads_table'));
         $uploads_table->createTable(['posts_table' => $domain->reference('posts_table')]);
     }
 
@@ -320,6 +325,9 @@ class Setup
         $this->file_handler->createDirectory($domain->reference('preview_path'), NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory($domain->reference('page_path'), NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory($domain->reference('banners_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('archive_src_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('archive_preview_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('archive_page_path'), NEL_DIRECTORY_PERM, true);
     }
 
     public function installCoreTemplates($overwrite = false): void

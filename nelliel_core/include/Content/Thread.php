@@ -184,12 +184,13 @@ class Thread
         $this->database->executePrepared($prepared, [$post_count, $this->content_id->threadID()]);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('upload_table') . '" WHERE "parent_thread" = ?');
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE "parent_thread" = ?');
         $total_uploads = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('upload_table') .
+                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "parent_thread" = ? AND "embed_url" IS NOT NULL');
         $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
@@ -404,8 +405,35 @@ class Thread
         return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/';
     }
 
-    public function archive()
+    public function archive(bool $permanent): bool
     {
+        $thread_data = $this->getJSON()->getJSON();
+        $prepared = $this->database->prepare(
+                'INSERT INTO "' . $this->domain->reference('archives_table') .
+                '" ("thread_id", "thread_data", "time_archived", "permanent", "moar") VALUES (?, ?, ?, ?, ?)');
+        $prepared->bindValue(1, $this->content_id->threadID(), PDO::PARAM_INT);
+        $prepared->bindValue(2, $thread_data, PDO::PARAM_STR);
+        $prepared->bindValue(3, time(), PDO::PARAM_INT);
+        $prepared->bindValue(4, $permanent, PDO::PARAM_INT);
+        $prepared->bindValue(5, $this->getMoar()->get(), PDO::PARAM_STR);
+        $result = $this->database->executePrepared($prepared);
+
+        if ($result !== true)
+        {
+            return false;
+        }
+
+        $file_handler = nel_utilities()->fileHandler();
+        $file_handler->moveDirectory($this->domain->reference('src_path') . $this->content_id->threadID() . '/',
+                $this->domain->reference('archive_src_path') . $this->content_id->threadID() . '/');
+        $file_handler->moveDirectory($this->domain->reference('preview_path') . $this->content_id->threadID() . '/',
+                $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/');
+        // TODO: regen as archive page
+        $file_handler->moveDirectory($this->domain->reference('page_path') . $this->content_id->threadID() . '/',
+                $this->domain->reference('archive_page_path') . $this->content_id->threadID() . '/');
+
+        $this->removeFromDatabase();
+        return true;
     }
 
     public function storeMoar(Moar $moar)

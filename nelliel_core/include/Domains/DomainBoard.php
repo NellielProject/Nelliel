@@ -46,8 +46,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $board_path = NEL_BASE_PATH . $board_data['board_id'] . '/';
         $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($board_data['board_id']) . '/';
         $new_reference['board_directory'] = $board_data['board_id'];
-        $new_reference['board_uri'] = sprintf(nel_site_domain()->setting('uri_display_format'),
-                $board_data['board_id']);
+        $new_reference['board_uri'] = sprintf(nel_site_domain()->setting('uri_display_format'), $board_data['board_id']);
         $title = $new_reference['board_uri'];
         $title .= (!nel_true_empty($this->setting('name')) ? ' - ' . $this->setting('name') : '');
         $new_reference['title'] = $title;
@@ -56,20 +55,33 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['src_dir'] = 'src';
         $new_reference['preview_dir'] = 'preview';
         $new_reference['page_dir'] = 'threads';
+        $new_reference['archive_dir'] = 'archive';
         $new_reference['banners_dir'] = $this->id();
         $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_dir'] . '/';
         $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_dir']) . '/';
         $new_reference['board_path'] = $board_path;
         $new_reference['board_web_path'] = $board_web_path;
+        $new_reference['archive_path'] = $board_path . $new_reference['archive_dir'] . '/';
+        $new_reference['archive_web_path'] = $board_web_path . rawurlencode($new_reference['archive_dir']) . '/';
         $new_reference['src_path'] = $board_path . $new_reference['src_dir'] . '/';
         $new_reference['src_web_path'] = $board_web_path . rawurlencode($new_reference['src_dir']) . '/';
+        $new_reference['archive_src_path'] = $new_reference['archive_path'] . $new_reference['src_dir'] . '/';
+        $new_reference['archive_src_web_path'] = $new_reference['archive_web_path'] .
+                rawurlencode($new_reference['src_dir']) . '/';
         $new_reference['preview_path'] = $board_path . $new_reference['preview_dir'] . '/';
         $new_reference['preview_web_path'] = $board_web_path . rawurlencode($new_reference['preview_dir']) . '/';
+        $new_reference['archive_preview_path'] = $new_reference['archive_path'] . $new_reference['preview_dir'] . '/';
+        $new_reference['archive_preview_web_path'] = $new_reference['archive_web_path'] .
+                rawurlencode($new_reference['preview_dir']) . '/';
         $new_reference['page_path'] = $board_path . $new_reference['page_dir'] . '/';
         $new_reference['page_web_path'] = $board_web_path . rawurlencode($new_reference['page_dir']) . '/';
+        $new_reference['archive_page_path'] = $new_reference['archive_path'] . $new_reference['page_dir'] . '/';
+        $new_reference['archive_page_web_path'] = $new_reference['archive_web_path'] .
+                rawurlencode($new_reference['page_dir']) . '/';
         $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
         $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
-        $new_reference['upload_table'] = $new_reference['db_prefix'] . '_uploads';
+        $new_reference['uploads_table'] = $new_reference['db_prefix'] . '_uploads';
+        $new_reference['archives_table'] = $new_reference['db_prefix'] . '_archives';
         $new_reference['config_table'] = NEL_BOARD_CONFIGS_TABLE;
         $new_reference['log_table'] = NEL_LOGS_TABLE;
         $this->references = $new_reference;

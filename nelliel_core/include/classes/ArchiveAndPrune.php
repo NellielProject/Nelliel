@@ -66,7 +66,7 @@ class ArchiveAndPrune
                 if ($archive)
                 {
                     $thread = $content_id->getInstanceFromID($this->domain);
-                    $thread->archive();
+                    $thread->archive(false);
                 }
             }
             else // Thread is beyond automatic archive range

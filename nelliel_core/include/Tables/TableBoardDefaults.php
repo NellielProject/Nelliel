@@ -132,9 +132,9 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['limit_bump_count', '1', 0]);
         $this->insertDefaultRow(['max_bumps', '1000', 0]);
         $this->insertDefaultRow(['active_threads', '100', 0]);
-        $this->insertDefaultRow(['thread_buffer', '50', 0]);
-        $this->insertDefaultRow(['old_threads', 'ARCHIVE', 0]);
-        $this->insertDefaultRow(['max_archive_threads', '1000', 0]);
+        $this->insertDefaultRow(['thread_buffer', '100', 0]);
+        $this->insertDefaultRow(['old_threads', 'PRUNE', 0]);
+        $this->insertDefaultRow(['max_archive_threads', '500', 0]);
         $this->insertDefaultRow(['do_archive_pruning', '1', 0]);
         $this->insertDefaultRow(['store_exif_data', '1', 0]);
         $this->insertDefaultRow(['max_slug_length', '80', 0]);

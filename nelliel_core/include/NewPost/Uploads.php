@@ -256,7 +256,7 @@ class Uploads
 
         if ($post->data('op') && $this->domain->setting('check_op_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $file->data('md5'), PDO::PARAM_STR);
@@ -266,7 +266,7 @@ class Uploads
         }
         else if (!$post->data('op') && $this->domain->setting('check_thread_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $database->prepare($query);
             $prepared->bindValue(1, $post->contentID()->threadID(), PDO::PARAM_INT);
@@ -335,7 +335,7 @@ class Uploads
             if ($post->data('op') && $this->domain->setting('check_op_duplicates'))
             {
                 $prepared = $this->database->prepare(
-                        'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
+                        'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
                         '" WHERE "parent_thread" = "post_ref" AND "embed_url" = ?');
                 $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
                 $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
@@ -344,7 +344,7 @@ class Uploads
             if (!$duplicates_found && $this->domain->setting('check_thread_duplicates'))
             {
                 $prepared = $this->database->prepare(
-                        'SELECT 1 FROM "' . $this->domain->reference('upload_table') .
+                        'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
                         '" WHERE "parent_thread" = ? AND "embed_url" = ?');
                 $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
                 $prepared->bindValue(2, $embed_url, PDO::PARAM_STR);

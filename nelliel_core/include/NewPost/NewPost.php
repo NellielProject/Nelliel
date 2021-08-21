@@ -19,6 +19,7 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainSite;
 use Nelliel\IfThens\IfThen;
 use PDO;
+use Nelliel\ArchiveAndPrune;
 
 class NewPost
 {
@@ -219,6 +220,9 @@ class NewPost
         {
             $thread->cycle();
         }
+
+        $archive_and_prune = new ArchiveAndPrune($thread->domain(), $file_handler);
+        $archive_and_prune->updateThreads();
 
         $update_overboard = new Overboard($this->database);
         $update_overboard->addThread($thread);

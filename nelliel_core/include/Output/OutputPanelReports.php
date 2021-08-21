@@ -83,7 +83,7 @@ class OutputPanelReports extends Output
             {
                 $report_data['is_upload'] = false;
                 $prepared = $this->database->prepare(
-                        'SELECT "filename" FROM "' . $current_domain->reference('upload_table') .
+                        'SELECT "filename" FROM "' . $current_domain->reference('uploads_table') .
                         '" WHERE "parent_thread" = ? AND post_ref = ? AND "upload_order" = ?');
                 $filename = $this->database->executePreparedFetch($prepared,
                         [$content_id->threadID(), $content_id->postID(), $content_id->orderID()], PDO::FETCH_COLUMN);

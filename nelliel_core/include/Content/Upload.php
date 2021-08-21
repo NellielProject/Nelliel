@@ -35,7 +35,7 @@ class Upload
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
         $this->main_table = new TableUploads($this->database, new SQLCompatibility($this->database));
-        $this->main_table->tableName($domain->reference('upload_table'));
+        $this->main_table->tableName($domain->reference('uploads_table'));
         $this->parent = $parent;
         $this->json = new UploadJSON($this, nel_utilities()->fileHandler());
         $this->sql_helpers = new SQLHelpers($this->database);
@@ -49,7 +49,7 @@ class Upload
     public function loadFromDatabase()
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('upload_table') .
+                'SELECT * FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "post_ref" = ? AND "upload_order" = ?');
         $result = $this->database->executePreparedFetch($prepared,
                 [$this->content_id->postID(), $this->content_id->orderID()], PDO::FETCH_ASSOC);
@@ -135,7 +135,7 @@ class Upload
         if ($this->domain->setting('deleted_upload_placeholder'))
         {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->domain->reference('upload_table') .
+                    'UPDATE "' . $this->domain->reference('uploads_table') .
                     '" SET "preview_name" = null, "preview_extension" = null, "preview_width" = null, "preview_height" = null,
                     "deleted" = 1 WHERE "post_ref" = ? AND "upload_order" = ?');
             $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
@@ -143,7 +143,7 @@ class Upload
         else
         {
             $prepared = $this->database->prepare(
-                    'DELETE FROM "' . $this->domain->reference('upload_table') .
+                    'DELETE FROM "' . $this->domain->reference('uploads_table') .
                     '" WHERE "post_ref" = ? AND "upload_order" = ?');
             $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
             return true;

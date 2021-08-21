@@ -171,11 +171,11 @@ class AdminBoards extends Admin
             return;
         }
 
-        if ($this->database->tableExists($domain->reference('upload_table'), NEL_SQLTYPE))
+        if ($this->database->tableExists($domain->reference('uploads_table'), NEL_SQLTYPE))
         {
-            $this->database->query('DROP TABLE "' . $domain->reference('upload_table') . '"');
+            $this->database->query('DROP TABLE "' . $domain->reference('uploads_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
-            $this->database->executePrepared($prepared, [$domain->reference('upload_table')]);
+            $this->database->executePrepared($prepared, [$domain->reference('uploads_table')]);
         }
 
         if ($this->database->tableExists($domain->reference('posts_table'), NEL_SQLTYPE))
@@ -192,12 +192,19 @@ class AdminBoards extends Admin
             $this->database->executePrepared($prepared, [$domain->reference('threads_table')]);
         }
 
+        if ($this->database->tableExists($domain->reference('archives_table'), NEL_SQLTYPE))
+        {
+            $this->database->query('DROP TABLE "' . $domain->reference('archives_table') . '"');
+            $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
+            $this->database->executePrepared($prepared, [$domain->reference('archives_table')]);
+        }
+
+        // This should wipe out everything in the board directory
         nel_utilities()->fileHandler()->eraserGun($domain->reference('board_path'));
         $domain->deleteCache();
         // Foreign key constraints allow this to handle any removals from site tables
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $regen = new Regen();
         $this->outputMain(true);
     }
 

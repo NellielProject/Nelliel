@@ -22,7 +22,7 @@ class TablePMs extends Table
             'sender' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'recipient' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'message' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'time_sent' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'message_read' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
@@ -30,7 +30,7 @@ class TablePMs extends Table
             'sender' => ['row_check' => false, 'auto_inc' => false],
             'recipient' => ['row_check' => false, 'auto_inc' => false],
             'message' => ['row_check' => false, 'auto_inc' => false],
-            'time' => ['row_check' => false, 'auto_inc' => false],
+            'time_sent' => ['row_check' => false, 'auto_inc' => false],
             'message_read' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;

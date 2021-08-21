@@ -6,16 +6,17 @@ namespace Nelliel;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use PDO;
+use PDOStatement;
 
 class NellielPDO extends PDO
 {
 
-    public function __construct($dsn, $username = null, $password = null, $options = array())
+    public function __construct($dsn, $username = null, $password = null, array $options = array())
     {
         parent::__construct($dsn, $username, $password, $options);
     }
 
-    public function databaseExists(string $database_name, string $sql_type)
+    public function databaseExists(string $database_name, string $sql_type): bool
     {
         switch ($sql_type)
         {
@@ -45,7 +46,7 @@ class NellielPDO extends PDO
         return $result !== false;
     }
 
-    public function tableExists(string $table_name, string $sql_type)
+    public function tableExists(string $table_name, string $sql_type): bool
     {
         switch ($sql_type)
         {
@@ -80,7 +81,7 @@ class NellielPDO extends PDO
         return $result !== false;
     }
 
-    public function columnExists(string $table_name, string $column_name, string $sql_type)
+    public function columnExists(string $table_name, string $column_name, string $sql_type): bool
     {
         switch ($sql_type)
         {
@@ -129,7 +130,7 @@ class NellielPDO extends PDO
         return $result !== false;
     }
 
-    public function rowExists(string $table_name, array $columns, array $values, array $pdo_types = null)
+    public function rowExists(string $table_name, array $columns, array $values, array $pdo_types = null): bool
     {
         $query = 'SELECT 1 FROM "' . $table_name . '" WHERE ';
         $count = count($columns);
@@ -174,7 +175,7 @@ class NellielPDO extends PDO
         return $result !== false;
     }
 
-    public function executeFetch($query, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
+    public function executeFetch(string $query, int $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
     {
         $result = $this->query($query);
 
@@ -197,7 +198,7 @@ class NellielPDO extends PDO
         return $fetched_result;
     }
 
-    public function executeFetchAll($query, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE): array
+    public function executeFetchAll(string $query, int $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE): array
     {
         $result = $this->query($query);
 
@@ -213,9 +214,9 @@ class NellielPDO extends PDO
         return $fetched_result;
     }
 
-    public function executePrepared($prepared, $parameters = null, bool $close_cursor = true)
+    public function executePrepared(PDOStatement $prepared, array $parameters = array(), bool $close_cursor = true): bool
     {
-        if (is_null($parameters))
+        if (empty($parameters))
         {
             $result = $prepared->execute();
         }
@@ -232,7 +233,7 @@ class NellielPDO extends PDO
         return $result;
     }
 
-    public function executePreparedFetch($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE,
+    public function executePreparedFetch(PDOStatement $prepared, array $parameters = array(), int $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE,
             bool $close_cursor = true)
     {
         $result = $this->executePrepared($prepared, $parameters, false);
@@ -261,7 +262,7 @@ class NellielPDO extends PDO
         return $fetched_result;
     }
 
-    public function executePreparedFetchAll($prepared, $parameters = null, $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE): array
+    public function executePreparedFetchAll(PDOStatement $prepared, array $parameters = array(), $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE): array
     {
         $result = $this->executePrepared($prepared, $parameters, false);
 
