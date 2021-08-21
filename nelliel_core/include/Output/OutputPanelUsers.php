@@ -116,7 +116,7 @@ class OutputPanelUsers extends Output
                 $domain_role_data['select_id'] = 'domain_role_' . $domain['board_id'];
                 $prepared = $this->database->prepare(
                         'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-                $role_id = $this->database->executePreparedFetch($prepared, array($user_id, $domain['board_id']),
+                $role_id = $this->database->executePreparedFetch($prepared, [$user_id, $domain['board_id']],
                         PDO::FETCH_COLUMN);
 
                 foreach ($roles as $role)

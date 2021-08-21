@@ -11,7 +11,7 @@ use PDOStatement;
 class NellielPDO extends PDO
 {
 
-    public function __construct($dsn, $username = null, $password = null, array $options = array())
+    function __construct(string $dsn, ?string $username = null, ?string $password = null, ?array $options = null)
     {
         parent::__construct($dsn, $username, $password, $options);
     }
@@ -175,7 +175,7 @@ class NellielPDO extends PDO
         return $result !== false;
     }
 
-    public function executeFetch(string $query, int $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE)
+    public function executeFetch(string $query, int $fetch_style = PDO::FETCH_BOTH)
     {
         $result = $this->query($query);
 
@@ -198,7 +198,7 @@ class NellielPDO extends PDO
         return $fetched_result;
     }
 
-    public function executeFetchAll(string $query, int $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE): array
+    public function executeFetchAll(string $query, int $fetch_style = PDO::FETCH_BOTH): array
     {
         $result = $this->query($query);
 
@@ -214,9 +214,9 @@ class NellielPDO extends PDO
         return $fetched_result;
     }
 
-    public function executePrepared(PDOStatement $prepared, array $parameters = array(), bool $close_cursor = true): bool
+    public function executePrepared(PDOStatement $prepared, ?array $parameters = null, bool $close_cursor = true): bool
     {
-        if (empty($parameters))
+        if (is_null($parameters))
         {
             $result = $prepared->execute();
         }
@@ -233,8 +233,8 @@ class NellielPDO extends PDO
         return $result;
     }
 
-    public function executePreparedFetch(PDOStatement $prepared, array $parameters = array(), int $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE,
-            bool $close_cursor = true)
+    public function executePreparedFetch(PDOStatement $prepared, ?array $parameters = null,
+            int $fetch_style = PDO::FETCH_BOTH, bool $close_cursor = true)
     {
         $result = $this->executePrepared($prepared, $parameters, false);
 
@@ -262,7 +262,8 @@ class NellielPDO extends PDO
         return $fetched_result;
     }
 
-    public function executePreparedFetchAll(PDOStatement $prepared, array $parameters = array(), $fetch_style = PDO::ATTR_DEFAULT_FETCH_MODE): array
+    public function executePreparedFetchAll(PDOStatement $prepared, ?array $parameters = null,
+            int $fetch_style = PDO::FETCH_BOTH): array
     {
         $result = $this->executePrepared($prepared, $parameters, false);
 

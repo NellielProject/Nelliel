@@ -1,13 +1,15 @@
 <?php
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\NellielPDO;
+
 //
 // Access point for database connections.
 // Database connections can be added, retrieved or removed using the hash table ID ($input).
 //
-function nel_database($input = null, $wut_do = null)
+function nel_database($input = null, $wut_do = null): ?NellielPDO
 {
-    // TODO: Actually create/remove/handle secondary databases
+    // TODO: Actually handle secondary databases
     static $databases = array();
     static $default_database_key = null;
 
@@ -50,18 +52,19 @@ function nel_database($input = null, $wut_do = null)
         }
     }
 
-    return false;
+    return null;
 }
 
 //
 // Initialize new database connections using the NellielPDO class.
 //
-function nel_new_database_connection($dsn, $username = null, $password = null, $options = array())
+function nel_new_database_connection(string $dsn, ?string $username = null, ?string $password = null,
+        ?array $options = null): NellielPDO
 {
     // Just in case things go wrong we want to avoid sensitive info leaking
     try
     {
-        $connection = new \Nelliel\NellielPDO($dsn, $username, $password, $options);
+        $connection = new NellielPDO($dsn, $username, $password, $options);
         return $connection;
     }
     catch (PDOException $exception)
@@ -73,7 +76,7 @@ function nel_new_database_connection($dsn, $username = null, $password = null, $
 //
 // Initialize the default/main database connection here.
 //
-function nel_default_database_connection()
+function nel_default_database_connection(): NellielPDO
 {
     $options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
@@ -118,7 +121,7 @@ function nel_default_database_connection()
             break;
 
         default:
-            return false;
+            nel_derp(50, _gettext('Invalid database type given in config.'));
     }
 
     $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);

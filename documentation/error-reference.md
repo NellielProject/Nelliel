@@ -48,6 +48,7 @@ Error 46: Too many cross-board cites. (Post/PostData.php)
 Error 47: Too many comment URLs. (Post/PostData.php) 
 Error 48: Max uploads for thread. (Post/Uploads.php) 
 Error 49: Database connection error. (database.php) 
+Error 50: Invalid database type. (database.php) 
 
 Error 60: Password does not match post. (Content/ContentPost.php)  
 Error 61: Board locked, can't remove file. (Content/ContentUpload.php)  

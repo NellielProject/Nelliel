@@ -122,7 +122,7 @@ class BansAccess
         else
         {
             $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '"');
-            $ban_ids = $this->database->executePreparedFetchAll($prepared, [], PDO::FETCH_COLUMN);
+            $ban_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
         }
 
         if (is_array($ban_ids))
