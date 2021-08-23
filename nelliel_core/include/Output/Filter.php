@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -35,47 +34,10 @@ class Filter
         return $text_array;
     }
 
-    public function filterUnicodeCombiningCharacters(string $text)
+    public function filterZalgo(string $text)
     {
-        $text = preg_replace_callback('#([^[:ascii:]])#Su',
-                function ($matches)
-                {
-                    $character = $matches[0];
-                    $ordinal = utf8_ord($matches[0]);
-
-                    // Base
-                    if ($ordinal >= 768 && $ordinal <= 879)
-                    {
-                        $character = '';
-                    }
-
-                    // Extended
-                    if ($ordinal >= 6832 && $ordinal <= 6911)
-                    {
-                        $character = '';
-                    }
-
-                    // Supplement
-                    if ($ordinal >= 7616 && $ordinal <= 7679)
-                    {
-                        $character = '';
-                    }
-
-                    // Symbols
-                    if ($ordinal >= 8400 && $ordinal <= 8447)
-                    {
-                        $character = '';
-                    }
-
-                    // Half Marks
-                    if ($ordinal >= 65056 && $ordinal <= 65071)
-                    {
-                        $character = '';
-                    }
-
-                    return $character;
-                }, $text);
-
-        return $text;
+        // https://stackoverflow.com/questions/32921751/how-to-prevent-zalgo-text-using-php
+        // Modified slightly to accomodate valid uses of 2 phonetic marks
+        return preg_replace('/(?:[\p{M}]{1})([\p{M}])+?/u', '', $text);
     }
 }

@@ -146,7 +146,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['index_sticky_replies', '1', 0]);
         $this->insertDefaultRow(['threads_per_page', '10', 0]);
         $this->insertDefaultRow(['max_index_comment_lines', '15', 0]);
-        $this->insertDefaultRow(['filter_combining_characters', '0', 0]);
+        $this->insertDefaultRow(['filter_zalgo', '0', 0]);
         $this->insertDefaultRow(['display_render_timer', '1', 0]);
         $this->insertDefaultRow(['enable_dynamic_pages', '0', 0]);
         $this->insertDefaultRow(['generate_catalog', '1', 0]);

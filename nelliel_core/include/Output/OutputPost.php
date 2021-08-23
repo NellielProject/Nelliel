@@ -409,9 +409,9 @@ class OutputPost extends Output
             $comment = rtrim($comment, "\n\r");
         }
 
-        if ($this->domain->setting('filter_combining_characters'))
+        if ($this->domain->setting('filter_zalgo'))
         {
-            $comment = $this->output_filter->filterUnicodeCombiningCharacters($comment);
+            $comment = $this->output_filter->filterZalgo($comment);
         }
 
         $markdown = new ImageboardMarkdown($this->domain, $post_content_id);
