@@ -223,36 +223,6 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
         return $path . $separator . $filename;
     }
 
-    public function filterFilename($filename)
-    {
-        $filtered = preg_replace('#[[:cntrl:]]#u', '', $filename); // Filter out the ASCII control characters
-        $filtered = preg_replace('#[^\PC\s\p{Cn}]#u', '', $filename); // Filter out invisible Unicode characters
-
-        // https://msdn.microsoft.com/en_US/library/aa365247(VS.85).aspx
-        $filtered = preg_replace('#[<>:"\/\\|\?\*]#u', '_', $filtered); // Reserved characters for Windows
-        $filtered = preg_replace('#(com[1-9]|lpt[1-9]|con|prn|aux|nul)\.?[a-zA-Z0-9]*#ui', '', $filtered); // Reserved names for Windows
-        $cleared = false;
-
-        while (!$cleared)
-        {
-            if (preg_match('#.php#ui', $filtered) > 0)
-            {
-                $filtered = preg_replace('#.php#ui', '', $filtered);
-            }
-            else
-            {
-                $cleared = true;
-            }
-        }
-
-        if ($filtered === '')
-        {
-            nel_derp(140, _gettext('Filename was empty or was purged by filter.'));
-        }
-
-        return $filtered;
-    }
-
     public function recursiveFileList($path, int $recursion_depth = -1, bool $include_directories = false,
             bool $names_only = false): array
     {

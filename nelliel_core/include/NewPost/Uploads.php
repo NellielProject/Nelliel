@@ -56,265 +56,265 @@ class Uploads
     {
         $file_count = count($this->files['upload_files']['name']);
         $data_handler = new PostData($this->domain, $this->authorization, $this->session);
-        $file_handler = nel_utilities()->fileHandler();
         $filenames = array();
         $file_duplicate = 1;
         $total_files = 0;
 
         for ($i = 0; $i < $file_count; $i ++)
         {
-            if (nel_true_empty($this->files['upload_files']['name'][$i]))
+            $file_original_name = $this->files['upload_files']['name'][$i];
+            $file_provided_type = $this->files['upload_files']['type'][$i];
+            $temp_file = $this->files['upload_files']['tmp_name'][$i];
+            $file_upload_error = $this->files['upload_files']['error'][$i];
+            $file_size = $this->files['upload_files']['size'][$i];
+
+            if (nel_true_empty($file_original_name) || !is_uploaded_file($temp_file))
             {
                 continue;
             }
 
-            $file_data = array();
-            $file_data['name'] = $this->files['upload_files']['name'][$i];
-            $file_data['type'] = $this->files['upload_files']['type'][$i];
-            $file_data['tmp_name'] = $this->files['upload_files']['tmp_name'][$i];
-            $file_data['error'] = $this->files['upload_files']['error'][$i];
-            $file_data['size'] = $this->files['upload_files']['size'][$i];
-            $file = new Upload(new ContentID(), $this->domain);
-            $file->changeData('location', $file_data['tmp_name']);
-            $file->changeData('name', $file_data['name']);
-            $file_data['location'] = $file_data['tmp_name'];
-            $this->checkForErrors($file_data);
-            $this->doesFileExist($post, $file);
-            $this->checkFiletype($file);
-            $exif_data = json_encode(@exif_read_data($file->data('location'), '', true));
+            $this->checkForErrors($file_upload_error);
 
-            if ($this->domain->setting('store_exif_data') && is_string($exif_data))
+            if ($file_size > $this->domain->setting('max_filesize') * 1024)
             {
-
-                $file->changeData('exif', $exif_data);
+                nel_derp(12, _gettext('File is too big.'));
             }
 
-            if ($file->data('type') === 'graphics' || $file->data('format') === 'swf')
-            {
-                $dim = getimagesize($file->data('location'));
+            $upload = new Upload(new ContentID(), $this->domain);
+            $upload->changeData('filesize', $file_size);
 
-                if ($dim !== false)
+            $file_info = new \SplFileInfo($file_original_name);
+            $file_extension = $file_info->getExtension();
+            $upload->changeData('original_filename', $file_original_name);
+            $this->checkFiletype($upload, $file_extension, $temp_file);
+            $upload->changeData('extension', $file_extension);
+            $this->checkHashes($upload, $temp_file);
+            $this->checkDuplicates($post, $upload);
+            $upload->changeData('location', $this->files['upload_files']['tmp_name'][$i]);
+            $upload->changeData('name', $this->files['upload_files']['name'][$i]);
+            $upload->changeData('tmp_name', $this->files['upload_files']['tmp_name'][$i]);
+
+            if ($this->domain->setting('store_exif_data'))
+            {
+                $exif_data = json_encode(@exif_read_data($temp_file, '', true));
+
+                if (is_string($exif_data))
                 {
-                    $file->changeData('display_width', $dim[0]);
-                    $file->changeData('display_height', $dim[1]);
+                    $upload->changeData('exif', $exif_data);
                 }
             }
 
-            $this->getPathInfo($file);
-            $file->getMoar()->modify('original_filename', $file->data('filename'));
-            $file->getMoar()->modify('original_extension', $file->data('extension'));
-            $file->changeData('name', $file_handler->filterFilename($file_data['name']));
-            $spoiler = $_POST['form_spoiler'];
-            $file->changeData('filesize', $file_data['size']);
-
-            if (isset($spoiler) && $this->domain->setting('enable_spoilers'))
+            if ($upload->data('type') === 'graphics' || $upload->data('format') === 'swf')
             {
-                $file->changeData('spoiler', $data_handler->checkEntry($spoiler, 'integer'));
+                $dim = getimagesize($upload->data('location'));
+
+                if ($dim !== false)
+                {
+                    $upload->changeData('display_width', $dim[0]);
+                    $upload->changeData('display_height', $dim[1]);
+                }
             }
 
-            $filename_maxlength = 255 - strlen($file->data('extension')) - 1;
-            $file->changeData('filename', substr($file->data('filename'), 0, $filename_maxlength));
+            if ($this->domain->setting('enable_spoilers'))
+            {
+                $spoiler = $_POST['form_spoiler'] ?? 0;
+                $upload->changeData('spoiler', $data_handler->checkEntry($spoiler, 'integer'));
+            }
+
+            $upload->changeData('filename', $this->filterBasename($file_original_name));
+            $this->setFilename($upload, $post);
 
             foreach ($filenames as $filename)
             {
-                if (strcasecmp($filename, $file->data('fullname')) === 0)
+                if (strcasecmp($filename, $upload->data('fullname')) === 0)
                 {
-                    $file->changeData('filename', $file->data('filename') . '_' . $file_duplicate);
-                    $file->changeData('fullname', $file->data('filename') . '.' . $file->data('extension'));
+                    $upload->changeData('filename', $upload->data('filename') . '_' . $file_duplicate);
+                    $upload->changeData('fullname', $upload->data('filename') . '.' . $upload->data('extension'));
                     $file_duplicate ++;
                 }
             }
 
-            switch ($this->domain->setting('preferred_filename'))
-            {
-                case 'original':
-                    ;
-                    break;
-
-                case 'timestamp':
-                    $file->changeData('filename', $post->data('post_time') . $post->data('post_time_milli'));
-                    $file->changeData('fullname', $file->data('filename') . '.' . $file->data('extension'));
-                    break;
-
-                case 'md5':
-                    $file->changeData('filename', $file->data('md5'));
-                    $file->changeData('fullname', $file->data('md5') . '.' . $file->data('extension'));
-                    break;
-
-                case 'sha1':
-                    $file->changeData('filename', $file->data('sha1'));
-                    $file->changeData('fullname', $file->data('sha1') . '.' . $file->data('extension'));
-                    break;
-
-                case 'sha256':
-                    $file->changeData('filename', $file->data('sha256'));
-                    $file->changeData('fullname', $file->data('sha256') . '.' . $file->data('extension'));
-                    break;
-
-                case 'sha512':
-                    $file->changeData('filename', $file->data('sha512'));
-                    $file->changeData('fullname', $file->data('sha512') . '.' . $file->data('extension'));
-                    break;
-
-                default:
-                    $file->changeData('filename', $post->data('post_time') . $post->data('post_time_milli'));
-                    $file->changeData('fullname', $file->data('filename') . '.' . $file->data('extension'));
-                    break;
-            }
-
-            array_push($filenames, $file->data('fullname'));
-            $this->processed_uploads[] = $file;
+            array_push($filenames, $upload->data('fullname'));
+            $this->processed_uploads[] = $upload;
             $total_files ++;
         }
 
         $post->changeData('file_count', $total_files);
     }
 
-    private function getPathInfo($file)
+    private function setFilename(Upload $upload, Post $post): void
     {
-        $file_info = new \SplFileInfo($file->data('name'));
-        $file->changeData('extension', $file_info->getExtension());
-        $file->changeData('filename', $file_info->getBasename('.' . $file->data('extension')));
-        $file->changeData('fullname', $file_info->getFilename());
+        switch ($this->domain->setting('preferred_filename'))
+        {
+            case 'md5':
+                $filename = $upload->data('md5');
+                break;
+
+            case 'sha1':
+                $filename = $upload->data('sha1');
+                break;
+
+            case 'sha256':
+                $filename = $upload->data('sha256');
+                break;
+
+            case 'sha512':
+                $filename = $upload->data('sha512');
+                break;
+
+            case 'original':
+                $filename = $this->filterBasename($upload->data('filename'));
+                $maxlength = 255 - strlen($upload->data('extension')) - 1;
+                $filename = substr($filename, 0, $maxlength);
+
+            case 'timestamp':
+            default:
+                $filename = $post->data('post_time') . $post->data('post_time_milli');
+                break;
+        }
+
+        $upload->changeData('filename', $filename);
+        $upload->changeData('fullname', $upload->data('filename') . '.' . $upload->data('extension'));
     }
 
-    private function checkForErrors($file)
+    private function checkForErrors(int $upload_error): void
     {
-        $error_data = ['delete_files' => true, 'bad-filename' => $file['name'], 'files' => $this->files,
-            'board_id' => $this->domain->id()];
-
-        if ($file['size'] > $this->domain->setting('max_filesize') * 1024)
+        if ($upload_error === UPLOAD_ERR_INI_SIZE)
         {
-            nel_derp(11, _gettext('File is too big.'), $error_data);
+            nel_derp(13, _gettext('File is bigger than the server allows.'));
         }
 
-        if ($file['error'] === UPLOAD_ERR_INI_SIZE)
+        if ($upload_error === UPLOAD_ERR_FORM_SIZE)
         {
-            nel_derp(12, _gettext('File is bigger than the server allows.'), $error_data);
+            nel_derp(14, _gettext('File is bigger than submission form allows.'));
         }
 
-        if ($file['error'] === UPLOAD_ERR_FORM_SIZE)
+        if ($upload_error === UPLOAD_ERR_PARTIAL)
         {
-            nel_derp(13, _gettext('File is bigger than submission form allows.'), $error_data);
+            nel_derp(15, _gettext('Only part of the file was uploaded.'));
         }
 
-        if ($file['error'] === UPLOAD_ERR_PARTIAL)
+        if ($upload_error === UPLOAD_ERR_NO_FILE)
         {
-            nel_derp(14, _gettext('Only part of the file was uploaded.'), $error_data);
+            nel_derp(16, _gettext('File size is 0 or Candlejack stole your upl'));
         }
 
-        if ($file['error'] === UPLOAD_ERR_NO_FILE)
+        if ($upload_error === UPLOAD_ERR_NO_TMP_DIR)
         {
-            nel_derp(15, _gettext('File size is 0 or Candlejack stole your uplo'), $error_data);
+            nel_derp(17, _gettext('Temp directory for uploads is unavailable.'));
         }
 
-        if ($file['error'] === UPLOAD_ERR_NO_TMP_DIR || $file['error'] === UPLOAD_ERR_CANT_WRITE)
+        if ($upload_error === UPLOAD_ERR_CANT_WRITE)
         {
-            nel_derp(16, _gettext('Cannot save uploaded files to server for some reason.'), $error_data);
+            nel_derp(18, _gettext('Cannot write uploaded files to server for some reason.'));
         }
 
-        if ($file['error'] !== UPLOAD_ERR_OK)
+        if ($upload_error === UPLOAD_ERR_EXTENSION)
         {
-            nel_derp(17, _gettext("The uploaded file just ain't right. Dunno why.'"), $error_data);
+            nel_derp(19, _gettext("A PHP extension interfered with upload.'"));
         }
 
-        nel_plugins()->processHook('nel-post-check-file-errors', [$file, $error_data]);
+        if ($upload_error !== UPLOAD_ERR_OK)
+        {
+            nel_derp(20, _gettext("The uploaded file just ain't right. Dunno why.'"));
+        }
     }
 
-    private function doesFileExist(Post $post, Upload $file)
+    private function checkHashes(Upload $upload, string $file): void
     {
-        $database = $this->domain->database();
-        $snacks = new Snacks($this->domain, new BansAccess($database));
-        $error_data = ['delete_files' => true, 'bad-filename' => $file->data('name'), 'files' => $this->files,
-            'board_id' => $this->domain->id()];
+        $snacks = new Snacks($this->domain, new BansAccess($this->database));
         $is_banned = false;
-        $file->changeData('md5', hash_file('md5', $file->data('location')));
-        $is_banned = $snacks->fileHashIsBanned($file->data('md5'), 'md5');
+        $md5 = hash_file('md5', $file);
+        $is_banned = $snacks->fileHashIsBanned($md5, 'md5');
 
         if (!$is_banned)
         {
-            $file->changeData('sha1', hash_file('sha1', $file->data('location')));
-            $is_banned = $snacks->fileHashIsBanned($file->data('sha1'), 'sha1');
+            $sha1 = hash_file('sha1', $file);
+            $is_banned = $snacks->fileHashIsBanned($sha1, 'sha1');
         }
 
         if (!$is_banned)
         {
-            $file->changeData('sha256', hash_file('sha256', $file->data('location')));
-            $is_banned = $snacks->fileHashIsBanned($file->data('sha256'), 'sha256');
+            $sha256 = hash_file('sha1', $file);
+            $is_banned = $snacks->fileHashIsBanned($sha256, 'sha256');
         }
 
         if (!$is_banned)
         {
-            $file->changeData('sha512', hash_file('sha512', $file->data('location')));
-            $is_banned = $snacks->fileHashIsBanned($file->data('sha512'), 'sha512');
+            $sha512 = hash_file('sha1', $file);
+            $is_banned = $snacks->fileHashIsBanned($sha512, 'sha512');
         }
 
         if ($is_banned)
         {
-            nel_derp(22, _gettext('That file is banned.'), $error_data);
+            nel_derp(24, _gettext('That file is banned.'));
         }
 
+        $upload->changeData('md5', $md5);
+        $upload->changeData('sha1', $sha1);
+        $upload->changeData('sha256', $sha256);
+        $upload->changeData('sha512', $sha512);
+    }
+
+    private function checkDuplicates(Post $post, Upload $upload): void
+    {
         if ($post->data('op') && $this->domain->setting('check_op_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
                     '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
-            $prepared = $database->prepare($query);
-            $prepared->bindValue(1, $file->data('md5'), PDO::PARAM_STR);
-            $prepared->bindValue(2, $file->data('sha1'), PDO::PARAM_STR);
-            $prepared->bindValue(3, $file->data('sha256'), PDO::PARAM_STR);
-            $prepared->bindValue(4, $file->data('sha512'), PDO::PARAM_STR);
+            $prepared = $this->database->prepare($query);
+            $prepared->bindValue(1, $upload->data('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(2, $upload->data('sha1'), PDO::PARAM_STR);
+            $prepared->bindValue(3, $upload->data('sha256'), PDO::PARAM_STR);
+            $prepared->bindValue(4, $upload->data('sha512'), PDO::PARAM_STR);
         }
         else if (!$post->data('op') && $this->domain->setting('check_thread_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
                     '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
-            $prepared = $database->prepare($query);
+            $prepared = $this->database->prepare($query);
             $prepared->bindValue(1, $post->contentID()->threadID(), PDO::PARAM_INT);
-            $prepared->bindValue(2, $file->data('md5'), PDO::PARAM_STR);
-            $prepared->bindValue(3, $file->data('sha1'), PDO::PARAM_STR);
-            $prepared->bindValue(4, $file->data('sha256'), PDO::PARAM_STR);
-            $prepared->bindValue(5, $file->data('sha512'), PDO::PARAM_STR);
+            $prepared->bindValue(2, $upload->data('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(3, $upload->data('sha1'), PDO::PARAM_STR);
+            $prepared->bindValue(4, $upload->data('sha256'), PDO::PARAM_STR);
+            $prepared->bindValue(5, $upload->data('sha512'), PDO::PARAM_STR);
         }
         else
         {
             return;
         }
 
-        $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
+        $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 
         if ($result)
         {
-            nel_derp(21, _gettext('Duplicate file detected.'), $error_data);
+            nel_derp(25, _gettext('Duplicate file detected.'));
         }
     }
 
-    private function checkFiletype($file)
+    private function checkFiletype(Upload $upload, string $extension, string $file): void
     {
         $filetypes = new FileTypes($this->domain->database());
-        $error_data = ['delete_files' => true, 'bad-filename' => $file->data('name'), 'files' => $this->files,
-            'board_id' => $this->domain->id()];
-        $this->getPathInfo($file);
-        $test_ext = utf8_strtolower($file->data('extension'));
 
-        if (!$filetypes->isValidExtension($test_ext))
+        if (!$filetypes->isValidExtension($extension))
         {
-            nel_derp(18, _gettext('Unrecognized file type.'), $error_data);
+            nel_derp(21, _gettext('Unrecognized file type.'));
         }
 
-        if (!$filetypes->extensionIsEnabled($this->domain->id(), $test_ext))
+        if (!$filetypes->extensionIsEnabled($this->domain->id(), $extension))
         {
-            nel_derp(19, _gettext('Filetype is not allowed.'), $error_data);
+            nel_derp(22, _gettext('Filetype is not allowed.'));
         }
 
-        if (!$filetypes->verifyFile($test_ext, $file->data('location'), 65535, 65535))
+        if (!$filetypes->verifyFile($extension, $file, 65535, 65535))
         {
-            nel_derp(20, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'), $error_data);
+            nel_derp(23, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'));
         }
 
-        $type_data = $filetypes->extensionData($test_ext);
-        $file->changeData('type', $type_data['type']);
-        $file->changeData('format', $type_data['format']);
-        $file->changeData('mime', $type_data['mime']);
+        $type_data = $filetypes->extensionData($extension);
+        $upload->changeData('type', $type_data['type']);
+        $upload->changeData('format', $type_data['format']);
+        $upload->changeData('mime', $type_data['mime']);
     }
 
     private function embeds(Post $post)
@@ -397,7 +397,7 @@ class Uploads
         {
             if ($files_count > 0 && !$this->domain->setting('allow_files'))
             {
-                nel_derp(25, _gettext('File uploads are not allowed.'));
+                nel_derp(27, _gettext('File uploads are not allowed.'));
             }
         }
 
@@ -427,7 +427,7 @@ class Uploads
 
         if ($total > $this->domain->setting('max_post_uploads'))
         {
-            nel_derp(27,
+            nel_derp(28,
                     sprintf(
                             _gettext(
                                     'You have too many uploads in one post. Received %d embeds and %d files for a total of %d uploads. Limit is %d.'),
@@ -465,5 +465,42 @@ class Uploads
                 nel_derp(40, _gettext('You cannot have multiple uploads in a reply.'));
             }
         }
+    }
+
+    private function filterBasename(string $basename): string
+    {
+        $filtered = $basename;
+        $bad_found = true;
+
+        // This is done in a loop to deal with filenames taking advantage of the filters
+        while ($bad_found)
+        {
+            $before = $filtered;
+
+            // Decode in case bad things are hidden
+            // Has the side benefit of fixing some mangled filenames
+            $filtered = rawurldecode($filtered);
+
+            $filtered = preg_replace('#[[:cntrl:]]#', '', $filtered); // Filter out the ASCII control characters
+            $filtered = preg_replace('#[\p{C}]#u', '', $filtered); // Filter out invisible Unicode characters
+
+            // https://msdn.microsoft.com/en_US/library/aa365247(VS.85).aspx
+            $filtered = preg_replace('#[<>:"\/\\|\?\*]#', '_', $filtered); // Reserved characters for Windows
+            $filtered = preg_replace('#com[1-9]|lpt[1-9]|con|prn|aux|nul#i', '', $filtered); // Reserved filenames for Windows
+
+            $filtered = preg_replace('#\.#', '_', $filtered); // Simply eliminating periods blocks many traversal and extension attacks
+
+            if ($filtered === '')
+            {
+                nel_derp(140, _gettext('Filename was empty or was purged by filter.'));
+            }
+
+            if ($before === $filtered)
+            {
+                $bad_found = false;
+            }
+        }
+
+        return $filtered;
     }
 }

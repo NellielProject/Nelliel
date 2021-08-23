@@ -90,6 +90,7 @@ class Thread
         }
 
         $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $filtered_data['moar'] = $this->getMoar()->getJSON();
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
 

@@ -118,7 +118,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['always_noko', '0', 0]);
 
         // Content handling
-        $this->insertDefaultRow(['preferred_filename', 'original', 0]);
+        $this->insertDefaultRow(['preferred_filename', 'timestamp', 0]);
         $this->insertDefaultRow(['generate_preview', '1', 0]);
         $this->insertDefaultRow(['max_preview_width', '250', 0]);
         $this->insertDefaultRow(['max_preview_height', '250', 0]);

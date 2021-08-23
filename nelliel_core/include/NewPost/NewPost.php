@@ -54,7 +54,7 @@ class NewPost
 
         if ($this->domain->reference('locked'))
         {
-            nel_derp(23, _gettext('Board is locked. Cannot make new post.'), $error_data);
+            nel_derp(11, _gettext('Board is locked. Cannot make new post.'), $error_data);
         }
 
         $authorization = new Authorization($this->database);

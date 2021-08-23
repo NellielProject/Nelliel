@@ -44,14 +44,14 @@ class OutputFile extends Output
 
         $this->render_data['file_url'] = $this->domain->reference('src_web_path') . $post->data('parent_thread') . '/' .
                 $post->data('post_number') . '/' . rawurlencode($full_filename);
-        $moar = json_decode($file->data('moar') ?? '', true);
-        $display_filename = $file->data('filename');
-        $display_extension = $file->data('extension');
 
-        if ($this->domain->setting('display_original_name') && !empty($moar['original_filename']))
+        if ($this->domain->setting('display_original_name') && !nel_true_empty($file->data('original_filename')))
         {
-            $display_filename = $moar['original_filename'] ?? $file->data('extension');
-            $display_extension = $moar['original_extension'] ?? $file->data('filename');
+            $display_filename = $file->data('original_filename');
+        }
+        else
+        {
+            $display_filename = $file->data('filename') . '.' . $file->data('extension');
         }
 
         if (utf8_strlen($display_filename) > $this->domain->setting('filename_display_length'))
@@ -59,7 +59,7 @@ class OutputFile extends Output
             $display_filename = substr($display_filename, 0, $this->domain->setting('filename_display_length')) . '...';
         }
 
-        $this->render_data['display_filename'] = $display_filename . '.' . $display_extension;
+        $this->render_data['display_filename'] = $display_filename;
 
         if (!empty($file->data('md5')))
         {
