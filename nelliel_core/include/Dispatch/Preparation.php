@@ -15,6 +15,7 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Output\OutputAboutNelliel;
+use Nelliel\Content\ContentID;
 
 class Preparation
 {
@@ -62,7 +63,14 @@ class Preparation
         $inputs['subsection'] = $_GET['subsection'] ?? '';
         $inputs['domain_id'] = $_GET['domain-id'] ?? '';
         $inputs['board_id'] = $_GET['board-id'] ?? '';
-        $inputs['content_id'] = $_GET['content-id'] ?? '';
+
+        $cid = $_GET['content-id'] ?? '';
+
+        if(ContentID::isContentID($cid))
+        {
+            $inputs['content_id'] = new ContentID($cid);
+        }
+
         $inputs['modmode'] = isset($_GET['modmode']) ? true : false;
         $goback = isset($_GET['goback']) ? $_GET['goback'] === 'true' : false;
 

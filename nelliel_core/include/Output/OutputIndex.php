@@ -39,9 +39,9 @@ class OutputIndex extends Output
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
                     $this->domain->id() . '&modmode=true';
-            $this->render_data['catalog_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=output&board-id=' .
-                    $this->domain->id() . '&section=catalog&actions=view&modmode=true';
-            ;
+            $this->render_data['catalog_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    'module=output&section=catalog&actions=view&board-id=' . $this->domain->id() . '&modmode=true';
+            $this->render_data['render'] = '-render';
         }
         else
         {

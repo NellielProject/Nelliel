@@ -21,7 +21,6 @@ class DispatchThreads extends Dispatch
     {
         //switch ($inputs['section'])
         //{
-        $content_id = new \Nelliel\Content\ContentID($inputs['content_id']);
 
         if ($this->session->modmodeRequested())
         {

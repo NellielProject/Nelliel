@@ -65,8 +65,8 @@ class OutputPanelReports extends Output
                 $content_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
-                                    'thread' => $content_id->threadID(), 'content-id' => $content_id->getIDString(),
-                                    'board-id' => $report_info['board_id'], 'modmode' => 'true']);
+                                    'content-id' => $content_id->getIDString(), 'board-id' => $report_info['board_id'],
+                                    'modmode' => 'true']);
                 $report_data['is_upload'] = false;
             }
             else if ($content_id->isPost())
@@ -74,8 +74,8 @@ class OutputPanelReports extends Output
                 $content_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
-                                    'thread' => $content_id->threadID(), 'content-id' => $content_id->getIDString(),
-                                    'board-id' => $report_info['board_id'], 'modmode' => 'true']);
+                                    'content-id' => $content_id->getIDString(), 'board-id' => $report_info['board_id'],
+                                    'modmode' => 'true']);
                 $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
                 $report_data['is_upload'] = false;
             }
@@ -93,8 +93,8 @@ class OutputPanelReports extends Output
                 $content_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(
                                 ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
-                                    'thread' => $content_id->threadID(), 'content-id' => $content_id->getIDString(),
-                                    'board-id' => $report_info['board_id'], 'modmode' => 'true']);
+                                    'content-id' => $content_id->getIDString(), 'board-id' => $report_info['board_id'],
+                                    'modmode' => 'true']);
                 $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
             }
 
