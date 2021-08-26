@@ -23,7 +23,7 @@ class UploadJSON extends JSON
         $this->raw_data['parent_thread'] = $this->source->data('parent_thread');
         $this->raw_data['post_ref'] = $this->source->data('post_ref');
         $this->raw_data['upload_order'] = $this->source->data('upload_order');
-        $this->raw_data['type'] = $this->source->data('type');
+        $this->raw_data['category'] = $this->source->data('category');
         $this->raw_data['format'] = $this->source->data('format');
         $this->raw_data['mime'] = $this->source->data('mime');
         $this->raw_data['filename'] = $this->source->data('filename');

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -44,13 +43,13 @@ class OutputPostingForm extends Output
 
         if ($this->render_data['in_modmode'])
         {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=new-post&board-id=' . $this->domain->id() . '&modmode=true';
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=new-post&board-id=' .
+                    $this->domain->id() . '&modmode=true';
         }
         else
         {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=new-post&board-id=' . $this->domain->id();
+            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=new-post&board-id=' .
+                    $this->domain->id();
         }
 
         if (!$response_to)
@@ -86,7 +85,8 @@ class OutputPostingForm extends Output
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=anti-spam&section=captcha&actions=get';
+        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=anti-spam&section=captcha&actions=get';
         $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 'module=anti-spam&section=captcha&actions=generate&no-display';
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
@@ -106,23 +106,54 @@ class OutputPostingForm extends Output
     {
         $filetypes = new \Nelliel\FileTypes($this->domain->database());
 
-        foreach ($filetypes->enabledTypes($this->domain->id()) as $type)
+        foreach ($filetypes->enabledCategories($this->domain->id()) as $category)
         {
-            $supported_types = sprintf(_gettext('Supported %s file types: '), $type);
-            $supported_formats = '';
+            $supported_types = sprintf(_gettext('Supported %s file types: '), $category);
+            $supported = '';
+            $joiner = '';
 
-            foreach ($filetypes->enabledFormats($this->domain->id(), $type) as $format)
+            foreach ($filetypes->enabledFormats($this->domain->id(), $category) as $format)
             {
-                $supported_formats .= utf8_strtoupper($format) . ', ';
+                $extensions = '';
+                $add = '';
+
+                if ($this->domain->setting('list_file_extensions'))
+                {
+                    $joiner = ', ';
+
+                    foreach ($filetypes->formatExtensions($format) as $extension)
+                    {
+                        $extensions .= $extension . ', ';
+                    }
+
+                    $extensions = substr($extensions, 0, -2);
+                }
+
+                $add = $extensions;
+
+                if ($this->domain->setting('list_file_formats'))
+                {
+                    $joiner = ', ';
+
+                    if ($extensions !== '')
+                    {
+                        $extensions = '(' . $extensions . ')';
+                    }
+
+                    $add = utf8_strtoupper($format) . '' . $extensions;
+                }
+
+                $supported .= $add . $joiner;
             }
 
-            if (empty($supported_formats))
+            if (empty($supported))
             {
                 continue;
             }
 
-            $supported_types .= $supported_formats;
-            $this->render_data['posting_rules_items'][]['rules_text'] = substr($supported_types, 0, -2);
+            $supported_types .= $supported;
+            $this->render_data['posting_rules_items'][]['rules_text'] = substr($supported_types, 0,
+                    -utf8_strlen($joiner));
         }
 
         $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(

@@ -104,7 +104,7 @@ class Uploads
                 }
             }
 
-            if ($upload->data('type') === 'graphics' || $upload->data('format') === 'swf')
+            if ($upload->data('category') === 'graphics' || $upload->data('format') === 'swf')
             {
                 $dim = getimagesize($upload->data('location'));
 
@@ -235,13 +235,13 @@ class Uploads
 
         if (!$is_banned)
         {
-            $sha256 = hash_file('sha1', $file);
+            $sha256 = hash_file('sha256', $file);
             $is_banned = $snacks->fileHashIsBanned($sha256, 'sha256');
         }
 
         if (!$is_banned)
         {
-            $sha512 = hash_file('sha1', $file);
+            $sha512 = hash_file('sha512', $file);
             $is_banned = $snacks->fileHashIsBanned($sha512, 'sha512');
         }
 
@@ -303,16 +303,16 @@ class Uploads
 
         if (!$filetypes->extensionIsEnabled($this->domain->id(), $extension))
         {
-            nel_derp(22, _gettext('Filetype is not allowed.'));
+            nel_derp(22, _gettext('File type is not allowed.'));
         }
 
-        if (!$filetypes->verifyFile($extension, $file, 65535, 65535))
+        if (!$filetypes->verifyFile($extension, $file))
         {
             nel_derp(23, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'));
         }
 
         $type_data = $filetypes->extensionData($extension);
-        $upload->changeData('type', $type_data['type']);
+        $upload->changeData('category', $type_data['category']);
         $upload->changeData('format', $type_data['format']);
         $upload->changeData('mime', $type_data['mime']);
     }
@@ -357,7 +357,7 @@ class Uploads
             }
 
             $embed = new Upload(new ContentID(), $this->domain);
-            $embed->changeData('type', 'embed');
+            $embed->changeData('category', 'embed');
             $embed->changeData('format', 'embed');
             $embed->changeData('embed_url', $embed_url);
             $this->processed_uploads[] = $embed;

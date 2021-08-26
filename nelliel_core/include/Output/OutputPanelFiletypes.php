@@ -43,23 +43,22 @@ class OutputPanelFiletypes extends Output
             $filetype_data = array();
             $filetype_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $filetype_data['base_extension'] = $filetype['base_extension'];
-            $filetype_data['type'] = $filetype['type'];
             $filetype_data['format'] = $filetype['format'];
+            $filetype_data['category'] = $filetype['category'];
             $filetype_data['mime'] = $filetype['mime'];
             $sub_extensions = '';
 
-            if (!empty($filetype['sub_extensions']))
+            if (!empty($filetype['extensions']))
             {
-                foreach (json_decode($filetype['sub_extensions'], true) as $sub_extension)
+                foreach (json_decode($filetype['extensions'], true) as $sub_extension)
                 {
                     $sub_extensions .= $sub_extension . ' ';
                 }
             }
 
-            $filetype_data['sub_extensions'] = substr($sub_extensions, 0, -1);
+            $filetype_data['extensions'] = substr($sub_extensions, 0, -1);
             $filetype_data['mime'] = $filetype['mime'];
-            $filetype_data['id_regex'] = $filetype['id_regex'];
+            $filetype_data['magic_regex'] = $filetype['magic_regex'];
             $filetype_data['type_label'] = $filetype['type_label'];
             $filetype_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
@@ -101,6 +100,7 @@ class OutputPanelFiletypes extends Output
     public function new(array $parameters, bool $data_only)
     {
         $parameters['section'] = $parameters['section'] ?? _gettext('New');
+        $parameters['editing'] = false;
         return $this->edit($parameters, $data_only);
     }
 
@@ -114,7 +114,7 @@ class OutputPanelFiletypes extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $editing = $parameters['editing'] ?? false;
+        $editing = $parameters['editing'] ?? true;
 
         if ($editing)
         {
@@ -129,22 +129,11 @@ class OutputPanelFiletypes extends Output
             if ($filetype_data !== false)
             {
                 $this->render_data['entry'] = $filetype_data['entry'];
-                $this->render_data['base_extension'] = $filetype_data['base_extension'];
-                $this->render_data['type'] = $filetype_data['type'];
                 $this->render_data['format'] = $filetype_data['format'];
+                $this->render_data['extensions'] = $filetype_data['extensions'];
+                $this->render_data['category'] = $filetype_data['category'];
                 $this->render_data['mime'] = $filetype_data['mime'];
-                $sub_extensions = '';
-
-                if (!empty($filetype_data['sub_extensions']))
-                {
-                    foreach (json_decode($filetype_data['sub_extensions'], true) as $sub_extension)
-                    {
-                        $sub_extensions .= $sub_extension . ' ';
-                    }
-                }
-
-                $this->render_data['sub_extensions'] = substr($sub_extensions, 0, -1);
-                $this->render_data['id_regex'] = $filetype_data['id_regex'];
+                $this->render_data['magic_regex'] = $filetype_data['magic_regex'];
                 $this->render_data['type_label'] = $filetype_data['type_label'];
                 $this->render_data['is_category_checked'] = $filetype_data['is_category'] == 1 ? 'checked' : '';
                 $this->render_data['enabled_checked'] = $filetype_data['enabled'] == 1 ? 'checked' : '';
@@ -153,7 +142,7 @@ class OutputPanelFiletypes extends Output
         else
         {
             $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'update']);
+                    http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'add']);
         }
 
         $this->render_data['form_action'] = $form_action;

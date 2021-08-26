@@ -140,7 +140,7 @@ class OutputFile extends Output
                 else if ($this->domain->setting('use_file_icon'))
                 {
                     $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('filetype_icon_set'));
-                    $type = utf8_strtolower($file->data('type'));
+                    $type = utf8_strtolower($file->data('category'));
                     $format = utf8_strtolower($file->data('format'));
                     $web_path = $icon_set->getWebPath('filetype', $format, true);
 

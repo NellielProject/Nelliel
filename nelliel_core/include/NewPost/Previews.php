@@ -32,7 +32,7 @@ class Previews
                 continue;
             }
 
-            if ($files[$i]->data('type') === 'graphics')
+            if ($files[$i]->data('category') === 'graphics')
             {
                 $parameters = array();
                 $ratio = min(($this->domain->setting('max_preview_height') / $files[$i]->data('display_height')),

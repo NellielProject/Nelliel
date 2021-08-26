@@ -441,6 +441,12 @@
 		{{# prefix_board_title }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ prefix_board_title }}
+		{{# list_file_formats }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ list_file_formats }}
+		{{# list_file_extensions }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ list_file_extensions }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}
@@ -494,27 +500,27 @@
 		{{/ show_lock_update }}
 
 		{{# file_types }}
-		{{# type_select }}
+			{{# category_select }}
 		<div class="display-row">
 			<span class="display-cell">
 				<br>
 				<input type="hidden" name="{{ input_name }}[default]" value="0">
 				<input id="{{ name }}" type="checkbox" name="{{ input_name }}[value]" value="1" {{ value }} {{ disabled }}>
-				<label for="{{ name }}" class="bold">{{ type_label }}</label>
+				<label for="{{ name }}" class="bold">{{ category_label }}</label>
 			</span>
 		</div>
-		{{/ type_select }}
-		{{# entry_rows }}
+			{{/ category_select }}
+			{{# entry_rows }}
 		<div class="display-row">
-			{{# entry }}
+				{{# entry }}
 			<span class="display-cell">
 				<input type="hidden" name="{{ input_name }}[default]" value="0">
 				<input id="{{ format }}" type="checkbox" name="{{ input_name }}[value]" value="1" {{ value }} {{ disabled }}>
 				<label for="{{ format }}">{{ type_label }}</label>
 			</span>
-			{{/ entry }}
+				{{/ entry }}
 		</div>
-		{{/ entry_rows }}
+			{{/ entry_rows }}
 		{{/ file_types }}
 	</div>
 	{{/ enabled_filetypes }}

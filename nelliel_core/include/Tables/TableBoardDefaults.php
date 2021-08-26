@@ -187,6 +187,8 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['slug_in_title', '1', 0]);
         $this->insertDefaultRow(['thread_number_in_title', '1', 0]);
         $this->insertDefaultRow(['prefix_board_title', '1', 0]);
+        $this->insertDefaultRow(['list_file_formats', '1', 0]);
+        $this->insertDefaultRow(['list_file_extensions', '1', 0]);
 
         // Anti-spam
         $this->insertDefaultRow(['use_post_captcha', '0', 0]);
@@ -196,6 +198,6 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['use_honeypot', '1', 0]);
 
         // Filetypes
-        $this->insertDefaultRow(['enabled_filetypes', '{"graphics":{"enabled":true,"formats":{"jpeg":{"enabled":true},"gif":{"enabled":true},"png":{"enabled":true},"webp":{"enabled":true}}},"video":{"enabled":true,"formats":{"mpeg4":{"enabled":true},"webm":{"enabled":true}}}}', 0]);
+        $this->insertDefaultRow(['enabled_filetypes', '{"graphics": {"enabled": true, "formats": ["jpeg", "gif", "png", "webp"]}, "video": {"enabled": true, "formats": ["mpeg4", "webm"]}}', 0]);
     }
 }

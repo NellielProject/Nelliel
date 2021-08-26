@@ -78,8 +78,13 @@ class AdminBoardDefaults extends Admin
             {
                 $filetypes_array = array();
 
-                foreach ($value['types'] as $type => $entries)
+                foreach ($value as $type => $entries)
                 {
+                    if($type === 'lock' || $type === 'force_update')
+                    {
+                        continue;
+                    }
+
                     $type_enabled = nel_form_input_default($entries['enabled']) === '1';
                     $filetypes_array[$type]['enabled'] = $type_enabled;
                     $type_formats = $entries['formats'] ?? array();
@@ -90,7 +95,7 @@ class AdminBoardDefaults extends Admin
 
                         if ($format_enabled)
                         {
-                            $filetypes_array[$type]['formats'][$format] = true;
+                            $filetypes_array[$type]['formats'][] = $format;
                         }
                     }
                 }

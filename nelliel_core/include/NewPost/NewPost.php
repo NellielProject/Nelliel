@@ -201,7 +201,7 @@ class NewPost
                 $upload->contentID()->changeOrderID($order);
                 $upload->changeData('upload_order', $order);
 
-                if ($upload->data('type') !== 'embed')
+                if ($upload->data('category') !== 'embed')
                 {
                     $file_handler->moveFile($upload->data('location'), $src_path . $upload->data('fullname'), false);
                     chmod($src_path . $upload->data('fullname'), octdec(NEL_FILES_PERM));

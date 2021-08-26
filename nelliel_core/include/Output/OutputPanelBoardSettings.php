@@ -61,84 +61,91 @@ class OutputPanelBoardSettings extends Output
 
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $user_lock_override = $this->session->user()->checkPermission($this->domain, 'perm_manage_board_config_override');
-        $all_filetypes = $filetypes->allTypeData();
-        $all_types = $filetypes->types();
+        $formats_data = $filetypes->formatData();
         $enabled_array = json_decode($enabled_types['setting_value'], true);
         $types_edit_lock = $defaults_list['enabled_filetypes']['edit_lock'] == 1 && !$defaults && !$user_lock_override;
-        $available_formats = $filetypes->availableFormats();
 
-        foreach ($all_types as $type)
+        foreach ($filetypes->categories() as $category)
         {
-            $type_data = array();
-            $type_data['type_label'] = _gettext($type['type_label'] ?? '');
-            $type_data['type_select']['name'] = $type['type'];
-            $type_data['type_select']['input_name'] = 'enabled_filetypes[types][' . $type['type'] . '][enabled]';
+            $category_data = array();
+            $category_data['category_label'] = _gettext($category['type_label'] ?? '');
+            $category_data['category_select']['name'] = $category['category'];
+            $category_data['category_select']['input_name'] = 'enabled_filetypes[' . $category['category'] . '][enabled]';
+            $category_data['category_select']['value'] = (isset($enabled_array[$category['category']]) &&
+                    $enabled_array[$category['category']]['enabled']) ? 'checked' : '';
+            $category_data['category_select']['disabled'] = ($types_edit_lock) ? 'disabled' : '';
+            $enabled_formats = $enabled_array[$category['category']] ?? array();
+            $entry_row['entry'] = array();
 
-            if (isset($enabled_array[$type['type']]))
+            foreach ($formats_data as $format => $data)
             {
-                $type_enabled = $enabled_array[$type['type']]['enabled'] ?? false;
-            }
-            else
-            {
-                $type_enabled = false;
-            }
-
-            $type_data['type_select']['value'] = ($type_enabled) ? 'checked' : '';
-            $type_data['type_select']['disabled'] = ($types_edit_lock) ? 'disabled' : '';
-            $enabled_formats = $enabled_array[$type['type']]['formats'] ?? array();
-            $filetype_set = array();
-
-            foreach ($all_filetypes as $filetype)
-            {
-                if ($filetype['type'] != $type['type'] || !isset($available_formats[$filetype['format']]))
+                if ($data['category'] !== $category['category'])
                 {
                     continue;
                 }
 
-                $filetype_set[$filetype['base_extension']]['format'] = $filetype['format'];
-                $filetype_set[$filetype['base_extension']]['input_name'] = 'enabled_filetypes[types][' . $type['type'] .
-                        '][formats][' . $filetype['format'] . ']';
-                $filetype_set[$filetype['base_extension']]['type_label'] = _gettext($filetype['type_label'] ?? '');
-                $filetype_set[$filetype['base_extension']]['value'] = (array_key_exists($filetype['format'],
-                        $enabled_formats)) ? 'checked' : '';
-                $filetype_set[$filetype['base_extension']]['disabled'] = ($types_edit_lock) ? 'disabled' : '';
-                $extensions = ' - ' . $filetype['base_extension'];
+                $set = array();
+                $set['format'] = $format;
+                $set['input_name'] = 'enabled_filetypes[' . $data['category'] . '][formats][' . $format . ']';
+                $set['type_label'] = _gettext($data['type_label'] ?? '');
+                $set['value'] = '';
 
-                if (!empty($filetype['sub_extensions']))
+                if (!empty($enabled_formats) && isset($enabled_formats['formats']) &&
+                        array_search($format, $enabled_formats['formats']) !== false)
                 {
-                    foreach (json_decode($filetype['sub_extensions'], true) as $sub_extension)
-                    {
-                        $extensions .= ', ' . $sub_extension;
-                    }
+                    $set['value'] = 'checked';
                 }
 
-                $filetype_set[$filetype['base_extension']]['type_label'] .= $extensions;
-            }
+                $set['disabled'] = ($types_edit_lock) ? 'disabled' : '';
+                $extensions = '';
 
-            $entry_row['entry'] = array();
-
-            foreach ($filetype_set as $data)
-            {
-                if (count($entry_row['entry']) >= 4)
+                if (!empty($data['extensions']))
                 {
-                    $type_data['entry_rows'][] = $entry_row;
+                    $extensions = ' - ';
+
+                    foreach (json_decode($data['extensions'], true) as $extension)
+                    {
+                        $extensions .= $extension . ', ';
+                    }
+
+                    $extensions = substr($extensions, 0, -2);
+                }
+
+                $set['type_label'] .= $extensions;
+
+                if (count($entry_row['entry']) === 3)
+                {
+                    $category_data['entry_rows'][] = $entry_row;
                     $entry_row['entry'] = array();
                 }
 
-                $entry_row['entry'][] = $data;
+                $entry_row['entry'][] = $set;
             }
 
-            $type_data['entry_rows'][] = $entry_row;
-            $this->render_data['settings_data']['file_types'][] = $type_data;
+            $category_data['entry_rows'][] = $entry_row;
+            $this->render_data['settings_data']['file_types'][] = $category_data;
         }
 
         $this->render_data['show_lock_update'] = $defaults;
-        $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '" ON "' .
-                NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
-                NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "' . NEL_SETTINGS_TABLE .
-                '"."setting_category" = \'board\'');
-        $board_settings = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
+
+        if ($defaults)
+        {
+            $prepared = $this->database->prepare(
+                    'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_DEFAULTS_TABLE . '" ON "' .
+                    NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_DEFAULTS_TABLE . '"."setting_name" WHERE "' .
+                    NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'');
+            $board_settings = $this->database->executePreparedFetchAll($prepared, [], PDO::FETCH_ASSOC);
+        }
+        else
+        {
+            $prepared = $this->database->prepare(
+                    'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '" ON "' .
+                    NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
+                    NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "' . NEL_SETTINGS_TABLE .
+                    '"."setting_category" = \'board\'');
+            $board_settings = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()],
+                    PDO::FETCH_ASSOC);
+        }
 
         foreach ($board_settings as $setting)
         {
@@ -208,13 +215,13 @@ class OutputPanelBoardSettings extends Output
         }
 
         $this->render_data['settings_data']['default_style']['options'] = $this->stylesSelect(
-                $this->render_data['settings_data']['default_style']['setting_value']);
+                $this->render_data['settings_data']['default_style']['setting_value'] ?? '');
         $this->render_data['settings_data']['ui_icon_set']['options'] = $this->iconSetsSelect(
-                $this->render_data['settings_data']['ui_icon_set']['setting_value']);
+                $this->render_data['settings_data']['ui_icon_set']['setting_value'] ?? '');
         $this->render_data['settings_data']['filetype_icon_set']['options'] = $this->iconSetsSelect(
-                $this->render_data['settings_data']['filetype_icon_set']['setting_value']);
+                $this->render_data['settings_data']['filetype_icon_set']['setting_value'] ?? '');
         $this->render_data['settings_data']['template_id']['options'] = $this->templatesSelect(
-                $this->render_data['settings_data']['template_id']['setting_value']);
+                $this->render_data['settings_data']['template_id']['setting_value'] ?? '');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

@@ -119,7 +119,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         {
             $this->cacheSettings();
             $filetypes = new FileTypes($this->database());
-            $filetypes->generateSettingsCache($this->id);
+            $filetypes->regenCache($this->id);
         }
     }
 

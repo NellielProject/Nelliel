@@ -1,28 +1,24 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="base_extension" class="display-cell" data-i18n="">Base extension</label>
-			<input id="base_extension" class="display-cell" type="text" name="base_extension" value="{{ base_extension }}">
-		</div>
-		<div class="display-row">
-			<label for="type" class="display-cell" data-i18n="">Category</label>
-			<input id="type" class="display-cell" type="text" name="type" value="{{ type }}" required="required">
-		</div>
-		<div class="display-row">
 			<label for="format" class="display-cell" data-i18n="">Format</label>
 			<input id="format" class="display-cell" type="text" name="format" value="{{ format }}">
+		</div>
+		<div class="display-row">
+			<label for="extensions" class="display-cell" data-i18n="">Extensions (JSON array)</label>
+			<input id="extensions" class="display-cell" type="text" name="extensions" value="{{ extensions }}">
+		</div>
+		<div class="display-row">
+			<label for="category" class="display-cell" data-i18n="">Category</label>
+			<input id="category" class="display-cell" type="text" name="category" value="{{ category }}" required="required">
 		</div>
 		<div class="display-row">
 			<label for="mime" class="display-cell" data-i18n="">Mime</label>
 			<input id="mime" class="display-cell" type="text" name="mime" value="{{ mime }}">
 		</div>
 		<div class="display-row">
-			<label for="sub_extensions" class="display-cell" data-i18n="">Sub extensions</label>
-			<input id="sub_extensions" class="display-cell" type="text" name="sub_extensions" value="{{ sub_extensions }}">
-		</div>
-		<div class="display-row">
-			<label for="regex" class="display-cell" data-i18n="">ID regex</label>
-			<input id="regex" class="display-cell" type="text" name="id_regex" value="{{ id_regex }}">
+			<label for="magic_regex" class="display-cell" data-i18n="">Magic regex</label>
+			<input id="magic_regex" class="display-cell" type="text" name="magic_regex" value="{{ magic_regex }}">
 		</div>
 		<div class="display-row">
 			<label for="type_label" class="display-cell" data-i18n="">Label</label>
