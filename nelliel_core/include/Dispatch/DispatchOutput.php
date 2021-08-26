@@ -7,9 +7,11 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputIndex;
 use Nelliel\Output\OutputThread;
+use Nelliel\Output\OutputCatalog;
 
 class DispatchOutput extends Dispatch
 {
@@ -59,7 +61,20 @@ class DispatchOutput extends Dispatch
                     {
                         case 'view':
                             $output_thread = new OutputThread($this->domain, false);
-                            $output_thread->render(['thread_id' => $inputs['thread'], 'command' => 'view'], false);
+                            $content_id = new ContentID($inputs['content_id']);
+                            $output_thread->render(['thread_id' => $content_id->threadID(), 'command' => 'view'], false);
+                            break;
+                    }
+                }
+
+            case 'catalog':
+                foreach ($inputs['actions'] as $action)
+                {
+                    switch ($action)
+                    {
+                        case 'view':
+                            $output_thread = new OutputCatalog($this->domain, false);
+                            $output_thread->render(['command' => 'view'], false);
                             break;
                     }
                 }

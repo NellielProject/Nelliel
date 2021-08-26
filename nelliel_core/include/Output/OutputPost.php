@@ -200,15 +200,14 @@ class OutputPost extends Output
                 }
             }
 
-            $thread_headers['reply_to_url'] = $thread->getURL();
+            $thread_headers['reply_to_url'] = $thread->getURL($this->session->inModmode($this->domain));
 
             if ($this->session->inModmode($this->domain) && !$this->write_mode)
             {
                 $thread_headers['output'] = '-render';
                 $thread_headers['reply_to_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         'module=output&section=thread&actions=view&content-id=' . $thread->contentID()->getIDString() .
-                        '&thread=' . $thread->contentID()->threadID() . '&board-id=' . $this->domain->id() .
-                        '&modmode=true';
+                        '&board-id=' . $this->domain->id() . '&modmode=true';
             }
 
             $header_data['thread_headers'] = $thread_headers;
@@ -254,8 +253,8 @@ class OutputPost extends Output
 
         $post_headers['post_time'] = date($this->domain->setting('date_format'), intval($post->data('post_time')));
         $post_headers['post_number'] = $post->contentID()->postID();
-        $post_headers['post_number_url'] = $thread->getURL() . '#t' . $post_content_id->threadID() . 'p' .
-                $post_content_id->postID();
+        $post_headers['post_number_url'] = $thread->getURL($this->session->inModmode($this->domain)) . '#t' .
+                $post_content_id->threadID() . 'p' . $post_content_id->postID();
         $post_headers['post_number_url_cite'] = $post_headers['post_number_url'] . 'cite';
 
         if ($this->domain->setting('display_post_backlinks'))
@@ -307,8 +306,8 @@ class OutputPost extends Output
                 if ($line_count > $this->domain->setting('max_index_comment_lines'))
                 {
                     $comment_data['long_comment'] = true;
-                    $comment_data['long_comment_url'] = $thread->getURL() . '#t' . $post->contentID()->threadID() . 'p' .
-                            $post->contentID()->postID();
+                    $comment_data['long_comment_url'] = $thread->getURL($this->session->inModmode($this->domain)) . '#t' .
+                            $post->contentID()->threadID() . 'p' . $post->contentID()->postID();
                     $comment_data['comment_lines'] = array();
                     $i = 0;
                     $reduced_lines = array();

@@ -385,8 +385,16 @@ class Thread
         return $page_filename;
     }
 
-    public function getURL(): string
+    public function getURL(bool $dynamic): string
     {
+        if ($dynamic)
+        {
+            return NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    http_build_query(
+                            ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
+                                'board-id' => $this->domain->id(), 'content-id' => $this->content_id->getIDString()]);
+        }
+
         $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
         return $base_path . $this->pageBasename() . NEL_PAGE_EXT;
     }

@@ -39,12 +39,16 @@ class OutputIndex extends Output
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
                     $this->domain->id() . '&modmode=true';
+            $this->render_data['catalog_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=output&board-id=' .
+                    $this->domain->id() . '&section=catalog&actions=view&modmode=true';
+            ;
         }
         else
         {
             $this->render_data['header'] = $output_header->board([], true);
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
                     $this->domain->id();
+            $this->render_data['catalog_url'] = 'catalog.html';
         }
 
         $threads = $this->domain->activeThreads(true);
@@ -67,7 +71,7 @@ class OutputIndex extends Output
         $this->render_data['show_global_announcement'] = !nel_true_empty($site_domain->setting('global_announcement'));
         $this->render_data['global_announcement_text'] = $site_domain->setting('global_announcement');
         $index_format = $site_domain->setting('index_filename_format');
-        $this->render_data['catalog_url'] = 'catalog.html';
+
         $this->render_data['index_navigation_top'] = $this->domain->setting('index_nav_top');
         $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;

@@ -51,7 +51,7 @@ class OutputCatalog extends Output
 
             $post_content_id = new ContentId('cid_' . $thread->contentID()->threadID() . '_' . $op_id . '_0');
             $post = $post_content_id->getInstanceFromID($this->domain);
-            $thread_data['open_url'] = $thread->getURL();
+            $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
             $thread_data['first_post_subject'] = $post->data('subject');
 
             if (!nel_true_empty($post->data('comment')))
