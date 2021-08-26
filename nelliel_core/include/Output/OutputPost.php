@@ -113,11 +113,11 @@ class OutputPost extends Output
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
                     !empty($post->data('ip_address')))
             {
-                $ip = @inet_ntop($post->data('ip_address'));
+                $ip = $post->data('ip_address');
             }
             else
             {
-                $ip = bin2hex($post->data('hashed_ip_address'));
+                $ip = $post->data('hashed_ip_address');
             }
 
             $modmode_headers['ip_address'] = $ip;
