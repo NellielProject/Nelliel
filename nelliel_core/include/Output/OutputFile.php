@@ -98,9 +98,9 @@ class OutputFile extends Output
             else
             {
                 $max_width = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
-                        'max_display_width');
+                        'max_preview_display_width');
                 $max_height = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
-                        'max_display_height');
+                        'max_preview_display_height');
             }
 
             $this->render_data['max_width'] = $max_width;

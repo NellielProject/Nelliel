@@ -71,20 +71,26 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['require_name', '0', 0]);
         $this->insertDefaultRow(['min_name_length', '0', 0]);
         $this->insertDefaultRow(['max_name_length', '100', 0]);
+        $this->insertDefaultRow(['name_field_placeholder', '', 0]);
         $this->insertDefaultRow(['enable_email_field', '1', 0]);
         $this->insertDefaultRow(['require_email', '0', 0]);
         $this->insertDefaultRow(['min_email_length', '0', 0]);
         $this->insertDefaultRow(['max_email_length', '100', 0]);
+        $this->insertDefaultRow(['email_field_placeholder', '', 0]);
         $this->insertDefaultRow(['enable_subject_field', '1', 0]);
         $this->insertDefaultRow(['require_subject', '0', 0]);
         $this->insertDefaultRow(['min_subject_length', '0', 0]);
         $this->insertDefaultRow(['max_subject_length', '200', 0]);
+        $this->insertDefaultRow(['subject_field_placeholder', '', 0]);
         $this->insertDefaultRow(['enable_comment_field', '1', 0]);
         $this->insertDefaultRow(['require_comment', '0', 0]);
         $this->insertDefaultRow(['min_comment_length', '0', 0]);
         $this->insertDefaultRow(['max_comment_length', '5000', 0]);
+        $this->insertDefaultRow(['comment_field_placeholder', '', 0]);
         $this->insertDefaultRow(['enable_fgsfds_field', '1', 0]);
+        $this->insertDefaultRow(['fgsfds_field_placeholder', 'Enter commands here', 0]);
         $this->insertDefaultRow(['enable_password_field', '1', 0]);
+        $this->insertDefaultRow(['password_field_placeholder', '', 0]);
         $this->insertDefaultRow(['allow_files', '1', 0]);
         $this->insertDefaultRow(['allow_embeds', '0', 0]);
         $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
@@ -108,9 +114,10 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['process_new_post_commands', '1', 0]);
         $this->insertDefaultRow(['allow_email_commands', '1', 0]);
         $this->insertDefaultRow(['thread_renzoku', '120', 0]);
-        $this->insertDefaultRow(['reply_renzoku', '20', 0]);
+        $this->insertDefaultRow(['reply_renzoku', '30', 0]);
         $this->insertDefaultRow(['max_cites', '30', 0]);
         $this->insertDefaultRow(['max_crossboard_cites', '15', 0]);
+        $this->insertDefaultRow(['max_comment_urls', '15', 0]);
         $this->insertDefaultRow(['trim_comment_newlines_start', '0', 0]);
         $this->insertDefaultRow(['trim_comment_newlines_end', '1', 0]);
         $this->insertDefaultRow(['use_anonymous_names', '1', 0]);
@@ -122,7 +129,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['generate_preview', '1', 0]);
         $this->insertDefaultRow(['max_preview_width', '250', 0]);
         $this->insertDefaultRow(['max_preview_height', '250', 0]);
-        $this->insertDefaultRow(['jpeg_quality', '90', 0]);
+        $this->insertDefaultRow(['jpeg_quality', '85', 0]);
         $this->insertDefaultRow(['use_png_preview', '0', 0]);
         $this->insertDefaultRow(['png_compression', '6', 0]);
         $this->insertDefaultRow(['animated_preview', '0', 0]);
@@ -157,8 +164,10 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['icon_set_fallback', '1', 0]);
         $this->insertDefaultRow(['use_file_icon', '1', 0]);
         $this->insertDefaultRow(['max_uploads_row', '3', 0]);
-        $this->insertDefaultRow(['max_display_width', '250', 0]);
-        $this->insertDefaultRow(['max_display_height', '250', 0]);
+        $this->insertDefaultRow(['max_preview_display_width', '250', 0]);
+        $this->insertDefaultRow(['max_preview_display_height', '250', 0]);
+        $this->insertDefaultRow(['max_embed_display_width', '300', 0]);
+        $this->insertDefaultRow(['max_embed_display_height', '300', 0]);
         $this->insertDefaultRow(['max_multi_display_width', '200', 0]);
         $this->insertDefaultRow(['max_multi_display_height', '200', 0]);
         $this->insertDefaultRow(['max_catalog_display_width', '120', 0]);
@@ -176,7 +185,6 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['create_url_links', '1', 0]);
         $this->insertDefaultRow(['url_protocols', 'http|https|ftp|sftp|irc|nntp', 0]);
         $this->insertDefaultRow(['url_prefix', '', 0]);
-        $this->insertDefaultRow(['max_comment_urls', '15', 0]);
         $this->insertDefaultRow(['display_original_name', '1', 0]);
         $this->insertDefaultRow(['board_content_disclaimer', '', 0]);
         $this->insertDefaultRow(['index_nav_top', '0', 0]);
@@ -187,7 +195,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['slug_in_title', '1', 0]);
         $this->insertDefaultRow(['thread_number_in_title', '1', 0]);
         $this->insertDefaultRow(['prefix_board_title', '1', 0]);
-        $this->insertDefaultRow(['list_file_formats', '1', 0]);
+        $this->insertDefaultRow(['list_file_formats', '0', 0]);
         $this->insertDefaultRow(['list_file_extensions', '1', 0]);
 
         // Anti-spam

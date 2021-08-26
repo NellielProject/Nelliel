@@ -40,6 +40,12 @@ class OutputPostingForm extends Output
         $this->render_data['require_email'] = $this->domain->setting('require_email') ? 'required' : '';
         $this->render_data['require_subject'] = $this->domain->setting('require_subject') ? 'required' : '';
         $this->render_data['require_comment'] = $this->domain->setting('require_comment') ? 'required' : '';
+        $this->render_data['name_field_placeholder'] = $this->domain->setting('name_field_placeholder');
+        $this->render_data['email_field_placeholder'] = $this->domain->setting('email_field_placeholder');
+        $this->render_data['subject_field_placeholder'] = $this->domain->setting('subject_field_placeholder');
+        $this->render_data['comment_field_placeholder'] = $this->domain->setting('comment_field_placeholder');
+        $this->render_data['fgsfds_field_placeholder'] = $this->domain->setting('fgsfds_field_placeholder');
+        $this->render_data['password_field_placeholder'] = $this->domain->setting('password_field_placeholder');
 
         if ($this->render_data['in_modmode'])
         {
