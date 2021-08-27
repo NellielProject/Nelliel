@@ -1,0 +1,33 @@
+<form accept-charset="utf-8" action="{{ form_action }}" method="post">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="blotter_text" class="display-cell" data-i18n="">Text</label>
+			<textarea id="blotter_text" class="display-cell" name="blotter_text" cols="80" rows="6"></textarea>
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Submit" data-i18n-attributes="value">
+		</div>
+	</div>
+</form>
+<hr>
+<table class="data-table">
+	<caption class="data-table-caption" data-i18n="">List of blotter entries</caption>
+	<thead class="data-table-header">
+		<tr>
+			<th data-i18n="">Time</th>
+			<th data-i18n="">Text</th>
+			<th data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# blotter_entry }}
+		<tr class="{{ bgclass }}">
+			<td>{{ time }}</td>
+			<td>{{ text }}</td>
+			<td>
+				<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove</a>
+			</td>
+		</tr>
+{{/ blotter_entry }}
+	</tbody>
+</table>

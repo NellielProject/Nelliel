@@ -6,6 +6,7 @@ namespace Nelliel;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputBlotter;
 use Nelliel\Output\OutputCatalog;
 use Nelliel\Output\OutputIndex;
 use Nelliel\Output\OutputNews;
@@ -36,6 +37,12 @@ class Regen
     public function news(Domain $domain)
     {
         $news = new OutputNews($domain, true);
+        $news->render(array(), false);
+    }
+
+    public function blotter(Domain $domain)
+    {
+        $news = new OutputBlotter($domain, true);
         $news->render(array(), false);
     }
 

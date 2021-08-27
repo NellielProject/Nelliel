@@ -85,6 +85,8 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['nofollow_external_links', '1']);
         $this->insertDefaultRow(['base_icon_set', 'icons-nelliel-basic']);
         $this->insertDefaultRow(['default_style', 'style-nelliel']);
+        $this->insertDefaultRow(['show_blotter', '1']);
+        $this->insertDefaultRow(['small_blotter_limit', '3']);
 
         // Hashing and security
         $this->insertDefaultRow(['post_password_algorithm', 'sha256']);

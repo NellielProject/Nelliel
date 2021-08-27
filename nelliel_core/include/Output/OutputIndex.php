@@ -70,6 +70,26 @@ class OutputIndex extends Output
 
         $this->render_data['show_global_announcement'] = !nel_true_empty($site_domain->setting('global_announcement'));
         $this->render_data['global_announcement_text'] = $site_domain->setting('global_announcement');
+
+        $blotter_limit = $this->site_domain->setting('small_blotter_limit');
+        $query = 'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" DESC LIMIT ' . $blotter_limit;
+        $blotter_entries = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+
+        if ($this->site_domain->setting('show_blotter') && !empty($blotter_entries))
+        {
+            foreach ($blotter_entries as $entry)
+            {
+                $blotter_data = array();
+                $blotter_data['time'] = date('Y/m/d', intval($entry['time']));
+                $blotter_data['text'] = $entry['text'];
+                $this->render_data['blotter_entries'][] = $blotter_data;
+            }
+
+            $this->render_data['show_blotter'] = isset($this->render_data['blotter_entries']) &&
+                    !empty($this->render_data['blotter_entries']);
+            $this->render_data['blotter_url'] = NEL_BASE_WEB_PATH . 'blotter.html';
+        }
+
         $index_format = $site_domain->setting('index_filename_format');
 
         $this->render_data['index_navigation_top'] = $this->domain->setting('index_nav_top');

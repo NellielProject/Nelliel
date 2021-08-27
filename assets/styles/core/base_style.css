@@ -520,8 +520,36 @@ form {
 	font-size: 0.85rem;
 }
 
-.global-announcement{
+.global-announcement {
     text-align: center;
+}
+
+.blotter {
+	width: 80%;
+	margin: auto;
+	text-align: left;
+	font-family: sans-serif;
+}
+
+.blotter.small {
+	border-top: solid 1px var(--hr-color);
+	width: 30em;
+	font-size: 0.8rem;
+}
+
+.blotter-entry {
+	border: none;
+	background-color: var(--main-background);
+}
+
+.blotter-entry.small {
+    font-size: 0.75rem;
+    border-bottom: none;
+}
+
+.blotter-link {
+	font-size: 0.75rem;
+	text-align: right;
 }
 
 .thread-status-icon {

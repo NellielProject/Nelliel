@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
+use PDO;
 
 class OutputThread extends Output
 {
@@ -95,6 +96,22 @@ class OutputThread extends Output
         $this->render_data['show_global_announcement'] = !nel_true_empty(
                 nel_site_domain()->setting('global_announcement'));
         $this->render_data['global_announcement_text'] = nel_site_domain()->setting('global_announcement');
+
+        $query = 'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" ASC';
+        $blotter_entries = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+
+        foreach ($blotter_entries as $entry)
+        {
+            $blotter_data = array();
+            $blotter_data['time'] = date('Y/m/d', intval($entry['time']));
+            $blotter_data['text'] = $entry['text'];
+            $this->render_data['blotter_entries'][] = $blotter_data;
+        }
+
+        $this->render_data['show_blotter'] = isset($this->render_data['blotter_entries']) &&
+        !empty($this->render_data['blotter_entries']);
+        $this->render_data['blotter_url'] = NEL_BASE_WEB_PATH . 'blotter.html';
+
         $this->render_data['return_url'] = $return_url;
         $post_counter = 1;
         $gen_data['index_rendering'] = false;

@@ -107,6 +107,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'nofollow_external_links', '', '1', 'Add rel="nofollow" to external links', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'base_icon_set', '', 'icons-nelliel-basic', 'Base icon set', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'default_style', '', 'style-nelliel', 'Default style for site pages and control panels', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_blotter', '', '1', 'Show the short list of blotter entries.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'small_blotter_limit', '', '3', 'Maximum entries to show in the blotter short list.', '{"type":"text"}']);
 
         // Hashing and security
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'post_password_algorithm', '', 'sha256', 'Post password hash algorithm', '{"type":"text"}']);
