@@ -191,12 +191,12 @@ class OutputPanelThreads extends Output
         $this->render_data['spam_target_value'] = $post->data('email');
         $this->render_data['verb_value'] = $post->data('subject');
         $this->render_data['wordswordswords_value'] = $post->data('comment');
-        $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] . '&goback=true'; // TODO: Use a standard content return url/builder
+        $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'];
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                         ['module' => 'admin', 'section' => 'threads', 'actions' => 'update-post',
                             'board-id' => $post->domain()->id(), 'content-id' => $post->contentID()->getIDString(),
-                            'modmode' => 'true', 'goback' => 'true']);
+                            'modmode' => 'true']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
