@@ -74,7 +74,7 @@ class Thread
 
         foreach ($result as $name => $value)
         {
-            $this->content_data[$name] = nel_cast_to_datatype($value, $column_types[$name]['php_type'] ?? '');
+            $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
         }
 
         $moar = $result['moar'] ?? '';
@@ -474,7 +474,7 @@ class Thread
     {
         $column_types = $this->main_table->columnTypes();
         $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_cast_to_datatype($new_data, $type);
+        $new_data = nel_typecast($new_data, $type);
         $old_data = $this->data($key);
         $this->content_data[$key] = $new_data;
         return $old_data;

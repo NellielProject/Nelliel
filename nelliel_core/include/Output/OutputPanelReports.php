@@ -103,7 +103,7 @@ class OutputPanelReports extends Output
             $report_data['content_url'] = $content_url;
             $report_data['content_id'] = $report_info['content_id'];
             $report_data['reason'] = $report_info['reason'];
-            $report_data['reporter_ip'] = @inet_pton($report_info['reporter_ip']);
+            $report_data['reporter_ip'] = nel_convert_ip_from_storage($report_info['reporter_ip']);
             $report_data['dismiss_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports&board-id=' .
                     $report_info['board_id'] . '&actions=remove&report-id=' . $report_info['report_id'];
             $this->render_data['reports_list'][] = $report_data;

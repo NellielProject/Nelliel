@@ -52,7 +52,7 @@ class AdminFileFilters extends Admin
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . $this->data_table .
                     '" ("hash_type", "file_hash", "file_notes", "board_id") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$type, pack("H*", $hash), $notes, $board_id]);
+            $this->database->executePrepared($prepared, [$type, $hash, $notes, $board_id]);
         }
 
         $this->outputMain(true);

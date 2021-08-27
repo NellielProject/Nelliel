@@ -55,7 +55,7 @@ class TableDomainRegistry extends Table
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow([Domain::SITE, hash('sha256', Domain::SITE), 'System Domain. NEVER DELETE!']);
-        $this->insertDefaultRow([Domain::GLOBAL, hash('sha256', Domain::GLOBAL), 'System Domain. NEVER DELETE!']);
+        $this->insertDefaultRow([Domain::SITE, hash('sha256', Domain::SITE), 'System domain. NEVER DELETE!']);
+        $this->insertDefaultRow([Domain::GLOBAL, hash('sha256', Domain::GLOBAL), 'System domain. NEVER DELETE!']);
     }
 }

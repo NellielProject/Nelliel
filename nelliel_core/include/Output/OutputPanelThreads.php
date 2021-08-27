@@ -108,11 +108,11 @@ class OutputPanelThreads extends Output
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
                     !empty($post_data['ip_address']))
             {
-                $thread_info['op_ip'] = @inet_ntop($op_post['ip_address']);
+                $thread_info['op_ip'] = nel_convert_ip_from_storage($op_post['ip_address']);
             }
             else
             {
-                $thread_info['op_ip'] = bin2hex($op_post['hashed_ip_address']);
+                $thread_info['op_ip'] = $op_post['hashed_ip_address'];
             }
 
             $thread_info['post_count'] = $thread['post_count'];
@@ -163,7 +163,7 @@ class OutputPanelThreads extends Output
             $post_info['thread_url'] = $this->domain->reference('page_dir') . '/' . $post['parent_thread'] . '/' .
                     $post['post_number'] . '.html';
             $post_info['name'] = $post['name'];
-            $post_info['poster_ip'] = @inet_ntop($post['ip_address']);
+            $post_info['poster_ip'] = nel_convert_ip_from_storage($post['ip_address']);
             $post_info['email'] = $post['email'];
             $post_info['comment'] = $post['comment'];
             $this->render_data['posts'][] = $post_info;

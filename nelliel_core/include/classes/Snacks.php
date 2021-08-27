@@ -69,7 +69,7 @@ class Snacks
 
                 foreach ($filters as $filter)
                 {
-                    $this->file_filters[$this->domain->id()][$filter['hash_type']][] = bin2hex($filter['file_hash']);
+                    $this->file_filters[$this->domain->id()][$filter['hash_type']][] = $filter['file_hash'];
                 }
             }
         }

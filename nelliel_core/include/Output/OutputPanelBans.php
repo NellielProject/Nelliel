@@ -55,8 +55,8 @@ class OutputPanelBans extends Output
             $ban_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $ban_data['ban_id'] = $ban_hammer->getData('ban_id');
-            $ban_data['ip_address'] = $this->formatIP($ban_hammer) ?? nel_truncate_hash(
-                    $ban_hammer->getData('hashed_ip_address'));
+            $ban_data['ip_address'] = $this->formatIP($ban_hammer) ?? substr($ban_hammer->getData('hashed_ip_address'),
+                    0, 12);
             $ban_data['board_id'] = $ban_hammer->getData('board_id');
 
             if ($ban_data['board_id'] === Domain::GLOBAL)

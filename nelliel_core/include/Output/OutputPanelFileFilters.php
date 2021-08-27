@@ -54,7 +54,7 @@ class OutputPanelFileFilters extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $filter_data['filter_id'] = $filter['entry'];
             $filter_data['hash_type'] = $filter['hash_type'];
-            $filter_data['file_hash'] = bin2hex($filter['file_hash']);
+            $filter_data['file_hash'] = $filter['file_hash'];
             $filter_data['file_notes'] = $filter['file_notes'];
             $filter_data['board_id'] = $filter['board_id'];
             $filter_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

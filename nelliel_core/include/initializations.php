@@ -8,7 +8,6 @@ define('NEL_BASE_HONEYPOT_FIELD1', 'display_signature'); // Honeypot field name
 define('NEL_BASE_HONEYPOT_FIELD2', 'signature'); // Honeypot field name
 define('NEL_BASE_HONEYPOT_FIELD3', 'website'); // Honeypot field name
 
-// Set default values here in case the config is missing something
 $base_config = array();
 $db_config = array();
 $crypt_config = array();
@@ -59,6 +58,7 @@ unset($db_config);
 unset($crypt_config);
 
 require_once NEL_INCLUDE_PATH . 'crypt.php';
+nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 $language = new \Nelliel\Language\Language();
 $language->loadLanguage(NEL_DEFAULT_LOCALE, 'nelliel', LC_MESSAGES);
@@ -105,13 +105,15 @@ if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php'))
 {
     $peppers = array();
     include_once NEL_GENERATED_FILES_PATH . 'peppers.php';
-    define('NEL_TRIPCODE_PEPPER', hex2bin($peppers['tripcode_pepper']));
-    define('NEL_IP_ADDRESS_PEPPER', hex2bin($peppers['ip_address_pepper']));
-    define('NEL_POSTER_ID_PEPPER', hex2bin($peppers['poster_id_pepper']));
-    define('NEL_POST_PASSWORD_PEPPER', hex2bin($peppers['post_password_pepper']));
+    define('NEL_TRIPCODE_PEPPER', $peppers['tripcode_pepper']);
+    define('NEL_IP_ADDRESS_PEPPER', $peppers['ip_address_pepper']);
+    define('NEL_POSTER_ID_PEPPER', $peppers['poster_id_pepper']);
+    define('NEL_POST_PASSWORD_PEPPER', $peppers['post_password_pepper']);
     unset($peppers);
 }
 
 unset($file_handler);
 
 define('NEL_SETUP_GOOD', true);
+
+nel_plugins()->loadPlugins();

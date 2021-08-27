@@ -227,7 +227,7 @@ class OutputPost extends Output
         if ($this->domain->setting('display_poster_id'))
         {
             $raw_poster_id = hash_hmac('sha256',
-                    @inet_ntop($post->data('ip_address'), NEL_POSTER_ID_PEPPER) . $this->domain->id() .
+                    nel_convert_ip_from_storage($post->data('ip_address'), NEL_POSTER_ID_PEPPER) . $this->domain->id() .
                     $thread->contentID()->threadID());
             $poster_id = substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
             $post_headers['id_color_code'] = '#' . substr($raw_poster_id, 0, 6);

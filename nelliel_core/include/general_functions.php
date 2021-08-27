@@ -65,7 +65,7 @@ function nel_numeric_html_entities_to_utf8(&$input)
             }, $input);
 }
 
-function nel_cast_to_datatype($value, string $datatype, bool $empty_null = true)
+function nel_typecast($value, string $datatype, bool $empty_null = true)
 {
     if($empty_null && nel_true_empty($value))
     {
@@ -161,9 +161,4 @@ function nel_convert_ip_from_storage(?string $ip_address)
     }
 
     return $unpacked_ip_address;
-}
-
-function nel_truncate_hash(string $hash, int $length = 12)
-{
-    return substr($hash, 0, $length);
 }
