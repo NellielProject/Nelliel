@@ -23,8 +23,6 @@ class DispatchNewPost extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        //switch ($inputs['section'])
-        //{
         $new_post = new NewPost($this->domain, $this->session);
         $new_post->processPost();
 
@@ -67,8 +65,5 @@ class DispatchNewPost extends Dispatch
         $output_post = new OutputPost($this->domain, true);
         echo $output_post->postSuccess(['forward_url' => $url], false);
         nel_clean_exit();
-
-        //break;
-        //}
     }
 }

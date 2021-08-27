@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputInterstitial;
 
 class DispatchThreads extends Dispatch
 {
@@ -19,9 +20,6 @@ class DispatchThreads extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        //switch ($inputs['section'])
-        //{
-
         if ($this->session->modmodeRequested())
         {
             $this->session->init(true);
@@ -45,6 +43,12 @@ class DispatchThreads extends Dispatch
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
 
+            $messages[] = _gettext('The selected items have been reported.');
+            $link['url'] = $url;
+            $link['text'] = _gettext('Click here if you are not automatically redirected');
+            $parameters['page_title'] = $this->domain->reference('title');
+            $output_interstitial = new OutputInterstitial($this->domain, false);
+            echo $output_interstitial->render($parameters, false, $messages, [$link]);
             $redirect->changeURL($url);
         }
 
@@ -67,8 +71,5 @@ class DispatchThreads extends Dispatch
             $output_post = new \Nelliel\Output\OutputPost($this->domain, true);
             echo $output_post->contentDeleted(['forward_url' => $url], false);
         }
-
-        //break;
-        //}
     }
 }

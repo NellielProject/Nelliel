@@ -101,7 +101,8 @@ abstract class Admin
 
     protected function getEntryByID($id): array
     {
-        $prepared = $this->database->prepare('SELECT * FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $prepared = $this->database->prepare(
+                'SELECT * FROM "' . $this->data_table . '" WHERE "' . $this->id_column . '" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$id], PDO::FETCH_ASSOC);
         return ($result !== false) ? $result : array();
     }
