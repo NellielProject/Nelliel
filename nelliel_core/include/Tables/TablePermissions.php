@@ -58,6 +58,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_manage_board_config', 'Manage board configuration']);
         $this->insertDefaultRow(['perm_manage_board_config_override', 'Override board config lock']);
         $this->insertDefaultRow(['perm_manage_board_defaults', 'Manage board default config']);
+        $this->insertDefaultRow(['perm_manage_blotter', 'Manage blotter']);
         $this->insertDefaultRow(['perm_manage_dnsbl', 'Manage DNSBL']);
         $this->insertDefaultRow(['perm_manage_filetypes', 'Manage filetypes']);
         $this->insertDefaultRow(['perm_manage_file_filters', 'Manage file filters']);
