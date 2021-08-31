@@ -27,13 +27,12 @@ class Uploads
     private $session;
     private $total = 0;
 
-    function __construct(Domain $domain, array $files = array(), array $embeds = array(), Authorization $authorization,
-            Session $session)
+    function __construct(Domain $domain, Authorization $authorization, Session $session)
     {
         $this->domain = $domain;
         $this->database = $domain->database();
-        $this->embeds = $embeds;
-        $this->files = $files;
+        $this->embeds = $_POST['embed_urls'] ?? array();
+        $this->files = $_FILES;
         $this->authorization = $authorization;
         $this->session = $session;
     }
@@ -54,6 +53,11 @@ class Uploads
 
     private function files(Post $post)
     {
+        if (!isset($this->files['upload_files']['name']))
+        {
+            return;
+        }
+
         $file_count = count($this->files['upload_files']['name']);
         $data_handler = new PostData($this->domain, $this->authorization, $this->session);
         $filenames = array();
@@ -89,7 +93,7 @@ class Uploads
             $this->checkFiletype($upload, $file_extension, $temp_file);
             $upload->changeData('extension', $file_extension);
             $this->checkHashes($upload, $temp_file);
-            $this->checkDuplicates($post, $upload);
+            $this->checkFileDuplicates($post, $upload);
             $upload->changeData('location', $this->files['upload_files']['tmp_name'][$i]);
             $upload->changeData('name', $this->files['upload_files']['name'][$i]);
             $upload->changeData('tmp_name', $this->files['upload_files']['tmp_name'][$i]);
@@ -256,22 +260,34 @@ class Uploads
         $upload->changeData('sha512', $sha512);
     }
 
-    private function checkDuplicates(Post $post, Upload $upload): void
+    private function checkFileDuplicates(Post $post, Upload $upload): void
     {
-        if ($post->data('op') && $this->domain->setting('check_op_duplicates'))
+        $active = ($this->domain->setting('only_active_duplicates')) ? 'AND "old" = 0' : '';
+
+        if ($this->domain->setting('check_board_file_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                    '" WHERE "parent_thread" = "post_ref" AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
+            '" WHERE ' . $active . ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(1, $upload->data('md5'), PDO::PARAM_STR);
             $prepared->bindValue(2, $upload->data('sha1'), PDO::PARAM_STR);
             $prepared->bindValue(3, $upload->data('sha256'), PDO::PARAM_STR);
             $prepared->bindValue(4, $upload->data('sha512'), PDO::PARAM_STR);
         }
-        else if (!$post->data('op') && $this->domain->setting('check_thread_duplicates'))
+        else if ($post->data('op') && $this->domain->setting('check_op_file_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                    '" WHERE "parent_thread" = ? AND ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
+                    '" WHERE "parent_thread" = "post_ref" AND ' . $active . ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
+            $prepared = $this->database->prepare($query);
+            $prepared->bindValue(1, $upload->data('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(2, $upload->data('sha1'), PDO::PARAM_STR);
+            $prepared->bindValue(3, $upload->data('sha256'), PDO::PARAM_STR);
+            $prepared->bindValue(4, $upload->data('sha512'), PDO::PARAM_STR);
+        }
+        else if (!$post->data('op') && $this->domain->setting('check_thread_file_duplicates'))
+        {
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
+                    '" WHERE "parent_thread" = ? AND ' . $active . ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(1, $post->contentID()->threadID(), PDO::PARAM_INT);
             $prepared->bindValue(2, $upload->data('md5'), PDO::PARAM_STR);
@@ -284,9 +300,9 @@ class Uploads
             return;
         }
 
-        $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
+        $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
 
-        if ($result)
+        if ($duplicates_found)
         {
             nel_derp(25, _gettext('Duplicate file detected.'));
         }
@@ -330,32 +346,7 @@ class Uploads
                 continue;
             }
 
-            $duplicates_found = false;
-
-            if ($post->data('op') && $this->domain->setting('check_op_duplicates'))
-            {
-                $prepared = $this->database->prepare(
-                        'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                        '" WHERE "parent_thread" = "post_ref" AND "embed_url" = ?');
-                $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
-                $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
-            }
-
-            if (!$duplicates_found && $this->domain->setting('check_thread_duplicates'))
-            {
-                $prepared = $this->database->prepare(
-                        'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                        '" WHERE "parent_thread" = ? AND "embed_url" = ?');
-                $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
-                $prepared->bindValue(2, $embed_url, PDO::PARAM_STR);
-                $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
-            }
-
-            if ($duplicates_found)
-            {
-                nel_derp(36, _gettext('Duplicate embed detected.'));
-            }
-
+            $this->checkEmbedDuplicates($post, $embed_url);
             $embed = new Upload(new ContentID(), $this->domain);
             $embed->changeData('category', 'embed');
             $embed->changeData('format', 'embed');
@@ -367,7 +358,48 @@ class Uploads
         $post->changeData('embed_count', $total_embeds);
     }
 
-    private function checkCount(Post $post)
+    private function checkEmbedDuplicates(Post $post, string $embed_url): void
+    {
+        $active = ($this->domain->setting('only_active_duplicates')) ? ' AND "old" = 0 ' : '';
+
+        if ($this->domain->setting('check_board_embed_duplicates'))
+        {
+            $prepared = $this->database->prepare(
+                    'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
+                    '" WHERE "embed_url" = ?' . $active);
+            $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
+            $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+        }
+        else if ($post->data('op') && $this->domain->setting('check_op_embed_duplicates'))
+        {
+            $prepared = $this->database->prepare(
+                    'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
+                    '" WHERE "parent_thread" = "post_ref" AND "embed_url" = ?' . $active);
+            $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
+        }
+        else if (!$post->data('op') && $this->domain->setting('check_thread_embed_duplicates'))
+        {
+            $prepared = $this->database->prepare(
+                    'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
+                    '" WHERE "parent_thread" = ? AND "embed_url" = ?' . $active);
+            $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
+            $prepared->bindValue(2, $embed_url, PDO::PARAM_STR);
+
+        }
+        else
+        {
+            return;
+        }
+
+        $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+        if ($duplicates_found)
+        {
+            nel_derp(35, _gettext('Duplicate embed detected.'));
+        }
+    }
+
+    private function checkCount(Post $post): void
     {
         $embeds_count = 0;
         $files_count = 0;
@@ -375,95 +407,98 @@ class Uploads
         $parent_thread = $post->getParent();
         $parent_thread->loadFromDatabase();
 
+        if (!$response_to)
+        {
+            $allow_files = $this->domain->setting('allow_op_files');
+            $require_file = $this->domain->setting('require_op_file');
+            $allow_embeds = $this->domain->setting('allow_op_embeds');
+            $require_embed = $this->domain->setting('require_op_embed');
+            $max_files = $this->domain->setting('max_op_files');
+            $max_embeds = $this->domain->setting('max_op_embeds');
+            $max_total_uploads = $this->domain->setting('max_op_total_uploads');
+        }
+        else
+        {
+            $allow_files = $this->domain->setting('allow_reply_files');
+            $require_file = $this->domain->setting('require_reply_file');
+            $allow_embeds = $this->domain->setting('allow_reply_embeds');
+            $require_embed = $this->domain->setting('require_reply_embed');
+            $max_files = $this->domain->setting('max_reply_files');
+            $max_embeds = $this->domain->setting('max_reply_embeds');
+            $max_total_uploads = $this->domain->setting('max_reply_total_uploads');
+        }
+
         foreach ($this->embeds as $embed)
         {
             $embeds_count += (nel_true_empty($embed)) ? 0 : 1;
         }
 
-        if ($embeds_count > 0 && !$this->domain->setting('allow_embeds'))
-        {
-            nel_derp(26, _gettext('You are not allowed to post embedded content.'));
-        }
-
         if (isset($this->files['upload_files']['name']))
         {
-            foreach ($this->files['upload_files']['name'] as $file_name)
+            $entry_count = count($this->files['upload_files']['name']);
+
+            for ($i = 0; $i < $entry_count; $i ++)
             {
-                $files_count += (nel_true_empty($file_name)) ? 0 : 1;
+                $files_count += (nel_true_empty($this->files['upload_files']['name'][$i])) ? 0 : 1;
             }
         }
 
-        if ($embeds_count === 0 || !$this->domain->setting('embed_replaces_file'))
+        $total_uploads = ($this->domain->setting('embed_replaces_file') && $embeds_count > 0) ? $embeds_count : $embeds_count +
+                $files_count;
+
+        if ($total_uploads > 0 && !$allow_files && !$allow_embeds)
         {
-            if ($files_count > 0 && !$this->domain->setting('allow_files'))
-            {
-                nel_derp(27, _gettext('File uploads are not allowed.'));
-            }
+            nel_derp(26, _gettext('This post cannot have files or embedded content.'));
         }
 
-        if ($embeds_count > 0 && $this->domain->setting('embed_replaces_file'))
+        if ($total_uploads > $max_total_uploads)
         {
-            $total = $embeds_count;
-        }
-        else
-        {
-            $total = $embeds_count + $files_count;
-        }
-
-        if ($total === 0)
-        {
-            if ($response_to && $this->domain->setting('require_reply_upload'))
-            {
-                nel_derp(8, _gettext('An image, file or embed is required when replying.'));
-            }
-
-            if (!$response_to && $this->domain->setting('require_op_upload'))
-            {
-                nel_derp(9, _gettext('An image, file or embed is required to make new thread.'));
-            }
-
-            return;
-        }
-
-        if ($total > $this->domain->setting('max_post_uploads'))
-        {
-            nel_derp(28,
+            nel_derp(27,
                     sprintf(
                             _gettext(
-                                    'You have too many uploads in one post. Received %d embeds and %d files for a total of %d uploads. Limit is %d.'),
-                            $embeds_count, $files_count, $total, $this->domain->setting('max_post_uploads')));
+                                    'You have too many uploads in your post. Received %d embeds and %d files for a total of %d uploads. Maximum is %d.'),
+                            $embeds_count, $files_count, $total_uploads, $max_total_uploads));
         }
 
-        if ($total >= 1 && $this->domain->setting('limit_thread_uploads') &&
+        if ($files_count === 0 && $require_file)
+        {
+            nel_derp(28, _gettext('At least one file is required.'));
+        }
+
+        if ($files_count > 0 && !$allow_files && ($embeds_count === 0 || !$this->domain->setting('embed_replaces_file')))
+        {
+            nel_derp(29, _gettext('Files are not allowed in this post.'));
+        }
+
+        if ($files_count > $max_files)
+        {
+            nel_derp(30,
+                    sprintf(_gettext('You have too many files in your post. Received %d files but the maximum is %d.'),
+                            $files_count, $max_files));
+        }
+
+        if ($embeds_count === 0 && $require_embed)
+        {
+            nel_derp(31, _gettext('Embedded content is required.'));
+        }
+
+        if ($embeds_count > 0 && !$allow_embeds)
+        {
+            nel_derp(32, _gettext('Embedded content is not allowed in this post.'));
+        }
+
+        if ($embeds_count > $max_embeds)
+        {
+            nel_derp(33,
+                    sprintf(
+                            _gettext('You have too many embeds in your post. Received %d embeds but the maximum is %d.'),
+                            $embeds_count, $max_embeds));
+        }
+
+        if ($this->domain->setting('limit_thread_uploads') &&
                 $parent_thread->data('total_uploads') >= $this->domain->setting('max_thread_uploads'))
         {
-            nel_derp(48, _gettext('This thread has reached the maximum number of uploads.'));
-        }
-
-        if ($total === 1)
-        {
-            if (!$response_to && !$this->domain->setting('allow_op_uploads'))
-            {
-                nel_derp(37, _gettext('The first post cannot have uploads.'));
-            }
-
-            if ($response_to && !$this->domain->setting('allow_reply_uploads'))
-            {
-                nel_derp(38, _gettext('Replies cannot have uploads.'));
-            }
-        }
-
-        if ($total > 1)
-        {
-            if (!$response_to && !$this->domain->setting('allow_op_multiple'))
-            {
-                nel_derp(39, _gettext('The first post cannot have multiple uploads.'));
-            }
-
-            if ($response_to && !$this->domain->setting('allow_reply_multiple'))
-            {
-                nel_derp(40, _gettext('You cannot have multiple uploads in a reply.'));
-            }
+            nel_derp(34, _gettext('This thread has reached the maximum number of uploads.'));
         }
     }
 

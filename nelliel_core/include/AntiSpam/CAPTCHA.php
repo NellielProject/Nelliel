@@ -73,7 +73,7 @@ class CAPTCHA
             }
             else
             {
-                nel_derp(33, _gettext('Requesting new CAPTCHAs too fast. Wait a minute.'));
+                nel_derp(72, _gettext('Requesting new CAPTCHAs too fast. Wait a minute.'));
             }
         }
         else
@@ -248,7 +248,7 @@ class CAPTCHA
 
         if ($result === false)
         {
-            nel_derp(32, _gettext('CAPTCHA test failed.'));
+            nel_derp(70, _gettext('CAPTCHA test failed.'));
         }
 
         $this->remove($key);
@@ -302,7 +302,7 @@ class CAPTCHA
 
         if (!$verification->success)
         {
-            nel_derp(33, _gettext('reCAPTCHA test failed.'));
+            nel_derp(71, _gettext('reCAPTCHA test failed.'));
         }
 
         return;

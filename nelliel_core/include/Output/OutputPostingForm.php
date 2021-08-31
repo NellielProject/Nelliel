@@ -60,33 +60,27 @@ class OutputPostingForm extends Output
 
         if (!$response_to)
         {
-            $this->render_data['allow_files'] = $this->domain->setting('allow_files') &&
-                    $this->domain->setting('allow_op_uploads');
-            $this->render_data['allow_embeds'] = $this->domain->setting('allow_embeds') &&
-                    $this->domain->setting('allow_op_uploads');
-            $this->render_data['allow_multiple'] = $this->domain->setting('allow_op_multiple');
-            $this->render_data['upload_required'] = $this->domain->setting('require_op_upload');
+            $this->render_data['allow_files'] = $this->domain->setting('allow_op_files');
+            $this->render_data['file_required'] = $this->domain->setting('require_op_file');
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_op_embeds');
+            $this->render_data['embed_required'] = $this->domain->setting('require_op_embed');
+            $max_files = intval($this->domain->setting('max_op_files'));
+            $max_embeds = intval($this->domain->setting('max_op_embeds'));
         }
         else
         {
-            $this->render_data['allow_files'] = $this->domain->setting('allow_files') &&
-                    $this->domain->setting('allow_reply_uploads');
-            $this->render_data['allow_embeds'] = $this->domain->setting('allow_embeds') &&
-                    $this->domain->setting('allow_reply_uploads');
-            $this->render_data['allow_multiple'] = $this->domain->setting('allow_reply_multiple');
-            $this->render_data['upload_required'] = $this->domain->setting('require_reply_upload');
+            $this->render_data['allow_files'] = $this->domain->setting('allow_reply_files');
+            $this->render_data['file_required'] = $this->domain->setting('require_reply_file');
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_reply_embeds');
+            $this->render_data['embed_required'] = $this->domain->setting('require_reply_embed');
+            $max_files = intval($this->domain->setting('max_reply_files'));
+            $max_embeds = intval($this->domain->setting('max_reply_embeds'));
         }
 
-        if ($this->domain->setting('allow_op_multiple') || $this->domain->setting('allow_reply_multiple'))
-        {
-            $max_files = $this->domain->setting('max_post_uploads');
-        }
-        else
-        {
-            $max_files = 1;
-        }
-
+        $this->render_data['allowed_files'] = array_fill(0, $max_files, '');
+        $this->render_data['allowed_embeds'] = array_fill(0, $max_embeds, '');
         $this->render_data['file_max_message'] = sprintf(_gettext('Maximum files: %d'), $max_files);
+        $this->render_data['embed_max_message'] = sprintf(_gettext('Maximum embeds: %d'), $max_embeds);
         $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');

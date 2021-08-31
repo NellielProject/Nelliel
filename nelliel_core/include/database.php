@@ -69,7 +69,7 @@ function nel_new_database_connection(string $dsn, ?string $username = null, ?str
     }
     catch (PDOException $exception)
     {
-        nel_derp(49, _gettext('Error connecting to database.'));
+        nel_derp(1, _gettext('Error connecting to database.'));
     }
 }
 
@@ -121,7 +121,7 @@ function nel_default_database_connection(): NellielPDO
             break;
 
         default:
-            nel_derp(50, _gettext('Invalid database type given in config.'));
+            nel_derp(2, _gettext('Invalid database type given in config.'));
     }
 
     $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);

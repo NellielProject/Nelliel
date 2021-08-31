@@ -29,7 +29,7 @@ class PostData
     {
         if (!isset($_POST['new_post']))
         {
-            nel_derp(35,
+            nel_derp(40,
                     "No POST data was received. The request may have been too big or server settings need to be adjusted.");
         }
 
@@ -324,28 +324,28 @@ class PostData
             case 'name':
                 $min = $this->domain->setting('min_name_length');
                 $max = $this->domain->setting('max_name_length');
-                $error_number = 51;
+                $error_number = 48;
                 $error_message = sprintf(_gettext('Name must be between %s and %s characters.'), $min, $max);
                 break;
 
             case 'email':
                 $min = $this->domain->setting('min_email_length');
                 $max = $this->domain->setting('max_email_length');
-                $error_number = 52;
+                $error_number = 49;
                 $error_message = sprintf(_gettext('Email must be between %s and %s characters.'), $min, $max);
                 break;
 
             case 'subject':
                 $min = $this->domain->setting('min_subject_length');
                 $max = $this->domain->setting('max_subject_length');
-                $error_number = 53;
+                $error_number = 50;
                 $error_message = sprintf(_gettext('Subject must be between %s and %s characters.'), $min, $max);
                 break;
 
             case 'comment':
                 $min = $this->domain->setting('min_comment_length');
                 $max = $this->domain->setting('max_comment_length');
-                $error_number = 54;
+                $error_number = 51;
                 $error_message = sprintf(_gettext('Comment must be between %s and %s characters.'), $min, $max);
                 break;
         }

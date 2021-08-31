@@ -22,7 +22,7 @@ class ActionsPost implements Actions
             switch ($action)
             {
                 case 'reject':
-                    nel_derp(34, $data['message']);
+                    nel_derp(75, $data['message']);
                     break;
             }
         }

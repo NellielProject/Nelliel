@@ -59,8 +59,7 @@ class NewPost
 
         $authorization = new Authorization($this->database);
         $file_handler = nel_utilities()->fileHandler();
-        $uploads_handler = new Uploads($this->domain, $_FILES, [$_POST['embed_url'] ?? ''], $authorization,
-                $this->session);
+        $uploads_handler = new Uploads($this->domain, $authorization, $this->session);
         $data_handler = new PostData($this->domain, $authorization, $this->session);
         $post = new Post(new ContentID(), $this->domain);
         $data_handler->processPostData($post);
@@ -112,7 +111,7 @@ class NewPost
         {
             if (!$post->data('comment'))
             {
-                nel_derp(7, _gettext('Post contains zero content. What was the point of this?'), $error_data);
+                nel_derp(9, _gettext('Post contains zero content. What was the point of this?'), $error_data);
             }
         }
 
@@ -155,8 +154,8 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
-                            'sage') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
+                    !$fgsfds->commandIsSet('sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
@@ -268,7 +267,7 @@ class NewPost
 
         if ($renzoku > 0 && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
         {
-            nel_derp(1, _gettext("Flood detected! You're posting too fast, slow down."), $error_data);
+            nel_derp(3, _gettext("Flood detected! You're posting too fast, slow down."), $error_data);
         }
 
         if ($post->data('parent_thread') != 0)
@@ -282,29 +281,29 @@ class NewPost
             {
                 if ($thread_info['locked'] == 1)
                 {
-                    nel_derp(2, _gettext('This thread is locked.'), $error_data);
+                    nel_derp(4, _gettext('This thread is locked.'), $error_data);
                 }
 
                 if ($thread_info['old'] != 0)
                 {
-                    nel_derp(3, _gettext('The thread you have tried posting in is currently inaccessible or archived.'),
+                    nel_derp(5, _gettext('The thread you have tried posting in is currently inaccessible or archived.'),
                             $error_data);
                 }
             }
             else
             {
-                nel_derp(4, _gettext('The thread you have tried posting in could not be found.'), $error_data);
+                nel_derp(6, _gettext('The thread you have tried posting in could not be found.'), $error_data);
             }
 
             if ($this->domain->setting('limit_post_count') && $thread_info['cyclic'] != 1 &&
                     $thread_info['post_count'] >= $this->domain->setting('max_posts'))
             {
-                nel_derp(5, _gettext('The thread has reached maximum posts.'), $error_data);
+                nel_derp(7, _gettext('The thread has reached maximum posts.'), $error_data);
             }
 
             if ($thread_info['old'] != 0)
             {
-                nel_derp(6, _gettext('The thread is archived or buffered and cannot be posted to.'), $error_data);
+                nel_derp(8, _gettext('The thread is archived or buffered and cannot be posted to.'), $error_data);
             }
         }
     }

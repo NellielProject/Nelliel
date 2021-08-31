@@ -31,14 +31,14 @@
 		</label>
 		{{/ display_comment_field }}
 		{{# allow_files }}
-		<span class="posting-form-row">
-			<label class="posting-form-label" for="form-file-upload">
-				<span data-i18n="">File</span>
-			</label>
+		<label class="posting-form-row">
+			<span class="posting-form-label" data-i18n="">Files</span>
 			<span data-i18n="">{{ file_max_message }}</span>
 			<br>
-			<input id="form-file-upload" class="posting-form-input" type="file" name="upload_files[]" {{# allow_multiple }}multiple{{/ allow_multiple }}>
+			{{# allowed_files }}
+			<input class="posting-form-input" type="file" name="upload_files[]">
 			<br>
+			{{/ allowed_files }}
 			{{# spoilers_enabled }}
 			<span id="form-spoiler">
 				<input type="hidden" name="form_spoiler" value="0">
@@ -46,18 +46,19 @@
 				<span data-i18n="">Spoiler</span>
 			</span>
 			{{/ spoilers_enabled }}
-		</span>
+		</label>
 		{{/ allow_files}}
 		{{# allow_embeds }}
 		<label class="posting-form-row">
-			<span class="posting-form-label" data-i18n="">Embed URL</span>
-			<input class="posting-form-input" type="text" name="embed_url" size="30">
+			<span class="posting-form-label" data-i18n="">Embed URLs</span>
+			<span data-i18n="">{{ embed_max_message }}</span>
 			<br>
-			{{^ embed_replaces }}
-			(<span data-i18n="">Embed will count as a file</span>)
-			{{/ embed_replaces }}
+			{{# allowed_embeds }}
+			<input class="posting-form-input" type="text" name="embed_urls[]" size="30">
+			<br>
+			{{/ allowed_embeds }}
 			{{# embed_replaces }}
-			(<span data-i18n="">Embed will replace files</span>)
+			(<span data-i18n="">Embeds will replace all files</span>)
 			{{/ embed_replaces }}
 		</label>
 		{{/ allow_embeds }}
@@ -116,9 +117,12 @@
 		</label>
 		{{/ use_honeypot }}
 	</div>
-	{{# upload_required }}
-	<div class="text-center" data-i18n="">At least one file or embed is required.</div>
-	{{/ upload_required }}
+	{{# file_required }}
+	<div class="text-center" data-i18n="">At least one file is required.</div>
+	{{/ file_required }}
+	{{# embed_required }}
+	<div class="text-center" data-i18n="">At least one embed is required.</div>
+	{{/ embed_required }}
 	<ul class="posting-rules-list">
 	{{# posting_rules_items }}
 		<li class="posting-rules-item">{{ rules_text }}</li>
