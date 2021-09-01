@@ -47,6 +47,7 @@ use Nelliel\Tables\TablePosts;
 use Nelliel\Tables\TableUploads;
 use Nelliel\Tables\TableThreadArchives;
 use Nelliel\Tables\TablePages;
+use Nelliel\Tables\TableCache;
 
 class Setup
 {
@@ -274,6 +275,8 @@ class Setup
         $board_configs_table->createTable();
         $pages_table = new TablePages($this->database, $this->sql_compatibility);
         $pages_table->createTable();
+        $cache_table = new TableCache($this->database, $this->sql_compatibility);
+        $cache_table->createTable();
 
         // NOTE: Tables must be created in order of:
         // roles -> permissions -> role permissions -> users -> user roles

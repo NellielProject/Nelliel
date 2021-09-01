@@ -29,6 +29,7 @@ define('NEL_BLOTTER_TABLE', 'nelliel_blotter');
 define('NEL_BOARD_DATA_TABLE', 'nelliel_board_data');
 define('NEL_BOARD_CONFIGS_TABLE', 'nelliel_board_configs');
 define('NEL_BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
+define('NEL_CACHE_TABLE', 'nelliel_cache');
 define('NEL_CAPTCHA_TABLE', 'nelliel_captcha');
 define('NEL_CITES_TABLE', 'nelliel_cites');
 define('NEL_DNSBL_TABLE', 'nelliel_DNSBL');
