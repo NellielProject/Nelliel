@@ -20,19 +20,19 @@ class TableIPNotes extends Table
         $this->columns_data = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
+            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
-            'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
-            'user_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
-            'hashed_ip_address' => ['pdo_type' => PDO::PARAM_LOB, 'row_check' => false, 'auto_inc' => false],
-            'time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'notes' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'user_id' => ['row_check' => false, 'auto_inc' => false],
+            'ip_address' => ['row_check' => false, 'auto_inc' => false],
+            'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false],
+            'time' => ['row_check' => false, 'auto_inc' => false],
+            'notes' => ['row_check' => false, 'auto_inc' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

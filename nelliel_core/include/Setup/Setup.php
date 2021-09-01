@@ -46,6 +46,7 @@ use Nelliel\Tables\TableThreads;
 use Nelliel\Tables\TablePosts;
 use Nelliel\Tables\TableUploads;
 use Nelliel\Tables\TableThreadArchives;
+use Nelliel\Tables\TablePages;
 
 class Setup
 {
@@ -271,6 +272,8 @@ class Setup
         $captcha_table->createTable();
         $board_configs_table = new TableBoardConfigs($this->database, $this->sql_compatibility);
         $board_configs_table->createTable();
+        $pages_table = new TablePages($this->database, $this->sql_compatibility);
+        $pages_table->createTable();
 
         // NOTE: Tables must be created in order of:
         // roles -> permissions -> role permissions -> users -> user roles

@@ -39,6 +39,7 @@ define('NEL_FILETYPES_TABLE', 'nelliel_filetypes');
 define('NEL_IP_NOTES_TABLE', 'nelliel_ip_notes');
 define('NEL_LOGS_TABLE', 'nelliel_logs');
 define('NEL_NEWS_TABLE', 'nelliel_news');
+define('NEL_PAGES_TABLE', 'nelliel_pages');
 define('NEL_PERMISSIONS_TABLE', 'nelliel_permissions');
 define('NEL_PLUGINS_TABLE', 'nelliel_plugins');
 define('NEL_PMS_TABLE', 'nelliel_pms');
