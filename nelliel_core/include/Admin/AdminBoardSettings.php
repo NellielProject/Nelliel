@@ -84,6 +84,23 @@ class AdminBoardSettings extends Admin
                 $value = json_encode($filetypes_array);
                 $key = 'enabled_filetypes';
             }
+            else if ($key === 'enabled_styles')
+            {
+                $styles_array = array();
+
+                foreach ($value as $style => $entries)
+                {
+                    $style_enabled = nel_form_input_default($entries) === '1';
+
+                    if ($style_enabled)
+                    {
+                        $styles_array[] = $style;
+                    }
+                }
+
+                $value = json_encode($styles_array);
+                $key = 'enabled_styles';
+            }
             else
             {
                 $value = nel_form_input_default($value);

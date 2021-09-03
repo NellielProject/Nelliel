@@ -530,6 +530,42 @@
 			{{> panels/pieces/settings_checkbox }}
 		{{/ use_honeypot }}
 	</div>
+	{{# enabled_styles }}
+	<div class="display-table text-left">
+		<div class="display-row">
+			<hr class="display_cell">
+		{{# show_locked }}
+			<span class="display-cell"></span>
+		{{/show_locked }}
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<span class="bold" data-i18n="">Styles</span>
+			</span>
+		{{# show-locked }}
+			<span class="display-cell"></span>
+		{{/ show-locked }}
+		</div>
+		{{# show_lock_update }}
+		<div class="display-row">
+			{{> panels/pieces/settings_lock_update }}
+		</div>
+		{{/ show_lock_update }}
+		{{# styles }}
+			{{# entry }}
+		<div class="display-row">
+			<span class="display-cell">
+				<input type="hidden" name="{{ input_name }}[default]" value="0">
+				<label>
+				<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
+				<span>{{ item_label }}</span>
+				</label>
+			</span>
+		</div>
+			{{/ entry }}
+		{{/ styles }}
+	</div>
+	{{/ enabled_styles }}
 	{{# enabled_filetypes }}
 	<div class="display-table text-left">
 		<div class="display-row">
@@ -551,15 +587,16 @@
 			{{> panels/pieces/settings_lock_update }}
 		</div>
 		{{/ show_lock_update }}
-
 		{{# file_types }}
 			{{# category_select }}
 		<div class="display-row">
 			<span class="display-cell">
 				<br>
 				<input type="hidden" name="{{ input_name }}[default]" value="0">
-				<input id="{{ name }}" type="checkbox" name="{{ input_name }}[value]" value="1" {{ value }} {{ disabled }}>
-				<label for="{{ name }}" class="bold">{{ category_label }}</label>
+				<label>
+				<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
+				<span class="bold">{{ item_label }}</span>
+				</label>
 			</span>
 		</div>
 			{{/ category_select }}
@@ -568,8 +605,10 @@
 				{{# entry }}
 			<span class="display-cell">
 				<input type="hidden" name="{{ input_name }}[default]" value="0">
-				<input id="{{ format }}" type="checkbox" name="{{ input_name }}[value]" value="1" {{ value }} {{ disabled }}>
-				<label for="{{ format }}">{{ type_label }}</label>
+				<label>
+				<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
+				<span>{{ item_label }}</span>
+				</label>
 			</span>
 				{{/ entry }}
 		</div>

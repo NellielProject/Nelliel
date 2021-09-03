@@ -65,6 +65,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['user_delete_own', '1', 0]);
         $this->insertDefaultRow(['delete_post_renzoku', '0', 0]);
         $this->insertDefaultRow(['safety_level', 'SFW', 0]);
+        $this->insertDefaultRow(['enabled_styles', '["style-nelliel","style-nelliel-2","style-nelliel-classic","style-burichan","style-futaba","style-nigra"]', 0]);
 
         // New post
         $this->insertDefaultRow(['enable_name_field', '1', 0]);

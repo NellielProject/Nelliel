@@ -20,9 +20,15 @@ class OutputMenu extends Output
         $this->renderSetup();
         $styles = $this->domain->frontEndData()->getAllStyles();
         $render_data = array();
+        $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
 
         foreach ($styles as $style)
         {
+            if($this->domain->id() !== Domain::SITE && !in_array($style->id(), $enabled_styles))
+            {
+                continue;
+            }
+
             $style_data = array();
             $style_data['stylesheet'] = ($this->domain->setting('default_style') === $style->id()) ? 'stylesheet' : 'alternate stylesheet';
             $style_data['style_id'] = $style->id();

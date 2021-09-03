@@ -160,6 +160,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'user_delete_own', '', '1', 'Let users delete own posts and content', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'delete_post_renzoku', '', '0', 'Cooldown after posting before user can delete the post', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'safety_level', '{"SFW":{"label":"SFW - Safe For Work"}, "NSFW":{"label":"NSFW - Not Safe For Work"}, "NSFL":{"label":"NSFL - Not Safe For Life"}}', 'SFW', 'Content safety level of board', '{"type":"select"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'enabled_styles', '', '["style-nelliel","style-nelliel-2","style-nelliel-classic","style-burichan","style-futaba","style-nigra"]', '', '{"type":"text"}']);
 
         // New post
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_name_field', '', '1', 'Enable the name field.', '{"type":"checkbox"}']);

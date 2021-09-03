@@ -68,11 +68,15 @@ class OutputPanelBoardSettings extends Output
         foreach ($filetypes->categories() as $category)
         {
             $category_data = array();
-            $category_data['category_label'] = _gettext($category['type_label'] ?? '');
+            $category_data['item_label'] = _gettext($category['type_label'] ?? '');
             $category_data['category_select']['name'] = $category['category'];
             $category_data['category_select']['input_name'] = 'enabled_filetypes[' . $category['category'] . '][enabled]';
-            $category_data['category_select']['value'] = (isset($enabled_array[$category['category']]) &&
-                    $enabled_array[$category['category']]['enabled']) ? 'checked' : '';
+
+            if (isset($enabled_array[$category['category']]) && $enabled_array[$category['category']]['enabled'])
+            {
+                $category_data['category_select']['checked'] = 'checked';
+            }
+
             $category_data['category_select']['disabled'] = ($types_edit_lock) ? 'disabled' : '';
             $enabled_formats = $enabled_array[$category['category']] ?? array();
             $entry_row['entry'] = array();
@@ -85,15 +89,13 @@ class OutputPanelBoardSettings extends Output
                 }
 
                 $set = array();
-                $set['format'] = $format;
                 $set['input_name'] = 'enabled_filetypes[' . $data['category'] . '][formats][' . $format . ']';
-                $set['type_label'] = _gettext($data['type_label'] ?? '');
-                $set['value'] = '';
+                $set['item_label'] = _gettext($data['type_label'] ?? '');
 
                 if (!empty($enabled_formats) && isset($enabled_formats['formats']) &&
                         array_search($format, $enabled_formats['formats']) !== false)
                 {
-                    $set['value'] = 'checked';
+                    $set['checked'] = 'checked';
                 }
 
                 $set['disabled'] = ($types_edit_lock) ? 'disabled' : '';
@@ -111,7 +113,7 @@ class OutputPanelBoardSettings extends Output
                     $extensions = substr($extensions, 0, -2);
                 }
 
-                $set['type_label'] .= $extensions;
+                $set['item_label'] .= $extensions;
 
                 if (count($entry_row['entry']) === 3)
                 {
@@ -163,6 +165,33 @@ class OutputPanelBoardSettings extends Output
                 {
                     $setting_data['setting_disabled'] = 'disabled';
                 }
+            }
+
+            if ($setting['setting_name'] === 'enabled_styles')
+            {
+                $styles_edit_lock = $defaults_list['enabled_styles']['edit_lock'] == 1 && !$defaults &&
+                        !$user_lock_override;
+                $styles = $this->domain->frontEndData()->getAllStyles();
+                $styles_array = json_decode($setting['setting_value'] ?? '', true);
+                $style_entries = array();
+
+                foreach ($styles as $style)
+                {
+                    $style_id = $style->id();
+                    $set = array();
+                    $set['input_name'] = 'enabled_styles[' . $style_id . ']';
+                    $set['item_label'] = $style->info('name');
+                    $set['disabled'] = ($styles_edit_lock) ? 'disabled' : '';
+
+                    if (in_array($style_id, $styles_array))
+                    {
+                        $set['checked'] = 'checked';
+                    }
+
+                    $style_entries['entry'][] = $set;
+                }
+
+                $this->render_data['settings_data']['styles'][] = $style_entries;
             }
 
             foreach ($input_attributes as $attribute => $value)
