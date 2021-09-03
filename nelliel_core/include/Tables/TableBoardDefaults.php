@@ -169,6 +169,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['display_render_timer', '1', 0]);
         $this->insertDefaultRow(['enable_dynamic_pages', '0', 0]);
         $this->insertDefaultRow(['generate_catalog', '1', 0]);
+        $this->insertDefaultRow(['show_catalog_link', '1', 0]);
         $this->insertDefaultRow(['template_id', 'template-nelliel-basic', 0]);
         $this->insertDefaultRow(['default_style', 'style-nelliel', 0]);
         $this->insertDefaultRow(['ui_icon_set', 'icons-nelliel-basic', 0]);
