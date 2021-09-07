@@ -1,8 +1,9 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel;
+namespace Nelliel\Utility;
 
+use Nelliel\NellielPDO;
 use PDOStatement;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');

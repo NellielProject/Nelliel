@@ -6,7 +6,6 @@ namespace Nelliel\Tables;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use PDO;
-use Nelliel\SQLHelpers;
 
 abstract class Table
 {
@@ -76,7 +75,7 @@ abstract class Table
 
     protected function insertDefaultRow(array $values)
     {
-        $sql_helpers = new SQLHelpers($this->database);
+        $sql_helpers = nel_utilities()->sqlHelpers;
         $data = array();
         $index = 0;
 

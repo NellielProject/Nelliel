@@ -6,8 +6,6 @@ namespace Nelliel\Content;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Moar;
-use Nelliel\SQLCompatibility;
-use Nelliel\SQLHelpers;
 use Nelliel\API\JSON\UploadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -34,11 +32,11 @@ class Upload
         $this->domain = $domain;
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
-        $this->main_table = new TableUploads($this->database, new SQLCompatibility($this->database));
+        $this->main_table = new TableUploads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('uploads_table'));
         $this->parent = $parent;
         $this->json = new UploadJSON($this, nel_utilities()->fileHandler());
-        $this->sql_helpers = new SQLHelpers($this->database);
+        $this->sql_helpers = nel_utilities()->sqlHelpers;
 
         if ($load)
         {

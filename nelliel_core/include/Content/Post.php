@@ -8,8 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Moar;
-use Nelliel\SQLCompatibility;
-use Nelliel\SQLHelpers;
 use Nelliel\API\JSON\PostJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -38,11 +36,11 @@ class Post
         $this->domain = $domain;
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
-        $this->main_table = new TablePosts($this->database, new SQLCompatibility($this->database));
+        $this->main_table = new TablePosts($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('posts_table'));
         $this->parent = $parent;
         $this->json = new PostJSON($this, nel_utilities()->fileHandler());
-        $this->sql_helpers = new SQLHelpers($this->database);
+        $this->sql_helpers = nel_utilities()->sqlHelpers;
 
         if ($load)
         {

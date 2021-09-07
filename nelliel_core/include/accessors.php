@@ -68,7 +68,7 @@ function nel_utilities()
 
     if (!isset($utilities))
     {
-        $utilities = new \Nelliel\Utility\Utilities();
+        $utilities = new \Nelliel\Utility\Utilities(nel_database());
     }
 
     return $utilities;

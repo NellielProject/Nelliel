@@ -1,8 +1,7 @@
 <?php
+declare(strict_types = 1);
 
-declare(strict_types=1);
-
-namespace Nelliel;
+namespace Nelliel\Utility;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
@@ -124,6 +123,22 @@ class SQLCompatibility
                 NEL_SQLTYPE === 'POSTGRESQL')
         {
             return 'LIMIT ' . $limit . ' OFFSET ' . $offset;
+        }
+    }
+
+    public function return(string $sqltype): string
+    {
+        if ($sqltype === 'MYSQL' || $sqltype === 'MARIADB')
+        {
+            return 'RETURN';
+        }
+        else if ($sqltype === 'POSTGRESQL' || $sqltype === 'SQLITE')
+        {
+            return 'RETURNING';
+        }
+        else
+        {
+            return 'RETURN';
         }
     }
 }

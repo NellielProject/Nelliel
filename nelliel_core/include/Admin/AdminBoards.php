@@ -6,7 +6,6 @@ namespace Nelliel\Admin;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Regen;
-use Nelliel\SQLCompatibility;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -121,7 +120,7 @@ class AdminBoards extends Admin
         $prepared->bindValue(2, $db_prefix, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
 
-        $setup = new Setup($this->database, new SQLCompatibility($this->database), new FileHandler());
+        $setup = new Setup($this->database, nel_utilities()->sqlCompatibility(), new FileHandler());
         $query = 'SELECT "setting_name", "setting_value", "edit_lock" FROM "' . NEL_BOARD_DEFAULTS_TABLE . '"';
         $defaults = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
         $prepared = $this->database->prepare(

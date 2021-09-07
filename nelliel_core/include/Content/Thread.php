@@ -9,8 +9,6 @@ use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Moar;
 use Nelliel\Overboard;
-use Nelliel\SQLCompatibility;
-use Nelliel\SQLHelpers;
 use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -39,11 +37,11 @@ class Thread
         $this->domain = $domain;
         $this->authorization = new Authorization($this->database);
         $this->storeMoar(new Moar());
-        $this->main_table = new TableThreads($this->database, new SQLCompatibility($this->database));
+        $this->main_table = new TableThreads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('threads_table'));
         $this->parent = $parent;
         $this->json = new ThreadJSON($this, nel_utilities()->fileHandler());
-        $this->sql_helpers = new SQLHelpers($this->database);
+        $this->sql_helpers = nel_utilities()->sqlHelpers;
 
         if ($load)
         {

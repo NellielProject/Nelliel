@@ -1,9 +1,6 @@
 <?php
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\SQLCompatibility;
-use Nelliel\Utility\FileHandler;
-
 define('NEL_BASE_HONEYPOT_FIELD1', 'display_signature'); // Honeypot field name
 define('NEL_BASE_HONEYPOT_FIELD2', 'signature'); // Honeypot field name
 define('NEL_BASE_HONEYPOT_FIELD3', 'website'); // Honeypot field name
@@ -67,8 +64,8 @@ Mustache_Autoloader::register();
 
 require_once NEL_INCLUDE_PATH . 'database.php';
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
-$file_handler = new FileHandler();
-$setup = new \Nelliel\Setup\Setup(nel_database(), new SQLCompatibility(nel_database()), $file_handler);
+$file_handler = nel_utilities()->fileHandler();
+$setup = new \Nelliel\Setup\Setup(nel_database(), nel_utilities()->sqlCompatibility(), $file_handler);
 
 if (isset($_GET['install']))
 {
