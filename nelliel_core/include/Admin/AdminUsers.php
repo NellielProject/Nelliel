@@ -11,6 +11,7 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Output\OutputPanelUsers;
+use Nelliel\Domains\DomainGlobal;
 
 class AdminUsers extends Admin
 {
@@ -85,6 +86,10 @@ class AdminUsers extends Admin
                 if (strpos($key, Domain::SITE))
                 {
                     $domain = new DomainSite($this->database);
+                }
+                else if(strpos($key, Domain::GLOBAL))
+                {
+                    $domain = new DomainGlobal($this->database);
                 }
                 else
                 {

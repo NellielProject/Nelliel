@@ -12,6 +12,8 @@ use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputAccount;
 use Nelliel\Output\OutputLoginPage;
 use Nelliel\Output\OutputRegisterPage;
+use Nelliel\PrivateMessage;
+use Nelliel\Output\OutputPrivateMessages;
 
 class DispatchAccount extends Dispatch
 {
@@ -46,17 +48,47 @@ class DispatchAccount extends Dispatch
                 break;
 
             case 'register':
-                $authorization = new Authorization(nel_database());
-
                 if ($inputs['actions'][0] === 'submit')
                 {
-                    $register = new Register($authorization, $this->domain);
+                    $register = new Register($this->authorization, $this->domain);
                     $register->new();
                 }
                 else
                 {
                     $output_login = new OutputRegisterPage($this->domain, false);
                     $output_login->render(['section' => 'register'], false);
+                }
+
+                break;
+
+            case 'private-message':
+                $this->session->init(true);
+
+                if (!$this->session->user()->checkPermission($this->domain, 'perm_private_message'))
+                {
+                    //nel_derp(0, '');
+                }
+
+                $message_id = intval($_GET['message_id'] ?? 0);
+                $private_message = new PrivateMessage($this->domain->database(), $this->session, $message_id);
+
+                if ($inputs['actions'][0] === 'send')
+                {
+                    $private_message->collectFromPOST();
+                    $private_message->send();
+                }
+                else if ($inputs['actions'][0] === 'mark-read')
+                {
+                    $private_message->markRead();
+                }
+                else if ($inputs['actions'][0] === 'delete')
+                {
+                    $private_message->delete();
+                }
+                else
+                {
+                    $output_private_messages = new OutputPrivateMessages($this->domain, false);
+                    $output_private_messages->messageList([], false);
                 }
 
                 break;

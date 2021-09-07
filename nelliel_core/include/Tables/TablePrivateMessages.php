@@ -9,14 +9,14 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use PDO;
 
-class TablePMs extends Table
+class TablePrivateMessages extends Table
 {
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = NEL_PMS_TABLE;
+        $this->table_name = NEL_PRIVATE_MESSAGES_TABLE;
         $this->columns_data = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'sender' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],

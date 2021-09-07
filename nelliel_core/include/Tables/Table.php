@@ -75,7 +75,7 @@ abstract class Table
 
     protected function insertDefaultRow(array $values)
     {
-        $sql_helpers = nel_utilities()->sqlHelpers;
+        $sql_helpers = nel_utilities()->sqlHelpers();
         $data = array();
         $index = 0;
 

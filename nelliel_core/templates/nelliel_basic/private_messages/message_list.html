@@ -1,0 +1,28 @@
+<table class="data-table">
+	<caption class="data-table-caption" data-i18n="">List of your private messages</caption>
+	<thead class="data-table-header">
+		<tr>
+			<th data-i18n="">Read</th>
+			<th data-i18n="">Time</th>
+			<th data-i18n="">Sender</th>
+			<th data-i18n="">Message</th>
+			<th data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# private_messages }}
+		<tr class="{{ bgclass }}">
+			<td>{{ message_read }}</td>
+			<td>{{ time }}</td>
+			<td>{{ sender }}</td>
+			<td>{{ message }}</td>
+			<td>
+	{{^ message_read }}
+				<span>[<a class="display-cell" href="{{ mark_read_url }}" data-i18n="">Mark as read</a>]</span>
+	{{/ message_read }}
+				<span>[<a class="display-cell" href="{{ delete_url }}" data-i18n="">Delete</a>]</span>
+			</td>
+		</tr>
+{{/ private_messages }}
+	</tbody>
+</table>

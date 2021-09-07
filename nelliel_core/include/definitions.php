@@ -43,7 +43,7 @@ define('NEL_NEWS_TABLE', 'nelliel_news');
 define('NEL_PAGES_TABLE', 'nelliel_pages');
 define('NEL_PERMISSIONS_TABLE', 'nelliel_permissions');
 define('NEL_PLUGINS_TABLE', 'nelliel_plugins');
-define('NEL_PMS_TABLE', 'nelliel_pms');
+define('NEL_PRIVATE_MESSAGES_TABLE', 'nelliel_private_messages');
 define('NEL_OVERBOARD_TABLE', 'nelliel_overboard');
 define('NEL_RATE_LIMIT_TABLE', 'nelliel_rate_limit');
 define('NEL_REPORTS_TABLE', 'nelliel_reports');

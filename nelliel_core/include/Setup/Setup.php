@@ -25,7 +25,7 @@ use Nelliel\Tables\TableLogs;
 use Nelliel\Tables\TableNews;
 use Nelliel\Tables\TableNoticeboard;
 use Nelliel\Tables\TableOverboard;
-use Nelliel\Tables\TablePMs;
+use Nelliel\Tables\TablePrivateMessages;
 use Nelliel\Tables\TablePages;
 use Nelliel\Tables\TablePermissions;
 use Nelliel\Tables\TablePlugins;
@@ -238,7 +238,7 @@ class Setup
         $templates_table->createTable();
         $plugins_table = new TablePlugins($this->database, $this->sql_compatibility);
         $plugins_table->createTable();
-        $pms_table = new TablePMs($this->database, $this->sql_compatibility);
+        $pms_table = new TablePrivateMessages($this->database, $this->sql_compatibility);
         $pms_table->createTable();
         $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
         $blotter_table->createTable();
