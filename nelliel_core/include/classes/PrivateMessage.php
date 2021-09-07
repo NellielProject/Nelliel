@@ -37,7 +37,7 @@ class PrivateMessage
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "entry" = ?');
         $prepared->bindValue(1, $this->id(), PDO::PARAM_INT);
-        $data = $this->database->executePreparedFetch($prepared, [], PDO::FETCH_ASSOC);
+        $data = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
         if (is_array($data))
         {

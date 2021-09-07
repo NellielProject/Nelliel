@@ -64,12 +64,12 @@ class DispatchAccount extends Dispatch
             case 'private-message':
                 $this->session->init(true);
 
-                if (!$this->session->user()->checkPermission($this->domain, 'perm_private_message'))
+                if (!$this->session->user()->checkPermission($this->domain, 'perm_private_messages_use'))
                 {
-                    //nel_derp(0, '');
+                    nel_derp(670, _gettext('You cannot use private messages.'));
                 }
 
-                $message_id = intval($_GET['message_id'] ?? 0);
+                $message_id = intval($_GET['message-id'] ?? 0);
                 $private_message = new PrivateMessage($this->domain->database(), $this->session, $message_id);
 
                 if ($inputs['actions'][0] === 'send')
@@ -85,11 +85,9 @@ class DispatchAccount extends Dispatch
                 {
                     $private_message->delete();
                 }
-                else
-                {
-                    $output_private_messages = new OutputPrivateMessages($this->domain, false);
-                    $output_private_messages->messageList([], false);
-                }
+
+                $output_private_messages = new OutputPrivateMessages($this->domain, false);
+                $output_private_messages->messageList([], false);
 
                 break;
 

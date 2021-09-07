@@ -182,3 +182,5 @@ Error 552: perm_regen_caches (site) (central_dispatch.php)
 Error 553: perm_regen_pages (overboard) (central_dispatch.php)  
 
 Error 660: perm_extract_gettext (Language/Language.php) 
+
+Error 670: perm_private_messages_use (Dispatch/DispatchAccount.php) 

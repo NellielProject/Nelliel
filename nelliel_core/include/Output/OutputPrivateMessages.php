@@ -26,13 +26,15 @@ class OutputPrivateMessages extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "recipient" = ?');
-        var_dump($this->session->user());
         $prepared->bindValue(1, $this->session->user()->id(), PDO::PARAM_STR);
         $list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
+        $bgclass = 'row1';
 
         foreach($list as $message)
         {
             $message_info = array();
+            $message_info['bgclass'] = $bgclass;
+            $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $message_info['message_read'] = ($message['message_read'] == 1) ? 'X' : null;
             $message_info['time'] = date('Y/m/d l H:i', intval($message['time_sent']));
             $message_info['sender'] = $message['sender'];
@@ -49,6 +51,5 @@ class OutputPrivateMessages extends Output
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
-
     }
 }
