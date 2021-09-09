@@ -555,3 +555,7 @@ form {
 .thread-status-icon {
 	filter: var(--thread-status-icon-color, inherit);
 }
+
+.text-button {
+	white-space: nowrap;
+}

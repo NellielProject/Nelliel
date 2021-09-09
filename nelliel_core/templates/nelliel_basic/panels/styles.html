@@ -17,7 +17,7 @@
 			<td>{{ name }}</td>
 			<td>{{ directory }}</td>
 			<td>
-				<span>[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Uninstall</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Uninstall</a>]</span>
 			</td>
 		</tr>
 {{/ installed_list }}
@@ -53,7 +53,7 @@
 			</td>
 			<td>
 	{{^ is_installed }}
-				<span>[<a class="display-cell" href="{{ install_url }}" data-i18n="">Install Style</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ install_url }}" data-i18n="">Install Style</a>]</span>
 	{{/ is_installed }}
 			</td>
 		</tr>

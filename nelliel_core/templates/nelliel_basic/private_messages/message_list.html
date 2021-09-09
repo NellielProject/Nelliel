@@ -18,9 +18,9 @@
 			<td>{{ message }}</td>
 			<td>
 	{{^ message_read }}
-				<span>[<a class="display-cell" href="{{ mark_read_url }}" data-i18n="">Mark as read</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ mark_read_url }}" data-i18n="">Mark as read</a>]</span>
 	{{/ message_read }}
-				<span>[<a class="display-cell" href="{{ delete_url }}" data-i18n="">Delete</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ delete_url }}" data-i18n="">Delete</a>]</span>
 			</td>
 		</tr>
 {{/ private_messages }}
