@@ -1,14 +1,13 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 use Nelliel\Output\Filter;
 
 class AdminFileFilters extends Admin
@@ -20,6 +19,7 @@ class AdminFileFilters extends Admin
         $this->data_table = NEL_FILES_FILTERS_TABLE;
         $this->id_field = 'filter-id';
         $this->id_column = 'entry';
+        $this->panel_name = _gettext('File Filters');
     }
 
     public function dispatch(array $inputs): void
@@ -29,7 +29,7 @@ class AdminFileFilters extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
         $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain, false);
         $output_panel->render([], false);
     }
@@ -40,8 +40,16 @@ class AdminFileFilters extends Admin
 
     public function add(): void
     {
-        $this->verifyAction($this->domain);
-        $board_id = $board_id = $this->globalIDToNull($_POST['board_id'] ?? '', 'perm_manage_file_filters');
+        if(is_null($_POST['board_id']) || $_POST['board_id'] === '')
+        {
+            $board_id = Domain::GLOBAL;
+        }
+        else
+        {
+            $board_id = $_POST['board_id'];
+        }
+
+        $this->verifyPermissions(Domain::getDomainFromID($board_id, $this->database), 'perm_file_filters_manage');
         $type = $_POST['hash_type'];
         $notes = $_POST['file_notes'];
         $output_filter = new Filter();
@@ -70,25 +78,27 @@ class AdminFileFilters extends Admin
     {
         $id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
+        $this->verifyPermissions($entry_domain, 'perm_file_filters_manage');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(350, _gettext('You do not have access to the File Filters panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
+        switch ($perm)
         {
-            nel_derp(351, _gettext('You are not allowed to manage file filters.'));
+            case 'perm_file_filters_manage':
+                nel_derp(340, _gettext('You are not allowed to manage file filters.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

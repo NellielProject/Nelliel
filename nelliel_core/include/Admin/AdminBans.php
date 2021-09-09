@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
@@ -22,6 +21,7 @@ class AdminBans extends Admin
         $this->data_table = NEL_BANS_TABLE;
         $this->id_field = 'ban-id';
         $this->id_column = 'ban_id';
+        $this->panel_name = _gettext('Bans');
     }
 
     public function dispatch(array $inputs): void
@@ -31,14 +31,14 @@ class AdminBans extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_bans_view');
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_bans_add');
         $ban_ip = $_GET['ban-ip'] ?? '';
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
         $output_panel->new(['ban_ip' => $ban_ip], false);
@@ -47,7 +47,7 @@ class AdminBans extends Admin
 
     public function add(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_bans_add');
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
 
@@ -73,7 +73,7 @@ class AdminBans extends Admin
 
     public function editor(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_bans_modify');
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
         $output_panel->modify([], false);
         $this->outputMain(false);
@@ -81,7 +81,7 @@ class AdminBans extends Admin
 
     public function update(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_bans_modify');
         $this->ban_hammer->loadFromID($_POST['ban_id']);
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
@@ -90,26 +90,40 @@ class AdminBans extends Admin
 
     public function remove(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_bans_delete');
         $ban_id = $_GET['ban_id'] ?? '';
         $this->ban_hammer->loadFromID($ban_id);
         $this->ban_hammer->remove();
         $this->outputMain(true);
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_access_bans'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(320, _gettext('You do not have access to the Bans panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_bans'))
+        switch ($perm)
         {
-            nel_derp(321, _gettext('You are not allowed to manage bans.'));
+            case 'perm_bans_view':
+                nel_derp(310, sprintf(_gettext('You do not have access to the %s control panel.'), $this->panel_name));
+                break;
+
+            case 'perm_bans_add':
+                nel_derp(311, _gettext('You cannot add new bans.'));
+                break;
+
+            case 'perm_bans_modify':
+                nel_derp(312, _gettext('You cannot modify existing bans.'));
+                break;
+
+            case 'perm_bans_delete':
+                nel_derp(313, _gettext('You cannot delete existing bans.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

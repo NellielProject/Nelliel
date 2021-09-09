@@ -100,7 +100,7 @@ Error 210: No user ID. (Account/Register.php)
 Error 211: No password. (Account/Register.php)  
 Error 212: User already exists. (Account/Register.php)  
 Error 213: Passwords do not match. (Account/Register.php)  
-Error 214: Install ID odesn't match. (Account/Register.php)  
+Error 214: Install ID doesn't match. (Account/Register.php)  
 
 Error 220: Secure session only. (Account/Session.php)  
 Error 221: Expired session. (Account/Session.php)  
@@ -117,70 +117,66 @@ Error 242: Invalid characters board URI. (Admin/AdminBoards.php)
 Error 243: Board URI is empty. (Admin/AdminBoards.php)  
 Error 244: Board URI is reserved. (Admin/AdminBoards.php)  
 
-Error 300: perm_manage_users (access) (Admin/AdminUsers.php)  
-Error 301: perm_manage_users (action) (Admin/AdminUsers.php)   
+Error 300: Default permission error. (Admin/Admin.php)  
 
-Error 310: perm_manage_roles (access) (Admin/AdminRoles.php)  
-Error 311: perm_manage_roles (action) (Admin/AdminRoles.php)   
+Error 310: perm_bans_view (Admin/AdminBans.php)  
+Error 311: perm_bans_add (Admin/AdminBans.php)   
+Error 312: perm_bans_modify (Admin/AdminBans.php)   
+Error 313: perm_bans_delete (Admin/AdminBans.php)   
 
-Error 320: perm_manage_bans (access) (Admin/AdminBans.php)  
-Error 321: perm_manage_bans (action) (Admin/AdminBans.php)  
+Error 315: perm_blotter_manage (Admin/AdminBlotter.php)   
 
-Error 330: perm_board_config (access) (Admin/AdminBoardSettings.php)  
-Error 331: perm_board_config (action) (Admin/AdminBoardSettings.php)  
+Error 320: perm_board_defaults_modify (Admin/AdminBoardDefaults.php)  
 
-Error 340: perm_manage_board_defaults (access) (Admin/AdminBoardSettings.php)  
-Error 341: perm_manage_board_defaults (action) (Admin/AdminBoardSettings.php)  
+Error 325: perm_boards_view (Admin/AdminBoards.php)  
+Error 326: perm_boards_add (Admin/AdminBoards.php)   
+Error 327: perm_boards_modify (Admin/AdminBoards.php)   
+Error 328: perm_boards_delete (Admin/AdminBoards.php)   
 
-Error 350: perm_manage_file_filters (access) (Admin/AdminFileFilters.php)  
-Error 351: perm_manage_file_filters (action) (Admin/AdminFileFilters.php)  
+Error 330: perm_board_config_modify (Admin/AdminBoardSettings.php)   
 
-Error 360: perm_manage_site_config (access) (Admin/AdminSiteSettings.php)  
-Error 361: perm_manage_site_config (action) (Admin/AdminSiteSettings.php)  
+Error 335: perm_dnsbl_manage (Admin/AdminDNSBL.php)    
 
-Error 370: perm_manage_boards (access) (Admin/AdminBoards.php)  
-Error 371: perm_manage_boards (action) (Admin/AdminBoards.php)  
+Error 340: perm_file_filters_manage (Admin/AdminFileFilters.php)  
 
-Error 380: perm_manage_reports (access) (Admin/AdminReports.php)  
-Error 381: perm_manage_reports (action) (Admin/AdminReports.php)  
+Error 345: perm_filetypes_manage (Admin/AdminFiletypes.php)  
 
-Error 390: perm_manage_templates (access) (Admin/AdminTemplates.php)  
-Error 391: perm_manage_templates (action) (Admin/AdminTemplates.php)  
+Error 350: perm_icon_sets_manage (Admin/AdminIconSets.php)  
 
-Error 400: perm_manage_filetypes (access) (Admin/AdminFiletypes.php)  
-Error 401: perm_manage_filetypes (action) (Admin/AdminFiletypes.php)  
+Error 355: perm_logs_view (Admin/AdminLogs.php)  
+Error 356: perm_logs_manage (Admin/AdminLogs.php)  
 
-Error 410: perm_manage_styles (access) (Admin/AdminStyles.php)  
-Error 411: perm_manage_styles (action) (Admin/AdminStyles.php)  
+Error 360: perm_news_manage (Admin/AdminNews.php)  
 
-Error 420: perm_manage_permissions (access) (Admin/AdminPermissions.php)  
-Error 421: perm_manage_permissions (action) (Admin/AdminPermissions.php)  
+Error 365: perm_permissions_manage (Admin/AdminPermissions.php)  
 
-Error 430: perm_manage_icon_sets (access) (Admin/AdminIconSets.php)  
-Error 431: perm_manage_icon_sets (action) (Admin/AdminIconSets.php)  
+Error 370: perm_reports_view (Admin/AdminReports.php)  
+Error 371: perm_reports_dismiss (Admin/AdminReports.php)  
 
-Error 440: perm_manage_news (access) (Admin/AdminNews.php)  
-Error 441: perm_manage_news (action) (Admin/AdminNews.php)  
+Error 375: perm_roles_view (Admin/AdminRoles.php)  
+Error 376: perm_roles_manage (Admin/AdminRoles.php)  
 
-Error 460: perm_manage_news (access) (Admin/AdminThreads.php)  
-Error 461: perm_manage_news (action) (Admin/AdminThreads.php)  
-Error 462: perm_delete_by_ip (Admin/AdminThreads.php)  
-Error 463: perm_edit_posts (Admin/AdminThreads.php)  
+Error 380: perm_site_config_modify (Admin/AdminSiteSettings.php)  
 
-Error 470: perm_manage_logs (access) (Admin/AdminLogs.php)  
-Error 471: perm_manage_logs (action) (Admin/AdminLogs.php)  
+Error 385: perm_styles_manage (Admin/AdminStyles.php)  
 
-Error 480: perm_manage_dnsbl (access) (Admin/AdminDNSBL.php)  
-Error 481: perm_manage_dnsbl (action) (Admin/AdminDNSBL.php)  
+Error 390: perm_templates_manage (Admin/AdminTemplates.php)  
 
-Error 490: perm_manage_wordfilters (access) (Admin/AdminWordfilters.php)  
-Error 491: perm_manage_wordfilters (action) (Admin/AdminWordfilters.php)  
+Error 395: perm_users_view (Admin/AdminUsers.php)  
+Error 396: perm_users_manage (Admin/AdminUsers.php)  
 
-Error 550: perm_regen_pages (central_dispatch.php)  
-Error 551: perm_regen_caches (board) (central_dispatch.php)  
-Error 552: perm_regen_caches (site) (central_dispatch.php)  
-Error 553: perm_regen_pages (overboard) (central_dispatch.php)  
+Error 400: perm_word_filters_manage (Admin/AdminWordFilters.php)  
 
-Error 660: perm_extract_gettext (Language/Language.php) 
+Error 410: perm_threads_access (Admin/AdminThreads.php)  
+Error 411: perm_post_status (Admin/AdminThreads.php)  
+Error 412: perm_post_type (Admin/AdminThreads.php)  
+Error 413: perm_edit_posts (Admin/AdminThreads.php)  
+Error 414: perm_delete_by_ip (Admin/AdminThreads.php)  
 
-Error 670: perm_private_messages_use (Dispatch/DispatchAccount.php) 
+Error 500: perm_regen_pages (central_dispatch.php)  
+Error 501: perm_regen_cache (board) (central_dispatch.php)  
+Error 502: perm_regen_cache (site) (central_dispatch.php)  
+Error 503: perm_regen_pages (overboard) (central_dispatch.php)  
+
+Error 510: perm_extract_gettext (Language/Language.php) 
+Error 511: perm_private_messages_use (Dispatch/DispatchAccount.php) 

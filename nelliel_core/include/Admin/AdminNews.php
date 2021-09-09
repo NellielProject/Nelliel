@@ -17,6 +17,8 @@ class AdminNews extends Admin
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_NEWS_TABLE;
         $this->id_field = 'entry';
+        $this->id_column = 'entry';
+        $this->panel_name = _gettext('News');
     }
 
     public function dispatch(array $inputs): void
@@ -26,7 +28,7 @@ class AdminNews extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_news_manage');
         $output_panel = new \Nelliel\Output\OutputPanelNews($this->domain, false);
         $output_panel->render([], false);
     }
@@ -37,7 +39,7 @@ class AdminNews extends Admin
 
     public function add(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_news_manage');
         $news_info = array();
         $news_info['poster_id'] = $this->session_user->id();
         $news_info['name'] = $_POST['name'] ?? '';
@@ -56,7 +58,8 @@ class AdminNews extends Admin
         $this->database->executePrepared($prepared,
                 [$news_info['poster_id'], $news_info['name'], $news_info['headline'], $news_info['time'],
                     $news_info['text']]);
-        $this->regenNews();
+        $regen = new \Nelliel\Regen();
+        $regen->news($this->domain);
         $this->outputMain(true);
     }
 
@@ -70,34 +73,30 @@ class AdminNews extends Admin
 
     public function remove(): void
     {
+        $this->verifyPermissions($this->domain, 'perm_news_manage');
         $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$id]);
-        $this->regenNews();
+        $regen = new \Nelliel\Regen();
+        $regen->news($this->domain);
         $this->outputMain(true);
     }
 
-    private function regenNews()
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        $regen = new \Nelliel\Regen();
-        $regen->news($this->domain);
-    }
-
-    public function verifyAccess(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(440, _gettext('You do not have access to the News panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_news'))
+        switch ($perm)
         {
-            nel_derp(441, _gettext('You are not allowed to manage news articles.'));
+            case 'perm_news_manage':
+                nel_derp(360, _gettext('You are not allowed to manage news entries.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

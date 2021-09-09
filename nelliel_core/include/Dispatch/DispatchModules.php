@@ -7,7 +7,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Account\Session;
-use Nelliel\Admin\DispatchAdmin;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPanelBoard;
@@ -80,7 +79,7 @@ class DispatchModules extends Dispatch
                         case 'board-all-pages':
                             if (!$user->checkPermission($this->domain, 'perm_regen_pages'))
                             {
-                                nel_derp(550, _gettext('You are not allowed to regenerate board pages.'));
+                                nel_derp(500, _gettext('You are not allowed to regenerate board pages.'));
                             }
 
                             $regen->allBoardPages($this->domain);
@@ -92,7 +91,7 @@ class DispatchModules extends Dispatch
                         case 'board-all-caches':
                             if (!$user->checkPermission($this->domain, 'perm_regen_cache'))
                             {
-                                nel_derp(551, _gettext('You are not allowed to regenerate board caches.'));
+                                nel_derp(501, _gettext('You are not allowed to regenerate board caches.'));
                             }
 
                             $this->domain->regenCache();
@@ -102,7 +101,7 @@ class DispatchModules extends Dispatch
                         case 'site-all-caches':
                             if (!$user->checkPermission($this->domain, 'perm_regen_cache'))
                             {
-                                nel_derp(552, _gettext('You are not allowed to regenerate site caches.'));
+                                nel_derp(502, _gettext('You are not allowed to regenerate site caches.'));
                             }
 
                             $this->domain->regenCache();
@@ -112,7 +111,7 @@ class DispatchModules extends Dispatch
                         case 'overboard-all-pages':
                             if (!$user->checkPermission($this->domain, 'perm_regen_pages'))
                             {
-                                nel_derp(553, _gettext('You are not allowed to regenerate overboard pages.'));
+                                nel_derp(503, _gettext('You are not allowed to regenerate overboard pages.'));
                             }
 
                             $regen->overboard($this->domain);

@@ -93,7 +93,7 @@ class AdminThreads extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_threads_access');
 
         if (isset($_GET['actions']) && $_GET['actions'] === 'expand-thread')
         {
@@ -135,7 +135,7 @@ class AdminThreads extends Admin
 
     public function sticky()
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_post_type');
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isPost())
@@ -154,7 +154,7 @@ class AdminThreads extends Admin
 
     public function lock()
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_post_status');
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread())
@@ -166,7 +166,7 @@ class AdminThreads extends Admin
 
     public function permasage()
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_post_status');
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread())
@@ -178,7 +178,7 @@ class AdminThreads extends Admin
 
     public function cyclic()
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_post_type');
         $content_id = new ContentID($_GET['content-id']);
 
         if ($content_id->isThread())
@@ -218,11 +218,7 @@ class AdminThreads extends Admin
 
     public function removeByIP()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_delete_by_ip'))
-        {
-            nel_derp(462, _gettext('You are not allowed to delete by IP.'));
-        }
-
+        $this->verifyPermissions($this->domain, 'perm_delete_by_ip');
         $first_content_id = new ContentID($_GET['content-id']);
         $post_instance = $first_content_id->getInstanceFromID($this->domain);
         $prepared = $this->database->prepare(
@@ -247,6 +243,7 @@ class AdminThreads extends Admin
 
     public function editPost()
     {
+        $this->verifyPermissions($this->domain, 'perm_edit_posts');
         $content_id = new ContentID($_GET['content-id']);
         $post = $content_id->getInstanceFromID($this->domain);
         $output_panel_threads = new OutputPanelThreads($this->domain, true);
@@ -256,11 +253,7 @@ class AdminThreads extends Admin
 
     public function updatePost()
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_edit_posts'))
-        {
-            nel_derp(463, _gettext('You are not allowed to edit posts.'));
-        }
-
+        $this->verifyPermissions($this->domain, 'perm_edit_posts');
         $content_id = new ContentID($_GET['content-id']);
         $post = $content_id->getInstanceFromID($this->domain);
         $post->changeData('name', $_POST['not_anonymous'] ?? null);
@@ -275,19 +268,37 @@ class AdminThreads extends Admin
         $redirect->changeURL($_POST['return_url']);
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_threads'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(460, _gettext('You do not have access to the Threads panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_threads'))
+        switch ($perm)
         {
-            nel_derp(461, _gettext('You are not allowed to manage threads or posts.'));
+            case 'perm_threads_access':
+                nel_derp(410, _gettext('You cannot access the threads control panel.'));
+                break;
+
+            case 'perm_post_status':
+                nel_derp(411, _gettext('You are not allowed to change the status of threads or posts.'));
+                break;
+
+            case 'perm_post_type':
+                nel_derp(412, _gettext('You are not allowed to change the type of threads or posts.'));
+                break;
+
+            case 'perm_edit_posts':
+                nel_derp(413, _gettext('You are not allowed to edit posts.'));
+                break;
+
+            case 'perm_delete_by_ip':
+                nel_derp(414, _gettext('You are not allowed to delete content by IP.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

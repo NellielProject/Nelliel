@@ -56,7 +56,7 @@ define('NEL_TEMPLATES_TABLE', 'nelliel_templates');
 define('NEL_USER_ROLES_TABLE', 'nelliel_user_roles');
 define('NEL_USERS_TABLE', 'nelliel_users');
 define('NEL_VERSIONS_TABLE', 'nelliel_version');
-define('NEL_WORD_FILTERS_TABLE', 'nelliel_wordfilters');
+define('NEL_WORD_FILTERS_TABLE', 'nelliel_word_filters');
 define('NEL_STYLES_TABLE', 'nelliel_styles');
 define('NEL_ICON_SETS_TABLE', 'nelliel_icon_sets');
 

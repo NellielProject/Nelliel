@@ -28,6 +28,7 @@ class AdminBoards extends Admin
         $this->data_table = NEL_BOARD_DATA_TABLE;
         $this->id_field = 'board-id';
         $this->id_column = 'board_id';
+        $this->panel_name = _gettext('Manage Boards');
     }
 
     public function dispatch(array $inputs): void
@@ -56,7 +57,7 @@ class AdminBoards extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_boards_view');
         $output_panel = new OutputPanelManageBoards($this->site_domain, false);
         $output_panel->main([], false);
     }
@@ -67,7 +68,7 @@ class AdminBoards extends Admin
 
     public function add(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_boards_add');
         $site_domain = new DomainSite($this->database);
         $board_uri = trim($_POST['new_board_uri']);
 
@@ -155,7 +156,7 @@ class AdminBoards extends Admin
 
     public function remove(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_boards_delete');
         $board_id = $_GET['board-id'];
         $domain = new DomainBoard($board_id, $this->database);
 
@@ -207,24 +208,39 @@ class AdminBoards extends Admin
         $this->outputMain(true);
     }
 
-    public function enable()
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        $this->verifyAction($this->domain);
-    }
+        if ($this->session_user->checkPermission($domain, $perm))
+        {
+            return;
+        }
 
-    public function disable()
-    {
-        $this->verifyAction($this->domain);
-    }
+        switch ($perm)
+        {
+            case 'perm_boards_view':
+                nel_derp(325, sprintf(_gettext('You do not have access to the %s control panel.'), $this->panel_name));
+                break;
 
-    public function makeDefault()
-    {
-        $this->verifyAction($this->domain);
+            case 'perm_boards_add':
+                nel_derp(311, _gettext('You cannot add new boards.'));
+                break;
+
+            case 'perm_boards_modify':
+                nel_derp(312, _gettext('You cannot modify existing boards.'));
+                break;
+
+            case 'perm_boards_delete':
+                nel_derp(313, _gettext('You cannot delete existing boards.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
+        }
     }
 
     public function unlock()
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_boards_modify');
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
@@ -233,21 +249,21 @@ class AdminBoards extends Admin
 
     public function lock()
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_boards_modify');
         $board_id = $_GET['board_id'];
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $this->outputMain(true);
     }
 
-    public function createInterstitial(string $which)
+    private function createInterstitial(string $which)
     {
-        $this->verifyAccess($this->domain);
         $output_panel = new OutputPanelManageBoards($this->domain, false);
 
         switch ($which)
         {
             case 'remove_warning':
+                $this->verifyPermissions($this->domain, 'perm_boards_delete');
                 $output_panel->removeWarning([], false);
                 break;
         }
@@ -257,7 +273,7 @@ class AdminBoards extends Admin
 
     // While most engines can handle unicode, there is potential for issues
     // We also have to account for table name max lengths (especially postgresql's tiny 63 byte limit)
-    protected function generateDBPrefix(string $board_id)
+    private function generateDBPrefix(string $board_id)
     {
         $ascii_id = preg_replace('/[^a-zA-Z0-9_]/', '', $board_id);
         $final_id = '';
@@ -285,21 +301,5 @@ class AdminBoards extends Admin
         }
 
         return $final_id;
-    }
-
-    public function verifyAccess(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_access_boards'))
-        {
-            nel_derp(370, _gettext('You do not have access to the Manage Boards panel.'));
-        }
-    }
-
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_boards'))
-        {
-            nel_derp(371, _gettext('You are not allowed to manage boards.'));
-        }
     }
 }

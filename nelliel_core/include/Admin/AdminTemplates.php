@@ -5,9 +5,9 @@ namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class AdminTemplates extends Admin
 {
@@ -18,6 +18,7 @@ class AdminTemplates extends Admin
         $this->data_table = NEL_TEMPLATES_TABLE;
         $this->id_field = 'template-id';
         $this->id_column = 'template_id';
+        $this->panel_name = _gettext('Templates');
     }
 
     public function dispatch(array $inputs): void
@@ -27,7 +28,7 @@ class AdminTemplates extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_templates_manage');
         $output_panel = new \Nelliel\Output\OutputPanelTemplates($this->domain, false);
         $output_panel->render([], false);
     }
@@ -38,8 +39,8 @@ class AdminTemplates extends Admin
 
     public function add(): void
     {
+        $this->verifyPermissions($this->domain, 'perm_templates_manage');
         $id = $_GET[$this->id_field] ?? '';
-        $this->verifyAction(nel_site_domain());
         $this->domain->frontEndData()->getTemplate($id)->install();
         $this->domain->templatePath($this->domain->frontEndData()->getTemplate($id)->getPath());
         $this->outputMain(true);
@@ -55,26 +56,28 @@ class AdminTemplates extends Admin
 
     public function remove(): void
     {
+        $this->verifyPermissions($this->domain, 'perm_templates_manage');
         $id = $_GET[$this->id_field] ?? '';
-        $this->verifyAction(nel_site_domain());
         $this->domain->frontEndData()->getTemplate($id)->uninstall();
         $this->domain->templatePath($this->domain->frontEndData()->getTemplate($id)->getPath());
         $this->outputMain(true);
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(390, _gettext('You do not have access to the Templates panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
+        switch ($perm)
         {
-            nel_derp(391, _gettext('You are not allowed to manage Templates.'));
+            case 'perm_templates_manage':
+                nel_derp(390, _gettext('You are not allowed to manage templates.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

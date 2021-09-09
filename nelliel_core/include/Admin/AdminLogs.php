@@ -1,14 +1,13 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class AdminLogs extends Admin
 {
@@ -16,6 +15,10 @@ class AdminLogs extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_LOGS_TABLE;
+        $this->id_field = 'entry';
+        $this->id_column = 'entry';
+        $this->panel_name = _gettext('Logs');
     }
 
     public function dispatch(array $inputs): void
@@ -25,7 +28,7 @@ class AdminLogs extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_logs_view');
         $output_panel = new \Nelliel\Output\OutputPanelLogs($this->domain, false);
         $log_type = $_GET['log-type'] ?? '';
         $output_panel->render(['log_type' => $log_type], false);
@@ -51,19 +54,25 @@ class AdminLogs extends Admin
     {
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_access_logs'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(470, _gettext('You do not have access to the Logs panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_logs'))
+        switch ($perm)
         {
-            nel_derp(471, _gettext('You are not allowed to manage logs.'));
+            case 'perm_logs_view':
+                nel_derp(355, _gettext('You are not allowed to view the logs.'));
+                break;
+
+            case 'perm_logs_manage':
+                nel_derp(356, _gettext('You are not allowed to manage the logs.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

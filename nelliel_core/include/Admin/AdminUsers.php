@@ -9,9 +9,9 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
+use Nelliel\Domains\DomainGlobal;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Output\OutputPanelUsers;
-use Nelliel\Domains\DomainGlobal;
 
 class AdminUsers extends Admin
 {
@@ -21,6 +21,10 @@ class AdminUsers extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->user_id = $_GET['user-id'] ?? null;
+        $this->data_table = NEL_USERS_TABLE;
+        $this->id_field = 'user-id';
+        $this->id_column = 'user_id';
+        $this->panel_name = _gettext('Users');
 
         if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))
         {
@@ -35,14 +39,14 @@ class AdminUsers extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_users_view');
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->new(['user_id' => $this->user_id], false);
         $this->outputMain(false);
@@ -50,7 +54,7 @@ class AdminUsers extends Admin
 
     public function add(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $this->user_id = $_POST['user_id'];
         $this->update();
         $this->outputMain(true);
@@ -58,7 +62,7 @@ class AdminUsers extends Admin
 
     public function editor(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->edit(['user_id' => $this->user_id], false);
         $this->outputMain(false);
@@ -66,7 +70,7 @@ class AdminUsers extends Admin
 
     public function update(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $update_user = $this->authorization->getUser($this->user_id);
 
         if ($update_user->empty())
@@ -87,7 +91,7 @@ class AdminUsers extends Admin
                 {
                     $domain = new DomainSite($this->database);
                 }
-                else if(strpos($key, Domain::GLOBAL))
+                else if (strpos($key, Domain::GLOBAL))
                 {
                     $domain = new DomainGlobal($this->database);
                 }
@@ -120,24 +124,30 @@ class AdminUsers extends Admin
 
     public function remove(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $this->authorization->removeUser($this->user_id);
         $this->outputMain(true);
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_access_users'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(300, _gettext('You do not have access to the Users panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
+        switch ($perm)
         {
-            nel_derp(301, _gettext('You are not allowed to manage users.'));
+            case 'perm_users_view':
+                nel_derp(395, _gettext('You are not allowed to view users.'));
+                break;
+
+            case 'perm_users_manage':
+                nel_derp(396, _gettext('You are not allowed to manage users.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

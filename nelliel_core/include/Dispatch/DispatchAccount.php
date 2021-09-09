@@ -66,7 +66,7 @@ class DispatchAccount extends Dispatch
 
                 if (!$this->session->user()->checkPermission($this->domain, 'perm_private_messages_use'))
                 {
-                    nel_derp(670, _gettext('You cannot use private messages.'));
+                    nel_derp(511, _gettext('You cannot use private messages.'));
                 }
 
                 $message_id = intval($_GET['message-id'] ?? 0);

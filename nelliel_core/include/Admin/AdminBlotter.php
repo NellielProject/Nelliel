@@ -17,6 +17,7 @@ class AdminBlotter extends Admin
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_BLOTTER_TABLE;
         $this->id_field = 'entry';
+        $this->panel_name = _gettext('Blotter');
     }
 
     public function dispatch(array $inputs): void
@@ -26,7 +27,7 @@ class AdminBlotter extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_blotter_manage');
         $output_panel = new \Nelliel\Output\OutputPanelBlotter($this->domain, false);
         $output_panel->render([], false);
     }
@@ -37,14 +38,12 @@ class AdminBlotter extends Admin
 
     public function add(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_blotter_manage');
         $text = $_POST['blotter_text'] ?? '';
         $time = time();
-        $query = 'INSERT INTO "' . $this->data_table .
-                '" ("time", "text") VALUES (?, ?)';
+        $query = 'INSERT INTO "' . $this->data_table . '" ("time", "text") VALUES (?, ?)';
         $prepared = $this->database->prepare($query);
-        $this->database->executePrepared($prepared,
-                [$time, $text]);
+        $this->database->executePrepared($prepared, [$time, $text]);
         $regen = new \Nelliel\Regen();
         $regen->blotter(nel_site_domain());
         $regen->allBoards(true, true);
@@ -62,8 +61,7 @@ class AdminBlotter extends Admin
     public function remove(): void
     {
         $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
+        $this->verifyPermissions($this->domain, 'perm_blotter_manage');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $regen = new \Nelliel\Regen();
@@ -72,19 +70,20 @@ class AdminBlotter extends Admin
         $this->outputMain(true);
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_blotter'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(440, _gettext('You do not have access to the Blotter panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_blotter'))
+        switch ($perm)
         {
-            nel_derp(441, _gettext('You are not allowed to manage blotter entries.'));
+            case 'perm_blotter_manage':
+                nel_derp(315, _gettext('You do not have permission to manage blotter entries.'));
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

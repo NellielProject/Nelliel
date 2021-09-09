@@ -20,6 +20,7 @@ abstract class Admin
     protected $output_main = true;
     protected $inputs;
     protected $data_table;
+    protected $panel_name = '';
     protected $id_field = 'id';
     protected $id_column = 'entry';
 
@@ -78,9 +79,7 @@ abstract class Admin
 
     public abstract function remove(): void;
 
-    public abstract function verifyAccess(Domain $domain);
-
-    public abstract function verifyAction(Domain $domain);
+    protected abstract function verifyPermissions(Domain $domain, string $perm): void;
 
     protected function getEntryDomain($id): Domain
     {
@@ -107,19 +106,9 @@ abstract class Admin
         return ($result !== false) ? $result : array();
     }
 
-    public function globalIDToNull(string $id, string $permission): ?string
+    protected function defaultPermissionError()
     {
-        if (!nel_true_empty($id) && $id !== Domain::GLOBAL && $id !== Domain::SITE)
-        {
-            return $id;
-        }
-
-        if (!$this->session_user->checkPermission(nel_global_domain(), $permission, false))
-        {
-            nel_derp();
-        }
-
-        return null;
+        nel_derp(300, _gettext('You do not have permission for that.'));
     }
 }
 

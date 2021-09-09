@@ -1,15 +1,36 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Admin;
+namespace Nelliel\Dispatch;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Redirect;
 use Nelliel\Account\Session;
+use Nelliel\Admin\AdminBans;
+use Nelliel\Admin\AdminBlotter;
+use Nelliel\Admin\AdminBoardDefaults;
+use Nelliel\Admin\AdminBoardSettings;
+use Nelliel\Admin\AdminBoards;
+use Nelliel\Admin\AdminDNSBL;
+use Nelliel\Admin\AdminFileFilters;
+use Nelliel\Admin\AdminFiletypes;
+use Nelliel\Admin\AdminIconSets;
+use Nelliel\Admin\AdminLogs;
+use Nelliel\Admin\AdminNews;
+use Nelliel\Admin\AdminPermissions;
+use Nelliel\Admin\AdminReports;
+use Nelliel\Admin\AdminRoles;
+use Nelliel\Admin\AdminSiteSettings;
+use Nelliel\Admin\AdminStyles;
+use Nelliel\Admin\AdminTemplates;
+use Nelliel\Admin\AdminThreads;
+use Nelliel\Admin\AdminUsers;
+use Nelliel\Admin\AdminWordFilters;
 use Nelliel\Auth\Authorization;
-use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelBoard;
+use Nelliel\Output\OutputPanelMain;
 
 class DispatchAdmin extends Dispatch
 {
@@ -121,18 +142,13 @@ class DispatchAdmin extends Dispatch
                 break;
 
             case 'site-main-panel':
-                $output_main_panel = new \Nelliel\Output\OutputPanelMain($this->domain, false);
+                $output_main_panel = new OutputPanelMain($this->domain, false);
                 $output_main_panel->render([], false);
                 break;
 
             case 'board-main-panel':
-                $output_board_panel = new \Nelliel\Output\OutputPanelBoard($this->domain, false);
+                $output_board_panel = new OutputPanelBoard($this->domain, false);
                 $output_board_panel->render(['board_id' => $board_id], false);
-                break;
-
-            case 'staff-board':
-                $admin_handler = new AdminStaffBoard($this->authorization, $this->domain, $this->session);
-                $admin_handler->dispatch($inputs);
                 break;
 
             case 'dnsbl':
@@ -140,8 +156,8 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'wordfilters':
-                $admin_handler = new AdminWordfilters($this->authorization, $this->domain, $this->session);
+            case 'word-filters':
+                $admin_handler = new AdminWordFilters($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
                 break;
 

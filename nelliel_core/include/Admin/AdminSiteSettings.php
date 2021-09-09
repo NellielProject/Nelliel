@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
@@ -17,6 +16,10 @@ class AdminSiteSettings extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_SITE_CONFIG_TABLE;
+        $this->id_field = '';
+        $this->id_column = '';
+        $this->panel_name = _gettext('Site Settings');
     }
 
     public function dispatch(array $inputs): void
@@ -26,7 +29,7 @@ class AdminSiteSettings extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_site_config_modify');
         $output_panel = new \Nelliel\Output\OutputPanelSiteSettings($this->domain, false);
         $output_panel->render([], false);
     }
@@ -45,7 +48,7 @@ class AdminSiteSettings extends Admin
 
     public function update(): void
     {
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_site_config_modify');
 
         foreach ($_POST as $key => $value)
         {
@@ -72,19 +75,21 @@ class AdminSiteSettings extends Admin
     {
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(360, _gettext('You do not have access to the Site Settings panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
+        switch ($perm)
         {
-            nel_derp(361, _gettext('You are not allowed to manage site settings.'));
+            case 'perm_site_config_modify':
+                nel_derp(380, _gettext('You are not allowed to modify the site settings.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

@@ -5,8 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Admin\AdminBoardSettings;
-use Nelliel\Auth\Authorization;
+use Nelliel\FileTypes;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -26,13 +25,11 @@ class OutputPanelBoardSettings extends Output
         $parameters['is_panel'] = true;
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $defaults = $parameters['defaults'] ?? false;
-        $filetypes = new \Nelliel\FileTypes($this->database);
+        $filetypes = new FileTypes($this->database);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $admin_board_settings = new AdminBoardSettings(new Authorization($this->database), $this->domain, $this->session,
-                array());
-        $defaults_list = $admin_board_settings->defaultsList();
+        $defaults_list = $this->defaultsList();
 
         if ($defaults)
         {
@@ -322,5 +319,18 @@ class OutputPanelBoardSettings extends Output
         }
 
         return $options;
+    }
+
+    private function defaultsList()
+    {
+        $defaults_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DEFAULTS_TABLE . '"', PDO::FETCH_ASSOC);
+        $defaults = array();
+
+        foreach ($defaults_data as $data)
+        {
+            $defaults[$data['setting_name']] = $data;
+        }
+
+        return $defaults;
     }
 }

@@ -5,9 +5,9 @@ namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class AdminIconSets extends Admin
 {
@@ -18,6 +18,7 @@ class AdminIconSets extends Admin
         $this->data_table = NEL_ICON_SETS_TABLE;
         $this->id_field = 'icon-set-id';
         $this->id_column = 'set_id';
+        $this->panel_name = _gettext('Icon Sets');
     }
 
     public function dispatch(array $inputs): void
@@ -27,7 +28,7 @@ class AdminIconSets extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_icon_sets_manage');
         $output_panel = new \Nelliel\Output\OutputPanelIconSets($this->domain, false);
         $output_panel->render([], false);
     }
@@ -38,8 +39,8 @@ class AdminIconSets extends Admin
 
     public function add(): void
     {
+        $this->verifyPermissions($this->domain, 'perm_icon_sets_manage');
         $id = $_GET[$this->id_field] ?? '';
-        $this->verifyAction(nel_site_domain());
         $this->domain->frontEndData()->getIconSet($id)->install();
         $this->outputMain(true);
     }
@@ -54,25 +55,27 @@ class AdminIconSets extends Admin
 
     public function remove(): void
     {
+        $this->verifyPermissions($this->domain, 'perm_icon_sets_manage');
         $id = $_GET[$this->id_field] ?? '';
-        $this->verifyAction(nel_site_domain());
         $this->domain->frontEndData()->getIconSet($id)->uninstall();
         $this->outputMain(true);
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(430, _gettext('You do not have access to the Icon Sets panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_icon_sets'))
+        switch ($perm)
         {
-            nel_derp(431, _gettext('You are not allowed to manage icon sets.'));
+            case 'perm_icon_sets_manage':
+                nel_derp(350, _gettext('You are not allowed to manage icon sets.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

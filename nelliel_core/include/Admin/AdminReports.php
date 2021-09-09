@@ -1,18 +1,16 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class AdminReports extends Admin
 {
-    private $defaults = false;
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
@@ -20,6 +18,7 @@ class AdminReports extends Admin
         $this->data_table = NEL_REPORTS_TABLE;
         $this->id_field = 'report-id';
         $this->id_column = 'report_id';
+        $this->panel_name = _gettext('Reports');
     }
 
     public function dispatch(array $inputs): void
@@ -29,7 +28,7 @@ class AdminReports extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_reports_view');
         $output_panel = new \Nelliel\Output\OutputPanelReports($this->domain, false);
         $output_panel->render([], false);
     }
@@ -54,25 +53,31 @@ class AdminReports extends Admin
     {
         $id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($id);
-        $this->verifyAction($entry_domain);
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_REPORTS_TABLE . '" WHERE "report_id" = ?');
+        $this->verifyPermissions($entry_domain, 'perm_reports_dismiss');
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 
-    public function verifyAccess(Domain $domain)
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_reports'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(380, _gettext('You do not have access to the Reports panel.'));
+            return;
         }
-    }
 
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_reports'))
+        switch ($perm)
         {
-            nel_derp(381, _gettext('You are not allowed to manage reports.'));
+            case 'perm_reports_view':
+                nel_derp(370, _gettext('You are not allowed to view reports.'));
+                break;
+
+            case 'perm_reports_dismiss':
+                nel_derp(371, _gettext('You are not allowed to dismiss reports.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

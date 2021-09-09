@@ -18,13 +18,12 @@ class AdminBoardDefaults extends Admin
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        // TODO: Something better should be possible
-        $this->board_id = $_GET['board-id'] ?? '';
         parent::__construct($authorization, $domain, $session);
         $this->domain = $domain;
         $this->data_table = NEL_BOARD_DEFAULTS_TABLE;
         $this->id_field = '';
         $this->id_column = '';
+        $this->panel_name = _gettext('Default Board Configuration');
     }
 
     public function dispatch(array $inputs): void
@@ -34,7 +33,7 @@ class AdminBoardDefaults extends Admin
 
     public function panel(): void
     {
-        $this->verifyAccess($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_board_defaults_modify');
         $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain, false); // TODO: Maybe separate output too
         $output_panel->render(['defaults' => true], false);
     }
@@ -54,8 +53,9 @@ class AdminBoardDefaults extends Admin
     public function update(): void
     {
         $force_update_done = false;
-        $this->verifyAction($this->domain);
+        $this->verifyPermissions($this->domain, 'perm_board_defaults_modify');
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
+        $board_domains = $this->getBoardDomains();
 
         foreach ($_POST as $key => $value)
         {
@@ -132,7 +132,7 @@ class AdminBoardDefaults extends Admin
 
             if ($force_update)
             {
-                foreach ($this->getBoardDomains() as $board_domain)
+                foreach ($board_domains as $board_domain)
                 {
                     $this->updateSetting($board_domain, $key, $value, $lock_override);
                 }
@@ -154,6 +154,24 @@ class AdminBoardDefaults extends Admin
 
     public function remove(): void
     {
+    }
+
+    protected function verifyPermissions(Domain $domain, string $perm): void
+    {
+        if ($this->session_user->checkPermission($domain, $perm))
+        {
+            return;
+        }
+
+        switch ($perm)
+        {
+            case 'perm_board_defaults_modify':
+                nel_derp(320, _gettext('You are not allowed to modify the default board configuration.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
+        }
     }
 
     private function setLock(DomainBoard $domain, $config_name, $setting)
@@ -190,25 +208,9 @@ class AdminBoardDefaults extends Admin
 
         foreach ($board_ids as $board_id)
         {
-            $board_domains[] = new \Nelliel\Domains\DomainBoard($board_id, $this->database);
+            $board_domains[] = new DomainBoard($board_id, $this->database);
         }
 
         return $board_domains;
-    }
-
-    public function verifyAccess(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
-        {
-            nel_derp(340, _gettext('You do not have access to the New Board Defaults panel.'));
-        }
-    }
-
-    public function verifyAction(Domain $domain)
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_board_defaults'))
-        {
-            nel_derp(341, _gettext('You are not allowed to manage board defaults.'));
-        }
     }
 }
