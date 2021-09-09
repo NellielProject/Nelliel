@@ -198,8 +198,6 @@ class PostData
             return;
         }
 
-        $this->session->init(true);
-
         if (!$this->session->isActive())
         {
             return;

@@ -94,6 +94,8 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_delete_by_ip', 'Delete all content from a specific IP.']);
         $this->insertDefaultRow(['perm_mod_mode', 'Access to Moderator Mode.']);
         $this->insertDefaultRow(['perm_post_as_staff', 'Post as staff (displays capcode).']);
+        $this->insertDefaultRow(['perm_post_locked_thread', 'Post in a locked thread.']);
+        $this->insertDefaultRow(['perm_post_locked_board', 'Post on a locked board.']);
         $this->insertDefaultRow(['perm_custom_name', 'Post as staff with a custom name.']);
         $this->insertDefaultRow(['perm_custom_capcode', 'Can use a custom capcode.']);
         $this->insertDefaultRow(['perm_bypass_renzoku', 'Bypass posting cooldowns.']);

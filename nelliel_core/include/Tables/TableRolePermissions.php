@@ -101,6 +101,8 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_delete_by_ip', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_mod_mode', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_as_staff', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_locked_thread', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_locked_board', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_custom_name', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_custom_capcode', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_bypass_renzoku', 1]);
@@ -149,6 +151,8 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_delete_by_ip', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_mod_mode', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_as_staff', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_locked_thread', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_locked_board', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_bypass_renzoku', 1]);
@@ -197,6 +201,8 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_delete_by_ip', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_mod_mode', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_post_as_staff', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_post_locked_thread', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_post_locked_board', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_bypass_renzoku', 1]);
@@ -245,6 +251,8 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_delete_by_ip', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_mod_mode', 1]);
         $this->insertDefaultRow(['JANITOR', 'perm_post_as_staff', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_post_locked_thread', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_post_locked_board', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_bypass_renzoku', 0]);
@@ -293,6 +301,8 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_delete_by_ip', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_mod_mode', 1]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_post_as_staff', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_post_locked_thread', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_post_locked_board', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_bypass_renzoku', 0]);

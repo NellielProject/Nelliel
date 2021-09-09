@@ -40,7 +40,7 @@ class Post
         $this->main_table->tableName($domain->reference('posts_table'));
         $this->parent = $parent;
         $this->json = new PostJSON($this, nel_utilities()->fileHandler());
-        $this->sql_helpers = nel_utilities()->sqlHelpers;
+        $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load)
         {

@@ -36,7 +36,7 @@ class Upload
         $this->main_table->tableName($domain->reference('uploads_table'));
         $this->parent = $parent;
         $this->json = new UploadJSON($this, nel_utilities()->fileHandler());
-        $this->sql_helpers = nel_utilities()->sqlHelpers;
+        $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load)
         {

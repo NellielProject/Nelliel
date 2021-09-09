@@ -5,6 +5,7 @@ namespace Nelliel\NewPost;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\FGSFDS;
 use Nelliel\Overboard;
@@ -19,7 +20,6 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainSite;
 use Nelliel\IfThens\IfThen;
 use PDO;
-use Nelliel\ArchiveAndPrune;
 
 class NewPost
 {
@@ -52,7 +52,8 @@ class NewPost
             $captcha->verifyReCAPTCHA();
         }
 
-        if ($this->domain->reference('locked'))
+        if ($this->domain->reference('locked') &&
+                !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_board'))
         {
             nel_derp(11, _gettext('Board is locked. Cannot make new post.'), $error_data);
         }
@@ -154,8 +155,8 @@ class NewPost
             $thread->changeData('post_count', $thread->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) &&
-                    !$fgsfds->commandIsSet('sage') && !$thread->data('permasage'))
+                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
+                            'sage') && !$thread->data('permasage'))
             {
                 $thread->changeData('last_bump_time', $time['time']);
                 $thread->changeData('last_bump_time_milli', $time['milli']);
@@ -279,9 +280,10 @@ class NewPost
 
             if (!empty($thread_info))
             {
-                if ($thread_info['locked'] == 1)
+                if ($thread_info['locked'] == 1 &&
+                        !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_thread'))
                 {
-                    nel_derp(4, _gettext('This thread is locked.'), $error_data);
+                    nel_derp(4, _gettext('This thread is locked, you cannot post in it.'), $error_data);
                 }
 
                 if ($thread_info['old'] != 0)

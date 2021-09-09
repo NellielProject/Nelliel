@@ -41,7 +41,7 @@ class Thread
         $this->main_table->tableName($domain->reference('threads_table'));
         $this->parent = $parent;
         $this->json = new ThreadJSON($this, nel_utilities()->fileHandler());
-        $this->sql_helpers = nel_utilities()->sqlHelpers;
+        $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load)
         {
