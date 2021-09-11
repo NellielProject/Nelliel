@@ -11,11 +11,13 @@ class Previews
 {
     private $domain;
     private $site_domain;
+    private $shell_path = '';
 
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->site_domain = new \Nelliel\Domains\DomainSite(nel_database());
+        $this->site_domain = nel_site_domain();
+        $this->shell_path = $this->site_domain->setting('shell_path');
     }
 
     public function generate($files, $preview_path)
@@ -65,6 +67,7 @@ class Previews
                 $parameters['magicks'] = $this->magickAvailable();
                 $graphics_handler = $this->site_domain->setting('graphics_handler');
 
+                // We favor command line here as it tends to work better with more flexibility than the extensions
                 if ($graphics_handler === 'GraphicsMagick')
                 {
                     if (in_array('graphicsmagick', $parameters['magicks']))
@@ -127,24 +130,18 @@ class Previews
             $magicks[] = 'imagick';
         }
 
-        if (function_exists('exec'))
+        $results = nel_exec($this->shell_path, 'gm -version');
+
+        if (!empty($results) && $results['result_code'] === 0)
         {
-            $rescode = null;
-            $out = null;
+            $magicks[] = 'graphicsmagick';
+        }
 
-            exec("gm -version 2>&1", $out, $rescode);
+        $results = nel_exec($this->shell_path, 'convert -version');
 
-            if ($rescode === 0)
-            {
-                $magicks[] = 'graphicsmagick';
-            }
-
-            exec("convert -version 2>&1", $out, $rescode);
-
-            if ($rescode === 0)
-            {
-                $magicks[] = 'imagemagick';
-            }
+        if (!empty($results) && $results['result_code'] === 0)
+        {
+            $magicks[] = 'imagemagick';
         }
 
         return $magicks;
@@ -152,150 +149,116 @@ class Previews
 
     public function graphicsMagick($file, $preview_path, $parameters)
     {
-        $sharpen_sigma = 0.25;
-        $resize_command = 'gm convert ' . escapeshellarg($file->data('location')) . ' ';
-
         if ($file->data('format') === 'gif' && $this->domain->setting('animated_preview'))
         {
             $file->changeData('preview_extension', 'gif');
-
-            // GrahpicsMagick fucks up coalesce on some animated GIFs but Gmagick extension seems to avoid the problem
-            if (in_array('gmagick', $parameters['magicks']))
-            {
-                $this->gmagick($file, $preview_path, $parameters);
-                return;
-            }
-
-            if ($file->data('display_width') > $this->domain->setting('max_preview_width') ||
-                    $file->data('display_height') > $this->domain->setting('max_preview_height'))
-            {
-                $resize_command .= '-coalesce ';
-                $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
-            }
+            $resize_command = 'gm convert ' .
+                    sprintf($this->site_domain->setting('graphicsmagick_animated_args'),
+                            escapeshellarg($file->data('location')), $file->data('preview_width'),
+                            $file->data('preview_height'),
+                            escapeshellarg(
+                                    $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension')));
         }
         else
         {
-            $resize_command .= '-filter lanczos ';
-            $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
-            $resize_command .= '-sharpen 0x' . $sharpen_sigma . ' ';
-            $resize_command .= '-quality ' . $parameters['compression'] . ' ';
+            $resize_command = 'gm convert ' .
+                    sprintf($this->site_domain->setting('graphicsmagick_args'),
+                            escapeshellarg($file->data('location') . '[0]'), $file->data('preview_width'),
+                            $file->data('preview_height'), $parameters['compression'],
+                            escapeshellarg(
+                                    $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension')));
         }
 
-        $resize_command .= '-strip ';
-        $resize_command .= escapeshellarg(
-                $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'));
-        $rescode = null;
-        $out = null;
-        exec($resize_command, $out, $rescode);
+        $results = nel_exec($this->shell_path, $resize_command); // TODO: Proper error
         chmod($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
                 octdec(NEL_FILES_PERM));
     }
 
     public function gmagick($file, $preview_path, $parameters)
     {
-        $sharpen_sigma = 0.25;
-        $filter = \gmagick::FILTER_LANCZOS;
         $image = new \Gmagick($file->data('location'));
-        $image->setCompressionQuality($parameters['compression']);
         $image_count = $image->getNumberImages();
 
         if ($file->data('format') === 'gif' && $image_count > 1 && $this->domain->setting('animated_preview'))
         {
             $file->changeData('preview_extension', 'gif');
+            $image = $image->coalesceImages();
 
-            if ($file->data('display_width') > $file->data('preview_width') ||
-                    $file->data('display_height') > $file->data('preview_height'))
+            // Straight thumbnail works for simple animations but not complex ones so we process frames individually
+            // Note: For some reason Gmagick thumbnail output can be a bit different than gm convert
+            foreach ($image as $frame)
             {
-                $image = $image->coalesceImages();
-
-                do
-                {
-                    $image->resizeImage($file->data('preview_width'), $file->data('preview_height'), $filter, 1.0);
-                }
-                while ($image->nextImage());
+                $frame->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
             }
 
             $image->setFormat('gif');
+            $image->writeImage($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
+                    true);
         }
         else
         {
-            $image->resizeImage($file->data('preview_width'), $file->data('preview_height'), $filter, 1.0);
-            $image->sharpenImage(0, $sharpen_sigma);
+            $image->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
+            $image->setCompressionQuality($parameters['compression']);
             $image->setFormat($parameters['destination_format']);
+            $image->writeImage($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
+                    false);
         }
-
-        $image->stripImage();
-        $image->writeImage($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'), true);
     }
 
     public function imageMagick($file, $preview_path, $parameters)
     {
-        $sharpen_sigma = 0.25;
-        $resize_command = 'convert ' . escapeshellarg($file->data('location')) . ' ';
-
         if ($file->data('format') === 'gif' && $this->domain->setting('animated_preview'))
         {
             $file->changeData('preview_extension', 'gif');
-
-            if ($file->data('display_width') > $this->domain->setting('max_preview_width') ||
-                    $file->data('display_height') > $this->domain->setting('max_preview_height'))
-            {
-                $resize_command .= '-coalesce ';
-                $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
-            }
+            $resize_command = 'convert ' .
+                    sprintf($this->site_domain->setting('imagemagick_animated_args'),
+                            escapeshellarg($file->data('location')), $file->data('preview_width'),
+                            $file->data('preview_height'),
+                            escapeshellarg(
+                                    $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension')));
         }
         else
         {
-            $resize_command .= '-filter lanczos ';
-            $resize_command .= '-resize ' . $file->data('preview_width') . 'x' . $file->data('preview_height') . ' ';
-            $resize_command .= '-sharpen 0x' . $sharpen_sigma . ' ';
-            $resize_command .= '-quality ' . $parameters['compression'] . ' ';
+            $resize_command = 'convert ' .
+                    sprintf($this->site_domain->setting('imagemagick_args'),
+                            escapeshellarg($file->data('location') . '[0]'), $file->data('preview_width'),
+                            $file->data('preview_height'), $parameters['compression'],
+                            escapeshellarg(
+                                    $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension')));
         }
 
-        $resize_command .= '-strip ';
-        $resize_command .= escapeshellarg(
-                $preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'));
-        $rescode = null;
-        $out = null;
-        exec($resize_command, $out, $rescode);
+        $results = nel_exec($this->shell_path, $resize_command); // TODO: Proper error
         chmod($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
                 octdec(NEL_FILES_PERM));
     }
 
     public function imagick($file, $preview_path, $parameters)
     {
-        $sharpen_sigma = 0.25;
-        $filter = \imagick::FILTER_LANCZOS;
         $image = new \Imagick($file->data('location'));
-        $image->setImageCompressionQuality($parameters['compression']);
         $image_count = $image->getNumberImages();
 
         if ($file->data('format') === 'gif' && $image_count > 1 && $this->domain->setting('animated_preview'))
         {
             $file->changeData('preview_extension', 'gif');
+            $image = $image->coalesceImages();
 
-            if ($file->data('display_width') > $this->domain->setting('max_preview_width') ||
-                    $file->data('display_height') > $this->domain->setting('max_preview_height'))
+            // Straight thumbnail works for simple animations but not complex ones so we process frames individually
+            foreach ($image as $frame)
             {
-                $image = $image->coalesceImages();
-
-                foreach ($image as $frame)
-                {
-                    $frame->resizeImage($file->data('preview_width'), $file->data('preview_height'), $filter, 1.0);
-                }
+                $frame->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
             }
 
             $image->setFormat('gif');
+            $image->writeImages($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'),
+                    true);
         }
         else
         {
-            $image->resizeImage($file->data('preview_width'), $file->data('preview_height'), $filter, 1.0);
-            $image->sharpenImage(0, $sharpen_sigma);
+            $image->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
+            $image->setImageCompressionQuality($parameters['compression']);
             $image->setFormat($parameters['destination_format']);
+            $image->writeImage($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'));
         }
-
-        $image->stripImage();
-        $image->writeImages($preview_path . $file->data('preview_name') . '.' . $file->data('preview_extension'), true);
     }
 
     public function gd($file, $preview_path)

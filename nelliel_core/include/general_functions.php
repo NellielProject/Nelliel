@@ -67,7 +67,7 @@ function nel_numeric_html_entities_to_utf8(&$input)
 
 function nel_typecast($value, string $datatype, bool $empty_null = true)
 {
-    if($empty_null && nel_true_empty($value))
+    if ($empty_null && nel_true_empty($value))
     {
         return null;
     }
@@ -161,4 +161,43 @@ function nel_convert_ip_from_storage(?string $ip_address)
     }
 
     return $unpacked_ip_address;
+}
+
+function nel_exec(string $path, string $command): array
+{
+    if (!function_exists('exec'))
+    {
+        return array();
+    }
+
+    $path_command = '';
+
+    if($path !== '')
+    {
+        $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";' ;
+    }
+
+    $full_command = $path_command . $command;
+    $output = array();
+    $result_code = 0;
+    $last_line = exec($full_command, $output, $result_code);
+    return ['last_line' => $last_line, 'output' => $output, 'result_code' => $result_code];
+}
+
+function nel_shell_exec(string $path, string $command): ?string
+{
+    if (!function_exists('shell_exec'))
+    {
+        return null;
+    }
+
+    $path_command = '';
+
+    if($path !== '')
+    {
+        $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";' ;
+    }
+
+    $full_command = $path_command . $command;
+    return shell_exec($full_command);
 }

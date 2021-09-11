@@ -84,6 +84,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_delete_items', '', '5', 'Maximum items that can be deleted at one time', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'global_announcement', '', '', 'Global announcement shown on all boards', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'uri_display_format', '', '/%s/', 'Format to use when displaying board URIs', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'shell_path', '', '/usr/local/bin', 'Append this to the path when executing shell commands. Multiple directories must be separated by :', '{"type":"text"}']);
 
         // Banners
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_site_banners', '', '1', 'Show site banners', '{"type":"checkbox"}']);
@@ -101,6 +102,11 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'thread_filename_format', '', '%d', 'Thread filename (sprintf)', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'template_id', '', 'template-nelliel-basic', 'ID of default template for site', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', '{"GD":{"label":"GD"}, "ImageMagick":{"label":"ImageMagick"}, "GraphicsMagick":{"label":"GraphicsMagick"}}', 'GD', 'Preferred graphics handler', '{"type":"select"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'imagemagick_args', '', '%s -thumbnail %dx%d -quality %d %s', 'Arguments given to ImageMagick for creating still image previews.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'imagemagick_animated_args', '', '%s -coalesce -thumbnail %dx%d %s', 'Arguments given to ImageMagick for creating animated previews.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphicsmagick_args', '', '%s -thumbnail %dx%d -quality %d %s', 'Arguments given to GraphicsMagick for creating still image previews.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphicsmagick_animated_args', '', '%s -coalesce -thumbnail %dx%d %s', 'Arguments given to GraphicsMagick for creating animated previews.', '{"type":"text"}']);
+
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'display_render_timer', '', '1', 'Display rendering timer', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_content_disclaimer', '', '', 'Site-wide disclaimer added to the bottom of posts', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_referrer_policy', '{"no-referrer": {}, "no-referrer-when-downgrade": {}, "origin": {}, "origin-when-cross-origin": {}, "same-origin": {},"strict-origin": {}, "strict-origin-when-cross-origin": {}, "unsafe-url": {}}', 'strict-origin-when-cross-origin', 'Referrer policy for the site', '{"type":"select"}']);

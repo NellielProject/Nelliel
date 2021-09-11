@@ -51,6 +51,9 @@
 	{{# uri_display_format }}
 		{{> panels/pieces/settings_text }}
 	{{/ uri_display_format }}
+	{{# shell_path }}
+		{{> panels/pieces/settings_text }}
+	{{/ shell_path }}
 	<div class="display-row">
 	<hr class="display_cell">
 	</div>
@@ -108,6 +111,18 @@
 	{{# graphics_handler }}
 		{{> panels/pieces/settings_select }}
 	{{/ graphics_handler }}
+	{{# imagemagick_args }}
+		{{> panels/pieces/settings_text }}
+	{{/ imagemagick_args }}
+	{{# imagemagick_animated_args }}
+		{{> panels/pieces/settings_text }}
+	{{/ imagemagick_animated_args }}
+	{{# graphicsmagick_args }}
+		{{> panels/pieces/settings_text }}
+	{{/ graphicsmagick_args }}
+	{{# graphicsmagick_animated_args }}
+		{{> panels/pieces/settings_text }}
+	{{/ graphicsmagick_animated_args}}
 	{{# display_render_timer }}
 		{{> panels/pieces/settings_checkbox }}
 	{{/ display_render_timer }}

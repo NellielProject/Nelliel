@@ -62,6 +62,7 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['max_delete_items', '5']);
         $this->insertDefaultRow(['global_announcement', '']);
         $this->insertDefaultRow(['uri_display_format', '/%s/']);
+        $this->insertDefaultRow(['shell_path', '/usr/local/bin']);
 
         // Banners
         $this->insertDefaultRow(['show_site_banners', '0']);
@@ -79,6 +80,10 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['thread_filename_format', '%d']);
         $this->insertDefaultRow(['template_id', 'template-nelliel-basic']);
         $this->insertDefaultRow(['graphics_handler', 'GD']);
+        $this->insertDefaultRow(['imagemagick_args', '%s -thumbnail %dx%d -quality %d %s']);
+        $this->insertDefaultRow(['imagemagick_animated_args', '%s -coalesce -thumbnail %dx%d %s']);
+        $this->insertDefaultRow(['graphicsmagick_args', '%s -thumbnail %dx%d -quality %d %s']);
+        $this->insertDefaultRow(['graphicsmagick_animated_args', '%s -coalesce -thumbnail %dx%d %s']);
         $this->insertDefaultRow(['display_render_timer', '1']);
         $this->insertDefaultRow(['site_content_disclaimer', '']);
         $this->insertDefaultRow(['site_referrer_policy', 'strict-origin-when-cross-origin']);
