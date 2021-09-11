@@ -94,9 +94,11 @@ class Uploads
             $upload->changeData('extension', $file_extension);
             $this->checkHashes($upload, $temp_file);
             $this->checkFileDuplicates($post, $upload);
-            $upload->changeData('location', $this->files['upload_files']['tmp_name'][$i]);
             $upload->changeData('name', $this->files['upload_files']['name'][$i]);
-            $upload->changeData('tmp_name', $this->files['upload_files']['tmp_name'][$i]);
+            // We re-add the extension to help with processing
+            $upload->changeData('tmp_name', $temp_file . '.' . $file_extension);
+            $upload->changeData('location', $temp_file . '.' . $file_extension);
+            nel_utilities()->fileHandler()->moveFile($temp_file, $upload->data('location'), false);
 
             if ($this->domain->setting('store_exif_data'))
             {
@@ -105,17 +107,6 @@ class Uploads
                 if (is_string($exif_data))
                 {
                     $upload->changeData('exif', $exif_data);
-                }
-            }
-
-            if ($upload->data('category') === 'graphics' || $upload->data('format') === 'swf')
-            {
-                $dim = getimagesize($upload->data('location'));
-
-                if ($dim !== false)
-                {
-                    $upload->changeData('display_width', $dim[0]);
-                    $upload->changeData('display_height', $dim[1]);
                 }
             }
 
@@ -137,6 +128,8 @@ class Uploads
                     $file_duplicate ++;
                 }
             }
+
+            $this->setDimensions($upload);
 
             array_push($filenames, $upload->data('fullname'));
             $this->processed_uploads[] = $upload;
@@ -266,8 +259,8 @@ class Uploads
 
         if ($this->domain->setting('check_board_file_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-            '" WHERE ' . $active . ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') . '" WHERE ' . $active .
+                    ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(1, $upload->data('md5'), PDO::PARAM_STR);
             $prepared->bindValue(2, $upload->data('sha1'), PDO::PARAM_STR);
@@ -277,7 +270,8 @@ class Uploads
         else if ($post->data('op') && $this->domain->setting('check_op_file_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                    '" WHERE "parent_thread" = "post_ref" AND ' . $active . ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
+                    '" WHERE "parent_thread" = "post_ref" AND ' . $active .
+                    ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(1, $upload->data('md5'), PDO::PARAM_STR);
             $prepared->bindValue(2, $upload->data('sha1'), PDO::PARAM_STR);
@@ -286,8 +280,8 @@ class Uploads
         }
         else if (!$post->data('op') && $this->domain->setting('check_thread_file_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                    '" WHERE "parent_thread" = ? AND ' . $active . ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') . '" WHERE "parent_thread" = ? AND ' .
+                    $active . ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(1, $post->contentID()->threadID(), PDO::PARAM_INT);
             $prepared->bindValue(2, $upload->data('md5'), PDO::PARAM_STR);
@@ -365,8 +359,7 @@ class Uploads
         if ($this->domain->setting('check_board_embed_duplicates'))
         {
             $prepared = $this->database->prepare(
-                    'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                    '" WHERE "embed_url" = ?' . $active);
+                    'SELECT 1 FROM "' . $this->domain->reference('uploads_table') . '" WHERE "embed_url" = ?' . $active);
             $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
             $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         }
@@ -384,7 +377,6 @@ class Uploads
                     '" WHERE "parent_thread" = ? AND "embed_url" = ?' . $active);
             $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
             $prepared->bindValue(2, $embed_url, PDO::PARAM_STR);
-
         }
         else
         {
@@ -537,5 +529,78 @@ class Uploads
         }
 
         return $filtered;
+    }
+
+    private function setDimensions(Upload $upload)
+    {
+        $magicks = nel_magick_available();
+        $graphics_handler = nel_site_domain()->setting('graphics_handler');
+        $display_width = 0;
+        $display_height = 0;
+
+        $dims = getimagesize($upload->data('location'));
+
+        if ($dims !== false)
+        {
+            $display_width = $dims[0];
+            $display_height = $dims[1];
+        }
+
+        if ($display_width === 0 || $display_height === 0)
+        {
+            if ($graphics_handler === 'ImageMagick')
+            {
+                if (in_array('imagemagick', $magicks))
+                {
+                    $results = nel_exec('identify -format "%wx%h" ' . escapeshellarg($upload->data('location') . '[0]'));
+
+                    if ($results['result_code'] === 0)
+                    {
+                        $matches = array();
+                        preg_match('/^(\d+)x(\d+)$/', $results['output'][0], $matches);
+                        $display_width = intval($matches['1'] ?? 0);
+                        $display_height = intval($matches['2'] ?? 0);
+                    }
+                }
+                else if (in_array('imagick', $magicks))
+                {
+                    $image = new \Imagick($upload->data('location'));
+                    $display_width = $image->getimagewidth();
+                    $display_height = $image->getimageheight();
+                }
+            }
+
+            if ($graphics_handler === 'GraphicsMagick')
+            {
+                if (in_array('graphicsmagick', $magicks))
+                {
+                    $results = nel_exec('gm identify -format "%wx%h" ' . escapeshellarg($upload->data('location') . '[0]'));
+
+                    if ($results['result_code'] === 0)
+                    {
+                        $matches = array();
+                        preg_match('/^(\d+)x(\d+)$/', $results['output'][0], $matches);
+                        $display_width = intval($matches['1'] ?? 0);
+                        $display_height = intval($matches['2'] ?? 0);
+                    }
+                }
+                else if (in_array('gmagick', $magicks))
+                {
+                    $image = new \Gmagick($upload->data('location'));
+                    $display_width = $image->getimagewidth();
+                    $display_height = $image->getimageheight();
+                }
+            }
+        }
+
+        if ($display_width > 0)
+        {
+            $upload->changeData('display_width', $display_width);
+        }
+
+        if ($display_height > 0)
+        {
+            $upload->changeData('display_height', $display_height);
+        }
     }
 }

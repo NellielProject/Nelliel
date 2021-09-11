@@ -163,7 +163,7 @@ function nel_convert_ip_from_storage(?string $ip_address)
     return $unpacked_ip_address;
 }
 
-function nel_exec(string $path, string $command): array
+function nel_exec(string $command): array
 {
     if (!function_exists('exec'))
     {
@@ -171,10 +171,11 @@ function nel_exec(string $path, string $command): array
     }
 
     $path_command = '';
+    $path = nel_site_domain()->setting('shell_path');
 
-    if($path !== '')
+    if ($path !== '')
     {
-        $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";' ;
+        $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";';
     }
 
     $full_command = $path_command . $command;
@@ -184,7 +185,7 @@ function nel_exec(string $path, string $command): array
     return ['last_line' => $last_line, 'output' => $output, 'result_code' => $result_code];
 }
 
-function nel_shell_exec(string $path, string $command): ?string
+function nel_shell_exec(string $command): ?string
 {
     if (!function_exists('shell_exec'))
     {
@@ -192,12 +193,44 @@ function nel_shell_exec(string $path, string $command): ?string
     }
 
     $path_command = '';
+    $path = nel_site_domain()->setting('shell_path');
 
-    if($path !== '')
+    if ($path !== '')
     {
-        $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";' ;
+        $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";';
     }
 
     $full_command = $path_command . $command;
     return shell_exec($full_command);
+}
+
+function nel_magick_available(): array
+{
+    $magicks = array();
+
+    if (extension_loaded('gmagick'))
+    {
+        $magicks[] = 'gmagick';
+    }
+
+    if (extension_loaded('imagick'))
+    {
+        $magicks[] = 'imagick';
+    }
+
+    $results = nel_exec('gm -version');
+
+    if (!empty($results) && $results['result_code'] === 0)
+    {
+        $magicks[] = 'graphicsmagick';
+    }
+
+    $results = nel_exec('convert -version');
+
+    if (!empty($results) && $results['result_code'] === 0)
+    {
+        $magicks[] = 'imagemagick';
+    }
+
+    return $magicks;
 }
