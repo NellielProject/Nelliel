@@ -63,10 +63,7 @@
 		</label>
 		{{/ allow_embeds }}
 		{{# display_fgsfds_field }}
-		<label class="posting-form-row">
-			<span class="posting-form-label">{{ fgsfds_name }}</span>
-			<input class="posting-form-input" type="text" name="new_post[post_info][fgsfds]" size="30" placeholder="{{ fgsfds_field_placeholder }}">
-		</label>
+			{{> thread/pieces/fgsfds }}
 		{{/ display_fgsfds_field }}
 		{{# display_password_field }}
 		<label class="posting-form-row">

@@ -24,7 +24,7 @@ class OutputMenu extends Output
 
         foreach ($styles as $style)
         {
-            if($this->domain->id() !== Domain::SITE && !in_array($style->id(), $enabled_styles))
+            if ($this->domain->id() !== Domain::SITE && !in_array($style->id(), $enabled_styles))
             {
                 continue;
             }
@@ -49,5 +49,28 @@ class OutputMenu extends Output
         }
 
         return ($a['style_name'] < $b['style_name']) ? -1 : 1;
+    }
+
+    public function fgsfds(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $options = array();
+        $option_none = array();
+        $option_none['option_label'] = '';
+        $option_none['option_value'] = '';
+        $options[] = $option_none;
+        $option_noko = array();
+        $option_noko['option_label'] = 'noko';
+        $option_noko['option_value'] = 'noko';
+        $options[] = $option_noko;
+        $option_sage = array();
+        $option_sage['option_label'] = 'sage';
+        $option_sage['option_value'] = 'sage';
+        $options[] = $option_sage;
+        $option_noko_sage = array();
+        $option_noko_sage['option_label'] = 'noko + sage';
+        $option_noko_sage['option_value'] = 'noko sage';
+        $options[] = $option_noko_sage;
+        return $options;
     }
 }

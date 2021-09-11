@@ -77,6 +77,13 @@ class OutputPostingForm extends Output
             $max_embeds = intval($this->domain->setting('max_reply_embeds'));
         }
 
+        if ($this->domain->setting('use_fgsfds_menu'))
+        {
+            $output_menu = new OutputMenu($this->domain, $this->write_mode);
+            $this->render_data['use_fgsfds_menu'] = true;
+            $this->render_data['fgsfds_options'] = $output_menu->fgsfds([], true);
+        }
+
         $this->render_data['allowed_files'] = array_fill(0, $max_files, '');
         $this->render_data['allowed_embeds'] = array_fill(0, $max_embeds, '');
         $this->render_data['file_max_message'] = sprintf(_gettext('Maximum files: %d'), $max_files);

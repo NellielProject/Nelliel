@@ -185,6 +185,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'comment_field_placeholder', '', '', 'Comment field placeholder text.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_fgsfds_field', '', '1', 'Display the FGSFDS field.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'fgsfds_field_placeholder', '', 'Enter commands here', 'FGSFDS field placeholder text.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_fgsfds_menu', '', '0', 'Replace the FGSFDS field with a menu of preset options.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_password_field', '', '1', 'Enable the password field.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'password_field_placeholder', '', '', 'Password field placeholder text.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'truncate_long_fields', '', '0', 'Truncate fields that are too long instead of giving an error.', '{"type":"checkbox"}']);

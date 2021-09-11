@@ -128,6 +128,9 @@
 		{{# fgsfds_field_placeholder }}
 			{{> panels/pieces/settings_text }}
 		{{/ fgsfds_field_placeholder }}
+		{{# use_fgsfds_menu }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ use_fgsfds_menu }}
 		{{# enable_password_field }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ enable_password_field }}
@@ -140,7 +143,6 @@
 		{{# forced_anonymous }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ forced_anonymous }}
-		
 		{{# allow_op_files }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_op_files }}
@@ -216,7 +218,6 @@
 		{{# enable_spoilers }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ enable_spoilers }}
-
 		{{# allow_sage }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ allow_sage }}

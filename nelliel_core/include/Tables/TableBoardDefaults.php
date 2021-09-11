@@ -90,6 +90,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['comment_field_placeholder', '', 0]);
         $this->insertDefaultRow(['enable_fgsfds_field', '1', 0]);
         $this->insertDefaultRow(['fgsfds_field_placeholder', 'Enter commands here', 0]);
+        $this->insertDefaultRow(['use_fgsfds_menu', '0', 0]);
         $this->insertDefaultRow(['enable_password_field', '1', 0]);
         $this->insertDefaultRow(['password_field_placeholder', '', 0]);
         $this->insertDefaultRow(['truncate_long_fields', '0', 0]);
