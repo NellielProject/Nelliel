@@ -1,6 +1,7 @@
 {{# upload_rows }}
 	<div class="single upload-row">
 	{{# row }}
+		{{^ deleted_url }}
 		{{# is_file }}
 		<div id="{{ file_container_id }}">
 		{{> thread/files/single_file_header }}
@@ -13,6 +14,10 @@
 		{{> thread/embeds/embed_frame }}
 		</div>
 		{{/ is_embed }}
+		{{/ deleted_url }}
+		{{# deleted_url }}
+		{{> thread/pieces/deleted }}
+		{{/ deleted_url }}
 	{{/ row }}
 	</div>
 {{/ upload_rows }}

@@ -452,7 +452,7 @@ class Uploads
                             $embeds_count, $files_count, $total_uploads, $max_total_uploads));
         }
 
-        if ($files_count === 0 && $require_file)
+        if ($files_count === 0 && $total_uploads === 0 && $require_file)
         {
             nel_derp(28, _gettext('At least one file is required.'));
         }

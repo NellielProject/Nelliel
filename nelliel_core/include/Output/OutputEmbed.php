@@ -71,6 +71,11 @@ class OutputEmbed extends Output
                     'max_embed_display_height');
         }
 
+        if ($embed->data('deleted'))
+        {
+            $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_embed');
+        }
+
         $output = $this->output('thread/file_info', $data_only, true, $this->render_data);
         return $output;
     }

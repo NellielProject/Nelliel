@@ -65,6 +65,11 @@ class OutputPost extends Output
 
             foreach ($uploads as $upload)
             {
+                if ($upload->data('deleted') && !$this->domain->setting('display_deleted_placeholder'))
+                {
+                    continue;
+                }
+
                 $post->getJSON()->addUpload($upload->getJSON());
 
                 if (nel_true_empty($upload->data('embed_url')))

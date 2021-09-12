@@ -85,104 +85,118 @@ class OutputFile extends Output
             $this->render_data['file_metadata'][] = $sha512_data;
         }
 
-        if ($this->domain->setting('generate_preview'))
+        if ($catalog)
         {
-            $this->render_data['image_preview'] = true;
+            $max_width = $this->domain->setting('max_catalog_display_width');
+            $max_height = $this->domain->setting('max_catalog_display_height');
+        }
+        else
+        {
+            $max_width = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
+                    'max_preview_display_width');
+            $max_height = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
+                    'max_preview_display_height');
+        }
 
-            if ($catalog)
-            {
-                $max_width = $this->domain->setting('max_catalog_display_width');
-                $max_height = $this->domain->setting('max_catalog_display_height');
-                $multiple = false;
-            }
-            else
-            {
-                $max_width = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
-                        'max_preview_display_width');
-                $max_height = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
-                        'max_preview_display_height');
-            }
+        $this->render_data['max_width'] = $max_width;
+        $this->render_data['max_height'] = $max_height;
+        $preview_size_not_zero = $file->data('preview_width') > 0 && $file->data('preview_height') > 0;
+        $has_static_preview = !nel_true_empty($file->data('static_preview_name')) && $preview_size_not_zero;
+        $has_animated_preview = !nel_true_empty($file->data('animated_preview_name')) && $preview_size_not_zero;
+        $preview_type = null;
 
-            $this->render_data['max_width'] = $max_width;
-            $this->render_data['max_height'] = $max_height;
+        if ($file->data('deleted'))
+        {
+            $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_file');
+            $preview_type = 'image';
+        }
 
-            if ($file->data('format') == 'webm' || $file->data('format') == 'mpeg4')
+        if (is_null($preview_type) && $file->data('spoiler'))
+        {
+            $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_spoiler_cover');
+            $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
+            $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
+            $preview_type = 'image';
+        }
+
+        if (is_null($preview_type) && $file->data('category') === 'video' &&
+                (!$this->domain->setting('display_video_preview') || (!$has_static_preview && !$has_animated_preview)))
+        {
+            if ($this->domain->setting('embed_video_files') &&
+                    ($file->data('format') == 'webm' || $file->data('format') == 'mpeg4'))
             {
-                $this->render_data['video_preview'] = true;
                 $this->render_data['video_width'] = $max_width;
                 $this->render_data['video_height'] = $max_height;
                 $this->render_data['mime_type'] = $file->data('mime');
                 $this->render_data['video_url'] = $this->render_data['file_url'];
+                $this->render_data['video_preview'] = true;
+                $preview_type = 'video';
             }
-            else
+        }
+
+        if (is_null($preview_type))
+        {
+            if ($this->domain->setting('display_static_preview') && $has_static_preview)
             {
-                if (!empty($file->data('preview_name')) && $file->data('preview_width') > 0 &&
-                        $file->data('preview_height') > 0)
+                $preview_name = $file->data('static_preview_name');
+            }
+
+            if ($this->domain->setting('display_animated_preview') && $has_animated_preview)
+            {
+                $preview_name = $file->data('animated_preview_name');
+            }
+
+            if (!empty($preview_name))
+            {
+                $this->render_data['preview_url'] = $this->domain->reference('preview_web_path') .
+                        $post->data('parent_thread') . '/' . $post->data('post_number') . '/' .
+                        rawurlencode($preview_name);
+
+                if ($file->data('preview_width') > $max_width || $file->data('preview_height') > $max_height)
                 {
-                    $full_preview_name = $file->data('preview_name') . '.' . $file->data('preview_extension');
-                    $this->render_data['preview_url'] = $this->domain->reference('preview_web_path') .
-                            $post->data('parent_thread') . '/' . $post->data('post_number') . '/' .
-                            rawurlencode($full_preview_name);
-
-                    if ($file->data('preview_width') > $max_width || $file->data('preview_height') > $max_height)
-                    {
-                        $ratio = min(($max_height / $file->data('preview_height')),
-                                ($max_width / $file->data('preview_width')));
-                        $this->render_data['preview_width'] = intval($ratio * $file->data('preview_width'));
-                        $this->render_data['preview_height'] = intval($ratio * $file->data('preview_height'));
-                    }
-                    else
-                    {
-                        $this->render_data['preview_width'] = $file->data('preview_width');
-                        $this->render_data['preview_height'] = $file->data('preview_height');
-                    }
-                }
-                else if ($this->domain->setting('use_file_icon'))
-                {
-                    $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('filetype_icon_set'));
-                    $type = utf8_strtolower($file->data('category'));
-                    $format = utf8_strtolower($file->data('format'));
-                    $web_path = $icon_set->getWebPath('filetype', $format, true);
-
-                    if ($web_path === '')
-                    {
-                        $web_path = $icon_set->getWebPath('filetype', 'generic-' . $type, true);
-
-                        if ($web_path === '')
-                        {
-                            $web_path = $icon_set->getWebPath('filetype', 'generic', true);
-                        }
-                    }
-
-                    $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
-                    $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
-                    $this->render_data['preview_url'] = $web_path;
+                    $ratio = min(($max_height / $file->data('preview_height')),
+                            ($max_width / $file->data('preview_width')));
+                    $this->render_data['preview_width'] = intval($ratio * $file->data('preview_width'));
+                    $this->render_data['preview_height'] = intval($ratio * $file->data('preview_height'));
                 }
                 else
                 {
-                    $this->render_data['image_preview'] = false;
+                    $this->render_data['preview_width'] = $file->data('preview_width');
+                    $this->render_data['preview_height'] = $file->data('preview_height');
                 }
 
-                if ($file->data('spoiler'))
-                {
-                    $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH .
-                            $this->domain->setting('image_spoiler_cover');
-                    $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
-                    $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
-                }
-
-                if ($file->data('deleted'))
-                {
-                    $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH .
-                            $this->domain->setting('image_deleted_file');
-                    $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
-                    $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
-                }
-
-                $this->render_data['other_dims'] = 'w' . $file->data('display_width') . 'h' .
-                        $file->data('display_height');
-                $this->render_data['other_loc'] = $this->render_data['file_url'];
+                $preview_type = 'image';
             }
+            else if ($this->domain->setting('use_file_icon'))
+            {
+                $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('filetype_icon_set'));
+                $type = utf8_strtolower($file->data('category'));
+                $format = utf8_strtolower($file->data('format'));
+                $web_path = $icon_set->getWebPath('filetype', $format, true);
+
+                if ($web_path === '')
+                {
+                    $web_path = $icon_set->getWebPath('filetype', 'generic-' . $type, true);
+
+                    if ($web_path === '')
+                    {
+                        $web_path = $icon_set->getWebPath('filetype', 'generic', true);
+                    }
+                }
+
+                $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
+                $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
+                $this->render_data['preview_url'] = $web_path;
+                $preview_type = 'image';
+            }
+        }
+
+        if (!is_null($preview_type))
+        {
+            $this->render_data['other_dims'] = 'w' . $file->data('display_width') . 'h' . $file->data('display_height');
+            $this->render_data['other_loc'] = $this->render_data['file_url'];
+            $this->render_data['image_preview'] = $preview_type === 'image';
+            $this->render_data['video_preview'] = $preview_type === 'video';
         }
 
         $output = $this->output('thread/file_info', $data_only, true, $this->render_data);

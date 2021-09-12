@@ -30,8 +30,8 @@ class UploadJSON extends JSON
         $this->raw_data['extension'] = $this->source->data('extension');
         $this->raw_data['display_width'] = $this->source->data('display_width');
         $this->raw_data['display_height'] = $this->source->data('display_height');
-        $this->raw_data['preview_name'] = $this->source->data('preview_name');
-        $this->raw_data['preview_extension'] = $this->source->data('preview_extension');
+        $this->raw_data['static_preview_name'] = $this->source->data('static_preview_name');
+        $this->raw_data['animated_preview_name'] = $this->source->data('animated_preview_name');
         $this->raw_data['preview_width'] = $this->source->data('preview_width');
         $this->raw_data['preview_height'] = $this->source->data('preview_height');
         $this->raw_data['filesize'] = $this->source->data('filesize');

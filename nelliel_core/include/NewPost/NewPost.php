@@ -182,7 +182,7 @@ class NewPost
         if ($spoon)
         {
             // Make previews and do final file processing
-            if ($this->domain->setting('generate_preview'))
+            if ($this->domain->setting('create_static_preview') || $this->domain->setting('create_animated_preview'))
             {
                 $preview_path = $this->domain->reference('preview_path') . $post->contentID()->threadID() . '/' .
                         $post->contentID()->postID() . '/';

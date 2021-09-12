@@ -131,12 +131,11 @@ class Upload
             return false;
         }
 
-        if ($this->domain->setting('deleted_upload_placeholder'))
+        if ($this->domain->setting('keep_deleted_upload_entry'))
         {
             $prepared = $this->database->prepare(
                     'UPDATE "' . $this->domain->reference('uploads_table') .
-                    '" SET "preview_name" = null, "preview_extension" = null, "preview_width" = null, "preview_height" = null,
-                    "deleted" = 1 WHERE "post_ref" = ? AND "upload_order" = ?');
+                    '" SET "deleted" = 1 WHERE "post_ref" = ? AND "upload_order" = ?');
             $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
         }
         else
@@ -156,11 +155,16 @@ class Upload
             $this->loadFromDatabase();
         }
 
+        if (!nel_true_empty($this->data('embed_url')))
+        {
+            return;
+        }
+
         $file_handler = nel_utilities()->fileHandler();
         $file_handler->eraserGun($this->srcPath(),
                 $this->content_data['filename'] . '.' . $this->content_data['extension']);
-        $file_handler->eraserGun($this->previewPath(),
-                $this->content_data['preview_name'] . '.' . $this->content_data['preview_extension']);
+        $file_handler->eraserGun($this->previewPath(), $this->content_data['static_preview_name']);
+        $file_handler->eraserGun($this->previewPath(), $this->content_data['animated_preview_name']);
     }
 
     public function verifyModifyPerms()
