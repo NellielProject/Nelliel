@@ -119,23 +119,33 @@ class OutputFile extends Output
             $preview_type = 'image';
         }
 
-        if (is_null($preview_type) && $file->data('category') === 'video' &&
-                (!$this->domain->setting('display_video_preview') || (!$has_static_preview && !$has_animated_preview)))
+        if ($file->data('category') === 'video')
         {
-            if ($this->domain->setting('embed_video_files') &&
-                    ($file->data('format') == 'webm' || $file->data('format') == 'mpeg4'))
+            $this->render_data['alt_tag'] = "video";
+
+            if (is_null($preview_type) &&
+                    (!$this->domain->setting('display_video_preview') || (!$has_static_preview && !$has_animated_preview)))
             {
-                $this->render_data['video_width'] = $max_width;
-                $this->render_data['video_height'] = $max_height;
-                $this->render_data['mime_type'] = $file->data('mime');
-                $this->render_data['video_url'] = $this->render_data['file_url'];
-                $this->render_data['video_preview'] = true;
-                $preview_type = 'video';
+                if ($this->domain->setting('embed_video_files') &&
+                        ($file->data('format') == 'webm' || $file->data('format') == 'mpeg4'))
+                {
+                    $this->render_data['video_width'] = $max_width;
+                    $this->render_data['video_height'] = $max_height;
+                    $this->render_data['mime_type'] = $file->data('mime');
+                    $this->render_data['video_url'] = $this->render_data['file_url'];
+                    $this->render_data['video_preview'] = true;
+                    $preview_type = 'video';
+                }
             }
         }
 
         if (is_null($preview_type))
         {
+            if ($file->data('category') === 'graphics')
+            {
+                $this->render_data['alt_tag'] = "img";
+            }
+
             if ($this->domain->setting('display_static_preview') && $has_static_preview)
             {
                 $preview_name = $file->data('static_preview_name');

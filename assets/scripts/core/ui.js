@@ -2,16 +2,16 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
     if (element == null && content_id == null) {
         return;
     }
-    
+
     var store_update = true;
 
     if (content_id == null) {
         content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     }
-   
+
     var post_container = document.getElementById("post-container-" + content_id.id_string);
     var thread_header_options = post_container.querySelector(".thread-header-options");
-    
+
     if (element == null) {
         element = thread_header_options.querySelector(".toggle-thread");
     }
@@ -19,8 +19,6 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
     var post_header_options = post_container.querySelector(".post-header-options");
     var expand_thread = thread_header_options.querySelector(".expand-thread");
     var reply_thread = thread_header_options.querySelector(".reply-thread");
-    var content_container = post_container.querySelector(".content-container");
-    var comment_container = post_container.querySelector(".comment-container");
     var thread_expand = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
 
     nelliel.ui.toggleHidden(post_header_options);
@@ -45,7 +43,7 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
     if (!dataBin.hidden_posts.hasOwnProperty(content_id.id_string)) {
         nelliel.ui.hideShowPost(null, null, content_id);
     }
- 
+
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
     nelliel.ui.toggleHidden(thread_expand);
     nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
@@ -55,7 +53,7 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
     if (element == null && content_id == null) {
         return;
     }
-    
+
     var store_update = true;
 
     if (content_id == null) {
@@ -98,9 +96,9 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
     if (content_id == null) {
         content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     }
-   
+
     var file_container = document.getElementById("file-container-" + content_id.id_string);
-	var file_preview = file_container.querySelector(".file-preview");
+    var file_preview = file_container.querySelector(".file-preview");
 
     if (element == null) {
         element = file_container.querySelector(".toggle-file");
@@ -133,8 +131,8 @@ nelliel.ui.hideShowEmbed = function(element, command, content_id) {
     }
 
     var embed_container = document.getElementById("embed-container-" + content_id.id_string);
-	var embed_frame = embed_container.querySelector(".embed-frame");
-    
+    var embed_frame = embed_container.querySelector(".embed-frame");
+
     if (element == null) {
         element = embed_container.querySelector(".toggle-embed");
     }
@@ -157,8 +155,6 @@ nelliel.ui.hideShowEmbed = function(element, command, content_id) {
 }
 
 nelliel.ui.applyHideContent = function() {
-    var cids = [];
-
     for (var id in dataBin.hidden_threads) {
         nelliel.ui.hideShowThread(null, "apply", nelliel.core.contentID(id));
     }
@@ -197,8 +193,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
     var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
     var thread_page = element.getAttribute("data-thread-page");
     var target_element = document.getElementById("thread-expand-" + content_id.id_string);
-    var split_command = command.split("-");
-    
+
     if (!target_element) {
         return;
     }
@@ -209,7 +204,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
         if (dataBin.is_modmode) {
             url = url + "&modmode=true";
         }
-        
+
         var command1 = "expand-thread-render";
         var command2 = "collapse-thread-render";
     } else {
@@ -232,11 +227,11 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 
         request.send();
     }
-    
+
     if (command === "collapse-thread" || command === "collapse-thread-render") {
         target_element.innerHTML = dataBin.collapsedThreads[content_id.id_string];
     }
-    
+
     nelliel.ui.swapContentAttribute(element, "data-alt-visual");
     nelliel.ui.switchDataCommand(element, command1, command2);
     nelliel.ui.applyHideContent();
@@ -260,26 +255,86 @@ nelliel.ui.unhighlightPost = function(content_id) {
     }
 }
 
-nelliel.ui.inlineExpandReduce = function(element, command) {
+nelliel.ui.inlineExpand = function(element) {
+    if (element === null || !element.hasAttribute("data-alt-tag")) {
+        return;
+    }
+
+    var expanded_id = element.id + "-expanded";
+    var expanded_element = document.getElementById(expanded_id);
+
+    if (expanded_element == null) {
+        var new_tag = element.getAttribute("data-alt-tag");
+        var new_element = document.createElement(new_tag);
+        new_element.id = expanded_id;
+        var new_location = "";
+
+        if (element.hasAttribute("data-alt-src")) {
+            new_location = element.getAttribute("data-alt-src");
+        }
+
+        if (new_tag == "video") {
+            var new_source = document.createElement("source");
+            new_source.setAttribute("src", new_location);
+            new_element.appendChild(new_source);
+            new_element.setAttribute("controls", "");
+        }
+
+        if (new_tag == "img") {
+            new_element.setAttribute("src", new_location);
+            new_element.setAttribute("data-command", "inline-reduce");
+        }
+
+        if (element.hasAttribute("data-alt-dims")) {
+            var alt_dims = element.getAttribute("data-alt-dims");
+            var new_width = alt_dims.match(/w([0-9]+)/)[1];
+            var new_height = alt_dims.match(/h([0-9]+)/)[1];
+            new_element.setAttribute("width", new_width);
+            new_element.setAttribute("height", new_height);
+        }
+
+        new_element.setAttribute("data-preview-id", element.id);
+        element.parentNode.parentNode.appendChild(new_element);
+        expanded_element = new_element;
+    } else {
+        nelliel.ui.toggleHidden(expanded_element);
+    }
+
+    var hide_element = document.createElement("a");
+    hide_element.setAttribute("src", "");
+    hide_element.setAttribute("data-command", "inline-reduce");
+    hide_element.setAttribute("data-expanded-id", expanded_id);
+    hide_element.innerText = "[-]";
+    expanded_element.parentNode.insertBefore(hide_element, expanded_element);
+    nelliel.ui.toggleHidden(element);
+}
+
+nelliel.ui.inlineReduce = function(element) {
     if (element === null) {
         return;
     }
 
-    if (element.hasAttribute("data-other-dims")) {
-        var new_location = element.getAttribute("data-other-loc");
-        var old_location = element.getAttribute("src");
-        var image_dims = element.getAttribute("data-other-dims");
-        var width = image_dims.match(/w([0-9]+)/)[1];
-        var height = image_dims.match(/h([0-9]+)/)[1];
-        var old_width = element.getAttribute("width");
-        var old_height = element.getAttribute("height");
-        element.setAttribute("width", width);
-        element.setAttribute("height", height);
-        element.setAttribute("data-other-dims", 'w' + old_width + 'h' + old_height);
-        element.setAttribute("src", new_location);
-        element.setAttribute("data-other-loc", old_location);
-        nelliel.ui.switchDataCommand(element, "inline-reduce", "inline-expand");
+    var hide_element = element.parentNode.querySelector('[data-expanded-id]');
+
+    if (hide_element != null) {
+        var expanded_id = hide_element.getAttribute("data-expanded-id");
+        hide_element.remove();
     }
+
+    var expanded_element = document.getElementById(expanded_id);
+
+    if (!expanded_element.hasAttribute("data-preview-id")) {
+        return;
+    }
+
+    if (expanded_element.getName == "video") {
+        expanded_element.pause();
+    }
+
+    nelliel.ui.toggleHidden(expanded_element);
+    var original_id = expanded_element.getAttribute("data-preview-id");
+    var original_element = document.getElementById(original_id);
+    nelliel.ui.toggleHidden(original_element);
 }
 
 nelliel.ui.showLinkedPost = function(element, event) {
@@ -361,7 +416,7 @@ nelliel.ui.toggleHidden = function(element) {
     if (element === null) {
         return;
     }
-    
+
     if (element.className.search("hidden") === -1) {
         element.className += " hidden";
     } else {
@@ -386,9 +441,9 @@ nelliel.ui.switchDataCommand = function(element, option_one, option_two) {
 
     var data_command = element.getAttribute("data-command");
 
-    if (data_command.indexOf(option_one) > -1 ) {
+    if (data_command.indexOf(option_one) > -1) {
         element.setAttribute("data-command", option_two);
-    } else if (data_command.indexOf(option_two) > -1 ) {
+    } else if (data_command.indexOf(option_two) > -1) {
         element.setAttribute("data-command", option_one);
     }
 }

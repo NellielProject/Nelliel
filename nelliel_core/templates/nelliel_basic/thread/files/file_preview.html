@@ -1,12 +1,12 @@
 <div class="{{ op_reply }} {{ single_multiple }} file-preview">
 	{{# video_preview }}
-	<video preload="metadata" class="video-preview" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;" controls>
+	<video id="preview-{{ file_content_id }}"  preload="metadata" class="video-preview" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;" controls>
 		<source src="{{ video_url }}" type="{{ mime_type }}">
 	</video>
 	{{/ video_preview }}
 	{{# image_preview }}
 	<a href="{{ file_url }}" target="_blank" class="preview-link">
-	<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}" data-command="inline-expand" data-other-dims="{{ other_dims }}" data-other-loc="{{ other_loc }}">
+	<img id="preview-{{ file_content_id }}" src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}" data-command="inline-expand" data-alt-dims="{{ other_dims }}" data-alt-src="{{ other_loc }}" data-alt-tag="{{ alt_tag }}">
 	</a>
 	{{/ image_preview }}
 </div>

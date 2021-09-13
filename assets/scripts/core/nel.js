@@ -125,8 +125,11 @@ nelliel.events.processPostClick = function(event) {
             nelliel.ui.showHideFileMeta(event.target);
         } else if (command === "add-file-meta") {
             addNewFileMeta(event.target, command);
-        } else if (command === "inline-expand" || command === "inline-reduce") {
-            nelliel.ui.inlineExpandReduce(event.target, command);
+        } else if (command === "inline-expand") {
+            nelliel.ui.inlineExpand(event.target, command);
+            event.preventDefault();
+        } else if (command === "inline-reduce") {
+            nelliel.ui.inlineReduce(event.target, command);
             event.preventDefault();
         } else if (command === "hide-thread" || command === "show-thread" ) {
             nelliel.ui.hideShowThread(event.target, command, content_id);
