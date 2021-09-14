@@ -26,6 +26,7 @@ class Uploads
     private $authorization;
     private $session;
     private $total = 0;
+    private $fullnames = array();
 
     function __construct(Domain $domain, Authorization $authorization, Session $session)
     {
@@ -60,8 +61,6 @@ class Uploads
 
         $file_count = count($this->files['upload_files']['name']);
         $data_handler = new PostData($this->domain, $this->authorization, $this->session);
-        $filenames = array();
-        $file_duplicate = 1;
         $total_files = 0;
         $total_filesize = 0;
 
@@ -69,11 +68,11 @@ class Uploads
         {
             $file_original_name = $this->files['upload_files']['name'][$i];
             $file_provided_type = $this->files['upload_files']['type'][$i];
-            $temp_file = $this->files['upload_files']['tmp_name'][$i];
+            $tmp_name = $this->files['upload_files']['tmp_name'][$i];
             $file_upload_error = $this->files['upload_files']['error'][$i];
             $filesize = $this->files['upload_files']['size'][$i];
 
-            if (nel_true_empty($file_original_name) || !is_uploaded_file($temp_file))
+            if (nel_true_empty($file_original_name) || !is_uploaded_file($tmp_name))
             {
                 continue;
             }
@@ -94,23 +93,19 @@ class Uploads
 
             $upload = new Upload(new ContentID(), $this->domain);
             $upload->changeData('filesize', $filesize);
-
-            $file_info = new \SplFileInfo($file_original_name);
-            $file_extension = $file_info->getExtension();
+            $upload->changeData('tmp_name', $tmp_name);
             $upload->changeData('original_filename', $file_original_name);
-            $this->checkFiletype($upload, $file_extension, $temp_file);
-            $upload->changeData('extension', $file_extension);
-            $this->checkHashes($upload, $temp_file);
-            $this->checkFileDuplicates($post, $upload);
-            $upload->changeData('name', $this->files['upload_files']['name'][$i]);
+            $this->setFilenameAndExtension($upload, $post);
+            $this->checkFiletype($upload, $upload->data('extension'), $tmp_name);
             // We re-add the extension to help with processing
-            $upload->changeData('tmp_name', $temp_file . '.' . $file_extension);
-            $upload->changeData('location', $temp_file . '.' . $file_extension);
-            nel_utilities()->fileHandler()->moveFile($temp_file, $upload->data('location'), false);
+            $upload->changeData('location', $tmp_name . '.' . $upload->data('extension'));
+            nel_utilities()->fileHandler()->moveFile($tmp_name, $upload->data('location'), false);
+            $this->checkHashes($upload);
+            $this->checkFileDuplicates($post, $upload);
 
             if ($this->domain->setting('store_exif_data'))
             {
-                $exif_data = json_encode(@exif_read_data($temp_file, '', true));
+                $exif_data = json_encode(@exif_read_data($tmp_name, '', true));
 
                 if (is_string($exif_data))
                 {
@@ -124,23 +119,8 @@ class Uploads
                 $upload->changeData('spoiler', $data_handler->checkEntry($spoiler, 'integer'));
             }
 
-            $upload->changeData('filename', $this->filterBasename($file_original_name));
-            $this->setFilename($upload, $post);
-
-            foreach ($filenames as $filename)
-            {
-                if (strcasecmp($filename, $upload->data('fullname')) === 0)
-                {
-                    $upload->changeData('filename', $upload->data('filename') . '_' . $file_duplicate);
-                    $upload->changeData('fullname', $upload->data('filename') . '.' . $upload->data('extension'));
-                    $file_duplicate ++;
-                }
-            }
-
             $this->setDimensions($upload);
             $this->removeEXIF($upload);
-
-            array_push($filenames, $upload->data('fullname'));
             $this->processed_uploads[] = $upload;
             $total_files ++;
         }
@@ -148,8 +128,12 @@ class Uploads
         $post->changeData('file_count', $total_files);
     }
 
-    private function setFilename(Upload $upload, Post $post): void
+    private function setFilenameAndExtension(Upload $upload, Post $post): void
     {
+        $file_info = new \SplFileInfo($upload->data('original_filename'));
+        $extension = $file_info->getExtension();
+        $filename = $file_info->getBasename('.' . $extension);
+
         switch ($this->domain->setting('preferred_filename'))
         {
             case 'md5':
@@ -169,9 +153,10 @@ class Uploads
                 break;
 
             case 'original':
-                $filename = $this->filterBasename($upload->data('filename'));
-                $maxlength = 255 - strlen($upload->data('extension')) - 1;
+                $filename = $this->filterBasename($filename);
+                $maxlength = 255 - strlen($extension) - 1;
                 $filename = substr($filename, 0, $maxlength);
+                break;
 
             case 'timestamp':
             default:
@@ -179,8 +164,26 @@ class Uploads
                 break;
         }
 
+        $fullname = $filename . '.' . $extension;
+        $temp_fullname = $fullname;
+        $duplicate_suffix = 1;
+
+        while (in_array($temp_fullname, $this->fullnames))
+        {
+            $duplicate_suffix ++;
+            $temp_fullname = $filename . '_' . $duplicate_suffix . '.' . $extension;
+        }
+
+        if ($duplicate_suffix > 1)
+        {
+            $fullname = $temp_fullname;
+            $filename = $filename . '_' . $duplicate_suffix;
+        }
+
+        array_push($this->fullnames, $fullname);
+        $upload->changeData('extension', $extension);
         $upload->changeData('filename', $filename);
-        $upload->changeData('fullname', $upload->data('filename') . '.' . $upload->data('extension'));
+        $upload->changeData('fullname', $fullname);
     }
 
     private function checkForErrors(int $upload_error): void
@@ -226,10 +229,11 @@ class Uploads
         }
     }
 
-    private function checkHashes(Upload $upload, string $file): void
+    private function checkHashes(Upload $upload): void
     {
         $snacks = new Snacks($this->domain, new BansAccess($this->database));
         $is_banned = false;
+        $file = $upload->data('location');
         $md5 = hash_file('md5', $file);
         $is_banned = $snacks->fileHashIsBanned($md5, 'md5');
 
@@ -616,7 +620,6 @@ class Uploads
 
     private function removeEXIF(Upload $upload): void
     {
-        var_dump("here");
         if (!$this->domain->setting('strip_exif'))
         {
             return;
