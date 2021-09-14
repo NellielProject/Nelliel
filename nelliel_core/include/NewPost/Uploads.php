@@ -138,6 +138,7 @@ class Uploads
             }
 
             $this->setDimensions($upload);
+            $this->removeEXIF($upload);
 
             array_push($filenames, $upload->data('fullname'));
             $this->processed_uploads[] = $upload;
@@ -615,12 +616,13 @@ class Uploads
 
     private function removeEXIF(Upload $upload): void
     {
-        if(!$this->domain->setting('remove_exif'))
+        var_dump("here");
+        if (!$this->domain->setting('strip_exif'))
         {
             return;
         }
 
-        if($this->domain->setting('keep_icc'))
+        if ($this->domain->setting('keep_icc'))
         {
             $exiftool_args = '-all= --icc_profile:all ';
         }
@@ -629,6 +631,14 @@ class Uploads
             $exiftool_args = '-all= ';
         }
 
-        nel_exec('exiftool ' . $exiftool_args . escapeshellarg($upload->data('location')));
+        $results = nel_exec('exiftool ' . $exiftool_args . escapeshellarg($upload->data('location')));
+
+        if ($results['result_code'] === 0)
+        {
+            $upload->changeData('md5', hash_file('md5', $upload->data('location')));
+            $upload->changeData('sha1', hash_file('sha1', $upload->data('location')));
+            $upload->changeData('sha256', hash_file('sha256', $upload->data('location')));
+            $upload->changeData('sha512', hash_file('sha512', $upload->data('location')));
+        }
     }
 }
