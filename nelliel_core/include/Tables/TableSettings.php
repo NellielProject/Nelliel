@@ -108,13 +108,14 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphicsmagick_animated_args', '', '%s -coalesce -thumbnail %dx%d %s', 'Arguments given to GraphicsMagick for creating animated previews.', '{"type":"text"}']);
 
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'display_render_timer', '', '1', 'Display rendering timer', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_content_disclaimer', '', '', 'Site-wide disclaimer added to the bottom of posts', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_content_disclaimer', '', '', 'Site-wide disclaimer added to the bottom of posts.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_referrer_policy', '{"no-referrer": {}, "no-referrer-when-downgrade": {}, "origin": {}, "origin-when-cross-origin": {}, "same-origin": {},"strict-origin": {}, "strict-origin-when-cross-origin": {}, "unsafe-url": {}}', 'strict-origin-when-cross-origin', 'Referrer policy for the site', '{"type":"select"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'nofollow_external_links', '', '1', 'Add rel="nofollow" to external links', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'base_icon_set', '', 'icons-nelliel-basic', 'Base icon set', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'default_style', '', 'style-nelliel', 'Default style for site pages and control panels', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_blotter', '', '1', 'Show the short list of blotter entries.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'small_blotter_limit', '', '3', 'Maximum entries to show in the blotter short list.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_footer_text', '', '', 'Additional text to put in the footer site-wide.', '{"type":"textarea"}']);
 
         // Hashing and security
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'post_password_algorithm', '', 'sha256', 'Post password hash algorithm', '{"type":"text"}']);
@@ -222,7 +223,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'embed_replaces_file', '', '1', 'If embed URLs are given along with files, the files will be discarded and the embeds will be counted as files.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '', '1', 'Limit the number of uploads in a thread.', '{"type":"checkbox"}']);        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '', '1', 'Limit the number of uploads in a thread.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_thread_uploads', '', '1000', 'Maximum number of uploads in a thread.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize', '', '5120', 'Maximum file size (KB)', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize', '', '5242880', 'Maximum size of each file uploaded. (bytes)', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize_all_files', '', '5242880', 'Maximum total size of all files uploaded in one post. (bytes)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_spoilers', '', '1', 'Enable spoilers for uploads.', '{"type":"checkbox"}']);
 
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_sage', '', '1', 'Allow new posts to be saged', '{"type":"checkbox"}']);
@@ -266,6 +268,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'store_exif_data', '', '1', 'Store EXIF data from images (if present).', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_slug_length', '', '80', 'Maximum characters in the thread URL slug.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'slugify_thread_url', '', '0', 'Use semantic URL (slug) for thread.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'strip_exif', '', '0', 'Remove all EXIF data from an image. Requires ExifTool.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'keep_icc', '', '1', 'When removing EXIF data, keep ICC color profiles.', '{"type":"checkbox"}']);
 
         // Page rendering
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'date_format', '', 'Y/m/d (D) H:i:s', 'Format for post time (uses PHP date() function)', '{"type":"text"}']);
@@ -313,7 +317,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'url_prefix', '', '', 'Prefix that will be added to URLs', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_original_name', '', '1', 'Display the original file name.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_deleted_placeholder', '', '1', 'Display placeholder image for deleted uploads. If entry was fully removed from database nothing will be displayed.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_content_disclaimer', '', '', 'Disclaimer added to the bottom of posts on this board.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_content_disclaimer', '', '', 'Disclaimer added to the bottom of posts on this board.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_top', '', '1', 'Display index navigation at top of page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_bottom', '', '1', 'Display index navigation at bottom of page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_spoiler_cover', '', 'media/core/covers/spoiler.png', 'Cover image for spoilers.', '{"type":"text"}']);
@@ -325,6 +329,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'prefix_board_title', '', '1', 'Prefix the board title (URI and name) to the page title of threads.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'list_file_formats', '', '0', 'List the enabled formats.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'list_file_extensions', '', '1', 'List the enabled extensions. If formats is selected as well the two will be combined.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_footer_text', '', '', 'Additional text to put in the footer for this board.', '{"type":"textarea"}']);
 
         // Anti-spam
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_post_captcha', '', '0', 'Use CAPTCHA for new posts and threads', '{"type":"checkbox"}']);

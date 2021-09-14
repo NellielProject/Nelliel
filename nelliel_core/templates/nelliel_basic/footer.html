@@ -1,4 +1,14 @@
 <footer class="footer">
+{{# board_footer_lines }}
+	<div class="footer-text">
+		{{ text }}
+	</div>
+{{/ board_footer_lines }}
+{{# site_footer_lines }}
+	<div class="footer-text">
+		{{ text }}
+	</div>
+{{/ site_footer_lines }}
 	{{> pieces/attribution_links }}
 {{# show_stats }}
 	{{> pieces/render_stats }}

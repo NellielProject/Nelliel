@@ -63,6 +63,7 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['global_announcement', '']);
         $this->insertDefaultRow(['uri_display_format', '/%s/']);
         $this->insertDefaultRow(['shell_path', '/usr/local/bin']);
+        $this->insertDefaultRow(['site_footer_text', '', 0]);
 
         // Banners
         $this->insertDefaultRow(['show_site_banners', '0']);

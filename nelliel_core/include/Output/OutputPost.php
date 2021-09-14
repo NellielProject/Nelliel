@@ -97,8 +97,23 @@ class OutputPost extends Output
         }
 
         $this->render_data['post_comments'] = $this->postComments($post, $gen_data, $thread);
-        $this->render_data['site_content_disclaimer'] = nel_site_domain()->setting('site_content_disclaimer');
-        $this->render_data['board_content_disclaimer'] = $this->domain->setting('board_content_disclaimer');
+
+        if (!nel_true_empty($this->site_domain->setting('site_content_disclaimer')))
+        {
+            foreach ($this->output_filter->newlinesToArray($this->site_domain->setting('site_content_disclaimer')) as $line)
+            {
+                $this->render_data['site_content_disclaimer_lines'][]['text'] = htmlspecialchars($line);
+            }
+        }
+
+        if (!nel_true_empty($this->domain->setting('board_content_disclaimer')))
+        {
+            foreach ($this->output_filter->newlinesToArray($this->domain->setting('board_content_disclaimer')) as $line)
+            {
+                $this->render_data['board_content_disclaimer_lines'][]['text'] = htmlspecialchars($line);
+            }
+        }
+
         $output = $this->output('thread/post', $data_only, true, $this->render_data);
         return $output;
     }

@@ -34,6 +34,7 @@ Error 32: Embeds not allowed. (NewPost/Uploads.php)
 Error 33: Too many embeds. (NewPost/Uploads.php)  
 Error 34: Max uploads for thread. (NewPost/Uploads.php) 
 Error 35: Duplicate embed. (NewPost/Uploads.php)  
+Error 36: Max total filesize. (NewPost/Uploads.php)  
 
 Error 40: No POST data. (NewPost/PostData.php)  
 Error 41: Name required. (NewPost/PostData.php)  

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -20,6 +19,23 @@ class OutputFooter extends Output
     {
         $this->renderSetup();
         $this->render_data['nelliel_version'] = NELLIEL_VERSION;
+
+        if (!nel_true_empty($this->domain->setting('board_footer_text')))
+        {
+            foreach ($this->output_filter->newlinesToArray($this->domain->setting('board_footer_text')) as $line)
+            {
+                $this->render_data['board_footer_lines'][]['text'] = htmlspecialchars($line);
+            }
+        }
+
+        if (!nel_true_empty($this->site_domain->setting('site_footer_text')))
+        {
+            foreach ($this->output_filter->newlinesToArray($this->site_domain->setting('site_footer_text')) as $line)
+            {
+                $this->render_data['site_footer_lines'][]['text'] = htmlspecialchars($line);
+            }
+        }
+
         $output = $this->output('footer', $data_only, true, $this->render_data);
         return $output;
     }

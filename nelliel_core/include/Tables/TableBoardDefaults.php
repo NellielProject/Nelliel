@@ -66,6 +66,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['delete_post_renzoku', '0', 0]);
         $this->insertDefaultRow(['safety_level', 'SFW', 0]);
         $this->insertDefaultRow(['enabled_styles', '["style-nelliel","style-nelliel-2","style-nelliel-classic","style-burichan","style-futaba","style-nigra"]', 0]);
+        $this->insertDefaultRow(['board_footer_text', '', 0]);
 
         // New post
         $this->insertDefaultRow(['enable_name_field', '1', 0]);
@@ -119,7 +120,8 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
         $this->insertDefaultRow(['limit_thread_uploads', '1', 0]);
         $this->insertDefaultRow(['max_thread_uploads', '1000', 0]);
-        $this->insertDefaultRow(['max_filesize', '5120', 0]);
+        $this->insertDefaultRow(['max_filesize', '5242880', 0]);
+        $this->insertDefaultRow(['max_filesize_all_files', '5242880', 0]);
         $this->insertDefaultRow(['enable_spoilers', '1', 0]);
 
         $this->insertDefaultRow(['allow_sage', '1', 0]);
@@ -163,6 +165,8 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['store_exif_data', '1', 0]);
         $this->insertDefaultRow(['max_slug_length', '80', 0]);
         $this->insertDefaultRow(['slugify_thread_url', '0', 0]);
+        $this->insertDefaultRow(['strip_exif', '0', 0]);
+        $this->insertDefaultRow(['keep_icc', '1', 0]);
 
         // Page rendering
         $this->insertDefaultRow(['date_format', 'Y/m/d (D) H:i:s', 0]);

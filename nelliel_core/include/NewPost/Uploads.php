@@ -63,6 +63,7 @@ class Uploads
         $filenames = array();
         $file_duplicate = 1;
         $total_files = 0;
+        $total_filesize = 0;
 
         for ($i = 0; $i < $file_count; $i ++)
         {
@@ -70,7 +71,7 @@ class Uploads
             $file_provided_type = $this->files['upload_files']['type'][$i];
             $temp_file = $this->files['upload_files']['tmp_name'][$i];
             $file_upload_error = $this->files['upload_files']['error'][$i];
-            $file_size = $this->files['upload_files']['size'][$i];
+            $filesize = $this->files['upload_files']['size'][$i];
 
             if (nel_true_empty($file_original_name) || !is_uploaded_file($temp_file))
             {
@@ -79,13 +80,20 @@ class Uploads
 
             $this->checkForErrors($file_upload_error);
 
-            if ($file_size > $this->domain->setting('max_filesize') * 1024)
+            if ($filesize > $this->domain->setting('max_filesize'))
             {
                 nel_derp(12, _gettext('File is too big.'));
             }
 
+            $total_filesize += $filesize;
+
+            if ($total_filesize > $this->domain->setting('max_filesize_all_files'))
+            {
+                nel_derp(36, _gettext('Total size of files is too big.'));
+            }
+
             $upload = new Upload(new ContentID(), $this->domain);
-            $upload->changeData('filesize', $file_size);
+            $upload->changeData('filesize', $filesize);
 
             $file_info = new \SplFileInfo($file_original_name);
             $file_extension = $file_info->getExtension();
@@ -574,7 +582,8 @@ class Uploads
             {
                 if (in_array('graphicsmagick', $magicks))
                 {
-                    $results = nel_exec('gm identify -format "%wx%h" ' . escapeshellarg($upload->data('location') . '[0]'));
+                    $results = nel_exec(
+                            'gm identify -format "%wx%h" ' . escapeshellarg($upload->data('location') . '[0]'));
 
                     if ($results['result_code'] === 0)
                     {
@@ -602,5 +611,24 @@ class Uploads
         {
             $upload->changeData('display_height', $display_height);
         }
+    }
+
+    private function removeEXIF(Upload $upload): void
+    {
+        if(!$this->domain->setting('remove_exif'))
+        {
+            return;
+        }
+
+        if($this->domain->setting('keep_icc'))
+        {
+            $exiftool_args = '-all= --icc_profile:all ';
+        }
+        else
+        {
+            $exiftool_args = '-all= ';
+        }
+
+        nel_exec('exiftool ' . $exiftool_args . escapeshellarg($upload->data('location')));
     }
 }

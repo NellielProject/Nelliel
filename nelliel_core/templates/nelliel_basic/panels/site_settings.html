@@ -127,7 +127,7 @@
 		{{> panels/pieces/settings_checkbox }}
 	{{/ display_render_timer }}
 	{{# site_content_disclaimer }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings_textarea }}
 	{{/ site_content_disclaimer }}
 	{{# site_referrer_policy }}
 		{{> panels/pieces/settings_select }}
@@ -144,6 +144,9 @@
 	{{# small_blotter_limit }}
 		{{> panels/pieces/settings_number }}
 	{{/ small_blotter_limit }}
+	{{# site_footer_text }}
+		{{> panels/pieces/settings_textarea }}
+	{{/ site_footer_text }}
 	<div class="display-row">
 		<hr class="display_cell">
 	</div>

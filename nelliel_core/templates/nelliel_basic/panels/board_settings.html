@@ -215,6 +215,9 @@
 		{{# max_filesize }}
 			{{> panels/pieces/settings_number }}
 		{{/ max_filesize }}
+		{{# max_filesize_all_files }}
+			{{> panels/pieces/settings_number }}
+		{{/ max_filesize_all_files }}
 		{{# enable_spoilers }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ enable_spoilers }}
@@ -349,6 +352,12 @@
 		{{# slugify_thread_url }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ slugify_thread_url }}
+		{{# strip_exif }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ strip_exif }}
+		{{# keep_icc }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ keep_icc }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}
@@ -496,7 +505,7 @@
 			{{> panels/pieces/settings_text }}
 		{{/ display_deleted_placeholder }}
 		{{# board_content_disclaimer }}
-			{{> panels/pieces/settings_text }}
+			{{> panels/pieces/settings_textarea }}
 		{{/ board_content_disclaimer }}
 		{{# index_nav_top }}
 			{{> panels/pieces/settings_checkbox }}
@@ -531,6 +540,9 @@
 		{{# list_file_extensions }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ list_file_extensions }}
+		{{# board_footer_text }}
+			{{> panels/pieces/settings_textarea }}
+		{{/ board_footer_text }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}
