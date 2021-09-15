@@ -543,6 +543,18 @@
 		{{# board_footer_text }}
 			{{> panels/pieces/settings_textarea }}
 		{{/ board_footer_text }}
+		{{# first_posts_increments }}
+			{{> panels/pieces/settings_text }}
+		{{/ first_posts_increments }}
+		{{# first_posts_threshold }}
+			{{> panels/pieces/settings_number }}
+		{{/ first_posts_threshold }}
+		{{# last_posts_increments }}
+			{{> panels/pieces/settings_text }}
+		{{/ last_posts_increments }}
+		{{# last_posts_threshold }}
+			{{> panels/pieces/settings_number }}
+		{{/ last_posts_threshold }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}

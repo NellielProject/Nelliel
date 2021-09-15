@@ -224,6 +224,10 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['prefix_board_title', '1', 0]);
         $this->insertDefaultRow(['list_file_formats', '0', 0]);
         $this->insertDefaultRow(['list_file_extensions', '1', 0]);
+        $this->insertDefaultRow(['first_posts_increments', '[100]', 0]);
+        $this->insertDefaultRow(['first_posts_threshold', '200', 0]);
+        $this->insertDefaultRow(['last_posts_increments', '[50,100,200,500]', 0]);
+        $this->insertDefaultRow(['last_posts_threshold', '100', 0]);
 
         // Anti-spam
         $this->insertDefaultRow(['use_post_captcha', '0', 0]);

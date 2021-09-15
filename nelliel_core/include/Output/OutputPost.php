@@ -230,6 +230,42 @@ class OutputPost extends Output
                         '&board-id=' . $this->domain->id() . '&modmode=true';
             }
 
+            $first_posts_increments = json_decode($this->domain->setting('first_posts_increments'));
+
+            if (is_array($first_posts_increments) &&
+                    $thread->data('post_count') >= $this->domain->setting('first_posts_threshold'))
+            {
+                foreach ($first_posts_increments as $increment)
+                {
+                    if ($thread->data('post_count') >= $increment)
+                    {
+                        $options = array();
+                        $options['first_posts_url'] = $this->domain->reference('page_web_path') .
+                                $thread->contentID()->threadID() . '/first_' . $increment . NEL_PAGE_EXT;
+                        $options['first_posts_label'] = sprintf(_gettext('First %d Posts'), $increment);
+                        $thread_headers['first_posts'][] = $options;
+                    }
+                }
+            }
+
+            $last_posts_increments = json_decode($this->domain->setting('last_posts_increments'));
+
+            if (is_array($last_posts_increments) &&
+                    $thread->data('post_count') >= $this->domain->setting('last_posts_threshold'))
+            {
+                foreach ($last_posts_increments as $increment)
+                {
+                    if ($thread->data('post_count') >= $increment)
+                    {
+                        $options = array();
+                        $options['last_posts_url'] = $this->domain->reference('page_web_path') .
+                                $thread->contentID()->threadID() . '/last_' . $increment . NEL_PAGE_EXT;
+                        $options['last_posts_label'] = sprintf(_gettext('Last %d Posts'), $increment);
+                        $thread_headers['last_posts'][] = $options;
+                    }
+                }
+            }
+
             $header_data['thread_headers'] = $thread_headers;
         }
 

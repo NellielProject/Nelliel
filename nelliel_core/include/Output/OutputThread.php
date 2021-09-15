@@ -46,6 +46,7 @@ class OutputThread extends Output
         }
 
         $posts = $thread->getPosts();
+        $post_count = count($posts);
 
         if (empty($posts))
         {
@@ -109,7 +110,7 @@ class OutputThread extends Output
         }
 
         $this->render_data['show_blotter'] = isset($this->render_data['blotter_entries']) &&
-        !empty($this->render_data['blotter_entries']);
+                !empty($this->render_data['blotter_entries']);
         $this->render_data['blotter_url'] = NEL_BASE_WEB_PATH . 'blotter.html';
 
         $this->render_data['return_url'] = $return_url;
@@ -131,9 +132,18 @@ class OutputThread extends Output
         $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
+        $generate_first_posts = $post_count >= $this->domain->setting('first_posts_threshold');
+        $generate_last_posts = $post_count >= $this->domain->setting('last_posts_threshold');
+        $first_posts_increments = json_decode($this->domain->setting('first_posts_increments'));
+        $first_posts_increments = is_array($first_posts_increments) ? $first_posts_increments : array();
+        $last_posts_increments = json_decode($this->domain->setting('last_posts_increments'));
+        $last_posts_increments = is_array($last_posts_increments) ? $last_posts_increments : array();
+        $first_posts = array();
+        $last_posts = array();
 
         foreach ($posts as $post)
         {
+            $posts_from_end = $post_count - $post_counter;
             $thread->getJSON()->addPost($post->getJSON());
             $parameters = ['gen_data' => $gen_data, 'in_thread_number' => $post_counter];
             $post_render = $output_post->render($post, $parameters, true);
@@ -145,6 +155,29 @@ class OutputThread extends Output
             else
             {
                 $this->render_data['thread_posts'][] = $post_render;
+
+                if ($generate_first_posts)
+                {
+                    foreach ($first_posts_increments as $increment)
+                    {
+                        // Account for OP
+                        if ($post_counter - 1 <= $increment)
+                        {
+                            $first_posts[$increment][] = $post_render;
+                        }
+                    }
+                }
+
+                if ($generate_last_posts)
+                {
+                    foreach ($last_posts_increments as $increment)
+                    {
+                        if ($posts_from_end < $increment && $post_count > $increment)
+                        {
+                            $last_posts[$increment][] = $post_render;
+                        }
+                    }
+                }
             }
 
             $post_counter ++;
@@ -162,6 +195,32 @@ class OutputThread extends Output
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
+
+        foreach ($first_posts as $increment => $posts)
+        {
+            $this->render_data['thread_posts'] = $posts;
+            $first_output = $this->output('basic_page', $data_only, true, $this->render_data);
+
+            if ($this->write_mode)
+            {
+                $this->file_handler->writeFile(
+                        $this->domain->reference('page_path') . $thread_id . '/first_' . $increment . NEL_PAGE_EXT,
+                        $first_output, NEL_FILES_PERM, true);
+            }
+        }
+
+        foreach ($last_posts as $increment => $posts)
+        {
+            $this->render_data['thread_posts'] = $posts;
+            $last_output = $this->output('basic_page', $data_only, true, $this->render_data);
+
+            if ($this->write_mode)
+            {
+                $this->file_handler->writeFile(
+                        $this->domain->reference('page_path') . $thread_id . '/last_' . $increment . NEL_PAGE_EXT,
+                        $last_output, NEL_FILES_PERM, true);
+            }
+        }
 
         if ($this->write_mode)
         {
@@ -184,5 +243,9 @@ class OutputThread extends Output
 
             nel_clean_exit();
         }
+    }
+
+    private function lastPosts()
+    {
     }
 }

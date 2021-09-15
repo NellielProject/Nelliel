@@ -330,6 +330,10 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'list_file_formats', '', '0', 'List the enabled formats.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'list_file_extensions', '', '1', 'List the enabled extensions. If formats is selected as well the two will be combined.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_footer_text', '', '', 'Additional text to put in the footer for this board.', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'first_posts_increments', '', '[100]', 'Increments for first X posts. Leave empty to disable. Must be a JSON array.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'first_posts_threshold', '', '200', 'Minimum posts in a thread before generating first X posts.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'last_posts_increments', '', '[50,100,200,500]', 'Increments for last X posts. Leave empty to disable. Must be a JSON array.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'last_posts_threshold', '', '100', 'Minimum posts in a thread before generating last X posts.', '{"type":"number"}']);
 
         // Anti-spam
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_post_captcha', '', '0', 'Use CAPTCHA for new posts and threads', '{"type":"checkbox"}']);

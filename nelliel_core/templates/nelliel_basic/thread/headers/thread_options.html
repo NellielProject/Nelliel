@@ -6,6 +6,12 @@
 	<span class="expand-thread hidden text-button" data-jsonly="">[<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-thread-page="{{ thread_page }}" data-alt-visual="Collapse Thread" data-i18n-attributes="data-alt-visual" data-i18n="">Expand Thread</a>]</span>
 		{{/ abbreviate }}
 	<span class="reply-thread text-button">[<a href="{{ reply_to_url }}" data-i18n="">Reply</a>]</span>
+		{{# first_posts }}
+	<span class="first-posts text-button">[<a href="{{ first_posts_url }}">{{ first_posts_label }}</a>]</span>
+		{{/ first_posts }}
+		{{# last_posts }}
+	<span class="last-posts text-button">[<a href="{{ last_posts_url }}">{{ last_posts_label }}</a>]</span>
+		{{/ last_posts }}
 	{{/ index_render }}
 </span>
 {{/ thread_headers }}
