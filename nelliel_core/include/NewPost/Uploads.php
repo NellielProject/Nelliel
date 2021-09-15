@@ -100,8 +100,6 @@ class Uploads
             // We re-add the extension to help with processing
             $upload->changeData('location', $tmp_name . '.' . $upload->data('extension'));
             nel_utilities()->fileHandler()->moveFile($tmp_name, $upload->data('location'), false);
-            $this->checkHashes($upload);
-            $this->checkFileDuplicates($post, $upload);
 
             if ($this->domain->setting('store_exif_data'))
             {
@@ -113,6 +111,10 @@ class Uploads
                 }
             }
 
+            $this->removeEXIF($upload);
+            $this->checkHashes($upload);
+            $this->checkFileDuplicates($post, $upload);
+
             if ($this->domain->setting('enable_spoilers'))
             {
                 $spoiler = $_POST['form_spoiler'] ?? 0;
@@ -120,7 +122,6 @@ class Uploads
             }
 
             $this->setDimensions($upload);
-            $this->removeEXIF($upload);
             $this->processed_uploads[] = $upload;
             $total_files ++;
         }
@@ -638,10 +639,7 @@ class Uploads
 
         if ($results['result_code'] === 0)
         {
-            $upload->changeData('md5', hash_file('md5', $upload->data('location')));
-            $upload->changeData('sha1', hash_file('sha1', $upload->data('location')));
-            $upload->changeData('sha256', hash_file('sha256', $upload->data('location')));
-            $upload->changeData('sha512', hash_file('sha512', $upload->data('location')));
+            $this->checkHashes($upload);
         }
     }
 }

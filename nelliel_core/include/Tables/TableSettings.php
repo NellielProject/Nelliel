@@ -268,7 +268,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'store_exif_data', '', '1', 'Store EXIF data from images (if present).', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_slug_length', '', '80', 'Maximum characters in the thread URL slug.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'slugify_thread_url', '', '0', 'Use semantic URL (slug) for thread.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'strip_exif', '', '0', 'Remove all EXIF data from an image. Requires ExifTool.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'strip_exif', '', '0', 'Remove EXIF data from an image. Requires ExifTool.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'keep_icc', '', '1', 'When removing EXIF data, keep ICC color profiles.', '{"type":"checkbox"}']);
 
         // Page rendering
