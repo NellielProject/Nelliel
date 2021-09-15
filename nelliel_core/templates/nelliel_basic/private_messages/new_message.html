@@ -2,11 +2,11 @@
 	<div class="display-table">
 		<label class="display-row">
 			<span class="display-cell" data-i18n="">Recipient</span>
-			<input class="display-cell" type="text" name="recipient" size="30">
+			<input class="display-cell" type="text" name="recipient" size="30" value="{{ recipient }}">
 		</label>
 		<label class="display-row">
 			<span class="display-cell" data-i18n="">Message</span>
-			<textarea class="display-cell" name="news_text" cols="80" rows="6"></textarea>
+			<textarea class="display-cell" name="message" cols="60" rows="6">{{ quoted_text }}</textarea>
 		</label>
 		<div class="display-row">
 			<input type="submit" value="Send" data-i18n-attributes="value">

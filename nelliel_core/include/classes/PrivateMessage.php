@@ -6,6 +6,7 @@ namespace Nelliel;
 use Nelliel\Tables\TablePrivateMessages;
 use PDO;
 use Nelliel\Account\Session;
+use Nelliel\Output\OutputPrivateMessages;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
@@ -72,24 +73,42 @@ class PrivateMessage
         return $old_data;
     }
 
+    public function reply()
+    {
+        $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
+        $output_private_messages->newMessage(['reply_id' => $this->message_id], false);
+    }
+
+    public function view()
+    {
+        $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
+        $output_private_messages->viewMessage(['message_id' => $this->message_id], false);
+    }
+
     public function send(): void
     {
+        $this->changeData('time_sent', time());
         $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_PRIVATE_MESSAGES_TABLE .
-                '" ("sender", "recipient", "message", "time") VALUES (?, ?, ?, ?) ' .
-                $this->sql_compatibility->return(NEL_SQLTYPE) . ' "entry"');
+                '" ("sender", "recipient", "message", "time_sent") VALUES (?, ?, ?, ?) ');
         $prepared->bindValue(1, $this->data('sender'), PDO::PARAM_STR);
         $prepared->bindValue(2, $this->data('recipient'), PDO::PARAM_STR);
         $prepared->bindValue(3, $this->data('message'), PDO::PARAM_STR);
-        $prepared->bindValue(4, time(), PDO::PARAM_INT);
-        $message_id = $this->database->executePreparedFetch($prepared, [], PDO::FETCH_COLUMN);
+        $prepared->bindValue(4, $this->data('time_sent'), PDO::PARAM_INT);
+        $this->database->executePrepared($prepared);
+
+        $prepared = $this->database->prepare(
+                'SELECT "entry" FROM "' . NEL_PRIVATE_MESSAGES_TABLE .
+                '" WHERE "sender" = ? AND "recipient" = ? AND "time_sent" = ?');
+        $prepared->bindValue(1, $this->data('sender'), PDO::PARAM_STR);
+        $prepared->bindValue(2, $this->data('recipient'), PDO::PARAM_STR);
+        $prepared->bindValue(3, $this->data('time_sent'), PDO::PARAM_INT);
+        $message_id = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if ($message_id !== false)
         {
             $this->message_id = $message_id;
         }
-
-        $this->load();
     }
 
     public function markRead(): void

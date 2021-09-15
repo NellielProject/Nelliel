@@ -29,6 +29,9 @@ class OutputAccount extends Output
         $this->render_data['normal_user'] = true;
         $this->render_data['display_name'] = $this->session->user()->getData('display_name');
         $this->render_data['last_login'] = $this->session->user()->getData('last_login');
+        $this->render_data['private_messages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        http_build_query(
+                ['module' => 'account', 'section' => 'private-message']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

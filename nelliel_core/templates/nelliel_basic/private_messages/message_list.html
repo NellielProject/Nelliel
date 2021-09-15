@@ -1,3 +1,6 @@
+<div>
+	<a href="{{ new_url }}" data-i18n="">New message</a>
+</div>
 <table class="data-table">
 	<caption class="data-table-caption" data-i18n="">List of your private messages</caption>
 	<thead class="data-table-header">
@@ -17,6 +20,7 @@
 			<td>{{ sender }}</td>
 			<td>{{ message }}</td>
 			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ view_url }}" data-i18n="">View</a>]</span>
 	{{^ message_read }}
 				<span class="text-button">[<a class="display-cell" href="{{ mark_read_url }}" data-i18n="">Mark as read</a>]</span>
 	{{/ message_read }}

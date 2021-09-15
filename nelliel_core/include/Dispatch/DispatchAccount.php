@@ -66,7 +66,7 @@ class DispatchAccount extends Dispatch
 
                 if (!$this->session->user()->checkPermission($this->domain, 'perm_private_messages_use'))
                 {
-                    nel_derp(511, _gettext('You cannot use private messages.'));
+                    nel_derp(511, _gettext('You cannot use the private message system.'));
                 }
 
                 $message_id = intval($_GET['message-id'] ?? 0);
@@ -85,10 +85,25 @@ class DispatchAccount extends Dispatch
                 {
                     $private_message->delete();
                 }
+                else if ($inputs['actions'][0] === 'view')
+                {
+                    $private_message->view();
+                    break;
+                }
+                else if ($inputs['actions'][0] === 'new')
+                {
+                    $output_private_messages = new OutputPrivateMessages($this->domain, false);
+                    $output_private_messages->newMessage([], false);
+                    break;
+                }
+                else if ($inputs['actions'][0] === 'reply')
+                {
+                    $private_message->reply();
+                    break;
+                }
 
                 $output_private_messages = new OutputPrivateMessages($this->domain, false);
                 $output_private_messages->messageList([], false);
-
                 break;
 
             default:
