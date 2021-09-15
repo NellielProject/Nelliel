@@ -165,6 +165,11 @@ class Uploads
                 break;
         }
 
+        if (nel_true_empty($filename))
+        {
+            $filename = $post->data('post_time') . $post->data('post_time_milli');
+        }
+
         $fullname = $filename . '.' . $extension;
         $temp_fullname = $fullname;
         $duplicate_suffix = 1;
@@ -236,23 +241,27 @@ class Uploads
         $is_banned = false;
         $file = $upload->data('location');
         $md5 = hash_file('md5', $file);
+        $upload->changeData('md5', $md5);
         $is_banned = $snacks->fileHashIsBanned($md5, 'md5');
 
         if (!$is_banned)
         {
             $sha1 = hash_file('sha1', $file);
+            $upload->changeData('sha1', $sha1);
             $is_banned = $snacks->fileHashIsBanned($sha1, 'sha1');
         }
 
-        if (!$is_banned)
+        if (!$is_banned && $this->domain->setting('generate_file_sha256'))
         {
             $sha256 = hash_file('sha256', $file);
+            $upload->changeData('sha256', $sha256);
             $is_banned = $snacks->fileHashIsBanned($sha256, 'sha256');
         }
 
-        if (!$is_banned)
+        if (!$is_banned && $this->domain->setting('generate_file_sha512'))
         {
             $sha512 = hash_file('sha512', $file);
+            $upload->changeData('sha512', $sha512);
             $is_banned = $snacks->fileHashIsBanned($sha512, 'sha512');
         }
 
@@ -260,52 +269,54 @@ class Uploads
         {
             nel_derp(24, _gettext('That file is banned.'));
         }
-
-        $upload->changeData('md5', $md5);
-        $upload->changeData('sha1', $sha1);
-        $upload->changeData('sha256', $sha256);
-        $upload->changeData('sha512', $sha512);
     }
 
     private function checkFileDuplicates(Post $post, Upload $upload): void
     {
         $active = ($this->domain->setting('only_active_duplicates')) ? 'AND "old" = 0' : '';
+        $sha256 = ($this->domain->setting('generate_file_sha256')) ? ' OR "sha256" = :sha256' : '';
+        $sha512 = ($this->domain->setting('generate_file_sha512')) ? ' OR "sha512" = :sha512' : '';
 
         if ($this->domain->setting('check_board_file_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') . '" WHERE ' . $active .
-                    ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
+                    ' ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
             $prepared = $this->database->prepare($query);
-            $prepared->bindValue(1, $upload->data('md5'), PDO::PARAM_STR);
-            $prepared->bindValue(2, $upload->data('sha1'), PDO::PARAM_STR);
-            $prepared->bindValue(3, $upload->data('sha256'), PDO::PARAM_STR);
-            $prepared->bindValue(4, $upload->data('sha512'), PDO::PARAM_STR);
+            $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
         }
         else if ($post->data('op') && $this->domain->setting('check_op_file_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                    '" WHERE "parent_thread" = "post_ref" AND ' . $active .
-                    ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
+                    '" WHERE "parent_thread" = "post_ref" AND ' . $active . ' ("md5" = :md5 OR "sha1" = :sha1' . $sha256 .
+                    $sha512 . ')';
             $prepared = $this->database->prepare($query);
-            $prepared->bindValue(1, $upload->data('md5'), PDO::PARAM_STR);
-            $prepared->bindValue(2, $upload->data('sha1'), PDO::PARAM_STR);
-            $prepared->bindValue(3, $upload->data('sha256'), PDO::PARAM_STR);
-            $prepared->bindValue(4, $upload->data('sha512'), PDO::PARAM_STR);
+            $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
         }
         else if (!$post->data('op') && $this->domain->setting('check_thread_file_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') . '" WHERE "parent_thread" = ? AND ' .
-                    $active . ' ("md5" = ? OR "sha1" = ? OR "sha256" = ? OR "sha512" = ?)';
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
+                    '" WHERE "parent_thread" = :parent_thread AND ' . $active . ' ("md5" = :md5 OR "sha1" = :sha1' . $sha256 .
+                    $sha512 . ')';
             $prepared = $this->database->prepare($query);
-            $prepared->bindValue(1, $post->contentID()->threadID(), PDO::PARAM_INT);
-            $prepared->bindValue(2, $upload->data('md5'), PDO::PARAM_STR);
-            $prepared->bindValue(3, $upload->data('sha1'), PDO::PARAM_STR);
-            $prepared->bindValue(4, $upload->data('sha256'), PDO::PARAM_STR);
-            $prepared->bindValue(5, $upload->data('sha512'), PDO::PARAM_STR);
+            $prepared->bindValue(':parent_thread', $post->contentID()->threadID(), PDO::PARAM_INT);
+            $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
         }
         else
         {
             return;
+        }
+
+        if ($sha256 != '')
+        {
+            $prepared->bindValue(':sha256', $upload->data('sha256'), PDO::PARAM_STR);
+        }
+
+        if ($sha512 != '')
+        {
+            $prepared->bindValue(':sha512', $upload->data('sha512'), PDO::PARAM_STR);
         }
 
         $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);

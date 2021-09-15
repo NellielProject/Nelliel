@@ -167,6 +167,8 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['slugify_thread_url', '0', 0]);
         $this->insertDefaultRow(['strip_exif', '0', 0]);
         $this->insertDefaultRow(['keep_icc', '1', 0]);
+        $this->insertDefaultRow(['generate_file_sha256', '1', 0]);
+        $this->insertDefaultRow(['generate_file_sha512', '1', 0]);
 
         // Page rendering
         $this->insertDefaultRow(['date_format', 'Y/m/d (D) H:i:s', 0]);

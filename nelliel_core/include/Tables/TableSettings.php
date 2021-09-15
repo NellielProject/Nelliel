@@ -243,7 +243,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'always_noko', '', '0', 'Always return to thread (noko) after making a post', '{"type":"checkbox"}']);
 
         // Content handling
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'preferred_filename', '{"original":{"label":"Original"}, "timestamp":{"label":"Unix timestamp"}, "md5":{"label":"MD5"}, "sha1":{"label":"SHA1"}, "sha256":{"label":"SHA256"}, "sha512":{"label":"SHA512"}}', 'timestamp', 'Preferred filename for uploads. If original filename is chosen, the filename will still go through some filtering to avoid problems.', '{"type":"select"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'preferred_filename', '{"original":{"label":"Original"}, "timestamp":{"label":"Unix timestamp"}, "md5":{"label":"MD5"}, "sha1":{"label":"SHA1"}, "sha256":{"label":"SHA256"}, "sha512":{"label":"SHA512"}}', 'timestamp', 'Preferred filename for uploads. If original filename is chosen, the filename will still go through some basicfiltering to avoid problems. If the preferred option is not available the name will default to timestamp.', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'create_static_preview', '', '1', 'Create a static image preview whenever possible.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'static_preview_images_only', '', '0', 'Only create static previews for images.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'static_preview_format', '{"jpg":{"label":"JPEG"}, "png":{"label":"PNG"}, "webp":{"label":"WebP"}, "gif":{"label":"GIF"}}', 'jpg', 'Format used for static previews.', '{"type":"select"}']);
@@ -270,6 +270,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'slugify_thread_url', '', '0', 'Use semantic URL (slug) for thread.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'strip_exif', '', '0', 'Remove EXIF data from an image. Requires ExifTool.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'keep_icc', '', '1', 'When removing EXIF data, keep ICC color profiles.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'generate_file_sha256', '', '1', 'Generate SHA256 hash for uploaded files.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'generate_file_sha512', '', '1', 'Generate SHA512 hash for uploaded files.', '{"type":"checkbox"}']);
 
         // Page rendering
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'date_format', '', 'Y/m/d (D) H:i:s', 'Format for post time (uses PHP date() function)', '{"type":"text"}']);

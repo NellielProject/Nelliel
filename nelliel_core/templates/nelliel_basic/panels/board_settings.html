@@ -358,6 +358,12 @@
 		{{# keep_icc }}
 			{{> panels/pieces/settings_checkbox }}
 		{{/ keep_icc }}
+		{{# generate_file_sha256 }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ generate_file_sha256 }}
+		{{# generate_file_sha512 }}
+			{{> panels/pieces/settings_checkbox }}
+		{{/ generate_file_sha512 }}
 		<div class="display-row">
 			<hr class="display_cell">
 			{{# show_locked }}
