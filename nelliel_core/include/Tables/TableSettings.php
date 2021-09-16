@@ -77,7 +77,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_description', '', '1', 'Display site description in header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'favicon', '', '', 'Site favicon.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_favicon', '', '0', 'Show site favicon.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'home_page', '', '/', 'Site home page.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'home_page', '', '', 'Site home page. If empty, will default to the base web path.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for site (use ISO language + country code).', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'only_alphanumeric_board_ids', '', '1', 'Allow only alphanumeric board IDs.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_report_items', '', '5', 'Maximum items that can be reported at one time.', '{"type":"number"}']);

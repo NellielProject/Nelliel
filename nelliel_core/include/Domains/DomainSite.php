@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Domains;
 
@@ -46,6 +45,13 @@ class DomainSite extends Domain implements NellielCacheInterface
         $new_reference['log_table'] = NEL_LOGS_TABLE;
         $new_reference['title'] = (!nel_true_empty($this->setting('name'))) ? $this->setting('name') : _gettext(
                 'Nelliel Imageboard');
+        $new_reference['home_page'] = NEL_BASE_WEB_PATH;
+
+        if (!nel_true_empty($this->site_domain->setting('home_page')))
+        {
+            $new_reference['home_page'] = $this->site_domain->setting('home_page');
+        }
+
         $this->references = $new_reference;
     }
 

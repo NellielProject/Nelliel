@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -45,9 +44,9 @@ class OutputNavigation extends Output
         $render_data['board_area'] = $this->domain->id() !== Domain::SITE;
         $render_data['logout_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account&section=logout';
         $render_data['site_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-main-panel';
-        $render_data['board_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-main-panel&board-id=' . $this->domain->id();
-        $render_data['home_url'] = $this->site_domain->setting('home_page');
-        $render_data['news_url'] = NEL_BASE_WEB_PATH . 'news.html';
+        $render_data['board_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=admin&section=board-main-panel&board-id=' . $this->domain->id();
+        $render_data['home_url'] = $this->site_domain->reference('home_page');
         $render_data['account_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account';
         $render_data['overboard_active'] = $this->site_domain->setting('overboard_active');
         $render_data['overboard_url'] = NEL_BASE_WEB_PATH . $this->site_domain->setting('overboard_uri') . '/';
