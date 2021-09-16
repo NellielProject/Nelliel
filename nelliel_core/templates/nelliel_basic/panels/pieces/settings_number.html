@@ -1,9 +1,0 @@
-<div class="display-row">
-	{{# show_lock_update }}
-		{{> panels/pieces/settings_lock_update }}
-	{{/ show_lock_update }}
-	{{# input_attributes }}
-	<label for="{{ setting_name }}" class="display-cell">{{ setting_description }}</label>
-	<input id="{{ setting_name }}" class="display-cell" type="{{ input_type }}" name="{{ setting_name }}[value]" size="{{ input_size }}" value="{{ setting_value }}" {{ setting_disabled }}>
-	{{/ input_attributes }}
-</div>

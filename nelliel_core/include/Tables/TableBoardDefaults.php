@@ -65,10 +65,11 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['user_delete_own', '1', 0]);
         $this->insertDefaultRow(['delete_post_renzoku', '0', 0]);
         $this->insertDefaultRow(['safety_level', 'SFW', 0]);
-        $this->insertDefaultRow(['enabled_styles', '["style-nelliel","style-nelliel-2","style-nelliel-classic","style-burichan","style-futaba","style-nigra"]', 0]);
+        $this->insertDefaultRow(['board_content_disclaimer', '', 0]);
         $this->insertDefaultRow(['board_footer_text', '', 0]);
+        $this->insertDefaultRow(['enabled_styles', '["style-nelliel","style-nelliel-2","style-nelliel-classic","style-burichan","style-futaba","style-nigra"]', 0]);
 
-        // New post
+        // New Post Form
         $this->insertDefaultRow(['enable_name_field', '1', 0]);
         $this->insertDefaultRow(['require_name', '0', 0]);
         $this->insertDefaultRow(['min_name_length', '0', 0]);
@@ -91,12 +92,16 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['comment_field_placeholder', '', 0]);
         $this->insertDefaultRow(['enable_fgsfds_field', '1', 0]);
         $this->insertDefaultRow(['fgsfds_field_placeholder', 'Enter commands here', 0]);
+        $this->insertDefaultRow(['fgsfds_name', 'FGSFDS', 0]);
         $this->insertDefaultRow(['use_fgsfds_menu', '0', 0]);
         $this->insertDefaultRow(['enable_password_field', '1', 0]);
         $this->insertDefaultRow(['password_field_placeholder', '', 0]);
         $this->insertDefaultRow(['truncate_long_fields', '0', 0]);
         $this->insertDefaultRow(['forced_anonymous', '0', 0]);
+        $this->insertDefaultRow(['list_file_formats', '0', 0]);
+        $this->insertDefaultRow(['list_file_extensions', '1', 0]);
 
+        // Uploads
         $this->insertDefaultRow(['allow_op_files', '1', 0]);
         $this->insertDefaultRow(['require_op_file', '1', 0]);
         $this->insertDefaultRow(['allow_op_embeds', '0', 0]);
@@ -111,19 +116,27 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['max_reply_files', '1', 0]);
         $this->insertDefaultRow(['max_reply_embeds', '1', 0]);
         $this->insertDefaultRow(['max_reply_total_uploads', '1', 0]);
+        $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
         $this->insertDefaultRow(['check_board_file_duplicates', '0', 0]);
         $this->insertDefaultRow(['check_op_file_duplicates', '1', 0]);
         $this->insertDefaultRow(['check_thread_file_duplicates', '1', 0]);
         $this->insertDefaultRow(['check_board_embed_duplicates', '0', 0]);
         $this->insertDefaultRow(['check_op_embed_duplicates', '1', 0]);
         $this->insertDefaultRow(['check_thread_embed_duplicates', '1', 0]);
-        $this->insertDefaultRow(['embed_replaces_file', '1', 0]);
         $this->insertDefaultRow(['limit_thread_uploads', '1', 0]);
         $this->insertDefaultRow(['max_thread_uploads', '1000', 0]);
         $this->insertDefaultRow(['max_filesize', '5242880', 0]);
         $this->insertDefaultRow(['max_filesize_all_files', '5242880', 0]);
         $this->insertDefaultRow(['enable_spoilers', '1', 0]);
+        $this->insertDefaultRow(['strip_exif', '0', 0]);
+        $this->insertDefaultRow(['keep_icc', '1', 0]);
+        $this->insertDefaultRow(['generate_file_sha256', '1', 0]);
+        $this->insertDefaultRow(['generate_file_sha512', '1', 0]);
+        $this->insertDefaultRow(['preferred_filename', 'timestamp', 0]);
+        $this->insertDefaultRow(['keep_deleted_upload_entry', '1', 0]);
+        $this->insertDefaultRow(['enabled_filetypes', '{"graphics": {"enabled": true, "formats": ["jpeg", "gif", "png", "webp"]}, "video": {"enabled": true, "formats": ["mpeg4", "webm"]}}', 0]);
 
+        // Other New Post
         $this->insertDefaultRow(['allow_sage', '1', 0]);
         $this->insertDefaultRow(['allow_tripcodes', '1', 0]);
         $this->insertDefaultRow(['process_new_post_commands', '1', 0]);
@@ -139,8 +152,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['anonymous_names', '["Anonymous"]', 0]);
         $this->insertDefaultRow(['always_noko', '0', 0]);
 
-        // Content handling
-        $this->insertDefaultRow(['preferred_filename', 'timestamp', 0]);
+        // Preview Generation
         $this->insertDefaultRow(['create_static_preview', '1', 0]);
         $this->insertDefaultRow(['static_preview_images_only', '0', 0]);
         $this->insertDefaultRow(['static_preview_format', 'jpg', 0]);
@@ -148,11 +160,12 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['animated_preview_images_only', '1', 0]);
         $this->insertDefaultRow(['animated_preview_format', 'gif', 0]);
         $this->insertDefaultRow(['animated_preview_max_frames', '1000', 0]);
-        $this->insertDefaultRow(['max_preview_width', '250', 0]);
-        $this->insertDefaultRow(['max_preview_height', '250', 0]);
         $this->insertDefaultRow(['jpeg_quality', '85', 0]);
         $this->insertDefaultRow(['webp_quality', '75', 0]);
-        $this->insertDefaultRow(['keep_deleted_upload_entry', '1', 0]);
+        $this->insertDefaultRow(['max_preview_width', '250', 0]);
+        $this->insertDefaultRow(['max_preview_height', '250', 0]);
+
+        // Threads
         $this->insertDefaultRow(['limit_post_count', '1', 0]);
         $this->insertDefaultRow(['max_posts', '1000', 0]);
         $this->insertDefaultRow(['limit_bump_count', '1', 0]);
@@ -165,31 +178,46 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['store_exif_data', '1', 0]);
         $this->insertDefaultRow(['max_slug_length', '80', 0]);
         $this->insertDefaultRow(['slugify_thread_url', '0', 0]);
-        $this->insertDefaultRow(['strip_exif', '0', 0]);
-        $this->insertDefaultRow(['keep_icc', '1', 0]);
-        $this->insertDefaultRow(['generate_file_sha256', '1', 0]);
-        $this->insertDefaultRow(['generate_file_sha512', '1', 0]);
 
-        // Page rendering
-        $this->insertDefaultRow(['date_format', 'Y/m/d (D) H:i:s', 0]);
+        // Index Rendering
         $this->insertDefaultRow(['index_thread_replies', '5', 0]);
         $this->insertDefaultRow(['index_sticky_replies', '1', 0]);
         $this->insertDefaultRow(['threads_per_page', '10', 0]);
         $this->insertDefaultRow(['max_index_comment_lines', '15', 0]);
-        $this->insertDefaultRow(['filter_zalgo', '0', 0]);
-        $this->insertDefaultRow(['display_render_timer', '1', 0]);
-        $this->insertDefaultRow(['generate_catalog', '1', 0]);
+        $this->insertDefaultRow(['index_nav_top', '0', 0]);
+        $this->insertDefaultRow(['index_nav_bottom', '1', 0]);
+        $this->insertDefaultRow(['first_posts_increments', '[100]', 0]);
+        $this->insertDefaultRow(['first_posts_threshold', '200', 0]);
+        $this->insertDefaultRow(['last_posts_increments', '[50,100,200,500]', 0]);
+        $this->insertDefaultRow(['last_posts_threshold', '100', 0]);
         $this->insertDefaultRow(['show_catalog_link', '1', 0]);
-        $this->insertDefaultRow(['template_id', 'template-nelliel-basic', 0]);
-        $this->insertDefaultRow(['default_style', 'style-nelliel', 0]);
-        $this->insertDefaultRow(['ui_icon_set', 'icons-nelliel-basic', 0]);
-        $this->insertDefaultRow(['filetype_icon_set', 'icons-nelliel-basic', 0]);
-        $this->insertDefaultRow(['icon_set_fallback', '1', 0]);
-        $this->insertDefaultRow(['use_file_icon', '1', 0]);
+
+        // Thread Rendering
+        $this->insertDefaultRow(['subject_in_title', '1', 0]);
+        $this->insertDefaultRow(['slug_in_title', '1', 0]);
+        $this->insertDefaultRow(['thread_number_in_title', '1', 0]);
+        $this->insertDefaultRow(['prefix_board_title', '1', 0]);
+
+        // Post Rendering
+        $this->insertDefaultRow(['date_format', 'Y/m/d (D) H:i:s', 0]);
+        $this->insertDefaultRow(['indent_marker', '>>', 0]);
+        $this->insertDefaultRow(['tripcode_marker', '!', 0]);
+        $this->insertDefaultRow(['no_comment_text', '(no comment)', 0]);
+        $this->insertDefaultRow(['filter_zalgo', '0', 0]);
+        $this->insertDefaultRow(['display_post_backlinks', '1', 0]);
+        $this->insertDefaultRow(['display_poster_id', '0', 0]);
+        $this->insertDefaultRow(['poster_id_colors', '0', 0]);
+        $this->insertDefaultRow(['poster_id_length', '6', 0]);
+        $this->insertDefaultRow(['create_url_links', '1', 0]);
+        $this->insertDefaultRow(['url_protocols', 'http|https|ftp|sftp|irc|nntp', 0]);
+        $this->insertDefaultRow(['url_prefix', '', 0]);
+
+        // Uploads Rendering
         $this->insertDefaultRow(['display_static_preview', '1', 0]);
         $this->insertDefaultRow(['display_animated_preview', '0', 0]);
         $this->insertDefaultRow(['display_video_preview', '1', 0]);
         $this->insertDefaultRow(['embed_video_files', '1', 0]);
+        $this->insertDefaultRow(['use_file_icon', '1', 0]);
         $this->insertDefaultRow(['max_uploads_row', '3', 0]);
         $this->insertDefaultRow(['max_preview_display_width', '250', 0]);
         $this->insertDefaultRow(['max_preview_display_height', '250', 0]);
@@ -199,37 +227,22 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['max_multi_display_height', '200', 0]);
         $this->insertDefaultRow(['max_catalog_display_width', '120', 0]);
         $this->insertDefaultRow(['max_catalog_display_height', '120', 0]);
-        $this->insertDefaultRow(['filename_display_length', '25', 0]);
-        $this->insertDefaultRow(['embed_url_display_length', '25', 0]);
-        $this->insertDefaultRow(['fgsfds_name', 'FGSFDS', 0]);
-        $this->insertDefaultRow(['indent_marker', '>>', 0]);
-        $this->insertDefaultRow(['tripcode_marker', '!', 0]);
-        $this->insertDefaultRow(['no_comment_text', '(no comment)', 0]);
-        $this->insertDefaultRow(['display_post_backlinks', '1', 0]);
-        $this->insertDefaultRow(['display_poster_id', '0', 0]);
-        $this->insertDefaultRow(['poster_id_colors', '0', 0]);
-        $this->insertDefaultRow(['poster_id_length', '6', 0]);
-        $this->insertDefaultRow(['create_url_links', '1', 0]);
-        $this->insertDefaultRow(['url_protocols', 'http|https|ftp|sftp|irc|nntp', 0]);
-        $this->insertDefaultRow(['url_prefix', '', 0]);
-        $this->insertDefaultRow(['display_original_name', '1', 0]);
-        $this->insertDefaultRow(['display_deleted_placeholder', '1', 0]);
-        $this->insertDefaultRow(['board_content_disclaimer', '', 0]);
-        $this->insertDefaultRow(['index_nav_top', '0', 0]);
-        $this->insertDefaultRow(['index_nav_bottom', '1', 0]);
         $this->insertDefaultRow(['image_spoiler_cover', 'media/core/covers/spoiler.png', 0]);
         $this->insertDefaultRow(['image_deleted_file', 'media/core/placeholders/deleted_file.png', 0]);
         $this->insertDefaultRow(['image_deleted_embed', 'media/core/placeholders/deleted_embed.png', 0]);
-        $this->insertDefaultRow(['subject_in_title', '1', 0]);
-        $this->insertDefaultRow(['slug_in_title', '1', 0]);
-        $this->insertDefaultRow(['thread_number_in_title', '1', 0]);
-        $this->insertDefaultRow(['prefix_board_title', '1', 0]);
-        $this->insertDefaultRow(['list_file_formats', '0', 0]);
-        $this->insertDefaultRow(['list_file_extensions', '1', 0]);
-        $this->insertDefaultRow(['first_posts_increments', '[100]', 0]);
-        $this->insertDefaultRow(['first_posts_threshold', '200', 0]);
-        $this->insertDefaultRow(['last_posts_increments', '[50,100,200,500]', 0]);
-        $this->insertDefaultRow(['last_posts_threshold', '100', 0]);
+        $this->insertDefaultRow(['filename_display_length', '25', 0]);
+        $this->insertDefaultRow(['embed_url_display_length', '25', 0]);
+        $this->insertDefaultRow(['display_original_name', '1', 0]);
+        $this->insertDefaultRow(['display_deleted_placeholder', '1', 0]);
+
+        // Other Rendering
+        $this->insertDefaultRow(['template_id', 'template-nelliel-basic', 0]);
+        $this->insertDefaultRow(['default_style', 'style-nelliel', 0]);
+        $this->insertDefaultRow(['ui_icon_set', 'icons-nelliel-basic', 0]);
+        $this->insertDefaultRow(['filetype_icon_set', 'icons-nelliel-basic', 0]);
+        $this->insertDefaultRow(['icon_set_fallback', '1', 0]);
+        $this->insertDefaultRow(['display_render_timer', '1', 0]);
+        $this->insertDefaultRow(['generate_catalog', '1', 0]);
 
         // Anti-spam
         $this->insertDefaultRow(['use_post_captcha', '0', 0]);
@@ -237,8 +250,5 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['use_report_captcha', '0', 0]);
         $this->insertDefaultRow(['use_report_recaptcha', '0', 0]);
         $this->insertDefaultRow(['use_honeypot', '1', 0]);
-
-        // Filetypes
-        $this->insertDefaultRow(['enabled_filetypes', '{"graphics": {"enabled": true, "formats": ["jpeg", "gif", "png", "webp"]}, "video": {"enabled": true, "formats": ["mpeg4", "webm"]}}', 0]);
     }
 }

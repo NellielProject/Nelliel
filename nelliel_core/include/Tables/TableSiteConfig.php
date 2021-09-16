@@ -63,6 +63,7 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['global_announcement', '']);
         $this->insertDefaultRow(['uri_display_format', '/%s/']);
         $this->insertDefaultRow(['shell_path', '/usr/local/bin']);
+        $this->insertDefaultRow(['site_content_disclaimer', '']);
         $this->insertDefaultRow(['site_footer_text', '', 0]);
 
         // Banners
@@ -76,23 +77,26 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['allow_ban_appeals', '1']);
         $this->insertDefaultRow(['min_time_before_ban_appeal', '3600']);
 
-        // Posts and rendering
+        // Filenames and Structure
         $this->insertDefaultRow(['index_filename_format', 'index%d']);
         $this->insertDefaultRow(['thread_filename_format', '%d']);
+
+        // Rendering
+        $this->insertDefaultRow(['base_icon_set', 'icons-nelliel-basic']);
+        $this->insertDefaultRow(['default_style', 'style-nelliel']);
+        $this->insertDefaultRow(['show_blotter', '1']);
+        $this->insertDefaultRow(['small_blotter_limit', '3']);
         $this->insertDefaultRow(['template_id', 'template-nelliel-basic']);
+        $this->insertDefaultRow(['display_render_timer', '1']);
+        $this->insertDefaultRow(['site_referrer_policy', 'strict-origin-when-cross-origin']);
+        $this->insertDefaultRow(['nofollow_external_links', '1']);
+
+        // Uploads
         $this->insertDefaultRow(['graphics_handler', 'GD']);
         $this->insertDefaultRow(['imagemagick_args', '%s -thumbnail %dx%d -quality %d %s']);
         $this->insertDefaultRow(['imagemagick_animated_args', '%s -coalesce -thumbnail %dx%d %s']);
         $this->insertDefaultRow(['graphicsmagick_args', '%s -thumbnail %dx%d -quality %d %s']);
         $this->insertDefaultRow(['graphicsmagick_animated_args', '%s -coalesce -thumbnail %dx%d %s']);
-        $this->insertDefaultRow(['display_render_timer', '1']);
-        $this->insertDefaultRow(['site_content_disclaimer', '']);
-        $this->insertDefaultRow(['site_referrer_policy', 'strict-origin-when-cross-origin']);
-        $this->insertDefaultRow(['nofollow_external_links', '1']);
-        $this->insertDefaultRow(['base_icon_set', 'icons-nelliel-basic']);
-        $this->insertDefaultRow(['default_style', 'style-nelliel']);
-        $this->insertDefaultRow(['show_blotter', '1']);
-        $this->insertDefaultRow(['small_blotter_limit', '3']);
 
         // Hashing and security
         $this->insertDefaultRow(['post_password_algorithm', 'sha256']);
@@ -128,8 +132,5 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['sfw_overboard_uri', 'sfwoverboard']);
         $this->insertDefaultRow(['sfw_overboard_threads', '20']);
         $this->insertDefaultRow(['sfw_overboard_thread_replies', '5']);
-
-        // Filetypes
-        $this->insertDefaultRow(['enabled_filetypes', '{"graphics":{"enabled":true,"formats":{"jpeg":{"enabled":true},"gif":{"enabled":true},"png":{"enabled":true},"webp":{"enabled":true}}}}']);
     }
 }

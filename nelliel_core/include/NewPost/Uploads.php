@@ -273,13 +273,13 @@ class Uploads
 
     private function checkFileDuplicates(Post $post, Upload $upload): void
     {
-        $active = ($this->domain->setting('only_active_duplicates')) ? 'AND "old" = 0' : '';
+        $active = ($this->domain->setting('only_active_file_duplicates')) ? ' AND "old" = 0' : '';
         $sha256 = ($this->domain->setting('generate_file_sha256')) ? ' OR "sha256" = :sha256' : '';
         $sha512 = ($this->domain->setting('generate_file_sha512')) ? ' OR "sha512" = :sha512' : '';
 
         if ($this->domain->setting('check_board_file_duplicates'))
         {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') . '" WHERE ' . $active .
+            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') . '" WHERE' . $active .
                     ' ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
@@ -379,7 +379,7 @@ class Uploads
 
     private function checkEmbedDuplicates(Post $post, string $embed_url): void
     {
-        $active = ($this->domain->setting('only_active_duplicates')) ? ' AND "old" = 0 ' : '';
+        $active = ($this->domain->setting('only_active_embed_duplicates')) ? ' AND "old" = 0 ' : '';
 
         if ($this->domain->setting('check_board_embed_duplicates'))
         {

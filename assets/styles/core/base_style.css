@@ -38,6 +38,28 @@ form {
 	border-spacing: 2px;
 }
 
+table {
+	background: var(--data-table-background);
+    color: var(--data-table-color);
+    width: 100%;
+}
+
+caption {
+	font-size: 1.25rem;
+	font-weight: bold;
+	line-height: 1.75rem;
+}
+
+th {
+	background: var(--data-table-header-background);
+    color: var(--data-table-header-color);
+    padding: 0.3em;
+}
+
+td {
+    padding: 0.3em;
+}
+
 /* Top navigation */
 .boards-navigation {
     text-align: center;
@@ -105,7 +127,21 @@ form {
     clear: both;
 }
 
-/* Data tables */
+/* Tables */
+.row-header {
+	width: 1%;
+	text-align: left;
+}
+
+.min-column-width {
+	width: 1%;
+}
+
+.table-button {
+	margin: 1em auto;
+	text-align: center;
+}
+
 .data-table {
     background: var(--data-table-background);
     color: var(--data-table-color);

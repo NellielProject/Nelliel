@@ -1,266 +1,251 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 {{# settings_data }}
-<div class="display-table">
-	<div class="display-row">
-		<span class="display-cell">
-			<span class="bold" data-i18n="">General</span>
-		</span>
-	</div>
+	<table>
+		<thead>
+			<tr>
+				<th class="min-column-width" data-i18n="">Name</th>
+				<th class="min-column-width" data-i18n="">Value</th>
+				<th data-i18n="">Description</th>
+			</tr>
+		</thead>
+		<tr>
+			<th colspan="3" data-i18n="">General</th>
+		</tr>
 	{{# name }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ name }}
 	{{# show_name }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ show_name }}
 	{{# description }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ description }}
 	{{# show_description }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ show_description }}
 	{{# favicon }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ favicon }}
 	{{# show_favicon }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ show_favicon }}
 	{{# banner }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ banner }}
 	{{# show_banner }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ show_banner }}
 	{{# home_page }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ home_page }}
 	{{# locale }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ locale }}
 	{{# only_alphanumeric_board_ids }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ only_alphanumeric_board_ids }}
 	{{# max_report_items }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ max_report_items }}
 	{{# max_delete_items }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ max_delete_items }}
 	{{# global_announcement }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ global_announcement }}
 	{{# uri_display_format }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ uri_display_format }}
 	{{# shell_path }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ shell_path }}
-	<div class="display-row">
-	<hr class="display_cell">
-	</div>
-	<div class="display-row">
-		<span class="display-cell">
-			<span class="bold" data-i18n="">Banners</span>
-		</span>
-	</div>
+	{{# site_content_disclaimer }}
+		{{> panels/pieces/settings/textarea }}
+	{{/ site_content_disclaimer }}
+	{{# site_footer_text }}
+		{{> panels/pieces/settings/textarea }}
+	{{/ site_footer_text }}
+	
+		<tr>
+			<th colspan="3" data-i18n="">Banners</th>
+		</tr>
 	{{# show_site_banners }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ show_site_banners }}
 	{{# show_board_banners }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ show_board_banners}}
 	{{# banner_display_width }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ banner_display_width }}
 	{{# banner_display_height }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ banner_display_height }}
-	<div class="display-row">
-		<hr class="display_cell">
-	</div>
-	<div class="display-row">
-		<span class="display-cell">
-			<span class="bold" data-i18n="">Bans</span>
-		</span>
-	</div>
+		<tr>
+			<th colspan="3" data-i18n="">Bans</th>
+		</tr>
 	{{# must_see_ban }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ must_see_ban }}
 	{{# allow_ban_appeals }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ allow_ban_appeals }}
 	{{# min_time_before_ban_appeal }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ min_time_before_ban_appeal }}
-	<div class="display-row">
-		<hr class="display_cell">
-	</div>
-	<div class="display-row">
-		<span class="display-cell">
-			<span class="bold" data-i18n="">Posts and rendering</span>
-		</span>
-	</div>
+		<tr>
+			<th colspan="3" data-i18n="">Filenames and Structure</th>
+		</tr>
 	{{# index_filename_format }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ index_filename_format }}
 	{{# thread_filename_format }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ thread_filename_format }}
-	{{# template_id }}
-		{{> panels/pieces/settings_select }}
-	{{/ template_id }}
-	{{# graphics_handler }}
-		{{> panels/pieces/settings_select }}
-	{{/ graphics_handler }}
-	{{# imagemagick_args }}
-		{{> panels/pieces/settings_text }}
-	{{/ imagemagick_args }}
-	{{# imagemagick_animated_args }}
-		{{> panels/pieces/settings_text }}
-	{{/ imagemagick_animated_args }}
-	{{# graphicsmagick_args }}
-		{{> panels/pieces/settings_text }}
-	{{/ graphicsmagick_args }}
-	{{# graphicsmagick_animated_args }}
-		{{> panels/pieces/settings_text }}
-	{{/ graphicsmagick_animated_args}}
-	{{# display_render_timer }}
-		{{> panels/pieces/settings_checkbox }}
-	{{/ display_render_timer }}
-	{{# site_content_disclaimer }}
-		{{> panels/pieces/settings_textarea }}
-	{{/ site_content_disclaimer }}
-	{{# site_referrer_policy }}
-		{{> panels/pieces/settings_select }}
-	{{/ site_referrer_policy }}
-	{{# nofollow_external_links }}
-		{{> panels/pieces/settings_checkbox }}
-	{{/ nofollow_external_links }}
+		<tr>
+			<th colspan="3" data-i18n="">Rendering</th>
+		</tr>
 	{{# base_icon_set }}
-		{{> panels/pieces/settings_select }}
+		{{> panels/pieces/settings/select }}
 	{{/ base_icon_set }}
+	{{# default_style }}
+		{{> panels/pieces/settings/select }}
+	{{/ default_style }}
 	{{# show_blotter }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ show_blotter }}
 	{{# small_blotter_limit }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ small_blotter_limit }}
-	{{# site_footer_text }}
-		{{> panels/pieces/settings_textarea }}
-	{{/ site_footer_text }}
-	<div class="display-row">
-		<hr class="display_cell">
-	</div>
-	<div class="display-row">
-		<span class="display-cell">
-			<span class="bold" data-i18n="">Hashing and security</span>
-		</span>
-	</div>
+	{{# template_id }}
+		{{> panels/pieces/settings/select }}
+	{{/ template_id }}
+	{{# display_render_timer }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ display_render_timer }}
+	{{# site_referrer_policy }}
+		{{> panels/pieces/settings/select }}
+	{{/ site_referrer_policy }}
+	{{# nofollow_external_links }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ nofollow_external_links }}
+		<tr>
+			<th colspan="3" data-i18n="">Uploads</th>
+		</tr>
+	{{# graphics_handler }}
+		{{> panels/pieces/settings/select }}
+	{{/ graphics_handler }}
+	{{# imagemagick_args }}
+		{{> panels/pieces/settings/text }}
+	{{/ imagemagick_args }}
+	{{# imagemagick_animated_args }}
+		{{> panels/pieces/settings/text }}
+	{{/ imagemagick_animated_args }}
+	{{# graphicsmagick_args }}
+		{{> panels/pieces/settings/text }}
+	{{/ graphicsmagick_args }}
+	{{# graphicsmagick_animated_args }}
+		{{> panels/pieces/settings/text }}
+	{{/ graphicsmagick_animated_args}}
+		<tr>
+			<th colspan="3" data-i18n="">Hashing and Security</th>
+		</tr>
 	{{# post_password_algorithm }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ post_password_algorithm }}
 	{{# secure_tripcode_algorithm }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ secure_tripcode_algorithm }}
 	{{# do_password_rehash }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ do_password_rehash }}
 	{{# login_delay }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ login_delay }}
 	{{# session_length }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ session_length }}
 	{{# store_unhashed_ip }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ store_unhashed_ip }}
 	{{# use_dnsbl }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ use_dnsbl }}
 	{{# dnsbl_exceptions }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ dnsbl_exceptions }}
-	<div class="display-row">
-		<hr class="display_cell">
-	</div>
-	<div class="display-row">
-		<span class="display-cell">
-			<span class="bold" data-i18n="">CAPTCHA</span>
-		</span>
-	</div>
+		<tr>
+			<th colspan="3" data-i18n="">CAPTCHA</th>
+		</tr>
 	{{# captcha_width }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ captcha_width }}
 	{{# captcha_height }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ captcha_height }}
 	{{# captcha_character_count }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ captcha_character_count }}
 	{{# captcha_timeout }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ captcha_timeout }}
 	{{# captcha_rate_limit }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ captcha_rate_limit }}
 	{{# recaptcha_site_key }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ recaptcha_site_key }}
 	{{# recaptcha_sekrit_key }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ recaptcha_sekrit_key }}
 	{{# recaptcha_type }}
-		{{> panels/pieces/settings_select }}
+		{{> panels/pieces/settings/select }}
 	{{/ recaptcha_type }}
 	{{# use_login_captcha }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ use_login_captcha }}
 	{{# use_login_recaptcha }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ use_login_recaptcha }}
 	{{# use_register_captcha }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ use_register_captcha }}
 	{{# use_register_recaptcha }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ use_register_recaptcha }}
-	<div class="display-row">
-		<hr class="display_cell">
-	</div>
-	<div class="display-row">
-		<span class="display-cell">
-			<span class="bold" data-i18n="">Overboard</span>
-		</span>
-	</div>
+		<tr>
+			<th colspan="3" data-i18n="">Overboard</th>
+		</tr>
 	{{# overboard_active }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ overboard_active }}
 	{{# overboard_uri }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ overboard_uri }}
 	{{# overboard_threads }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ overboard_threads }}
 	{{# overboard_thread_replies }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ overboard_thread_replies }}
 	{{# nsfl_on_overboard }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ nsfl_on_overboard }}
 	{{# sfw_overboard_active }}
-		{{> panels/pieces/settings_checkbox }}
+		{{> panels/pieces/settings/checkbox }}
 	{{/ sfw_overboard_active }}
 	{{# sfw_overboard_uri }}
-		{{> panels/pieces/settings_text }}
+		{{> panels/pieces/settings/text }}
 	{{/ sfw_overboard_uri }}
 	{{# sfw_overboard_threads }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ sfw_overboard_threads }}
 	{{# sfw_overboard_thread_replies }}
-		{{> panels/pieces/settings_number }}
+		{{> panels/pieces/settings/number }}
 	{{/ sfw_overboard_thread_replies }}
-	<div class="display-row">
+	</table>
+	<div class="table-button">
 		<input type="submit" value="Update Settings" data-i18n-attributes="value">
 	</div>
-</div>
 {{/ settings_data }}
 </form>
