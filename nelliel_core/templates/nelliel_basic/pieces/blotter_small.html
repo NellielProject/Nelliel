@@ -1,14 +1,10 @@
-<table class="blotter small">
-	<tbody>
+<div class="blotter small display-table">
 {{# blotter_entries }}
-		<tr class="blotter-entry small">
-			<td>{{ time }} {{ text }}</td>
-		</tr>
+	<div class="blotter-entry small display-row">
+		<span class="display-cell">{{ time }} {{ text }}</span>
+	</div>
 {{/ blotter_entries }}
-		<tr class="blotter-link">
-			<td>
-				<span class="text-button">[<a href="{{ blotter_url }}" data-i18n="">Show All</a>]</span>
-			</td>
-		</tr>
-	</tbody>
-</table>
+	<div  class="blotter-link display-row">
+		<span class="text-button display-cell">[<a href="{{ blotter_url }}" data-i18n="">Show All</a>]</span>
+	</div>
+</div>
