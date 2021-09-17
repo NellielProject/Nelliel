@@ -32,10 +32,10 @@ class OutputNews extends Output
         $this->file_handler->writeFile(NEL_BASE_PATH . 'news.html', $output);
     }
 
-    private function newsList(int $limit = 0)
+    public function newsList(int $limit = 0)
     {
         $database = $this->domain->database();
-        $news_entries = $database->executeFetchAll('SELECT * FROM "' . NEL_NEWS_TABLE . '" ORDER BY "time" ASC',
+        $news_entries = $database->executeFetchAll('SELECT * FROM "' . NEL_NEWS_TABLE . '" ORDER BY "time" DESC',
                 PDO::FETCH_ASSOC);
         $limit_counter = 0;
         $entry_list = array();

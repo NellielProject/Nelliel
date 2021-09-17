@@ -87,6 +87,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_word_filters_manage', 'Manage word filters.']);
         $this->insertDefaultRow(['perm_regen_cache', 'Regenerate caches.']);
         $this->insertDefaultRow(['perm_regen_pages', 'Regenerate pages.']);
+        $this->insertDefaultRow(['perm_regen_overboard', 'Regenerate overboard.']);
         $this->insertDefaultRow(['perm_extract_gettext', 'Extract Gettext strings.']);
         $this->insertDefaultRow(['perm_post_status', 'Change the status of a thread or post.']);
         $this->insertDefaultRow(['perm_post_type', 'Change the type of a thread or post.']);

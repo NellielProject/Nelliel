@@ -13,6 +13,7 @@ use Nelliel\Output\OutputNews;
 use Nelliel\Output\OutputOverboard;
 use Nelliel\Output\OutputThread;
 use PDO;
+use Nelliel\Output\OutputHomePage;
 
 class Regen
 {
@@ -36,14 +37,23 @@ class Regen
 
     public function news(Domain $domain)
     {
-        $news = new OutputNews($domain, true);
-        $news->render(array(), false);
+        $output_news = new OutputNews($domain, true);
+        $output_news->render(array(), false);
+    }
+
+    public function homePage(Domain $domain)
+    {
+        if ($domain->setting('generate_home_page'))
+        {
+            $output_home_page = new OutputHomePage($domain, true);
+            $output_home_page->render(array(), false);
+        }
     }
 
     public function blotter(Domain $domain)
     {
-        $news = new OutputBlotter($domain, true);
-        $news->render(array(), false);
+        $output_blotter = new OutputBlotter($domain, true);
+        $output_blotter->render(array(), false);
     }
 
     public function index(Domain $domain)
@@ -93,7 +103,9 @@ class Regen
 
     public function allSitePages(Domain $domain)
     {
-        $this->boardList($domain);
+        $this->blotter($domain);
+        $this->news($domain);
+        $this->homePage($domain);
     }
 
     public function allBoardPages(Domain $domain)

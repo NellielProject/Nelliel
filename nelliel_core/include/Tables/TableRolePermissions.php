@@ -94,6 +94,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_word_filters_manage', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_regen_cache', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_regen_pages', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_regen_overboard', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_extract_gettext', 0]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_status', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_type', 1]);
@@ -144,6 +145,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_word_filters_manage', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_regen_cache', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_regen_pages', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_regen_overboard', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_extract_gettext', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_status', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_type', 1]);
@@ -194,6 +196,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_word_filters_manage', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_regen_cache', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_regen_pages', 0]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_regen_overboard', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_extract_gettext', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_post_status', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_post_type', 1]);
@@ -244,6 +247,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_word_filters_manage', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_regen_cache', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_regen_pages', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_regen_overboard', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_extract_gettext', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_post_status', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_post_type', 0]);
@@ -294,6 +298,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_word_filters_manage', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_regen_cache', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_regen_pages', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_regen_overboard', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_extract_gettext', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_post_status', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_post_type', 0]);

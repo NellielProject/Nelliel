@@ -151,9 +151,13 @@ class OutputPanelMain extends Output
                 'perm_blotter_manage');
         $this->render_data['blotter_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=blotter';
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
+                'perm_regen_overboard');
+        $this->render_data['regen_overboard_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=regen&actions=overboard-all-pages';
+        $this->render_data['regen_site_pages'] = $this->session->user()->checkPermission($this->domain,
                 'perm_regen_pages');
         $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=regen&actions=overboard-all-pages';
+        'module=regen&actions=site-all-pages';
         $this->render_data['regen_site_caches'] = $this->session->user()->checkPermission($this->domain,
                 'perm_regen_cache');
         $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=site-all-caches';

@@ -47,9 +47,9 @@ class DomainSite extends Domain implements NellielCacheInterface
                 'Nelliel Imageboard');
         $new_reference['home_page'] = NEL_BASE_WEB_PATH;
 
-        if (!nel_true_empty($this->site_domain->setting('home_page')))
+        if (!nel_true_empty($this->setting('home_page')))
         {
-            $new_reference['home_page'] = $this->site_domain->setting('home_page');
+            $new_reference['home_page'] = $this->setting('home_page');
         }
 
         $this->references = $new_reference;

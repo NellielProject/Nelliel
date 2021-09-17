@@ -108,10 +108,20 @@ class DispatchModules extends Dispatch
                             $forward = 'site';
                             break;
 
-                        case 'overboard-all-pages':
+                        case 'site-all-pages':
                             if (!$user->checkPermission($this->domain, 'perm_regen_pages'))
                             {
-                                nel_derp(503, _gettext('You are not allowed to regenerate overboard pages.'));
+                                nel_derp(503, _gettext('You are not allowed to regenerate site pages.'));
+                            }
+
+                            $regen->allSitePages($this->domain);
+                            $forward = 'site';
+                            break;
+
+                        case 'overboard-all-pages':
+                            if (!$user->checkPermission($this->domain, 'perm_regen_overboard'))
+                            {
+                                nel_derp(504, _gettext('You are not allowed to regenerate overboard pages.'));
                             }
 
                             $regen->overboard($this->domain);

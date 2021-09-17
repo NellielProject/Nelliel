@@ -56,6 +56,7 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['favicon', '']);
         $this->insertDefaultRow(['show_favicon', '0']);
         $this->insertDefaultRow(['home_page', '']);
+        $this->insertDefaultRow(['generate_home_page', '0']);
         $this->insertDefaultRow(['locale', 'en_US']);
         $this->insertDefaultRow(['only_alphanumeric_board_ids', '1']);
         $this->insertDefaultRow(['max_report_items', '5']);
