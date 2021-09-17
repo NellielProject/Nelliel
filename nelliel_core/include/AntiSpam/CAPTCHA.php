@@ -89,13 +89,6 @@ class CAPTCHA
 
         // Pretty basic CAPTCHA
         // We'll leave making a better one to someone who really knows the stuff
-        $generated = nel_plugins()->processHook('nel-captcha-generate', [$this->domain], false);
-
-        if ($generated)
-        {
-            return;
-        }
-
         $captcha_text = '';
         $character_set = 'bcdfghjkmnpqrstvwxyz23456789';
         $set_array = utf8_split($character_set);
@@ -128,13 +121,6 @@ class CAPTCHA
 
     public function render(string $captcha_text)
     {
-        $captcha_image = nel_plugins()->processHook('nel-captcha-render', [$this->domain]);
-
-        if (!is_null($captcha_image))
-        {
-            return $captcha_image;
-        }
-
         $character_count = utf8_strlen($captcha_text);
         $font_file = NEL_FONTS_FILES_PATH . 'core/' . 'Halogen.ttf';
         $image_width = $this->site_domain->setting('captcha_width');
@@ -233,13 +219,6 @@ class CAPTCHA
 
     public function verify(string $key, string $answer)
     {
-        $verified = nel_plugins()->processHook('nel-captcha-verify', [$this->domain], false);
-
-        if ($verified)
-        {
-            return true;
-        }
-
         $expiration = time() - $this->site_domain->setting('captcha_timeout');
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_CAPTCHA_TABLE .
@@ -264,13 +243,6 @@ class CAPTCHA
 
     public function cleanupExpired()
     {
-        $done = nel_plugins()->processHook('nel-captcha-cleanup', [$this->domain], false);
-
-        if ($done)
-        {
-            return;
-        }
-
         $expiration = time() - $this->site_domain->setting('captcha_timeout');
         $prepared = $this->database->prepare(
                 'SELECT "captcha_key" FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "time_created" = ?');
@@ -287,13 +259,6 @@ class CAPTCHA
 
     public function verifyReCAPTCHA()
     {
-        $verified = nel_plugins()->processHook('nel-verify-recaptcha', [$this->domain]);
-
-        if ($verified)
-        {
-            return;
-        }
-
         $response = $_POST['g-recaptcha-response'] ?? '';
         $result = file_get_contents(
                 'https://www.google.com/recaptcha/api/siteverify?secret=' .

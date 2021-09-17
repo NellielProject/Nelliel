@@ -40,7 +40,6 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
     $diagnostic = array();
     $diagnostic['error_id'] = (!empty($error_id)) ? $error_id : 0;
     $diagnostic['error_message'] = (!empty($error_message)) ? $error_message : "I just don't know what went wrong!";
-    $diagnostic = nel_plugins()->processHook('nel-derp-happened', [$error_id, $error_message, $error_data], $diagnostic);
 
     if (!empty($error_data))
     {

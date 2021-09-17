@@ -26,8 +26,6 @@ class Preparation
 
     public function prepare()
     {
-        nel_plugins()->processHook('nel-inb4-dispatch-prep', array());
-
         if (empty($_GET) && empty($_POST))
         {
             return;
@@ -97,8 +95,6 @@ class Preparation
         {
             $domain = new DomainSite(nel_database());
         }
-
-        $inputs = nel_plugins()->processHook('nel-in-after-dispatch-prep', [$domain], $inputs);
 
         if ($inputs['module'] === 'new-post')
         {
