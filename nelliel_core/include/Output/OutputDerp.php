@@ -31,7 +31,7 @@ class OutputDerp extends Output
 
         if ($this->domain->id() === Domain::SITE)
         {
-            $return_url = NEL_BASE_WEB_PATH . $this->domain->setting('home_page');
+            $return_url = $this->domain->reference('home_page');
         }
         else
         {
