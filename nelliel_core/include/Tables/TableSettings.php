@@ -235,6 +235,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_thread_uploads', '', '1000', 'Maximum number of uploads in a thread.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize', '', '5242880', 'Maximum size of each file uploaded. (bytes)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize_all_files', '', '5242880', 'Maximum total size of all files uploaded in one post. (bytes)', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_image_width', '', '8000', 'Maximum width of images (if detectable).', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_image_height', '', '8000', 'Maximum height of images (if detectable).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_spoilers', '', '1', 'Enable spoilers for uploads.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'strip_exif', '', '0', 'Remove EXIF data from an image. Requires ExifTool.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'keep_icc', '', '1', 'When removing EXIF data, keep ICC color profiles.', '{"type":"checkbox"}']);

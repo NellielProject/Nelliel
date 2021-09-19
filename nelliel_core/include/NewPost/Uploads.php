@@ -297,8 +297,8 @@ class Uploads
         else if (!$post->data('op') && $this->domain->setting('check_thread_file_duplicates'))
         {
             $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                    '" WHERE "parent_thread" = :parent_thread AND ' . $active . ' ("md5" = :md5 OR "sha1" = :sha1' . $sha256 .
-                    $sha512 . ')';
+                    '" WHERE "parent_thread" = :parent_thread AND ' . $active . ' ("md5" = :md5 OR "sha1" = :sha1' .
+                    $sha256 . $sha512 . ')';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(':parent_thread', $post->contentID()->threadID(), PDO::PARAM_INT);
             $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
@@ -617,6 +617,14 @@ class Uploads
                     $display_height = $image->getimageheight();
                 }
             }
+        }
+
+        if ($display_width > $this->domain->setting('max_image_width') ||
+                $display_height > $this->domain->setting('max_image_height'))
+        {
+            nel_derp(0,
+                    sprintf(_gettext('Image dimensions are too large. Maximum is %d x %d pixels.'),
+                            $this->domain->setting('max_image_width'), $this->domain->setting('max_image_height')));
         }
 
         if ($display_width > 0)

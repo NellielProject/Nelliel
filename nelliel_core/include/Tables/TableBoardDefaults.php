@@ -127,6 +127,8 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['max_thread_uploads', '1000', 0]);
         $this->insertDefaultRow(['max_filesize', '5242880', 0]);
         $this->insertDefaultRow(['max_filesize_all_files', '5242880', 0]);
+        $this->insertDefaultRow(['max_image_width', '8000', 0]);
+        $this->insertDefaultRow(['max_image_height', '8000', 0]);
         $this->insertDefaultRow(['enable_spoilers', '1', 0]);
         $this->insertDefaultRow(['strip_exif', '0', 0]);
         $this->insertDefaultRow(['keep_icc', '1', 0]);
