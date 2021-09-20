@@ -81,6 +81,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'generate_home_page', '', '0', 'Generate a standard home page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for site (use ISO language + country code).', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'only_alphanumeric_board_ids', '', '1', 'Allow only alphanumeric board IDs.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'allow_custom_directories', '', '0', 'Allow custom subdirectory names for a board.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'only_alphanumeric_directories', '', '1', 'Allow only alphanumeric subdirectory names.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_report_items', '', '5', 'Maximum items that can be reported at one time.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_delete_items', '', '5', 'Maximum items that can be deleted at one time.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'global_announcement', '', '', 'Global announcement shown on all boards.', '{"type":"text"}']);

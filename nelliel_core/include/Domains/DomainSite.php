@@ -39,9 +39,10 @@ class DomainSite extends Domain implements NellielCacheInterface
     protected function loadReferences(): void
     {
         $new_reference = array();
-        $new_reference['banners_dir'] = 'site';
-        $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_dir'] . '/';
-        $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_dir']) . '/';
+        $new_reference['banners_directory'] = 'site';
+        $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_directory'] . '/';
+        $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_directory']) .
+                '/';
         $new_reference['log_table'] = NEL_LOGS_TABLE;
         $new_reference['title'] = (!nel_true_empty($this->setting('name'))) ? $this->setting('name') : _gettext(
                 'Nelliel Imageboard');

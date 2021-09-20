@@ -114,9 +114,13 @@ Error 231: Role does not exist. (Admin/AdminRoles.php)
 
 Error 240: Board URI already exists. (Admin/AdminBoards.php)  
 Error 241: Trouble with board URI. (Admin/AdminBoards.php)  
-Error 242: Invalid characters board URI. (Admin/AdminBoards.php)  
+Error 242: Invalid board URI characters. (Admin/AdminBoards.php)  
 Error 243: Board URI is empty. (Admin/AdminBoards.php)  
 Error 244: Board URI is reserved. (Admin/AdminBoards.php)  
+Error 245: Board URI too long. (Admin/AdminBoards.php)  
+Error 246: Empty subdirectory name. (Admin/AdminBoards.php)  
+Error 247: Subdirectory name too long. (Admin/AdminBoards.php)  
+Error 248: Invalid directory characters. (Admin/AdminBoards.php)  
 
 Error 300: Default permission error. (Admin/Admin.php)  
 

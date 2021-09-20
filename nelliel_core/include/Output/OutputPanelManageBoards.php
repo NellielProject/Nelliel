@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use PDO;
+use Nelliel\Domains\DomainBoard;
 
 class OutputPanelManageBoards extends Output
 {
@@ -39,8 +40,9 @@ class OutputPanelManageBoards extends Output
             $board_data = array();
             $board_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $board_data['board_uri'] = $board_info['board_id'];
-            $board_data['board_url'] = NEL_BASE_WEB_PATH . $board_info['board_id'] . '/';
+            $board_data['board_uri'] = $board_info['board_uri'];
+            $board_data['board_url'] = NEL_BASE_WEB_PATH . $board_info['board_uri'] . '/';
+            $board_data['board_id'] = $board_info['board_id'];
             $board_data['db_prefix'] = $board_info['db_prefix'];
 
             if ($board_info['locked'] == 0)
@@ -69,7 +71,17 @@ class OutputPanelManageBoards extends Output
             $this->render_data['board_list'][] = $board_data;
         }
 
-        $this->render_data['alphanumeric_only'] = $this->domain->setting('only_alphanumeric_board_ids');
+        if ($this->domain->setting('allow_custom_directories'))
+        {
+            $this->render_data['allow_custom_directories'] = true;
+            $this->render_data['alphanumeric_directory_only'] = $this->domain->setting('only_alphanumeric_directories');
+            $this->render_data['src_default'] = DomainBoard::DEFAULT_SRC_DIRECTORY;
+            $this->render_data['preview_default'] = DomainBoard::DEFAULT_PREVIEW_DIRECTORY;
+            $this->render_data['page_default'] = DomainBoard::DEFAULT_PAGE_DIRECTORY;
+            $this->render_data['archive_default'] = DomainBoard::DEFAULT_ARCHIVE_DIRECTORY;
+        }
+
+        $this->render_data['alphanumeric_uri_only'] = $this->domain->setting('only_alphanumeric_board_ids');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -82,8 +94,9 @@ class OutputPanelManageBoards extends Output
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Manage Boards');
         $parameters['section'] = $parameters['section'] ?? _gettext('Remove');
         $parameters['is_manage'] = true;
-        $board_id = $_GET['board-id'];
-        $messages[] = sprintf(_gettext('You are about to delete the board: %s'), $board_id);
+        $board_id = $_GET['board-id'] ?? '';
+        $board = new DomainBoard($board_id, $this->database);
+        $messages[] = sprintf(_gettext('You are about to delete the board: %s'), $board->reference('board_uri'));
         $messages[] = _gettext(
                 'This will wipe out all posts, settings, files, everything. There is no undo or recovery.');
         $messages[] = _gettext('Are you sure?');

@@ -47,7 +47,7 @@ class DispatchNewPost extends Dispatch
             }
             else
             {
-                $url = $this->domain->reference('board_directory') . '/' . $this->domain->reference('page_dir') . '/' .
+                $url = $this->domain->reference('board_directory') . '/' . $this->domain->reference('page_directory') . '/' .
                         $fgsfds->getCommandData('noko', 'topic') . '/' .
                         sprintf(nel_site_domain()->setting('thread_filename_format'),
                                 $fgsfds->getCommandData('noko', 'topic')) . NEL_PAGE_EXT;

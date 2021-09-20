@@ -101,7 +101,7 @@ class OutputPanelThreads extends Output
             $thread_info['delete_text'] = _gettext('Delete Thread');
             $thread_info['last_update'] = date($this->domain->setting('date_format'), intval($thread['last_update']));
             $thread_info['subject'] = $op_post['subject'];
-            $thread_info['thread_url'] = $this->domain->reference('page_dir') . '/' . $thread['thread_id'] . '/' .
+            $thread_info['thread_url'] = $this->domain->reference('page_directory') . '/' . $thread['thread_id'] . '/' .
                     $thread['thread_id'] . '.html';
             $thread_info['op_name'] = $op_post['name'];
 
@@ -160,7 +160,7 @@ class OutputPanelThreads extends Output
             $post_info['parent_thread'] = $post['parent_thread'];
             $post_info['post_time'] = date($this->domain->setting('date_format'), intval($post['post_time']));
             $post_info['subject'] = $post['subject'];
-            $post_info['thread_url'] = $this->domain->reference('page_dir') . '/' . $post['parent_thread'] . '/' .
+            $post_info['thread_url'] = $this->domain->reference('page_directory') . '/' . $post['parent_thread'] . '/' .
                     $post['post_number'] . '.html';
             $post_info['name'] = $post['name'];
             $post_info['poster_ip'] = nel_convert_ip_from_storage($post['ip_address']);

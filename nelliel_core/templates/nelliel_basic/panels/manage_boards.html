@@ -3,6 +3,7 @@
 	<thead>
 		<tr>
 			<th scope="col" data-i18n="">Board URI</th>
+			<th scope="col" data-i18n="">Board ID</th>
 			<th scope="col" data-i18n="">DB Prefix</th>
 			<th scope="col" data-i18n="">Status</th>
 			<th scope="col" data-i18n="">Lock/Unlock</th>
@@ -15,6 +16,7 @@
 			<td>
 				<a href="{{ board_url }}">{{ board_uri }}</a>
 			</td>
+			<td>{{ board_id }}</td>
 			<td>{{ db_prefix }}</td>
 			<td>{{ status }}</td>
 			<td>
@@ -30,15 +32,41 @@
 <hr>
 <form action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
-		<div class="display-row">
-			<label for="new_board_uri" class="display-cell" data-i18n="">Board URI</label>
-			<input id="new_board_uri" class="display-cell" type="text" name="new_board_uri" size="30" maxlength="50" value="">
-		</div>
-		{{# alphanumeric_only }}
+{{# alphanumeric_uri_only }}
 		<div class="display-row">
 			<span class="display-cell" data-i18n="">Only alphanumeric board URIs are allowed!</span>
 		</div>
-		{{/ alphanumeric_only }}
+{{/ alphanumeric_uri_only }}
+		<div class="display-row">
+			<label for="new_board_uri" class="display-cell" data-i18n="">Board URI:</label>
+			<input id="new_board_uri" class="display-cell" type="text" name="new_board_uri" size="30" maxlength="255" value="">
+		</div>
+{{# allow_custom_directories }}
+		<div class="display-row">
+			<span class="display-cell" data-i18n="">Board subdirectories can be customized below if necessary.</span>
+		</div>
+	{{# alphanumeric_directory_only }}
+		<div class="display-row">
+			<span class="display-cell" data-i18n="">Only alphanumeric directory names are allowed!</span>
+		</div>
+	{{/ alphanumeric_directory_only }}
+		<div class="display-row">
+			<label for="new_board_src" class="display-cell" data-i18n="">Directory for storing uploads:</label>
+			<input id="new_board_src" class="display-cell" type="text" name="new_board_src" size="30" maxlength="255" value="{{ src_default }}">
+		</div>
+		<div class="display-row">
+			<label for="new_board_preview" class="display-cell" data-i18n="">Directory for storing previews:</label>
+			<input id="new_board_preview" class="display-cell" type="text" name="new_board_preview" size="30" maxlength="255" value="{{ preview_default }}">
+		</div>
+		<div class="display-row">
+			<label for="new_board_page" class="display-cell" data-i18n="">Directory for output:</label>
+			<input id="new_board_page" class="display-cell" type="text" name="new_board_page" size="30" maxlength="255" value="{{ page_default }}">
+		</div>
+		<div class="display-row">
+			<label for="new_board_archive" class="display-cell" data-i18n="">Directory for archives:</label>
+			<input id="new_board_archive" class="display-cell" type="text" name="new_board_archive" size="30" maxlength="255" value="{{ archive_default }}">
+		</div>
+{{/ allow_custom_directories }}
 		<div class="display-row">
 			<input type="submit" value="Create Board" data-i18n-attributes="value">
 		</div>

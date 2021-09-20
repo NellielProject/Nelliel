@@ -48,6 +48,12 @@
 	{{# only_alphanumeric_board_ids }}
 		{{> panels/pieces/settings/checkbox }}
 	{{/ only_alphanumeric_board_ids }}
+	{{# allow_custom_directories }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ allow_custom_directories }}
+	{{# only_alphanumeric_directories }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ only_alphanumeric_directories }}
 	{{# max_report_items }}
 		{{> panels/pieces/settings/number }}
 	{{/ max_report_items }}
