@@ -1,4 +1,7 @@
 <?php
+use Nelliel\Domains\DomainGlobal;
+use Nelliel\Domains\DomainSite;
+
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 function nel_plugins()
@@ -13,25 +16,25 @@ function nel_plugins()
     return $plugins;
 }
 
-function nel_site_domain()
+function nel_site_domain(): DomainSite
 {
     static $site_domain;
 
     if (!isset($site_domain))
     {
-        $site_domain = new \Nelliel\Domains\DomainSite(nel_database());
+        $site_domain = new DomainSite(nel_database());
     }
 
     return $site_domain;
 }
 
-function nel_global_domain()
+function nel_global_domain(): DomainGlobal
 {
     static $global_domain;
 
     if (!isset($global_domain))
     {
-        $global_domain = new \Nelliel\Domains\DomainGlobal(nel_database());
+        $global_domain = new DomainGlobal(nel_database());
     }
 
     return $global_domain;

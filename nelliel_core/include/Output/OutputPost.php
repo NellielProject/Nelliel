@@ -181,6 +181,10 @@ class OutputPost extends Output
             $modmode_headers['delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
 
+            $modmode_headers['can_global_by_ip'] = $session_user->checkPermission(nel_global_domain(), 'perm_delete_by_ip');
+            $modmode_headers['global_delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+            '&actions=global-delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
+
             $modmode_headers['can_ban_delete'] = $session_user->checkPermission($this->domain, 'perm_manage_bans') &&
                     $session_user->checkPermission($this->domain, 'perm_delete_posts');
 

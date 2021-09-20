@@ -13,6 +13,8 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Output\OutputPanelThreads;
 use PDO;
+use Nelliel\Domains\DomainBoard;
+use Nelliel\Regen;
 
 class AdminThreads extends Admin
 {
@@ -56,6 +58,10 @@ class AdminThreads extends Admin
 
                 case 'delete-by-ip':
                     $this->removeByIP();
+                    break;
+
+                case 'global-delete-by-ip':
+                    $this->globalRemoveByIP();
                     break;
 
                 case 'ban':
@@ -130,7 +136,7 @@ class AdminThreads extends Admin
     {
         $content_id = new ContentID($_GET['content-id']);
         $content_id->getInstanceFromID($this->domain)->remove();
-        $this->regenThread($content_id->threadID(), true);
+        $this->regenThread($this->domain, $content_id->threadID(), true);
     }
 
     public function sticky()
@@ -142,13 +148,13 @@ class AdminThreads extends Admin
         {
             $thread = $content_id->getInstanceFromID($this->domain)->convertToThread();
             $thread->toggleSticky();
-            $this->regenThread($thread->contentID()->threadID(), true);
+            $this->regenThread($this->domain, $thread->contentID()->threadID(), true);
         }
 
         if ($content_id->isThread())
         {
             $content_id->getInstanceFromID($this->domain)->toggleSticky();
-            $this->regenThread($content_id->threadID(), true);
+            $this->regenThread($this->domain, $content_id->threadID(), true);
         }
     }
 
@@ -160,7 +166,7 @@ class AdminThreads extends Admin
         if ($content_id->isThread())
         {
             $content_id->getInstanceFromID($this->domain)->toggleLock();
-            $this->regenThread($content_id->threadID(), true);
+            $this->regenThread($this->domain, $content_id->threadID(), true);
         }
     }
 
@@ -172,7 +178,7 @@ class AdminThreads extends Admin
         if ($content_id->isThread())
         {
             $content_id->getInstanceFromID($this->domain)->toggleSage();
-            $this->regenThread($content_id->threadID(), true);
+            $this->regenThread($this->domain, $content_id->threadID(), true);
         }
     }
 
@@ -184,14 +190,14 @@ class AdminThreads extends Admin
         if ($content_id->isThread())
         {
             $content_id->getInstanceFromID($this->domain)->toggleCyclic();
-            $this->regenThread($content_id->threadID(), true);
+            $this->regenThread($this->domain, $content_id->threadID(), true);
         }
     }
 
-    private function regenThread($thread_id, bool $regen_index = false)
+    private function regenThread(DomainBoard $domain, $thread_id, bool $regen_index = false)
     {
-        $regen = new \Nelliel\Regen();
-        $regen->threads($this->domain, true, [$thread_id]);
+        $regen = new Regen();
+        $regen->threads($domain, true, [$thread_id]);
 
         if ($this->site_domain->setting('overboard_active'))
         {
@@ -200,7 +206,7 @@ class AdminThreads extends Admin
 
         if ($regen_index)
         {
-            $regen->index($this->domain);
+            $regen->index($domain);
         }
     }
 
@@ -209,7 +215,7 @@ class AdminThreads extends Admin
         $content_id = new ContentID($_GET['content-id']);
         $content_instance = $content_id->getInstanceFromID($this->domain);
         $content_instance->remove();
-        $this->regenThread($content_id->threadID(), true);
+        $this->regenThread($this->domain, $content_id->threadID(), true);
         $ban_ip = $_GET['ban-ip'] ?? '';
         $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
         $output_panel->new(['ban_ip' => $ban_ip], false);
@@ -237,7 +243,40 @@ class AdminThreads extends Admin
 
         foreach ($thread_ids as $thread_id => $value)
         {
-            $this->regenThread($thread_id, $value);
+            $this->regenThread($this->domain, $thread_id, $value);
+        }
+    }
+
+    public function globalRemoveByIP()
+    {
+        $this->verifyPermissions(nel_global_domain(), 'perm_delete_by_ip');
+        $first_content_id = new ContentID($_GET['content-id']);
+        $post_instance = $first_content_id->getInstanceFromID($this->domain);
+        $hashed_ip = $post_instance->data('hashed_ip_address');
+        $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
+        $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
+
+        foreach ($board_ids as $board_id)
+        {
+            $board_domain = new DomainBoard($board_id, $this->database);
+            $prepared = $this->database->prepare(
+                    'SELECT "post_number", "parent_thread" FROM "' . $board_domain->reference('posts_table') .
+                    '" WHERE "hashed_ip_address" = ?');
+            $prepared->bindValue(1, $hashed_ip, PDO::PARAM_STR);
+            $post_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
+            $thread_ids = array();
+
+            foreach ($post_ids as $id)
+            {
+                $content_id = new ContentID(ContentID::createIDString($id['parent_thread'], $id['post_number']));
+                $content_id->getInstanceFromID($board_domain)->remove();
+                $thread_ids[$content_id->threadID()] = true;
+            }
+
+            foreach ($thread_ids as $thread_id => $value)
+            {
+                $this->regenThread($board_domain, $thread_id, $value);
+            }
         }
     }
 
@@ -262,7 +301,7 @@ class AdminThreads extends Admin
         $post->changeData('comment', $_POST['wordswordswords'] ?? null);
         $post->changeData('regen_cache', 1);
         $post->writeToDatabase();
-        $this->regenThread($content_id->threadID(), true);
+        $this->regenThread($this->domain, $content_id->threadID(), true);
         $redirect = new Redirect();
         $redirect->doRedirect(true);
         $redirect->changeURL($_POST['return_url']);

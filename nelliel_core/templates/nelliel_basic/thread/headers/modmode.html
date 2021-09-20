@@ -4,6 +4,7 @@
 	{{# can_ban }}<span class="text-button">[<a href="{{ ban_url }}" data-i18n="">Ban</a>]</span>{{/ can_ban }}
 	{{# can_delete }}<span class="text-button">[<a href="{{ delete_url }}" data-i18n="">Delete</a>]</span>{{/ can_delete }}
 	{{# can_by_ip }}<span class="text-button">[<a href="{{ delete_by_ip_url }}" data-i18n="">Delete by IP</a>]</span>{{/ can_by_ip }}
+	{{# can_global_by_ip }}<span class="text-button">[<a href="{{ global_delete_by_ip_url }}" data-i18n="">Global delete by IP</a>]</span>{{/ can_global_by_ip }}
 	{{# can_ban_delete }}<span class="text-button">[<a href="{{ ban_delete_url }}" data-i18n="">Ban and Delete</a>]</span>{{/ can_ban_delete }}
 	{{^ response }}
 	{{# can_lock }}<span class="text-button">[<a href="{{ lock_url }}">{{ lock_text }}</a>]</span>{{/ can_lock }}
