@@ -195,7 +195,7 @@ class OutputPost extends Output
             $modmode_headers['can_edit'] = $session_user->checkPermission($this->domain, 'perm_edit_posts');
             $modmode_headers['edit_text'] = _gettext('Edit Post');
             $modmode_headers['edit_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=edit-post&content-id=' . $post_content_id->getIDString();
+                    '&actions=edit&content-id=' . $post_content_id->getIDString();
 
             $header_data['modmode_headers'] = $modmode_headers;
         }

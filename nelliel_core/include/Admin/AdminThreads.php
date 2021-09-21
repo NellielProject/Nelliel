@@ -15,6 +15,7 @@ use Nelliel\Output\OutputPanelThreads;
 use PDO;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Regen;
+use Nelliel\Output\OutputPanelBans;
 
 class AdminThreads extends Admin
 {
@@ -28,15 +29,6 @@ class AdminThreads extends Admin
 
     public function dispatch(array $inputs): void
     {
-        if ($inputs['subsection'] === 'panel')
-        {
-            $this->outputMain(true);
-        }
-        else
-        {
-            $this->outputMain(false);
-        }
-
         parent::dispatch($inputs);
 
         // TODO: Refine this whenever we get threads panel updated
@@ -65,21 +57,12 @@ class AdminThreads extends Admin
                     break;
 
                 case 'ban':
-                    $admin_bans = new \Nelliel\Admin\AdminBans($this->authorization, $this->domain, $this->session,
-                            $inputs);
+                    $admin_bans = new AdminBans($this->authorization, $this->domain, $this->session, $inputs);
                     $admin_bans->creator();
                     break;
 
                 case 'sage':
                     $this->permasage();
-                    break;
-
-                case 'edit-post':
-                    $this->editPost();
-                    break;
-
-                case 'update-post':
-                    $this->updatePost();
                     break;
 
                 case 'cyclic':
@@ -104,12 +87,12 @@ class AdminThreads extends Admin
         if (isset($_GET['actions']) && $_GET['actions'] === 'expand-thread')
         {
             $content_id = new ContentID($_GET['content-id']);
-            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain, false);
+            $output_panel = new OutputPanelThreads($this->domain, false);
             $output_panel->render(['section' => 'expanded_thread', 'thread_id' => $content_id->threadID()], false);
         }
         else
         {
-            $output_panel = new \Nelliel\Output\OutputPanelThreads($this->domain, false);
+            $output_panel = new OutputPanelThreads($this->domain, false);
             $output_panel->render(['section' => 'panel'], false);
         }
     }
@@ -124,16 +107,35 @@ class AdminThreads extends Admin
 
     public function editor(): void
     {
+        $this->verifyPermissions($this->domain, 'perm_edit_posts');
+        $content_id = new ContentID($_GET['content-id']);
+        $post = $content_id->getInstanceFromID($this->domain);
+        $output_panel_threads = new OutputPanelThreads($this->domain, true);
+        $output_panel_threads->editPost(['post' => $post], false);
+        $this->outputMain(false);
     }
 
     public function update(): void
     {
-        $thread_handler = new \Nelliel\ThreadHandler($this->database, $this->domain);
-        $thread_handler->processContentDeletes();
+        $this->verifyPermissions($this->domain, 'perm_edit_posts');
+        $content_id = new ContentID($_GET['content-id']);
+        $post = $content_id->getInstanceFromID($this->domain);
+        $post->changeData('name', $_POST['not_anonymous'] ?? null);
+        $post->changeData('email', $_POST['spam_target'] ?? null);
+        $post->changeData('subject', $_POST['verb'] ?? null);
+        $post->changeData('comment', $_POST['wordswordswords'] ?? null);
+        $post->changeData('regen_cache', 1);
+        $post->writeToDatabase();
+        $this->regenThread($this->domain, $content_id->threadID(), true);
+        $redirect = new Redirect();
+        $redirect->doRedirect(true);
+        $redirect->changeURL($_POST['return_url']);
+        $this->outputMain(false);
     }
 
     public function remove(): void
     {
+        $this->verifyPermissions($this->domain, 'perm_delete_posts');
         $content_id = new ContentID($_GET['content-id']);
         $content_id->getInstanceFromID($this->domain)->remove();
         $this->regenThread($this->domain, $content_id->threadID(), true);
@@ -212,12 +214,13 @@ class AdminThreads extends Admin
 
     public function banDelete()
     {
+        $this->verifyPermissions($this->domain, 'perm_delete_posts');
         $content_id = new ContentID($_GET['content-id']);
         $content_instance = $content_id->getInstanceFromID($this->domain);
         $content_instance->remove();
         $this->regenThread($this->domain, $content_id->threadID(), true);
         $ban_ip = $_GET['ban-ip'] ?? '';
-        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
+        $output_panel = new OutputPanelBans($this->domain, false);
         $output_panel->new(['ban_ip' => $ban_ip], false);
         $this->outputMain(false);
     }
@@ -278,33 +281,6 @@ class AdminThreads extends Admin
                 $this->regenThread($board_domain, $thread_id, $value);
             }
         }
-    }
-
-    public function editPost()
-    {
-        $this->verifyPermissions($this->domain, 'perm_edit_posts');
-        $content_id = new ContentID($_GET['content-id']);
-        $post = $content_id->getInstanceFromID($this->domain);
-        $output_panel_threads = new OutputPanelThreads($this->domain, true);
-        $output_panel_threads->editPost(['post' => $post], false);
-        $this->outputMain(false);
-    }
-
-    public function updatePost()
-    {
-        $this->verifyPermissions($this->domain, 'perm_edit_posts');
-        $content_id = new ContentID($_GET['content-id']);
-        $post = $content_id->getInstanceFromID($this->domain);
-        $post->changeData('name', $_POST['not_anonymous'] ?? null);
-        $post->changeData('email', $_POST['spam_target'] ?? null);
-        $post->changeData('subject', $_POST['verb'] ?? null);
-        $post->changeData('comment', $_POST['wordswordswords'] ?? null);
-        $post->changeData('regen_cache', 1);
-        $post->writeToDatabase();
-        $this->regenThread($this->domain, $content_id->threadID(), true);
-        $redirect = new Redirect();
-        $redirect->doRedirect(true);
-        $redirect->changeURL($_POST['return_url']);
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

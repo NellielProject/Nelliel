@@ -2,12 +2,11 @@
 	<caption data-i18n="">List of threads</caption>
 	<thead>
 		<tr>
-			<th scope="col" data-i18n="">Expand</th>
 			<th scope="col" data-i18n="">First Post</th>
 			<th scope="col" data-i18n="">Last Updated</th>
 			<th scope="col" data-i18n="">Subject</th>
 			<th scope="col" data-i18n="">Name</th>
-			<th scope="col" data-i18n="">Host</th>
+			<th scope="col" data-i18n="">IP</th>
 			<th scope="col" data-i18n="">Total Posts</th>
 			<th scope="col" data-i18n="">Total Files</th>
 			<th scope="col" data-i18n="">Actions</th>
@@ -16,9 +15,6 @@
 	<tbody>
 {{# threads }}
 		<tr class="{{ bgclass }}">
-			<td>
-				<span class="text-button">[<a href="{{ expand_url }}" data-i18n="">Expand Thread</a>]</span>
-			</td>
 			<td>{{ thread_id }}</td>
 			<td>{{ last_update }}</td>
 			<td>
