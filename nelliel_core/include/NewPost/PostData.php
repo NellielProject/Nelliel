@@ -88,7 +88,7 @@ class PostData
             }
         }
 
-        $raw_html = $this->checkEntry($_POST['raw_html'], 'boolean');
+        $raw_html = $this->checkEntry($_POST['raw_html'] ?? false, 'boolean');
 
         if($raw_html && $this->session->user()->checkPermission($this->domain, 'perm_raw_html'))
         {
