@@ -42,6 +42,7 @@ class PostData
 
         $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'] ?? '', 'string');
         $name = $this->fieldLengthCheck('name', $name);
+        $staff_post = $this->staffPost();
 
         if (nel_true_empty($name) || !$this->domain->setting('enable_name_field') ||
                 $this->domain->setting('forced_anonymous'))
@@ -59,18 +60,50 @@ class PostData
         }
         else
         {
-            if ($this->domain->setting('allow_tripcodes'))
+            $matches = array();
+
+            if (preg_match('/([^#]+)?(## |##|#)(.+)/', $name, $matches) === 1)
             {
-                $post->changeData('tripcode', $this->tripcode($name));
-                $post->changeData('secure_tripcode', $this->secureTripcode($name));
+                $name = $matches[1];
+                $type = $matches[2];
+                $trip = $matches[3];
+
+                if ($staff_post && $type === '## ')
+                {
+                    $post->changeData('capcode', $this->capcode($trip));
+                }
+
+                if ($this->domain->setting('allow_tripcodes'))
+                {
+                    if ($type === '##')
+                    {
+                        $post->changeData('secure_tripcode', $this->secureTripcode($trip));
+                    }
+
+                    if ($type === '#')
+                    {
+                        $post->changeData('tripcode', $this->tripcode($trip));
+                    }
+                }
+            }
+        }
+
+        if ($staff_post)
+        {
+            $this->session->ignore(true);
+            $user = $this->session->user();
+
+            if (nel_true_empty($name) || !$user->checkPermission($this->domain, 'perm_custom_name'))
+            {
+                $name = $user->getData('display_name');
             }
 
-            $name = $this->posterName($name);
+            $post->changeData('account_id', $user->id());
         }
 
         $post->changeData('name', $name);
 
-        if(nel_true_empty($post->data('name')) && $this->domain->setting('require_name'))
+        if (nel_true_empty($post->data('name')) && $this->domain->setting('require_name'))
         {
             nel_derp(41, _gettext('A name is required to post.'));
         }
@@ -81,7 +114,7 @@ class PostData
             $post->changeData('email', $this->fieldLengthCheck('email', $email));
         }
 
-        if(nel_true_empty($post->data('email')) && $this->domain->setting('require_email'))
+        if (nel_true_empty($post->data('email')) && $this->domain->setting('require_email'))
         {
             nel_derp(42, _gettext('An email is required to post.'));
         }
@@ -92,7 +125,7 @@ class PostData
             $post->changeData('subject', $this->fieldLengthCheck('subject', $subject));
         }
 
-        if(nel_true_empty($post->data('subject')) && $this->domain->setting('require_subject'))
+        if (nel_true_empty($post->data('subject')) && $this->domain->setting('require_subject'))
         {
             nel_derp(43, _gettext('A subject is required to post.'));
         }
@@ -105,7 +138,7 @@ class PostData
             $post->changeData('comment', $this->fieldLengthCheck('comment', $comment));
         }
 
-        if(nel_true_empty($post->data('comment')) && $this->domain->setting('require_comment'))
+        if (nel_true_empty($post->data('comment')) && $this->domain->setting('require_comment'))
         {
             nel_derp(44, _gettext('A comment is required to post.'));
         }
@@ -122,15 +155,6 @@ class PostData
         }
 
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
-        $post->changeData('post_as_staff',
-                (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false);
-
-        if (!$post->data('post_as_staff'))
-        {
-            $this->session->ignore(true);
-        }
-
-        $this->staffPost($post, $name);
 
         if (!nel_true_empty($post->data('comment')))
         {
@@ -191,89 +215,56 @@ class PostData
         return $post_item;
     }
 
-    public function staffPost(Post $post, ?string $name): void
+    public function staffPost(): bool
     {
-        if (!$post->data('post_as_staff'))
-        {
-            return;
-        }
+        $valid = (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false;
 
-        if (!$this->session->isActive())
+        if (!$valid || !$this->session->isActive())
         {
-            return;
+            return false;
         }
 
         $user = $this->session->user();
 
         if (!$user->checkPermission($this->domain, 'perm_post_as_staff'))
         {
-            return;
+            return false;
         }
 
-        $post->changeData('capcode', $this->capcode($name));
-        $post->changeData('name', $user->getData('display_name'));
-        $post->changeData('account_id', $user->id());
+        return true;
     }
 
-    public function posterName(string $text): string
+    public function tripcode(string $key): string
     {
-        $matches = array();
-        $name = '';
-
-        if (preg_match('/([^#]*)/u', $text, $matches) === 1)
-        {
-            $name = $matches[1];
-        }
-
-        return $name;
-    }
-
-    public function tripcode(string $text): string
-    {
-        $matches = array();
         $tripcode = '';
-
-        if (preg_match('/#((?:(?!##| ## ).)*)/u', $text, $matches) === 1)
-        {
-            $trip_key = $this->tripcodeCharsetConvert($matches[1], 'SHIFT_JIS', 'UTF-8');
-            $salt = substr($trip_key . 'H.', 1, 2);
-            $salt = preg_replace('#[^\.-z]#', '.', $salt);
-            $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
-            $tripcode = substr(crypt($trip_key, $salt), -10);
-        }
-
+        $trip_key = $this->tripcodeCharsetConvert($key, 'SHIFT_JIS', 'UTF-8');
+        $salt = substr($trip_key . 'H..', 1, 2);
+        $salt = preg_replace('/[^\.-z]/', '.', $salt);
+        $salt = strtr($salt, ':;<=>?@[\\]^_`', 'ABCDEFGabcdef');
+        $tripcode = substr(crypt($trip_key, $salt), -10);
         return $tripcode;
     }
 
-    public function secureTripcode(string $text): string
+    public function secureTripcode(string $key): string
     {
-        $matches = array();
         $secure_tripcode = '';
-
-        if (preg_match('/##((?:(?! ## ).)*)/u', $text, $matches) === 1)
-        {
-            $trip_key = $matches[1];
-            $trip_code = hash_hmac(nel_site_domain()->setting('secure_tripcode_algorithm'), $trip_key,
-                    NEL_TRIPCODE_PEPPER);
-            $trip_code = base64_encode(pack("H*", $trip_code));
-            $secure_tripcode = substr($trip_code, 2, 10);
-        }
-
+        $trip_code = hash_hmac(nel_site_domain()->setting('secure_tripcode_algorithm'), $key, NEL_TRIPCODE_PEPPER);
+        $trip_code = base64_encode(pack("H*", $trip_code));
+        $secure_tripcode = substr($trip_code, 2, 10);
         return $secure_tripcode;
     }
 
-    public function capcode(string $text): string
+    public function capcode(string $key): string
     {
         $capcode = '';
-        $matches = array();
 
-        if ($this->session->user()->checkPermission($this->domain, 'perm_custom_capcode') &&
-                preg_match('/ ## (.*)/u', $text, $matches) === 1)
+        if (!nel_true_empty($key) && $this->session->user()->checkPermission($this->domain, 'perm_custom_capcode'))
         {
-            $capcode = $matches[1];
+            $capcode = $key;
         }
         else
         {
+            // TODO: Maybe allow this to be customized?
             if ($this->session->user()->isSiteOwner())
             {
                 $capcode = 'Site Owner';
