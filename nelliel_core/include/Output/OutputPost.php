@@ -181,9 +181,11 @@ class OutputPost extends Output
             $modmode_headers['delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
 
-            $modmode_headers['can_global_by_ip'] = $session_user->checkPermission(nel_global_domain(), 'perm_delete_by_ip');
+            $modmode_headers['can_global_by_ip'] = $session_user->checkPermission(nel_global_domain(),
+                    'perm_delete_by_ip');
             $modmode_headers['global_delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-            '&actions=global-delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
+                    '&actions=global-delete-by-ip&content-id=' . $post_content_id->getIDString() .
+                    '&modmode=true&goback=true';
 
             $modmode_headers['can_ban_delete'] = $session_user->checkPermission($this->domain, 'perm_manage_bans') &&
                     $session_user->checkPermission($this->domain, 'perm_delete_posts');
@@ -224,7 +226,7 @@ class OutputPost extends Output
                 }
             }
 
-            $thread_headers['reply_to_url'] = $thread->getURL($this->session->inModmode($this->domain));
+            $thread_headers['reply_to_url'] = $thread->getURL($this->session->inModmode($this->domain) && !$this->write_mode);
 
             if ($this->session->inModmode($this->domain) && !$this->write_mode)
             {
@@ -235,9 +237,10 @@ class OutputPost extends Output
             }
 
             $first_posts_increments = json_decode($this->domain->setting('first_posts_increments'));
+            $first_posts_format = $thread->pageBasename() . $this->site_domain->setting('first_posts_filename_format');
 
             if (is_array($first_posts_increments) &&
-                    $thread->data('post_count') >= $this->domain->setting('first_posts_threshold'))
+                    $thread->data('post_count') > $this->domain->setting('first_posts_threshold'))
             {
                 foreach ($first_posts_increments as $increment)
                 {
@@ -245,7 +248,8 @@ class OutputPost extends Output
                     {
                         $options = array();
                         $options['first_posts_url'] = $this->domain->reference('page_web_path') .
-                                $thread->contentID()->threadID() . '/first_' . $increment . NEL_PAGE_EXT;
+                                $thread->contentID()->threadID() . '/' . sprintf($first_posts_format, $increment) .
+                                NEL_PAGE_EXT;
                         $options['first_posts_label'] = sprintf(_gettext('First %d Posts'), $increment);
                         $thread_headers['first_posts'][] = $options;
                     }
@@ -253,9 +257,10 @@ class OutputPost extends Output
             }
 
             $last_posts_increments = json_decode($this->domain->setting('last_posts_increments'));
+            $last_posts_format = $thread->pageBasename() . $this->site_domain->setting('last_posts_filename_format');
 
             if (is_array($last_posts_increments) &&
-                    $thread->data('post_count') >= $this->domain->setting('last_posts_threshold'))
+                    $thread->data('post_count') > $this->domain->setting('last_posts_threshold'))
             {
                 foreach ($last_posts_increments as $increment)
                 {
@@ -263,7 +268,8 @@ class OutputPost extends Output
                     {
                         $options = array();
                         $options['last_posts_url'] = $this->domain->reference('page_web_path') .
-                                $thread->contentID()->threadID() . '/last_' . $increment . NEL_PAGE_EXT;
+                                $thread->contentID()->threadID() . '/' . sprintf($last_posts_format, $increment) .
+                                NEL_PAGE_EXT;
                         $options['last_posts_label'] = sprintf(_gettext('Last %d Posts'), $increment);
                         $thread_headers['last_posts'][] = $options;
                     }

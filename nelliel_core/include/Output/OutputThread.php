@@ -132,8 +132,8 @@ class OutputThread extends Output
         $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
-        $generate_first_posts = $post_count >= $this->domain->setting('first_posts_threshold');
-        $generate_last_posts = $post_count >= $this->domain->setting('last_posts_threshold');
+        $generate_first_posts = $post_count > $this->domain->setting('first_posts_threshold');
+        $generate_last_posts = $post_count > $this->domain->setting('last_posts_threshold');
         $first_posts_increments = json_decode($this->domain->setting('first_posts_increments'));
         $first_posts_increments = is_array($first_posts_increments) ? $first_posts_increments : array();
         $last_posts_increments = json_decode($this->domain->setting('last_posts_increments'));
@@ -195,6 +195,7 @@ class OutputThread extends Output
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
+        $first_posts_format = $thread->pageBasename() . $this->site_domain->setting('first_posts_filename_format');
 
         foreach ($first_posts as $increment => $posts)
         {
@@ -204,10 +205,12 @@ class OutputThread extends Output
             if ($this->write_mode)
             {
                 $this->file_handler->writeFile(
-                        $this->domain->reference('page_path') . $thread_id . '/first_' . $increment . NEL_PAGE_EXT,
-                        $first_output, NEL_FILES_PERM, true);
+                        $this->domain->reference('page_path') . $thread_id . '/' .
+                        sprintf($first_posts_format, $increment) . NEL_PAGE_EXT, $first_output, NEL_FILES_PERM, true);
             }
         }
+
+        $last_posts_format = $thread->pageBasename() . $this->site_domain->setting('last_posts_filename_format');
 
         foreach ($last_posts as $increment => $posts)
         {
@@ -217,8 +220,8 @@ class OutputThread extends Output
             if ($this->write_mode)
             {
                 $this->file_handler->writeFile(
-                        $this->domain->reference('page_path') . $thread_id . '/last_' . $increment . NEL_PAGE_EXT,
-                        $last_output, NEL_FILES_PERM, true);
+                        $this->domain->reference('page_path') . $thread_id . '/' .
+                        sprintf($last_posts_format, $increment) . NEL_PAGE_EXT, $last_output, NEL_FILES_PERM, true);
             }
         }
 

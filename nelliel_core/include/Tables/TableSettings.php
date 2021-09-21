@@ -103,8 +103,12 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'min_time_before_ban_appeal', '', '3600', 'Minimum time before a ban can be appealed (seconds).', '{"type":"number"}']);
 
         // Filenames and Structure
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'index_filename_format', '', 'index%d', 'Index filename (sprintf).', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'thread_filename_format', '', '%d', 'Thread filename (sprintf).', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'index_filename_format', '', 'index%d', 'Basename for board index pages after the first. (sprintf)', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'first_index_filename_format', '', 'index', 'Basename for the first board index page. (sprintf)', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'thread_filename_format', '', '%d', 'Basename format for thread files. (sprintf)', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'slug_thread_filename_format', '', '%s', 'Basename format for thread files when using slugified URLs. (sprintf)', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'first_posts_filename_format', '', '-first%d', 'Format of string appended to basename for first posts.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'last_posts_filename_format', '', '-last%d', 'Format of string appended to basename for last posts.', '{"type":"text"}']);
 
         // Rendering
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'base_icon_set', '', 'icons-nelliel-basic', 'Base icon set.', '{"type":"text"}']);

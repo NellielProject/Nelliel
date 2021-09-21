@@ -369,11 +369,11 @@ class Thread
     public function pageBasename(): string
     {
         $page_filename = '';
-        $slug = $this->content_data['slug'] ?? '';
 
-        if ($this->domain->setting('slugify_thread_url') && !nel_true_empty($slug))
+        if ($this->domain->setting('slugify_thread_url') && !nel_true_empty($this->content_data['slug']))
         {
-            $page_filename = $this->content_data['slug'];
+            $page_filename = sprintf(nel_site_domain()->setting('slug_thread_filename_format'),
+                    $this->content_data['slug']);
         }
         else
         {

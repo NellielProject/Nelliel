@@ -8,7 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\API\JSON\PostJSON;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\DomainBoard;
-use Nelliel\Domains\DomainSite;
 use PDO;
 
 class OutputIndex extends Output
@@ -25,7 +24,6 @@ class OutputIndex extends Output
         $this->setupTimer();
         $this->setBodyTemplate('index/index');
         $page = 1;
-        $site_domain = new DomainSite($this->database);
         $page_title = $this->domain->reference('title');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
@@ -69,8 +67,9 @@ class OutputIndex extends Output
             $page_count = (int) ceil($thread_count / $this->domain->setting('threads_per_page'));
         }
 
-        $this->render_data['show_global_announcement'] = !nel_true_empty($site_domain->setting('global_announcement'));
-        $this->render_data['global_announcement_text'] = $site_domain->setting('global_announcement');
+        $this->render_data['show_global_announcement'] = !nel_true_empty(
+                $this->site_domain->setting('global_announcement'));
+        $this->render_data['global_announcement_text'] = $this->site_domain->setting('global_announcement');
 
         $blotter_limit = $this->site_domain->setting('small_blotter_limit');
         $query = 'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" DESC LIMIT ' . $blotter_limit;
@@ -91,8 +90,6 @@ class OutputIndex extends Output
             $this->render_data['blotter_url'] = NEL_BASE_WEB_PATH . 'blotter.html';
         }
 
-        $index_format = $site_domain->setting('index_filename_format');
-
         $this->render_data['index_navigation_top'] = $this->domain->setting('index_nav_top');
         $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;
@@ -106,11 +103,11 @@ class OutputIndex extends Output
         $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
-        $index_basename = 'index';
 
         if (empty($threads))
         {
-            $output = $this->doOutput($gen_data, $index_basename, $data_only);
+            $index_format = $this->site_domain->setting('first_index_filename_format');
+            $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $data_only);
 
             if (!$this->write_mode)
             {
@@ -129,13 +126,13 @@ class OutputIndex extends Output
             }
 
             $thread_input = array();
-            $index_basename = ($page == 1) ? 'index' : sprintf($index_format, ($page));
+            $index_format = ($page === 1) ? $this->site_domain->setting('first_index_filename_format') : $this->site_domain->setting(
+                    'index_filename_format');
             $prepared = $this->database->prepare(
                     'SELECT * FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
             $treeline = $this->database->executePreparedFetchAll($prepared, [$thread->contentID()->threadID()],
                     PDO::FETCH_ASSOC);
-
             if (empty($treeline))
             {
                 $threads_done ++;
@@ -189,8 +186,8 @@ class OutputIndex extends Output
 
             if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
             {
-                $this->render_data['pagination'] = $this->indexNavigation($page, $page_count, $index_format);
-                $output = $this->doOutput($gen_data, $index_basename, $data_only);
+                $this->render_data['pagination'] = $this->indexNavigation($page, $page_count);
+                $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $data_only);
 
                 if (!$this->write_mode)
                 {
@@ -206,14 +203,14 @@ class OutputIndex extends Output
         }
     }
 
-    private function indexNavigation(int $page, int $page_count, $page_format)
+    private function indexNavigation(int $page, int $page_count)
     {
         $pagination_object = new Pagination();
         $pagination_object->setPrevious(_gettext('Previous'));
         $pagination_object->setNext(_gettext('Next'));
-        $pagination_object->setPage('%d', $page_format . NEL_PAGE_EXT);
-        $pagination_object->setFirst('%d', 'index' . NEL_PAGE_EXT);
-        $pagination_object->setLast('%d', $page_format . NEL_PAGE_EXT);
+        $pagination_object->setPage('%d', $this->site_domain->setting('index_filename_format') . NEL_PAGE_EXT);
+        $pagination_object->setFirst('%d', $this->site_domain->setting('first_index_filename_format') . NEL_PAGE_EXT);
+        $pagination_object->setLast('%d', $this->site_domain->setting('index_filename_format') . NEL_PAGE_EXT);
         return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 

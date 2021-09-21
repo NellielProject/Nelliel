@@ -82,7 +82,11 @@ class TableSiteConfig extends Table
 
         // Filenames and Structure
         $this->insertDefaultRow(['index_filename_format', 'index%d']);
+        $this->insertDefaultRow(['first_index_filename_format', 'index']);
         $this->insertDefaultRow(['thread_filename_format', '%d']);
+        $this->insertDefaultRow(['slug_thread_filename_format', '%s']);
+        $this->insertDefaultRow(['first_posts_filename_format', '-first%d']);
+        $this->insertDefaultRow(['last_posts_filename_format', '-last%d']);
 
         // Rendering
         $this->insertDefaultRow(['base_icon_set', 'icons-nelliel-basic']);
