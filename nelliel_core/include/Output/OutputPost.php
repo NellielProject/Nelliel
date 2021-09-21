@@ -226,7 +226,8 @@ class OutputPost extends Output
                 }
             }
 
-            $thread_headers['reply_to_url'] = $thread->getURL($this->session->inModmode($this->domain) && !$this->write_mode);
+            $thread_headers['reply_to_url'] = $thread->getURL(
+                    $this->session->inModmode($this->domain) && !$this->write_mode);
 
             if ($this->session->inModmode($this->domain) && !$this->write_mode)
             {
@@ -348,49 +349,53 @@ class OutputPost extends Output
         $comment_data['nofollow_external_links'] = $this->site_domain->setting('nofollow_external_links');
         $comment = $post->data('comment');
 
+        if ($post->getMoar()->get('raw_html'))
+        {
+            $comment_data['comment_markdown'] = $comment;
+            return $comment_data;
+        }
+
         if (nel_true_empty($comment))
         {
             $comment_data['comment_markdown'] = $this->domain->setting('no_comment_text');
+            return $comment_data;
+        }
+
+        // TODO: Do cache check/fetch better
+        if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data']))
+        {
+            $comment_markdown = $post->getCache()['comment_data'];
         }
         else
         {
-            // TODO: Do cache check/fetch better
-            if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data']))
-            {
-                $comment_markdown = $post->getCache()['comment_data'];
-            }
-            else
-            {
-                $comment_markdown = $this->parseComment($comment, $post->contentID());
-            }
-
-            if ($gen_data['index_rendering'])
-            {
-                $comment_lines = $this->output_filter->newlinesToArray($comment_markdown);
-                $line_count = count($comment_lines);
-
-                if ($line_count > $this->domain->setting('max_index_comment_lines'))
-                {
-                    $comment_data['long_comment'] = true;
-                    $comment_data['long_comment_url'] = $thread->getURL($this->session->inModmode($this->domain)) . '#t' .
-                            $post->contentID()->threadID() . 'p' . $post->contentID()->postID();
-                    $comment_data['comment_lines'] = array();
-                    $i = 0;
-                    $reduced_lines = array();
-                    $limit = $this->domain->setting('max_index_comment_lines');
-
-                    for (; $i < $limit; $i ++)
-                    {
-                        $reduced_lines[] = $comment_lines[$i];
-                    }
-
-                    $comment_markdown = implode("\n", $reduced_lines);
-                }
-            }
-
-            $comment_data['comment_markdown'] = $comment_markdown;
+            $comment_markdown = $this->parseComment($comment, $post->contentID());
         }
 
+        if ($gen_data['index_rendering'])
+        {
+            $comment_lines = $this->output_filter->newlinesToArray($comment_markdown);
+            $line_count = count($comment_lines);
+
+            if ($line_count > $this->domain->setting('max_index_comment_lines'))
+            {
+                $comment_data['long_comment'] = true;
+                $comment_data['long_comment_url'] = $thread->getURL($this->session->inModmode($this->domain)) . '#t' .
+                        $post->contentID()->threadID() . 'p' . $post->contentID()->postID();
+                $comment_data['comment_lines'] = array();
+                $i = 0;
+                $reduced_lines = array();
+                $limit = $this->domain->setting('max_index_comment_lines');
+
+                for (; $i < $limit; $i ++)
+                {
+                    $reduced_lines[] = $comment_lines[$i];
+                }
+
+                $comment_markdown = implode("\n", $reduced_lines);
+            }
+        }
+
+        $comment_data['comment_markdown'] = $comment_markdown;
         return $comment_data;
     }
 

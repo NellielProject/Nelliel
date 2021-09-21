@@ -88,6 +88,13 @@ class PostData
             }
         }
 
+        $raw_html = $this->checkEntry($_POST['raw_html'], 'boolean');
+
+        if($raw_html && $this->session->user()->checkPermission($this->domain, 'perm_raw_html'))
+        {
+            $post->getMoar()->modify('raw_html', true);
+        }
+
         if ($staff_post)
         {
             $this->session->ignore(true);

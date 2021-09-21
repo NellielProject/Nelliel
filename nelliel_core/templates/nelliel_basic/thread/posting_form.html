@@ -72,14 +72,23 @@
 			(<span data-i18n="">Used for deletion</span>)
 		</label>
 		{{/ display_password_field }}
-		{{# is_staff }}
+		{{# flags }}
 		<label class="posting-form-row">
-			<span class="posting-form-label"></span>
+			<span class="posting-form-label" data-i18n="">Flags</span>
+			{{# post_as_staff }}
 			<input type="hidden" name="post_as_staff" value="0">
-			<input type="checkbox" name="post_as_staff" value="1" title="Post as staff" data-i18n-attributes="title" checked>
+			<input type="checkbox" name="post_as_staff" value="1">
 			<span data-i18n="">Post as staff</span>
+			<br>
+			{{/ post_as_staff }}
+			{{# raw_html }}
+			<input type="hidden" name="raw_html" value="0">
+			<input type="checkbox" name="raw_html" value="1">
+			<span data-i18n="">Raw HTML</span>
+			<br>
+			{{/ raw_html }}
 		</label>
-		{{/ is_staff }}
+		{{/ flags }}
 		{{# use_post_captcha }}
 		<div class="posting-form-row" data-jsevents="click">
 			<span class="posting-form-label" data-i18n="">CAPTCHA</span>

@@ -40,7 +40,7 @@ class Moar
         return json_encode($this->get($index));
     }
 
-    public function modify($index = null, $moar)
+    public function modify($index, $moar)
     {
         $this->moar[$index] = $moar;
     }

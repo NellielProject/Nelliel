@@ -103,5 +103,6 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_delete_posts', 'Delete posts and threads.']);
         $this->insertDefaultRow(['perm_view_unhashed_ip', 'View unhashed IP addresses.']);
         $this->insertDefaultRow(['perm_private_messages_use', 'View and send private messages.']);
+        $this->insertDefaultRow(['perm_raw_html', 'Can use raw HTML input.']);
     }
 }

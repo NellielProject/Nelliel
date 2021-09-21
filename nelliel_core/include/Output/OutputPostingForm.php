@@ -22,7 +22,6 @@ class OutputPostingForm extends Output
         $this->render_data['allow_embeds'] = true; // TODO: Change this when we get a setting
         $this->render_data['response_to'] = $response_to;
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
-        $this->render_data['is_staff'] = $this->session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['not_anonymous_minlength'] = $this->domain->setting('min_name_length');
         $this->render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
         $this->render_data['spam_target_minlength'] = $this->domain->setting('min_email_length');
@@ -51,6 +50,10 @@ class OutputPostingForm extends Output
         {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=new-post&board-id=' .
                     $this->domain->id() . '&modmode=true';
+            $this->render_data['flags']['post_as_staff'] = $this->session->user()->checkPermission($this->domain,
+                    'perm_post_as_staff');
+            $this->render_data['flags']['raw_html'] = $this->session->user()->checkPermission($this->domain,
+                    'perm_raw_html');
         }
         else
         {

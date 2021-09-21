@@ -110,6 +110,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_delete_posts', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_view_unhashed_ip', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_private_messages_use', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_raw_html', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_bans_view', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_bans_add', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_bans_modify', 1]);
@@ -161,6 +162,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_delete_posts', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_view_unhashed_ip', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_private_messages_use', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_raw_html', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_bans_view', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_bans_add', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_bans_modify', 1]);
@@ -212,6 +214,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_delete_posts', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_view_unhashed_ip', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_private_messages_use', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_raw_html', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_bans_view', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_bans_add', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_bans_modify', 0]);
@@ -263,6 +266,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_delete_posts', 1]);
         $this->insertDefaultRow(['JANITOR', 'perm_view_unhashed_ip', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_private_messages_use', 1]);
+        $this->insertDefaultRow(['JANITOR', 'perm_raw_html', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_bans_view', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_bans_add', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_bans_modify', 0]);
@@ -314,5 +318,6 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_delete_posts', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_view_unhashed_ip', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_private_messages_use', 1]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_raw_html', 0]);
     }
 }
