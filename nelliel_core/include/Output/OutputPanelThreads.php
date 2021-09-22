@@ -63,7 +63,7 @@ class OutputPanelThreads extends Output
             $thread_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $content_id = $thread->contentID();
-            $op_content_id = new ContentID('cid_' . $content_id->threadID() . '_' . $thread->firstPostID() . '_0');
+            $op_content_id = new ContentID('cid_' . $content_id->threadID() . '_' . $thread->firstPost->contentID()->postID() . '_0');
             $op_post = $op_content_id->getInstanceFromID($this->domain);
             $thread_info['thread_id'] = $content_id->threadID();
 

@@ -40,11 +40,16 @@ class Upload
 
         if ($load)
         {
-            $this->loadFromDatabase();
+            $this->loadFromDatabase(true);
         }
     }
 
-    public function loadFromDatabase()
+    public function exists(): bool
+    {
+        return $this->loadFromDatabase(false);
+    }
+
+    public function loadFromDatabase(bool $populate = true): bool
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('uploads_table') .
@@ -55,6 +60,11 @@ class Upload
         if (empty($result))
         {
             return false;
+        }
+
+        if (!$populate)
+        {
+            return true;
         }
 
         $column_types = $this->main_table->columnTypes();
@@ -69,7 +79,7 @@ class Upload
         return true;
     }
 
-    public function writeToDatabase()
+    public function writeToDatabase(): bool
     {
         if (!$this->isLoaded() || empty($this->content_id->orderID()))
         {

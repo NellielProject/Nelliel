@@ -68,7 +68,7 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
         return $this->writeFile($file, $output, NEL_FILES_PERM, true, NEL_DIRECTORY_PERM, $temp_move);
     }
 
-    public function createDirectory($directory, $chmod = NEL_DIRECTORY_PERM, bool $recursive = false)
+    public function createDirectory($directory, $chmod = NEL_DIRECTORY_PERM, bool $recursive = false): bool
     {
         clearstatcache();
 

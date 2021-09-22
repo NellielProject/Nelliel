@@ -14,6 +14,7 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Tables\TableThreads;
 use PDO;
+use Nelliel\FGSFDS;
 
 class Thread
 {
@@ -45,19 +46,19 @@ class Thread
 
         if ($load)
         {
-            $this->loadFromDatabase();
+            $this->loadFromDatabase(true);
         }
 
         $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
         $this->overboard = new Overboard($this->database);
     }
 
-    public function exists()
+    public function exists(): bool
     {
-        return !empty($this->content_data);
+        return $this->loadFromDatabase(false);
     }
 
-    public function loadFromDatabase()
+    public function loadFromDatabase(bool $populate = true): bool
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
@@ -66,6 +67,11 @@ class Thread
         if (empty($result))
         {
             return false;
+        }
+
+        if (!$populate)
+        {
+            return true;
         }
 
         $column_types = $this->main_table->columnTypes();
@@ -80,7 +86,7 @@ class Thread
         return true;
     }
 
-    public function writeToDatabase()
+    public function writeToDatabase(): bool
     {
         if (!$this->isLoaded() || empty($this->content_id->threadID()))
         {
@@ -161,7 +167,7 @@ class Thread
     public function verifyModifyPerms()
     {
         $post = new Post($this->content_id, $this->domain);
-        $post->content_id->changePostID($this->firstPostID());
+        $post->content_id->changePostID($this->firstPost()->contentID()->postID());
         return $post->verifyModifyPerms();
     }
 
@@ -202,10 +208,10 @@ class Thread
                 [$total_uploads, $file_count, $embed_count, $this->content_id->threadID()]);
     }
 
-    public function createDirectories()
+    public function createDirectories(): bool
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->pagePath(), NEL_DIRECTORY_PERM, true);
+        return $file_handler->createDirectory($this->pagePath(), NEL_DIRECTORY_PERM, true);
     }
 
     public function toggleSticky(): bool
@@ -268,51 +274,50 @@ class Thread
         }
     }
 
-    public function firstPostID(): int
+    public function firstPost(): Post
     {
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ? AND "op" = 1');
-        $first_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
-                PDO::FETCH_COLUMN);
-        return intval($first_post);
+        $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
+        $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
+        $post = $content_id->getInstanceFromID($this->domain);
+        return $post;
     }
 
-    public function lastPostID(): int
+    public function lastPost(): Post
     {
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
-        $last_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
-                PDO::FETCH_COLUMN);
-        return intval($last_post);
+        $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
+        $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
+        $post = $content_id->getInstanceFromID($this->domain);
+        return $post;
     }
 
-    public function lastBumpPostID(): int
+    public function lastBumpPost(): Post
     {
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
-        $last_bump_post = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
-                PDO::FETCH_COLUMN);
-        return intval($last_bump_post);
+        $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
+        $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
+        $post = $content_id->getInstanceFromID($this->domain);
+        return $post;
     }
 
-    public function getNthPostID(int $nth_post): int
+    public function getNthPost(int $nth_post): Post
     {
         $prepared = $this->database->prepare(
                 'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
         $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
                 PDO::FETCH_COLUMN);
-        $nth_post_index = $nth_post - 1;
-
-        if ($post_list === false || !isset($post_list[$nth_post_index]))
-        {
-            return 0;
-        }
-
-        return intval($post_list[$nth_post_index]);
+        $post_id = $post_list[$nth_post - 1] ?? 0;
+        $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
+        $post = $content_id->getInstanceFromID($this->domain);
+        return $post;
     }
 
     // Most of this is based on vichan's slugify
@@ -514,5 +519,45 @@ class Thread
     public function getJSON(): ThreadJSON
     {
         return $this->json;
+    }
+
+    public function addPost(Post $post): bool
+    {
+        if (!$this->isLoaded())
+        {
+            $this->loadFromDatabase();
+        }
+
+        $fgsfds = new FGSFDS();
+        $first_post = $this->firstPost();
+
+        // If no first post, assume this is a new thread
+        if (!$first_post->exists())
+        {
+            $this->createDirectories();
+            $this->changeData('thread_id', $post->contentID()->postID());
+            $this->changeData('last_bump_time', $post->data('post_time'));
+            $this->changeData('last_bump_time_milli', $post->data('post_time_milli'));
+            $this->changeData('last_update', $post->data('post_time'));
+            $this->changeData('last_update_milli', $post->data('post_time_milli'));
+            $this->changeData('post_count', 1);
+            $this->changeData('slug', $this->generateSlug($post));
+        }
+        else
+        {
+            $this->changeData('last_update', $post->data('post_time'));
+            $this->changeData('last_update_milli', $post->data('post_time_milli'));
+            $this->changeData('post_count', $this->data('post_count') + 1);
+
+            if ((!$this->domain->setting('limit_bump_count') ||
+                    $this->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
+                    !$this->data('permasage'))
+            {
+                $this->changeData('last_bump_time', $post->data('post_time'));
+                $this->changeData('last_bump_time_milli', $post->data('post_time_milli'));
+            }
+        }
+
+        return $this->writeToDatabase();
     }
 }

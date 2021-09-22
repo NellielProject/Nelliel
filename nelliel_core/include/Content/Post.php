@@ -44,13 +44,18 @@ class Post
 
         if ($load)
         {
-            $this->loadFromDatabase();
+            $this->loadFromDatabase(true);
         }
 
         $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
     }
 
-    public function loadFromDatabase()
+    public function exists(): bool
+    {
+        return $this->loadFromDatabase(false);
+    }
+
+    public function loadFromDatabase(bool $populate = true): bool
     {
         $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
@@ -59,6 +64,11 @@ class Post
         if (empty($result))
         {
             return false;
+        }
+
+        if (!$populate)
+        {
+            return true;
         }
 
         $result['ip_address'] = nel_convert_ip_from_storage($result['ip_address']);
@@ -74,7 +84,7 @@ class Post
         return true;
     }
 
-    public function writeToDatabase($temp_database = null)
+    public function writeToDatabase($temp_database = null): bool
     {
         if (!$this->isLoaded() || empty($this->content_id->postID()))
         {

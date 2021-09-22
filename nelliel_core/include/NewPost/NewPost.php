@@ -131,38 +131,9 @@ class NewPost
         $if_then->process('new_post');
 
         $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
-        $thread = new Thread(new ContentID(), $this->domain);
-
-        if ($post->data('op'))
-        {
-            $thread->contentID()->changeThreadID($post->contentID()->postID());
-            $thread->changeData('thread_id', $post->contentID()->postID());
-            $thread->changeData('last_bump_time', $time['time']);
-            $thread->changeData('last_bump_time_milli', $time['milli']);
-            $thread->changeData('last_update', $time['time']);
-            $thread->changeData('last_update_milli', $time['milli']);
-            $thread->changeData('post_count', 1);
-            $thread->changeData('slug', $thread->generateSlug($post));
-            $thread->writeToDatabase();
-            $thread->createDirectories();
-        }
-        else
-        {
-            $thread->contentID()->changeThreadID($post->data('parent_thread'));
-            $thread->loadFromDatabase();
-            $thread->changeData('last_update', $time['time']);
-            $thread->changeData('last_update_milli', $time['milli']);
-            $thread->changeData('post_count', $thread->data('post_count') + 1);
-
-            if ((!$this->domain->setting('limit_bump_count') ||
-                    $thread->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet(
-                            'sage') && !$thread->data('permasage'))
-            {
-                $thread->changeData('last_bump_time', $time['time']);
-                $thread->changeData('last_bump_time_milli', $time['milli']);
-            }
-        }
-
+        $thread_id = ($post->data('op')) ? $post->contentID()->postID() : $post->data('parent_thread');
+        $thread = new Thread(new ContentID(ContentID::createIDString($thread_id, 0, 0)), $this->domain);
+        $thread->addPost($post);
         $post->writeToDatabase();
         $this->addCites($post);
         $post->storeCache();
