@@ -160,6 +160,9 @@ class Post
         {
             $this->removeFromDatabase();
             $this->removeFromDisk();
+            $this->getParent()->updateCounts();
+            $this->getParent()->updateBumpTime();
+            $this->getParent()->updateUpdateTime();
         }
 
         $this->archive_prune->updateThreads();

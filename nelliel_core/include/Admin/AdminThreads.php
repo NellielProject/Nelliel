@@ -6,16 +6,16 @@ namespace Nelliel\Admin;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Redirect;
+use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
+use Nelliel\Output\OutputPanelBans;
 use Nelliel\Output\OutputPanelThreads;
 use PDO;
-use Nelliel\Domains\DomainBoard;
-use Nelliel\Regen;
-use Nelliel\Output\OutputPanelBans;
 
 class AdminThreads extends Admin
 {
@@ -158,6 +158,8 @@ class AdminThreads extends Admin
             $content_id->getInstanceFromID($this->domain)->toggleSticky();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
+
+        $this->outputMain(false);
     }
 
     public function lock()
@@ -170,6 +172,8 @@ class AdminThreads extends Admin
             $content_id->getInstanceFromID($this->domain)->toggleLock();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
+
+        $this->outputMain(false);
     }
 
     public function permasage()
@@ -182,6 +186,8 @@ class AdminThreads extends Admin
             $content_id->getInstanceFromID($this->domain)->toggleSage();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
+
+        $this->outputMain(false);
     }
 
     public function cyclic()
@@ -194,6 +200,8 @@ class AdminThreads extends Admin
             $content_id->getInstanceFromID($this->domain)->toggleCyclic();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
+
+        $this->outputMain(false);
     }
 
     private function regenThread(DomainBoard $domain, $thread_id, bool $regen_index = false)

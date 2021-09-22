@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
+use Nelliel\FGSFDS;
 use Nelliel\Moar;
 use Nelliel\Overboard;
 use Nelliel\API\JSON\ThreadJSON;
@@ -14,7 +15,6 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Tables\TableThreads;
 use PDO;
-use Nelliel\FGSFDS;
 
 class Thread
 {
@@ -208,6 +208,50 @@ class Thread
                 [$total_uploads, $file_count, $embed_count, $this->content_id->threadID()]);
     }
 
+    public function updateBumpTime(): void
+    {
+        if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
+                'max_bumps'))
+        {
+            return;
+        }
+
+        $last_bump = $this->lastBumpPost();
+
+        if (!$last_bump->exists())
+        {
+            return;
+        }
+
+        if ($last_bump->data('post_time') === $this->data('last_bump_time'))
+        {
+            $last_bump_lower = $last_bump->data('post_time_milli') < $this->data('last_bump_time_milli');
+        }
+        else
+        {
+            $last_bump_lower = $last_bump->data('post_time') < $this->data('last_bump_time');
+        }
+
+        if (!$this->data('permasage') || $last_bump_lower)
+        {
+            $this->changeData('last_bump_time', $last_bump->data('post_time'));
+            $this->changeData('last_bump_time_milli', $last_bump->data('post_time_milli'));
+            $this->writeToDatabase();
+        }
+    }
+
+    public function updateUpdateTime(): void
+    {
+        $last_post = $this->lastPost();
+
+        if ($last_post->exists())
+        {
+            $this->changeData('last_update_time', $last_post->data('post_time'));
+            $this->changeData('last_update_time_milli', $last_post->data('post_time_milli'));
+            $this->writeToDatabase();
+        }
+    }
+
     public function createDirectories(): bool
     {
         $file_handler = nel_utilities()->fileHandler();
@@ -235,7 +279,7 @@ class Thread
 
     public function toggleSage(): bool
     {
-        $this->changeData('sage', !$this->data('sage'));
+        $this->changeData('permasage', !$this->data('permasage'));
         return $this->writeToDatabase();
     }
 
@@ -550,8 +594,8 @@ class Thread
             $this->changeData('post_count', $this->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    $this->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
-                    !$this->data('permasage'))
+                    ($this->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
+                    !$this->data('permasage')))
             {
                 $this->changeData('last_bump_time', $post->data('post_time'));
                 $this->changeData('last_bump_time_milli', $post->data('post_time_milli'));
