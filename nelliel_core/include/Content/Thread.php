@@ -325,7 +325,7 @@ class Thread
                 '" WHERE "parent_thread" = ? AND "op" = 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
-        $post = $content_id->getInstanceFromID($this->domain);
+        $post = new Post($content_id, $this->domain, $this);
         return $post;
     }
 
@@ -336,7 +336,7 @@ class Thread
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
-        $post = $content_id->getInstanceFromID($this->domain);
+        $post = new Post($content_id, $this->domain, $this);
         return $post;
     }
 
@@ -347,7 +347,7 @@ class Thread
                 '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
-        $post = $content_id->getInstanceFromID($this->domain);
+        $post = new Post($content_id, $this->domain, $this);
         return $post;
     }
 
@@ -360,7 +360,7 @@ class Thread
                 PDO::FETCH_COLUMN);
         $post_id = $post_list[$nth_post - 1] ?? 0;
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
-        $post = $content_id->getInstanceFromID($this->domain);
+        $post = new Post($content_id, $this->domain, $this);
         return $post;
     }
 
