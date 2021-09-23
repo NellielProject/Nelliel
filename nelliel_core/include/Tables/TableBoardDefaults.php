@@ -153,6 +153,7 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['use_anonymous_names', '1', 0]);
         $this->insertDefaultRow(['anonymous_names', '["Anonymous"]', 0]);
         $this->insertDefaultRow(['always_noko', '0', 0]);
+        $this->insertDefaultRow(['automatic_gets', '[]', 0]);
 
         // Preview Generation
         $this->insertDefaultRow(['create_static_preview', '1', 0]);

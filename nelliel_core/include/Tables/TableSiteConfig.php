@@ -113,7 +113,7 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['session_length', '10800']);
         $this->insertDefaultRow(['store_unhashed_ip', '1']);
         $this->insertDefaultRow(['use_dnsbl', '0']);
-        $this->insertDefaultRow(['dnsbl_exceptions', '']);
+        $this->insertDefaultRow(['dnsbl_exceptions', '[]']);
 
         // CAPTCHA
         $this->insertDefaultRow(['captcha_width', '250']);

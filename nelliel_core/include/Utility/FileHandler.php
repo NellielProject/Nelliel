@@ -121,7 +121,7 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
         return $success;
     }
 
-    public function moveFile($file, $destination, bool $create_directories = false, $chmod = NEL_DIRECTORY_PERM)
+    public function moveFile($file, $destination, bool $create_directories = false, $chmod = NEL_DIRECTORY_PERM): bool
     {
         clearstatcache();
         $success = false;
@@ -145,8 +145,7 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
         return $success;
     }
 
-    public function moveDirectory($directory, $destination, bool $create_directories = false,
-            $dir_chmod = NEL_DIRECTORY_PERM)
+    public function moveDirectory($directory, $destination): bool
     {
         clearstatcache();
 
@@ -155,21 +154,7 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
             return false;
         }
 
-        rename($directory, $destination);
-
-        $files = glob($this->pathFileJoin($directory, '*'));
-
-        foreach ($files as $file)
-        {
-            if (is_dir($file))
-            {
-                $this->moveDirectory($file, null, true);
-            }
-            else
-            {
-                rename($this->pathFileJoin($directory, $file), $this->pathFileJoin($destination, $file));
-            }
-        }
+        return rename($directory, $destination);
     }
 
     public function eraserGun($path, $filename = null)

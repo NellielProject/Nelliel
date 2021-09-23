@@ -144,9 +144,6 @@ class NewPost
             $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()->threadID());
         }
 
-        $src_path = $this->domain->reference('src_path') . $post->contentID()->threadID() . '/' .
-                $post->contentID()->postID() . '/';
-
         clearstatcache();
 
         // Add preview, file data and move uploads to final location if applicable
@@ -155,10 +152,8 @@ class NewPost
             // Make previews and do final file processing
             if ($this->domain->setting('create_static_preview') || $this->domain->setting('create_animated_preview'))
             {
-                $preview_path = $this->domain->reference('preview_path') . $post->contentID()->threadID() . '/' .
-                        $post->contentID()->postID() . '/';
                 $gen_previews = new Previews($this->domain);
-                $uploads = $gen_previews->generate($uploads, $preview_path);
+                $uploads = $gen_previews->generate($uploads, $post->previewPath());
             }
 
             $order = 1;
@@ -174,9 +169,9 @@ class NewPost
 
                 if ($upload->data('category') !== 'embed')
                 {
-                    $file_handler->moveFile($upload->data('location'), $src_path . $upload->data('fullname'), false);
-                    chmod($src_path . $upload->data('fullname'), octdec(NEL_FILES_PERM));
-                    $upload->changeData('location', $src_path . $upload->data('fullname'));
+                    $file_handler->moveFile($upload->data('location'), $post->srcPath() . $upload->data('fullname'), false);
+                    chmod($post->srcPath() . $upload->data('fullname'), octdec(NEL_FILES_PERM));
+                    $upload->changeData('location', $post->srcPath() . $upload->data('fullname'));
                 }
 
                 $upload->writeToDatabase();
@@ -187,6 +182,13 @@ class NewPost
         $thread->writeToDatabase();
         $thread->updateCounts();
         $thread->loadFromDatabase(); // Make sure we have any expected defaults set
+        $automatic_gets = json_decode($this->domain->setting('automatic_gets'), true);
+
+        if (is_array($automatic_gets) && in_array($post->contentID()->postID(), $automatic_gets))
+        {
+            $get_thread = $post->convertToThread();
+            $get_thread->toggleSticky();
+        }
 
         if ($thread->data('cyclic') == 1)
         {

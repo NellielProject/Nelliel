@@ -58,8 +58,8 @@ class Regen
 
     public function index(Domain $domain)
     {
-        $output_thread = new OutputIndex($domain, true);
-        $output_thread->render(['thread_id' => 0], false);
+        $output_index = new OutputIndex($domain, true);
+        $output_index->render([], false);
         $output_catalog = new OutputCatalog($domain, true);
         $output_catalog->render([], false);
     }

@@ -134,8 +134,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'login_delay', '', '3', 'Delay between login attempts', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'session_length', '', '10800', 'Session timeout (seconds)', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'store_unhashed_ip', '', '1', 'Store unhashed IP addresses; (hashed IP will always be stored)', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_dnsbl', '', '', 'Use DNSBL to check incoming posts', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'dnsbl_exceptions', '', '', 'IPs that are exempt from DNSBL checks. Must be a JSON array.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_dnsbl', '', '0', 'Use DNSBL to check incoming posts', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'dnsbl_exceptions', '', '[]', 'IPs that are exempt from DNSBL checks. Enter as JSON array of strings.', '{"type":"text"}']);
 
         // CAPTCHA
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_width', '', '250', 'Width of CAPTCHA image', '{"type":"number"}']);
@@ -265,8 +265,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'trim_comment_newlines_start', '', '0', 'Trim extra newlines and whitespace at start of comment', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'trim_comment_newlines_end', '', '1', 'Trim extra newlines and whitespace at the end of comment', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_anonymous_names', '', '1', 'Use the list of anonymous names when name field is empty or disabled', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'anonymous_names', '', '["Anonymous"]', 'Names that can be randomly chosen when a name is not provided or forced anonymous is on. Must be a JSON array.', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'always_noko', '', '0', 'Always return to thread (noko) after making a post', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'anonymous_names', '', '["Anonymous"]', 'Names that can be randomly chosen when a name is not provided or forced anonymous is on. Enter as JSON array of strings.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'always_noko', '', '0', 'Always return to thread (noko) after making a post.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'automatic_gets', '', '[]', 'List of post numbers to be automatically stickied as a GET. Enter as JSON array of integers.', '{"type":"text"}']);
 
         // Preview Generation
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'create_static_preview', '', '1', 'Create a static image preview whenever possible.', '{"type":"checkbox"}']);
@@ -302,9 +303,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_index_comment_lines', '', '15', 'How many lines of comment to display when abbreviated.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_top', '', '1', 'Display index navigation at top of page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_bottom', '', '1', 'Display index navigation at bottom of page.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'first_posts_increments', '', '[100]', 'Increments for first X posts. Leave empty to disable. JSON array.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'first_posts_increments', '', '[100]', 'Increments for first X posts. Leave empty to disable. Enter as JSON array of integers.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'first_posts_threshold', '', '200', 'Minimum posts in a thread before generating first X posts.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'last_posts_increments', '', '[50,100,200,500]', 'Increments for last X posts. Leave empty to disable. JSON array.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'last_posts_increments', '', '[50,100,200,500]', 'Increments for last X posts. Leave empty to disable. Enter as JSON array of integers.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'last_posts_threshold', '', '100', 'Minimum posts in a thread before generating last X posts.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_catalog_link', '', '1', 'Show link for the catalog in the index navigation.', '{"type":"checkbox"}']);
 

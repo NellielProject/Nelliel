@@ -295,6 +295,8 @@ class Post
 
     public function convertToThread(): Thread
     {
+        $original_src_path = $this->srcPath();
+        $original_preview_path = $this->previewPath();
         $time = nel_get_microtime();
         $new_content_id = new ContentID();
         $new_content_id->changeThreadID($this->content_id->postID());
@@ -312,16 +314,23 @@ class Post
 
         foreach ($uploads as $upload)
         {
-            $upload->changeData('parent_thread', $new_thread->content_id->threadID());
+            $upload->changeData('parent_thread', $new_thread->contentID()->threadID());
             $upload->writeToDatabase();
         }
 
         $this->loadFromDatabase();
-        $this->content_id->changeThreadID($new_thread->content_id->threadID());
+        $this->content_id->changeThreadID($new_thread->contentID()->threadID());
         $this->changeData('parent_thread', $this->content_id->threadID());
         $this->changeData('op', 1);
+        $this->createDirectories();
+        $file_handler = nel_utilities()->fileHandler();
+        $file_handler->moveDirectory($original_src_path, $this->srcPath(), true);
+        $file_handler->moveDirectory($original_preview_path, $this->previewPath(), true);
         $this->writeToDatabase();
         $new_thread->updateCounts();
+        $this->getParent()->updateBumpTime();
+        $this->getParent()->updateCounts();
+        $this->getParent()->updateUpdateTime();
         $this->archive_prune->updateThreads();
         return $new_thread;
     }

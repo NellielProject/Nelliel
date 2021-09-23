@@ -133,6 +133,7 @@ class OutputIndex extends Output
                     '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
             $treeline = $this->database->executePreparedFetchAll($prepared, [$thread->contentID()->threadID()],
                     PDO::FETCH_ASSOC);
+
             if (empty($treeline))
             {
                 $threads_done ++;
@@ -184,7 +185,7 @@ class OutputIndex extends Output
             $threads_on_page ++;
             $threads_done ++;
 
-            if ($threads_on_page >= $this->domain->setting('threads_per_page') || $threads_done == $thread_count)
+            if ($threads_on_page >= $this->domain->setting('threads_per_page'))
             {
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count);
                 $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $data_only);
@@ -201,6 +202,10 @@ class OutputIndex extends Output
                 $page ++;
             }
         }
+
+        $this->render_data['pagination'] = $this->indexNavigation($page, $page_count);
+        $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $data_only);
+        return $output;
     }
 
     private function indexNavigation(int $page, int $page_count)
