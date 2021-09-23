@@ -172,10 +172,21 @@ class NewPost
                 $upload->contentID()->changeOrderID($order);
                 $upload->changeData('upload_order', $order);
 
+                if (!$this->domain->setting('store_exif_data') && is_array($upload->data('temp_exif')))
+                {
+                    $exif_data = json_encode($upload->data('temp_exif'));
+
+                    if (is_string($exif_data))
+                    {
+                        $upload->changeData('exif', $exif_data);
+                    }
+                }
+
                 if ($upload->data('category') !== 'embed')
                 {
                     $file_handler->moveFile($upload->data('location'), $src_path . $upload->data('fullname'), false);
                     chmod($src_path . $upload->data('fullname'), octdec(NEL_FILES_PERM));
+                    $upload->changeData('location', $src_path . $upload->data('fullname'));
                 }
 
                 $upload->writeToDatabase();

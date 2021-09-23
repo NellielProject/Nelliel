@@ -139,6 +139,23 @@ class Previews
         $has_animated = false;
         $static_preview_name = $this->staticPreviewName($file);
         $animated_preview_name = $this->animatedPreviewName($file);
+
+        $exif = $file->data('temp_exif');
+
+        if (is_array($exif))
+        {
+            $correct = $this->correctEXIFOrientation($exif);
+
+            if ($correct['flip_horizontal'])
+            {
+                $image->transverseimage();
+            }
+
+            $image->rotateimage('#000000', $correct['magick_rotate']);
+        }
+
+        $file->changeData('display_width', $image->getimagewidth());
+        $file->changeData('display_height', $image->getimageheight());
         $this->setPreviewDimensions($file);
 
         if ($this->generateStatic($file))
@@ -238,6 +255,23 @@ class Previews
         $has_animated = false;
         $static_preview_name = $this->staticPreviewName($file);
         $animated_preview_name = $this->animatedPreviewName($file);
+
+        $exif = $file->data('temp_exif');
+
+        if (is_array($exif))
+        {
+            $correct = $this->correctEXIFOrientation($exif);
+
+            if ($correct['flip_horizontal'])
+            {
+                $image->flopimage();
+            }
+
+            $image->rotateimage('#000000', $correct['magick_rotate']);
+        }
+
+        $file->changeData('display_width', $image->getimagewidth());
+        $file->changeData('display_height', $image->getimageheight());
         $this->setPreviewDimensions($file);
 
         if ($this->generateStatic($file))
@@ -323,6 +357,22 @@ class Previews
             return false;
         }
 
+        $exif = $file->data('temp_exif');
+
+        if (is_array($exif))
+        {
+            $correct = $this->correctEXIFOrientation($exif);
+
+            if ($correct['flip_horizontal'])
+            {
+                $image = imageflip($image, IMG_FLIP_HORIZONTAL);
+            }
+
+            $image = imagerotate($image, $correct['gd_rotate'], 0);
+        }
+
+        $file->changeData('display_width', imagesx($image));
+        $file->changeData('display_height', imagesy($image));
         $this->setPreviewDimensions($file);
         $preview = imagecreatetruecolor($file->data('preview_width'), $file->data('preview_height'));
 
@@ -363,6 +413,49 @@ class Previews
         }
 
         return $has_static;
+    }
+
+    private function correctEXIFOrientation(array $exif): array
+    {
+        $correct['flip_horizontal'] = false;
+        $correct['gd_rotate'] = 0;
+        $correct['magick_rotate'] = 0;
+
+        if (!empty($exif['IFD0']['Orientation']))
+        {
+            switch ($exif['IFD0']['Orientation'])
+            {
+                case 2:
+                    $correct['flip_horizontal'] = true;
+                    break;
+
+                case 4:
+                    $correct['flip_horizontal'] = true;
+
+                case 3:
+                    $correct['gd_rotate'] = 180;
+                    $correct['magick_rotate'] = 180;
+                    break;
+
+                case 5:
+                    $correct['flip_horizontal'] = true;
+
+                case 6:
+                    $correct['gd_rotate'] = 270;
+                    $correct['magick_rotate'] = 90;
+                    break;
+
+                case 7:
+                    $correct['flip_horizontal'] = true;
+
+                case 8:
+                    $correct['gd_rotate'] = 90;
+                    $correct['magick_rotate'] = 270;
+                    break;
+            }
+        }
+
+        return $correct;
     }
 
     private function setPreviewDimensions(Upload $file): void

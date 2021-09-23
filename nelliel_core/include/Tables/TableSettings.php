@@ -122,10 +122,10 @@ class TableSettings extends Table
 
         // Uploads
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', '{"GD":{"label":"GD"}, "ImageMagick":{"label":"ImageMagick"}, "GraphicsMagick":{"label":"GraphicsMagick"}}', 'GD', 'Preferred graphics handler', '{"type":"select"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'imagemagick_args', '', '%s -thumbnail %dx%d -quality %d %s', 'Arguments given to ImageMagick for creating still image previews.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'imagemagick_animated_args', '', '%s -coalesce -thumbnail %dx%d %s', 'Arguments given to ImageMagick for creating animated previews.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphicsmagick_args', '', '%s -thumbnail %dx%d -quality %d %s', 'Arguments given to GraphicsMagick for creating still image previews.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphicsmagick_animated_args', '', '%s -coalesce -thumbnail %dx%d %s', 'Arguments given to GraphicsMagick for creating animated previews.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'imagemagick_args', '', '%s --auto-orient -thumbnail %dx%d -quality %d %s', 'Arguments given to ImageMagick for creating still image previews.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'imagemagick_animated_args', '', '%s --auto-orient -coalesce -thumbnail %dx%d %s', 'Arguments given to ImageMagick for creating animated previews.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphicsmagick_args', '', '%s --auto-orient -thumbnail %dx%d -quality %d %s', 'Arguments given to GraphicsMagick for creating still image previews.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphicsmagick_animated_args', '', '%s --auto-orient -coalesce -thumbnail %dx%d %s', 'Arguments given to GraphicsMagick for creating animated previews.', '{"type":"text"}']);
 
         // Hashing and Security
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'post_password_algorithm', '', 'sha256', 'Post password hash algorithm', '{"type":"text"}']);

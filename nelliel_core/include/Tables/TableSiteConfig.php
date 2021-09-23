@@ -100,10 +100,10 @@ class TableSiteConfig extends Table
 
         // Uploads
         $this->insertDefaultRow(['graphics_handler', 'GD']);
-        $this->insertDefaultRow(['imagemagick_args', '%s -thumbnail %dx%d -quality %d %s']);
-        $this->insertDefaultRow(['imagemagick_animated_args', '%s -coalesce -thumbnail %dx%d %s']);
-        $this->insertDefaultRow(['graphicsmagick_args', '%s -thumbnail %dx%d -quality %d %s']);
-        $this->insertDefaultRow(['graphicsmagick_animated_args', '%s -coalesce -thumbnail %dx%d %s']);
+        $this->insertDefaultRow(['imagemagick_args', '%s --auto-orient -thumbnail %dx%d -quality %d %s']);
+        $this->insertDefaultRow(['imagemagick_animated_args', '%s --auto-orient -coalesce -thumbnail %dx%d %s']);
+        $this->insertDefaultRow(['graphicsmagick_args', '%s --auto-orient -thumbnail %dx%d -quality %d %s']);
+        $this->insertDefaultRow(['graphicsmagick_animated_args', '%s --auto-orient -coalesce -thumbnail %dx%d %s']);
 
         // Hashing and security
         $this->insertDefaultRow(['post_password_algorithm', 'sha256']);
