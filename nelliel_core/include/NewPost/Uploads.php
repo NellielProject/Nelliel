@@ -102,6 +102,17 @@ class Uploads
             nel_utilities()->fileHandler()->moveFile($tmp_name, $upload->data('location'), false);
             // Store this temporarily in case we need it for later processing
             $upload->changeData('temp_exif', @exif_read_data($upload->data('location'), '', true));
+
+            if ($this->domain->setting('store_exif_data') && is_array($upload->data('temp_exif')))
+            {
+                $exif_data = json_encode($upload->data('temp_exif'));
+
+                if (is_string($exif_data))
+                {
+                    $upload->changeData('exif', $exif_data);
+                }
+            }
+
             $this->removeEXIF($upload);
             $this->checkHashes($upload);
             $this->checkFileDuplicates($post, $upload);
