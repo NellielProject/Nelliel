@@ -34,7 +34,7 @@ class AuthUser extends AuthHandler
         }
 
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
@@ -43,7 +43,7 @@ class AuthUser extends AuthHandler
 
         $this->auth_data = $result;
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-        $result = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
+        $result = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         foreach ($result as $row)
         {

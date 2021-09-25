@@ -151,22 +151,13 @@ class Session
         $this->doing_login = true;
         $this->init(true);
         $login = new Login($this->authorization, $this->domain);
-        $login_data = $login->validate();
-
-        if (empty($login_data))
-        {
-            $this->terminate();
-            $this->failed = true;
-            nel_derp(223, _gettext('Login has not been validated. Cannot start session.'));
-        }
-
-        $_SESSION['user_id'] = $login_data['user_id'];
-        self::$user = $this->authorization->getUser($login_data['user_id']);
+        self::$user = $login->validate();
+        $_SESSION['user_id'] = self::$user->id();
         $log_event = new LogEvent(nel_site_domain());
         $log_event->changeContext('event_id', 'LOGIN_SUCCESS');
         $log_event->send(sprintf(_gettext("User %s logged in."), self::$user->id()));
-        $_SESSION['login_time'] = $login_data['login_time'];
-        $_SESSION['last_activity'] = $login_data['login_time'];
+        $_SESSION['login_time'] = self::$user->getData('last_login');
+        $_SESSION['last_activity'] = self::$user->getData('last_login');
         session_regenerate_id();
         $this->doing_login = false;
     }

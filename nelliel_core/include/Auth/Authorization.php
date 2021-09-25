@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Auth;
 
@@ -41,7 +40,7 @@ class Authorization
     public function userExists(string $user_id): bool
     {
         $user_id_lower = utf8_strtolower($user_id);
-        return isset(self::$users[$user_id_lower]) || $this->newUser($user_id, false, true)->loadFromDatabase();
+        return $this->userLoaded($user_id_lower) || $this->newUser($user_id_lower, false, true)->loadFromDatabase();
     }
 
     public function userLoaded(string $user_id): bool
@@ -54,9 +53,9 @@ class Authorization
     {
         $user_id_lower = utf8_strtolower($user_id);
 
-        if ($this->userExists($user_id))
+        if ($this->userExists($user_id_lower))
         {
-            if (!$this->userLoaded($user_id))
+            if (!$this->userLoaded($user_id_lower))
             {
                 $this->newUser($user_id);
             }
@@ -170,7 +169,10 @@ class Authorization
     {
         foreach (self::$users as $user)
         {
-            $user->writeToDatabase();
+            if ($user->changed())
+            {
+                $user->writeToDatabase();
+            }
         }
     }
 
@@ -178,7 +180,10 @@ class Authorization
     {
         foreach (self::$roles as $role)
         {
-            $role->writeToDatabase();
+            if ($role->changed())
+            {
+                $role->writeToDatabase();
+            }
         }
     }
 }

@@ -106,7 +106,7 @@ Error 214: Install ID doesn't match. (Account/Register.php)
 Error 220: Secure session only. (Account/Session.php)  
 Error 221: Expired session. (Account/Session.php)  
 Error 222: Inactive user. (Account/Session.php)  
-Error 223: Login not validated. (Account/Session.php)  
+
 Error 224: Must be logged in. (Account/Session.php)  
 
 Error 230: User does not exist. (Admin/AdminUsers.php)  

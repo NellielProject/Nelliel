@@ -33,7 +33,7 @@ class AuthRole extends AuthHandler
         }
 
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
