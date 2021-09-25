@@ -83,6 +83,7 @@ td {
 }
 
 .site-navigation {
+	clear: right;
 	float: right;
 	padding: 0.1em;
 }

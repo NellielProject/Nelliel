@@ -42,6 +42,7 @@ class OutputNavigation extends Output
         $this->renderSetup();
         $render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $render_data['board_area'] = $this->domain->id() !== Domain::SITE;
+        $render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account&section=login';
         $render_data['logout_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account&section=logout';
         $render_data['site_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-main-panel';
         $render_data['board_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

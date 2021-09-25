@@ -6,8 +6,6 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
-use PDO;
-use Nelliel\Auth\Authorization;
 
 class OutputPanelMain extends Output
 {
@@ -22,7 +20,6 @@ class OutputPanelMain extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/main');
-        $authorization = new Authorization($this->database);
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -30,80 +27,6 @@ class OutputPanelMain extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-        $user_roles = $this->database->executePreparedFetchAll($prepared, [$this->session->user()->id()],
-                PDO::FETCH_ASSOC);
-        $boards = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-
-        $roles_list = array();
-        $roles = $this->database->executeFetchAll('SELECT "role_id", "role_title" FROM "' . NEL_ROLES_TABLE . '"',
-                PDO::FETCH_ASSOC);
-
-        foreach ($roles as $role)
-        {
-            $roles_list[$role['role_id']]['role_title'] = $role['role_title'];
-        }
-
-        $user_roles_list = array();
-        $has_global = false;
-        $global_role_id = '';
-        $global_role_title = '';
-
-        foreach ($user_roles as $user_role)
-        {
-            $user_roles_list[$user_role['domain_id']]['role_id'] = $user_role['role_id'];
-
-            if (isset($roles_list[$user_role['role_id']]))
-            {
-                $user_roles_list[$user_role['domain_id']]['role_title'] = $roles_list[$user_role['role_id']]['role_title'];
-            }
-
-            if ($user_role['domain_id'] === Domain::GLOBAL)
-            {
-                $has_global = true;
-                $global_role_id = $user_role['role_id'];
-                $global_role_title = $roles_list[$user_role['role_id']]['role_title'];
-            }
-        }
-
-        if (is_array($boards))
-        {
-            foreach ($boards as $board)
-            {
-                if ($board['board_id'] === Domain::SITE)
-                {
-                    continue;
-                }
-
-                if (!isset($user_roles_list[$board['board_id']]) && !$this->session->user()->isSiteOwner() &&
-                        !$has_global)
-                {
-                    continue;
-                }
-
-                $board_data['board_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                        'module=admin&section=board-main-panel&board-id=' . $board['board_id'];
-                $board_data['board_id'] = '/' . $board['board_id'] . '/';
-                $global_level_lower = $authorization->roleLevelCheck($global_role_id,
-                        $user_roles_list[$board['board_id']]['role_title'] ?? '');
-
-                if ($this->session->user()->isSiteOwner())
-                {
-                    $board_data['board_role'] = _gettext('Site Owner');
-                }
-                else if (!isset($user_roles_list[$board['board_id']]) || !$global_level_lower)
-                {
-                    $board_data['board_role'] = ($has_global) ? $global_role_title : '';
-                }
-                else
-                {
-                    $board_data['board_role'] = $user_roles_list[$board['board_id']]['role_title'];
-                }
-
-                $this->render_data['board_list'][] = $board_data;
-            }
-        }
-
         $this->render_data['module_manage_boards'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_boards');
         $this->render_data['manage_boards_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=manage-boards';
@@ -156,8 +79,7 @@ class OutputPanelMain extends Output
                 'module=regen&actions=overboard-all-pages';
         $this->render_data['regen_site_pages'] = $this->session->user()->checkPermission($this->domain,
                 'perm_regen_pages');
-        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-        'module=regen&actions=site-all-pages';
+        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=site-all-pages';
         $this->render_data['regen_site_caches'] = $this->session->user()->checkPermission($this->domain,
                 'perm_regen_cache');
         $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=site-all-caches';
