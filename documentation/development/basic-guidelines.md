@@ -1,8 +1,6 @@
 # Nelliel Development Standards and Guidelines
 
 A guide to the basic development standards of Nelliel. Any contributions to the core codebase or official plugins must follow these guidelines.
- 
-Developers of plugins or other unofficial contributions are not required to follow this guide.
 
 ## Code Conventions
 PHP code follows [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR-2](https://www.php-fig.org/psr/psr-2/), [PSR-3](https://www.php-fig.org/psr/psr-3/) and [PSR-4](https://www.php-fig.org/psr/psr-4/) standards.
