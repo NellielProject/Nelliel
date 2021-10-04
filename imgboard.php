@@ -1,5 +1,5 @@
 <?php
-define('NELLIEL_VERSION', 'v0.9.23'); // Version
+define('NELLIEL_VERSION', 'v0.9.24'); // Version
 define('NELLIEL_COPYRIGHT', '2010-2021 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('NELLIEL_PHP_MINIMUM', '7.2.0'); // Minimum PHP version
