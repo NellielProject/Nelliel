@@ -6,20 +6,18 @@ namespace Nelliel\Auth;
 use PDO;
 use Nelliel\NellielPDO;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class AuthRole extends AuthHandler
 {
-    public $permissions = array();
+    public $permissions;
 
     function __construct(NellielPDO $database, string $role_id, bool $db_load = true)
     {
         $this->database = $database;
         $this->empty = nel_true_empty($role_id);
         $this->auth_id = $role_id;
+        $this->permissions = new AuthPermissions($this->database, $this->id());
 
         if ($db_load)
         {
@@ -29,8 +27,13 @@ class AuthRole extends AuthHandler
 
     public function loadFromDatabase(): bool
     {
+        if($this->empty)
+        {
+            return false;
+        }
+
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
@@ -38,7 +41,6 @@ class AuthRole extends AuthHandler
         }
 
         $this->auth_data = $result;
-        $this->permissions = new AuthPermissions($this->database, $this->id());
         $this->permissions->loadFromDatabase();
         return true;
     }

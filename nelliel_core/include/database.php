@@ -1,16 +1,15 @@
 <?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use Nelliel\NellielPDO;
 
 //
 // Access point for database connections.
 // Database connections can be added, retrieved or removed using the hash table ID ($input).
 //
-function nel_database($input = null, $wut_do = null)
+function nel_database($input = null, $wut_do = null): ?NellielPDO
 {
-    // TODO: Actually create/remove/handle secondary databases
+    // TODO: Actually handle secondary databases
     static $databases = array();
     static $default_database_key = null;
 
@@ -53,22 +52,31 @@ function nel_database($input = null, $wut_do = null)
         }
     }
 
-    return false;
+    return null;
 }
 
 //
 // Initialize new database connections using the NellielPDO class.
 //
-function nel_new_database_connection($dsn, $username = null, $password = null, $options = array())
+function nel_new_database_connection(string $dsn, ?string $username = null, ?string $password = null,
+        ?array $options = null): NellielPDO
 {
-    $connection = new \Nelliel\NellielPDO($dsn, $username, $password, $options);
-    return $connection;
+    // Just in case things go wrong we want to avoid sensitive info leaking
+    try
+    {
+        $connection = new NellielPDO($dsn, $username, $password, $options);
+        return $connection;
+    }
+    catch (PDOException $exception)
+    {
+        nel_derp(1, _gettext('Error connecting to database.'));
+    }
 }
 
 //
 // Initialize the default/main database connection here.
 //
-function nel_default_database_connection()
+function nel_default_database_connection(): NellielPDO
 {
     $options = array(PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false,
         PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION);
@@ -83,16 +91,18 @@ function nel_default_database_connection()
             break;
 
         case 'MARIADB':
-            $dsn = 'mysql:host=' . NEL_MARIADB_HOST . ';port=' . NEL_MARIADB_PORT . ';dbname=' . NEL_MARIADB_DB . ';charset=' .
-                    NEL_MARIADB_ENCODING . ';';
+            $dsn = 'mysql:host=' . NEL_MARIADB_HOST . ';port=' . NEL_MARIADB_PORT . ';dbname=' . NEL_MARIADB_DB .
+                    ';charset=' . NEL_MARIADB_ENCODING . ';';
             $connection = nel_new_database_connection($dsn, NEL_MARIADB_USER, NEL_MARIADB_PASS, $options);
             $connection->exec("SET SESSION sql_mode='ANSI';");
             break;
 
         case 'POSTGRESQL':
-            $dsn = 'pgsql:host=' . NEL_POSTGRESQL_HOST . ';port=' . NEL_POSTGRESQL_PORT . ';dbname=' . NEL_POSTGRESQL_DB . ';';
+            $dsn = 'pgsql:host=' . NEL_POSTGRESQL_HOST . ';port=' . NEL_POSTGRESQL_PORT . ';dbname=' . NEL_POSTGRESQL_DB .
+                    ';';
             $connection = nel_new_database_connection($dsn, NEL_POSTGRESQL_USER, NEL_POSTGRESQL_PASS, $options);
-            $connection->exec("SET search_path TO " . NEL_POSTGRESQL_SCHEMA . "; SET names '" . NEL_POSTGRESQL_ENCODING . "';");
+            $connection->exec(
+                    "SET search_path TO " . NEL_POSTGRESQL_SCHEMA . "; SET names '" . NEL_POSTGRESQL_ENCODING . "';");
             break;
 
         case 'SQLITE':
@@ -111,7 +121,7 @@ function nel_default_database_connection()
             break;
 
         default:
-            return false;
+            nel_derp(2, _gettext('Invalid database type given in config.'));
     }
 
     $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);

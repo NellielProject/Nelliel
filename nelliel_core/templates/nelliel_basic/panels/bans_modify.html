@@ -2,25 +2,25 @@
 	<div class="display-table">
 		<div class="display-row">
 			<span class="display-cell">
-				<span data-i18n="gettext">Ban set by:</span>
+				<span data-i18n="">Ban set by:</span>
 				<span id="ban-name-display">{{ creator }}</span>
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<span data-i18n="gettext">Time set:</span>
+				<span data-i18n="">Time set:</span>
 				<span>{{ start_time_formatted }}</span>
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<span data-i18n="gettext">Expires on:</span>
+				<span data-i18n="">Expires on:</span>
 				<span>{{ expiration }}</span>
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="ban_ip" data-i18n="gettext">Enter an IP address, hash or range:</label>
+				<label for="ban_ip" data-i18n="">Enter an IP address, hash or range:</label>
 			</span>
 			<span class="display-cell">
 				<input id="ban_ip" type="text" name="ban_ip" value="{{ ban_ip }}">
@@ -28,7 +28,7 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="ban_board" data-i18n="gettext">Apply ban to this board:</label>
+				<label for="ban_board" data-i18n="">Apply ban to this board:</label>
 			</span>
 			<span class="display-cell">
 				<input id="ban_board"  type="text" name="ban_board" value="{{ ban_board }}">
@@ -36,26 +36,26 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<input type="hidden" name="ban_all_boards[default]" value="0">
-				<input id="ban_all_boards" type="checkbox" name="ban_all_boards[value]" value="1" {{ all_boards }}>
-				<label for="ban_all_boards" data-i18n="gettext">Ban from all boards. This overrides any specific boards.</label>
+				<input type="hidden" name="ban_global[default]" value="0">
+				<input id="ban_global" type="checkbox" name="ban_global[value]" value="1" {{ global }}>
+				<label for="ban_global" data-i18n="">Ban from all boards. This overrides any specific boards.</label>
 			</span>
 		</div>
 		<div class="display-row">
-			<span class="display-cell" data-i18n="gettext">Ban length:</span>
+			<span class="display-cell" data-i18n="">Ban length:</span>
 			<span class="display-cell">
-				<label for="ban_time_years" data-i18n="gettext">Years</label>
+				<label for="ban_time_years" data-i18n="">Years</label>
 				<input id="ban_time_years" type="number" name="ban_time_years" size="6" value="{{ years }}">&nbsp;&nbsp;&nbsp;
-				<label for="ban_time_days" data-i18n="gettext">Days</label>
+				<label for="ban_time_days" data-i18n="">Days</label>
 				<input id="ban_time_days" type="number" name="ban_time_days" size="6" value="{{ days }}">&nbsp;&nbsp;&nbsp;
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell"></span>
 			<span class="display-cell">
-				<label for="ban_time_hours" data-i18n="gettext">Hours</label>
+				<label for="ban_time_hours" data-i18n="">Hours</label>
 				<input id="ban_time_hours"  type="number" name="ban_time_hours" size="6" value="{{ hours }}">&nbsp;&nbsp;&nbsp;
-				<label for="ban_time_minutes" data-i18n="gettext">Minutes</label>
+				<label for="ban_time_minutes" data-i18n="">Minutes</label>
 				<input id="ban_time_minutes"  type="number" name="ban_time_minutes" size="6" value="{{ minutes }}">&nbsp;&nbsp;&nbsp;
 			</span>
 		</div>
@@ -68,7 +68,7 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="ban_reason" data-i18n="gettext">Ban reason:</label>
+				<label for="ban_reason" data-i18n="">Ban reason:</label>
 			</span>
 			<span class="display-cell">
 				<textarea id="ban_reason" name="ban_reason" cols="25" rows="3">{{ ban_reason }}</textarea>
@@ -76,13 +76,13 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<span data-i18n="gettext">Appeal</span>
+				<span data-i18n="">Appeal</span>
 			</span>
 			<span class="display-cell">{{ appeal }}</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="ban-appeal-response" data-i18n="gettext">Appeal Response:</label>
+				<label for="ban-appeal-response" data-i18n="">Appeal Response:</label>
 			</span>
 			<span class="display-cell">
 				<textarea id="ban-appeal-response" name="ban_appeal_response" cols="25" rows="3">{{ appeal_response }}</textarea>
@@ -90,20 +90,20 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="address_type" data-i18n="gettext">Appeal status:</label>
+				<label for="address_type" data-i18n="">Appeal status:</label>
 			</span>
 			<span class="display-cell">
 				<select id="ban_appeal_status" name="ban_appeal_status">
-					<option value="0" data-i18n="gettext" {{ appeal_status_0 }}>No appeal received</option>
-					<option value="1" data-i18n="gettext" {{ appeal_status_1 }}>Appeal received; not reviewed</option>
-					<option value="2" data-i18n="gettext" {{ appeal_status_2 }}>Appeal denied</option>
-					<option value="3" data-i18n="gettext" {{ appeal_status_3 }}>Appeal accepted; ban modified</option>
+					<option value="0" data-i18n="" {{ appeal_status_0 }}>No appeal received</option>
+					<option value="1" data-i18n="" {{ appeal_status_1 }}>Appeal received; not reviewed</option>
+					<option value="2" data-i18n="" {{ appeal_status_2 }}>Appeal denied</option>
+					<option value="3" data-i18n="" {{ appeal_status_3 }}>Appeal accepted; ban modified</option>
 				</select>
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<input type="submit" value="Update Ban" data-i18n-attributes="gettext|value">
+				<input type="submit" value="Update Ban" data-i18n-attributes="value">
 			</span>
 		</div>
 	</div>

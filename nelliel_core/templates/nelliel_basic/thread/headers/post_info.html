@@ -1,10 +1,13 @@
 {{# post_headers }}
 <span class="{{ op_reply }} post-header-info">
+	{{^ hide_post_select }}
+	<input type="checkbox" name="{{ post_content_id }}" value="action">
+	{{/ hide_post_select }}
 	<span class="{{ op_reply }} subject">{{ subject }}</span>
 	{{> thread/pieces/poster_name }}{{> thread/pieces/tripline }}
 	<span class="post-time">{{ post_time }}</span>
 	{{> thread/pieces/poster_id }}
-	<a href="{{ post_number_url }}" class="post-number-link" data-i18n="gettext">No.</a>
+	<a href="{{ post_number_url }}" class="post-number-link" data-i18n="">No.</a>
 	<a href="{{ post_number_url_cite }}" class="post-number-link">{{ post_number }}</a>
 	<span>({{ in_thread_number }})</span>
 	{{> thread/pieces/backlink }}

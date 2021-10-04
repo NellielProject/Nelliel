@@ -1,20 +1,20 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Domains;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\FrontEndData;
+use Nelliel\FrontEnd\FrontEndData;
+use Nelliel\NellielCacheInterface;
 use Nelliel\NellielPDO;
+use Nelliel\Language\Language;
+use Nelliel\Language\Translator;
 
-abstract class Domain
+abstract class Domain implements NellielCacheInterface
 {
     const SITE = '_site_';
+    const GLOBAL = '_global_';
     protected $domain_id;
     protected $settings;
     protected $references;
@@ -40,8 +40,8 @@ abstract class Domain
         $this->front_end_data = new FrontEndData($this->database);
         $this->file_handler = nel_utilities()->fileHandler();
         $this->cache_handler = nel_utilities()->cacheHandler();
-        $this->translator = new \Nelliel\Language\Translator($this);
-        $this->language = new \Nelliel\Language\Language();
+        $this->translator = new Translator($this);
+        $this->language = new Language();
     }
 
     public function database(NellielPDO $new_database = null)
@@ -153,5 +153,21 @@ abstract class Domain
     {
         $this->loadSettings();
         $this->loadReferences();
+    }
+
+    public static function getDomainFromID(string $id, NellielPDO $database): Domain
+    {
+        if ($id === Domain::SITE)
+        {
+            return new DomainSite($database);
+        }
+        else if ($id === Domain::GLOBAL)
+        {
+            return new DomainGlobal($database);
+        }
+        else
+        {
+            return new DomainBoard($id, $database);
+        }
     }
 }

@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class FileHandler
 {
@@ -71,7 +68,7 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
         return $this->writeFile($file, $output, NEL_FILES_PERM, true, NEL_DIRECTORY_PERM, $temp_move);
     }
 
-    public function createDirectory($directory, $chmod = NEL_DIRECTORY_PERM, bool $recursive = false)
+    public function createDirectory($directory, $chmod = NEL_DIRECTORY_PERM, bool $recursive = false): bool
     {
         clearstatcache();
 
@@ -124,7 +121,7 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
         return $success;
     }
 
-    public function moveFile($file, $destination, bool $create_directories = false, $chmod = NEL_DIRECTORY_PERM)
+    public function moveFile($file, $destination, bool $create_directories = false, $chmod = NEL_DIRECTORY_PERM): bool
     {
         clearstatcache();
         $success = false;
@@ -148,8 +145,7 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
         return $success;
     }
 
-    public function moveDirectory($directory, $destination, bool $create_directories = false,
-            $dir_chmod = NEL_DIRECTORY_PERM)
+    public function moveDirectory($directory, $destination): bool
     {
         clearstatcache();
 
@@ -158,21 +154,7 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
             return false;
         }
 
-        rename($directory, $destination);
-
-        $files = glob($this->pathFileJoin($directory, '*'));
-
-        foreach ($files as $file)
-        {
-            if (is_dir($file))
-            {
-                $this->moveDirectory($file, null, true);
-            }
-            else
-            {
-                rename($this->pathFileJoin($directory, $file), $this->pathFileJoin($destination, $file));
-            }
-        }
+        return rename($directory, $destination);
     }
 
     public function eraserGun($path, $filename = null)
@@ -224,36 +206,6 @@ if(!defined("NELLIEL_VERSION")){die("NOPE.AVI");}
             $separator = '';
         }
         return $path . $separator . $filename;
-    }
-
-    public function filterFilename($filename)
-    {
-        $filtered = preg_replace('#[[:cntrl:]]#u', '', $filename); // Filter out the ASCII control characters
-        $filtered = preg_replace('#[^\PC\s\p{Cn}]#u', '', $filename); // Filter out invisible Unicode characters
-
-        // https://msdn.microsoft.com/en_US/library/aa365247(VS.85).aspx
-        $filtered = preg_replace('#[<>:"\/\\|\?\*]#u', '_', $filtered); // Reserved characters for Windows
-        $filtered = preg_replace('#(com[1-9]|lpt[1-9]|con|prn|aux|nul)\.?[a-zA-Z0-9]*#ui', '', $filtered); // Reserved names for Windows
-        $cleared = false;
-
-        while (!$cleared)
-        {
-            if (preg_match('#.php#ui', $filtered) > 0)
-            {
-                $filtered = preg_replace('#.php#ui', '', $filtered);
-            }
-            else
-            {
-                $cleared = true;
-            }
-        }
-
-        if ($filtered === '')
-        {
-            nel_derp(140, _gettext('Filename was empty or was purged by filter.'));
-        }
-
-        return $filtered;
     }
 
     public function recursiveFileList($path, int $recursion_depth = -1, bool $include_directories = false,

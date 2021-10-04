@@ -1,14 +1,9 @@
 <?php
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\NellielPDO;
 use Psr\Log\AbstractLogger;
@@ -38,7 +33,7 @@ class NellielLogger extends AbstractLogger
         $data['domain'] = $context['domain'] ?? '';
         $data['level'] = $this->level_map[$level];
         $data['event_id'] = $context['event_id'] ?? 'UNKNOWN';
-        $data['originator'] = $context['originator'] ?? null;
+        $data['originator'] = $context['originator'] ?? '';
         $data['ip_address'] = $context['ip_address'] ?? null;
         $data['hashed_ip_address'] = $context['hashed_ip_address'] ?? null;
         $data['time'] = time();
@@ -58,8 +53,7 @@ class NellielLogger extends AbstractLogger
         $prepared->bindValue(':event_id', $data['event_id'], PDO::PARAM_STR);
         $prepared->bindValue(':originator', $data['originator'], PDO::PARAM_STR);
         $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($data['ip_address']), PDO::PARAM_LOB);
-        $prepared->bindValue(':hashed_ip_address', nel_prepare_hash_for_storage($data['hashed_ip_address']),
-                PDO::PARAM_LOB);
+        $prepared->bindValue(':hashed_ip_address', $data['hashed_ip_address'], PDO::PARAM_STR);
         $prepared->bindValue(':time', $data['time'], PDO::PARAM_INT);
         $prepared->bindValue(':message', $data['message'], PDO::PARAM_STR);
         $this->database->executePrepared($prepared);

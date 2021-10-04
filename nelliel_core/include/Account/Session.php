@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Nelliel\Account;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use Nelliel\LogEvent;
@@ -144,7 +141,7 @@ class Session
         }
 
         $this->terminate();
-        $output_login = new \Nelliel\Render\OutputLoginPage($this->domain, false);
+        $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
         $output_login->render([], false);
         nel_clean_exit(false);
     }
@@ -153,23 +150,14 @@ class Session
     {
         $this->doing_login = true;
         $this->init(true);
-        $login = new \Nelliel\Account\Login($this->authorization, $this->domain);
-        $login_data = $login->validate();
-
-        if (empty($login_data))
-        {
-            $this->terminate();
-            $this->failed = true;
-            nel_derp(223, _gettext('Login has not been validated. Cannot start session.'));
-        }
-
-        $_SESSION['user_id'] = $login_data['user_id'];
-        self::$user = $this->authorization->getUser($login_data['user_id']);
+        $login = new Login($this->authorization, $this->domain);
+        self::$user = $login->validate();
+        $_SESSION['user_id'] = self::$user->id();
         $log_event = new LogEvent(nel_site_domain());
         $log_event->changeContext('event_id', 'LOGIN_SUCCESS');
         $log_event->send(sprintf(_gettext("User %s logged in."), self::$user->id()));
-        $_SESSION['login_time'] = $login_data['login_time'];
-        $_SESSION['last_activity'] = $login_data['login_time'];
+        $_SESSION['login_time'] = self::$user->getData('last_login');
+        $_SESSION['last_activity'] = self::$user->getData('last_login');
         session_regenerate_id();
         $this->doing_login = false;
     }

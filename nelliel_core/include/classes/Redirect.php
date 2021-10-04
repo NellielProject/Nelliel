@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Nelliel;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\DomainSite;
 
@@ -48,7 +45,7 @@ class Redirect
             if (self::$url === '')
             {
                 $site_domain = new DomainSite(nel_database());
-                self::$url = $site_domain->setting('home_page');
+                self::$url = $site_domain->reference('home_page');
             }
 
             nel_redirect(self::$url, self::$delay);

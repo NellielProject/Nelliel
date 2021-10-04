@@ -1,0 +1,20 @@
+<form accept-charset="utf-8" action="{{ form_action }}" method="post">
+	<div class="display-table">
+		<div class="display-row">
+			<span class="display-cell" data-i18n="">From:</span>
+			<span class="display-cell">{{ sender }}</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell" data-i18n="">Message:</span>
+			<span class="display-cell">
+{{# message_lines }}
+				{{ text }}<br>
+{{/ message_lines }}
+			</span>
+		</div>
+		<input type="hidden" name="message_id" value="{{ message_id }}">
+		<div class="display-row">
+			<input type="submit" value="Reply" data-i18n-attributes="value">
+		</div>
+	</div>
+</form>

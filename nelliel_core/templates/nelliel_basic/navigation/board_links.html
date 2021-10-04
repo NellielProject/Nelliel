@@ -1,10 +1,10 @@
 <nav class="boards-navigation">
-	<span>[ </span>
+	<span class="text-button">[ 
 	{{# boards }}
-	<a href="{{ board_url }}">{{ board_id }}</a>
+	<a href="{{ board_url }}">{{ board_uri }}</a>
 	{{^ end }}
 	<span> / </span>
 	{{/ end }}
 	{{/ boards }}
-	<span> ]</span>
+	 ]</span>
 </nav>

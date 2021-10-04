@@ -3,15 +3,51 @@ declare(strict_types = 1);
 
 namespace Nelliel\Setup;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use PDO;
 use Nelliel\NellielPDO;
-use Nelliel\SQLCompatibility;
+use Nelliel\Tables\TableBans;
+use Nelliel\Tables\TableBlotter;
+use Nelliel\Tables\TableBoardConfigs;
+use Nelliel\Tables\TableBoardData;
+use Nelliel\Tables\TableBoardDefaults;
+use Nelliel\Tables\TableCache;
+use Nelliel\Tables\TableCaptcha;
+use Nelliel\Tables\TableCites;
+use Nelliel\Tables\TableDNSBL;
+use Nelliel\Tables\TableDomainRegistry;
+use Nelliel\Tables\TableEmbeds;
+use Nelliel\Tables\TableFileFilters;
+use Nelliel\Tables\TableFiletypes;
+use Nelliel\Tables\TableIPNotes;
+use Nelliel\Tables\TableIconSets;
+use Nelliel\Tables\TableLogs;
+use Nelliel\Tables\TableNews;
+use Nelliel\Tables\TableNoticeboard;
+use Nelliel\Tables\TableOverboard;
+use Nelliel\Tables\TablePrivateMessages;
+use Nelliel\Tables\TablePages;
+use Nelliel\Tables\TablePermissions;
+use Nelliel\Tables\TablePlugins;
+use Nelliel\Tables\TablePosts;
+use Nelliel\Tables\TableRateLimit;
+use Nelliel\Tables\TableReports;
+use Nelliel\Tables\TableRolePermissions;
+use Nelliel\Tables\TableRoles;
+use Nelliel\Tables\TableSettings;
+use Nelliel\Tables\TableSiteConfig;
+use Nelliel\Tables\TableStyles;
+use Nelliel\Tables\TableTemplates;
+use Nelliel\Tables\TableThreadArchives;
+use Nelliel\Tables\TableThreads;
+use Nelliel\Tables\TableUploads;
+use Nelliel\Tables\TableUserRoles;
+use Nelliel\Tables\TableUsers;
+use Nelliel\Tables\TableVersions;
+use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
+use Nelliel\Utility\SQLCompatibility;
+use PDO;
 
 class Setup
 {
@@ -60,9 +96,9 @@ class Setup
         $this->installCoreStyles();
         $this->installCoreIconSets();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
-        //$regen = new \Nelliel\Regen();
+        $regen = new \Nelliel\Regen();
         $site_domain->regenCache();
-        //$regen->news($site_domain);
+        $regen->news($site_domain);
         $generate_files->installDone();
 
         if ($this->ownerCreated())
@@ -180,17 +216,14 @@ class Setup
     {
         $versions_table = new TableVersions($this->database, $this->sql_compatibility);
         $versions_table->createTable();
-        $assets_table = new TableAssets($this->database, $this->sql_compatibility);
-        $assets_table->createTable();
-        $bans_table = new TableBans($this->database, $this->sql_compatibility);
-        $bans_table->createTable();
-        $captcha_table = new TableCaptcha($this->database, $this->sql_compatibility);
-        $captcha_table->createTable();
+        $icon_sets_table = new TableIconSets($this->database, $this->sql_compatibility);
+        $icon_sets_table->createTable();
+        $board_defaults_table = new TableBoardDefaults($this->database, $this->sql_compatibility);
+        $board_defaults_table->createTable();
+        $styles_table = new TableStyles($this->database, $this->sql_compatibility);
+        $styles_table->createTable();
         $settings_table = new TableSettings($this->database, $this->sql_compatibility);
         $settings_table->createTable();
-        $board_defaults_table = new TableBoardConfig($this->database, $this->sql_compatibility);
-        $board_defaults_table->tableName(NEL_BOARD_DEFAULTS_TABLE);
-        $board_defaults_table->createTable();
         $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
         $embeds_table->createTable();
         $filetypes_table = new TableFiletypes($this->database, $this->sql_compatibility);
@@ -201,37 +234,49 @@ class Setup
         $rate_limit_table->createTable();
         $site_config_table = new TableSiteConfig($this->database, $this->sql_compatibility);
         $site_config_table->createTable();
-        $logs_table = new TableLogs($this->database, $this->sql_compatibility);
-        $logs_table->createTable();
         $templates_table = new TableTemplates($this->database, $this->sql_compatibility);
         $templates_table->createTable();
         $plugins_table = new TablePlugins($this->database, $this->sql_compatibility);
         $plugins_table->createTable();
-        $staff_board_table = new TableStaffBoard($this->database, $this->sql_compatibility);
-        $staff_board_table->createTable();
-        $pms_table = new TablePMs($this->database, $this->sql_compatibility);
+        $pms_table = new TablePrivateMessages($this->database, $this->sql_compatibility);
         $pms_table->createTable();
         $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
         $blotter_table->createTable();
         $dnsbl_table = new TableDNSBL($this->database, $this->sql_compatibility);
         $dnsbl_table->createTable();
+        $noticeboard_table = new TableNoticeboard($this->database, $this->sql_compatibility);
+        $noticeboard_table->createTable();
+        $ip_notes_table = new TableIPNotes($this->database, $this->sql_compatibility);
+        $ip_notes_table->createTable();
 
-        // NOTE: The following tables rely on the board data table
-        // Board data must be created first!
+        // NOTE: The following tables rely on the domain registry table
+        // Domain registry must be created first!
+        $domain_registry_table = new TableDomainRegistry($this->database, $this->sql_compatibility);
+        $domain_registry_table->createTable();
         $board_data_table = new TableBoardData($this->database, $this->sql_compatibility);
         $board_data_table->createTable();
         $file_filters_table = new TableFileFilters($this->database, $this->sql_compatibility);
-        $file_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
-        $if_thens_table = new TableIfThens($this->database, $this->sql_compatibility);
-        $if_thens_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $file_filters_table->createTable();
         $overboard_table = new TableOverboard($this->database, $this->sql_compatibility);
-        $overboard_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $overboard_table->createTable();
         $reports_table = new TableReports($this->database, $this->sql_compatibility);
-        $reports_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $reports_table->createTable();
         $cites_table = new TableCites($this->database, $this->sql_compatibility);
-        $cites_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $cites_table->createTable();
         $word_filters_table = new TableWordFilters($this->database, $this->sql_compatibility);
-        $word_filters_table->createTable(['board_data_table' => NEL_BOARD_DATA_TABLE]);
+        $word_filters_table->createTable();
+        $logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $logs_table->createTable();
+        $bans_table = new TableBans($this->database, $this->sql_compatibility);
+        $bans_table->createTable();
+        $captcha_table = new TableCaptcha($this->database, $this->sql_compatibility);
+        $captcha_table->createTable();
+        $board_configs_table = new TableBoardConfigs($this->database, $this->sql_compatibility);
+        $board_configs_table->createTable();
+        $pages_table = new TablePages($this->database, $this->sql_compatibility);
+        $pages_table->createTable();
+        $cache_table = new TableCache($this->database, $this->sql_compatibility);
+        $cache_table->createTable();
 
         // NOTE: Tables must be created in order of:
         // roles -> permissions -> role permissions -> users -> user roles
@@ -240,12 +285,11 @@ class Setup
         $permissions_table = new TablePermissions($this->database, $this->sql_compatibility);
         $permissions_table->createTable();
         $role_permissions_table = new TableRolePermissions($this->database, $this->sql_compatibility);
-        $role_permissions_table->createTable(
-                ['roles_table' => NEL_ROLES_TABLE, 'permissions_table' => NEL_PERMISSIONS_TABLE]);
+        $role_permissions_table->createTable();
         $users_table = new TableUsers($this->database, $this->sql_compatibility);
         $users_table->createTable();
         $user_roles_table = new TableUserRoles($this->database, $this->sql_compatibility);
-        $user_roles_table->createTable(['users_table' => NEL_USERS_TABLE, 'roles_table' => NEL_ROLES_TABLE]);
+        $user_roles_table->createTable();
         echo _gettext('Core database tables created.'), '<br>';
     }
 
@@ -261,26 +305,23 @@ class Setup
 
     public function createBoardTables(string $board_id, string $db_prefix)
     {
-        // IMPORTANT: Table creation must occur in the given order so foreign keys can be created.
-        // Domain and such doesn't function without config table
-        $config_table = new TableBoardConfig($this->database, $this->sql_compatibility);
-        $config_table->tableName($db_prefix . '_config');
-        $config_table->createTable();
-        $config_table->copyFrom(NEL_BOARD_DEFAULTS_TABLE, ['setting_name', 'setting_value']);
-
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
 
+        $archives_table = new TableThreadArchives($this->database, $this->sql_compatibility);
+        $archives_table->tableName($domain->reference('archives_table'));
+        $archives_table->createTable();
+
         // NOTE: Tables must be created in order of
-        // threads -> posts -> content
+        // threads -> posts -> uploads
         $threads_table = new TableThreads($this->database, $this->sql_compatibility);
         $threads_table->tableName($domain->reference('threads_table'));
         $threads_table->createTable();
         $posts_table = new TablePosts($this->database, $this->sql_compatibility);
         $posts_table->tableName($domain->reference('posts_table'));
         $posts_table->createTable(['threads_table' => $domain->reference('threads_table')]);
-        $content_table = new TableContent($this->database, $this->sql_compatibility);
-        $content_table->tableName($domain->reference('content_table'));
-        $content_table->createTable(['posts_table' => $domain->reference('posts_table')]);
+        $uploads_table = new TableUploads($this->database, $this->sql_compatibility);
+        $uploads_table->tableName($domain->reference('uploads_table'));
+        $uploads_table->createTable(['posts_table' => $domain->reference('posts_table')]);
     }
 
     public function createBoardDirectories(string $board_id)
@@ -290,97 +331,69 @@ class Setup
         $this->file_handler->createDirectory($domain->reference('preview_path'), NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory($domain->reference('page_path'), NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory($domain->reference('banners_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('archive_src_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('archive_preview_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('archive_page_path'), NEL_DIRECTORY_PERM, true);
     }
 
-    public function installCoreTemplates()
+    public function installCoreTemplates($overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
+        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
         $template_inis = $front_end_data->getTemplateInis();
 
         foreach ($template_inis as $ini)
         {
-            $template_id = $ini['id'];
+            $template_id = $ini['template-info']['id'];
 
             if (!$front_end_data->templateIsCore($template_id))
             {
                 continue;
             }
 
-            if ($this->database->rowExists(NEL_TEMPLATES_TABLE, ['template_id'], [$template_id], [PDO::PARAM_STR]))
-            {
-                continue;
-            }
-
-            $info = json_encode($ini);
-            $default = ($template_id === 'template-nelliel-basic') ? 1 : 0;
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "is_default", "info") VALUES (?, ?, ?)');
-            $this->database->executePrepared($prepared, [$template_id, $default, $info]);
+            $front_end_data->getTemplate($template_id)->install($overwrite);
         }
 
-        echo _gettext('Core templates installed.'), '<br>';
+        echo _gettext('Core templates installed.') . '<br>';
     }
 
-    public function installCoreStyles()
+    public function installCoreStyles(bool $overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
+        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
         $style_inis = $front_end_data->getStyleInis();
 
         foreach ($style_inis as $ini)
         {
-            $style_id = $ini['id'];
+            $style_id = $ini['style-info']['id'];
 
             if (!$front_end_data->styleIsCore($style_id))
             {
                 continue;
             }
 
-            if ($this->database->rowExists(NEL_ASSETS_TABLE, ['asset_id', 'type'], [$style_id, 'style'],
-                    [PDO::PARAM_STR, PDO::PARAM_STR]))
-            {
-                continue;
-            }
-
-            $info = json_encode($ini);
-            $default = ($style_id === 'style-nelliel') ? 1 : 0;
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_ASSETS_TABLE .
-                    '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$style_id, "style", $default, $info]);
+            $front_end_data->getStyle($style_id)->install($overwrite);
         }
 
-        echo _gettext('Core styles installed.'), '<br>';
+        echo _gettext('Core styles installed.') . '<br>';
     }
 
-    public function installCoreIconSets()
+    public function installCoreIconSets(bool $overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEndData($this->database);
+        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
         $icon_set_inis = $front_end_data->getIconSetInis();
 
         foreach ($icon_set_inis as $ini)
         {
-            $icon_set_id = $ini['id'];
+            $icon_set_id = $ini['set-info']['id'];
 
             if (!$front_end_data->iconSetIsCore($icon_set_id))
             {
                 continue;
             }
 
-            if ($this->database->rowExists(NEL_ASSETS_TABLE, ['asset_id', 'type'], [$icon_set_id, 'icon-set'],
-                    [PDO::PARAM_STR, PDO::PARAM_STR]))
-            {
-                continue;
-            }
-
-            $info = json_encode($ini);
-            $default = ($icon_set_id === 'icons-nelliel-basic') ? 1 : 0;
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_ASSETS_TABLE .
-                    '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$icon_set_id, "icon-set", $default, $info]);
+            $front_end_data->getIconSet($icon_set_id)->install($overwrite);
         }
 
-        echo _gettext('Core icon sets installed.'), '<br>';
+        echo _gettext('Core icon sets installed.') . '<br>';
     }
 
     private function checkForInnoDB()

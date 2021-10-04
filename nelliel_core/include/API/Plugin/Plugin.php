@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Nelliel\API\Plugin;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class Plugin
 {

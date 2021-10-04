@@ -1,8 +1,5 @@
 <?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 //
 // This file has only the very basic configuration needed to function and do setup.
@@ -14,15 +11,19 @@ if (!defined('NELLIEL_VERSION'))
 // === General Settings ===
 //
 
+// The default time zone that will be used.
+// An extensive list of supported time zones can be found here: https://www.php.net/manual/en/timezones.php
+$base_config['default_time_zone'] = 'UTC';
+
 // The fallback default value for locale.
-// If a locale is specified elsewhere but no language file exists for it, Nelliel will use this value instead.
-// If this language file for this value is also missing, Nelliel will fallback to 'en_US' which is included by default.
+// If a locale is specified elsewhere, but no language file exists for it, this value will be used instead.
+// If the language file for this value is also missing, Nelliel will fallback to 'en_US' which is included in standard distribution.
 // Locale should follow the standard format using ISO-639 language and ISO-3166 country codes, e.g. 'en_US' for 'English (United States)'
 // The available locales and their translations can be found in the directory 'nelliel_core/language/locale'
 $base_config['default_locale'] = 'en_US';
 
 // Forces Nelliel to only allow sessions over a secure connection.
-// Once SSL is set up for the site, it is recommended you set this to true.
+// Once SSL is set up for the site, it is recommended that you set this to true.
 $base_config['secure_session_only'] = false;
 
 //

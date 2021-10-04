@@ -1,105 +1,104 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
+use Nelliel\Output\Filter;
 
 class AdminFileFilters extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_FILES_FILTERS_TABLE;
+        $this->id_field = 'filter-id';
+        $this->id_column = 'entry';
+        $this->panel_name = _gettext('File Filters');
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
     {
-        $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelFileFilters($this->domain, false);
+        parent::dispatch($inputs);
+    }
+
+    public function panel(): void
+    {
+        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
-        $this->verifyAccess();
     }
 
-    public function add()
+    public function add(): void
     {
-        $this->verifyAction();
+        if(is_null($_POST['board_id']) || $_POST['board_id'] === '')
+        {
+            $board_id = Domain::GLOBAL;
+        }
+        else
+        {
+            $board_id = $_POST['board_id'];
+        }
+
+        $this->verifyPermissions(Domain::getDomainFromID($board_id, $this->database), 'perm_file_filters_manage');
         $type = $_POST['hash_type'];
         $notes = $_POST['file_notes'];
-        $board_id = $_POST['board_id'];
-        $output_filter = new \Nelliel\Render\Filter();
+        $output_filter = new Filter();
         $hashes = $output_filter->newlinesToArray($_POST['file_hashes']);
 
         foreach ($hashes as $hash)
         {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_FILES_FILTERS_TABLE .
+                    'INSERT INTO "' . $this->data_table .
                     '" ("hash_type", "file_hash", "file_notes", "board_id") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$type, pack("H*", $hash), $notes, $board_id]);
+            $this->database->executePrepared($prepared, [$type, $hash, $notes, $board_id]);
         }
 
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
-        $this->verifyAccess();
     }
 
-    public function update()
+    public function update(): void
     {
-        $this->verifyAction();
     }
 
-    public function remove()
+    public function remove(): void
     {
-        $this->verifyAction();
-        $filter_id = $_GET['filter-id'];
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_FILES_FILTERS_TABLE . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$filter_id]);
+        $id = $_GET[$this->id_field] ?? 0;
+        $entry_domain = $this->getEntryDomain($id);
+        $this->verifyPermissions($entry_domain, 'perm_file_filters_manage');
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
 
-    public function enable()
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        $this->verifyAction();
-    }
-
-    public function disable()
-    {
-        $this->verifyAction();
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction();
-    }
-
-    public function verifyAccess()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(350, _gettext('You do not have access to the File Filters panel.'));
+            return;
         }
-    }
 
-    public function verifyAction()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_file_filters'))
+        switch ($perm)
         {
-            nel_derp(351, _gettext('You are not allowed to manage file filters.'));
+            case 'perm_file_filters_manage':
+                nel_derp(340, _gettext('You are not allowed to manage file filters.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

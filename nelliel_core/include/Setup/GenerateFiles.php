@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Nelliel\Setup;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Utility\FileHandler;
 
@@ -35,12 +32,12 @@ class GenerateFiles
         if (!file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php') || $replace)
         {
             $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
-            $prepend .= "\n" . '// DOING SO WILL BREAK SECURE TRIPCODES, POST PASSWORDS AND A BUNCH OF OTHER THINGS';
+            $prepend .= "\n" . '// DOING SO WILL BREAK SECURE TRIPCODES, POST PASSWORDS AND OTHER THINGS';
             $peppers = array();
-            $peppers['tripcode_pepper'] = base64_encode(random_bytes(33));
-            $peppers['ip_address_pepper'] = base64_encode(random_bytes(33));
-            $peppers['poster_id_pepper'] = base64_encode(random_bytes(33));
-            $peppers['post_password_pepper'] = base64_encode(random_bytes(33));
+            $peppers['tripcode_pepper'] = base64_encode(random_bytes(32));
+            $peppers['ip_address_pepper'] = base64_encode(random_bytes(32));
+            $peppers['poster_id_pepper'] = base64_encode(random_bytes(32));
+            $peppers['post_password_pepper'] = base64_encode(random_bytes(32));
             $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'peppers.php',
                     $prepend . "\n" . '$peppers = ' . var_export($peppers, true) . ';', true, false);
             return true;

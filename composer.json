@@ -2,7 +2,13 @@
 	"name" : "nellielproject/nelliel",
 	"description" : "Nelliel Imageboard",
 	"require" : {
-		"php" : ">=7.2"
+		"php" : ">=7.2",
+		"ext-gd" : "*",
+		"ext-dom" : "*",
+		"ext-iconv" : "*",
+		"ext-libxml" : "*",
+		"ext-pdo" : "*",
+		"ext-session" : "*"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "6.*"

@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Nelliel\Auth;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 abstract class AuthHandler
 {
@@ -15,7 +12,8 @@ abstract class AuthHandler
     protected $auth_data = array();
     protected $auth_id;
     protected $authorization;
-    protected $empty;
+    protected $empty = false;
+    protected $changed = false;
 
     public function authDataOrDefault(string $key, $default = null)
     {
@@ -40,6 +38,11 @@ abstract class AuthHandler
         return $this->empty;
     }
 
+    public function changed(): bool
+    {
+        return $this->changed;
+    }
+
     public function getData(string $key)
     {
         return $this->auth_data[$key] ?? null;
@@ -47,6 +50,7 @@ abstract class AuthHandler
 
     public function changeData(string $key, $value): void
     {
+        $this->changed = true;
         $this->auth_data[$key] = $value;
     }
 }

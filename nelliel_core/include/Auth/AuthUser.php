@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Nelliel\Auth;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use Nelliel\NellielPDO;
@@ -37,7 +34,7 @@ class AuthUser extends AuthHandler
         }
 
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "user_id" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         if (empty($result))
         {
@@ -46,7 +43,7 @@ class AuthUser extends AuthHandler
 
         $this->auth_data = $result;
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
-        $result = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
+        $result = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         foreach ($result as $row)
         {
@@ -78,8 +75,8 @@ class AuthUser extends AuthHandler
                     'INSERT INTO "' . NEL_USERS_TABLE .
                     '" ("user_id", "display_name", "user_password", "hashed_user_id", "active", "owner", "last_login") VALUES
                     (:user_id, :display_name, :user_password, :hashed_user_id, :active, :owner, :last_login)');
-            $prepared->bindValue(':hashed_user_id', nel_prepare_hash_for_storage($this->getData('hashed_user_id')),
-                    PDO::PARAM_LOB);
+            $prepared->bindValue(':hashed_user_id', $this->getData('hashed_user_id'),
+                    PDO::PARAM_STR);
         }
 
         $prepared->bindValue(':user_id', $this->authDataOrDefault('user_id', $this->id()), PDO::PARAM_STR);
@@ -178,7 +175,7 @@ class AuthUser extends AuthHandler
         unset($this->user_roles[$domain_id]);
     }
 
-    public function checkPermission(Domain $domain, string $permission): bool
+    public function checkPermission(Domain $domain, string $permission, bool $escalate = true): bool
     {
         // Site Owner can do all the things
         if ($this->isSiteOwner())
@@ -194,6 +191,18 @@ class AuthUser extends AuthHandler
         $role = $this->getDomainRole($domain);
 
         if ($role->checkPermission($permission))
+        {
+            return true;
+        }
+
+        if (!$escalate)
+        {
+            return false;
+        }
+
+        $global_role = $this->getDomainRole(nel_global_domain());
+
+        if ($global_role->checkPermission($permission))
         {
             return true;
         }

@@ -1,118 +1,83 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class AdminTemplates extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_TEMPLATES_TABLE;
+        $this->id_field = 'template-id';
+        $this->id_column = 'template_id';
+        $this->panel_name = _gettext('Templates');
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
     {
-        $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelTemplates($this->domain, false);
+        parent::dispatch($inputs);
+    }
+
+    public function panel(): void
+    {
+        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $output_panel = new \Nelliel\Output\OutputPanelTemplates($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
-        $this->verifyAccess();
     }
 
-    public function add()
+    public function add(): void
     {
-        $this->verifyAction();
-        $template_id = $_GET['template-id'];
-        $template_inis = $this->domain->frontEndData()->getTemplateInis();
-        $info = '';
-
-        foreach ($template_inis as $ini)
-        {
-            if ($ini['id'] === $template_id)
-            {
-                $info = json_encode($ini);
-            }
-        }
-
-        if ($info !== '')
-        {
-            $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_TEMPLATES_TABLE .
-                    '" ("template_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$template_id, 'template', 0, $info]);
-        }
-
+        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getTemplate($id)->install();
+        $this->domain->templatePath($this->domain->frontEndData()->getTemplate($id)->getPath());
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
-        $this->verifyAccess();
     }
 
-    public function update()
+    public function update(): void
     {
-        $this->verifyAction();
     }
 
-    public function remove()
+    public function remove(): void
     {
-        $this->verifyAction();
-        $template_id = $_GET['template-id'];
-        $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ? AND "type" = \'template\'');
-        $this->database->executePrepared($prepared, [$template_id]);
+        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getTemplate($id)->uninstall();
+        $this->domain->templatePath($this->domain->frontEndData()->getTemplate($id)->getPath());
         $this->outputMain(true);
     }
 
-    public function enable()
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        $this->verifyAction();
-    }
-
-    public function disable()
-    {
-        $this->verifyAction();
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction();
-        $template_id = $_GET['template-id'];
-        $this->database->exec('UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 0');
-        $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "is_default" = 1 WHERE "template_id" = ?');
-        $this->database->executePrepared($prepared, [$template_id]);
-        $this->outputMain(true);
-    }
-
-    public function verifyAccess()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(390, _gettext('You do not have access to the Templates panel.'));
+            return;
         }
-    }
 
-    public function verifyAction()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_templates'))
+        switch ($perm)
         {
-            nel_derp(391, _gettext('You are not allowed to manage Templates.'));
+            case 'perm_templates_manage':
+                nel_derp(390, _gettext('You are not allowed to manage templates.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

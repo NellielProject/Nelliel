@@ -1,15 +1,12 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use Nelliel\Output\Filter;
 
 class RenderCoreMustache extends RenderCore
 {
@@ -59,6 +56,11 @@ class RenderCoreMustache extends RenderCore
                 {
                     return $this->escapeString($value, 'css');
                 }]);
+
+        $this->mustache_engine->addHelper('gettext', function ($msgid)
+        {
+            return _gettext($msgid);
+        });
     }
 
     public function renderEngine()

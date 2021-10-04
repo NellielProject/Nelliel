@@ -1,7 +1,7 @@
 {{# threads }}
 	<div id="{{ thread_corral_id }}" class="thread-corral" data-jsevents="click|mouseover|mouseout">
 		<div class="overboard-header">
-			<span data-i18n="gettext">Posted in</span>
+			<span data-i18n="">Posted in</span>
 			<a href="{{ board_url }}">/{{ board_id }}/</a>
 			<span class="safety-level">({{ board_safety }})</span>
 		</div>
@@ -10,7 +10,7 @@
 	{{/ op_post }}
 		<div id="{{ thread_expand_id }}">
 	{{# abbreviate }}
-			<span class="omitted-posts">{{ omitted_count }}<span data-i18n="gettext">  posts omitted. Click Reply or Expand Thread to view.</span><br></span>
+			<span class="omitted-posts">{{ omitted_count }}{{# gettext }} posts omitted. Click Reply or Expand Thread to view.{{/ gettext }}<br></span>
 	{{/ abbreviate }}
 	{{# thread_posts }}
 			{{> thread/post }}

@@ -1,51 +1,54 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
+use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class AdminSiteSettings extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_SITE_CONFIG_TABLE;
+        $this->id_field = '';
+        $this->id_column = '';
+        $this->panel_name = _gettext('Site Settings');
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
     {
-        $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelSiteSettings($this->domain, false);
+        parent::dispatch($inputs);
+    }
+
+    public function panel(): void
+    {
+        $this->verifyPermissions($this->domain, 'perm_site_config_modify');
+        $output_panel = new \Nelliel\Output\OutputPanelSiteSettings($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
-        $this->verifyAccess();
     }
 
-    public function add()
+    public function add(): void
     {
-        $this->verifyAction();
     }
 
-    public function editor()
+    public function editor(): void
     {
-        $this->verifyAccess();
     }
 
-    public function update()
+    public function update(): void
     {
-        $this->verifyAction();
+        $this->verifyPermissions($this->domain, 'perm_site_config_modify');
 
         foreach ($_POST as $key => $value)
         {
@@ -61,42 +64,32 @@ class AdminSiteSettings extends Admin
 
         $this->domain->regenCache();
         $this->domain->reload();
+        nel_site_domain()->reload();
+        $regen = new Regen();
+        $regen->allBoards(true, false);
+        $regen->allSitePages($this->domain);
         $this->outputMain(true);
     }
 
-    public function remove()
+    public function remove(): void
     {
-        $this->verifyAction();
     }
 
-    public function enable()
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        $this->verifyAction();
-    }
-
-    public function disable()
-    {
-        $this->verifyAction();
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction();
-    }
-
-    public function verifyAccess()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(360, _gettext('You do not have access to the Site Settings panel.'));
+            return;
         }
-    }
 
-    public function verifyAction()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_site_config'))
+        switch ($perm)
         {
-            nel_derp(361, _gettext('You are not allowed to manage site settings.'));
+            case 'perm_site_config_modify':
+                nel_derp(380, _gettext('You are not allowed to modify the site settings.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

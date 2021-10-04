@@ -1,16 +1,11 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\ContentID;
-use Nelliel\Content\ContentThread;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -34,96 +29,52 @@ class ArchiveAndPrune
             return;
         }
 
-        $this->updateAllArchiveStatus();
-
-        if ($this->domain->setting('old_threads') === 'ARCHIVE')
-        {
-            if ($this->domain->setting('do_archive_pruning'))
-            {
-                $this->pruneArchiveThreads();
-            }
-        }
-        else if ($this->domain->setting('old_threads') === 'PRUNE')
-        {
-            $this->pruneThreads();
-        }
-    }
-
-    public function changeArchiveStatus($thread_id, int $status, string $table)
-    {
-        $prepared = $this->database->prepare('UPDATE "' . $table . '" SET "archive_status" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$status, $thread_id]);
-    }
-
-    public function getFullThreadList()
-    {
-        $query = 'SELECT "thread_id", "archive_status" FROM "' . $this->domain->reference('threads_table') .
-                '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
-        $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
-        return $thread_list;
-    }
-
-    public function getThreadListForStatus(int $status)
-    {
-        $prepared = $this->database->prepare(
-                'SELECT "thread_id" FROM "' . $this->domain->reference('threads_table') . '" WHERE "archive_status" = ?');
-        $thread_list = $this->database->executePreparedFetchAll($prepared, [$status], PDO::FETCH_COLUMN);
-        return $thread_list;
-    }
-
-    // Archie statuses:
-    // 0: Thread normal status, displays in index
-    // 1: Thread should be in buffer
-    // 2: Thread should be in archive
-    // 3: Thread should be pruned from archive
-    public function updateAllArchiveStatus()
-    {
         $line = 1;
         $last_active = $this->domain->setting('active_threads');
         $last_buffer = $last_active + $this->domain->setting('thread_buffer');
         $last_archive = $last_buffer + $this->domain->setting('max_archive_threads');
         $archive_prune = $this->domain->setting('do_archive_pruning');
-        $thread_table = $this->domain->reference('threads_table');
+        $archive = $this->domain->setting('old_threads') === 'ARCHIVE';
+        $prune = $this->domain->setting('old_threads') === 'PRUNE';
         $thread_list = $this->getFullThreadList();
 
         foreach ($thread_list as $thread)
         {
-            if ($line <= $last_active)
+            $content_id = new ContentID();
+            $content_id->changeThreadID($thread['thread_id']);
+
+            if ($line <= $last_active) // Thread is within active range
             {
-                if ($thread['archive_status'] != 0)
+                if ($thread['old'] == 1)
                 {
-                    $this->changeArchiveStatus($thread['thread_id'], 0, $thread_table);
+                    $thread = $content_id->getInstanceFromID($this->domain);
+                    $thread->changeData('old', false);
+                    $thread->writeToDatabase();
                 }
             }
-            else if ($line <= $last_buffer)
+            else if ($line <= $last_buffer) // Thread is within buffer range
             {
-                if ($thread['archive_status'] != 1)
+                if ($thread['old'] == 0)
                 {
-                    $this->changeArchiveStatus($thread['thread_id'], 1, $thread_table);
+                    $thread = $content_id->getInstanceFromID($this->domain);
+                    $thread->changeData('old', true);
+                    $thread->writeToDatabase();
                 }
             }
-            else if ($line <= $last_archive)
+            else if ($line <= $last_archive) // Thread is past buffer range
             {
-                if ($thread['archive_status'] != 2)
+                if ($archive)
                 {
-                    $this->changeArchiveStatus($thread['thread_id'], 2, $thread_table);
+                    $thread = $content_id->getInstanceFromID($this->domain);
+                    $thread->archive(false);
                 }
             }
-            else
+            else // Thread is beyond automatic archive range
             {
-                if ($archive_prune)
+                if ($prune && $archive_prune)
                 {
-                    if ($thread['archive_status'] != 3)
-                    {
-                        $this->changeArchiveStatus($thread['thread_id'], 3, $thread_table);
-                    }
-                }
-                else
-                {
-                    if ($thread['archive_status'] != 2)
-                    {
-                        $this->changeArchiveStatus($thread['thread_id'], 2, $thread_table);
-                    }
+                    $thread = $content_id->getInstanceFromID($this->domain);
+                    $thread->remove();
                 }
             }
 
@@ -131,23 +82,11 @@ class ArchiveAndPrune
         }
     }
 
-    public function pruneThreads()
+    private function getFullThreadList()
     {
-        foreach ($this->getThreadListForStatus(2) as $thread_id)
-        {
-            $thread = new ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain);
-            $thread->remove(true);
-        }
-
-        $this->pruneArchiveThreads();
-    }
-
-    public function pruneArchiveThreads()
-    {
-        foreach ($this->getThreadListForStatus(3) as $thread_id)
-        {
-            $thread = new ContentThread(new ContentID('cid_' . $thread_id . '_0_0'), $this->domain);
-            $thread->remove(true);
-        }
+        $query = 'SELECT "thread_id", "old" FROM "' . $this->domain->reference('threads_table') .
+                '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
+        $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+        return $thread_list;
     }
 }

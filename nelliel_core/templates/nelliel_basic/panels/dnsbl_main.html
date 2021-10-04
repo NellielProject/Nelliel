@@ -1,14 +1,14 @@
 <div>
 	<a href="{{ new_url }}">Add new DNSBL entry</a>
 </div>
-<table class="data-table">
-	<caption class="data-table-caption" data-i18n="gettext">List of DNSBL entries</caption>
-	<thead class="data-table-header">
+<table >
+	<caption data-i18n="">List of DNSBL entries</caption>
+	<thead>
 		<tr>
-			<th data-i18n="gettext">ID</th>
-			<th data-i18n="gettext">Service domain</th>
-			<th data-i18n="gettext">Return codes</th>
-			<th data-i18n="gettext">Actions</th>
+			<th scope="col" data-i18n="">ID</th>
+			<th scope="col" data-i18n="">Service domain</th>
+			<th scope="col" data-i18n="">Return codes</th>
+			<th scope="col" data-i18n="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -18,9 +18,9 @@
 			<td>{{ service_domain }}</td>
 			<td>{{ return_codes }}</td>
 			<td>
-				<span>[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
-				<span>[<a class="display-cell" href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
-				<span>[<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
 			</td>
 		</tr>
 {{/ service_list }}

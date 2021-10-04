@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\NellielPDO;
 use PDO;
@@ -38,7 +35,7 @@ class RateLimit
     {
         $prepared = $this->database->prepare(
                 'SELECT "record" FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "rate_id" = :rate_id');
-        $prepared->bindValue(':rate_id', nel_prepare_hash_for_storage($rate_id), PDO::PARAM_LOB);
+        $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_STR);
         $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if (!empty($result))
@@ -51,7 +48,7 @@ class RateLimit
     {
         $serialized_record = serialize($this->records[$rate_id]);
         $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_RATE_LIMIT_TABLE . '" WHERE "rate_id" = :rate_id');
-        $prepared->bindValue(':rate_id', nel_prepare_hash_for_storage($rate_id), PDO::PARAM_LOB);
+        $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_STR);
         $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if (!empty($result))
@@ -59,14 +56,14 @@ class RateLimit
             $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_RATE_LIMIT_TABLE . '" SET "record" = :record WHERE "rate_id" = :rate_id');
             $prepared->bindValue(':record', $serialized_record, PDO::PARAM_STR);
-            $prepared->bindValue(':rate_id', nel_prepare_hash_for_storage($rate_id), PDO::PARAM_LOB);
+            $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_STR);
             $this->database->executePrepared($prepared);
         }
         else
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_RATE_LIMIT_TABLE . '" (rate_id, record) VALUES (:rate_id, :record)');
-            $prepared->bindValue(':rate_id', nel_prepare_hash_for_storage($rate_id), PDO::PARAM_LOB);
+            $prepared->bindValue(':rate_id', $rate_id, PDO::PARAM_STR);
             $prepared->bindValue(':record', $serialized_record, PDO::PARAM_STR);
             $this->database->executePrepared($prepared);
         }

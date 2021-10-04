@@ -1,13 +1,9 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Language;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use Nelliel\Render\RenderCoreDOM;
@@ -43,41 +39,28 @@ class Translator
         $content_node_list = $dom->getElementsByAttributeName('data-i18n');
         $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
 
-        foreach ($attribute_node_list as $node)
-        {
-            $split_attribute = explode('|', $node->getAttribute('data-i18n-attributes'), 2);
-
-            if ($split_attribute[0] === 'gettext')
-            {
-                $this->gettextAttribute($node);
-                $node->removeAttribute('data-i18n-attributes');
-            }
-        }
-
         foreach ($content_node_list as $node)
         {
-            if ($node->getAttribute('data-i18n') === 'gettext')
-            {
-                $this->gettextContent($node);
-                $node->removeAttribute('data-i18n');
-            }
+            $this->gettextContent($node);
+            $node->removeAttribute('data-i18n');
+        }
+
+        foreach ($attribute_node_list as $node)
+        {
+            $this->gettextAttribute($node);
+            $node->removeAttribute('data-i18n-attributes');
         }
     }
 
     private function gettextAttribute($node)
     {
-        $split_attribute = explode('|', $node->getAttribute('data-i18n-attributes'), 2);
-        $attribute_list = explode(',', $split_attribute[1]);
-        $new_text = '';
+        $attribute_list = explode('|', $node->getAttribute('data-i18n-attributes'));
 
         foreach ($attribute_list as $attribute_name)
         {
             $attribute_name = trim($attribute_name);
             $attribute_value = $node->getAttribute($attribute_name);
-            $new_text = _gettext($attribute_value);
-            $attribute_node = $node->ownerDocument->createFullAttribute($attribute_name, $new_text, 'none');
-            //$attribute_node->value = $new_text;
-            $node->setAttributeNode($attribute_node);
+            $node->modifyAttribute($attribute_name, _gettext($attribute_value));
         }
     }
 

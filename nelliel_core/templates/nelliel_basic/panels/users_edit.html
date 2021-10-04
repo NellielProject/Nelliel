@@ -1,22 +1,22 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="user_id" class="display-cell" data-i18n="gettext">User ID</label>
+			<label for="user_id" class="display-cell" data-i18n="">User ID</label>
 			<input id="user_id" class="display-cell" type="text" name="user_id" id="bname" size="30" value="{{ user_id }}">
 		</div>
 		<div class="display-row">
-			<label for="user_password" class="display-cell" data-i18n="gettext">New password (leave blank to keep current password)</label>
+			<label for="user_password" class="display-cell" data-i18n="">New password (leave blank to keep current password)</label>
 			<input id="user_password" class="display-cell" type="text" name="user_password" size="30">
 		</div>
 		<div class="display-row">
-			<label for="display_name" class="display-cell" data-i18n="gettext">User display name</label>
+			<label for="display_name" class="display-cell" data-i18n="">User display name</label>
 			<input id="display_name" class="display-cell" type="text" name="display_name" size="30" value="{{ display_name }}">
 		</div>
 		{{^ is_site_owner }}
 		<div class="display-row">
 			<input type="hidden" name="active[default]" value="0">
 			<input id="user_active" type="checkbox" name="active[value]" value="1" {{ active }}>
-			<label for="user_active" data-i18n="gettext">User is active</label>
+			<label for="user_active" data-i18n="">User is active</label>
 		</div>
 		{{/ is_site_owner }}
 	</div>
@@ -26,9 +26,18 @@
 		<div class="display-row">
 			<span>User Roles</span>
 		</div>
+		{{# special_domain_roles }}
+		<div class="display-row">
+			<label for="{{ select_id }}" class="display-cell" data-i18n="">{{ domain_name }}</label>
+			{{# roles }}
+				{{> panels/pieces/options_menu }}
+			{{/ roles }}
+		</div>
+		{{/ special_domain_roles }}
+		<hr>
 		{{# domain_roles }}
 		<div class="display-row">
-			<label for="{{ select_id }}" class="display-cell" data-i18n="gettext">{{ domain_name }}</label>
+			<label for="{{ select_id }}" class="display-cell" data-i18n="">{{ domain_name }}</label>
 			{{# roles }}
 				{{> panels/pieces/options_menu }}
 			{{/ roles }}
@@ -37,6 +46,6 @@
 	</div>
 	{{/ is_site_owner }}
 	<div>
-		<input type="submit" value="Update User" data-i18n-attributes="gettext|value">
+		<input type="submit" value="Update User" data-i18n-attributes="value">
 	</div>
 </form>

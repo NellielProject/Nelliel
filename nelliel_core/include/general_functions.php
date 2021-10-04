@@ -1,8 +1,5 @@
 <?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 function nel_clean_exit()
 {
@@ -68,35 +65,34 @@ function nel_numeric_html_entities_to_utf8(&$input)
             }, $input);
 }
 
-function nel_cast_to_datatype($value, $datatype, $null_empty = true)
+function nel_typecast($value, string $datatype, bool $empty_null = true)
 {
-    if (nel_true_empty($value))
+    if ($empty_null && nel_true_empty($value))
     {
-        if ($null_empty)
-        {
-            return null;
-        }
-        else
-        {
-            return $value;
-        }
+        return null;
     }
-    else if ($datatype === 'bool' || $datatype === 'boolean')
+
+    if ($datatype === 'bool' || $datatype === 'boolean')
     {
-        return (bool) $value;
+        return boolval($value);
     }
-    else if ($datatype === 'int' || $datatype === 'integer')
+
+    if ($datatype === 'int' || $datatype === 'integer')
     {
         return intval($value);
     }
-    else if ($datatype === 'str' || $datatype === 'string')
+
+    if ($datatype === 'str' || $datatype === 'string')
     {
-        return print_r($value, true);
+        return strval($value);
     }
-    else
+
+    if ($datatype === 'float')
     {
-        return $value;
+        return floatval($value);
     }
+
+    return $value;
 }
 
 function nel_true_empty($variable)
@@ -150,16 +146,6 @@ function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = 
     return $packed_ip_address;
 }
 
-function nel_prepare_hash_for_storage(?string $hash)
-{
-    if (is_null($hash))
-    {
-        return null;
-    }
-
-    return hex2bin($hash);
-}
-
 function nel_convert_ip_from_storage(?string $ip_address)
 {
     if (is_null($ip_address))
@@ -177,17 +163,74 @@ function nel_convert_ip_from_storage(?string $ip_address)
     return $unpacked_ip_address;
 }
 
-function nel_convert_hash_from_storage(?string $hash)
+function nel_exec(string $command): array
 {
-    if (is_null($hash))
+    if (!function_exists('exec'))
+    {
+        return array();
+    }
+
+    $path_command = '';
+    $path = nel_site_domain()->setting('shell_path');
+
+    if ($path !== '')
+    {
+        $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";';
+    }
+
+    $full_command = $path_command . $command;
+    $output = array();
+    $result_code = 0;
+    $last_line = exec($full_command, $output, $result_code);
+    return ['last_line' => $last_line, 'output' => $output, 'result_code' => $result_code];
+}
+
+function nel_shell_exec(string $command): ?string
+{
+    if (!function_exists('shell_exec'))
     {
         return null;
     }
 
-    return bin2hex($hash);
+    $path_command = '';
+    $path = nel_site_domain()->setting('shell_path');
+
+    if ($path !== '')
+    {
+        $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";';
+    }
+
+    $full_command = $path_command . $command;
+    return shell_exec($full_command);
 }
 
-function nel_truncate_hash(string $hash, int $length = 12)
+function nel_magick_available(): array
 {
-    return substr($hash, 0, $length);
+    $magicks = array();
+
+    if (extension_loaded('gmagick'))
+    {
+        $magicks[] = 'gmagick';
+    }
+
+    if (extension_loaded('imagick'))
+    {
+        $magicks[] = 'imagick';
+    }
+
+    $results = nel_exec('gm -version');
+
+    if (!empty($results) && $results['result_code'] === 0)
+    {
+        $magicks[] = 'graphicsmagick';
+    }
+
+    $results = nel_exec('convert -version');
+
+    if (!empty($results) && $results['result_code'] === 0)
+    {
+        $magicks[] = 'imagemagick';
+    }
+
+    return $magicks;
 }

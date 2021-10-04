@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Nelliel;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use IPTools\IP;
 use IPTools\Range;
@@ -52,7 +49,7 @@ class Snacks
             $ban_hammer->modifyData('reason', 'Ur a spambot. Nobody wants any. GTFO!');
             $ban_hammer->modifyData('start_time', time());
             $ban_hammer->modifyData('length', 86400 * 9001);
-            $ban_hammer->modifyData('all_boards', 1);
+            $ban_hammer->modifyData('board_id', Domain::GLOBAL);
             $ban_hammer->apply();
         }
     }
@@ -66,13 +63,13 @@ class Snacks
             if (!$loaded)
             {
                 $prepared = $this->database->prepare(
-                        'SELECT "hash_type", "file_hash" FROM "nelliel_file_filters" WHERE "board_id" = ? OR "all_boards" = 1');
-                $filters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()],
+                        'SELECT "hash_type", "file_hash" FROM "nelliel_file_filters" WHERE "board_id" = ? OR "board_id" = ?');
+                $filters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id(), Domain::GLOBAL],
                         PDO::FETCH_ASSOC);
 
                 foreach ($filters as $filter)
                 {
-                    $this->file_filters[$this->domain->id()][$filter['hash_type']][] = bin2hex($filter['file_hash']);
+                    $this->file_filters[$this->domain->id()][$filter['hash_type']][] = $filter['file_hash'];
                 }
             }
         }
@@ -155,7 +152,7 @@ class Snacks
     {
         $ban_hammer->modifyData('seen', 1);
         $ban_hammer->apply();
-        $output_ban_page = new \Nelliel\Render\OutputBanPage($this->domain, false);
+        $output_ban_page = new \Nelliel\Output\OutputBanPage($this->domain, false);
         $output_ban_page->render(['ban_hammer' => $ban_hammer], false);
         nel_clean_exit();
     }
@@ -171,7 +168,7 @@ class Snacks
                 continue;
             }
 
-            if ($ban_hammer->getData('all_boards') > 0 || $ban_hammer->getData('board_id') === $this->domain->id())
+            if ($ban_hammer->getData('board_id') === Domain::GLOBAL || $ban_hammer->getData('board_id') === $this->domain->id())
             {
                 $range = new Range(new IP($ban_hammer->getData('ip_address_start')),
                         new IP($ban_hammer->getData('ip_address_end')));
@@ -206,7 +203,7 @@ class Snacks
                 continue;
             }
 
-            if ($ban_hammer->getData('all_boards') > 0|| $ban_hammer->getData('board_id') === $this->domain->id())
+            if ($ban_hammer->getData('board_id') === Domain::GLOBAL || $ban_hammer->getData('board_id') === $this->domain->id())
             {
                 if (empty($longest) || $ban_hammer->timeToExpiration() > $longest->timeToExpiration())
                 {

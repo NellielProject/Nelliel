@@ -1,9 +1,12 @@
 <div>
-	[<a href="{{ return_url }}" data-i18n="gettext">Return</a>]
+	<span class="text-button">[<a href="{{ return_url }}" data-i18n="">Return</a>]</span>
 </div>
 {{# posting_form }}
 	{{> thread/posting_form }}
 {{/ posting_form }}
+{{# show_blotter }}
+	{{> pieces/blotter_small }}
+{{/ show_blotter }}
 {{# show_global_announcement }}
 	{{> pieces/global_announcement }}
 {{/ show_global_announcement }}

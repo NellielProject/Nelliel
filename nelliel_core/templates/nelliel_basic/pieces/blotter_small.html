@@ -1,0 +1,10 @@
+<div class="blotter small display-table">
+{{# blotter_entries }}
+	<div class="blotter-entry small display-row">
+		<span class="display-cell">{{ time }} {{ text }}</span>
+	</div>
+{{/ blotter_entries }}
+	<div  class="blotter-link display-row">
+		<span class="text-button display-cell">[<a href="{{ blotter_url }}" data-i18n="">Show All</a>]</span>
+	</div>
+</div>

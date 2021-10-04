@@ -9,14 +9,15 @@
 	--link-hover-color: #CCBB88;
 	--h1-color: #CC0000;
 	--h2-color: #CC0000;
-	--data-table-background: #FFFFFF;
-	--data-table-color: inherit;
-	--data-table-header-background: ;
-	--data-table-header-color: inherit;
-	--data-table-row1-background: #303030;
-	--data-table-row1-color: inherit;
-	--data-table-row2-background: #505050;
-	--data-table-row2-color: inherit;
+	--h3-color: #CC0000;
+	--table-background: #999999;
+	--table-color: inherit;
+	--table-header-background: ;
+	--table-header-color: inherit;
+	--table-row1-background: #303030;
+	--table-row1-color: inherit;
+	--table-row2-background: #505050;
+	--table-row2-color: inherit;
 	--manage-header-background: #404040;
 	--manage-header-color: inherit;
 	--manage-subheader-background: #606060;
@@ -45,4 +46,6 @@
 	--news-article-header-background: #404040;
 	--news-headline-color: inherit;
 	--news-paragraph-color: inherit;
+	--thread-status-icon-color: invert(60%) sepia(50%) saturate(2796%) hue-rotate(11deg) brightness(107%) contrast(94%);
+	--external-link: underline;
 }

@@ -1,0 +1,12 @@
+<tr>
+	{{> panels/pieces/settings/setting_name }}
+{{# input_attributes }}
+	<td>
+		<input id="{{ setting_name }}" class="display-cell" type="{{ input_type }}" name="{{ setting_name }}[value]" size="{{ input_size }}" value="{{ setting_value }}" {{ setting_disabled }}>
+	</td>
+{{/ input_attributes }}
+{{# show_lock_update }}
+	{{> panels/pieces/settings/lock_update }}
+{{/ show_lock_update }}
+	{{> panels/pieces/settings/setting_description }}
+</tr>

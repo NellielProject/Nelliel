@@ -3,11 +3,9 @@ declare(strict_types = 1);
 
 namespace Nelliel\Account;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Auth\AuthUser;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 
@@ -24,15 +22,15 @@ class Login
         $this->database = $domain->database();
     }
 
-    public function validate()
+    public function validate(): AuthUser
     {
-        $captcha = new \Nelliel\CAPTCHA($this->domain);
+        $captcha = new \Nelliel\AntiSpam\CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_login_captcha'))
         {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
-            $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
+            $captcha->verify($captcha_key, $captcha_answer);
         }
 
         if ($this->domain->setting('use_login_recaptcha'))
@@ -40,12 +38,11 @@ class Login
             $captcha->verifyReCAPTCHA();
         }
 
-        $login_data = array();
         $attempt_time = time();
         $hashed_ip_address = nel_request_ip_address(true);
-        $form_user_id = (isset($_POST['user_id'])) ? strval($_POST['user_id']) : '';
-        $session_user_id = (isset($_SESSION['user_id'])) ? strval($_SESSION['user_id']) : '';
-        $form_password = (isset($_POST['super_sekrit'])) ? strval($_POST['super_sekrit']) : '';
+        $form_user_id = strval($_POST['user_id'] ?? '');
+        $session_user_id = strval($_SESSION['user_id'] ?? '');
+        $form_password = strval($_POST['super_sekrit'] ?? '');
         $rate_limit = nel_utilities()->rateLimit();
 
         if ($rate_limit->lastTime($hashed_ip_address, 'login') > $attempt_time - 3)
@@ -90,12 +87,8 @@ class Login
             nel_derp(202, _gettext('User ID or password is incorrect.'));
         }
 
-        $login_data['user_id'] = $form_user_id;
-        $login_data['login_time'] = $attempt_time;
         $rate_limit->clearAttempts($hashed_ip_address, 'login', true);
-        $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_USERS_TABLE . '" SET "last_login" = ? WHERE "user_id" = ?');
-        $this->database->executePrepared($prepared, [time(), $_POST['user_id']]);
-        return $login_data;
+        $user->changeData('last_login', $attempt_time);
+        return $user;
     }
 }

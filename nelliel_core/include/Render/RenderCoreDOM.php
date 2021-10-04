@@ -4,10 +4,9 @@ declare(strict_types=1);
 
 namespace Nelliel\Render;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use Nelliel\Output\Filter;
 
 class RenderCoreDOM extends RenderCore
 {
@@ -16,7 +15,7 @@ class RenderCoreDOM extends RenderCore
 
     function __construct()
     {
-        $this->template_instance = new \NellielTemplates\TemplateCore($this);
+        $this->template_instance = new NellielTemplatesDOM($this);
         $this->template_loaders['file'] = $this->template_instance;
         $this->template_loaders['string'] = $this->template_instance;
         libxml_use_internal_errors(true);

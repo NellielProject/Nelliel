@@ -1,0 +1,12 @@
+<tr>
+	{{> panels/pieces/settings/setting_name }}
+	<td>
+{{# options }}
+		<input id="{{ option_key }}" type="radio" name="{{ setting_name }}[value]" value="{{ option_name }}" {{ option_checked }} {{ setting_disabled }}> 
+{{/ options }}
+	</td>
+{{# show_lock_update }}
+	{{> panels/pieces/settings/lock_update }}
+{{/ show_lock_update }}
+	{{> panels/pieces/settings/setting_description }}
+</tr>

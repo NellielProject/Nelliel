@@ -1,4 +1,6 @@
 <div>
 	{{> navigation/basic_pagination }}
-	<span> [<a href="{{ catalog_url }}" data-i18n="gettext">Catalog</a>]</span>
+	{{# show_catalog_link }}
+	<span class="text-button">[<a href="{{ catalog_url }}" data-i18n="">Catalog</a>]</span>
+	{{/ show_catalog_link }}
 </div>

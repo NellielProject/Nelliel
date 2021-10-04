@@ -3,26 +3,28 @@ declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
+use Nelliel\Domains\DomainGlobal;
 use Nelliel\Domains\DomainSite;
-use Nelliel\Render\OutputPanelUsers;
+use Nelliel\Output\OutputPanelUsers;
 
 class AdminUsers extends Admin
 {
     private $user_id;
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
         $this->user_id = $_GET['user-id'] ?? null;
+        $this->data_table = NEL_USERS_TABLE;
+        $this->id_field = 'user-id';
+        $this->id_column = 'user_id';
+        $this->panel_name = _gettext('Users');
 
         if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))
         {
@@ -30,40 +32,45 @@ class AdminUsers extends Admin
         }
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
     {
-        $this->verifyAccess();
+        parent::dispatch($inputs);
+    }
+
+    public function panel(): void
+    {
+        $this->verifyPermissions($this->domain, 'perm_users_view');
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->main([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
-        $this->verifyAccess();
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->new(['user_id' => $this->user_id], false);
         $this->outputMain(false);
     }
 
-    public function add()
+    public function add(): void
     {
-        $this->verifyAction();
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $this->user_id = $_POST['user_id'];
         $this->update();
         $this->outputMain(true);
     }
 
-    public function editor()
+    public function editor(): void
     {
-        $this->verifyAccess();
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->edit(['user_id' => $this->user_id], false);
         $this->outputMain(false);
     }
 
-    public function update()
+    public function update(): void
     {
-        $this->verifyAction();
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $update_user = $this->authorization->getUser($this->user_id);
 
         if ($update_user->empty())
@@ -83,6 +90,10 @@ class AdminUsers extends Admin
                 if (strpos($key, Domain::SITE))
                 {
                     $domain = new DomainSite($this->database);
+                }
+                else if (strpos($key, Domain::GLOBAL))
+                {
+                    $domain = new DomainGlobal($this->database);
                 }
                 else
                 {
@@ -111,41 +122,32 @@ class AdminUsers extends Admin
         $this->outputMain(true);
     }
 
-    public function remove()
+    public function remove(): void
     {
-        $this->verifyAction();
+        $this->verifyPermissions($this->domain, 'perm_users_manage');
         $this->authorization->removeUser($this->user_id);
         $this->outputMain(true);
     }
 
-    public function enable()
+    protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        $this->verifyAction();
-    }
-
-    public function disable()
-    {
-        $this->verifyAction();
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction();
-    }
-
-    public function verifyAccess()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_access_users'))
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            nel_derp(300, _gettext('You do not have access to the Users panel.'));
+            return;
         }
-    }
 
-    public function verifyAction()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_users'))
+        switch ($perm)
         {
-            nel_derp(301, _gettext('You are not allowed to manage users.'));
+            case 'perm_users_view':
+                nel_derp(395, _gettext('You are not allowed to view users.'));
+                break;
+
+            case 'perm_users_manage':
+                nel_derp(396, _gettext('You are not allowed to manage users.'));
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

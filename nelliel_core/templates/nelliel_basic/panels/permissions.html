@@ -1,27 +1,27 @@
-<p data-i18n="gettext">This panel basically exists for maintenance related to plugins that define extra permissions. Otherwise you shouldn't touch anything here.</p>
+<p data-i18n="">This panel basically exists for maintenance related to plugins that define extra permissions. Otherwise you shouldn't touch anything here.</p>
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="permission" class="display-cell" data-i18n="gettext">Permission</label>
+			<label for="permission" class="display-cell" data-i18n="">Permission</label>
 			<input id="permission" class="display-cell" type="text" name="permission" size="30">
 		</div>
 		<div class="display-row">
-			<label for="perm_description" class="display-cell" data-i18n="gettext">Short description</label>
+			<label for="perm_description" class="display-cell" data-i18n="">Short description</label>
 			<input id="perm_description" class="display-cell" type="text" name="perm_description" size="30">
 		</div>
 		<div class="display-row">
-			<input type="submit" value="Add Permission" data-i18n-attributes="gettext|value">
+			<input type="submit" value="Add Permission" data-i18n-attributes="value">
 		</div>
 	</div>
 </form>
 <hr>
-<table class="data-table">
-	<caption class="data-table-caption" data-i18n="gettext">List of permissions</caption>
-	<thead class="data-table-header">
+<table >
+	<caption data-i18n="">List of permissions</caption>
+	<thead>
 		<tr>
-			<th data-i18n="gettext">Permission</th>
-			<th data-i18n="gettext">Description</th>
-			<th data-i18n="gettext">Remove</th>
+			<th scope="col" data-i18n="">Permission</th>
+			<th scope="col" data-i18n="">Description</th>
+			<th scope="col" data-i18n="">Remove</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -30,7 +30,7 @@
 			<td>{{ permission }}</td>
 			<td>{{ perm_description }}</td>
 			<td>
-				<a class="display-cell" href="{{ remove_url }}" data-i18n="gettext">Remove Permission</a>
+				<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove Permission</a>
 			</td>
 		</tr>
 {{/ permission_list }}

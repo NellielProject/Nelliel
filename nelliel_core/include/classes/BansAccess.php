@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Nelliel;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use PDO;
 
@@ -82,7 +79,7 @@ class BansAccess
                     'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ?');
         }
 
-        $prepared->bindValue(1, nel_prepare_hash_for_storage($hashed_ip), PDO::PARAM_LOB);
+        $prepared->bindValue(1, $hashed_ip, PDO::PARAM_STR);
         $ban_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
 
         if (is_array($ban_ids))
@@ -125,7 +122,7 @@ class BansAccess
         else
         {
             $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '"');
-            $ban_ids = $this->database->executePreparedFetchAll($prepared, [], PDO::FETCH_COLUMN);
+            $ban_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
         }
 
         if (is_array($ban_ids))

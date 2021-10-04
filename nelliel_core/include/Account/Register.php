@@ -3,10 +3,7 @@ declare(strict_types = 1);
 
 namespace Nelliel\Account;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -26,7 +23,7 @@ class Register
 
     public function new()
     {
-        $captcha = new \Nelliel\CAPTCHA($this->domain);
+        $captcha = new \Nelliel\AntiSpam\CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_register_captcha'))
         {
@@ -51,7 +48,10 @@ class Register
         {
             $install_id = '';
 
-            include NEL_GENERATED_FILES_PATH . 'create_owner.php';
+            if (file_exists(NEL_GENERATED_FILES_PATH . 'create_owner.php'))
+            {
+                include NEL_GENERATED_FILES_PATH . 'create_owner.php';
+            }
 
             if ($install_id != $_GET['create_owner'])
             {
@@ -88,7 +88,7 @@ class Register
         }
         else
         {
-            $new_user->modifyRole('', 'BASIC_USER');
+            $new_user->modifyRole(Domain::SITE, 'BASIC_USER');
             $new_user->changeData('owner', 0);
         }
 
@@ -103,7 +103,7 @@ class Register
             unlink(NEL_GENERATED_FILES_PATH . 'create_owner.php');
         }
 
-        $output_register = new \Nelliel\Render\OutputRegisterPage($this->domain, false);
+        $output_register = new \Nelliel\Output\OutputRegisterPage($this->domain, false);
         $output_register->render(['section' => 'registration-done'], false);
     }
 }

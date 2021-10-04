@@ -1,8 +1,7 @@
 <?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+// Everything in this file should a hard-coded constant
 
 define('NEL_LIBRARY_PATH', NEL_CORE_PATH . 'libraries/'); // Libraries path
 
@@ -17,6 +16,7 @@ define('NEL_FONTS_DIR', 'fonts');
 define('NEL_GENERAL_DIR', '.nelliel');
 define('NEL_CAPTCHA_DIR', 'captchas');
 define('NEL_BANNERS_DIR', 'banners');
+define('NEL_DOCUMENTATION_DIR', 'documentation');
 
 define('NEL_MAIN_SCRIPT', 'imgboard.php');
 define('NEL_MAIN_SCRIPT_QUERY', 'imgboard.php?');
@@ -24,23 +24,26 @@ define('NEL_MAIN_INDEX', 'index');
 define('NEL_PAGE_EXT', '.html');
 define('NEL_JSON_EXT', '.json');
 
-define('NEL_ASSETS_TABLE', 'nelliel_assets');
 define('NEL_BANS_TABLE', 'nelliel_bans');
 define('NEL_BLOTTER_TABLE', 'nelliel_blotter');
 define('NEL_BOARD_DATA_TABLE', 'nelliel_board_data');
+define('NEL_BOARD_CONFIGS_TABLE', 'nelliel_board_configs');
 define('NEL_BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
+define('NEL_CACHE_TABLE', 'nelliel_cache');
 define('NEL_CAPTCHA_TABLE', 'nelliel_captcha');
 define('NEL_CITES_TABLE', 'nelliel_cites');
 define('NEL_DNSBL_TABLE', 'nelliel_DNSBL');
+define('NEL_DOMAIN_REGISTRY_TABLE', 'nelliel_domain_registry');
 define('NEL_EMBEDS_TABLE', 'nelliel_embeds');
 define('NEL_FILES_FILTERS_TABLE', 'nelliel_file_filters');
 define('NEL_FILETYPES_TABLE', 'nelliel_filetypes');
-define('NEL_IF_THENS_TABLE', 'nelliel_if_thens');
+define('NEL_IP_NOTES_TABLE', 'nelliel_ip_notes');
 define('NEL_LOGS_TABLE', 'nelliel_logs');
 define('NEL_NEWS_TABLE', 'nelliel_news');
+define('NEL_PAGES_TABLE', 'nelliel_pages');
 define('NEL_PERMISSIONS_TABLE', 'nelliel_permissions');
 define('NEL_PLUGINS_TABLE', 'nelliel_plugins');
-define('NEL_PMS_TABLE', 'nelliel_pms');
+define('NEL_PRIVATE_MESSAGES_TABLE', 'nelliel_private_messages');
 define('NEL_OVERBOARD_TABLE', 'nelliel_overboard');
 define('NEL_RATE_LIMIT_TABLE', 'nelliel_rate_limit');
 define('NEL_REPORTS_TABLE', 'nelliel_reports');
@@ -48,12 +51,14 @@ define('NEL_ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');
 define('NEL_ROLES_TABLE', 'nelliel_roles');
 define('NEL_SETTINGS_TABLE', 'nelliel_settings');
 define('NEL_SITE_CONFIG_TABLE', 'nelliel_site_config');
-define('NEL_STAFF_BOARD_TABLE', 'nelliel_staff_board');
+define('NEL_NOTICEBOARD_TABLE', 'nelliel_noticeboard');
 define('NEL_TEMPLATES_TABLE', 'nelliel_templates');
 define('NEL_USER_ROLES_TABLE', 'nelliel_user_roles');
 define('NEL_USERS_TABLE', 'nelliel_users');
 define('NEL_VERSIONS_TABLE', 'nelliel_version');
 define('NEL_WORD_FILTERS_TABLE', 'nelliel_word_filters');
+define('NEL_STYLES_TABLE', 'nelliel_styles');
+define('NEL_ICON_SETS_TABLE', 'nelliel_icon_sets');
 
 define('NEL_ASSETS_FILES_PATH', NEL_BASE_PATH . NEL_ASSETS_DIR . '/');
 define('NEL_CONFIG_FILES_PATH', NEL_CORE_PATH . 'configuration/');
@@ -71,21 +76,6 @@ define('NEL_WAT_FILES_PATH', NEL_INCLUDE_PATH . 'wat/');
 define('NEL_GENERAL_FILES_PATH', NEL_BASE_PATH . NEL_GENERAL_DIR . '/');
 define('NEL_CAPTCHA_FILES_PATH', NEL_GENERAL_FILES_PATH . NEL_CAPTCHA_DIR . '/');
 
-
-$dirname = pathinfo($_SERVER['PHP_SELF'], PATHINFO_DIRNAME);
-
-// When running at web root $dirname would result in // which has special meaning and all the URLs are fucked
-if($dirname === '/')
-{
-    define('NEL_BASE_WEB_PATH', '/');
-}
-else
-{
-    define('NEL_BASE_WEB_PATH', $dirname . '/');
-}
-
-unset($dirname);
-
 define('NEL_ASSETS_WEB_PATH', NEL_BASE_WEB_PATH . NEL_ASSETS_DIR . '/');
 define('NEL_SCRIPTS_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_SCRIPTS_DIR . '/');
 define('NEL_MEDIA_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_MEDIA_DIR . '/');
@@ -97,4 +87,4 @@ define('NEL_MAIN_SCRIPT_QUERY_WEB_PATH', NEL_BASE_WEB_PATH . NEL_MAIN_SCRIPT_QUE
 define('NEL_GENERAL_WEB_PATH', NEL_GENERAL_DIR . '/');
 define('NEL_CAPTCHA_WEB_PATH', NEL_GENERAL_WEB_PATH . NEL_CAPTCHA_DIR . '/');
 
-define('NEL_SQLITE_DB_DEFAULT_PATH', '../');
+define('NEL_SQLITE_DB_DEFAULT_PATH', NEL_CORE_PATH);

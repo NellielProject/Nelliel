@@ -1,24 +1,19 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\API\JSON\JSONBoard;
-use Nelliel\API\JSON\JSONBoardList;
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainBoard;
-use Nelliel\Render\OutputCatalog;
-use Nelliel\Render\OutputIndex;
-use Nelliel\Render\OutputNews;
-use Nelliel\Render\OutputOverboard;
-use Nelliel\Render\OutputThread;
+use Nelliel\Output\OutputBlotter;
+use Nelliel\Output\OutputCatalog;
+use Nelliel\Output\OutputIndex;
+use Nelliel\Output\OutputNews;
+use Nelliel\Output\OutputOverboard;
+use Nelliel\Output\OutputThread;
 use PDO;
+use Nelliel\Output\OutputHomePage;
 
 class Regen
 {
@@ -42,14 +37,29 @@ class Regen
 
     public function news(Domain $domain)
     {
-        $news = new OutputNews($domain, true);
-        $news->render(array(), false);
+        $output_news = new OutputNews($domain, true);
+        $output_news->render(array(), false);
+    }
+
+    public function homePage(Domain $domain)
+    {
+        if ($domain->setting('generate_home_page'))
+        {
+            $output_home_page = new OutputHomePage($domain, true);
+            $output_home_page->render(array(), false);
+        }
+    }
+
+    public function blotter(Domain $domain)
+    {
+        $output_blotter = new OutputBlotter($domain, true);
+        $output_blotter->render(array(), false);
     }
 
     public function index(Domain $domain)
     {
-        $output_thread = new OutputIndex($domain, true);
-        $output_thread->render(['thread_id' => 0], false);
+        $output_index = new OutputIndex($domain, true);
+        $output_index->render([], false);
         $output_catalog = new OutputCatalog($domain, true);
         $output_catalog->render([], false);
     }
@@ -69,44 +79,41 @@ class Regen
         }
     }
 
-    public function boardList(Domain $domain)
+    public function allBoards(bool $pages, bool $cache)
     {
-        $board_json = new JSONBoard($domain, nel_utilities()->fileHandler());
-        $board_list_json = new JSONBoardList($domain, nel_utilities()->fileHandler());
+        $domain = nel_site_domain();
         $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
                 PDO::FETCH_COLUMN);
 
         foreach ($board_ids as $id)
         {
-            $board_domain = new DomainBoard($id, $domain->database());
-            $board_config = $domain->database()->executeFetchAll(
-                    'SELECT "setting_name", "setting_value" FROM "' . $board_domain->reference('config_table') . '"',
-                    PDO::FETCH_ASSOC);
-            $board_data = ['board_id' => $id];
+            $board_domain = Domain::getDomainFromID($id, $domain->database());
 
-            foreach ($board_config as $config)
+            if ($cache)
             {
-                $board_data[$config['setting_name']] = $config['setting_value'];
+                $board_domain->regenCache();
             }
 
-            $board_list_json->addBoardData($board_json->prepareData($board_data));
+            if ($pages)
+            {
+                $this->allBoardPages($board_domain);
+            }
         }
-
-        $board_list_json->writeStoredData(NEL_BASE_PATH, 'boards');
     }
 
     public function allSitePages(Domain $domain)
     {
-        $this->boardList($domain);
+        $this->blotter($domain);
+        $this->news($domain);
+        $this->homePage($domain);
     }
 
     public function allBoardPages(Domain $domain)
     {
         $result = $domain->database()->query(
-                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "archive_status" = 0');
+                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
-        $domain->database()->query(
-                'UPDATE "' . $domain->reference('posts_table') . '" SET regen_cache = 1');
+        $domain->database()->query('UPDATE "' . $domain->reference('posts_table') . '" SET regen_cache = 1');
         $this->threads($domain, true, $ids);
         $this->index($domain);
     }
@@ -114,7 +121,7 @@ class Regen
     public function postCache(Domain $domain)
     {
         $result = $domain->database()->query(
-                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "archive_status" = 0');
+                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $this->threads($domain, true, $ids);
         $this->index($domain);

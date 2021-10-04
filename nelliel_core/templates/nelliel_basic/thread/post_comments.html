@@ -6,10 +6,14 @@
 {{# long_comment }}
 	{{> thread/pieces/long_comment }}
 {{/ long_comment }}
-	<small class="{{ op_reply }} site-post-disclaimer">
-		<i>{{ site_content_disclaimer }}</i>
-	</small>
-	<small class="{{ op_reply }} board-post-disclaimer">
-		<i>{{ board_content_disclaimer }}</i>
-	</small>
+{{# site_content_disclaimer_lines }}
+	<div class="{{ op_reply }} site-post-disclaimer">
+		<small><i>{{ text }}</i></small>
+	</div>
+{{/ site_content_disclaimer_lines }}
+{{# board_content_disclaimer_lines }}
+	<div class="{{ op_reply }} board-post-disclaimer">
+		<small><i>{{ text }}</i></small>
+	</div>
+{{/ board_content_disclaimer_lines }}
 </div>

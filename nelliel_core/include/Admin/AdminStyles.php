@@ -1,112 +1,81 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class AdminStyles extends Admin
 {
 
-    function __construct(Authorization $authorization, Domain $domain, Session $session, array $inputs)
+    function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
-        parent::__construct($authorization, $domain, $session, $inputs);
+        parent::__construct($authorization, $domain, $session);
+        $this->data_table = NEL_STYLES_TABLE;
+        $this->id_field = 'style-id';
+        $this->id_column = 'style_id';
+        $this->panel_name = _gettext('Styles');
     }
 
-    public function renderPanel()
+    public function dispatch(array $inputs): void
     {
-        $this->verifyAccess();
-        $output_panel = new \Nelliel\Render\OutputPanelStyles($this->domain, false);
+        parent::dispatch($inputs);
+    }
+
+    public function panel(): void
+    {
+        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $output_panel = new \Nelliel\Output\OutputPanelStyles($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator()
+    public function creator(): void
     {
-        $this->verifyAccess();
     }
 
-    public function add()
+    public function add(): void
     {
-        $this->verifyAction();
-        $style_id = $_GET['style-id'];
-        $style_inis = $this->domain->frontEndData()->getStyleInis();
+        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getStyle($id)->install();
+        $this->outputMain(true);
+    }
 
-        foreach ($style_inis as $ini)
+    public function editor(): void
+    {
+    }
+
+    public function update(): void
+    {
+    }
+
+    public function remove(): void
+    {
+        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getStyle($id)->uninstall();
+        $this->outputMain(true);
+    }
+
+    protected function verifyPermissions(Domain $domain, string $perm): void
+    {
+        if ($this->session_user->checkPermission($domain, $perm))
         {
-            if ($ini['id'] === $style_id)
-            {
-                $info = json_encode($ini);
-            }
+            return;
         }
 
-        $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_ASSETS_TABLE . '" ("asset_id", "type", "is_default", "info") VALUES (?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$style_id, 'style', 0, $info]);
-        $this->outputMain(true);
-    }
-
-    public function editor()
-    {
-        $this->verifyAccess();
-    }
-
-    public function update()
-    {
-        $this->verifyAction();
-    }
-
-    public function remove()
-    {
-        $this->verifyAction();
-        $style_id = $_GET['style-id'];
-        $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_ASSETS_TABLE . '" WHERE "asset_id" = ? AND "type" = \'style\'');
-        $this->database->executePrepared($prepared, [$style_id]);
-        $this->outputMain(true);
-    }
-
-    public function enable()
-    {
-        $this->verifyAction();
-    }
-
-    public function disable()
-    {
-        $this->verifyAction();
-    }
-
-    public function makeDefault()
-    {
-        $this->verifyAction();
-        $style_id = $_GET['style-id'];
-        $this->database->exec('UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 0 WHERE "type" = \'style\'');
-        $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_ASSETS_TABLE . '" SET "is_default" = 1 WHERE "asset_id" = ? AND "type" = \'style\'');
-        $this->database->executePrepared($prepared, [$style_id]);
-        $this->outputMain(true);
-    }
-
-    public function verifyAccess()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
+        switch ($perm)
         {
-            nel_derp(410, _gettext('You do not have access to the Styles panel.'));
-        }
-    }
+            case 'perm_styles_manage':
+                nel_derp(385, _gettext('You are not allowed to manage styles.'));
+                break;
 
-    public function verifyAction()
-    {
-        if (!$this->session_user->checkPermission($this->domain, 'perm_manage_styles'))
-        {
-            nel_derp(411, _gettext('You are not allowed to manage styles.'));
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

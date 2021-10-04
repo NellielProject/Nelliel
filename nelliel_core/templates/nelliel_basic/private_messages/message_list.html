@@ -1,0 +1,32 @@
+<div>
+	<a href="{{ new_url }}" data-i18n="">New message</a>
+</div>
+<table>
+	<caption data-i18n="">List of your private messages</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Read</th>
+			<th scope="col" data-i18n="">Time</th>
+			<th scope="col" data-i18n="">Sender</th>
+			<th scope="col" data-i18n="">Message</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# private_messages }}
+		<tr class="{{ bgclass }}">
+			<td>{{ message_read }}</td>
+			<td>{{ time }}</td>
+			<td>{{ sender }}</td>
+			<td>{{ message }}</td>
+			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ view_url }}" data-i18n="">View</a>]</span>
+	{{^ message_read }}
+				<span class="text-button">[<a class="display-cell" href="{{ mark_read_url }}" data-i18n="">Mark as read</a>]</span>
+	{{/ message_read }}
+				<span class="text-button">[<a class="display-cell" href="{{ delete_url }}" data-i18n="">Delete</a>]</span>
+			</td>
+		</tr>
+{{/ private_messages }}
+	</tbody>
+</table>

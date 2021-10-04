@@ -1,12 +1,12 @@
-<table class="data-table">
-	<caption class="data-table-caption" data-i18n="gettext">List of roles</caption>
-	<thead class="data-table-header">
+<table >
+	<caption data-i18n="">List of roles</caption>
+	<thead>
 		<tr>
-			<th data-i18n="gettext">Role ID</th>
-			<th data-i18n="gettext">Level</th>
-			<th data-i18n="gettext">Title</th>
-			<th data-i18n="gettext">Capcode Text</th>
-			<th data-i18n="gettext">Actions</th>
+			<th scope="col" data-i18n="">Role ID</th>
+			<th scope="col" data-i18n="">Level</th>
+			<th scope="col" data-i18n="">Title</th>
+			<th scope="col" data-i18n="">Capcode Text</th>
+			<th scope="col" data-i18n="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -17,8 +17,8 @@
 			<td>{{ role_title }}</td>
 			<td>{{ capcode }}</td>
 			<td>
-				<span>[<a href="{{ edit_url }}" data-i18n="gettext">Edit</a>]</span>
-				<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>
+				<span class="text-button">[<a href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
+				<span class="text-button">[<a href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
 			</td>
 		</tr>
 {{/ roles_list }}
@@ -26,5 +26,5 @@
 </table>
 <hr>
 <div>
-	<a href="{{ new_role_url }}" data-i18n="gettext">New Role</a>
+	<a href="{{ new_role_url }}" data-i18n="">New Role</a>
 </div>

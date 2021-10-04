@@ -4,10 +4,7 @@ declare(strict_types=1);
 
 namespace Nelliel;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class Moar
 {
@@ -43,7 +40,7 @@ class Moar
         return json_encode($this->get($index));
     }
 
-    public function modify($index = null, $moar)
+    public function modify($index, $moar)
     {
         $this->moar[$index] = $moar;
     }

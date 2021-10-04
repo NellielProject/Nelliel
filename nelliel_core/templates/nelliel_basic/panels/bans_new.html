@@ -2,7 +2,7 @@
 	<div class="display-table">
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="ban_ip" data-i18n="gettext">Enter an IP address, hash or range:</label>
+				<label for="ban_ip" data-i18n="">Enter an IP address, hash or range:</label>
 			</span>
 			<span class="display-cell">
 				<input id="ban_ip" type="text" name="ban_ip" value="{{ ban_ip }}">
@@ -10,7 +10,7 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="ban_board" data-i18n="gettext">Apply ban to this board:</label>
+				<label for="ban_board" data-i18n="">Apply ban to this board:</label>
 			</span>
 			<span class="display-cell">
 				<input id="ban_board"  type="text" name="ban_board" value="{{ ban_board }}">
@@ -18,32 +18,32 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<input type="hidden" name="ban_all_boards[default]" value="0">
-				<input id="ban_all_boards" type="checkbox" name="ban_all_boards[value]" value="1" {{ all_boards }}>
-				<label for="ban_all_boards" data-i18n="gettext">Ban from all boards. This overrides any specific boards.</label>
+				<input type="hidden" name="ban_global[default]" value="0">
+				<input id="ban_global" type="checkbox" name="ban_global[value]" value="1" {{ global }}>
+				<label for="ban_global" data-i18n="">Ban from all boards. This overrides any specific boards.</label>
 			</span>
 		</div>
 		<div class="display-row">
-			<span class="display-cell" data-i18n="gettext">Ban length:</span>
+			<span class="display-cell" data-i18n="">Ban length:</span>
 			<span class="display-cell">
-				<label for="ban_time_years" data-i18n="gettext">Years</label>
+				<label for="ban_time_years" data-i18n="">Years</label>
 				<input id="ban_time_years" type="number" name="ban_time_years" size="6" value="0">&nbsp;&nbsp;&nbsp;
-				<label for="ban_time_days" data-i18n="gettext">Days</label>
+				<label for="ban_time_days" data-i18n="">Days</label>
 				<input id="ban_time_days" type="number" name="ban_time_days" size="6" value="0">&nbsp;&nbsp;&nbsp;
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell"></span>
 			<span class="display-cell">
-				<label for="ban_time_hours" data-i18n="gettext">Hours</label>
+				<label for="ban_time_hours" data-i18n="">Hours</label>
 				<input id="ban_time_hours"  type="number" name="ban_time_hours" size="6" value="0">&nbsp;&nbsp;&nbsp;
-				<label for="ban_time_minutes" data-i18n="gettext">Minutes</label>
+				<label for="ban_time_minutes" data-i18n="">Minutes</label>
 				<input id="ban_time_minutes"  type="number" name="ban_time_minutes" size="6" value="0">&nbsp;&nbsp;&nbsp;
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="ban_reason" data-i18n="gettext">Ban reason (optional):</label>
+				<label for="ban_reason" data-i18n="">Ban reason (optional):</label>
 			</span>
 			<span class="display-cell">
 				<textarea id="ban_reason" name="ban_reason" cols="32" rows="3"></textarea>
@@ -52,7 +52,7 @@
 		{{# is_post_ban }}
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="mod_post_comment" data-i18n="gettext">Attach comment to post (optional):</label>
+				<label for="mod_post_comment" data-i18n="">Attach comment to post (optional):</label>
 			</span>
 			<span class="display-cell">
 				<textarea id="mod_post_comment" name="mod_post_comment" cols="32" rows="3"></textarea>
@@ -61,7 +61,7 @@
 		{{/ is_post_ban }}
 		<div class="display-row">
 			<span class="display-cell">
-				<input type="submit" value="Add Ban" data-i18n-attributes="gettext|value">
+				<input type="submit" value="Add Ban" data-i18n-attributes="value">
 			</span>
 		</div>
 	</div>

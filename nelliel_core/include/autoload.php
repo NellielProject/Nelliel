@@ -1,8 +1,5 @@
 <?php
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 spl_autoload_register(function ($class)
 {
@@ -58,6 +55,5 @@ function nel_autoload_core($class, $prefix, $base_directory)
 }
 
 require_once NEL_LIBRARY_PATH . 'phpDOMExtend/autoload.php';
-require_once NEL_LIBRARY_PATH . 'NellielTemplates/autoload.php';
 require_once NEL_LIBRARY_PATH . 'SmallPHPGettext/autoload.php';
 require_once NEL_LIBRARY_PATH . 'Mustache/src/Mustache/Autoloader.php';

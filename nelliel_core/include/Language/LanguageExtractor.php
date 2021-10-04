@@ -1,48 +1,46 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Language;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use SmallPHPGettext\SmallPHPGettext;
+use Mustache_Tokenizer;
+use Mustache_Parser;
 use PDO;
 
 class LanguageExtractor
 {
     private $domain;
-    private $language;
-    private $gettext_helpers;
+    private $gettext;
 
-    function __construct(Domain $domain)
+    function __construct(Domain $domain, SmallPHPGettext $gettext)
     {
         $this->domain = $domain;
-        $this->language = new Language();
-        $this->gettext_helpers = new \SmallPHPGettext\Helpers();
+        $this->gettext = $gettext;
     }
 
     public function assemblePoString(string $default_textdomain, int $default_category)
     {
         $outputs = array();
         $strings = array();
-        $strings = $this->parseHTMLFiles($strings, $default_category);
-        $strings = $this->parseSiteFiles($strings, $default_category);
-        $strings = $this->parseDatabaseEntries($strings, $default_category);
+        $strings = array_replace_recursive($strings, $this->parseSiteFiles($default_category));
+        $strings = array_replace_recursive($strings, $this->parseMustacheTemplates($default_category));
+        $strings = array_replace_recursive($strings, $this->parseHTMLFiles($default_category));
+        $strings = array_replace_recursive($strings, $this->parseDatabaseEntries($default_category));
 
         foreach ($strings as $category => $entries)
         {
-            $output_category = $this->gettext_helpers->categoryToString($category);
+            $output_category = $category;
 
             if (!isset($outputs[$output_category]))
             {
                 $outputs[$output_category] = array();
             }
 
-            foreach ($entries as $msgid => $data)
+            foreach ($entries as $data)
             {
                 $output_string = '';
 
@@ -56,20 +54,19 @@ class LanguageExtractor
 
                 if (isset($data['msgctxt']))
                 {
-                    $output_string .= 'msgctxt "' . $this->gettext_helpers->stringToPo($data['msgctxt']) . '"' . "\n";
+                    $output_string .= 'msgctxt "' . $this->gettext->poEncode($data['msgctxt']) . '"' . "\n";
                 }
 
                 if (isset($data['msgid']))
                 {
 
-                    $message = $this->gettext_helpers->stringToPo($data['msgid']);
+                    $message = $this->gettext->poEncode($data['msgid']);
                     $output_string .= 'msgid "' . $this->wrapLine($message, 79, '') . '"' . "\n";
                 }
 
                 if (isset($data['msgid_plural']))
                 {
-                    $output_string .= 'msgid_plural "' . $this->gettext_helpers->stringToPo($data['msgid_plural']) . '"' .
-                            "\n";
+                    $output_string .= 'msgid_plural "' . $this->gettext->poEncode($data['msgid_plural']) . '"' . "\n";
                     $output_string .= 'msgstr[0] ""' . "\n";
                     $output_string .= 'msgstr[1] ""' . "\n";
                 }
@@ -118,8 +115,9 @@ class LanguageExtractor
         return $headers;
     }
 
-    private function parseSiteFiles(array $strings, int $default_category)
+    private function parseSiteFiles(int $default_category): array
     {
+        $entries = array();
         $file_handler = nel_utilities()->fileHandler();
         $php_files = $file_handler->recursiveFileList(NEL_BASE_PATH, 0);
         $php_files = array_merge($php_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
@@ -152,7 +150,10 @@ class LanguageExtractor
 
                         if (!empty($entry) && isset($entry[1]))
                         {
-                            $this->addPHPMatch($strings, $entry, $default_category);
+                            $entry_data = $this->getFunctionParameters($entry, $default_category);
+                            $current_data = $entries[$entry_data['category']][$entry_data['msgid']] ?? array();
+                            $entries[$entry_data['category']][$entry_data['msgid']] = array_replace_recursive(
+                                    $current_data, $entry_data);
                         }
 
                         $entry = array();
@@ -175,10 +176,10 @@ class LanguageExtractor
                     {
                         $matches = array();
 
-                        if (preg_match('/^_([a-z]*?)gettext$/u', $token[1], $matches))
+                        if (preg_match('/^_*?(__|np|n|p|dn|dcn|dc|d)*?(?:gettext)*?$/u', $token[1], $matches))
                         {
                             $entry['file'] = $file_id;
-                            $entry['prefix'] = $matches[1];
+                            $entry['prefix'] = $matches[1] ?? '';
                             $entry['line_number'] = $token[2];
                             $function_found = true;
                         }
@@ -195,31 +196,13 @@ class LanguageExtractor
             }
         }
 
-        return $strings;
+        return $entries;
     }
 
-    private function getCategoryValue($category)
+    private function getFunctionParameters(array $entry, int $default_category)
     {
-        if (is_numeric($category))
-        {
-            $value = intval($category);
-        }
-        else
-        {
-            $value = $this->gettext_helpers->categoryFromString($category);
-        }
-
-        if ($value !== false && $value > 1 && $value < 7)
-        {
-            return $value;
-        }
-
-        return false;
-    }
-
-    private function addPHPMatch(array &$strings, array $entry, int $default_category)
-    {
-        $category = '';
+        $data = array();
+        $category = $default_category;
         $msgid = '';
         $msgid_plural = '';
         $domain = '';
@@ -245,12 +228,12 @@ class LanguageExtractor
             $msgid = $entry[2];
             $msgid_plural = $entry[3];
         }
-        else if ($entry['prefix'] === 'p')
+        else if ($entry['prefix'] === 'd')
         {
             $domain = $entry[1];
             $msgid = $entry[2];
         }
-        else if ($entry['prefix'] === 'np')
+        else if ($entry['prefix'] === 'dn')
         {
             $domain = $entry[1];
             $msgid = $entry[2];
@@ -270,43 +253,82 @@ class LanguageExtractor
             $category = $entry[5];
         }
 
-        if ($category !== '')
+        $data['category'] = $category;
+        $data['msgid'] = $msgid;
+
+        if ($msgid_plural !== '')
         {
-            $value = $this->getCategoryValue($category);
-            $category = ($value !== false) ? $value : $default_category;
-            $strings[$category][$msgid]['category'] = $category;
-        }
-        else
-        {
-            $category = $default_category;
+            $data['msgid_plural'] = $msgid_plural;
         }
 
         if ($domain !== '')
         {
-            $strings[$category][$msgid]['domain'] = $domain;
+            $data['domain'] = $domain;
         }
 
-        $strings[$category][$msgid]['msgid'] = $msgid;
-
-        if ($msgid_plural !== '')
+        if ($context !== '')
         {
-            $strings[$category][$msgid]['msgid_plural'] = $msgid_plural;
+            $data['context'] = $context;
         }
 
         $location = $entry['file'] . ':' . $entry['line_number'];
-        $strings[$category][$msgid]['comments'][$location] = '#:';
+        $data['comments'][$location] = '#:';
 
         if (preg_match('/%[-\+ 0\'bcdeEfFgGosuxX]/', $msgid) === 1 ||
                 preg_match('/%[-\+ 0\'bcdeEfFgGosuxX]/', $msgid_plural) === 1)
         {
-            $strings[$category][$msgid]['comments']['php-format'] = '#,';
+            $data['comments']['php-format'] = '#,';
         }
+
+        return $data;
     }
 
-    private function parseHTMLFiles(array $strings, int $default_category)
+    private function parseMustacheTemplates(int $default_category): array
     {
+        $entries = array();
         $file_handler = nel_utilities()->fileHandler();
-        $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/'); // TODO: Be able to parse custom template sets
+        $template_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/');
+        $template_files = array_merge($template_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
+
+        foreach ($template_files as $file)
+        {
+            if ($file->getExtension() !== 'html')
+            {
+                continue;
+            }
+
+            $tokenizer = new Mustache_Tokenizer();
+            $parser = new Mustache_Parser();
+            $file_id = str_replace(NEL_BASE_PATH, '', $file->getPathname());
+            $template = file_get_contents($file->getPathname());
+            $entry = array();
+
+            foreach ($parser->parse($tokenizer->scan($template)) as $node)
+            {
+                if ($node['type'] === Mustache_Tokenizer::T_SECTION && $node['name'] === 'gettext')
+                {
+                    $start = $node[Mustache_Tokenizer::INDEX];
+                    $end = $node[Mustache_Tokenizer::END];
+                    $msgid = substr($template, $start, $end - $start);
+                    $entry['msgid'] = $file_id;
+                    $entry['file'] = $file_id;
+                    $entry['prefix'] = ''; // TODO: Change this handler when we add more support
+                    $entry['line_number'] = $node['line'];
+                    $location = $entry['file'] . ':' . ($entry['line_number'] + 1);
+                    $entry['comments'][$location] = '#:';
+                    $entries[$default_category][$msgid] = $entry;
+                }
+            }
+        }
+
+        return $entries;
+    }
+
+    private function parseHTMLFiles(int $default_category): array
+    {
+        $entries = array();
+        $file_handler = nel_utilities()->fileHandler();
+        $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/');
         $html_files = array_merge($html_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
         $render = new \Nelliel\Render\RenderCoreDOM();
 
@@ -325,49 +347,42 @@ class LanguageExtractor
             $content_node_list = $dom->getElementsByAttributeName('data-i18n');
             $attribute_node_list = $dom->getElementsByAttributeName('data-i18n-attributes');
 
-            foreach ($attribute_node_list as $node)
+            foreach ($content_node_list as $node)
             {
-                $split_attribute = explode('|', $node->getAttribute('data-i18n-attributes'), 2);
+                $msgid = $node->getContent();
 
-                if ($split_attribute[0] === 'gettext')
+                if ($msgid !== '')
                 {
-                    $attribute_list = explode(',', $split_attribute[1]);
-
-                    foreach ($attribute_list as $attribute_name)
-                    {
-                        $msgid = $node->getAttribute(trim($attribute_name));
-
-                        if ($msgid !== '')
-                        {
-                            $location = $file_id;
-                            $strings[$default_category][$msgid]['msgid'] = $msgid;
-                            $strings[$default_category][$msgid]['comments'][$location] = '#:';
-                        }
-                    }
+                    $location = $file_id;
+                    $entries[$default_category][$msgid]['msgid'] = $msgid;
+                    $entries[$default_category][$msgid]['comments'][$location] = '#:';
                 }
             }
 
-            foreach ($content_node_list as $node)
+            foreach ($attribute_node_list as $node)
             {
-                if ($node->getAttribute('data-i18n') === 'gettext')
+                $attribute_list = explode('|', $node->getAttribute('data-i18n-attributes'));
+
+                foreach ($attribute_list as $attribute_name)
                 {
-                    $msgid = $node->getContent();
+                    $msgid = $node->getAttribute(trim($attribute_name));
 
                     if ($msgid !== '')
                     {
                         $location = $file_id;
-                        $strings[$default_category][$msgid]['msgid'] = $msgid;
-                        $strings[$default_category][$msgid]['comments'][$location] = '#:';
+                        $entries[$default_category][$msgid]['msgid'] = $msgid;
+                        $entries[$default_category][$msgid]['comments'][$location] = '#:';
                     }
                 }
             }
         }
 
-        return $strings;
+        return $entries;
     }
 
-    private function parseDatabaseEntries(array $strings, int $default_category)
+    private function parseDatabaseEntries(int $default_category)
     {
+        $entries = array();
         $database = $this->domain->database();
         $filetype_labels = $database->executeFetchAll('SELECT "type_label" FROM "' . NEL_FILETYPES_TABLE . '"',
                 PDO::FETCH_COLUMN);
@@ -377,8 +392,8 @@ class LanguageExtractor
             if ($label !== '' && !is_null($label))
             {
                 $msgid = $label;
-                $strings[$default_category][$msgid]['msgid'] = $label;
-                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_FILETYPES_TABLE .
+                $entries[$default_category][$msgid]['msgid'] = $label;
+                $entries[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_FILETYPES_TABLE .
                         ' | Column: type_label'] = '#:';
             }
         }
@@ -391,27 +406,27 @@ class LanguageExtractor
             if ($description !== '' && !is_null($description))
             {
                 $msgid = $description;
-                $strings[$default_category][$msgid]['msgid'] = $description;
-                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_PERMISSIONS_TABLE .
+                $entries[$default_category][$msgid]['msgid'] = $description;
+                $entries[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_PERMISSIONS_TABLE .
                         ' | Column: perm_description'] = '#:';
             }
         }
 
-        $setting_descriptions = $database->executeFetchAll('SELECT "setting_description" FROM "' . NEL_SETTINGS_TABLE . '"',
-                PDO::FETCH_COLUMN);
+        $setting_descriptions = $database->executeFetchAll(
+                'SELECT "setting_description" FROM "' . NEL_SETTINGS_TABLE . '"', PDO::FETCH_COLUMN);
 
         foreach ($setting_descriptions as $label)
         {
             if ($label !== '' && !is_null($label))
             {
                 $msgid = $label;
-                $strings[$default_category][$msgid]['msgid'] = $label;
-                $strings[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_SETTINGS_TABLE .
+                $entries[$default_category][$msgid]['msgid'] = $label;
+                $entries[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_SETTINGS_TABLE .
                         ' | Column: setting_description'] = '#:';
             }
         }
 
-        return $strings;
+        return $entries;
     }
 
     private function wrapLine(string $line, int $width, string $break)

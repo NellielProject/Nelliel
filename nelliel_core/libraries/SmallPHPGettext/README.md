@@ -1,9 +1,5 @@
 # SmallPHPGettext
 
-A small library written in PHP to handle gettext functions. Done as a combination learning experience and because a lightweight gettext that could use .po files and be more flexible switching languages and domains was needed for a thing.
+A small standalone library to handle gettext functions in PHP apps without needing gettext to be installed. Uses .po files directly instead of .mo files.
 
-Requires PHP 7.0+
-Uses .po files for input. Support for .mo files might be added later.
-
-### TODO
- - Documentation
+Requires PHP 7.2+

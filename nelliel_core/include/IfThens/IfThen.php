@@ -1,78 +1,63 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\IfThens;
 
-if (!defined('NELLIEL_VERSION'))
-{
-    die("NOPE.AVI");
-}
-
-use Nelliel\NellielPDO;
-use PDO;
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class IfThen
 {
-    private $database;
     private $conditions;
     private $actions;
-    private static $if_thens = array();
+    private $if_thens = array();
+    private $loaded = false;
 
-    function __construct(NellielPDO $database, Conditions $conditions, Actions $actions)
+    function __construct(Conditions $conditions, Actions $actions)
     {
-        $this->database = $database;
         $this->conditions = $conditions;
         $this->actions = $actions;
     }
 
-    public function getIfThens(string $board_id): array
+    public function getIfThens(string $set_id = null): array
     {
-        if (!isset(self::$if_thens[$board_id]))
+        if (!$this->loaded)
         {
-            $this->loadIfThens($board_id);
+            $this->loadIfThens();
         }
 
-        return self::$if_thens[$board_id];
+        if (!is_null($set_id))
+        {
+            return $this->if_thens[$set_id] ?? array();
+        }
+
+        return $this->if_thens;
     }
 
-    public function process(string $board_id)
+    public function process(string $set_id): void
     {
-        $if_thens = $this->getIfThens($board_id);
+        $if_thens = $this->getIfThens($set_id);
 
         foreach ($if_thens as $if_then)
         {
-            $conditions_met = $this->conditions->check($if_then['if']);
+            $conditions = $if_then['conditions'] ?? array();
+            $conditions_met = $this->conditions->check($conditions);
 
             if ($conditions_met)
             {
-                $this->actions->do($if_then['then']);
+                $actions = $if_then['actions'] ?? array();
+                $this->actions->do($actions);
             }
         }
     }
 
-    private function loadIfThens(string $board_id)
+    private function loadIfThens(string $board_id = null): void
     {
-        $prepared = $this->database->prepare(
-                'SELECT "if_conditions", "then_actions" FROM "' . NEL_IF_THENS_TABLE . '" WHERE "board_id" = ?');
-        $if_thens = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+        include NEL_CONFIG_FILES_PATH . 'if_thens.php';
 
-        if (!is_array($if_thens))
+        if (is_array($if_thens))
         {
-            self::$if_thens[$board_id] = array();
-            return;
+            $this->if_thens = $if_thens;
+            $this->loaded = true;
         }
-
-        $decoded_sets = array();
-
-        foreach ($if_thens as $if_then)
-        {
-            $new_set = array();
-            $new_set['if'] = json_decode($if_then['if_conditions'], true);
-            $new_set['then'] = json_decode($if_then['then_actions'], true);
-            $decoded_sets[] = $new_set;
-        }
-
-        self::$if_thens[$board_id] = $decoded_sets;
     }
 }

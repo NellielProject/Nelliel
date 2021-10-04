@@ -1,17 +1,17 @@
-<table class="data-table">
-	<caption class="data-table-caption" data-i18n="gettext">List of bans</caption>
-	<thead class="data-table-header">
+<table>
+	<caption data-i18n="">List of bans</caption>
+	<thead>
 		<tr>
-			<th data-i18n="gettext">Ban ID</th>
-			<th data-i18n="gettext">IP</th>
-			<th data-i18n="gettext">Board</th>
-			<th data-i18n="gettext">All Boards</th>
-			<th data-i18n="gettext">Reason</th>
-			<th data-i18n="gettext">Expiration</th>
-			<th data-i18n="gettext">Appeal</th>
-			<th data-i18n="gettext">Response</th>
-			<th data-i18n="gettext">Status</th>
-			<th data-i18n="gettext">Actions</th>
+			<th scope="col" data-i18n="">Ban ID</th>
+			<th scope="col" data-i18n="">IP</th>
+			<th scope="col" data-i18n="">Board</th>
+			<th scope="col" data-i18n="">Global</th>
+			<th scope="col" data-i18n="">Reason</th>
+			<th scope="col" data-i18n="">Expiration</th>
+			<th scope="col" data-i18n="">Appeal</th>
+			<th scope="col" data-i18n="">Response</th>
+			<th scope="col" data-i18n="">Status</th>
+			<th scope="col" data-i18n="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -20,15 +20,15 @@
 			<td>{{ ban_id }}</td>
 			<td>{{ ip_address }}</td>
 			<td>{{ board_id }}</td>
-			<td>{{ all_boards }}</td>
+			<td>{{ global }}</td>
 			<td>{{ reason }}</td>
 			<td>{{ expiration }}</td>
 			<td>{{ appeal }}</td>
 			<td>{{ appeal_response }}</td>
 			<td>{{ appeal_status }}</td>
 			<td>
-	{{# modify_url }}<span>[<a href="{{ modify_url }}" data-i18n="gettext">Modify</a>]</span>{{/ modify_url }}
-	{{# remove_url }}<span>[<a href="{{ remove_url }}" data-i18n="gettext">Remove</a>]</span>{{/ remove_url }}
+	{{# modify_url }}<span class="text-button">[<a href="{{ modify_url }}" data-i18n="">Modify</a>]</span>{{/ modify_url }}
+	{{# remove_url }}<span class="text-button">[<a href="{{ remove_url }}" data-i18n="">Remove</a>]</span>{{/ remove_url }}
 			</td>
 		</tr>
 {{/ ban_list }}
@@ -36,5 +36,5 @@
 </table>
 <hr>
 <div>
-	<a href="{{ new_ban_url }}" data-i18n="gettext">Add New Ban</a>
+	<a href="{{ new_ban_url }}" data-i18n="">Add New Ban</a>
 </div>

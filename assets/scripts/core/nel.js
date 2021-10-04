@@ -31,7 +31,7 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
         nelliel.setup.fillForms(board_id);
         nelliel.ui.applyHideContent();
     }
-    
+
     nelliel.core.unhideJSonly();
 }
 
@@ -125,8 +125,11 @@ nelliel.events.processPostClick = function(event) {
             nelliel.ui.showHideFileMeta(event.target);
         } else if (command === "add-file-meta") {
             addNewFileMeta(event.target, command);
-        } else if (command === "inline-expand" || command === "inline-reduce") {
-            nelliel.ui.inlineExpandReduce(event.target, command);
+        } else if (command === "inline-expand") {
+            nelliel.ui.inlineExpand(event.target, command);
+            event.preventDefault();
+        } else if (command === "inline-reduce") {
+            nelliel.ui.inlineReduce(event.target, command);
             event.preventDefault();
         } else if (command === "hide-thread" || command === "show-thread" ) {
             nelliel.ui.hideShowThread(event.target, command, content_id);
@@ -286,24 +289,37 @@ function setStyle(style, update = false) {
 
     var allstyles = document.getElementsByTagName("link");
     var menu_style = null;
+    var default_style_attr = null;
+    var valid_set = false;
 
     for (i = 0; i < allstyles.length; i++) {
         if (allstyles[i].getAttribute("data-style-type") == "style-board") {
             var style_id = allstyles[i].getAttribute("data-id");
             allstyles[i].disabled = true;
+            
+            if (allstyles[i].getAttribute("rel") === "stylesheet") {
+                default_style_attr = allstyles[i];
+            }
 
             if (empty_style) {
                 if (allstyles[i].getAttribute("rel") === "stylesheet") {
                     allstyles[i].disabled = false;
                     menu_style = style_id;
+                    valid_set = true;
                 }
             } else {
                 if (style_id === style) {
                     allstyles[i].disabled = false;
                     menu_style = style_id;
+                    valid_set = true;
                 }
             }
         }
+    }
+    
+    if (!valid_set) {
+        default_style_attr.disabled = false;
+        menu_style = default_style_attr.getAttribute("data-id");
     }
 
     var style_menus = document.getElementsByClassName("styles-menu");
