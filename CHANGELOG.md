@@ -1,4 +1,89 @@
 # Nelliel Changelog
+## v0.9.24 (2021/10/4)
+### Breaking
+ - Database
+ - Templates
+
+### Added
+ - More details to requirements
+ - Links to packages and libraries mentioned in `README.md`
+ - NellielTemplates library merged into core code
+ - Domain registry table
+ - Time zone setting in `config.php`
+ - Post editing
+ - Options for customizing post form fields
+ - Custom name for news posts
+ - Separate directory for table classes
+ - New archiving system
+ - Settings for shell path and magick arguments
+ - Blotter
+ - Additional tables for planned features
+ - Private messages
+ - EXIF stripping
+ - New preview options and formats
+ - Lots more settings
+ - Rudimentary home page generation
+ - Preview orientation correction
+ - Automatic GETs option
+ - Raw HTML option for posts
+
+### Changed
+ - Moved all directories except `assets` and `documentation` into `nelliel_core`
+ - Renamed `imagez` to `media`
+ - Updated `composer.json`
+ - Moved banners into `assets`
+ - Updated embed and file counting
+ - Cleanup and debugging of Auth classes
+ - Improved filename handling and filtering
+ - Displayed Mod Mode options now correspond to user permissions
+ - Redo of if-thens
+ - Board configs moved to central table
+ - Updated reserved URIs
+ - Cleanup of domains system
+ - Split rendering cores and output functions into separate modules
+ - Overhaul of dispatch system
+ - Updated SmallPHPGtettext library
+ - Changed poster_name to just name
+ - Language file update
+ - Improvements to template translations
+ - Better asset sets handling
+ - Changed some settings to menus
+ - Rework on page layouts
+ - Overhaul of settings panels
+ - JSON API overhaul
+ - Improved NellielPDO
+ - Better database connection
+ - Better Zalgo filter
+ - Filetypes update and debug
+ - Moved SQLHelpers and SQLCompatibility to utilities
+ - Updated permissions
+ - Overhaul of preview generation
+ - Global delete by IP
+ - Updated dev guidelines
+ - Board list now on account page instead of site panel 
+
+### Fixed
+ - Fixed deletion
+ - Fixed redirects
+ - Fixed raw setting data being inserted into template
+ - About page error message
+ - Regen issues
+ - Stylesheet switching
+ - Fixed cooldowns
+ - Catalog rendering
+ - Cache not being removed when board deleted
+ - Inline expansion
+ - Tables display and styling
+ - Home page setting
+ - Error page return link
+ - Tripcode and capcode parsing
+ - Permasage updates when removing last post
+ - Last login not being stored
+ 
+### Removed
+ - Temporarily removed plugin hooks until API is worked out
+ - NellielTemplates library
+ 
 ## v0.9.23 (2021/6/29)
 ### Breaking
  - Database
