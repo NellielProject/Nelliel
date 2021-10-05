@@ -27,7 +27,7 @@ define('NEL_BASE_WEB_PATH', $dirname . '/');
 unset($dirname);
 
 require_once NEL_INCLUDE_PATH . 'definitions.php'; // Hard-coded constants are defined here
-require_once NEL_INCLUDE_PATH . 'autoload.php'; // Autoloader
+require_once NEL_INCLUDE_PATH . 'autoload.php'; // Autoloaders
 require_once NEL_INCLUDE_PATH . 'accessors.php'; //  Utility functions for accessing various things
 require_once NEL_LIBRARY_PATH . 'portable-utf8/portable-utf8.php'; // UTF-8 support
 require_once NEL_INCLUDE_PATH . 'derp.php'; // Error handler

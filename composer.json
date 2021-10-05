@@ -8,7 +8,11 @@
 		"ext-iconv" : "*",
 		"ext-libxml" : "*",
 		"ext-pdo" : "*",
-		"ext-session" : "*"
+		"ext-session" : "*",
+		"s1lentium/iptools" : "~1.1.1",
+		"cebe/markdown" : "~1.2.1",
+		"psr/log" : "~1.1.4",
+		"mustache/mustache" : "~2.13"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "6.*"
@@ -20,18 +24,20 @@
 		"nelliel",
 		"futallaby"
 	],
+	"authors" : [{
+			"name" : "OtakuMegane",
+			"homepage" : "https://github.com/OtakuMegane"
+		}
+	],
+	"support" : {
+		"source" : "https://github.com/NellielProject/Nelliel",
+		"issues" : "https://github.com/NellielProject/Nelliel/issues"
+	},
 	"autoload" : {
 		"psr-4" : {
-			"Nelliel" : [
-				"nelliel_core/include",
-				"nelliel_core/include/classes"
-			],
-			"IPTools" : "nelliel_core/libraries/IPTools/src",
-			"Psr\\Log" : "nelliel_core/libraries/PSRLog/Psr/Log",
-			"SmallPHPGettext" : "nelliel_core/libraries/SmallPHPGettext/src",
-			"phpDOMExtend" : "nelliel_core/libraries/phpDOMExtend",
-			"NellielTemplates" : "nelliel_core/libraries/NellielTemplates",
-			"" : "nelliel_core"
+			"Nelliel\\" : "include",
+			"SmallPHPGettext\\" : "libraries/SmallPHPGettext/src",
+			"phpDOMExtend\\" : "libraries/phpDOMExtend"
 		}
 	}
 }

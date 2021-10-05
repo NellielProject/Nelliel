@@ -3,7 +3,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 // Everything in this file should a hard-coded constant
 
-define('NEL_LIBRARY_PATH', NEL_CORE_PATH . 'libraries/'); // Libraries path
+define('NEL_LIBRARY_PATH', NEL_CORE_PATH . 'libraries/'); // Provided libraries path
+define('NEL_VENDOR_PATH', NEL_CORE_PATH . 'vendor/'); // Composer vendor path
 
 define('NEL_OVER_9000', 9001);
 define('NEL_ASSETS_DIR', 'assets');
