@@ -3,11 +3,11 @@ declare(strict_types = 1);
 
 namespace Nelliel\Dispatch;
 
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-
-defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 abstract class Dispatch
 {
@@ -23,4 +23,9 @@ abstract class Dispatch
     }
 
     public abstract function dispatch(array $inputs);
+
+    protected function invalidSection()
+    {
+        nel_derp(0, 'Invalid section');
+    }
 }

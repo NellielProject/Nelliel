@@ -5,15 +5,18 @@ namespace Nelliel\Domains;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\FrontEnd\FrontEndData;
 use Nelliel\NellielCacheInterface;
 use Nelliel\NellielPDO;
+use Nelliel\FrontEnd\FrontEndData;
 use Nelliel\Language\Language;
 use Nelliel\Language\Translator;
+use PDO;
 
 abstract class Domain implements NellielCacheInterface
 {
+
     const SITE = '_site_';
+
     const GLOBAL = '_global_';
     protected $domain_id;
     protected $settings;
@@ -46,8 +49,7 @@ abstract class Domain implements NellielCacheInterface
 
     public function database(NellielPDO $new_database = null)
     {
-        if (!is_null($new_database))
-        {
+        if (!is_null($new_database)) {
             $this->database = $new_database;
         }
 
@@ -61,18 +63,15 @@ abstract class Domain implements NellielCacheInterface
 
     public function setting(string $setting = null)
     {
-        if (empty($this->settings))
-        {
+        if (empty($this->settings)) {
             $this->loadSettings();
         }
 
-        if (is_null($setting))
-        {
+        if (is_null($setting)) {
             return $this->settings;
         }
 
-        if (!isset($this->settings[$setting]))
-        {
+        if (!isset($this->settings[$setting])) {
             return null;
         }
 
@@ -81,13 +80,11 @@ abstract class Domain implements NellielCacheInterface
 
     public function reference(string $reference = null)
     {
-        if (empty($this->references))
-        {
+        if (empty($this->references)) {
             $this->loadReferences();
         }
 
-        if (is_null($reference))
-        {
+        if (is_null($reference)) {
             return $this->references;
         }
 
@@ -96,8 +93,7 @@ abstract class Domain implements NellielCacheInterface
 
     public function templatePath($new_path = null)
     {
-        if (!is_null($new_path))
-        {
+        if (!is_null($new_path)) {
             $this->template_path = $new_path;
         }
 
@@ -111,14 +107,12 @@ abstract class Domain implements NellielCacheInterface
 
     public function locale(bool $html_format = false)
     {
-        if (!isset($this->locale))
-        {
+        if (!isset($this->locale)) {
             return NEL_DEFAULT_LOCALE;
         }
 
         // Convert underscore notation to hyphen for HTML
-        if ($html_format)
-        {
+        if ($html_format) {
             return str_replace('_', '-', $this->locale());
         }
 
@@ -131,8 +125,7 @@ abstract class Domain implements NellielCacheInterface
         $this->language->accessGettext()->locale($this->locale);
         $this->language->accessGettext()->textdomain('nelliel');
 
-        if (!$this->language->accessGettext()->translationLoaded('nelliel', LC_MESSAGES))
-        {
+        if (!$this->language->accessGettext()->translationLoaded('nelliel', LC_MESSAGES)) {
             $this->language->loadLanguage($locale, 'nelliel', LC_MESSAGES);
         }
     }
@@ -145,8 +138,7 @@ abstract class Domain implements NellielCacheInterface
     protected function cacheSettings()
     {
         $settings = $this->loadSettingsFromDatabase();
-        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
-                'domains/' . $this->id);
+        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->id);
     }
 
     public function reload(): void
@@ -157,17 +149,21 @@ abstract class Domain implements NellielCacheInterface
 
     public static function getDomainFromID(string $id, NellielPDO $database): Domain
     {
-        if ($id === Domain::SITE)
-        {
+        if ($id === Domain::SITE) {
             return new DomainSite($database);
-        }
-        else if ($id === Domain::GLOBAL)
-        {
+        } else if ($id === Domain::GLOBAL) {
             return new DomainGlobal($database);
-        }
-        else
-        {
+        } else {
             return new DomainBoard($id, $database);
         }
+    }
+
+    public static function validID(string $domain_id): bool
+    {
+        $database = nel_database();
+        $prepared = $database->prepare('SELECT 1 FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');
+        $prepared->bindValue(1, $domain_id, PDO::PARAM_STR);
+        $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+        return $result !== false;
     }
 }

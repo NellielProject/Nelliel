@@ -25,10 +25,8 @@ class OutputLoginPage extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'account', 'section' => 'login', 'actions' => 'submit']);
-        $this->render_data['register_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'account', 'section' => 'register']);
+        $this->render_data['form_action'] = nel_build_router_url(['account', 'login']);;
+        $this->render_data['register_url'] = nel_build_router_url(['account', 'register']);
         $this->render_data['use_login_captcha'] = $this->domain->setting('use_login_captcha');
         $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=anti-spam&section=captcha&actions=get';
         $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .

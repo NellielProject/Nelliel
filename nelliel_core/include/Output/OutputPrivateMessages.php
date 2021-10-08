@@ -26,12 +26,12 @@ class OutputPrivateMessages extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "recipient" = ?');
-        $prepared->bindValue(1, $this->session->user()->id(), PDO::PARAM_STR);
+        $prepared->bindValue(1, $this->session->user()
+            ->id(), PDO::PARAM_STR);
         $list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
-        foreach ($list as $message)
-        {
+        foreach ($list as $message) {
             $message_info = array();
             $message_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
@@ -39,23 +39,15 @@ class OutputPrivateMessages extends Output
             $message_info['time'] = date('Y/m/d l H:i', intval($message['time_sent']));
             $message_info['sender'] = $message['sender'];
             $message_info['message'] = $message['message'];
-            $message_info['view_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'account', 'section' => 'private-message', 'actions' => 'view',
-                                'message-id' => $message['entry']]);
-            $message_info['mark_read_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'account', 'section' => 'private-message', 'actions' => 'mark-read',
-                                'message-id' => $message['entry']]);
-            $message_info['delete_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'account', 'section' => 'private-message', 'actions' => 'delete',
-                                'message-id' => $message['entry']]);
+            $message_info['view_url'] = nel_build_router_url(['account', 'private-message', 'view', $message['entry']]);
+            $message_info['mark_read_url'] = nel_build_router_url(
+                ['account', 'private-message', 'mark-read', $message['entry']]);
+            $message_info['delete_url'] = nel_build_router_url(['account', 'private-message', 'delete',
+                $message['entry']]);
             $this->render_data['private_messages'][] = $message_info;
         }
 
-        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'account', 'section' => 'private-message', 'actions' => 'new']);
+        $this->render_data['new_url'] = nel_build_router_url(['account', 'private-message', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -73,17 +65,14 @@ class OutputPrivateMessages extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'account', 'section' => 'private-message', 'actions' => 'send']);
+        $this->render_data['form_action'] = nel_build_router_url(['account', 'private-message', 'send']);
 
-        if (!is_null($reply_id))
-        {
+        if (!is_null($reply_id)) {
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "entry" = ?');
             $prepared->bindValue(1, $reply_id, PDO::PARAM_INT);
             $message = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
-            if (!is_array($message))
-            {
+            if (!is_array($message)) {
                 return;
             }
 
@@ -108,8 +97,7 @@ class OutputPrivateMessages extends Output
         $prepared->bindValue(1, $message_id, PDO::PARAM_INT);
         $message = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
-        if (!is_array($message))
-        {
+        if (!is_array($message)) {
             return;
         }
 
@@ -117,14 +105,11 @@ class OutputPrivateMessages extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                        ['module' => 'account', 'section' => 'private-message', 'actions' => 'reply',
-                            'message-id' => $message_id]);
+        $this->render_data['form_action'] = nel_build_router_url(
+            ['account', 'private-message', 'reply', $message['entry']]);
         $this->render_data['sender'] = $message['sender'];
 
-        foreach($this->output_filter->newlinesToArray($message['message']) as $line)
-        {
+        foreach ($this->output_filter->newlinesToArray($message['message']) as $line) {
             $this->render_data['message_lines'][]['text'] = $line;
         }
 

@@ -5,15 +5,15 @@ namespace Nelliel\Dispatch;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\PrivateMessage;
 use Nelliel\Account\Register;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputAccount;
 use Nelliel\Output\OutputLoginPage;
-use Nelliel\Output\OutputRegisterPage;
-use Nelliel\PrivateMessage;
 use Nelliel\Output\OutputPrivateMessages;
+use Nelliel\Output\OutputRegisterPage;
 
 class DispatchAccount extends Dispatch
 {
@@ -25,18 +25,16 @@ class DispatchAccount extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        switch ($inputs['section'])
-        {
+        switch ($inputs['section']) {
             case 'login':
-                if ($inputs['actions'][0] === 'submit')
-                {
+                if ($inputs['method'] === 'POST') {
                     $this->session->login();
                     $this->session->loggedInOrError();
                     $output_account = new OutputAccount($this->domain, false);
                     $output_account->render([], false);
                 }
-                else
-                {
+
+                if ($inputs['method'] === 'GET') {
                     $output_login = new OutputLoginPage($this->domain, false);
                     $output_login->render([], false);
                 }
@@ -48,13 +46,12 @@ class DispatchAccount extends Dispatch
                 break;
 
             case 'register':
-                if ($inputs['actions'][0] === 'submit')
-                {
+                if ($inputs['method'] === 'POST') {
                     $register = new Register($this->authorization, $this->domain);
                     $register->new();
                 }
-                else
-                {
+
+                if ($inputs['method'] === 'GET') {
                     $output_login = new OutputRegisterPage($this->domain, false);
                     $output_login->render(['section' => 'register'], false);
                 }
@@ -64,42 +61,45 @@ class DispatchAccount extends Dispatch
             case 'private-message':
                 $this->session->init(true);
 
-                if (!$this->session->user()->checkPermission($this->domain, 'perm_private_messages_use'))
-                {
+                if (!$this->session->user()->checkPermission($this->domain, 'perm_private_messages_use')) {
                     nel_derp(511, _gettext('You cannot use the private message system.'));
                 }
 
-                $message_id = intval($_GET['message-id'] ?? 0);
-                $private_message = new PrivateMessage($this->domain->database(), $this->session, $message_id);
+                $private_message = new PrivateMessage($this->domain->database(), $this->session, intval($inputs['message_id'] ?? 0));
 
-                if ($inputs['actions'][0] === 'send')
-                {
-                    $private_message->collectFromPOST();
-                    $private_message->send();
+                if ($inputs['method'] === 'GET') {
+                    switch ($inputs['action']) {
+                        case 'view':
+                            $private_message->view();
+                            break;
+
+                        case 'mark-read':
+                            $private_message->markRead();
+                            break;
+
+                        case 'delete':
+                            $private_message->delete();
+                            break;
+
+                        case 'new':
+                            $output_private_messages = new OutputPrivateMessages($this->domain, false);
+                            $output_private_messages->newMessage([], false);
+                            nel_clean_exit();
+                            break;
+                    }
                 }
-                else if ($inputs['actions'][0] === 'mark-read')
-                {
-                    $private_message->markRead();
-                }
-                else if ($inputs['actions'][0] === 'delete')
-                {
-                    $private_message->delete();
-                }
-                else if ($inputs['actions'][0] === 'view')
-                {
-                    $private_message->view();
-                    break;
-                }
-                else if ($inputs['actions'][0] === 'new')
-                {
-                    $output_private_messages = new OutputPrivateMessages($this->domain, false);
-                    $output_private_messages->newMessage([], false);
-                    break;
-                }
-                else if ($inputs['actions'][0] === 'reply')
-                {
-                    $private_message->reply();
-                    break;
+
+                if ($inputs['method'] === 'POST') {
+                    switch ($inputs['action']) {
+                        case 'send':
+                            $private_message->collectFromPOST();
+                            $private_message->send();
+                            break;
+
+                        case 'reply':
+                            $private_message->reply();
+                            break;
+                    }
                 }
 
                 $output_private_messages = new OutputPrivateMessages($this->domain, false);
@@ -109,13 +109,10 @@ class DispatchAccount extends Dispatch
             default:
                 $this->session->init(true);
 
-                if ($this->session->isActive())
-                {
+                if ($this->session->isActive()) {
                     $output_account = new OutputAccount($this->domain, false);
                     $output_account->render([], false);
-                }
-                else
-                {
+                } else {
                     $output_login = new OutputLoginPage($this->domain, false);
                     $output_login->render([], false);
                 }

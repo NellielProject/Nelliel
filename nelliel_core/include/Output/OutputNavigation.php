@@ -24,8 +24,7 @@ class OutputNavigation extends Output
         $end = $board_count - 1;
         $render_data = array();
 
-        for ($i = 0; $i < $board_count; $i ++)
-        {
+        for ($i = 0; $i < $board_count; $i ++) {
             $board_info = array();
             $board_info['board_url'] = NEL_BASE_WEB_PATH . $board_data[$i]['board_uri'] . '/';
             $board_info['name'] = ''; // TODO: Get and use actual name
@@ -42,11 +41,11 @@ class OutputNavigation extends Output
         $this->renderSetup();
         $render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $render_data['board_area'] = $this->domain->id() !== Domain::SITE;
-        $render_data['login_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account&section=login';
-        $render_data['logout_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account&section=logout';
+        $render_data['login_url'] = nel_build_router_url(['account', 'login']);
+        $render_data['logout_url'] = nel_build_router_url(['account', 'logout']);
         $render_data['site_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-main-panel';
         $render_data['board_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=admin&section=board-main-panel&board-id=' . $this->domain->id();
+            'module=admin&section=board-main-panel&board-id=' . $this->domain->id();
         $render_data['home_url'] = $this->site_domain->reference('home_page');
         $render_data['news_url'] = NEL_BASE_WEB_PATH . 'news.html';
         $render_data['account_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=account';
