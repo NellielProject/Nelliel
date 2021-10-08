@@ -298,7 +298,7 @@ class ExtendedDOMElement extends DOMElement
     /**
      * Delete this node.
      */
-    public function remove()
+    public function remove(): void // quick fix for PHP 8
     {
         $parent = $this->parentNode;
 
