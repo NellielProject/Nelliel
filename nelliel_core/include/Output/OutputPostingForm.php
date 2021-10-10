@@ -46,32 +46,26 @@ class OutputPostingForm extends Output
         $this->render_data['fgsfds_field_placeholder'] = $this->domain->setting('fgsfds_field_placeholder');
         $this->render_data['password_field_placeholder'] = $this->domain->setting('password_field_placeholder');
 
-        if ($this->render_data['in_modmode'])
-        {
+        if ($this->render_data['in_modmode']) {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=new-post&board-id=' .
-                    $this->domain->id() . '&modmode=true';
+                $this->domain->id() . '&modmode=true';
             $this->render_data['flags']['post_as_staff'] = $this->session->user()->checkPermission($this->domain,
-                    'perm_post_as_staff');
+                'perm_post_as_staff');
             $this->render_data['flags']['raw_html'] = $this->session->user()->checkPermission($this->domain,
-                    'perm_raw_html');
-        }
-        else
-        {
+                'perm_raw_html');
+        } else {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=new-post&board-id=' .
-                    $this->domain->id();
+                $this->domain->id();
         }
 
-        if (!$response_to)
-        {
+        if (!$response_to) {
             $this->render_data['allow_files'] = $this->domain->setting('allow_op_files');
             $this->render_data['file_required'] = $this->domain->setting('require_op_file');
             $this->render_data['allow_embeds'] = $this->domain->setting('allow_op_embeds');
             $this->render_data['embed_required'] = $this->domain->setting('require_op_embed');
             $max_files = intval($this->domain->setting('max_op_files'));
             $max_embeds = intval($this->domain->setting('max_op_embeds'));
-        }
-        else
-        {
+        } else {
             $this->render_data['allow_files'] = $this->domain->setting('allow_reply_files');
             $this->render_data['file_required'] = $this->domain->setting('require_reply_file');
             $this->render_data['allow_embeds'] = $this->domain->setting('allow_reply_embeds');
@@ -80,8 +74,7 @@ class OutputPostingForm extends Output
             $max_embeds = intval($this->domain->setting('max_reply_embeds'));
         }
 
-        if ($this->domain->setting('use_fgsfds_menu'))
-        {
+        if ($this->domain->setting('use_fgsfds_menu')) {
             $output_menu = new OutputMenu($this->domain, $this->write_mode);
             $this->render_data['use_fgsfds_menu'] = true;
             $this->render_data['fgsfds_options'] = $output_menu->fgsfds([], true);
@@ -95,10 +88,8 @@ class OutputPostingForm extends Output
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=anti-spam&section=captcha&actions=get';
-        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=anti-spam&section=captcha&actions=generate&no-display';
+        $this->render_data['captcha_gen_url'] = nel_build_router_url(['anti-spam', 'captcha', 'get']);
+        $this->render_data['captcha_regen_url'] = nel_build_router_url(['anti-spam', 'captcha', 'regenerate']);
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['captcha_label'] = true;
@@ -116,23 +107,19 @@ class OutputPostingForm extends Output
     {
         $filetypes = new \Nelliel\FileTypes($this->domain->database());
 
-        foreach ($filetypes->enabledCategories($this->domain->id()) as $category)
-        {
+        foreach ($filetypes->enabledCategories($this->domain->id()) as $category) {
             $supported_types = sprintf(_gettext('Supported %s file types: '), $category);
             $supported = '';
             $joiner = '';
 
-            foreach ($filetypes->enabledFormats($this->domain->id(), $category) as $format)
-            {
+            foreach ($filetypes->enabledFormats($this->domain->id(), $category) as $format) {
                 $extensions = '';
                 $add = '';
 
-                if ($this->domain->setting('list_file_extensions'))
-                {
+                if ($this->domain->setting('list_file_extensions')) {
                     $joiner = ', ';
 
-                    foreach ($filetypes->formatExtensions($format) as $extension)
-                    {
+                    foreach ($filetypes->formatExtensions($format) as $extension) {
                         $extensions .= $extension . ', ';
                     }
 
@@ -141,12 +128,10 @@ class OutputPostingForm extends Output
 
                 $add = $extensions;
 
-                if ($this->domain->setting('list_file_formats'))
-                {
+                if ($this->domain->setting('list_file_formats')) {
                     $joiner = ', ';
 
-                    if ($extensions !== '')
-                    {
+                    if ($extensions !== '') {
                         $extensions = '(' . $extensions . ')';
                     }
 
@@ -156,20 +141,19 @@ class OutputPostingForm extends Output
                 $supported .= $add . $joiner;
             }
 
-            if (empty($supported))
-            {
+            if (empty($supported)) {
                 continue;
             }
 
             $supported_types .= $supported;
             $this->render_data['posting_rules_items'][]['rules_text'] = substr($supported_types, 0,
-                    -utf8_strlen($joiner));
+                -utf8_strlen($joiner));
         }
 
         $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
-                _gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize') / 1024);
+            _gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize') / 1024);
         $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
-                _gettext('Images greater than %d x %d pixels will be thumbnailed.'),
-                $this->domain->setting('max_preview_width'), $this->domain->setting('max_preview_height'));
+            _gettext('Images greater than %d x %d pixels will be thumbnailed.'),
+            $this->domain->setting('max_preview_width'), $this->domain->setting('max_preview_height'));
     }
 }

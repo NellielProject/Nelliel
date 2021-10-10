@@ -36,15 +36,30 @@ class Router
 
     public function addRoutes(): void
     {
-        $this->dispatcher = cachedDispatcher(function (RouteCollector $r) {
-            $r->addGroup('/{module:account}', function (RouteCollector $r) {
-                $dispatch_class = '\Nelliel\Dispatch\DispatchAccount';
-                $r->addRoute(['GET', 'POST'], '/{section:login}', $dispatch_class);
-                $r->addRoute('GET', '/{section:logout}', $dispatch_class);
-                $r->addRoute(['GET', 'POST'], '/{section:register}', $dispatch_class);
-                $r->addRoute(['GET', 'POST'], '/{section:private-message}[/{action:[^\/]+}[/{message_id:[^\/]+}]]', $dispatch_class);
-            });
-        }, ['cacheFile' => NEL_CACHE_FILES_PATH . 'route.cache']);
+        $this->dispatcher = cachedDispatcher(
+            function (RouteCollector $r) {
+                $r->addGroup('/{module:account}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchAccount';
+                        $r->addRoute(['GET', 'POST'], '/{section:login}', $dispatch_class);
+                        $r->addRoute('GET', '/{section:logout}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{section:register}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'],
+                            '/{section:private-message}[/{action:[^\/]+}[/{message_id:[^\/]+}]]', $dispatch_class);
+                    });
+
+                $r->addGroup('/{module:language}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchLanguage';
+                        $r->addRoute(['GET', 'POST'], '/{section:gettext}/{action:[^\/]+}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{module:anti-spam}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchAntiSpam';
+                        $r->addRoute(['GET', 'POST'], '/{section:captcha}/{action:[^\/]+}', $dispatch_class);
+                    });
+            }, ['cacheFile' => NEL_CACHE_FILES_PATH . 'route.php']);
     }
 
     public function dispatch(): bool

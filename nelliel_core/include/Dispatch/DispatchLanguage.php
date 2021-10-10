@@ -24,15 +24,17 @@ class DispatchLanguage extends Dispatch
     {
         $this->session->loggedInOrError();
 
-        foreach ($inputs['actions'] as $action)
-        {
-            switch ($action)
-            {
-                case 'extract-gettext':
-                    $language = new Language();
-                    $language->extractLanguageStrings($this->domain, $this->session->user(), 'nelliel', LC_MESSAGES);
-                    break;
-            }
+        switch ($inputs['section']) {
+            case 'gettext':
+                if ($inputs['method'] === 'GET') {
+                    switch ($inputs['action']) {
+                        case 'extract':
+                            $language = new Language();
+                            $language->extractLanguageStrings($this->domain, $this->session->user(), 'nelliel',
+                                LC_MESSAGES);
+                            break;
+                    }
+                }
         }
 
         $output_main_panel = new OutputPanelMain($this->domain, false);

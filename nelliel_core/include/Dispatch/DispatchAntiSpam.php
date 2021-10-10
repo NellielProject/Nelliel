@@ -20,12 +20,23 @@ class DispatchAntiSpam extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        switch ($inputs['section'])
-        {
+        switch ($inputs['section']) {
             case 'captcha':
                 $captcha = new CAPTCHA($this->domain);
-                $captcha->dispatch($inputs);
-                break;
+
+                if ($inputs['method'] === 'GET') {
+                    switch ($inputs['action']) {
+                        case 'get':
+                            $captcha->get();
+                            break;
+
+                        case 'regenerate':
+                            $captcha->generate(false);
+                            break;
+                    }
+
+                    break;
+                }
         }
     }
 }

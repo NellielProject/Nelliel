@@ -27,50 +27,39 @@ class OutputThread extends Output
         $thread_content_id = new ContentID(ContentID::createIDString($thread_id));
         $thread = $thread_content_id->getInstanceFromID($this->domain);
 
-        if (is_null($thread) || !$thread->exists())
-        {
+        if (is_null($thread) || !$thread->exists()) {
             return;
         }
 
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
-        if ($this->render_data['in_modmode'])
-        {
+        if ($this->render_data['in_modmode']) {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
-                    $this->domain->id() . '&modmode=true';
-        }
-        else
-        {
+                $this->domain->id() . '&modmode=true';
+        } else {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
-                    $this->domain->id();
+                $this->domain->id();
         }
 
         $posts = $thread->getPosts();
         $post_count = count($posts);
 
-        if (empty($posts))
-        {
+        if (empty($posts)) {
             return;
         }
 
         $op_post = $posts[0];
         $page_title = '';
 
-        if ($this->domain->setting('prefix_board_title'))
-        {
+        if ($this->domain->setting('prefix_board_title')) {
             $page_title .= $this->domain->reference('title');
         }
 
-        if ($this->domain->setting('subject_in_title') && !nel_true_empty($op_post->data('subject')))
-        {
+        if ($this->domain->setting('subject_in_title') && !nel_true_empty($op_post->data('subject'))) {
             $page_title .= ' - ' . $op_post->data('subject');
-        }
-        else if ($this->domain->setting('slug_in_title') && !nel_true_empty($thread->data('slug')))
-        {
+        } else if ($this->domain->setting('slug_in_title') && !nel_true_empty($thread->data('slug'))) {
             $page_title .= ' - ' . $thread->data('slug');
-        }
-        else if ($this->domain->setting('thread_number_in_title'))
-        {
+        } else if ($this->domain->setting('thread_number_in_title')) {
             $page_title .= ' - ' . _gettext('Thread') . ' #' . $op_post->data('post_number');
         }
 
@@ -78,31 +67,27 @@ class OutputThread extends Output
         $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
 
-        if ($this->session->inModmode($this->domain) && !$this->write_mode)
-        {
+        if ($this->session->inModmode($this->domain) && !$this->write_mode) {
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Thread');
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
             $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'output', 'section' => 'index', 'actions' => 'view', 'index' => '0',
-                                'board-id' => $this->domain->id(), 'modmode' => 'true']);
-        }
-        else
-        {
+                http_build_query(
+                    ['module' => 'output', 'section' => 'index', 'actions' => 'view', 'index' => '0',
+                        'board-id' => $this->domain->id(), 'modmode' => 'true']);
+        } else {
             $this->render_data['header'] = $output_header->board([], true);
             $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
         }
 
         $this->render_data['show_global_announcement'] = !nel_true_empty(
-                nel_site_domain()->setting('global_announcement'));
+            nel_site_domain()->setting('global_announcement'));
         $this->render_data['global_announcement_text'] = nel_site_domain()->setting('global_announcement');
 
         $query = 'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" ASC';
         $blotter_entries = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
-        foreach ($blotter_entries as $entry)
-        {
+        foreach ($blotter_entries as $entry) {
             $blotter_data = array();
             $blotter_data['time'] = date('Y/m/d', intval($entry['time']));
             $blotter_data['text'] = $entry['text'];
@@ -110,7 +95,7 @@ class OutputThread extends Output
         }
 
         $this->render_data['show_blotter'] = isset($this->render_data['blotter_entries']) &&
-                !empty($this->render_data['blotter_entries']);
+            !empty($this->render_data['blotter_entries']);
         $this->render_data['blotter_url'] = NEL_BASE_WEB_PATH . 'blotter.html';
 
         $this->render_data['return_url'] = $return_url;
@@ -141,39 +126,29 @@ class OutputThread extends Output
         $first_posts = array();
         $last_posts = array();
 
-        foreach ($posts as $post)
-        {
+        foreach ($posts as $post) {
             $posts_from_end = $post_count - $post_counter;
             $thread->getJSON()->addPost($post->getJSON());
             $parameters = ['gen_data' => $gen_data, 'in_thread_number' => $post_counter];
             $post_render = $output_post->render($post, $parameters, true);
 
-            if ($post->data('op'))
-            {
+            if ($post->data('op')) {
                 $this->render_data['op_post'] = $post_render;
-            }
-            else
-            {
+            } else {
                 $this->render_data['thread_posts'][] = $post_render;
 
-                if ($generate_first_posts)
-                {
-                    foreach ($first_posts_increments as $increment)
-                    {
+                if ($generate_first_posts) {
+                    foreach ($first_posts_increments as $increment) {
                         // Account for OP
-                        if ($post_counter - 1 <= $increment)
-                        {
+                        if ($post_counter - 1 <= $increment) {
                             $first_posts[$increment][] = $post_render;
                         }
                     }
                 }
 
-                if ($generate_last_posts)
-                {
-                    foreach ($last_posts_increments as $increment)
-                    {
-                        if ($posts_from_end < $increment && $post_count > $increment)
-                        {
+                if ($generate_last_posts) {
+                    foreach ($last_posts_increments as $increment) {
+                        if ($posts_from_end < $increment && $post_count > $increment) {
                             $last_posts[$increment][] = $post_render;
                         }
                     }
@@ -186,10 +161,8 @@ class OutputThread extends Output
         $this->render_data['index_navigation'] = true;
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=anti-spam&section=captcha&actions=get';
-        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=anti-spam&section=captcha&actions=generate&no-display';
+        $this->render_data['captcha_gen_url'] = nel_build_router_url(['anti-spam', 'captcha', 'get']);
+        $this->render_data['captcha_regen_url'] = nel_build_router_url(['anti-spam', 'captcha', 'regenerate']);
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
@@ -197,45 +170,37 @@ class OutputThread extends Output
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         $first_posts_format = $thread->pageBasename() . $this->site_domain->setting('first_posts_filename_format');
 
-        foreach ($first_posts as $increment => $posts)
-        {
+        foreach ($first_posts as $increment => $posts) {
             $this->render_data['thread_posts'] = $posts;
             $first_output = $this->output('basic_page', $data_only, true, $this->render_data);
 
-            if ($this->write_mode)
-            {
+            if ($this->write_mode) {
                 $this->file_handler->writeFile(
-                        $this->domain->reference('page_path') . $thread_id . '/' .
-                        sprintf($first_posts_format, $increment) . NEL_PAGE_EXT, $first_output, NEL_FILES_PERM, true);
+                    $this->domain->reference('page_path') . $thread_id . '/' . sprintf($first_posts_format, $increment) .
+                    NEL_PAGE_EXT, $first_output, NEL_FILES_PERM, true);
             }
         }
 
         $last_posts_format = $thread->pageBasename() . $this->site_domain->setting('last_posts_filename_format');
 
-        foreach ($last_posts as $increment => $posts)
-        {
+        foreach ($last_posts as $increment => $posts) {
             $this->render_data['thread_posts'] = $posts;
             $last_output = $this->output('basic_page', $data_only, true, $this->render_data);
 
-            if ($this->write_mode)
-            {
+            if ($this->write_mode) {
                 $this->file_handler->writeFile(
-                        $this->domain->reference('page_path') . $thread_id . '/' .
-                        sprintf($last_posts_format, $increment) . NEL_PAGE_EXT, $last_output, NEL_FILES_PERM, true);
+                    $this->domain->reference('page_path') . $thread_id . '/' . sprintf($last_posts_format, $increment) .
+                    NEL_PAGE_EXT, $last_output, NEL_FILES_PERM, true);
             }
         }
 
-        if ($this->write_mode)
-        {
+        if ($this->write_mode) {
             $this->file_handler->writeFile(
-                    $this->domain->reference('page_path') . $thread_id . '/' . $thread->pageBasename() . NEL_PAGE_EXT,
-                    $output, NEL_FILES_PERM, true);
+                $this->domain->reference('page_path') . $thread_id . '/' . $thread->pageBasename() . NEL_PAGE_EXT,
+                $output, NEL_FILES_PERM, true);
             $thread->getJSON()->write();
-        }
-        else
-        {
-            switch ($command)
-            {
+        } else {
+            switch ($command) {
                 case 'view':
                     echo $output;
                     break;
@@ -249,6 +214,5 @@ class OutputThread extends Output
     }
 
     private function lastPosts()
-    {
-    }
+    {}
 }

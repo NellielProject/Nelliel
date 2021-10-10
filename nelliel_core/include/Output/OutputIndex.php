@@ -30,22 +30,19 @@ class OutputIndex extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
-        if ($this->render_data['in_modmode'])
-        {
+        if ($this->render_data['in_modmode']) {
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Index');
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
-                    $this->domain->id() . '&modmode=true';
+                $this->domain->id() . '&modmode=true';
             $this->render_data['catalog_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=output&section=catalog&actions=view&board-id=' . $this->domain->id() . '&modmode=true';
+                'module=output&section=catalog&actions=view&board-id=' . $this->domain->id() . '&modmode=true';
             $this->render_data['render'] = '-render';
-        }
-        else
-        {
+        } else {
             $this->render_data['header'] = $output_header->board([], true);
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
-                    $this->domain->id();
+                $this->domain->id();
             $this->render_data['catalog_url'] = 'catalog.html';
         }
 
@@ -58,27 +55,22 @@ class OutputIndex extends Output
         $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
         $this->render_data['posting_form'] = $output_posting_form->render(['response_to' => 0], true);
 
-        if ($thread_count === 0)
-        {
+        if ($thread_count === 0) {
             $page_count = 1;
-        }
-        else
-        {
+        } else {
             $page_count = (int) ceil($thread_count / $this->domain->setting('threads_per_page'));
         }
 
         $this->render_data['show_global_announcement'] = !nel_true_empty(
-                $this->site_domain->setting('global_announcement'));
+            $this->site_domain->setting('global_announcement'));
         $this->render_data['global_announcement_text'] = $this->site_domain->setting('global_announcement');
 
         $blotter_limit = $this->site_domain->setting('small_blotter_limit');
         $query = 'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" DESC LIMIT ' . $blotter_limit;
         $blotter_entries = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
-        if ($this->site_domain->setting('show_blotter') && !empty($blotter_entries))
-        {
-            foreach ($blotter_entries as $entry)
-            {
+        if ($this->site_domain->setting('show_blotter') && !empty($blotter_entries)) {
+            foreach ($blotter_entries as $entry) {
                 $blotter_data = array();
                 $blotter_data['time'] = date('Y/m/d', intval($entry['time']));
                 $blotter_data['text'] = $entry['text'];
@@ -86,7 +78,7 @@ class OutputIndex extends Output
             }
 
             $this->render_data['show_blotter'] = isset($this->render_data['blotter_entries']) &&
-                    !empty($this->render_data['blotter_entries']);
+                !empty($this->render_data['blotter_entries']);
             $this->render_data['blotter_url'] = NEL_BASE_WEB_PATH . 'blotter.html';
         }
 
@@ -94,23 +86,19 @@ class OutputIndex extends Output
         $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
-                '?module=anti-spam&section=captcha&actions=get';
-        $this->render_data['captcha_regen_url'] = NEL_MAIN_SCRIPT_WEB_PATH .
-                '?module=anti-spam&section=captcha&actions=generate&no-display';
+        $this->render_data['captcha_gen_url'] = nel_build_router_url(['anti-spam', 'captcha', 'get']);
+        $this->render_data['captcha_regen_url'] = nel_build_router_url(['anti-spam', 'captcha', 'regenerate']);
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
 
-        if (empty($threads))
-        {
+        if (empty($threads)) {
             $index_format = $this->site_domain->setting('first_index_filename_format');
             $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $data_only);
 
-            if (!$this->write_mode)
-            {
+            if (!$this->write_mode) {
                 return $output;
             }
         }
@@ -118,24 +106,21 @@ class OutputIndex extends Output
         $gen_data['index_rendering'] = true;
         $threads_on_page = 0;
 
-        foreach ($threads as $thread)
-        {
-            if (is_null($thread) || !$thread->exists())
-            {
+        foreach ($threads as $thread) {
+            if (is_null($thread) || !$thread->exists()) {
                 continue;
             }
 
             $thread_input = array();
             $index_format = ($page === 1) ? $this->site_domain->setting('first_index_filename_format') : $this->site_domain->setting(
-                    'index_filename_format');
+                'index_filename_format');
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . $this->domain->reference('posts_table') .
-                    '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-            $treeline = $this->database->executePreparedFetchAll($prepared, [$thread->contentID()->threadID()],
-                    PDO::FETCH_ASSOC);
+                'SELECT * FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+            $treeline = $this->database->executePreparedFetchAll($prepared, [$thread->contentID()
+                ->threadID()], PDO::FETCH_ASSOC);
 
-            if (empty($treeline))
-            {
+            if (empty($treeline)) {
                 $threads_done ++;
                 continue;
             }
@@ -147,8 +132,7 @@ class OutputIndex extends Output
             $thread_input['thread_corral_id'] = 'thread-corral-' . $thread->contentID()->getIDString();
             $index_replies = $this->domain->setting('index_thread_replies');
 
-            if ($thread->data('sticky'))
-            {
+            if ($thread->data('sticky')) {
                 $index_replies = $this->domain->setting('index_sticky_replies');
             }
 
@@ -158,22 +142,17 @@ class OutputIndex extends Output
             $abbreviate_start = $thread->data('post_count') - $index_replies;
             $post_counter = 1;
 
-            foreach ($treeline as $post_data)
-            {
+            foreach ($treeline as $post_data) {
                 $post_content_id = new ContentID(
-                        ContentID::createIDString($thread->contentID()->threadID(), $post_data['post_number']));
+                    ContentID::createIDString($thread->contentID()->threadID(), $post_data['post_number']));
                 $post = $post_content_id->getInstanceFromID($this->domain);
                 $post_json = new PostJSON($post, $this->file_handler);
                 $parameters = ['gen_data' => $gen_data, 'post_json' => $post_json, 'in_thread_number' => $post_counter];
 
-                if ($post_data['op'] == 1)
-                {
+                if ($post_data['op'] == 1) {
                     $thread_input['op_post'] = $output_post->render($post, $parameters, true);
-                }
-                else
-                {
-                    if ($post_counter > $abbreviate_start)
-                    {
+                } else {
+                    if ($post_counter > $abbreviate_start) {
                         $thread_input['thread_posts'][] = $output_post->render($post, $parameters, true);
                     }
                 }
@@ -185,13 +164,11 @@ class OutputIndex extends Output
             $threads_on_page ++;
             $threads_done ++;
 
-            if ($threads_on_page >= $this->domain->setting('threads_per_page'))
-            {
+            if ($threads_on_page >= $this->domain->setting('threads_per_page')) {
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count);
                 $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $data_only);
 
-                if (!$this->write_mode)
-                {
+                if (!$this->write_mode) {
                     return $output;
                 }
 
@@ -225,13 +202,10 @@ class OutputIndex extends Output
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
-        if ($this->write_mode)
-        {
+        if ($this->write_mode) {
             $this->file_handler->writeFile($this->domain->reference('board_path') . $index_basename . NEL_PAGE_EXT,
-                    $output, NEL_FILES_PERM, true);
-        }
-        else
-        {
+                $output, NEL_FILES_PERM, true);
+        } else {
             echo $output;
         }
 

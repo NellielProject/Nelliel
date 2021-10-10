@@ -24,40 +24,23 @@ class CAPTCHA
         $this->file_handler = nel_utilities()->fileHandler();
     }
 
-    public function dispatch(array $inputs)
-    {
-        switch ($inputs['actions'][0])
-        {
-            case 'get':
-                $this->get();
-                break;
-
-            case 'generate':
-                $this->generate();
-                break;
-        }
-    }
-
     public function get()
     {
         $captcha_key = $_COOKIE['captcha-key'] ?? '';
 
-        if (!empty($captcha_key))
-        {
-            if ($this->keyExists($captcha_key, true))
-            {
+        if (!empty($captcha_key)) {
+            if ($this->keyExists($captcha_key, true)) {
                 $this->redirectToImage($captcha_key);
                 return;
             }
         }
 
-        $this->generate();
+        $this->generate(true);
     }
 
     protected function rateLimit()
     {
-        if ($this->site_domain->setting('captcha_rate_limit') == 0)
-        {
+        if ($this->site_domain->setting('captcha_rate_limit') == 0) {
             return;
         }
 
@@ -65,24 +48,18 @@ class CAPTCHA
         $hashed_ip_address = nel_request_ip_address(true);
         $attempt_time = time();
 
-        if ($rate_limit->lastTime($hashed_ip_address, 'captcha') > $attempt_time - 60)
-        {
-            if ($rate_limit->attempts($hashed_ip_address, 'captcha') < $this->site_domain->setting('captcha_rate_limit'))
-            {
+        if ($rate_limit->lastTime($hashed_ip_address, 'captcha') > $attempt_time - 60) {
+            if ($rate_limit->attempts($hashed_ip_address, 'captcha') < $this->site_domain->setting('captcha_rate_limit')) {
                 $rate_limit->updateAttempts($hashed_ip_address, 'captcha');
-            }
-            else
-            {
+            } else {
                 nel_derp(72, _gettext('Requesting new CAPTCHAs too fast. Wait a minute.'));
             }
-        }
-        else
-        {
+        } else {
             $rate_limit->clearAttempts($hashed_ip_address, 'captcha');
         }
     }
 
-    public function generate()
+    public function generate(bool $display)
     {
         $this->rateLimit();
         $this->cleanupExpired();
@@ -95,15 +72,14 @@ class CAPTCHA
         $characters_limit = $this->site_domain->setting('captcha_character_count');
         $selected_indexes = array_rand($set_array, $characters_limit);
 
-        foreach ($selected_indexes as $index)
-        {
+        foreach ($selected_indexes as $index) {
             $captcha_text .= $set_array[$index];
         }
 
         $captcha_image = $this->render($captcha_text);
         $captcha_key = substr(hash('sha256', (random_bytes(16))), -32);
         setrawcookie('captcha-key', $captcha_key, time() + $this->site_domain->setting('captcha_timeout'),
-                NEL_BASE_WEB_PATH);
+            NEL_BASE_WEB_PATH);
         $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH, NEL_DIRECTORY_PERM, true); // Just to be sure
         imagejpeg($captcha_image, NEL_CAPTCHA_FILES_PATH . $captcha_key . '.jpg');
         $captcha_data = array();
@@ -113,8 +89,7 @@ class CAPTCHA
         $captcha_data['time_created'] = time();
         $this->store($captcha_data);
 
-        if (!isset($_GET['no-display']))
-        {
+        if ($display) {
             $this->redirectToImage($captcha_key);
         }
     }
@@ -141,15 +116,14 @@ class CAPTCHA
         $line_colors[] = imagecolorallocate($captcha_image, 190, 150, 125);
         $line_colors_size = count($line_colors);
 
-        for ($i = 0; $i < 8; $i ++)
-        {
+        for ($i = 0; $i < 8; $i ++) {
             $line_color = $line_colors[rand(0, $line_colors_size - 1)];
             imagesetthickness($captcha_image, rand(1, 5));
             imageline($captcha_image, 0, rand(0, $image_height), $image_width, rand(0, $image_height), $line_color);
         }
 
-        $x = $x_margin - ($character_spacing * $character_count);
-        $y = $y_margin / 2;
+        $x = (int) $x_margin - ($character_spacing * $character_count);
+        $y = (int) $y_margin / 2;
 
         $text_colors = array();
         $text_colors[] = imagecolorallocate($captcha_image, 200, 100, 0);
@@ -159,8 +133,7 @@ class CAPTCHA
 
         $characters_array = utf8_split($captcha_text);
 
-        foreach ($characters_array as $character)
-        {
+        foreach ($characters_array as $character) {
             $box = imageftbbox($font_size, 0, $font_file, $character);
             $size = $font_size - rand(0, intval($font_size * 0.35));
             $angle = rand(0, 50) - 25;
@@ -180,20 +153,17 @@ class CAPTCHA
     public function keyExists(string $key, bool $check_expired)
     {
         $prepared = $this->database->prepare(
-                'SELECT "time_created" FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "captcha_key" = ?');
+            'SELECT "time_created" FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "captcha_key" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$key], PDO::FETCH_COLUMN);
 
-        if ($result === false)
-        {
+        if ($result === false) {
             return false;
         }
 
-        if ($check_expired)
-        {
+        if ($check_expired) {
             $expiration = time() - $this->site_domain->setting('captcha_timeout');
 
-            if ($result < $expiration)
-            {
+            if ($result < $expiration) {
                 $this->remove($key);
                 return false;
             }
@@ -207,8 +177,8 @@ class CAPTCHA
     public function store(array $captcha_data)
     {
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_CAPTCHA_TABLE .
-                '" ("captcha_key", "captcha_text", "domain_id", "time_created")
+            'INSERT INTO "' . NEL_CAPTCHA_TABLE .
+            '" ("captcha_key", "captcha_text", "domain_id", "time_created")
 								VALUES (:captcha_key, :captcha_text, :domain_id, :time_created)');
         $prepared->bindValue(':captcha_key', $captcha_data['captcha_key'], PDO::PARAM_STR);
         $prepared->bindValue(':captcha_text', $captcha_data['captcha_text'], PDO::PARAM_STR);
@@ -221,12 +191,11 @@ class CAPTCHA
     {
         $expiration = time() - $this->site_domain->setting('captcha_timeout');
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_CAPTCHA_TABLE .
-                '" WHERE "captcha_key" = ? AND "captcha_text" = ? AND "time_created" > ?');
+            'SELECT * FROM "' . NEL_CAPTCHA_TABLE .
+            '" WHERE "captcha_key" = ? AND "captcha_text" = ? AND "time_created" > ?');
         $result = $this->database->executePreparedFetch($prepared, [$key, $answer, $expiration], PDO::FETCH_ASSOC);
 
-        if ($result === false)
-        {
+        if ($result === false) {
             nel_derp(70, _gettext('CAPTCHA test failed.'));
         }
 
@@ -245,11 +214,10 @@ class CAPTCHA
     {
         $expiration = time() - $this->site_domain->setting('captcha_timeout');
         $prepared = $this->database->prepare(
-                'SELECT "captcha_key" FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "time_created" = ?');
+            'SELECT "captcha_key" FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "time_created" = ?');
         $result = $this->database->executePreparedFetchAll($prepared, [$expiration], PDO::FETCH_COLUMN);
 
-        foreach ($result as $key)
-        {
+        foreach ($result as $key) {
             $this->file_handler->eraserGun(NEL_CAPTCHA_WEB_PATH, $key . '.jpg');
         }
 
@@ -261,12 +229,11 @@ class CAPTCHA
     {
         $response = $_POST['g-recaptcha-response'] ?? '';
         $result = file_get_contents(
-                'https://www.google.com/recaptcha/api/siteverify?secret=' .
-                $this->site_domain->setting('recaptcha_sekrit_key') . '&response=' . $response);
+            'https://www.google.com/recaptcha/api/siteverify?secret=' .
+            $this->site_domain->setting('recaptcha_sekrit_key') . '&response=' . $response);
         $verification = json_decode($result);
 
-        if (!$verification->success)
-        {
+        if (!$verification->success) {
             nel_derp(71, _gettext('reCAPTCHA test failed.'));
         }
 
