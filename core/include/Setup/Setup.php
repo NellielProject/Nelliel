@@ -192,7 +192,7 @@ class Setup
     {
         if (!is_writable(NEL_BASE_PATH))
         {
-            nel_derp(105, _gettext('Nelliel main directory is not writable.'));
+            nel_derp(105, _gettext('Nelliel project directory is not writable.'));
         }
         else
         {

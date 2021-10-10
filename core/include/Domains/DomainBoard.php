@@ -47,7 +47,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_ASSOC);
         $new_reference = array();
-        $board_path = NEL_BASE_PATH . $board_data['board_uri'] . '/';
+        $board_path = NEL_PUBLIC_PATH . $board_data['board_uri'] . '/';
         $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($board_data['board_uri']) . '/';
         $new_reference['board_directory'] = $board_data['board_uri'];
         $new_reference['board_uri'] = sprintf(nel_site_domain()->setting('uri_display_format'), $board_data['board_uri']);

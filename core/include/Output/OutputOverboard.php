@@ -59,7 +59,7 @@ class OutputOverboard extends Output
 
                 if ($this->write_mode)
                 {
-                    $this->file_handler->writeFile(NEL_BASE_PATH . $uri . '/' . $index_filename, $output, NEL_FILES_PERM,
+                    $this->file_handler->writeFile(NEL_PUBLIC_PATH . $uri . '/' . $index_filename, $output, NEL_FILES_PERM,
                             true);
                 }
                 else

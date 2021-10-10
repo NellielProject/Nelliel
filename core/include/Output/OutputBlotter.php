@@ -29,7 +29,7 @@ class OutputBlotter extends Output
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
-        $this->file_handler->writeFile(NEL_BASE_PATH . 'blotter.html', $output);
+        $this->file_handler->writeFile(NEL_PUBLIC_PATH . 'blotter.html', $output);
     }
 
     private function blotterList(int $limit = 0)

@@ -3,7 +3,7 @@ use \Nelliel\Content\ContentID;
 use \PHPUnit\Framework\TestCase;
 
 require_once 'nelliel_version.php';
-require_once __DIR__ . '/../nelliel_core/include/classes/ContentID.php';
+require_once __DIR__ . '/../core/include/classes/ContentID.php';
 
 class ContentIDTest extends TestCase
 {
