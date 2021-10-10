@@ -41,7 +41,7 @@ class TableDomainRegistry extends Table
         CREATE TABLE " . $this->table_name . " (
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             domain_id           VARCHAR(50) NOT NULL UNIQUE,
-            hashed_domain_id    VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL UNIQUE,
+            hashed_domain_id    VARCHAR(128) NOT NULL UNIQUE,
             notes               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL
         ) " . $options . ";";

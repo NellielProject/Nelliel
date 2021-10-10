@@ -42,7 +42,7 @@ class TableFileFilters extends Table
         CREATE TABLE " . $this->table_name . " (
             entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             hash_type   VARCHAR(50) NOT NULL,
-            file_hash   VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+            file_hash   VARCHAR(128) NOT NULL,
             file_notes  TEXT DEFAULT NULL,
             board_id    VARCHAR(50) NOT NULL,
             moar        TEXT DEFAULT NULL,
