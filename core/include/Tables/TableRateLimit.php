@@ -35,7 +35,7 @@ class TableRateLimit extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry      " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            rate_id    VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL UNIQUE,
+            rate_id    VARCHAR(128) NOT NULL UNIQUE,
             record     TEXT NOT NULL
         ) " . $options . ";";
 

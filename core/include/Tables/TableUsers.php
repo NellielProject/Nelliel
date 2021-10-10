@@ -52,7 +52,7 @@ class TableUsers extends Table
             user_id         VARCHAR(50) NOT NULL UNIQUE,
             display_name    VARCHAR(255) NOT NULL,
             user_password   VARCHAR(255) NOT NULL,
-            hashed_user_id  VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL UNIQUE,
+            hashed_user_id  VARCHAR(128) NOT NULL UNIQUE,
             active          SMALLINT NOT NULL DEFAULT 0,
             locked          SMALLINT NOT NULL DEFAULT 0,
             owner           SMALLINT NOT NULL DEFAULT 0,

@@ -46,7 +46,7 @@ class TableReports extends Table
             board_id            VARCHAR(50) NOT NULL,
             content_id          VARCHAR(255) NOT NULL,
             reporter_ip         " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_reporter_ip  VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci NOT NULL,
+            hashed_reporter_ip  VARCHAR(128) NOT NULL,
             reason              TEXT NOT NULL,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "

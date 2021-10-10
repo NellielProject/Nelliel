@@ -4,7 +4,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 // Everything in this file should a hard-coded constant
 
 define('NEL_LIBRARY_PATH', NEL_CORE_PATH . 'libraries/'); // Provided libraries path
-define('NEL_VENDOR_PATH', NEL_CORE_PATH . 'vendor/'); // Composer vendor path
+define('NEL_VENDOR_PATH', NEL_BASE_PATH . 'vendor/'); // Composer vendor path
 
 define('NEL_OVER_9000', 9001);
 define('NEL_ASSETS_DIR', 'assets');
@@ -61,20 +61,20 @@ define('NEL_WORD_FILTERS_TABLE', 'nelliel_word_filters');
 define('NEL_STYLES_TABLE', 'nelliel_styles');
 define('NEL_ICON_SETS_TABLE', 'nelliel_icon_sets');
 
-define('NEL_ASSETS_FILES_PATH', NEL_BASE_PATH . NEL_ASSETS_DIR . '/');
-define('NEL_CONFIG_FILES_PATH', NEL_CORE_PATH . 'configuration/');
+define('NEL_ASSETS_FILES_PATH', NEL_PUBLIC_PATH . NEL_ASSETS_DIR . '/');
+define('NEL_CONFIG_FILES_PATH', NEL_BASE_PATH . 'configuration/');
 define('NEL_CACHE_FILES_PATH', NEL_CORE_PATH . 'cache/');
-define('NEL_TEMPLATES_FILES_PATH', NEL_CORE_PATH . NEL_TEMPLATES_DIR . '/');
+define('NEL_TEMPLATES_FILES_PATH', NEL_BASE_PATH . NEL_TEMPLATES_DIR . '/');
 define('NEL_FONTS_FILES_PATH', NEL_ASSETS_FILES_PATH . NEL_FONTS_DIR . '/');
 define('NEL_GENERATED_FILES_PATH', NEL_CORE_PATH . 'generated/');
-define('NEL_PLUGINS_FILES_PATH', NEL_CORE_PATH . 'plugins/');
-define('NEL_LANGUAGES_FILES_PATH', NEL_CORE_PATH . 'languages/');
+define('NEL_PLUGINS_FILES_PATH', NEL_BASE_PATH . 'plugins/');
+define('NEL_LANGUAGES_FILES_PATH', NEL_BASE_PATH . 'languages/');
 define('NEL_LOCALE_FILES_PATH', NEL_LANGUAGES_FILES_PATH . 'locale/');
 define('NEL_STYLES_FILES_PATH', NEL_ASSETS_FILES_PATH . NEL_STYLES_DIR . '/');
 define('NEL_ICON_SETS_FILES_PATH', NEL_ASSETS_FILES_PATH . NEL_ICON_SETS_DIR . '/');
 define('NEL_BANNERS_FILES_PATH', NEL_ASSETS_FILES_PATH . NEL_BANNERS_DIR . '/');
 define('NEL_WAT_FILES_PATH', NEL_INCLUDE_PATH . 'wat/');
-define('NEL_GENERAL_FILES_PATH', NEL_BASE_PATH . NEL_GENERAL_DIR . '/');
+define('NEL_GENERAL_FILES_PATH', NEL_PUBLIC_PATH . NEL_GENERAL_DIR . '/');
 define('NEL_CAPTCHA_FILES_PATH', NEL_GENERAL_FILES_PATH . NEL_CAPTCHA_DIR . '/');
 
 define('NEL_ASSETS_WEB_PATH', NEL_BASE_WEB_PATH . NEL_ASSETS_DIR . '/');

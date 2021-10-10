@@ -64,7 +64,7 @@ class TableBans extends Table
             ip_type             SMALLINT NOT NULL DEFAULT 0,
             ip_address_start    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             ip_address_end      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            hashed_ip_address   VARCHAR(128) CHARACTER SET ascii COLLATE ascii_general_ci DEFAULT NULL,
+            hashed_ip_address   VARCHAR(128) DEFAULT NULL,
             reason              TEXT NOT NULL,
             start_time          BIGINT NOT NULL,
             length              BIGINT NOT NULL,
