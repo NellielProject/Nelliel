@@ -60,7 +60,7 @@ class DispatchOutput extends Dispatch
                     {
                         case 'view':
                             $output_thread = new OutputThread($this->domain, false);
-                            $output_thread->render(['thread_id' => $inputs['content_id']->threadID(), 'command' => 'view'], false);
+                            $output_thread->render(['thread_id' => $inputs['thread'], 'command' => 'view'], false);
                             break;
                     }
                 }
