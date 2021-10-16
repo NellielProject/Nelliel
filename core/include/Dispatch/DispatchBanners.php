@@ -24,25 +24,20 @@ class DispatchBanners extends Dispatch
     {
         $banners = new Banners($this->domain);
 
-        switch ($inputs['actions'][0])
-        {
-            case 'get-random':
+        switch ($inputs['section']) {
+            case 'random':
                 $banners_list = array();
                 $web_path = NEL_BANNERS_WEB_PATH;
 
-                if ($this->site_domain->setting('show_board_banners'))
-                {
-                    if ($this->domain->id() !== Domain::SITE)
-                    {
+                if ($this->site_domain->setting('show_board_banners')) {
+                    if ($this->domain->id() !== Domain::SITE) {
                         $banners_list = $banners->getList($this->domain->reference('banners_path'));
                         $web_path = $this->domain->reference('banners_web_path');
                     }
                 }
 
-                if ($this->site_domain->setting('show_site_banners'))
-                {
-                    if ($this->domain->id() === Domain::SITE || empty($banners_list))
-                    {
+                if ($this->site_domain->setting('show_site_banners')) {
+                    if ($this->domain->id() === Domain::SITE || empty($banners_list)) {
                         $banners_list = $banners->getList($this->site_domain->reference('banners_path'));
                         $web_path = $this->site_domain->reference('banners_web_path');
                     }
@@ -50,8 +45,7 @@ class DispatchBanners extends Dispatch
 
                 $banner = $banners->getRandomBanner($banners_list);
 
-                if (!is_null($banner))
-                {
+                if (!is_null($banner)) {
                     $banners->serveBanner($web_path, $banner->getFilename());
                 }
 

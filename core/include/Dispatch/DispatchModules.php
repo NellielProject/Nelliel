@@ -24,30 +24,30 @@ class DispatchModules extends Dispatch
     {
         switch ($inputs['module'])
         {
-            case 'account':
+            /*case 'account':
                 $account_dispatch = new DispatchAccount($this->authorization, $this->domain, $this->session);
                 $account_dispatch->dispatch($inputs);
-                break;
+                break;*/
 
             case 'admin':
                 $admin_dispatch = new DispatchAdmin($this->authorization, $this->domain, $this->session);
                 $admin_dispatch->dispatch($inputs);
                 break;
 
-            case 'banners':
+            /*case 'banners':
                 $banners_dispatch = new DispatchBanners($this->authorization, $this->domain, $this->session);
                 $banners_dispatch->dispatch($inputs);
-                break;
+                break;*/
 
-            case 'anti-spam':
+            /*case 'anti-spam':
                 $anti_spam_dispatch = new DispatchAntiSpam($this->authorization, $this->domain, $this->session);
                 $anti_spam_dispatch->dispatch($inputs);
-                break;
+                break;*/
 
-            case 'language':
+            /*case 'language':
                 $language_dispatch = new DispatchLanguage($this->authorization, $this->domain, $this->session);
                 $language_dispatch->dispatch($inputs);
-                break;
+                break;*/
 
             case 'threads':
                 $threads_dispatch = new DispatchThreads($this->authorization, $this->domain, $this->session);

@@ -27,7 +27,7 @@ class OutputHeader extends Output
         $this->render_data['use_site_header'] = true;
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
-                'description') : '';
+            'description') : '';
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -47,19 +47,17 @@ class OutputHeader extends Output
         $this->render_data['board_uri'] = '/' . $uri . '/';
         $board_name = $this->domain->setting('name');
 
-        if ($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name')))
-        {
+        if ($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name'))) {
             $this->render_data['name'] = ' - ' . $board_name;
         }
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
-                'description') : '';
+            'description') : '';
         $this->render_data['show_banner'] = $this->site_domain->setting('show_site_banners') ||
-                $this->site_domain->setting('show_board_banners');
+            $this->site_domain->setting('show_board_banners');
         $this->render_data['banner_display_width'] = $this->site_domain->setting('banner_display_width');
         $this->render_data['banner_display_height'] = $this->site_domain->setting('banner_display_height');
-        $this->render_data['banner_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'banners', 'actions' => 'get-random', 'board-id' => $this->domain->id()]);
+        $this->render_data['banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -80,18 +78,16 @@ class OutputHeader extends Output
         $this->render_data['board_uri'] = '/' . $uri . '/';
         $board_name = $this->domain->setting('name');
 
-        if ($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name')))
-        {
+        if ($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name'))) {
             $this->render_data['name'] = ' - ' . $board_name;
         }
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
-                'description') : '';
+            'description') : '';
         $this->render_data['show_banner'] = $this->site_domain->setting('show_site_banners');
         $this->render_data['banner_display_width'] = $this->site_domain->setting('banner_display_width');
         $this->render_data['banner_display_height'] = $this->site_domain->setting('banner_display_height');
-        $this->render_data['banner_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'banners', 'actions' => 'get-random']);
+        $this->render_data['banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -106,12 +102,9 @@ class OutputHeader extends Output
         $this->render_data['is_panel'] = $parameters['is_panel'] ?? false;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
-        if ($this->domain->id() === Domain::SITE)
-        {
+        if ($this->domain->id() === Domain::SITE) {
             $this->render_data['area'] = $parameters['area'] ?? _gettext('Site Management');
-        }
-        else
-        {
+        } else {
             $this->render_data['board_id'] = $this->domain->id();
             $this->render_data['area'] = $parameters['area'] ?? _gettext('Board Management');
         }

@@ -29,9 +29,12 @@ class Banners
         $banner = null;
         $banners_count = count($banners_list);
 
-        if ($banners_count > 0)
-        {
-            $banner = $banners_list[mt_rand(0, $banners_count - 1)];
+        if ($banners_count > 0) {
+            $valid_banner = false;
+            while (!$valid_banner) {
+                $banner = $banners_list[mt_rand(0, $banners_count - 1)];
+                $valid_banner = $banner->getFilename()[0] !== '.';
+            }
         }
 
         return $banner;

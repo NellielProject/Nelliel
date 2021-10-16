@@ -53,6 +53,12 @@ class Router
                         $dispatch_class = '\Nelliel\Dispatch\DispatchAntiSpam';
                         $r->addRoute(['GET', 'POST'], '/{section:captcha}/{action:[^\/]+}', $dispatch_class);
                     });
+
+                $r->addGroup('/{domain_id:[^\/]+}/{module:banners}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchBanners';
+                        $r->addRoute(['GET'], '/{section:random}', $dispatch_class);
+                    });
             }, ['cacheFile' => NEL_CACHE_FILES_PATH . 'route.php']);
     }
 
@@ -72,7 +78,7 @@ class Router
             case Dispatcher::FOUND:
                 $inputs = $routeInfo[2];
                 $inputs['method'] = $_SERVER['REQUEST_METHOD'];
-                $domain = Domain::getDomainFromID($inputs['board_id'] ?? $inputs['domain_id'], nel_database());
+                $domain = Domain::getDomainFromID($inputs['domain_id'], nel_database());
                 $inputs['section'] = $inputs['section'] ?? '';
                 $inputs['action'] = $inputs['action'] ?? '';
                 $dispatch_class = $routeInfo[1];
