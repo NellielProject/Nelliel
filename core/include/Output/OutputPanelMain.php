@@ -85,7 +85,8 @@ class OutputPanelMain extends Output
         $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=site-all-caches';
         $this->render_data['module_extract_gettext'] = $this->session->user()->checkPermission($this->domain,
             'perm_extract_gettext');
-        $this->render_data['extract_gettext_url'] = nel_build_router_url(['language', 'gettext', 'extract']);
+        $this->render_data['extract_gettext_url'] = nel_build_router_url(
+            [Domain::SITE, 'language', 'gettext', 'extract']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

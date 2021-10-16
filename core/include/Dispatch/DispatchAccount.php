@@ -58,7 +58,7 @@ class DispatchAccount extends Dispatch
 
                 break;
 
-            case 'private-message':
+            case 'private-messages':
                 $this->session->init(true);
 
                 if (!$this->session->user()->checkPermission($this->domain, 'perm_private_messages_use')) {

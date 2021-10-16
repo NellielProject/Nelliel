@@ -122,8 +122,8 @@ class CAPTCHA
             imageline($captcha_image, 0, rand(0, $image_height), $image_width, rand(0, $image_height), $line_color);
         }
 
-        $x = (int) $x_margin - ($character_spacing * $character_count);
-        $y = (int) $y_margin / 2;
+        $x = $x_margin - ($character_spacing * $character_count);
+        $y = $y_margin / 2;
 
         $text_colors = array();
         $text_colors[] = imagecolorallocate($captcha_image, 200, 100, 0);
@@ -138,7 +138,7 @@ class CAPTCHA
             $size = $font_size - rand(0, intval($font_size * 0.35));
             $angle = rand(0, 50) - 25;
             $color = $text_colors[rand(0, $text_colors_size - 1)];
-            imagefttext($captcha_image, $size, $angle, $x, $y + rand(0, 5), $color, $font_file, $character);
+            imagefttext($captcha_image, $size, $angle, intval($x), intval($y + rand(0, 5)), $color, $font_file, $character);
             $x += $box[4] + $character_spacing;
         }
 

@@ -88,8 +88,9 @@ class OutputPostingForm extends Output
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
-        $this->render_data['captcha_gen_url'] = nel_build_router_url(['anti-spam', 'captcha', 'get']);
-        $this->render_data['captcha_regen_url'] = nel_build_router_url(['anti-spam', 'captcha', 'regenerate']);
+        $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'anti-spam', 'captcha', 'get']);
+        $this->render_data['captcha_regen_url'] = nel_build_router_url(
+            [Domain::SITE, 'anti-spam', 'captcha', 'regenerate']);
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['captcha_label'] = true;

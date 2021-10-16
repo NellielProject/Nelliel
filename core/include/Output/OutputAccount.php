@@ -31,7 +31,7 @@ class OutputAccount extends Output
         $this->render_data['normal_user'] = true;
         $this->render_data['display_name'] = $this->session->user()->getData('display_name');
         $this->render_data['last_login'] = $this->session->user()->getData('last_login');
-        $this->render_data['private_messages_url'] = nel_build_router_url(['account', 'private-message']);
+        $this->render_data['private_messages_url'] = nel_build_router_url([Domain::SITE, 'account', 'private-messages']);
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ?');
         $user_roles = $this->database->executePreparedFetchAll($prepared, [$this->session->user()
             ->id()], PDO::FETCH_ASSOC);

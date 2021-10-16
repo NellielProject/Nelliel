@@ -39,15 +39,16 @@ class OutputPrivateMessages extends Output
             $message_info['time'] = date('Y/m/d l H:i', intval($message['time_sent']));
             $message_info['sender'] = $message['sender'];
             $message_info['message'] = $message['message'];
-            $message_info['view_url'] = nel_build_router_url(['account', 'private-message', 'view', $message['entry']]);
+            $message_info['view_url'] = nel_build_router_url(
+                [Domain::SITE, 'account', 'private-messages', 'view', $message['entry']]);
             $message_info['mark_read_url'] = nel_build_router_url(
-                ['account', 'private-message', 'mark-read', $message['entry']]);
-            $message_info['delete_url'] = nel_build_router_url(['account', 'private-message', 'delete',
-                $message['entry']]);
+                [Domain::SITE, 'account', 'private-messages', 'mark-read', $message['entry']]);
+            $message_info['delete_url'] = nel_build_router_url(
+                [Domain::SITE, 'account', 'private-messages', 'delete', $message['entry']]);
             $this->render_data['private_messages'][] = $message_info;
         }
 
-        $this->render_data['new_url'] = nel_build_router_url(['account', 'private-message', 'new']);
+        $this->render_data['new_url'] = nel_build_router_url([Domain::SITE, 'account', 'private-messages', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -65,7 +66,7 @@ class OutputPrivateMessages extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
-        $this->render_data['form_action'] = nel_build_router_url(['account', 'private-message', 'send']);
+        $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'account', 'private-messages', 'send']);
 
         if (!is_null($reply_id)) {
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "entry" = ?');
@@ -106,7 +107,7 @@ class OutputPrivateMessages extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['form_action'] = nel_build_router_url(
-            ['account', 'private-message', 'reply', $message['entry']]);
+            [Domain::SITE, 'account', 'private-messages', 'reply', $message['entry']]);
         $this->render_data['sender'] = $message['sender'];
 
         foreach ($this->output_filter->newlinesToArray($message['message']) as $line) {

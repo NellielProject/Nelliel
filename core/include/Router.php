@@ -17,44 +17,38 @@ class Router
     private $dispatcher;
     private $uri = '';
     private $routes = array();
-    private $domain_id;
 
     function __construct(string $uri)
     {
-        $uri = rawurldecode($uri);
-        $matches = array();
-        preg_match('/^\/([^\/]+)/u', $uri, $matches);
-
-        if (isset($matches[1]) && Domain::validID($matches[1])) {
-            $this->uri = substr($uri, utf8_strlen($matches[0]));
-            $this->domain_id = $matches[1];
-        } else {
-            $this->uri = $uri;
-            $this->domain_id = Domain::SITE;
-        }
+        $this->uri = rawurldecode($uri);
     }
 
+    //
     public function addRoutes(): void
     {
+        $site_domain = Domain::SITE;
+        // {domain_id:[^\/]+}
+
         $this->dispatcher = cachedDispatcher(
-            function (RouteCollector $r) {
-                $r->addGroup('/{module:account}',
+            function (RouteCollector $r) use ($site_domain) {
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:account}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchAccount';
                         $r->addRoute(['GET', 'POST'], '/{section:login}', $dispatch_class);
                         $r->addRoute('GET', '/{section:logout}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{section:register}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'],
-                            '/{section:private-message}[/{action:[^\/]+}[/{message_id:[^\/]+}]]', $dispatch_class);
+                            '/{section:private-messages}[/{action:[^\/]+}[/{message_id:[^\/]+}]]', $dispatch_class);
+                        $r->addRoute(['GET'], '', $dispatch_class);
                     });
 
-                $r->addGroup('/{module:language}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:language}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchLanguage';
                         $r->addRoute(['GET', 'POST'], '/{section:gettext}/{action:[^\/]+}', $dispatch_class);
                     });
 
-                $r->addGroup('/{module:anti-spam}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:anti-spam}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchAntiSpam';
                         $r->addRoute(['GET', 'POST'], '/{section:captcha}/{action:[^\/]+}', $dispatch_class);
@@ -78,9 +72,9 @@ class Router
             case Dispatcher::FOUND:
                 $inputs = $routeInfo[2];
                 $inputs['method'] = $_SERVER['REQUEST_METHOD'];
-                $domain = Domain::getDomainFromID($inputs['board_id'] ?? $this->domain_id, nel_database());
+                $domain = Domain::getDomainFromID($inputs['board_id'] ?? $inputs['domain_id'], nel_database());
+                $inputs['section'] = $inputs['section'] ?? '';
                 $inputs['action'] = $inputs['action'] ?? '';
-                $inputs['domain_id'] = $domain->id();
                 $dispatch_class = $routeInfo[1];
                 $dispatch_instance = new $dispatch_class($authorization, $domain, $session);
                 $dispatch_instance->dispatch($inputs);
