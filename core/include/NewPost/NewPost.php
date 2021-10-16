@@ -297,7 +297,7 @@ class NewPost
 
         foreach ($cite_list as $cite)
         {
-            $cite_data = $cites->getCiteData($cite, $this->domain, $this->content_id);
+            $cite_data = $cites->getCiteData($cite, $this->domain, $post->contentID());
 
             if ($cite_data['exists'] || $cite_data['future'])
             {
