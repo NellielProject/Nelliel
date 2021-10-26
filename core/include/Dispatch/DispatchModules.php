@@ -54,10 +54,10 @@ class DispatchModules extends Dispatch
                 $threads_dispatch->dispatch($inputs);
                 break;
 
-            case 'new-post':
+            /*case 'new-post':
                 $new_post_dispatch = new DispatchNewPost($this->authorization, $this->domain, $this->session);
                 $new_post_dispatch->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'output':
                 $output_dispatch = new DispatchOutput($this->authorization, $this->domain, $this->session);

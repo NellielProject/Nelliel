@@ -47,15 +47,13 @@ class OutputPostingForm extends Output
         $this->render_data['password_field_placeholder'] = $this->domain->setting('password_field_placeholder');
 
         if ($this->render_data['in_modmode']) {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=new-post&board-id=' .
-                $this->domain->id() . '&modmode=true';
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post', 'modmode']);
             $this->render_data['flags']['post_as_staff'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_as_staff');
             $this->render_data['flags']['raw_html'] = $this->session->user()->checkPermission($this->domain,
                 'perm_raw_html');
         } else {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=new-post&board-id=' .
-                $this->domain->id();
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post']);
         }
 
         if (!$response_to) {

@@ -34,7 +34,7 @@ class DispatchOutput extends Dispatch
         }
 
         switch ($inputs['section']) {
-            case 'page':
+            case $this->domain->reference('page_directory'):
                 $output_thread = new OutputThread($this->domain, false);
                 $output_thread->render(['inputs' => $inputs], false);
 

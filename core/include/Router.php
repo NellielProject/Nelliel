@@ -79,6 +79,12 @@ class Router
                             $dispatch_class);
                         $r->addRoute(['GET'], '/[{parameters:.+}]', $dispatch_class);
                     });
+
+                $r->addGroup('/{domain_id:[^\/]+}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchNewPost';
+                        $r->addRoute(['POST'], '/{section:new-post}', $dispatch_class);
+                    });
             }, ['cacheFile' => NEL_CACHE_FILES_PATH . 'route.php']);
     }
 
