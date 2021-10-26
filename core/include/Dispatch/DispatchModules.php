@@ -49,10 +49,10 @@ class DispatchModules extends Dispatch
                 $language_dispatch->dispatch($inputs);
                 break;*/
 
-            case 'threads':
+            /*case 'threads':
                 $threads_dispatch = new DispatchThreads($this->authorization, $this->domain, $this->session);
                 $threads_dispatch->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'new-post':
                 $new_post_dispatch = new DispatchNewPost($this->authorization, $this->domain, $this->session);

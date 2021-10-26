@@ -34,11 +34,9 @@ class OutputThread extends Output
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->render_data['in_modmode']) {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
-                $this->domain->id() . '&modmode=true';
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads', 'modmode']);
         } else {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
-                $this->domain->id();
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads']);
         }
 
         $posts = $thread->getPosts();

@@ -40,13 +40,11 @@ class OutputIndex extends Output
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Index');
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
-                $this->domain->id() . '&modmode=true';
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads', 'modmode']);
             $this->render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog', 'modmode']);
         } else {
             $this->render_data['header'] = $output_header->board([], true);
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
-                $this->domain->id();
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads']);
             $this->render_data['catalog_url'] = 'catalog.html';
         }
 

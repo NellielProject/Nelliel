@@ -20,25 +20,20 @@ class DispatchThreads extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        if ($this->session->modmodeRequested())
-        {
+        if ($this->session->modmodeRequested()) {
             $this->session->init(true);
         }
 
         $redirect = new \Nelliel\Redirect();
         $redirect->doRedirect(true);
 
-        if (isset($_POST['form_submit_report']))
-        {
+        if (isset($_POST['form_submit_report'])) {
             $report = new \Nelliel\Report($this->domain);
             $report->submit();
 
-            if ($this->session->inModmode($this->domain))
-            {
+            if ($this->session->inModmode($this->domain)) {
                 $url = nel_build_router_url([$this->domain->id(), 'modmode']);
-            }
-            else
-            {
+            } else {
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
 
@@ -51,18 +46,13 @@ class DispatchThreads extends Dispatch
             $redirect->changeURL($url);
         }
 
-        if (isset($_POST['form_submit_delete']))
-        {
+        if (isset($_POST['form_submit_delete'])) {
             $thread_handler = new \Nelliel\ThreadHandler($this->domain);
             $thread_handler->processContentDeletes();
 
-            if ($this->session->inModmode($this->domain))
-            {
-                $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=output&section=index&actions=view&index=0&board-id=' .
-                        $inputs['board_id'] . '&modmode=true';
-            }
-            else
-            {
+            if ($this->session->inModmode($this->domain)) {
+                $url = nel_build_router_url([$this->domain->id(), 'modmode']);
+            } else {
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
 
