@@ -44,8 +44,7 @@ class Thread
         $this->json = new ThreadJSON($this, nel_utilities()->fileHandler());
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
-        if ($load)
-        {
+        if ($load) {
             $this->loadFromDatabase(true);
         }
 
@@ -61,23 +60,20 @@ class Thread
     public function loadFromDatabase(bool $populate = true): bool
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
+            'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_ASSOC);
 
-        if (empty($result))
-        {
+        if (empty($result)) {
             return false;
         }
 
-        if (!$populate)
-        {
+        if (!$populate) {
             return true;
         }
 
         $column_types = $this->main_table->columnTypes();
 
-        foreach ($result as $name => $value)
-        {
+        foreach ($result as $name => $value) {
             $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
         }
 
@@ -88,8 +84,7 @@ class Thread
 
     public function writeToDatabase(): bool
     {
-        if (!$this->isLoaded() || empty($this->content_id->threadID()))
-        {
+        if (!$this->isLoaded() || empty($this->content_id->threadID())) {
             return false;
         }
 
@@ -98,19 +93,16 @@ class Thread
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
 
-        if ($this->main_table->rowExists($filtered_data))
-        {
+        if ($this->main_table->rowExists($filtered_data)) {
             $where_columns = ['thread_id'];
             $where_keys = ['where_thread_id'];
             $where_values = [$this->content_id->threadID()];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
-                    $where_columns, $where_keys);
+                $where_columns, $where_keys);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
             $this->database->executePrepared($prepared);
-        }
-        else
-        {
+        } else {
             $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
             $this->database->executePrepared($prepared);
@@ -121,15 +113,12 @@ class Thread
 
     public function remove(bool $perm_override = false)
     {
-        if (!$perm_override)
-        {
-            if (!$this->verifyModifyPerms())
-            {
+        if (!$perm_override) {
+            if (!$this->verifyModifyPerms()) {
                 return false;
             }
 
-            if ($this->domain->reference('locked'))
-            {
+            if ($this->domain->reference('locked')) {
                 nel_derp(63, _gettext('Cannot remove thread. Board is locked.'));
             }
         }
@@ -142,13 +131,12 @@ class Thread
 
     protected function removeFromDatabase()
     {
-        if (empty($this->content_id->threadID()))
-        {
+        if (empty($this->content_id->threadID())) {
             return false;
         }
 
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
+            'DELETE FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
         $cites = new Cites($this->database);
         $cites->updateForThread($this);
@@ -167,7 +155,9 @@ class Thread
     public function verifyModifyPerms()
     {
         $post = new Post($this->content_id, $this->domain);
-        $post->content_id->changePostID($this->firstPost()->contentID()->postID());
+        $post->content_id->changePostID($this->firstPost()
+            ->contentID()
+            ->postID());
         return $post->verifyModifyPerms();
     }
 
@@ -179,61 +169,54 @@ class Thread
     public function updateCounts()
     {
         $prepared = $this->database->prepare(
-                'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ?');
+            'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ?');
         $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
-                PDO::FETCH_COLUMN);
+            PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('threads_table') . '" SET "post_count" = ? WHERE "thread_id" = ?');
+            'UPDATE "' . $this->domain->reference('threads_table') . '" SET "post_count" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$post_count, $this->content_id->threadID()]);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "parent_thread" = ?');
+            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') . '" WHERE "parent_thread" = ?');
         $total_uploads = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
-                PDO::FETCH_COLUMN);
+            PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "parent_thread" = ? AND "embed_url" IS NOT NULL');
+            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
+            '" WHERE "parent_thread" = ? AND "embed_url" IS NOT NULL');
         $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
-                PDO::FETCH_COLUMN);
+            PDO::FETCH_COLUMN);
 
         $file_count = $total_uploads - $embed_count;
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('threads_table') .
-                '" SET "total_uploads" = ?, "file_count" = ?, "embed_count" = ? WHERE "thread_id" = ?');
+            'UPDATE "' . $this->domain->reference('threads_table') .
+            '" SET "total_uploads" = ?, "file_count" = ?, "embed_count" = ? WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared,
-                [$total_uploads, $file_count, $embed_count, $this->content_id->threadID()]);
+            [$total_uploads, $file_count, $embed_count, $this->content_id->threadID()]);
     }
 
     public function updateBumpTime(): void
     {
         if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
-                'max_bumps'))
-        {
+            'max_bumps')) {
             return;
         }
 
         $last_bump = $this->lastBumpPost();
 
-        if (!$last_bump->exists())
-        {
+        if (!$last_bump->exists()) {
             return;
         }
 
-        if ($last_bump->data('post_time') === $this->data('last_bump_time'))
-        {
+        if ($last_bump->data('post_time') === $this->data('last_bump_time')) {
             $last_bump_lower = $last_bump->data('post_time_milli') < $this->data('last_bump_time_milli');
-        }
-        else
-        {
+        } else {
             $last_bump_lower = $last_bump->data('post_time') < $this->data('last_bump_time');
         }
 
-        if (!$this->data('permasage') || $last_bump_lower)
-        {
+        if (!$this->data('permasage') || $last_bump_lower) {
             $this->changeData('last_bump_time', $last_bump->data('post_time'));
             $this->changeData('last_bump_time_milli', $last_bump->data('post_time_milli'));
             $this->writeToDatabase();
@@ -244,8 +227,7 @@ class Thread
     {
         $last_post = $this->lastPost();
 
-        if ($last_post->exists())
-        {
+        if ($last_post->exists()) {
             $this->changeData('last_update_time', $last_post->data('post_time'));
             $this->changeData('last_update_time_milli', $last_post->data('post_time_milli'));
             $this->writeToDatabase();
@@ -260,8 +242,7 @@ class Thread
 
     public function toggleSticky(): bool
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             return false;
         }
 
@@ -292,26 +273,23 @@ class Thread
     public function cycle(): void
     {
         $prepared = $this->database->prepare(
-                'SELECT "post_number", "op" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
+            'SELECT "post_number", "op" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
         $descending_post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
-                PDO::FETCH_ASSOC);
+            PDO::FETCH_ASSOC);
         $post_count = count($descending_post_list);
         $bump_limit = $this->domain->setting('max_posts');
 
-        if ($post_count > $bump_limit)
-        {
+        if ($post_count > $bump_limit) {
             $old_post_list = array_slice($descending_post_list, $bump_limit - 1);
 
-            foreach ($old_post_list as $old_post)
-            {
-                if ($old_post['op'] == 1)
-                {
+            foreach ($old_post_list as $old_post) {
+                if ($old_post['op'] == 1) {
                     continue;
                 }
 
                 $post_content_id = new ContentID(
-                        ContentID::createIDString($this->content_id->threadID(), $old_post['post_number'], 0));
+                    ContentID::createIDString($this->content_id->threadID(), $old_post['post_number'], 0));
                 $post = $post_content_id->getInstanceFromID($this->domain);
                 $post->remove(true);
             }
@@ -321,8 +299,8 @@ class Thread
     public function firstPost(): Post
     {
         $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? AND "op" = 1');
+            'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? AND "op" = 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
         $post = new Post($content_id, $this->domain, $this);
@@ -332,8 +310,8 @@ class Thread
     public function lastPost(): Post
     {
         $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
+            'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
         $post = new Post($content_id, $this->domain, $this);
@@ -343,8 +321,8 @@ class Thread
     public function lastBumpPost(): Post
     {
         $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
+            'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
         $post = new Post($content_id, $this->domain, $this);
@@ -354,10 +332,10 @@ class Thread
     public function getNthPost(int $nth_post): Post
     {
         $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+            'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
         $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
-                PDO::FETCH_COLUMN);
+            PDO::FETCH_COLUMN);
         $post_id = $post_list[$nth_post - 1] ?? 0;
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
         $post = new Post($content_id, $this->domain, $this);
@@ -370,16 +348,11 @@ class Thread
         $slug = '';
         $max_length = $this->domain->setting('max_slug_length');
 
-        if (!nel_true_empty($post->data('subject')))
-        {
+        if (!nel_true_empty($post->data('subject'))) {
             $base_text = $post->data('subject');
-        }
-        else if (!nel_true_empty($post->data('comment')))
-        {
+        } else if (!nel_true_empty($post->data('comment'))) {
             $base_text = $post->data('comment');
-        }
-        else
-        {
+        } else {
             $base_text = '';
         }
 
@@ -400,12 +373,9 @@ class Thread
         preg_match('/^(.{0,' . $max_length . '})\b(?=\W|$)/', $slug, $matches);
 
         // If the base text is actually one really long word or something, just truncate it
-        if (empty($matches))
-        {
+        if (empty($matches)) {
             $slug = substr($slug, 0, $max_length);
-        }
-        else
-        {
+        } else {
             $slug = $matches[1];
         }
 
@@ -419,13 +389,10 @@ class Thread
     {
         $page_filename = '';
 
-        if ($this->domain->setting('slugify_thread_url') && !nel_true_empty($this->content_data['slug']))
-        {
+        if ($this->domain->setting('slugify_thread_url') && !nel_true_empty($this->content_data['slug'])) {
             $page_filename = sprintf(nel_site_domain()->setting('slug_thread_filename_format'),
-                    $this->content_data['slug']);
-        }
-        else
-        {
+                $this->content_data['slug']);
+        } else {
             $page_filename = sprintf(nel_site_domain()->setting('thread_filename_format'), $this->content_id->threadID());
         }
 
@@ -434,12 +401,10 @@ class Thread
 
     public function getURL(bool $dynamic): string
     {
-        if ($dynamic)
-        {
-            return NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
-                                'board-id' => $this->domain->id(), 'content-id' => $this->content_id->getIDString()]);
+        if ($dynamic) {
+            return nel_build_router_url(
+                [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
+                    $this->pageBasename()]);
         }
 
         $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
@@ -465,28 +430,28 @@ class Thread
     {
         $thread_data = $this->getJSON()->getJSON();
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . $this->domain->reference('archives_table') .
-                '" ("thread_id", "thread_data", "time_archived", "permanent", "moar") VALUES (?, ?, ?, ?, ?)');
+            'INSERT INTO "' . $this->domain->reference('archives_table') .
+            '" ("thread_id", "thread_data", "time_archived", "permanent", "moar") VALUES (?, ?, ?, ?, ?)');
         $prepared->bindValue(1, $this->content_id->threadID(), PDO::PARAM_INT);
         $prepared->bindValue(2, $thread_data, PDO::PARAM_STR);
         $prepared->bindValue(3, time(), PDO::PARAM_INT);
         $prepared->bindValue(4, $permanent, PDO::PARAM_INT);
-        $prepared->bindValue(5, $this->getMoar()->get(), PDO::PARAM_STR);
+        $prepared->bindValue(5, $this->getMoar()
+            ->get(), PDO::PARAM_STR);
         $result = $this->database->executePrepared($prepared);
 
-        if ($result !== true)
-        {
+        if ($result !== true) {
             return false;
         }
 
         $file_handler = nel_utilities()->fileHandler();
         $file_handler->moveDirectory($this->domain->reference('src_path') . $this->content_id->threadID() . '/',
-                $this->domain->reference('archive_src_path') . $this->content_id->threadID() . '/');
+            $this->domain->reference('archive_src_path') . $this->content_id->threadID() . '/');
         $file_handler->moveDirectory($this->domain->reference('preview_path') . $this->content_id->threadID() . '/',
-                $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/');
+            $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/');
         // TODO: regen as archive page
         $file_handler->moveDirectory($this->domain->reference('page_path') . $this->content_id->threadID() . '/',
-                $this->domain->reference('archive_page_path') . $this->content_id->threadID() . '/');
+            $this->domain->reference('archive_page_path') . $this->content_id->threadID() . '/');
 
         $this->removeFromDatabase();
         return true;
@@ -504,8 +469,7 @@ class Thread
 
     protected function contentDataOrDefault(string $data_name, $default)
     {
-        if (isset($this->content_data[$data_name]))
-        {
+        if (isset($this->content_data[$data_name])) {
             return $this->content_data[$data_name];
         }
 
@@ -546,13 +510,12 @@ class Thread
     {
         $posts = array();
         $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+            'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
         $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
-                PDO::FETCH_COLUMN);
+            PDO::FETCH_COLUMN);
 
-        foreach ($post_list as $id)
-        {
+        foreach ($post_list as $id) {
             $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), intval($id)));
             $posts[] = $content_id->getInstanceFromID($this->domain);
         }
@@ -567,8 +530,7 @@ class Thread
 
     public function addPost(Post $post): bool
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             $this->loadFromDatabase();
         }
 
@@ -576,27 +538,24 @@ class Thread
         $first_post = $this->firstPost();
 
         // If no first post, assume this is a new thread
-        if (!$first_post->exists())
-        {
+        if (!$first_post->exists()) {
             $this->createDirectories();
-            $this->changeData('thread_id', $post->contentID()->postID());
+            $this->changeData('thread_id', $post->contentID()
+                ->postID());
             $this->changeData('last_bump_time', $post->data('post_time'));
             $this->changeData('last_bump_time_milli', $post->data('post_time_milli'));
             $this->changeData('last_update', $post->data('post_time'));
             $this->changeData('last_update_milli', $post->data('post_time_milli'));
             $this->changeData('post_count', 1);
             $this->changeData('slug', $this->generateSlug($post));
-        }
-        else
-        {
+        } else {
             $this->changeData('last_update', $post->data('post_time'));
             $this->changeData('last_update_milli', $post->data('post_time_milli'));
             $this->changeData('post_count', $this->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                    ($this->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
-                    !$this->data('permasage')))
-            {
+                ($this->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
+                !$this->data('permasage'))) {
                 $this->changeData('last_bump_time', $post->data('post_time'));
                 $this->changeData('last_bump_time_milli', $post->data('post_time_milli'));
             }

@@ -24,12 +24,17 @@ class OutputIndex extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('index/index');
-        $page = 1;
+        $page = $parameters['page'] ?? 1;
         $page_title = $this->domain->reference('title');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
+
+        if (!$this->write_mode) {
+            $this->render_data['render'] = '-render';
+            $this->render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog']);
+        }
 
         if ($this->render_data['in_modmode']) {
             $manage_headers['header'] = _gettext('Moderator Mode');
@@ -37,9 +42,7 @@ class OutputIndex extends Output
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .
                 $this->domain->id() . '&modmode=true';
-            $this->render_data['catalog_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=output&section=catalog&actions=view&board-id=' . $this->domain->id() . '&modmode=true';
-            $this->render_data['render'] = '-render';
+            $this->render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog', 'modmode']);
         } else {
             $this->render_data['header'] = $output_header->board([], true);
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=threads&board-id=' .

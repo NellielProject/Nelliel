@@ -59,12 +59,12 @@ class DispatchModules extends Dispatch
                 $new_post_dispatch->dispatch($inputs);
                 break;
 
-            case 'output':
+            /*case 'output':
                 $output_dispatch = new DispatchOutput($this->authorization, $this->domain, $this->session);
                 $output_dispatch->dispatch($inputs);
-                break;
+                break;*/
 
-            case 'regen':
+            /*case 'regen':
                 $regen = new \Nelliel\Regen();
                 $this->session->init(true);
                 $this->session->loggedInOrError();
@@ -141,7 +141,7 @@ class DispatchModules extends Dispatch
                     $output_board_panel->render(['user' => $user, 'board_id' => $board_id], false);
                 }
 
-                break;
+                break;*/
 
             default:
                 nel_derp(250, _gettext('The selected module is invalid.'));

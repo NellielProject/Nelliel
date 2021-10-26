@@ -22,8 +22,8 @@ class OutputThread extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('thread/thread');
-        $thread_id = ($parameters['thread_id']) ?? 0;
-        $command = ($parameters['command']) ?? 'view';
+        $inputs = $parameters['inputs'] ?? array();
+        $thread_id = $inputs['thread_id'] ?? 0;
         $thread_content_id = new ContentID(ContentID::createIDString($thread_id));
         $thread = $thread_content_id->getInstanceFromID($this->domain);
 
@@ -49,62 +49,68 @@ class OutputThread extends Output
         }
 
         $op_post = $posts[0];
-        $page_title = '';
 
-        if ($this->domain->setting('prefix_board_title')) {
-            $page_title .= $this->domain->reference('title');
-        }
+        if (!in_array('expand', $inputs['parameters']) && !in_array('collapse', $inputs['parameters'])) {
+            $page_title = '';
 
-        if ($this->domain->setting('subject_in_title') && !nel_true_empty($op_post->data('subject'))) {
-            $page_title .= ' - ' . $op_post->data('subject');
-        } else if ($this->domain->setting('slug_in_title') && !nel_true_empty($thread->data('slug'))) {
-            $page_title .= ' - ' . $thread->data('slug');
-        } else if ($this->domain->setting('thread_number_in_title')) {
-            $page_title .= ' - ' . _gettext('Thread') . ' #' . $op_post->data('post_number');
-        }
+            if ($this->domain->setting('prefix_board_title')) {
+                $page_title .= $this->domain->reference('title');
+            }
+            if ($this->domain->setting('subject_in_title') && !nel_true_empty($op_post->data('subject'))) {
+                $page_title .= ' - ' . $op_post->data('subject');
+            } else if ($this->domain->setting('slug_in_title') && !nel_true_empty($thread->data('slug'))) {
+                $page_title .= ' - ' . $thread->data('slug');
+            } else if ($this->domain->setting('thread_number_in_title')) {
+                $page_title .= ' - ' . _gettext('Thread') . ' #' . $op_post->data('post_number');
+            }
 
-        $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
-        $output_header = new OutputHeader($this->domain, $this->write_mode);
+            $output_head = new OutputHead($this->domain, $this->write_mode);
+            $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
+            $output_header = new OutputHeader($this->domain, $this->write_mode);
 
-        if ($this->session->inModmode($this->domain) && !$this->write_mode) {
-            $manage_headers['header'] = _gettext('Moderator Mode');
-            $manage_headers['sub_header'] = _gettext('View Thread');
-            $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
-            $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'output', 'section' => 'index', 'actions' => 'view', 'index' => '0',
-                        'board-id' => $this->domain->id(), 'modmode' => 'true']);
+            if ($this->session->inModmode($this->domain) && !$this->write_mode) {
+                $manage_headers['header'] = _gettext('Moderator Mode');
+                $manage_headers['sub_header'] = _gettext('View Thread');
+                $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
+                $return_url = nel_build_router_url([$this->domain->id(), 'modmode']);
+            } else {
+                $this->render_data['header'] = $output_header->board([], true);
+                $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
+            }
+
+            $this->render_data['show_global_announcement'] = !nel_true_empty(
+                nel_site_domain()->setting('global_announcement'));
+            $this->render_data['global_announcement_text'] = nel_site_domain()->setting('global_announcement');
+
+            $query = 'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" ASC';
+            $blotter_entries = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+
+            foreach ($blotter_entries as $entry) {
+                $blotter_data = array();
+                $blotter_data['time'] = date('Y/m/d', intval($entry['time']));
+                $blotter_data['text'] = $entry['text'];
+                $this->render_data['blotter_entries'][] = $blotter_data;
+            }
+
+            $this->render_data['show_blotter'] = isset($this->render_data['blotter_entries']) &&
+                !empty($this->render_data['blotter_entries']);
+            $this->render_data['blotter_url'] = NEL_BASE_WEB_PATH . 'blotter.html';
+            $this->render_data['return_url'] = $return_url;
+
+            $this->render_data['abbreviate'] = false;
+            $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
+            $this->render_data['posting_form'] = $output_posting_form->render(['response_to' => $thread_id], true);
+            $this->render_data['show_styles'] = true;
+            $output_menu = new OutputMenu($this->domain, $this->write_mode);
+            $this->render_data['styles'] = $output_menu->styles([], true);
+            $this->render_data['return_link'] = true;
+            $gen_data['index_rendering'] = false;
         } else {
-            $this->render_data['header'] = $output_header->board([], true);
-            $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
+            $gen_data['index_rendering'] = true;
+            $this->render_data['return_link'] = false;
         }
 
-        $this->render_data['show_global_announcement'] = !nel_true_empty(
-            nel_site_domain()->setting('global_announcement'));
-        $this->render_data['global_announcement_text'] = nel_site_domain()->setting('global_announcement');
-
-        $query = 'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" ASC';
-        $blotter_entries = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
-
-        foreach ($blotter_entries as $entry) {
-            $blotter_data = array();
-            $blotter_data['time'] = date('Y/m/d', intval($entry['time']));
-            $blotter_data['text'] = $entry['text'];
-            $this->render_data['blotter_entries'][] = $blotter_data;
-        }
-
-        $this->render_data['show_blotter'] = isset($this->render_data['blotter_entries']) &&
-            !empty($this->render_data['blotter_entries']);
-        $this->render_data['blotter_url'] = NEL_BASE_WEB_PATH . 'blotter.html';
-
-        $this->render_data['return_url'] = $return_url;
-        $post_counter = 1;
-        $gen_data['index_rendering'] = false;
         $gen_data['abbreviate'] = false;
-        $this->render_data['abbreviate'] = false;
-        $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
-        $this->render_data['posting_form'] = $output_posting_form->render(['response_to' => $thread_id], true);
         $output_post = new OutputPost($this->domain, $this->write_mode);
         $this->render_data['op_post'] = array();
         $this->render_data['thread_posts'] = array();
@@ -114,9 +120,6 @@ class OutputThread extends Output
         $this->render_data['thread_info_id'] = 'thread-header-info-' . $thread_content_id->getIDString();
         $this->render_data['thread_options_id'] = 'thread-header-options-' . $thread_content_id->getIDString();
         $this->render_data['board_id'] = $this->domain->id();
-        $this->render_data['show_styles'] = true;
-        $output_menu = new OutputMenu($this->domain, $this->write_mode);
-        $this->render_data['styles'] = $output_menu->styles([], true);
         $generate_first_posts = $post_count > $this->domain->setting('first_posts_threshold');
         $generate_last_posts = $post_count > $this->domain->setting('last_posts_threshold');
         $first_posts_increments = json_decode($this->domain->setting('first_posts_increments'));
@@ -125,8 +128,15 @@ class OutputThread extends Output
         $last_posts_increments = is_array($last_posts_increments) ? $last_posts_increments : array();
         $first_posts = array();
         $last_posts = array();
+        $post_counter = 1;
+        $abbreviate_start = $thread->data('post_count') - $this->domain->setting('index_thread_replies');
 
         foreach ($posts as $post) {
+            if (in_array('collapse', $inputs['parameters']) && $post_counter <= $abbreviate_start) {
+                $post_counter ++;
+                continue;
+            }
+
             $posts_from_end = $post_count - $post_counter;
             $thread->getJSON()->addPost($post->getJSON());
             $parameters = ['gen_data' => $gen_data, 'in_thread_number' => $post_counter];
@@ -158,16 +168,20 @@ class OutputThread extends Output
             $post_counter ++;
         }
 
-        $this->render_data['index_navigation'] = true;
-        $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
         $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'anti-spam', 'captcha', 'get']);
         $this->render_data['captcha_regen_url'] = nel_build_router_url(
             [Domain::SITE, 'anti-spam', 'captcha', 'regenerate']);
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
-        $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+
+        if (!in_array('expand', $inputs['parameters']) && !in_array('collapse', $inputs['parameters'])) {
+            $this->render_data['index_navigation'] = true;
+            $this->render_data['footer_form'] = true;
+            $output_footer = new OutputFooter($this->domain, $this->write_mode);
+            $this->render_data['footer'] = $output_footer->render([], true);
+        }
+
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         $first_posts_format = $thread->pageBasename() . $this->site_domain->setting('first_posts_filename_format');
 
@@ -201,15 +215,7 @@ class OutputThread extends Output
                 $output, NEL_FILES_PERM, true);
             $thread->getJSON()->write();
         } else {
-            switch ($command) {
-                case 'view':
-                    echo $output;
-                    break;
-
-                default:
-                    echo $output;
-            }
-
+            echo $output;
             nel_clean_exit();
         }
     }

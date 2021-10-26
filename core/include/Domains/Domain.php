@@ -88,7 +88,7 @@ abstract class Domain implements NellielCacheInterface
             return $this->references;
         }
 
-        return $this->references[$reference];
+        return $this->references[$reference] ?? '';
     }
 
     public function templatePath($new_path = null)

@@ -45,19 +45,39 @@ class Router
                 $r->addGroup('/{domain_id:' . $site_domain . '}/{module:language}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchLanguage';
-                        $r->addRoute(['GET', 'POST'], '/{section:gettext}/{action:[^\/]+}', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:extract-gettext}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:anti-spam}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:captcha}',
                     function (RouteCollector $r) {
-                        $dispatch_class = '\Nelliel\Dispatch\DispatchAntiSpam';
-                        $r->addRoute(['GET', 'POST'], '/{section:captcha}/{action:[^\/]+}', $dispatch_class);
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchCAPTCHA';
+                        $r->addRoute(['GET'], '/{section:get}', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:regenerate}', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:[^\/]+}/{module:banners}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchBanners';
                         $r->addRoute(['GET'], '/{section:random}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:[^\/]+}/{module:regen}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchRegen';
+                        $r->addRoute(['GET'], '/{section:pages}', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:cache}', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:overboard}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:[^\/]+}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchOutput';
+                        $r->addRoute(['GET'], '/{page:\d+}[/{parameters:.+}]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:catalog}/[{parameters:.+}]', $dispatch_class);
+                        // Board subdirectories can be custom so we catch it last and compare in dispatch
+                        $r->addRoute(['GET'], '/{section:[^\/]+}/{thread_id:\d+}/{slug:[^\/]+}[/{parameters:.+}]',
+                            $dispatch_class);
+                        $r->addRoute(['GET'], '/[{parameters:.+}]', $dispatch_class);
                     });
             }, ['cacheFile' => NEL_CACHE_FILES_PATH . 'route.php']);
     }
@@ -79,11 +99,12 @@ class Router
                 $inputs = $routeInfo[2];
                 $inputs['method'] = $_SERVER['REQUEST_METHOD'];
                 $domain = Domain::getDomainFromID($inputs['domain_id'], nel_database());
+                $inputs['module'] = $inputs['module'] ?? '';
                 $inputs['section'] = $inputs['section'] ?? '';
                 $inputs['action'] = $inputs['action'] ?? '';
-                $dispatch_class = $routeInfo[1];
-                $dispatch_instance = new $dispatch_class($authorization, $domain, $session);
-                $dispatch_instance->dispatch($inputs);
+                $class = $routeInfo[1];
+                $instance = new $class($authorization, $domain, $session);
+                $instance->dispatch($inputs);
                 return true;
                 break;
         }

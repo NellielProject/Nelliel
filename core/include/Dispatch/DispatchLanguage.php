@@ -18,22 +18,18 @@ class DispatchLanguage extends Dispatch
     {
         parent::__construct($authorization, $domain, $session);
         $this->session->init(true);
+        $this->session->loggedInOrError();
     }
 
     public function dispatch(array $inputs)
     {
-        $this->session->loggedInOrError();
-
         switch ($inputs['section']) {
             case 'gettext':
-                if ($inputs['method'] === 'GET') {
-                    switch ($inputs['action']) {
-                        case 'extract':
-                            $language = new Language();
-                            $language->extractLanguageStrings($this->domain, $this->session->user(), 'nelliel',
-                                LC_MESSAGES);
-                            break;
-                    }
+                switch ($inputs['action']) {
+                    case 'extract':
+                        $language = new Language();
+                        $language->extractLanguageStrings($this->domain, $this->session->user(), 'nelliel', LC_MESSAGES);
+                        break;
                 }
         }
 

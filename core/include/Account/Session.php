@@ -21,11 +21,11 @@ class Session
     protected static $ignore = false;
     protected $doing_login = false;
     protected $session_options = array();
+    protected static $modmode = false;
 
     function __construct()
     {
-        if ($this->failed)
-        {
+        if ($this->failed) {
             return;
         }
 
@@ -36,17 +36,13 @@ class Session
         $this->session_options['cookie_lifetime'] = 0;
         $this->session_options['cookie_path'] = NEL_BASE_WEB_PATH;
 
-        if (NEL_SECURE_SESSION_ONLY)
-        {
+        if (NEL_SECURE_SESSION_ONLY) {
             $this->session_options['cookie_secure'] = true;
         }
 
-        if (version_compare(PHP_VERSION, '7.3.0', '>='))
-        {
+        if (version_compare(PHP_VERSION, '7.3.0', '>=')) {
             $this->session_options['cookie_samesite'] = 'Strict';
-        }
-        else
-        {
+        } else {
             $this->session_options['cookie_path'] = NEL_BASE_WEB_PATH . '; samesite=strict';
         }
 
@@ -54,8 +50,7 @@ class Session
         $this->database = $this->domain->database();
         $this->authorization = new Authorization($this->database);
 
-        if (empty(self::$user))
-        {
+        if (empty(self::$user)) {
             self::$user = $this->authorization->emptyUser();
         }
     }
@@ -67,55 +62,44 @@ class Session
 
     public function init(bool $do_setup)
     {
-        if (!$this->started())
-        {
+        if (!$this->started()) {
             session_name($this->session_name);
             session_start($this->session_options);
         }
 
-        if (!self::$setup_done && $do_setup)
-        {
+        if (!self::$setup_done && $do_setup) {
             $this->setup();
         }
     }
 
     protected function setup()
     {
-        if (self::$setup_done)
-        {
+        if (self::$setup_done) {
             return;
         }
 
-        if (NEL_SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off'))
-        {
+        if (NEL_SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off')) {
             $this->terminate();
             $this->failed = true;
             nel_derp(220, _gettext('Session requires a secure connection.'));
         }
 
-        if (!empty($_SESSION))
-        {
-            if ($this->isOld())
-            {
+        if (!empty($_SESSION)) {
+            if ($this->isOld()) {
                 $this->terminate();
                 $this->failed = true;
                 nel_derp(221, _gettext('Session has expired.'));
             }
-        }
-        else
-        {
-            if (!$this->doing_login)
-            {
+        } else {
+            if (!$this->doing_login) {
                 return;
             }
         }
 
-        if (!$this->doing_login)
-        {
+        if (!$this->doing_login) {
             $user = $this->authorization->getUser($_SESSION['user_id'] ?? '');
 
-            if ($user->empty() || !$user->active())
-            {
+            if ($user->empty() || !$user->active()) {
                 $this->failed = true;
                 $this->terminate();
                 nel_derp(222, _gettext('User does not exist or is inactive.'));
@@ -133,8 +117,7 @@ class Session
     {
         $this->init(true);
 
-        if (!empty(self::$user))
-        {
+        if (!empty(self::$user)) {
             $log_event = new LogEvent(nel_site_domain());
             $log_event->changeContext('event_id', 'LOGOUT_SUCCESS');
             $log_event->send(sprintf(_gettext("User %s logged out."), self::$user->id()));
@@ -174,8 +157,7 @@ class Session
 
     public function ignore(bool $ignore = null)
     {
-        if (!is_null($ignore))
-        {
+        if (!is_null($ignore)) {
             self::$ignore = $ignore;
         }
 
@@ -184,8 +166,7 @@ class Session
 
     protected function isOld()
     {
-        if ($this->domain->setting('session_length') == 0)
-        {
+        if ($this->domain->setting('session_length') == 0) {
             return false;
         }
 
@@ -203,21 +184,26 @@ class Session
         return !$this->ignore() && self::$setup_done;
     }
 
+    public function toggleModMode(): void
+    {
+        self::$modmode = !self::$modmode;
+    }
+
     public function modmodeRequested()
     {
         return (isset($_POST['modmode']) && $_POST['modmode'] === 'true') ||
-                (isset($_GET['modmode']) && $_GET['modmode'] === 'true');
+            (isset($_GET['modmode']) && $_GET['modmode'] === 'true');
     }
 
     public function inModmode(Domain $domain)
     {
-        return $this->isActive() && $this->modmodeRequested() && self::$user->checkPermission($domain, 'perm_mod_mode');
+        return $this->isActive() && ($this->modmodeRequested() || self::$modmode) &&
+            self::$user->checkPermission($domain, 'perm_mod_mode');
     }
 
     public function loggedInOrError()
     {
-        if (!$this->isActive() || (!$this->doing_login && empty(self::$user)))
-        {
+        if (!$this->isActive() || (!$this->doing_login && empty(self::$user))) {
             $this->failed = true;
             nel_derp(224, _gettext('You must be logged in for this action.'));
         }

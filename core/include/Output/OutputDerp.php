@@ -29,27 +29,17 @@ class OutputDerp extends Output
         $this->render_data['error_message'] = $diagnostic['error_message'];
         $this->render_data['error_data'] = '';
 
-        if ($this->domain->id() === Domain::SITE)
-        {
+        if ($this->domain->id() === Domain::SITE) {
             $return_url = $this->domain->reference('home_page');
-        }
-        else
-        {
+        } else {
             $return_url = NEL_BASE_WEB_PATH . $this->domain->reference('board_directory');
         }
 
-        if ($this->session->inModmode($this->domain))
-        {
-            if ($this->domain->id() === Domain::SITE)
-            {
+        if ($this->session->inModmode($this->domain)) {
+            if ($this->domain->id() === Domain::SITE) {
                 ; // TODO: Figure out this one
-            }
-            else
-            {
-                $return_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                        http_build_query(
-                                ['module' => 'output', 'section' => 'index', 'actions' => 'view', 'index' => '0',
-                                    'board-id' => $this->domain->id(), 'modmode' => 'true']);
+            } else {
+                nel_build_router_url([$this->domain->id(), 'modmode']);
             }
         }
 

@@ -15,7 +15,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 {
     public const DEFAULT_SRC_DIRECTORY = 'src';
     public const DEFAULT_PREVIEW_DIRECTORY = 'preview';
-    public const DEFAULT_PAGE_DIRECTORY = 'page';
+    public const DEFAULT_PAGE_DIRECTORY = 'threads';
     public const DEFAULT_ARCHIVE_DIRECTORY = 'archive';
 
     public function __construct(string $domain_id, NellielPDO $database)

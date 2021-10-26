@@ -8,9 +8,9 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputCatalog;
 use Nelliel\Output\OutputIndex;
 use Nelliel\Output\OutputThread;
-use Nelliel\Output\OutputCatalog;
 
 class DispatchOutput extends Dispatch
 {
@@ -22,61 +22,30 @@ class DispatchOutput extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        $inputs['index'] = $_GET['index'] ?? null;
-        $inputs['thread'] = intval($_GET['thread'] ?? null);
+        if ($this->domain->id() === Domain::SITE) {
+            return;
+        }
 
-        switch ($inputs['section'])
-        {
-            case 'index':
-                foreach ($inputs['actions'] as $action)
-                {
-                    switch ($action)
-                    {
-                        case 'view':
-                            $output_index = new OutputIndex($this->domain, false);
-                            $output_index->render(['thread_id' => 0], false);
-                            break;
+        $inputs['parameters'] = explode('+', $inputs['parameters'] ?? '');
 
-                        case 'expand-thread':
-                            $output_thread = new OutputThread($this->domain, false);
-                            $output_thread->render(['thread_id' => $inputs['thread'], 'command' => 'expand-thread'],
-                                    false);
-                            break;
+        if (in_array('modmode', $inputs['parameters'])) {
+            $this->session->init(true);
+            $this->session->toggleModMode();
+        }
 
-                        case 'collapse-thread':
-                            $output_thread = new OutputThread($this->domain, false);
-                            $output_thread->render(['thread_id' => $inputs['thread'], 'command' => 'collapse-thread'],
-                                    false);
-                            break;
-                    }
-                }
-
-                break;
-
-            case 'thread':
-                foreach ($inputs['actions'] as $action)
-                {
-                    switch ($action)
-                    {
-                        case 'view':
-                            $output_thread = new OutputThread($this->domain, false);
-                            $output_thread->render(['thread_id' => $inputs['thread'], 'command' => 'view'], false);
-                            break;
-                    }
-                }
+        switch ($inputs['section']) {
+            case 'page':
+                $output_thread = new OutputThread($this->domain, false);
+                $output_thread->render(['inputs' => $inputs], false);
 
             case 'catalog':
-                foreach ($inputs['actions'] as $action)
-                {
-                    switch ($action)
-                    {
-                        case 'view':
-                            $output_thread = new OutputCatalog($this->domain, false);
-                            $output_thread->render(['command' => 'view'], false);
-                            break;
-                    }
-                }
+                $output_thread = new OutputCatalog($this->domain, false);
+                $output_thread->render([], false);
 
+            // Index
+            default:
+                $output_index = new OutputIndex($this->domain, false);
+                $output_index->render(['page' => $inputs['page'] ?? 1], false);
                 break;
         }
     }

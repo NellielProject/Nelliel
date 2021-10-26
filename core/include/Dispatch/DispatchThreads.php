@@ -35,8 +35,7 @@ class DispatchThreads extends Dispatch
 
             if ($this->session->inModmode($this->domain))
             {
-                $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=output&section=index&actions=view&index=0&board-id=' .
-                        $inputs['board_id'] . '&modmode=true';
+                $url = nel_build_router_url([$this->domain->id(), 'modmode']);
             }
             else
             {

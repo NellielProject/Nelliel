@@ -9,15 +9,21 @@ function dataBin() {
     ;
 }
 
-nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
-    dataBin.board_id = board_id;
+nelliel.setup.infoTransfer = function(info) {
+    dataBin.board_id = info.domain_id;
+    dataBin.src_directory = info.src_directory;
+    dataBin.preview_directory = info.preview_directory;
+    dataBin.page_directory = info.page_directory;
+    dataBin.is_modmode = info.is_modmode;
+}
+
+nelliel.setup.doImportantStuff = function() {
     dataBin.style_override = nelliel.core.retrieveFromLocalStorage("style_override", false);
     setStyle(dataBin.style_override);
-    dataBin.is_modmode = is_modmode;
-    dataBin.hidden_threads_id = "hidden_threads_" + board_id;
-    dataBin.hidden_posts_id = "hidden_posts_" + board_id;
-    dataBin.hidden_files_id = "hidden_files_" + board_id;
-    dataBin.hidden_embeds_id = "hidden_embeds_" + board_id;
+    dataBin.hidden_threads_id = "hidden_threads_" + dataBin.board_id;
+    dataBin.hidden_posts_id = "hidden_posts_" + dataBin.board_id;
+    dataBin.hidden_files_id = "hidden_files_" + dataBin.board_id;
+    dataBin.hidden_embeds_id = "hidden_embeds_" + dataBin.board_id;
     nelliel.setup.localStorageInitCheck();
     dataBin.hidden_threads = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_threads_id, true);
     dataBin.hidden_posts = nelliel.core.retrieveFromLocalStorage(dataBin.hidden_posts_id, true);
@@ -27,8 +33,8 @@ nelliel.setup.doImportantStuff = function(board_id, is_modmode) {
     nelliel.setup.setupListeners();
     nelliel.core.hashHandler(null);
     
-    if (board_id !== "") {
-        nelliel.setup.fillForms(board_id);
+    if (dataBin.board_id !== "") {
+        nelliel.setup.fillForms(dataBin.board_id);
         nelliel.ui.applyHideContent();
     }
 

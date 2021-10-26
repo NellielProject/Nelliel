@@ -29,24 +29,22 @@ class DispatchBanners extends Dispatch
                 $banners_list = array();
                 $web_path = NEL_BANNERS_WEB_PATH;
 
-                if ($this->site_domain->setting('show_board_banners')) {
-                    if ($this->domain->id() !== Domain::SITE) {
-                        $banners_list = $banners->getList($this->domain->reference('banners_path'));
-                        $web_path = $this->domain->reference('banners_web_path');
-                    }
+                if ($this->domain->id() !== Domain::SITE && $this->site_domain->setting('show_board_banners')) {
+                    $banners_list = $banners->getList($this->domain->reference('banners_path'));
+                    $web_path = $this->domain->reference('banners_web_path');
                 }
 
-                if ($this->site_domain->setting('show_site_banners')) {
-                    if ($this->domain->id() === Domain::SITE || empty($banners_list)) {
-                        $banners_list = $banners->getList($this->site_domain->reference('banners_path'));
-                        $web_path = $this->site_domain->reference('banners_web_path');
-                    }
+                if ($this->domain->id() === Domain::SITE && $this->site_domain->setting('show_site_banners')) {
+                    $banners_list = $banners->getList($this->site_domain->reference('banners_path'));
+                    $web_path = $this->site_domain->reference('banners_web_path');
                 }
 
-                $banner = $banners->getRandomBanner($banners_list);
+                if (!empty($banners_list)) {
+                    $banner = $banners->getRandomBanner($banners_list);
 
-                if (!is_null($banner)) {
-                    $banners->serveBanner($web_path, $banner->getFilename());
+                    if (!is_null($banner)) {
+                        $banners->serveBanner($web_path, $banner->getFilename());
+                    }
                 }
 
                 break;

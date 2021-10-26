@@ -75,14 +75,13 @@ class OutputPanelMain extends Output
         $this->render_data['blotter_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=blotter';
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_overboard');
-        $this->render_data['regen_overboard_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            'module=regen&actions=overboard-all-pages';
+        $this->render_data['regen_overboard_url'] = nel_build_router_url([Domain::SITE, 'regen', 'overboard']);
         $this->render_data['regen_site_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_pages');
-        $this->render_data['regen_pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=site-all-pages';
+        $this->render_data['regen_pages_url'] = nel_build_router_url([Domain::SITE, 'regen', 'pages']);
         $this->render_data['regen_site_caches'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_cache');
-        $this->render_data['regen_caches_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=regen&actions=site-all-caches';
+        $this->render_data['regen_caches_url'] = nel_build_router_url([Domain::SITE, 'regen', 'cache']);
         $this->render_data['module_extract_gettext'] = $this->session->user()->checkPermission($this->domain,
             'perm_extract_gettext');
         $this->render_data['extract_gettext_url'] = nel_build_router_url(

@@ -23,8 +23,7 @@ class DispatchNewPost extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        if($this->session->modmodeRequested($this->domain))
-        {
+        if ($this->session->modmodeRequested($this->domain)) {
             $this->session->init(true);
         }
 
@@ -35,33 +34,20 @@ class DispatchNewPost extends Dispatch
         $redirect->doRedirect(true);
         $fgsfds = new FGSFDS();
 
-        if ($fgsfds->commandIsSet('noko') || $this->domain->setting('always_noko'))
-        {
-            if ($this->session->inModmode($this->domain))
-            {
-                $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                        http_build_query(
-                                ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
-                                    'thread' => $fgsfds->getCommandData('noko', 'topic'),
-                                    'board-id' => $inputs['board_id'], 'modmode' => 'true']);
+        if ($fgsfds->commandIsSet('noko') || $this->domain->setting('always_noko')) {
+            if ($this->session->inModmode($this->domain)) {
+                $url = nel_build_router_url($this->domain->id(), $this->domain->reference('page_directory'),
+                    $fgsfds->getCommandData('noko', 'topic'), 'modmode');
+            } else {
+                $url = $this->domain->reference('board_directory') . '/' . $this->domain->reference('page_directory') .
+                    '/' . $fgsfds->getCommandData('noko', 'topic') . '/' .
+                    sprintf(nel_site_domain()->setting('thread_filename_format'),
+                        $fgsfds->getCommandData('noko', 'topic')) . NEL_PAGE_EXT;
             }
-            else
-            {
-                $url = $this->domain->reference('board_directory') . '/' . $this->domain->reference('page_directory') . '/' .
-                        $fgsfds->getCommandData('noko', 'topic') . '/' .
-                        sprintf(nel_site_domain()->setting('thread_filename_format'),
-                                $fgsfds->getCommandData('noko', 'topic')) . NEL_PAGE_EXT;
-            }
-        }
-        else
-        {
-            if ($this->session->inModmode($this->domain))
-            {
-                $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=output&section=index&actions=view&index=0&board-id=' .
-                        $inputs['board_id'] . '&modmode=true';
-            }
-            else
-            {
+        } else {
+            if ($this->session->inModmode($this->domain)) {
+                $url = nel_build_router_url([$this->domain->id(), 'modmode']);
+            } else {
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
         }

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -23,13 +22,19 @@ class OutputHead extends Output
         $this->render_data['main_js_file'] = NEL_SCRIPTS_WEB_PATH . 'core/nel.js';
         $this->render_data['js_ui_url'] = NEL_SCRIPTS_WEB_PATH . 'core/ui.js';
         $this->render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
-       $this->render_data['js_domloaded'] = 'window.addEventListener(\'DOMContentLoaded\', (event) => {nelliel.setup.doImportantStuff(\'' .
-                $this->domain->id() . '\', \'' . $this->session->inModmode($this->domain) . '\');});';
+        $info = array();
+        $info['domain_id'] = $this->domain->id();
+        $info['src_directory'] = $this->domain->reference('src_directory');
+        $info['preview_directory'] = $this->domain->reference('preview_directory');
+        $info['page_directory'] = $this->domain->reference('page_directory');
+        $info['is_modmode'] = $this->session->inModmode($this->domain);
+        $this->render_data['js_domloaded'] = 'window.addEventListener(\'DOMContentLoaded\', (event) => {
+            nelliel.setup.infoTransfer(' . json_encode($info) . ');
+            nelliel.setup.doImportantStuff();});';
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['stylesheets'] = $output_menu->styles([], true);
 
-        if ($this->domain->setting('use_honeypot'))
-        {
+        if ($this->domain->setting('use_honeypot')) {
             $this->render_data['honeypot_css'] = '#form-user-info-1{display: none !important;}#form-user-info-2{display: none !important;}#form-user-info-3{position: absolute; top: 3px; left: -9001px;}';
             $this->render_data['use_honeypot'] = true;
         }
