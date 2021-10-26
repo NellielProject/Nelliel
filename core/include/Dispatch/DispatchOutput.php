@@ -36,7 +36,8 @@ class DispatchOutput extends Dispatch
         switch ($inputs['section']) {
             case $this->domain->reference('page_directory'):
                 $output_thread = new OutputThread($this->domain, false);
-                $output_thread->render(['inputs' => $inputs], false);
+                $output_thread->render(['thread_id' => $inputs['thread_id'], 'parameters' => $inputs['parameters']],
+                    false);
 
             case 'catalog':
                 $output_thread = new OutputCatalog($this->domain, false);

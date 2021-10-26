@@ -22,8 +22,8 @@ class OutputThread extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('thread/thread');
-        $inputs = $parameters['inputs'] ?? array();
-        $thread_id = $inputs['thread_id'] ?? 0;
+        $route_parameters = $parameters['parameters'] ?? array();
+        $thread_id = $parameters['thread_id'] ?? array();
         $thread_content_id = new ContentID(ContentID::createIDString($thread_id));
         $thread = $thread_content_id->getInstanceFromID($this->domain);
 
@@ -48,7 +48,7 @@ class OutputThread extends Output
 
         $op_post = $posts[0];
 
-        if (!in_array('expand', $inputs['parameters']) && !in_array('collapse', $inputs['parameters'])) {
+        if (!in_array('expand', $route_parameters) && !in_array('collapse', $route_parameters)) {
             $page_title = '';
 
             if ($this->domain->setting('prefix_board_title')) {
@@ -130,7 +130,7 @@ class OutputThread extends Output
         $abbreviate_start = $thread->data('post_count') - $this->domain->setting('index_thread_replies');
 
         foreach ($posts as $post) {
-            if (in_array('collapse', $inputs['parameters']) && $post_counter <= $abbreviate_start) {
+            if (in_array('collapse', $route_parameters) && $post_counter <= $abbreviate_start) {
                 $post_counter ++;
                 continue;
             }
@@ -173,7 +173,7 @@ class OutputThread extends Output
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
 
-        if (!in_array('expand', $inputs['parameters']) && !in_array('collapse', $inputs['parameters'])) {
+        if (!in_array('expand', $route_parameters) && !in_array('collapse', $route_parameters)) {
             $this->render_data['index_navigation'] = true;
             $this->render_data['footer_form'] = true;
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
