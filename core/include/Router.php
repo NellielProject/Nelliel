@@ -27,7 +27,6 @@ class Router
     public function addRoutes(): void
     {
         $site_domain = Domain::SITE;
-        // {domain_id:[^\/]+}
 
         $this->dispatcher = cachedDispatcher(
             function (RouteCollector $r) use ($site_domain) {
@@ -72,12 +71,12 @@ class Router
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchOutput';
-                        $r->addRoute(['GET'], '/{page:\d+}[/{parameters:.+}]', $dispatch_class);
-                        $r->addRoute(['GET'], '/{section:catalog}/[{parameters:.+}]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{page:\d+}[?{query_string:.+}]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:catalog}/[?{query_string:.+}]', $dispatch_class);
                         // Board subdirectories can be custom so we catch it last and compare in dispatch
-                        $r->addRoute(['GET'], '/{section:[^\/]+}/{thread_id:\d+}/{slug:[^\/]+}[/{parameters:.+}]',
+                        $r->addRoute(['GET'], '/{section:[^\/]+}/{thread_id:\d+}/{slug:[^\/\?]+}[?{query_string:.+}]',
                             $dispatch_class);
-                        $r->addRoute(['GET'], '/[{parameters:.+}]', $dispatch_class);
+                        $r->addRoute(['GET'], '/[?{query_string:.+}]', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:[^\/]+}',
@@ -114,6 +113,7 @@ class Router
                 $inputs['module'] = $inputs['module'] ?? '';
                 $inputs['section'] = $inputs['section'] ?? '';
                 $inputs['action'] = $inputs['action'] ?? '';
+                parse_str($inputs['query_string'] ?? '', $inputs['parameters']);
                 $class = $routeInfo[1];
                 $instance = new $class($authorization, $domain, $session);
                 $instance->dispatch($inputs);

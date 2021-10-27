@@ -36,8 +36,10 @@ class DispatchNewPost extends Dispatch
 
         if ($fgsfds->commandIsSet('noko') || $this->domain->setting('always_noko')) {
             if ($this->session->inModmode($this->domain)) {
-                $url = nel_build_router_url($this->domain->id(), $this->domain->reference('page_directory'),
-                    $fgsfds->getCommandData('noko', 'topic'), $fgsfds->getCommandData('noko', 'topic'), 'modmode');
+                $url = nel_build_router_url(
+                    [$this->domain->id(), $this->domain->reference('page_directory'),
+                        $fgsfds->getCommandData('noko', 'topic'), $fgsfds->getCommandData('noko', 'topic')], false,
+                    'modmode');
             } else {
                 $url = $this->domain->reference('board_directory') . '/' . $this->domain->reference('page_directory') .
                     '/' . $fgsfds->getCommandData('noko', 'topic') . '/' .
@@ -46,7 +48,7 @@ class DispatchNewPost extends Dispatch
             }
         } else {
             if ($this->session->inModmode($this->domain)) {
-                $url = nel_build_router_url([$this->domain->id(), 'modmode']);
+                $url = nel_build_router_url([$this->domain->id()], true, 'modmode');
             } else {
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }

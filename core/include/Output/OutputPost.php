@@ -206,7 +206,7 @@ class OutputPost extends Output
                 $thread_headers['output'] = '-render';
 
                 if ($this->session->inModmode($this->domain)) {
-                    $thread_headers['reply_to_url'] .= '/modmode';
+                    $thread_headers['reply_to_url'] .= '?modmode';
                 }
             } else {
                 $thread_headers['reply_to_url'] = $thread->getURL(false);

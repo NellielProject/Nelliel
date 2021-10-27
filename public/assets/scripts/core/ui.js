@@ -206,15 +206,15 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
         + "/" + encodeURIComponent(content_id.thread_id);
 
 		if (command === "expand-thread-render") {
-			url = url + "/expand";
+			url = url + "?expand";
 		}
 
 		if (command === "collapse-thread-render") {
-			url = url + "/collapse";
+			url = url + "?collapse";
 		}
 
 		if (dataBin.is_modmode) {
-			url = url + encodeURIComponent("+modmode");
+			url = url + encodeURIComponent("&modmode");
 		}
 
 		var command1 = "expand-thread-render";

@@ -207,12 +207,20 @@ function nel_magick_available(): array
     return $magicks;
 }
 
-function nel_build_router_url(array $uris): string
+function nel_build_router_url(array $uris, bool $end_slash = false, string $query_string = ''): string
 {
     $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'route=';
 
     foreach ($uris as $uri) {
         $url .= '/' . rawurlencode($uri);
+    }
+
+    if ($end_slash) {
+        $url .= '/';
+    }
+
+    if ($query_string !== '') {
+        $url .= '?' . $query_string;
     }
 
     return $url;

@@ -39,7 +39,7 @@ class OutputDerp extends Output
             if ($this->domain->id() === Domain::SITE) {
                 ; // TODO: Figure out this one
             } else {
-                nel_build_router_url([$this->domain->id(), 'modmode']);
+                nel_build_router_url([$this->domain->id()], true, 'modmode');
             }
         }
 

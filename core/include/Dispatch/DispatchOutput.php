@@ -26,9 +26,7 @@ class DispatchOutput extends Dispatch
             return;
         }
 
-        $inputs['parameters'] = explode('+', $inputs['parameters'] ?? '');
-
-        if (in_array('modmode', $inputs['parameters'])) {
+        if (array_key_exists('modmode', $inputs['parameters'])) {
             $this->session->init(true);
             $this->session->toggleModMode();
         }
@@ -42,6 +40,7 @@ class DispatchOutput extends Dispatch
             case 'catalog':
                 $output_thread = new OutputCatalog($this->domain, false);
                 $output_thread->render([], false);
+                break;
 
             // Index
             default:

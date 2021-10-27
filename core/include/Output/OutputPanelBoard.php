@@ -38,7 +38,7 @@ class OutputPanelBoard extends Output
         // $this->render_data['module_threads'] = true;
         // $this->render_data['threads_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=threads&board-id=' . $this->domain->id();
         $this->render_data['module_modmode'] = $this->session->user()->checkPermission($this->domain, 'perm_mod_mode');
-        $this->render_data['modmode_url'] = nel_build_router_url([$this->domain->id(), 'modmode']);
+        $this->render_data['modmode_url'] = nel_build_router_url([$this->domain->id()], true, 'modmode');
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
             'perm_reports_view');
         $this->render_data['reports_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports&board-id=' .

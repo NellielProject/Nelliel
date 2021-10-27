@@ -47,7 +47,7 @@ class OutputPostingForm extends Output
         $this->render_data['password_field_placeholder'] = $this->domain->setting('password_field_placeholder');
 
         if ($this->render_data['in_modmode']) {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post', 'modmode']);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post'], false, 'modmode');
             $this->render_data['flags']['post_as_staff'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_as_staff');
             $this->render_data['flags']['raw_html'] = $this->session->user()->checkPermission($this->domain,

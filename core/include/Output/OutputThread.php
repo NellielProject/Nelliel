@@ -24,6 +24,8 @@ class OutputThread extends Output
         $this->setBodyTemplate('thread/thread');
         $route_parameters = $parameters['parameters'] ?? array();
         $thread_id = $parameters['thread_id'] ?? array();
+        $expand = array_key_exists('expand', $route_parameters);
+        $collapse = array_key_exists('collapse', $route_parameters);
         $thread_content_id = new ContentID(ContentID::createIDString($thread_id));
         $thread = $thread_content_id->getInstanceFromID($this->domain);
 
@@ -34,7 +36,7 @@ class OutputThread extends Output
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->render_data['in_modmode']) {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads', 'modmode']);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads'], false, 'modmode');
         } else {
             $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads']);
         }
@@ -48,7 +50,7 @@ class OutputThread extends Output
 
         $op_post = $posts[0];
 
-        if (!in_array('expand', $route_parameters) && !in_array('collapse', $route_parameters)) {
+        if (!$expand && !$collapse) {
             $page_title = '';
 
             if ($this->domain->setting('prefix_board_title')) {
@@ -70,7 +72,7 @@ class OutputThread extends Output
                 $manage_headers['header'] = _gettext('Moderator Mode');
                 $manage_headers['sub_header'] = _gettext('View Thread');
                 $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
-                $return_url = nel_build_router_url([$this->domain->id(), 'modmode']);
+                $return_url = nel_build_router_url([$this->domain->id()], true, 'modmode');
             } else {
                 $this->render_data['header'] = $output_header->board([], true);
                 $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
@@ -130,7 +132,7 @@ class OutputThread extends Output
         $abbreviate_start = $thread->data('post_count') - $this->domain->setting('index_thread_replies');
 
         foreach ($posts as $post) {
-            if (in_array('collapse', $route_parameters) && $post_counter <= $abbreviate_start) {
+            if ($collapse && $post_counter <= $abbreviate_start) {
                 $post_counter ++;
                 continue;
             }
@@ -173,7 +175,7 @@ class OutputThread extends Output
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
 
-        if (!in_array('expand', $route_parameters) && !in_array('collapse', $route_parameters)) {
+        if (!$expand && !$collapse) {
             $this->render_data['index_navigation'] = true;
             $this->render_data['footer_form'] = true;
             $output_footer = new OutputFooter($this->domain, $this->write_mode);

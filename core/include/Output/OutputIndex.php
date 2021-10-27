@@ -33,15 +33,15 @@ class OutputIndex extends Output
 
         if (!$this->write_mode) {
             $this->render_data['render'] = '-render';
-            $this->render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog']);
+            $this->render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog'], true);
         }
 
         if ($this->render_data['in_modmode']) {
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Index');
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads', 'modmode']);
-            $this->render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog', 'modmode']);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads'], false, 'modmode');
+            $this->render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog'], true, 'modmode');
         } else {
             $this->render_data['header'] = $output_header->board([], true);
             $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads']);
