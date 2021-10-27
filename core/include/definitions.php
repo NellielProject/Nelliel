@@ -33,7 +33,6 @@ define('NEL_BOARD_DEFAULTS_TABLE', 'nelliel_board_defaults');
 define('NEL_CACHE_TABLE', 'nelliel_cache');
 define('NEL_CAPTCHA_TABLE', 'nelliel_captcha');
 define('NEL_CITES_TABLE', 'nelliel_cites');
-define('NEL_DNSBL_TABLE', 'nelliel_DNSBL');
 define('NEL_DOMAIN_REGISTRY_TABLE', 'nelliel_domain_registry');
 define('NEL_EMBEDS_TABLE', 'nelliel_embeds');
 define('NEL_FILES_FILTERS_TABLE', 'nelliel_file_filters');

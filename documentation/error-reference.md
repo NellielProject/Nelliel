@@ -140,8 +140,6 @@ Error 328: perm_boards_delete (Admin/AdminBoards.php)
 
 Error 330: perm_board_config_modify (Admin/AdminBoardSettings.php)   
 
-Error 335: perm_dnsbl_manage (Admin/AdminDNSBL.php)    
-
 Error 340: perm_file_filters_manage (Admin/AdminFileFilters.php)  
 
 Error 345: perm_filetypes_manage (Admin/AdminFiletypes.php)  

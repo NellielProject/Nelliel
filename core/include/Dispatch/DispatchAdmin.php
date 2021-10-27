@@ -12,7 +12,6 @@ use Nelliel\Admin\AdminBlotter;
 use Nelliel\Admin\AdminBoardDefaults;
 use Nelliel\Admin\AdminBoardSettings;
 use Nelliel\Admin\AdminBoards;
-use Nelliel\Admin\AdminDNSBL;
 use Nelliel\Admin\AdminFileFilters;
 use Nelliel\Admin\AdminFiletypes;
 use Nelliel\Admin\AdminIconSets;
@@ -49,13 +48,11 @@ class DispatchAdmin extends Dispatch
         $admin_handler = null;
         $board_id = $inputs['board_id'];
 
-        if (empty($inputs['actions']))
-        {
+        if (empty($inputs['actions'])) {
             $this->invalidAction();
         }
 
-        switch ($inputs['section'])
-        {
+        switch ($inputs['section']) {
             case 'bans':
                 $admin_handler = new AdminBans($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
@@ -151,11 +148,6 @@ class DispatchAdmin extends Dispatch
                 $output_board_panel->render(['board_id' => $board_id], false);
                 break;
 
-            case 'dnsbl':
-                $admin_handler = new AdminDNSBL($this->authorization, $this->domain, $this->session);
-                $admin_handler->dispatch($inputs);
-                break;
-
             case 'word-filters':
                 $admin_handler = new AdminWordFilters($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
@@ -170,13 +162,11 @@ class DispatchAdmin extends Dispatch
                 $this->invalidSection();
         }
 
-        if (is_null($admin_handler))
-        {
+        if (is_null($admin_handler)) {
             return;
         }
 
-        if ($admin_handler->outputMain())
-        {
+        if ($admin_handler->outputMain()) {
             $admin_handler->panel();
         }
     }

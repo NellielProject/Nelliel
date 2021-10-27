@@ -14,7 +14,6 @@ use Nelliel\Tables\TableBoardDefaults;
 use Nelliel\Tables\TableCache;
 use Nelliel\Tables\TableCaptcha;
 use Nelliel\Tables\TableCites;
-use Nelliel\Tables\TableDNSBL;
 use Nelliel\Tables\TableDomainRegistry;
 use Nelliel\Tables\TableEmbeds;
 use Nelliel\Tables\TableFileFilters;
@@ -25,11 +24,11 @@ use Nelliel\Tables\TableLogs;
 use Nelliel\Tables\TableNews;
 use Nelliel\Tables\TableNoticeboard;
 use Nelliel\Tables\TableOverboard;
-use Nelliel\Tables\TablePrivateMessages;
 use Nelliel\Tables\TablePages;
 use Nelliel\Tables\TablePermissions;
 use Nelliel\Tables\TablePlugins;
 use Nelliel\Tables\TablePosts;
+use Nelliel\Tables\TablePrivateMessages;
 use Nelliel\Tables\TableRateLimit;
 use Nelliel\Tables\TableReports;
 use Nelliel\Tables\TableRolePermissions;
@@ -66,8 +65,7 @@ class Setup
     {
         echo '<!DOCTYPE html><html><body>';
 
-        if ($this->checkInstallDone())
-        {
+        if ($this->checkInstallDone()) {
             nel_derp(108, _gettext('Installation has already been completed!'));
         }
 
@@ -75,18 +73,15 @@ class Setup
         $this->checkDBEngine();
         $this->mainDirWritable();
         $this->coreDirWritable();
-        //$this->configDirWritable();
+        // $this->configDirWritable();
 
         $file_handler = new \Nelliel\Utility\FileHandler();
         $generate_files = new \Nelliel\Setup\GenerateFiles($file_handler);
         $install_id = base64_encode(random_bytes(33));
 
-        if ($generate_files->peppers(false))
-        {
+        if ($generate_files->peppers(false)) {
             echo _gettext('Peppers file has been created.'), '<br>';
-        }
-        else
-        {
+        } else {
             echo _gettext('Peppers file already present.'), '<br>';
         }
 
@@ -101,24 +96,21 @@ class Setup
         $regen->news($site_domain);
         $generate_files->installDone();
 
-        if ($this->ownerCreated())
-        {
+        if ($this->ownerCreated()) {
             echo _gettext('Site owner account already created.'), '<br>';
             echo _gettext(
-                    'Install has finished with no apparent problems! When you\'re ready to continue, follow this link to the login page: '), '<br>';
+                'Install has finished with no apparent problems! When you\'re ready to continue, follow this link to the login page: '), '<br>';
             echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?module=account&amp;actions=login">' .
-                    _gettext('Login page') . '</a>';
+                _gettext('Login page') . '</a>';
             echo '</body></html>';
             die();
-        }
-        else
-        {
+        } else {
             echo '<p>';
             echo _gettext(
-                    'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions by default. It is also necessary to use the site settings control panel.');
+                'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions by default. It is also necessary to use the site settings control panel.');
             echo '</p>';
             echo '<form accept-charset="utf-8" action="imgboard.php?module=account&amp;section=register&amp;actions=submit&amp;create_owner=' .
-                    rawurlencode($install_id) . '" method="post">';
+                rawurlencode($install_id) . '" method="post">';
             echo '
 <div>
     <span data-i18n="gettext">User ID: </span><input type="text" name="register_user_id" size="25" maxlength="255">
@@ -147,8 +139,7 @@ class Setup
         echo _gettext('Minimum PHP version required: ' . NELLIEL_PHP_MINIMUM), '<br>';
         echo _gettext('PHP version detected: ' . PHP_VERSION), '<br>';
 
-        if (version_compare(PHP_VERSION, NELLIEL_PHP_MINIMUM, '<='))
-        {
+        if (version_compare(PHP_VERSION, NELLIEL_PHP_MINIMUM, '<=')) {
             nel_derp(109, _gettext('This version of PHP is too old! Upgrade to a version supported by Nelliel.'));
         }
     }
@@ -165,49 +156,37 @@ class Setup
 
     public function checkDBEngine()
     {
-        if ((NEL_SQLTYPE === 'MYSQL' || NEL_SQLTYPE === 'MARIADB') && !$this->checkForInnoDB())
-        {
+        if ((NEL_SQLTYPE === 'MYSQL' || NEL_SQLTYPE === 'MARIADB') && !$this->checkForInnoDB()) {
             nel_derp(102,
-                    _gettext('InnoDB engine is required for MySQL or MariaDB support but that engine is not available.'));
-        }
-        else
-        {
+                _gettext('InnoDB engine is required for MySQL or MariaDB support but that engine is not available.'));
+        } else {
             echo _gettext('DB engine ok.'), '<br>';
         }
     }
 
     public function coreDirWritable()
     {
-        if (!is_writable(NEL_CORE_PATH))
-        {
+        if (!is_writable(NEL_CORE_PATH)) {
             nel_derp(104, _gettext('The core directory not writable.'));
-        }
-        else
-        {
+        } else {
             echo _gettext('The core directory is writable.'), '<br>';
         }
     }
 
     public function mainDirWritable()
     {
-        if (!is_writable(NEL_BASE_PATH))
-        {
+        if (!is_writable(NEL_BASE_PATH)) {
             nel_derp(105, _gettext('Nelliel project directory is not writable.'));
-        }
-        else
-        {
+        } else {
             echo _gettext('Main directory is writable.'), '<br>';
         }
     }
 
     public function configDirWritable()
     {
-        if (!is_writable(NEL_CONFIG_FILES_PATH))
-        {
+        if (!is_writable(NEL_CONFIG_FILES_PATH)) {
             nel_derp(106, _gettext('Configuration directory is missing or not writable. Admin should check this out.'));
-        }
-        else
-        {
+        } else {
             echo _gettext('The configuration directory is writable.'), '<br>';
         }
     }
@@ -242,8 +221,6 @@ class Setup
         $pms_table->createTable();
         $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
         $blotter_table->createTable();
-        $dnsbl_table = new TableDNSBL($this->database, $this->sql_compatibility);
-        $dnsbl_table->createTable();
         $noticeboard_table = new TableNoticeboard($this->database, $this->sql_compatibility);
         $noticeboard_table->createTable();
         $ip_notes_table = new TableIPNotes($this->database, $this->sql_compatibility);
@@ -341,12 +318,10 @@ class Setup
         $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
         $template_inis = $front_end_data->getTemplateInis();
 
-        foreach ($template_inis as $ini)
-        {
+        foreach ($template_inis as $ini) {
             $template_id = $ini['template-info']['id'];
 
-            if (!$front_end_data->templateIsCore($template_id))
-            {
+            if (!$front_end_data->templateIsCore($template_id)) {
                 continue;
             }
 
@@ -361,12 +336,10 @@ class Setup
         $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
         $style_inis = $front_end_data->getStyleInis();
 
-        foreach ($style_inis as $ini)
-        {
+        foreach ($style_inis as $ini) {
             $style_id = $ini['style-info']['id'];
 
-            if (!$front_end_data->styleIsCore($style_id))
-            {
+            if (!$front_end_data->styleIsCore($style_id)) {
                 continue;
             }
 
@@ -381,12 +354,10 @@ class Setup
         $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
         $icon_set_inis = $front_end_data->getIconSetInis();
 
-        foreach ($icon_set_inis as $ini)
-        {
+        foreach ($icon_set_inis as $ini) {
             $icon_set_id = $ini['set-info']['id'];
 
-            if (!$front_end_data->iconSetIsCore($icon_set_id))
-            {
+            if (!$front_end_data->iconSetIsCore($icon_set_id)) {
                 continue;
             }
 
@@ -401,10 +372,8 @@ class Setup
         $result = $this->database->query("SHOW ENGINES");
         $list = $result->fetchAll(PDO::FETCH_ASSOC);
 
-        foreach ($list as $entry)
-        {
-            if ($entry['Engine'] === 'InnoDB' && ($entry['Support'] === 'DEFAULT' || $entry['Support'] === 'YES'))
-            {
+        foreach ($list as $entry) {
+            if ($entry['Engine'] === 'InnoDB' && ($entry['Support'] === 'DEFAULT' || $entry['Support'] === 'YES')) {
                 return true;
             }
         }

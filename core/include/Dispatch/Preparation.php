@@ -40,6 +40,8 @@ class Preparation
             require_once NEL_INCLUDE_PATH . 'wat/blank.php';
             nel_tpilb();
         }
+        $dnsbl = new DNSBL(nel_database());
+        $dnsbl->checkIP(nel_request_ip_address());
 
         if (isset($_GET['route'])) {
             $router = new Router($_GET['route'] ?? '');
