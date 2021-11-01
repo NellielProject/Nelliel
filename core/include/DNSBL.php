@@ -39,6 +39,10 @@ class DNSBL
         $services = $this->getServices();
 
         foreach ($services as $service) {
+            if (!isset($service[0])) {
+                continue;
+            }
+
             $service_domain = $service[0];
 
             // For special cases like Http:BL (http://www.projecthoneypot.org/httpbl.php)
