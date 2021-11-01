@@ -47,7 +47,8 @@ class OutputPostingForm extends Output
         $this->render_data['password_field_placeholder'] = $this->domain->setting('password_field_placeholder');
 
         if ($this->render_data['in_modmode']) {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post'], false, 'modmode');
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post'], false,
+                'modmode');
             $this->render_data['flags']['post_as_staff'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_as_staff');
             $this->render_data['flags']['raw_html'] = $this->session->user()->checkPermission($this->domain,
@@ -86,9 +87,8 @@ class OutputPostingForm extends Output
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
-        $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'anti-spam', 'captcha', 'get']);
-        $this->render_data['captcha_regen_url'] = nel_build_router_url(
-            [Domain::SITE, 'anti-spam', 'captcha', 'regenerate']);
+        $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
+        $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['captcha_label'] = true;
