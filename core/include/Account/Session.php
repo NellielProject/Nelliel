@@ -5,9 +5,9 @@ namespace Nelliel\Account;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\LogEvent;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
 
 class Session
 {
@@ -85,7 +85,7 @@ class Session
         }
 
         if (!empty($_SESSION)) {
-            if ($this->isOld()) {
+            if ($this->isOld() && !$this->doing_login) {
                 $this->terminate();
                 $this->failed = true;
                 nel_derp(221, _gettext('Session has expired.'));
