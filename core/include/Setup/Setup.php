@@ -109,8 +109,9 @@ class Setup
             echo _gettext(
                 'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions by default. It is also necessary to use the site settings control panel.');
             echo '</p>';
-            echo '<form accept-charset="utf-8" action="imgboard.php?module=account&amp;section=register&amp;actions=submit&amp;create_owner=' .
-                rawurlencode($install_id) . '" method="post">';
+            echo '<form accept-charset="utf-8" action="imgboard.php?route=/' . $site_domain->id() . '/account/register" method="post">';
+            echo '
+<input type="hidden" name="create_owner" value="' . $install_id . '"';
             echo '
 <div>
     <span data-i18n="gettext">User ID: </span><input type="text" name="register_user_id" size="25" maxlength="255">
