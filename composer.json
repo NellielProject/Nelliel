@@ -38,7 +38,8 @@
 		"psr-4" : {
 			"Nelliel\\" : "core/include",
 			"SmallPHPGettext\\" : "core/libraries/SmallPHPGettext",
-			"phpDOMExtend\\" : "core/libraries/phpDOMExtend"
+			"phpDOMExtend\\" : "core/libraries/phpDOMExtend",
+			"" : "core/libraries/portable-utf8"
 		}
 	}
 }

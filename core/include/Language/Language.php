@@ -5,8 +5,8 @@ namespace Nelliel\Language;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Auth\AuthUser;
+use Nelliel\Domains\Domain;
 use Nelliel\Utility\CacheHandler;
 
 class Language
@@ -15,13 +15,11 @@ class Language
 
     function __construct($gettext_instance = null)
     {
-        if (!is_null($gettext_instance))
-        {
+        if (!is_null($gettext_instance)) {
             self::$gettext = $gettext_instance;
         }
 
-        if (is_null(self::$gettext))
-        {
+        if (is_null(self::$gettext)) {
             self::$gettext = new \SmallPHPGettext\SmallPHPGettext();
             self::$gettext->textdomain('nelliel');
             self::$gettext->bindtextdomain('nelliel', NEL_LANGUAGES_FILES_PATH);
@@ -31,36 +29,29 @@ class Language
 
     public function loadLanguage(string $locale, string $domain, int $category): bool
     {
-        if (self::$gettext->translationLoaded($domain, $category, false))
-        {
+        if (self::$gettext->translationLoaded($domain, $category, false)) {
             return true;
         }
 
         $po_absolute_path = self::$gettext->getStandardPath($locale, $domain, $category, false);
 
-        if (NEL_USE_FILE_CACHE)
-        {
+        if (NEL_USE_FILE_CACHE) {
             $po_relative_path = self::$gettext->getStandardPath($locale, $domain, $category, true);
-            $cache_file = str_replace('.po', '.php', $po_relative_path);
+            $cache_file = utf8_str_replace('.po', '.php', $po_relative_path);
             $cache_handler = new CacheHandler();
             $translation_array = array();
             $hash = '';
 
-            if (file_exists($po_absolute_path))
-            {
+            if (file_exists($po_absolute_path)) {
                 $hash = md5_file($po_absolute_path);
             }
 
-            if ($cache_handler->checkHash($po_relative_path, $hash) && file_exists(NEL_CACHE_FILES_PATH . $cache_file))
-            {
+            if ($cache_handler->checkHash($po_relative_path, $hash) && file_exists(NEL_CACHE_FILES_PATH . $cache_file)) {
                 include NEL_CACHE_FILES_PATH . $cache_file;
                 return self::$gettext->addTranslationFromArray($translation_array, $domain, $category);
-            }
-            else
-            {
+            } else {
                 // No valid Po file or cache file to work with
-                if ($hash === '')
-                {
+                if ($hash === '') {
                     return false;
                 }
 
@@ -75,10 +66,9 @@ class Language
     }
 
     public function extractLanguageStrings(Domain $domain, AuthUser $user, string $default_textdomain,
-            int $default_category)
+        int $default_category)
     {
-        if (!$user->checkPermission($domain, 'perm_extract_gettext'))
-        {
+        if (!$user->checkPermission($domain, 'perm_extract_gettext')) {
             nel_derp(510, _gettext('You are not allowed to extract the gettext strings.'));
         }
 
@@ -86,12 +76,10 @@ class Language
         $file_handler = nel_utilities()->fileHandler();
         $extracted = $extractor->assemblePoString($default_textdomain, $default_category);
 
-        foreach ($extracted as $category_id => $domain_output)
-        {
-            foreach ($domain_output as $out_domain => $output)
-            {
+        foreach ($extracted as $category_id => $domain_output) {
+            foreach ($domain_output as $out_domain => $output) {
                 $directory = NEL_LANGUAGES_FILES_PATH . 'extracted/' . date('Y-m-d_H-i-s') . '/' .
-                        self::$gettext->categoryToString($category_id);
+                    self::$gettext->categoryToString($category_id);
                 $file_handler->createDirectory($directory, NEL_DIRECTORY_PERM, true);
                 $file = $directory . '/' . $out_domain . '.pot';
                 $file_handler->writeFile($file, $output);

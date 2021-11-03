@@ -113,7 +113,7 @@ abstract class Domain implements NellielCacheInterface
 
         // Convert underscore notation to hyphen for HTML
         if ($html_format) {
-            return str_replace('_', '-', $this->locale());
+            return utf8_str_replace('_', '-', $this->locale());
         }
 
         return $this->locale;

@@ -5,12 +5,12 @@ namespace Nelliel\Markdown;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Cites;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use cebe\markdown\Parser;
 use cebe\markdown\inline\StrikeoutTrait;
 use ReflectionMethod;
-use Nelliel\Cites;
 
 class ImageboardMarkdown extends Parser
 {
@@ -34,12 +34,11 @@ class ImageboardMarkdown extends Parser
     {
         $this->prepare();
 
-        if (ltrim($text) === '')
-        {
+        if (ltrim($text) === '') {
             return '';
         }
 
-        $text = str_replace(["\r\n", "\n\r", "\r"], "\n", $text);
+        $text = utf8_str_replace(["\r\n", "\n\r", "\r"], "\n", $text);
 
         $this->prepareMarkers($text);
         $blocks = explode("\n", $text);
@@ -47,10 +46,8 @@ class ImageboardMarkdown extends Parser
         // We have to enclose empty and whitespace lines so the parser doesn't purge them
         // Newlines were removed from user input during the explode function
         // So we can use those to identify internal modifications
-        for ($i = 0; $i < count($blocks); $i ++)
-        {
-            if (trim($blocks[$i]) === '')
-            {
+        for ($i = 0; $i < count($blocks); $i ++) {
+            if (trim($blocks[$i]) === '') {
                 $blocks[$i] = '&' . $blocks[$i] . "\n";
             }
         }
@@ -66,19 +63,15 @@ class ImageboardMarkdown extends Parser
     {
         // consume until newline
         $content = [];
-        for ($i = $current, $count = count($lines); $i < $count; $i ++)
-        {
+        for ($i = $current, $count = count($lines); $i < $count; $i ++) {
             $line = $lines[$i];
 
             // Adapted from GithubMarkdown
             // Without this only some blocks will be parsed before it collapses the remaining lines
             // Don't ask how long I spent losing sanity before realizing what 'break paragraphs' meant
-            if ($line === '' || ltrim($lines[$i]) === '' || $this->identifyWhitespaceLine($line, $lines, $i))
-            {
+            if ($line === '' || ltrim($lines[$i]) === '' || $this->identifyWhitespaceLine($line, $lines, $i)) {
                 break;
-            }
-            else
-            {
+            } else {
                 $content[] = $line;
             }
         }
@@ -99,18 +92,15 @@ class ImageboardMarkdown extends Parser
         // detect "parse" functions
         $reflection = new \ReflectionClass($this);
 
-        foreach ($reflection->getMethods(ReflectionMethod::IS_PROTECTED) as $method)
-        {
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PROTECTED) as $method) {
             $methodName = $method->getName();
             $matches = array();
 
             // Extra check needed since we're in strict mode
-            if ($method->getDocComment() !== false && strncmp($methodName, 'parse', 5) === 0)
-            {
+            if ($method->getDocComment() !== false && strncmp($methodName, 'parse', 5) === 0) {
                 preg_match_all('/@marker ([^\s]+)/', $method->getDocComment(), $matches);
 
-                foreach ($matches[1] as $match)
-                {
+                foreach ($matches[1] as $match) {
                     $markers[$match] = $methodName;
                 }
             }
@@ -119,10 +109,8 @@ class ImageboardMarkdown extends Parser
         // Available protocols depend on a dynamic external setting so markers can't be collected from annotations
         $protocols_list = explode('|', $this->url_protocols);
 
-        if (is_array($protocols_list))
-        {
-            foreach ($protocols_list as $protocol)
-            {
+        if (is_array($protocols_list)) {
+            foreach ($protocols_list as $protocol) {
                 $markers[$protocol] = 'parseURL';
             }
         }
@@ -132,6 +120,7 @@ class ImageboardMarkdown extends Parser
 
     /**
      * Parses quotes and content cites
+     *
      * @marker >
      */
     protected function parseQuoteAndContentCite(string $text): array
@@ -139,16 +128,12 @@ class ImageboardMarkdown extends Parser
         $quote_regex = '/^>(?:(?!>\d+|>>\/\w+\/))(.*)/iu';
         $matches = array();
 
-        if (preg_match($quote_regex, $text, $matches) === 1)
-        {
+        if (preg_match($quote_regex, $text, $matches) === 1) {
             return [['quote', $this->parseInline($matches[1])], utf8_strlen($matches[0])];
-        }
-        else
-        {
+        } else {
             $cite_type = $this->cites->citeType($text);
 
-            if ($cite_type['type'] !== 'not-cite')
-            {
+            if ($cite_type['type'] !== 'not-cite') {
                 return [['contentcite', $cite_type['matches'][0]], utf8_strlen($cite_type['matches'][0])];
             }
 
@@ -165,14 +150,11 @@ class ImageboardMarkdown extends Parser
     {
         $cite_data = $this->cites->getCiteData($block[1], $this->domain, $this->post_content_id);
 
-        if (isset($cite_data['exists']) && $cite_data['exists'])
-        {
+        if (isset($cite_data['exists']) && $cite_data['exists']) {
             $cite_url = $this->cites->createPostLinkURL($cite_data, $this->domain);
             $this->cites->addCite($cite_data);
             return '<a href="' . $cite_url . '" class="post-cite" data-command="show-linked-post">' . $block[1] . '</a>';
-        }
-        else
-        {
+        } else {
             return '<s class="invalid-cite">' . $block[1] . '</s>';
         }
     }

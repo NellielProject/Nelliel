@@ -4,21 +4,17 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 //
 // Most of these functions are basically wrappers to extend or simplify PHP password and crypt functions
 //
-if (!function_exists('hash_equals'))
-{
+if (!function_exists('hash_equals')) {
+
     function hash_equals(string $known_string, string $user_string)
     {
-        if (strlen($known_string) != strlen($user_string))
-        {
+        if (strlen($known_string) != utf8_strlen($user_string)) {
             return false;
-        }
-        else
-        {
+        } else {
             $res = $known_string ^ $user_string;
             $return = 0;
 
-            for ($i = strlen($res) - 1; $i >= 0; $i --)
-            {
+            for ($i = utf8_strlen($res) - 1; $i >= 0; $i --) {
                 $return |= ord($res[$i]);
             }
 
@@ -29,48 +25,37 @@ if (!function_exists('hash_equals'))
 
 function nel_set_password_algorithm(string $algorithm)
 {
-    if(defined('NEL_PASSWORD_ALGORITHM'))
-    {
+    if (defined('NEL_PASSWORD_ALGORITHM')) {
         return;
     }
 
-    if($algorithm === 'ARGON2')
-    {
-        if(defined('PASSWORD_ARGON2ID'))
-        {
+    if ($algorithm === 'ARGON2') {
+        if (defined('PASSWORD_ARGON2ID')) {
             define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2ID);
             return;
-        }
-        else if(defined('PASSWORD_ARGON2I'))
-        {
+        } else if (defined('PASSWORD_ARGON2I')) {
             define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2I);
             return;
         }
     }
 
-    if (!defined('NEL_PASSWORD_ALGORITHM') || $algorithm === 'BCRYPT')
-    {
-        if(defined('PASSWORD_BCRYPT'))
-        {
+    if (!defined('NEL_PASSWORD_ALGORITHM') || $algorithm === 'BCRYPT') {
+        if (defined('PASSWORD_BCRYPT')) {
             define('NEL_PASSWORD_ALGORITHM', PASSWORD_BCRYPT);
             return;
         }
     }
 
-    if (defined('PASSWORD_DEFAULT'))
-    {
+    if (defined('PASSWORD_DEFAULT')) {
         define('NEL_PASSWORD_ALGORITHM', PASSWORD_DEFAULT);
-    }
-    else
-    {
+    } else {
         nel_derp(101, _gettext("No acceptable password hashing algorithm has been found. We can't function like this."));
     }
 }
 
 function nel_password_hash(string $password, int $algorithm, array $options = array())
 {
-    switch ($algorithm)
-    {
+    switch ($algorithm) {
         case PASSWORD_BCRYPT:
             $options['cost'] = $options['cost'] ?? NEL_PASSWORD_BCRYPT_COST;
             return password_hash($password, $algorithm, $options);
@@ -96,8 +81,7 @@ function nel_password_needs_rehash(string $password, int $algorithm, array $opti
 {
     $site_domain = new \Nelliel\Domains\DomainSite(nel_database());
 
-    if (!$site_domain->setting('do_password_rehash'))
-    {
+    if (!$site_domain->setting('do_password_rehash')) {
         return false;
     }
 

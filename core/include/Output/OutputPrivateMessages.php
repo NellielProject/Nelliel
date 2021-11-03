@@ -78,7 +78,7 @@ class OutputPrivateMessages extends Output
             }
 
             $this->render_data['recipient'] = $message['sender'];
-            $this->render_data['quoted_text'] = '>' . str_replace("\n", "\n" . '>', $message['message']);
+            $this->render_data['quoted_text'] = '>' . utf8_str_replace("\n", "\n" . '>', $message['message']);
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

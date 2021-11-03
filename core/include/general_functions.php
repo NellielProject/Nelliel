@@ -93,8 +93,8 @@ function nel_random_alphanumeric($length)
         return '';
     }
 
-    $base = str_repeat('abcdefghijklmnopqrstuvwxyz0123456789', ceil($length / 36));
-    $random = str_shuffle($base);
+    $base = utf8_str_repeat('abcdefghijklmnopqrstuvwxyz0123456789', ceil($length / 36));
+    $random = utf8_str_shuffle($base);
     return substr($random, 0, $length);
 }
 

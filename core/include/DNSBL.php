@@ -35,7 +35,7 @@ class DNSBL
         }
 
         // IPTools appends these for the pointer but we don't need them
-        $reverse_ip = str_replace(['.in-addr.arpa', '.ip6.arpa'], '', $ip->getReversePointer());
+        $reverse_ip = utf8_str_replace(['.in-addr.arpa', '.ip6.arpa'], '', $ip->getReversePointer());
         $services = $this->getServices();
 
         foreach ($services as $service) {
@@ -46,7 +46,7 @@ class DNSBL
             $service_domain = $service[0];
 
             // For special cases like Http:BL (http://www.projecthoneypot.org/httpbl.php)
-            $service_domain = str_replace('%', $ip->__toString(), $service_domain);
+            $service_domain = utf8_str_replace('%', $ip->__toString(), $service_domain);
 
             $lookup_result = $this->lookup($reverse_ip . '.' . $service_domain);
 
