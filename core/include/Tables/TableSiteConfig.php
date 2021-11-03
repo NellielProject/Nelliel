@@ -58,9 +58,14 @@ class TableSiteConfig extends Table
         $this->insertDefaultRow(['home_page', '']);
         $this->insertDefaultRow(['generate_home_page', '0']);
         $this->insertDefaultRow(['locale', 'en_US']);
+        $this->insertDefaultRow(['default_source_subdirectory', 'source']);
+        $this->insertDefaultRow(['default_preview_subdirectory', 'preview']);
+        $this->insertDefaultRow(['default_page_subdirectory', 'threads']);
+        $this->insertDefaultRow(['default_archive_subdirectory', 'archive']);
         $this->insertDefaultRow(['only_alphanumeric_board_ids', '1']);
-        $this->insertDefaultRow(['allow_custom_directories', '0']);
-        $this->insertDefaultRow(['only_alphanumeric_directories', '1']);
+        $this->insertDefaultRow(['allow_custom_subdirectories', '0']);
+        $this->insertDefaultRow(['only_alphanumeric_subdirectories', '1']);
+        $this->insertDefaultRow(['max_subdirectory_length', '50']);
         $this->insertDefaultRow(['max_report_items', '5']);
         $this->insertDefaultRow(['max_delete_items', '5']);
         $this->insertDefaultRow(['global_announcement', '']);

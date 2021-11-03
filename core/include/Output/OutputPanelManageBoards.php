@@ -6,8 +6,8 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
-use PDO;
 use Nelliel\Domains\DomainBoard;
+use PDO;
 
 class OutputPanelManageBoards extends Output
 {
@@ -30,13 +30,12 @@ class OutputPanelManageBoards extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'add']);
+            http_build_query(['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'add']);
         $board_data = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
-        foreach ($board_data as $board_info)
-        {
+        foreach ($board_data as $board_info) {
             $board_data = array();
             $board_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
@@ -45,40 +44,37 @@ class OutputPanelManageBoards extends Output
             $board_data['board_id'] = $board_info['board_id'];
             $board_data['db_prefix'] = $board_info['db_prefix'];
 
-            if ($board_info['locked'] == 0)
-            {
+            if ($board_info['locked'] == 0) {
                 $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                        http_build_query(
-                                ['module' => 'admin', 'section' => 'manage-boards',
-                                    'board-id' => $board_info['board_id'], 'actions' => 'lock']);
+                    http_build_query(
+                        ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $board_info['board_id'],
+                            'actions' => 'lock']);
                 $board_data['status'] = _gettext('Active');
                 $board_data['lock_text'] = _gettext('Lock Board');
-            }
-            else
-            {
+            } else {
                 $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                        http_build_query(
-                                ['module' => 'admin', 'section' => 'manage-boards',
-                                    'board-id' => $board_info['board_id'], 'actions' => 'unlock']);
+                    http_build_query(
+                        ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $board_info['board_id'],
+                            'actions' => 'unlock']);
                 $board_data['status'] = _gettext('Locked');
                 $board_data['lock_text'] = _gettext('Unlock Board');
             }
 
             $board_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $board_info['board_id'],
-                                'actions' => 'remove']);
+                http_build_query(
+                    ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $board_info['board_id'],
+                        'actions' => 'remove']);
             $this->render_data['board_list'][] = $board_data;
         }
 
-        if ($this->domain->setting('allow_custom_directories'))
-        {
+        if ($this->domain->setting('allow_custom_subdirectories')) {
             $this->render_data['allow_custom_directories'] = true;
-            $this->render_data['alphanumeric_directory_only'] = $this->domain->setting('only_alphanumeric_directories');
-            $this->render_data['src_default'] = DomainBoard::DEFAULT_SRC_DIRECTORY;
-            $this->render_data['preview_default'] = DomainBoard::DEFAULT_PREVIEW_DIRECTORY;
-            $this->render_data['page_default'] = DomainBoard::DEFAULT_PAGE_DIRECTORY;
-            $this->render_data['archive_default'] = DomainBoard::DEFAULT_ARCHIVE_DIRECTORY;
+            $this->render_data['alphanumeric_directory_only'] = $this->domain->setting(
+                'only_alphanumeric_subdirectories');
+            $this->render_data['src_default'] = $this->site_domain->setting('default_source_subdirectory');
+            $this->render_data['preview_default'] = $this->site_domain->setting('default_preview_subdirectory');
+            $this->render_data['page_default'] = $this->site_domain->setting('default_page_subdirectory');
+            $this->render_data['archive_default'] = $this->site_domain->setting('default_archive_subdirectory');
         }
 
         $this->render_data['alphanumeric_uri_only'] = $this->domain->setting('only_alphanumeric_board_ids');
@@ -98,16 +94,16 @@ class OutputPanelManageBoards extends Output
         $board = new DomainBoard($board_id, $this->database);
         $messages[] = sprintf(_gettext('You are about to delete the board: %s'), $board->reference('board_uri'));
         $messages[] = _gettext(
-                'This will wipe out all posts, settings, files, everything. There is no undo or recovery.');
+            'This will wipe out all posts, settings, files, everything. There is no undo or recovery.');
         $messages[] = _gettext('Are you sure?');
         $link['text'] = _gettext('NOPE. Do not delete the board.');
         $link['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'manage-boards']);
+            http_build_query(['module' => 'admin', 'section' => 'manage-boards']);
         $link2['text'] = _gettext('Confirmed. Delete the board.');
         $link2['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                        ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove-confirmed',
-                            'board-id' => $board_id]);
+            http_build_query(
+                ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove-confirmed',
+                    'board-id' => $board_id]);
         $parameters['extra_url_break'] = true;
         $parameters['page_title'] = $this->domain->reference('title');
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);

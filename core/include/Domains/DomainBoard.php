@@ -13,7 +13,7 @@ use Nelliel\Content\ContentID;
 
 class DomainBoard extends Domain implements NellielCacheInterface
 {
-    public const DEFAULT_SRC_DIRECTORY = 'src';
+    public const DEFAULT_SRC_DIRECTORY = 'source';
     public const DEFAULT_PREVIEW_DIRECTORY = 'preview';
     public const DEFAULT_PAGE_DIRECTORY = 'threads';
     public const DEFAULT_ARCHIVE_DIRECTORY = 'archive';
@@ -56,7 +56,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['title'] = $title;
         $new_reference['db_prefix'] = $board_data['db_prefix'];
         $new_reference['locked'] = (bool) $board_data['locked'];
-        $new_reference['src_directory'] = $board_data['src_directory'];
+        $new_reference['source_directory'] = $board_data['source_directory'];
         $new_reference['preview_directory'] = $board_data['preview_directory'];
         $new_reference['page_directory'] = $board_data['page_directory'];
         $new_reference['archive_directory'] = $board_data['archive_directory'];
@@ -68,11 +68,11 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['board_web_path'] = $board_web_path;
         $new_reference['archive_path'] = $board_path . $new_reference['archive_directory'] . '/';
         $new_reference['archive_web_path'] = $board_web_path . rawurlencode($new_reference['archive_directory']) . '/';
-        $new_reference['src_path'] = $board_path . $new_reference['src_directory'] . '/';
-        $new_reference['src_web_path'] = $board_web_path . rawurlencode($new_reference['src_directory']) . '/';
-        $new_reference['archive_src_path'] = $new_reference['archive_path'] . $new_reference['src_directory'] . '/';
+        $new_reference['src_path'] = $board_path . $new_reference['source_directory'] . '/';
+        $new_reference['src_web_path'] = $board_web_path . rawurlencode($new_reference['source_directory']) . '/';
+        $new_reference['archive_src_path'] = $new_reference['archive_path'] . $new_reference['source_directory'] . '/';
         $new_reference['archive_src_web_path'] = $new_reference['archive_web_path'] .
-                rawurlencode($new_reference['src_directory']) . '/';
+                rawurlencode($new_reference['source_directory']) . '/';
         $new_reference['preview_path'] = $board_path . $new_reference['preview_directory'] . '/';
         $new_reference['preview_web_path'] = $board_web_path . rawurlencode($new_reference['preview_directory']) . '/';
         $new_reference['archive_preview_path'] = $new_reference['archive_path'] . $new_reference['preview_directory'] .

@@ -24,7 +24,7 @@ class OutputHead extends Output
         $this->render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
         $info = array();
         $info['domain_id'] = $this->domain->id();
-        $info['src_directory'] = $this->domain->reference('src_directory');
+        $info['src_directory'] = $this->domain->reference('source_directory');
         $info['preview_directory'] = $this->domain->reference('preview_directory');
         $info['page_directory'] = $this->domain->reference('page_directory');
         $info['is_modmode'] = $this->session->inModmode($this->domain);

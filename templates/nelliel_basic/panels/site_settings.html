@@ -48,12 +48,27 @@
 	{{# only_alphanumeric_board_ids }}
 		{{> panels/pieces/settings/checkbox }}
 	{{/ only_alphanumeric_board_ids }}
-	{{# allow_custom_directories }}
+	{{# default_source_subdirectory }}
+		{{> panels/pieces/settings/text }}
+	{{/ default_source_subdirectory }}
+	{{# default_preview_subdirectory }}
+		{{> panels/pieces/settings/text }}
+	{{/ default_preview_subdirectory }}
+	{{# default_page_subdirectory }}
+		{{> panels/pieces/settings/text }}
+	{{/ default_page_subdirectory }}
+	{{# default_archive_subdirectory }}
+		{{> panels/pieces/settings/text }}
+	{{/ default_archive_subdirectory }}
+	{{# allow_custom_subdirectories }}
 		{{> panels/pieces/settings/checkbox }}
-	{{/ allow_custom_directories }}
-	{{# only_alphanumeric_directories }}
+	{{/ allow_custom_subdirectories }}
+	{{# only_alphanumeric_subdirectories }}
 		{{> panels/pieces/settings/checkbox }}
-	{{/ only_alphanumeric_directories }}
+	{{/ only_alphanumeric_subdirectories }}
+	{{# max_subdirectory_length }}
+		{{> panels/pieces/settings/number }}
+	{{/ max_subdirectory_length }}
 	{{# max_report_items }}
 		{{> panels/pieces/settings/number }}
 	{{/ max_report_items }}
