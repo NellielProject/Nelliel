@@ -33,12 +33,6 @@ class OutputHead extends Output
             nelliel.setup.doImportantStuff();});';
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['stylesheets'] = $output_menu->styles([], true);
-
-        if ($this->domain->setting('use_honeypot')) {
-            $this->render_data['honeypot_css'] = '#form-user-info-1{display: none !important;}#form-user-info-2{display: none !important;}#form-user-info-3{position: absolute; top: 3px; left: -9001px;}';
-            $this->render_data['use_honeypot'] = true;
-        }
-
         $this->render_data['show_favicon'] = $this->domain->setting('show_favicon');
         $this->render_data['favicon_url'] = $this->domain->setting('favicon') ?? '';
         $this->render_data['page_title'] = $page_title;

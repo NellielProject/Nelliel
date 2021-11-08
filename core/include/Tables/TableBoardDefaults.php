@@ -252,6 +252,5 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['use_post_recaptcha', '0', 0]);
         $this->insertDefaultRow(['use_report_captcha', '0', 0]);
         $this->insertDefaultRow(['use_report_recaptcha', '0', 0]);
-        $this->insertDefaultRow(['use_honeypot', '1', 0]);
     }
 }

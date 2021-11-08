@@ -92,10 +92,6 @@ class OutputPostingForm extends Output
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['captcha_label'] = true;
-        $this->render_data['use_honeypot'] = $this->domain->setting('use_honeypot');
-        $this->render_data['honeypot_field_name1'] = NEL_BASE_HONEYPOT_FIELD1 . '_' . $this->domain->id();
-        $this->render_data['honeypot_field_name2'] = NEL_BASE_HONEYPOT_FIELD2 . '_' . $this->domain->id();
-        $this->render_data['honeypot_field_name3'] = NEL_BASE_HONEYPOT_FIELD3 . '_' . $this->domain->id();
         $this->render_data['posting_submit'] = ($response_to) ? _gettext('Reply') : _gettext('New thread');
         $this->postingRules();
         $output = $this->output('thread/posting_form', $data_only, true, $this->render_data);
