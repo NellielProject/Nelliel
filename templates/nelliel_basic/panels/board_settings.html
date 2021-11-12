@@ -35,12 +35,9 @@
 	{{# show_favicon }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_favicon }}
-	{{# banner }}
-			{{> panels/pieces/settings/text }}
-	{{/ banner }}
-	{{# show_banner }}
+	{{# show_banners }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ show_banner }}
+	{{/ show_banners }}
 	{{# locale }}
 			{{> panels/pieces/settings/text }}
 	{{/ locale }}
@@ -83,6 +80,20 @@
 				{{> panels/pieces/settings/setting_description }}
 			</tr>
 	{{/ enabled_styles }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">Banners</th>
+			</tr>
+	{{# show_banners }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ show_banners}}
+	{{# banner_display_width }}
+		{{> panels/pieces/settings/number }}
+	{{/ banner_display_width }}
+	{{# banner_display_height }}
+		{{> panels/pieces/settings/number }}
+	{{/ banner_display_height }}
 		</tbody>
 		<tbody>
 			<tr>

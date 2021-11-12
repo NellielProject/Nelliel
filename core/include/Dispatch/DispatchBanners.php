@@ -29,14 +29,9 @@ class DispatchBanners extends Dispatch
                 $banners_list = array();
                 $web_path = NEL_BANNERS_WEB_PATH;
 
-                if ($this->domain->id() !== Domain::SITE && $this->site_domain->setting('show_board_banners')) {
-                    $banners_list = $banners->getList($this->domain->reference('banners_path'));
+                if ($this->domain->setting('show_banners')) {
+                    $banners_list = $banners->getList($this->domain->reference('banners_path'), true);
                     $web_path = $this->domain->reference('banners_web_path');
-                }
-
-                if ($this->domain->id() === Domain::SITE && $this->site_domain->setting('show_site_banners')) {
-                    $banners_list = $banners->getList($this->site_domain->reference('banners_path'));
-                    $web_path = $this->site_domain->reference('banners_web_path');
                 }
 
                 if (!empty($banners_list)) {

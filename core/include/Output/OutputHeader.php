@@ -5,6 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Banners\Banners;
 use Nelliel\Domains\Domain;
 
 class OutputHeader extends Output
@@ -28,6 +29,7 @@ class OutputHeader extends Output
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
             'description') : '';
+        $this->displayBanners();
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -53,11 +55,7 @@ class OutputHeader extends Output
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
             'description') : '';
-        $this->render_data['show_banner'] = $this->site_domain->setting('show_site_banners') ||
-            $this->site_domain->setting('show_board_banners');
-        $this->render_data['banner_display_width'] = $this->site_domain->setting('banner_display_width');
-        $this->render_data['banner_display_height'] = $this->site_domain->setting('banner_display_height');
-        $this->render_data['banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
+        $this->displayBanners();
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -84,10 +82,7 @@ class OutputHeader extends Output
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
             'description') : '';
-        $this->render_data['show_banner'] = $this->site_domain->setting('show_site_banners');
-        $this->render_data['banner_display_width'] = $this->site_domain->setting('banner_display_width');
-        $this->render_data['banner_display_height'] = $this->site_domain->setting('banner_display_height');
-        $this->render_data['banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
+        $this->displayBanners();
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
     }
@@ -114,5 +109,15 @@ class OutputHeader extends Output
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $output = $this->output('header', $data_only, true, $this->render_data);
         return $output;
+    }
+
+    private function displayBanners()
+    {
+        $banners = new Banners();
+        $this->render_data['show_banner'] = $this->domain->setting('show_banners') &&
+            !empty($banners->getList($this->domain->reference('banners_path'), true));
+        $this->render_data['banner_display_width'] = $this->domain->setting('banner_display_width');
+        $this->render_data['banner_display_height'] = $this->domain->setting('banner_display_height');
+        $this->render_data['banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
     }
 }

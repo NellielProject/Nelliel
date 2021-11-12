@@ -97,10 +97,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_footer_text', '', '', 'Additional text to put in the footer site-wide.', '{"type":"textarea"}']);
 
         // Banners
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_site_banners', '', '1', 'Show site banners.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_board_banners', '', '1', 'Show board-specific banners when available.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'banner_display_width', '', '300', 'Display width of banners.', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'banner_display_height', '', '100', 'Display height of banners.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_banners', '', '0', 'Display site banners if available.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'banner_display_width', '', '300', 'Display width of site banners.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'banner_display_height', '', '100', 'Display height of site banners.', '{"type":"number"}']);
 
         // Bans
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'must_see_ban', '', '1', 'Bans must be seen at least once before expiration purge.', '{"type":"checkbox"}']);
@@ -175,8 +174,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_description', '', '1', 'Display board description in header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'favicon', '', '', 'Board favicon.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_favicon', '', '0', 'Show board favicon.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'banner', '', '', 'Board banner', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_banner', '', '0', 'Display board banner', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'locale', '', 'en_US', 'Locale for the board (use ISO language + country code).', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'exclude_from_overboards', '', '0', 'Exclude threads on this board from the overboards.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'user_delete_own', '', '1', 'Let users delete own posts and content.', '{"type":"checkbox"}']);
@@ -185,6 +182,11 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_content_disclaimer', '', '', 'Disclaimer added to the bottom of posts on this board.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_footer_text', '', '', 'Additional text to put in the footer for this board.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'enabled_styles', '', '["style-nelliel","style-nelliel-2","style-nelliel-classic","style-burichan","style-futaba","style-nigra"]', 'Styles which users can choose from.', '{"type":"text"}']);
+
+        // Banners
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_banners', '', '0', 'Display board banners if available.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'banner_display_width', '', '300', 'Display width of site banners.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'banner_display_height', '', '100', 'Display height of site banners.', '{"type":"number"}']);
 
         // New Post Form
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_name_field', '', '1', 'Enable the name field.', '{"type":"checkbox"}']);
@@ -306,7 +308,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'index_sticky_replies', '', '1', 'How many replies to a stickied thread should be displayed on the index page.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'threads_per_page', '', '10', 'Threads per page.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_index_comment_lines', '', '15', 'How many lines of comment to display when abbreviated.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_top', '', '1', 'Display index navigation at top of page.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_top', '', '0', 'Display index navigation at top of page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_bottom', '', '1', 'Display index navigation at bottom of page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'first_posts_increments', '', '[100]', 'Increments for first X posts. Leave empty to disable. Enter as JSON array of integers.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'first_posts_threshold', '', '200', 'Minimum posts in a thread before generating first X posts.', '{"type":"number"}']);
