@@ -14,9 +14,7 @@ use PDO;
 
 abstract class Domain implements NellielCacheInterface
 {
-
     const SITE = '_site_';
-
     const GLOBAL = '_global_';
     protected $domain_id;
     protected $settings;
@@ -58,7 +56,7 @@ abstract class Domain implements NellielCacheInterface
 
     public function id()
     {
-        return $this->id;
+        return $this->domain_id;
     }
 
     public function setting(string $setting = null)
@@ -138,7 +136,8 @@ abstract class Domain implements NellielCacheInterface
     protected function cacheSettings()
     {
         $settings = $this->loadSettingsFromDatabase();
-        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php', 'domains/' . $this->id);
+        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
+            'domains/' . $this->domain_id);
     }
 
     public function reload(): void
