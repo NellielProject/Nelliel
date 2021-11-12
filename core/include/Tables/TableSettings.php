@@ -57,7 +57,8 @@ class TableSettings extends Table
             default_value       TEXT NOT NULL,
             setting_description TEXT NOT NULL,
             input_attributes    TEXT NOT NULL,
-            moar                TEXT DEFAULT NULL
+            moar                TEXT DEFAULT NULL,
+            UNIQUE (setting_category, setting_name)
         ) " . $options . ";";
 
         return $schema;
@@ -65,6 +66,7 @@ class TableSettings extends Table
 
     public function postCreate(array $other_tables = null)
     {
+
     }
 
     public function insertDefaults()
