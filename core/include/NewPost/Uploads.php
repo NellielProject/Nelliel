@@ -250,27 +250,24 @@ class Uploads
 
     private function checkFileDuplicates(Post $post, Upload $upload): void
     {
-        $active = ($this->domain->setting('only_active_file_duplicates')) ? ' AND "old" = 0' : '';
         $sha256 = ($this->domain->setting('generate_file_sha256')) ? ' OR "sha256" = :sha256' : '';
         $sha512 = ($this->domain->setting('generate_file_sha512')) ? ' OR "sha512" = :sha512' : '';
 
         if ($this->domain->setting('check_board_file_duplicates')) {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') . '" WHERE' . $active .
-                ' ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
+            $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
             $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
         } else if ($post->data('op') && $this->domain->setting('check_op_file_duplicates')) {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "parent_thread" = "post_ref" AND ' . $active . ' ("md5" = :md5 OR "sha1" = :sha1' . $sha256 .
-                $sha512 . ')';
+            $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE "parent_thread" = "post_ref" AND ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
             $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
         } else if (!$post->data('op') && $this->domain->setting('check_thread_file_duplicates')) {
-            $query = 'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "parent_thread" = :parent_thread AND ' . $active . ' ("md5" = :md5 OR "sha1" = :sha1' . $sha256 .
-                $sha512 . ')';
+            $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE "parent_thread" = :parent_thread AND ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(':parent_thread', $post->contentID()
                 ->threadID(), PDO::PARAM_INT);
@@ -288,9 +285,31 @@ class Uploads
             $prepared->bindValue(':sha512', $upload->data('sha512'), PDO::PARAM_STR);
         }
 
-        $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN, true);
+        $parent_threads = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
 
-        if ($duplicates_found) {
+        if (empty($parent_threads)) {
+            return;
+        }
+
+        $duplicate_found = false;
+
+        if ($this->domain->setting('only_active_file_duplicates')) {
+            foreach ($parent_threads as $thread_id) {
+                $prepared = $this->database->prepare(
+                    'SELECT 1 FROM "' . $this->domain->reference('threads_table') .
+                    '" WHERE "thread_id" = :thread_id AND "old" = 0');
+                $prepared->bindValue(':thread_id', $thread_id, PDO::PARAM_INT);
+
+                if ($this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN)) {
+                    $duplicate_found = true;
+                    break;
+                }
+            }
+        } else {
+            $duplicate_found = true;
+        }
+
+        if ($duplicate_found) {
             nel_derp(25, _gettext('Duplicate file detected.'));
         }
     }
