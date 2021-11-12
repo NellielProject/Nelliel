@@ -177,20 +177,20 @@ class OutputFile extends Output
 
                 $preview_type = 'image';
             }
-            else if ($this->domain->setting('use_file_icon'))
+            else if ($this->domain->setting('use_file_image'))
             {
-                $icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('filetype_icon_set'));
+                $image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('filetype_image_set'));
                 $type = utf8_strtolower($file->data('category'));
                 $format = utf8_strtolower($file->data('format'));
-                $web_path = $icon_set->getWebPath('filetype', $format, true);
+                $web_path = $image_set->getWebPath('filetype', $format, true);
 
                 if ($web_path === '')
                 {
-                    $web_path = $icon_set->getWebPath('filetype', 'generic-' . $type, true);
+                    $web_path = $image_set->getWebPath('filetype', 'generic-' . $type, true);
 
                     if ($web_path === '')
                     {
-                        $web_path = $icon_set->getWebPath('filetype', 'generic', true);
+                        $web_path = $image_set->getWebPath('filetype', 'generic', true);
                     }
                 }
 

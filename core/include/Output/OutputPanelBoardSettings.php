@@ -242,10 +242,10 @@ class OutputPanelBoardSettings extends Output
 
         $this->render_data['settings_data']['default_style']['options'] = $this->stylesSelect(
                 $this->render_data['settings_data']['default_style']['setting_value'] ?? '');
-        $this->render_data['settings_data']['ui_icon_set']['options'] = $this->iconSetsSelect(
-                $this->render_data['settings_data']['ui_icon_set']['setting_value'] ?? '');
-        $this->render_data['settings_data']['filetype_icon_set']['options'] = $this->iconSetsSelect(
-                $this->render_data['settings_data']['filetype_icon_set']['setting_value'] ?? '');
+        $this->render_data['settings_data']['ui_image_set']['options'] = $this->imageSetsSelect(
+                $this->render_data['settings_data']['ui_image_set']['setting_value'] ?? '');
+        $this->render_data['settings_data']['filetype_image_set']['options'] = $this->imageSetsSelect(
+                $this->render_data['settings_data']['filetype_image_set']['setting_value'] ?? '');
         $this->render_data['settings_data']['template_id']['options'] = $this->templatesSelect(
                 $this->render_data['settings_data']['template_id']['setting_value'] ?? '');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
@@ -277,9 +277,9 @@ class OutputPanelBoardSettings extends Output
         return $options;
     }
 
-    private function iconSetsSelect(string $selected): array
+    private function imageSetsSelect(string $selected): array
     {
-        $sets = $this->domain->frontEndData()->getAllIconSets();
+        $sets = $this->domain->frontEndData()->getAllImageSets();
         $options = array();
 
         foreach ($sets as $set)

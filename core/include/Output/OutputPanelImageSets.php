@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 
-class OutputPanelIconSets extends Output
+class OutputPanelImageSets extends Output
 {
 
     function __construct(Domain $domain, bool $write_mode)
@@ -19,50 +19,50 @@ class OutputPanelIconSets extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
-        $this->setBodyTemplate('panels/icon_sets');
+        $this->setBodyTemplate('panels/image_sets');
         $parameters['is_panel'] = true;
-        $parameters['panel'] = $parameters['panel'] ?? _gettext('Icon Sets');
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Image Sets');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $icon_sets = $this->domain->frontEndData()->getAllIconSets();
+        $image_sets = $this->domain->frontEndData()->getAllImageSets();
         $installed_ids = array();
         $bgclass = 'row1';
 
-        foreach ($icon_sets as $icon_set)
+        foreach ($image_sets as $image_set)
         {
             $set_data = array();
             $set_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $installed_ids[] = $icon_set->id();
-            $set_data['id'] = $icon_set->id();
-            $set_data['name'] = $icon_set->info('name');
-            $set_data['directory'] = $icon_set->info('directory');
+            $installed_ids[] = $image_set->id();
+            $set_data['id'] = $image_set->id();
+            $set_data['name'] = $image_set->info('name');
+            $set_data['directory'] = $image_set->info('directory');
             $set_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
-                            ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'remove',
-                            'icon-set-id' => $icon_set->id()]);
+                            ['module' => 'admin', 'section' => 'image-sets', 'actions' => 'remove',
+                            'image-set-id' => $image_set->id()]);
             $this->render_data['installed_list'][] = $set_data;
         }
 
-        $icon_set_inis = $this->domain->frontEndData()->getIconSetInis();
+        $image_set_inis = $this->domain->frontEndData()->getImageSetInis();
         $bgclass = 'row1';
 
-        foreach ($icon_set_inis as $icon_set)
+        foreach ($image_set_inis as $image_set)
         {
             $set_data = array();
             $set_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $set_data['id'] = $icon_set['set-info']['id'];
-            $set_data['name'] = $icon_set['set-info']['name'];
-            $set_data['directory'] = $icon_set['set-info']['directory'];
-            $set_data['is_installed'] = in_array($icon_set['set-info']['id'], $installed_ids);
+            $set_data['id'] = $image_set['set-info']['id'];
+            $set_data['name'] = $image_set['set-info']['name'];
+            $set_data['directory'] = $image_set['set-info']['directory'];
+            $set_data['is_installed'] = in_array($image_set['set-info']['id'], $installed_ids);
             $set_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
-                            ['module' => 'admin', 'section' => 'icon-sets', 'actions' => 'add',
-                            'icon-set-id' => $icon_set['set-info']['id']]);
+                            ['module' => 'admin', 'section' => 'image-sets', 'actions' => 'add',
+                            'image-set-id' => $image_set['set-info']['id']]);
             $this->render_data['available_list'][] = $set_data;
         }
 

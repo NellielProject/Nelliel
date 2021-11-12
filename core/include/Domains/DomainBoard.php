@@ -20,7 +20,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function __construct(string $domain_id, NellielPDO $database)
     {
-        $this->id = $domain_id;
+        $this->domain_id = $domain_id;
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
@@ -30,13 +30,13 @@ class DomainBoard extends Domain implements NellielCacheInterface
     protected function loadSettings(): void
     {
         $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
-                'domains/' . $this->id);
+                'domains/' . $this->domain_id);
 
         if (empty($settings))
         {
             $settings = $this->loadSettingsFromDatabase();
             $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
-                    'domains/' . $this->id);
+                    'domains/' . $this->domain_id);
         }
 
         $this->settings = $settings;
@@ -45,7 +45,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
     protected function loadReferences(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-        $board_data = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_ASSOC);
+        $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
         $new_reference = array();
         $board_path = NEL_PUBLIC_PATH . $board_data['board_uri'] . '/';
         $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($board_data['board_uri']) . '/';
@@ -60,7 +60,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['preview_directory'] = $board_data['preview_directory'];
         $new_reference['page_directory'] = $board_data['page_directory'];
         $new_reference['archive_directory'] = $board_data['archive_directory'];
-        $new_reference['banners_directory'] = $this->id();
+        $new_reference['banners_directory'] = $this->domain_id;
         $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_directory'] . '/';
         $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_directory']) .
                 '/';
@@ -101,7 +101,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
                 NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
                 NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "setting_category" = ?';
         $prepared = $this->database->prepare($query);
-        $config_list = $this->database->executePreparedFetchAll($prepared, [$this->id, 'board'], PDO::FETCH_ASSOC);
+        $config_list = $this->database->executePreparedFetchAll($prepared, [$this->domain_id, 'board'], PDO::FETCH_ASSOC);
 
         foreach ($config_list as $config)
         {
@@ -115,7 +115,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
     public function exists()
     {
         $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-        $board_data = $this->database->executePreparedFetch($prepared, [$this->id], PDO::FETCH_COLUMN);
+        $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
         return !empty($board_data);
     }
 
@@ -125,7 +125,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         {
             $this->cacheSettings();
             $filetypes = new FileTypes($this->database());
-            $filetypes->regenCache($this->id);
+            $filetypes->regenCache($this->domain_id);
         }
     }
 
@@ -133,7 +133,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
     {
         if (NEL_USE_FILE_CACHE)
         {
-            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . 'domains/' . $this->id);
+            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . 'domains/' . $this->domain_id);
         }
     }
 

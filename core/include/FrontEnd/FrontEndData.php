@@ -15,10 +15,10 @@ class FrontEndData
     private $database;
     private $ini_parser;
     private $cache_handler;
-    private static $icon_sets = array();
+    private static $image_sets = array();
     private static $styles = array();
     private static $templates = array();
-    private $core_icon_set_ids = array();
+    private $core_image_set_ids = array();
     private $core_style_ids = array();
     private $core_template_ids = array();
 
@@ -27,49 +27,49 @@ class FrontEndData
         $this->database = $database;
         $this->ini_parser = new INIParser(nel_utilities()->fileHandler());
         $this->cache_handler = new CacheHandler();
-        $this->core_icon_set_ids = ['icons-nelliel-basic'];
+        $this->core_image_set_ids = ['images-nelliel-basic'];
         $this->core_style_ids = ['style-nelliel', 'style-nelliel-2', 'style-nelliel-classic', 'style-futaba',
             'style-burichan', 'style-nigra'];
         $this->core_template_ids = ['template-nelliel-basic'];
     }
 
-    public function getIconSetInis(string $directory = null): array
+    public function getImageSetInis(string $directory = null): array
     {
-        return $this->ini_parser->parseDirectories(NEL_ICON_SETS_FILES_PATH, 'icon_info.ini');
+        return $this->ini_parser->parseDirectories(NEL_IMAGE_SETS_FILES_PATH, 'image_info.ini');
     }
 
-    public function getIconSet(string $set_id): IconSet
+    public function getImageSet(string $set_id): ImageSet
     {
-        if (!isset(self::$icon_sets[$set_id]))
+        if (!isset(self::$image_sets[$set_id]))
         {
-            self::$icon_sets[$set_id] = new IconSet($this->database, $this, $set_id);
+            self::$image_sets[$set_id] = new ImageSet($this->database, $this, $set_id);
         }
 
-        return self::$icon_sets[$set_id];
+        return self::$image_sets[$set_id];
     }
 
-    public function getAllIconSets(): array
+    public function getAllImageSets(): array
     {
         $set_ids = $this->database->executeFetchAll(
-                'SELECT "set_id" FROM "' . NEL_ICON_SETS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
+                'SELECT "set_id" FROM "' . NEL_IMAGE_SETS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
         $sets = array();
 
         foreach ($set_ids as $set_id)
         {
-            $sets[$set_id] = $this->getIconSet($set_id);
+            $sets[$set_id] = $this->getImageSet($set_id);
         }
 
         return $sets;
     }
 
-    public function getBaseIconSet(): IconSet
+    public function getBaseImageSet(): ImageSet
     {
-        return $this->getIconSet(nel_site_domain()->setting('base_icon_set'));
+        return $this->getImageSet(nel_site_domain()->setting('base_image_set'));
     }
 
-    public function iconSetIsCore(string $id): bool
+    public function imageSetIsCore(string $id): bool
     {
-        return in_array($id, $this->core_icon_set_ids);
+        return in_array($id, $this->core_image_set_ids);
     }
 
     public function getStyleInis(): array

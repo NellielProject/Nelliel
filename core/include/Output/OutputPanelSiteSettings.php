@@ -93,7 +93,7 @@ class OutputPanelSiteSettings extends Output
             $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
 
-        $this->render_data['settings_data']['base_icon_set']['options'] = $this->iconSetsSelect($this->domain->setting('base_icon_set'));
+        $this->render_data['settings_data']['base_image_set']['options'] = $this->imageSetsSelect($this->domain->setting('base_image_set'));
         $this->render_data['settings_data']['template_id']['options'] = $this->templatesSelect($this->domain->setting('template_id'));
         $this->render_data['settings_data']['default_style']['options'] = $this->stylesSelect($this->domain->setting('default_style'));
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
@@ -125,9 +125,9 @@ class OutputPanelSiteSettings extends Output
         return $options;
     }
 
-    private function iconSetsSelect(string $selected): array
+    private function imageSetsSelect(string $selected): array
     {
-        $sets = $this->domain->frontEndData()->getAllIconSets();
+        $sets = $this->domain->frontEndData()->getAllImageSets();
         $options = array();
 
         foreach ($sets as $set)

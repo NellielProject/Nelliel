@@ -35,9 +35,6 @@
 	{{# show_favicon }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_favicon }}
-	{{# show_banners }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ show_banners }}
 	{{# locale }}
 			{{> panels/pieces/settings/text }}
 	{{/ locale }}
@@ -559,9 +556,9 @@
 	{{# embed_video_files }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ embed_video_files }}
-	{{# use_file_icon }}
+	{{# use_file_image }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ use_file_icon }}
+	{{/ use_file_image }}
 	{{# max_uploads_row }}
 			{{> panels/pieces/settings/number }}
 	{{/ max_uploads_row }}
@@ -621,15 +618,15 @@
 	{{# default_style }}
 			{{> panels/pieces/settings/select }}
 	{{/ default_style }}
-	{{# ui_icon_set }}
+	{{# ui_image_set }}
 			{{> panels/pieces/settings/select }}
-	{{/ ui_icon_set }}
-	{{# filetype_icon_set }}
+	{{/ ui_image_set }}
+	{{# filetype_image_set }}
 			{{> panels/pieces/settings/select }}
-	{{/ filetype_icon_set }}
-	{{# icon_set_fallback }}
+	{{/ filetype_image_set }}
+	{{# image_set_fallback }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ icon_set_fallback }}
+	{{/ image_set_fallback }}
 	{{# display_render_timer }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ display_render_timer }}

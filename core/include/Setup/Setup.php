@@ -19,7 +19,7 @@ use Nelliel\Tables\TableEmbeds;
 use Nelliel\Tables\TableFileFilters;
 use Nelliel\Tables\TableFiletypes;
 use Nelliel\Tables\TableIPNotes;
-use Nelliel\Tables\TableIconSets;
+use Nelliel\Tables\TableImageSets;
 use Nelliel\Tables\TableLogs;
 use Nelliel\Tables\TableNews;
 use Nelliel\Tables\TableNoticeboard;
@@ -89,7 +89,7 @@ class Setup
         $this->createCoreDirectories();
         $this->installCoreTemplates();
         $this->installCoreStyles();
-        $this->installCoreIconSets();
+        $this->installCoreImageSets();
         $site_domain = new \Nelliel\Domains\DomainSite($this->database);
         $regen = new \Nelliel\Regen();
         $site_domain->regenCache();
@@ -204,8 +204,8 @@ class Setup
         $board_defaults_table->createTable();
         $site_config_table = new TableSiteConfig($this->database, $this->sql_compatibility);
         $site_config_table->createTable();
-        $icon_sets_table = new TableIconSets($this->database, $this->sql_compatibility);
-        $icon_sets_table->createTable();
+        $image_sets_table = new TableImageSets($this->database, $this->sql_compatibility);
+        $image_sets_table->createTable();
         $styles_table = new TableStyles($this->database, $this->sql_compatibility);
         $styles_table->createTable();
         $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
@@ -352,22 +352,22 @@ class Setup
         echo _gettext('Core styles installed.') . '<br>';
     }
 
-    public function installCoreIconSets(bool $overwrite = false): void
+    public function installCoreImageSets(bool $overwrite = false): void
     {
         $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
-        $icon_set_inis = $front_end_data->getIconSetInis();
+        $image_set_inis = $front_end_data->getImageSetInis();
 
-        foreach ($icon_set_inis as $ini) {
-            $icon_set_id = $ini['set-info']['id'];
+        foreach ($image_set_inis as $ini) {
+            $image_set_id = $ini['set-info']['id'];
 
-            if (!$front_end_data->iconSetIsCore($icon_set_id)) {
+            if (!$front_end_data->imageSetIsCore($image_set_id)) {
                 continue;
             }
 
-            $front_end_data->getIconSet($icon_set_id)->install($overwrite);
+            $front_end_data->getImageSet($image_set_id)->install($overwrite);
         }
 
-        echo _gettext('Core icon sets installed.') . '<br>';
+        echo _gettext('Core image sets installed.') . '<br>';
     }
 
     private function checkForInnoDB()

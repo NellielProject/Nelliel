@@ -1,8 +1,8 @@
 <table >
-	<caption data-i18n="">Installed icon sets</caption>
+	<caption data-i18n="">Installed image sets</caption>
 	<thead>
 		<tr>
-			<th scope="col" data-i18n="">Icon Set ID</th>
+			<th scope="col" data-i18n="">Image Set ID</th>
 			<th scope="col" data-i18n="">Name</th>
 			<th scope="col" data-i18n="">Directory</th>
 			<th scope="col" data-i18n="">Actions</th>
@@ -15,7 +15,7 @@
 			<td>{{ name }}</td>
 			<td>{{ directory }}</td>
 			<td>
-				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Uninstall Icon Set</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Uninstall Image Set</a>]</span>
 			</td>
 		</tr>
 {{/ installed_list }}
@@ -23,10 +23,10 @@
 </table>
 <hr>
 <table >
-	<caption data-i18n="">Available icon sets</caption>
+	<caption data-i18n="">Available image sets</caption>
 	<thead>
 		<tr>
-			<th scope="col" data-i18n="">Icon Set ID</th>
+			<th scope="col" data-i18n="">Image Set ID</th>
 			<th scope="col" data-i18n="">Name</th>
 			<th scope="col" data-i18n="">Directory</th>
 			<th scope="col" data-i18n="">Installed</th>
@@ -49,7 +49,7 @@
 			</td>
 			<td>
 	{{^ is_installed }}
-				<span class="text-button">[<a class="display-cell" href="{{ install_url }}" data-i18n="">Install Icon Set</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ install_url }}" data-i18n="">Install Image Set</a>]</span>
 	{{/ is_installed }}
 			</td>
 		</tr>

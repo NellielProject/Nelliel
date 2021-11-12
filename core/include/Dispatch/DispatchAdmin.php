@@ -14,7 +14,7 @@ use Nelliel\Admin\AdminBoardSettings;
 use Nelliel\Admin\AdminBoards;
 use Nelliel\Admin\AdminFileFilters;
 use Nelliel\Admin\AdminFiletypes;
-use Nelliel\Admin\AdminIconSets;
+use Nelliel\Admin\AdminImageSets;
 use Nelliel\Admin\AdminLogs;
 use Nelliel\Admin\AdminNews;
 use Nelliel\Admin\AdminPermissions;
@@ -78,8 +78,8 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'icon-sets':
-                $admin_handler = new AdminIconSets($this->authorization, $this->domain, $this->session);
+            case 'image-sets':
+                $admin_handler = new AdminImageSets($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
                 break;
 

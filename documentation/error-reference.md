@@ -144,7 +144,7 @@ Error 340: perm_file_filters_manage (Admin/AdminFileFilters.php)
 
 Error 345: perm_filetypes_manage (Admin/AdminFiletypes.php)  
 
-Error 350: perm_icon_sets_manage (Admin/AdminIconSets.php)  
+Error 350: perm_image_sets_manage (Admin/AdminImageSets.php)  
 
 Error 355: perm_logs_view (Admin/AdminLogs.php)  
 Error 356: perm_logs_manage (Admin/AdminLogs.php)  

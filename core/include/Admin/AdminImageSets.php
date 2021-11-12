@@ -9,16 +9,16 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 
-class AdminIconSets extends Admin
+class AdminImageSets extends Admin
 {
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->data_table = NEL_ICON_SETS_TABLE;
-        $this->id_field = 'icon-set-id';
+        $this->data_table = NEL_IMAGE_SETS_TABLE;
+        $this->id_field = 'image-set-id';
         $this->id_column = 'set_id';
-        $this->panel_name = _gettext('Icon Sets');
+        $this->panel_name = _gettext('Image Sets');
     }
 
     public function dispatch(array $inputs): void
@@ -28,8 +28,8 @@ class AdminIconSets extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_icon_sets_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelIconSets($this->domain, false);
+        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $output_panel = new \Nelliel\Output\OutputPanelImageSets($this->domain, false);
         $output_panel->render([], false);
     }
 
@@ -39,9 +39,9 @@ class AdminIconSets extends Admin
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_icon_sets_manage');
+        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
         $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getIconSet($id)->install();
+        $this->domain->frontEndData()->getImageSet($id)->install();
         $this->outputMain(true);
     }
 
@@ -55,9 +55,9 @@ class AdminIconSets extends Admin
 
     public function remove(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_icon_sets_manage');
+        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
         $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getIconSet($id)->uninstall();
+        $this->domain->frontEndData()->getImageSet($id)->uninstall();
         $this->outputMain(true);
     }
 
@@ -70,8 +70,8 @@ class AdminIconSets extends Admin
 
         switch ($perm)
         {
-            case 'perm_icon_sets_manage':
-                nel_derp(350, _gettext('You are not allowed to manage icon sets.'));
+            case 'perm_image_sets_manage':
+                nel_derp(350, _gettext('You are not allowed to manage image sets.'));
                 break;
 
             default:

@@ -117,7 +117,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'last_posts_filename_format', '', '-last%d', 'Format of string appended to basename for last posts.', '{"type":"text"}']);
 
         // Rendering
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'base_icon_set', '', 'icons-nelliel-basic', 'Base icon set.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'base_image_set', '', 'images-nelliel-basic', 'Base image set.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'default_style', '', 'style-nelliel', 'Default style for site pages and control panels.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_blotter', '', '1', 'Show the short list of blotter entries.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'small_blotter_limit', '', '3', 'Maximum entries to show in the blotter short list.', '{"type":"text"}']);
@@ -343,7 +343,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_animated_preview', '', '0', 'Display animated image previews when available.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_video_preview', '', '1', 'Display an image preview for videos if available. Replaces video embedding.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'embed_video_files', '', '1', 'Embed uploaded video files. Currently supports MP4 and WebM.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_file_icon', '', '1', 'Use filetype icon when a preview is not available.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_file_image', '', '1', 'Use filetype image when a preview is not available.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_uploads_row', '', '3', 'Maximum number of uploads to display in each row.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_display_width', '', '250', 'Maximum display width for file previews.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_display_height', '', '250', 'Maximum display height for file previews.', '{"type":"number"}']);
@@ -364,9 +364,9 @@ class TableSettings extends Table
         // Other Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'template_id', '', 'template-nelliel-basic', 'ID of template for board to use.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'default_style', '', 'style-nelliel', 'ID of default style for board.', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_icon_set', '', 'icons-nelliel-basic', 'Icon set to use for UI elements.', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'filetype_icon_set', '', 'icons-nelliel-basic', 'Icon set to use for filetypes.', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'icon_set_fallback', '', '1', 'If a selected icon set doesn\'t have an entry for something, attempt to get it from the base icon set.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_image_set', '', 'images-nelliel-basic', 'Image set to use for UI elements.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'filetype_image_set', '', 'images-nelliel-basic', 'Image set to use for filetypes.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'image_set_fallback', '', '1', 'If a selected image set doesn\'t have an entry for something, attempt to get it from the base image set.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_render_timer', '', '1', 'Display the rendering timer.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'generate_catalog', '', '1', 'Generate catalog for this board.', '{"type":"checkbox"}']);
 

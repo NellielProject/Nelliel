@@ -103,7 +103,7 @@ class OutputPost extends Output
 
     private function postHeaders(bool $response, Thread $thread, Post $post, array $gen_data, int $in_thread_number)
     {
-        $ui_icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('ui_icon_set'));
+        $ui_image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('ui_image_set'));
         $header_data = array();
         $thread_headers = array();
         $this->render_data['headers']['response'] = $response;
@@ -164,11 +164,11 @@ class OutputPost extends Output
             $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
             $thread_headers['post_content_id'] = $post_content_id->getIDString();
             $thread_headers['is_sticky'] = $thread->data('sticky');
-            $thread_headers['sticky'] = $ui_icon_set->getWebPath('ui', 'sticky', true);
+            $thread_headers['sticky'] = $ui_image_set->getWebPath('ui', 'sticky', true);
             $thread_headers['is_locked'] = $thread->data('locked');
-            $thread_headers['locked'] = $ui_icon_set->getWebPath('ui', 'locked', true);
+            $thread_headers['locked'] = $ui_image_set->getWebPath('ui', 'locked', true);
             $thread_headers['is_cyclic'] = $thread->data('cyclic');
-            $thread_headers['cyclic'] = $ui_icon_set->getWebPath('ui', 'cyclic', true);
+            $thread_headers['cyclic'] = $ui_image_set->getWebPath('ui', 'cyclic', true);
 
             if ($gen_data['index_rendering']) {
                 $thread_headers['index_render'] = true;
