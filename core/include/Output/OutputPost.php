@@ -46,7 +46,7 @@ class OutputPost extends Output
         }
 
         $this->render_data['post_anchor_id'] = 't' . $post->contentID()->threadID() . 'p' . $post->contentID()->postID();
-        $this->render_data['headers'] = $this->postHeaders($response, $thread, $post, $gen_data, $in_thread_number);
+        $this->render_data['headers1'] = $this->postHeaders($response, $thread, $post, $gen_data, $in_thread_number);
 
         if ($post->data('total_uploads') > 0) {
             $uploads = $post->getUploads();
@@ -105,11 +105,9 @@ class OutputPost extends Output
     {
         $ui_icon_set = $this->domain->frontEndData()->getIconSet($this->domain->setting('ui_icon_set'));
         $header_data = array();
-        $modmode_headers = array();
         $thread_headers = array();
-        $header_data['response'] = $response;
+        $this->render_data['headers']['response'] = $response;
         $post_content_id = $post->contentID();
-        $session_user = $this->session->user();
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
@@ -119,68 +117,47 @@ class OutputPost extends Output
                 $ip = $post->data('hashed_ip_address');
             }
 
-            $modmode_headers['ip_address'] = $ip;
+            $this->render_data['mod_ip_address'] = $ip;
 
             if (!$response) {
-                $modmode_headers['can_lock'] = $session_user->checkPermission($this->domain, 'perm_post_status');
-                $locked = $thread->data('locked');
-                $modmode_headers['lock_text'] = ($locked) ? _gettext('Unlock') : _gettext('Lock');
-                $modmode_headers['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                $lock_button = $thread->data('locked') ? 'mod_unlock_label' : 'mod_lock_label';
+                $this->render_data['mod_lock_option_label'] = $this->render_data[$lock_button];
+                $this->render_data['mod_lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=lock&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
 
-                $modmode_headers['can_sticky'] = $session_user->checkPermission($this->domain, 'perm_post_status');
-                $sticky = $thread->data('sticky');
-                $modmode_headers['sticky_text'] = ($sticky) ? _gettext('Unsticky') : _gettext('Sticky');
-                $modmode_headers['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                $sticky_button = $thread->data('sticky') ? 'mod_unsticky_label' : 'mod_sticky_label';
+                $this->render_data['mod_sticky_option_label'] = $this->render_data[$sticky_button];
+                $this->render_data['mod_sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=sticky&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
 
-                $modmode_headers['can_sage'] = $session_user->checkPermission($this->domain, 'perm_post_status');
-                $permasage = $thread->data('permasage');
-                $modmode_headers['permasage_text'] = ($permasage) ? _gettext('Unsage') : _gettext('Sage');
-                $modmode_headers['permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                $sage_button = $thread->data('permasage') ? 'mod_unsage_label' : 'mod_sage_label';
+                $this->render_data['mod_sage_option_label'] = $this->render_data[$sage_button];
+                $this->render_data['mod_sage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=sage&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
 
-                $modmode_headers['can_cyclic'] = $session_user->checkPermission($this->domain, 'perm_post_type');
-                $cyclic = $thread->data('cyclic');
-                $modmode_headers['cyclic_text'] = ($cyclic) ? _gettext('Non-cyclic') : _gettext('Cyclic');
-                $modmode_headers['cyclic_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                $cyclic_button = $thread->data('cyclic') ? 'mod_cyclic_label' : 'mod_non_cyclic_label';
+                $this->render_data['mod_cyclic_option_label'] = $this->render_data[$cyclic_button];
+                $this->render_data['mod_cyclic_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=cyclic&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
             }
 
-            $modmode_headers['can_ban'] = $session_user->checkPermission($this->domain, 'perm_manage_bans');
-            $modmode_headers['ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .
+            $this->render_data['mod_ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .
                 '&actions=new&ban-ip=' . $ip . '&modmode=true&goback=false';
-
-            $modmode_headers['can_delete'] = $session_user->checkPermission($this->domain, 'perm_delete_posts');
-            $modmode_headers['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+            $this->render_data['mod_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                 '&actions=delete&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
-
-            $modmode_headers['can_by_ip'] = $session_user->checkPermission($this->domain, 'perm_delete_by_ip');
-            $modmode_headers['delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+            $this->render_data['mod_delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                 '&actions=delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
-
-            $modmode_headers['can_global_by_ip'] = $session_user->checkPermission(nel_global_domain(),
-                'perm_delete_by_ip');
-            $modmode_headers['global_delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=global-delete-by-ip&content-id=' . $post_content_id->getIDString() .
+            $this->render_data['mod_global_delete_by_ip_url'] = '?module=admin&section=threads&board-id=' .
+                $this->domain->id() . '&actions=global-delete-by-ip&content-id=' . $post_content_id->getIDString() .
                 '&modmode=true&goback=true';
-
-            $modmode_headers['can_ban_delete'] = $session_user->checkPermission($this->domain, 'perm_manage_bans') &&
-                $session_user->checkPermission($this->domain, 'perm_delete_posts');
-
-            $modmode_headers['ban_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+            $this->render_data['mod_ban_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                 '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&ban-ip=' . $ip .
                 '&modmode=true&goback=false';
-
-            $modmode_headers['can_edit'] = $session_user->checkPermission($this->domain, 'perm_edit_posts');
-            $modmode_headers['edit_text'] = _gettext('Edit Post');
-            $modmode_headers['edit_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+            $this->render_data['mod_edit_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                 '&actions=edit&content-id=' . $post_content_id->getIDString();
-
-            $header_data['modmode_headers'] = $modmode_headers;
         }
 
-        $header_data['thread_page'] = sprintf($this->site_domain->setting('thread_filename_format'),
+        $this->render_data['headers']['thread_page'] = sprintf($this->site_domain->setting('thread_filename_format'),
             $thread->contentID()->threadID()) . NEL_PAGE_EXT;
 
         if (!$response) {
@@ -246,7 +223,7 @@ class OutputPost extends Output
                 }
             }
 
-            $header_data['thread_headers'] = $thread_headers;
+            $this->render_data['headers']['thread_headers'] = $thread_headers;
         }
 
         $post_headers['in_thread_number'] = $in_thread_number;
@@ -298,7 +275,7 @@ class OutputPost extends Output
             }
         }
 
-        $header_data['post_headers'] = $post_headers;
+        $this->render_data['headers']['post_headers'] = $post_headers;
         return $header_data;
     }
 

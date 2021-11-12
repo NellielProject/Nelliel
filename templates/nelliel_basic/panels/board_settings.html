@@ -643,6 +643,85 @@
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_report_recaptcha }}
 		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="5" data-i18n="">Public UI</th>
+			</tr>
+	{{# ui_hide_thread }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_hide_thread }}
+	{{# ui_show_thread }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_show_thread }}
+	{{# ui_hide_post }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_hide_post }}
+	{{# ui_show_post }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_show_post }}
+	{{# ui_hide_file }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_hide_file }}
+	{{# ui_show_file }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_show_file }}
+	{{# ui_cite_post }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_cite_post }}
+	{{# ui_reply_to_thread }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_reply_to_thread }}
+	{{# ui_more_file_info }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_more_file_info }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="5" data-i18n="">Moderator UI</th>
+			</tr>
+	{{# ui_mod_ban }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_ban }}
+	{{# ui_mod_delete }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_delete }}
+	{{# ui_mod_delete_by_ip }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_delete_by_ip }}
+	{{# ui_mod_global_delete_by_ip }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_global_delete_by_ip }}
+	{{# ui_mod_ban_and_delete }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_ban_and_delete }}
+	{{# ui_mod_lock }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_lock }}
+	{{# ui_mod_unlock }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_unlock }}
+	{{# ui_mod_sticky }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_sticky }}
+	{{# ui_mod_unsticky }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_unsticky }}
+	{{# ui_mod_sage }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_sage }}
+	{{# ui_mod_unsage }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_unsage }}
+	{{# ui_mod_cyclic }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_cyclic }}
+	{{# ui_mod_non_cyclic }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_non_cyclic }}
+	{{# ui_mod_edit_post }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_edit_post }}
+		</tbody>
 	</table>
 	<hr>
 	<a id="filetypes-selection"></a>

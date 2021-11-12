@@ -371,5 +371,35 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_post_recaptcha', '', '0', 'Use reCAPTCHA for new posts and threads', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_report_captcha', '', '0', 'Use CAPTCHA for making reports', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_report_recaptcha', '', '0', 'Use reCAPTCHA for making reports', '{"type":"checkbox"}']);
+
+        // Public UI
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_hide_thread', '', 'Hide Thread', 'Hide Thread', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_show_thread', '', 'Show Thread', 'Show Thread', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_hide_post', '', 'Hide Post', 'Hide Post', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_show_post', '', 'Show Post', 'Show Post', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_hide_file', '', 'Hide File', 'Hide File', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_show_file', '', 'Show File', 'Show File', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_cite_post', '', 'Cite', 'Cite', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_reply_to_thread', '', 'Reply', 'Reply', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_more_file_info', '', 'More Info', 'More Info', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_less_file_info', '', 'Less Info', 'Less Info', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_expand_thread', '', 'Expand', 'Expand', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_collapse_thread', '', 'Collapse', 'Collapse', '{"type":"text"}']);
+
+        // Moderator UI
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_ban', '', 'Ban', 'Ban', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_delete', '', 'Delete', 'Delete', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_delete_by_ip', '', 'Delete By IP', 'Delete By IP', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_global_delete_by_ip', '', 'Global Delete By IP', 'Global Delete By IP', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_ban_and_delete', '', 'Ban + Delete', 'Ban + Delete', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_lock', '', 'Lock', 'Lock', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unlock', '', 'Unlock', 'Unlock', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_sticky', '', 'Sticky', 'Sticky', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unsticky', '', 'Unsticky', 'Unsticky', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_sage', '', 'Sage', 'Sage', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unsage', '', 'Unsage', 'Unsage', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_cyclic', '', 'Cyclic', 'Cyclic', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_non_cyclic', '', 'Non-cyclic', 'Non-cyclic', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_edit_post', '', 'Edit', 'Edit', '{"type":"text"}']);
     }
 }

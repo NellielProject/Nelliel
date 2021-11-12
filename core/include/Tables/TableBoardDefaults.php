@@ -252,5 +252,35 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['use_post_recaptcha', '0', 0]);
         $this->insertDefaultRow(['use_report_captcha', '0', 0]);
         $this->insertDefaultRow(['use_report_recaptcha', '0', 0]);
+
+        // Public UI
+        $this->insertDefaultRow(['ui_hide_thread', 'Hide Thread', 0]);
+        $this->insertDefaultRow(['ui_show_thread', 'Show Thread', 0]);
+        $this->insertDefaultRow(['ui_hide_post', 'Hide Post', 0]);
+        $this->insertDefaultRow(['ui_show_post', 'Show Post', 0]);
+        $this->insertDefaultRow(['ui_hide_file', 'Hide File', 0]);
+        $this->insertDefaultRow(['ui_show_file', 'Show File', 0]);
+        $this->insertDefaultRow(['ui_cite_post', 'Cite', 0]);
+        $this->insertDefaultRow(['ui_reply_to_thread', 'Reply', 0]);
+        $this->insertDefaultRow(['ui_more_file_info', 'More Info', 0]);
+        $this->insertDefaultRow(['ui_less_file_info', 'Less Info', 0]);
+        $this->insertDefaultRow(['ui_expand_thread', 'Expand', 0]);
+        $this->insertDefaultRow(['ui_collapse_thread', 'Collapse', 0]);
+
+        // Moderator UI
+        $this->insertDefaultRow(['ui_mod_ban', 'Ban', 0]);
+        $this->insertDefaultRow(['ui_mod_delete', 'Delete', 0]);
+        $this->insertDefaultRow(['ui_mod_delete_by_ip', 'Delete By IP', 0]);
+        $this->insertDefaultRow(['ui_mod_global_delete_by_ip', 'Global Delete By IP', 0]);
+        $this->insertDefaultRow(['ui_mod_ban_and_delete', 'Ban + Delete', 0]);
+        $this->insertDefaultRow(['ui_mod_lock', 'Lock', 0]);
+        $this->insertDefaultRow(['ui_mod_unlock', 'Unlock', 0]);
+        $this->insertDefaultRow(['ui_mod_sticky', 'Sticky', 0]);
+        $this->insertDefaultRow(['ui_mod_unsticky', 'Unsticky', 0]);
+        $this->insertDefaultRow(['ui_mod_sage', 'Sage', 0]);
+        $this->insertDefaultRow(['ui_mod_unsage', 'Unsage', 0]);
+        $this->insertDefaultRow(['ui_mod_cyclic', 'Cyclic', 0]);
+        $this->insertDefaultRow(['ui_mod_non_cyclic', 'Non-cyclic', 0]);
+        $this->insertDefaultRow(['ui_mod_edit_post', 'Edit', 0]);
     }
 }
