@@ -109,7 +109,8 @@ class Setup
             echo _gettext(
                 'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions by default. It is also necessary to use the site settings control panel.');
             echo '</p>';
-            echo '<form accept-charset="utf-8" action="imgboard.php?route=/' . $site_domain->id() . '/account/register" method="post">';
+            echo '<form accept-charset="utf-8" action="imgboard.php?route=/' . $site_domain->id() .
+                '/account/register" method="post">';
             echo '
 <input type="hidden" name="create_owner" value="' . $install_id . '"';
             echo '
@@ -196,14 +197,17 @@ class Setup
     {
         $versions_table = new TableVersions($this->database, $this->sql_compatibility);
         $versions_table->createTable();
-        $icon_sets_table = new TableIconSets($this->database, $this->sql_compatibility);
-        $icon_sets_table->createTable();
-        $board_defaults_table = new TableBoardDefaults($this->database, $this->sql_compatibility);
-        $board_defaults_table->createTable();
-        $styles_table = new TableStyles($this->database, $this->sql_compatibility);
-        $styles_table->createTable();
+        // Settings table must exist before any config tables
         $settings_table = new TableSettings($this->database, $this->sql_compatibility);
         $settings_table->createTable();
+        $board_defaults_table = new TableBoardDefaults($this->database, $this->sql_compatibility);
+        $board_defaults_table->createTable();
+        $site_config_table = new TableSiteConfig($this->database, $this->sql_compatibility);
+        $site_config_table->createTable();
+        $icon_sets_table = new TableIconSets($this->database, $this->sql_compatibility);
+        $icon_sets_table->createTable();
+        $styles_table = new TableStyles($this->database, $this->sql_compatibility);
+        $styles_table->createTable();
         $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
         $embeds_table->createTable();
         $filetypes_table = new TableFiletypes($this->database, $this->sql_compatibility);
@@ -212,8 +216,6 @@ class Setup
         $news_table->createTable();
         $rate_limit_table = new TableRateLimit($this->database, $this->sql_compatibility);
         $rate_limit_table->createTable();
-        $site_config_table = new TableSiteConfig($this->database, $this->sql_compatibility);
-        $site_config_table->createTable();
         $templates_table = new TableTemplates($this->database, $this->sql_compatibility);
         $templates_table->createTable();
         $plugins_table = new TablePlugins($this->database, $this->sql_compatibility);
