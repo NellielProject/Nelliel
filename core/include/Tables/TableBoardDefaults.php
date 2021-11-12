@@ -277,8 +277,8 @@ class TableBoardDefaults extends Table
         $this->insertDefaultRow(['ui_mod_unlock', 'Unlock', 0]);
         $this->insertDefaultRow(['ui_mod_sticky', 'Sticky', 0]);
         $this->insertDefaultRow(['ui_mod_unsticky', 'Unsticky', 0]);
-        $this->insertDefaultRow(['ui_mod_sage', 'Sage', 0]);
-        $this->insertDefaultRow(['ui_mod_unsage', 'Unsage', 0]);
+        $this->insertDefaultRow(['ui_mod_permasage', 'Permasage', 0]);
+        $this->insertDefaultRow(['ui_mod_unpermasage', 'Unpermasage', 0]);
         $this->insertDefaultRow(['ui_mod_cyclic', 'Cyclic', 0]);
         $this->insertDefaultRow(['ui_mod_non_cyclic', 'Non-cyclic', 0]);
         $this->insertDefaultRow(['ui_mod_edit_post', 'Edit', 0]);

@@ -396,8 +396,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unlock', '', 'Unlock', 'Unlock', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_sticky', '', 'Sticky', 'Sticky', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unsticky', '', 'Unsticky', 'Unsticky', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_sage', '', 'Sage', 'Sage', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unsage', '', 'Unsage', 'Unsage', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_permasage', '', 'Permasage', 'Permasage', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unpermasage', '', 'Unpermasage', 'Unpermasage', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_cyclic', '', 'Cyclic', 'Cyclic', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_non_cyclic', '', 'Non-cyclic', 'Non-cyclic', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_edit_post', '', 'Edit', 'Edit', '{"type":"text"}']);

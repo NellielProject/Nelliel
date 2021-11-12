@@ -258,7 +258,7 @@ class Thread
         return $this->writeToDatabase();
     }
 
-    public function toggleSage(): bool
+    public function togglePermasage(): bool
     {
         $this->changeData('permasage', !$this->data('permasage'));
         return $this->writeToDatabase();
@@ -322,7 +322,7 @@ class Thread
     {
         $prepared = $this->database->prepare(
             'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-            '" WHERE "parent_thread" = ? AND "sage" = 0 ORDER BY "post_number" DESC LIMIT 1');
+            '" WHERE "parent_thread" = ? AND "permasage" = 0 ORDER BY "post_number" DESC LIMIT 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
         $post = new Post($content_id, $this->domain, $this);

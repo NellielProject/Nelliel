@@ -148,9 +148,9 @@ abstract class Output
             $this->render_data['mod_unsticky_label'] = $this->getUISetting('ui_mod_unsticky');
             $this->render_data['mod_can_sticky'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_status');
-            $this->render_data['mod_sage_label'] = $this->getUISetting('ui_mod_sage');
-            $this->render_data['mod_unsage_label'] = $this->getUISetting('ui_mod_unsage');
-            $this->render_data['mod_can_sage'] = $this->session->user()->checkPermission($this->domain,
+            $this->render_data['mod_permasage_label'] = $this->getUISetting('ui_mod_permasage');
+            $this->render_data['mod_unpermasage_label'] = $this->getUISetting('ui_mod_unpermasage');
+            $this->render_data['mod_can_permasage'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_status');
             $this->render_data['mod_cyclic_label'] = $this->getUISetting('ui_mod_cyclic');
             $this->render_data['mod_non_cyclic_label'] = $this->getUISetting('ui_mod_non_cyclic');

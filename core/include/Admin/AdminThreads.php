@@ -32,10 +32,8 @@ class AdminThreads extends Admin
         parent::dispatch($inputs);
 
         // TODO: Refine this whenever we get threads panel updated
-        foreach ($inputs['actions'] as $action)
-        {
-            switch ($action)
-            {
+        foreach ($inputs['actions'] as $action) {
+            switch ($action) {
                 case 'sticky':
                     $this->sticky();
                     break;
@@ -61,7 +59,7 @@ class AdminThreads extends Admin
                     $admin_bans->creator();
                     break;
 
-                case 'sage':
+                case 'permasage':
                     $this->permasage();
                     break;
 
@@ -84,26 +82,21 @@ class AdminThreads extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_threads_access');
 
-        if (isset($_GET['actions']) && $_GET['actions'] === 'expand-thread')
-        {
+        if (isset($_GET['actions']) && $_GET['actions'] === 'expand-thread') {
             $content_id = new ContentID($_GET['content-id']);
             $output_panel = new OutputPanelThreads($this->domain, false);
             $output_panel->render(['section' => 'expanded_thread', 'thread_id' => $content_id->threadID()], false);
-        }
-        else
-        {
+        } else {
             $output_panel = new OutputPanelThreads($this->domain, false);
             $output_panel->render(['section' => 'panel'], false);
         }
     }
 
     public function creator(): void
-    {
-    }
+    {}
 
     public function add(): void
-    {
-    }
+    {}
 
     public function editor(): void
     {
@@ -146,15 +139,14 @@ class AdminThreads extends Admin
         $this->verifyPermissions($this->domain, 'perm_post_type');
         $content_id = new ContentID($_GET['content-id']);
 
-        if ($content_id->isPost())
-        {
+        if ($content_id->isPost()) {
             $thread = $content_id->getInstanceFromID($this->domain)->convertToThread();
             $thread->toggleSticky();
-            $this->regenThread($this->domain, $thread->contentID()->threadID(), true);
+            $this->regenThread($this->domain, $thread->contentID()
+                ->threadID(), true);
         }
 
-        if ($content_id->isThread())
-        {
+        if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->toggleSticky();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
@@ -167,8 +159,7 @@ class AdminThreads extends Admin
         $this->verifyPermissions($this->domain, 'perm_post_status');
         $content_id = new ContentID($_GET['content-id']);
 
-        if ($content_id->isThread())
-        {
+        if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->toggleLock();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
@@ -181,9 +172,8 @@ class AdminThreads extends Admin
         $this->verifyPermissions($this->domain, 'perm_post_status');
         $content_id = new ContentID($_GET['content-id']);
 
-        if ($content_id->isThread())
-        {
-            $content_id->getInstanceFromID($this->domain)->toggleSage();
+        if ($content_id->isThread()) {
+            $content_id->getInstanceFromID($this->domain)->togglePermasage();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
 
@@ -195,8 +185,7 @@ class AdminThreads extends Admin
         $this->verifyPermissions($this->domain, 'perm_post_type');
         $content_id = new ContentID($_GET['content-id']);
 
-        if ($content_id->isThread())
-        {
+        if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->toggleCyclic();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
@@ -209,13 +198,11 @@ class AdminThreads extends Admin
         $regen = new Regen();
         $regen->threads($domain, true, [$thread_id]);
 
-        if ($this->site_domain->setting('overboard_active'))
-        {
+        if ($this->site_domain->setting('overboard_active')) {
             $regen->overboard($this->site_domain);
         }
 
-        if ($regen_index)
-        {
+        if ($regen_index) {
             $regen->index($domain);
         }
     }
@@ -239,21 +226,19 @@ class AdminThreads extends Admin
         $first_content_id = new ContentID($_GET['content-id']);
         $post_instance = $first_content_id->getInstanceFromID($this->domain);
         $prepared = $this->database->prepare(
-                'SELECT "post_number", "parent_thread" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "hashed_ip_address" = ?');
+            'SELECT "post_number", "parent_thread" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "hashed_ip_address" = ?');
         $prepared->bindValue(1, $post_instance->data('hashed_ip_address'), PDO::PARAM_STR);
         $post_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $thread_ids = array();
 
-        foreach ($post_ids as $id)
-        {
+        foreach ($post_ids as $id) {
             $content_id = new ContentID(ContentID::createIDString($id['parent_thread'], $id['post_number']));
             $content_id->getInstanceFromID($this->domain)->remove();
             $thread_ids[$content_id->threadID()] = true;
         }
 
-        foreach ($thread_ids as $thread_id => $value)
-        {
+        foreach ($thread_ids as $thread_id => $value) {
             $this->regenThread($this->domain, $thread_id, $value);
         }
     }
@@ -267,25 +252,22 @@ class AdminThreads extends Admin
         $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
 
-        foreach ($board_ids as $board_id)
-        {
+        foreach ($board_ids as $board_id) {
             $board_domain = new DomainBoard($board_id, $this->database);
             $prepared = $this->database->prepare(
-                    'SELECT "post_number", "parent_thread" FROM "' . $board_domain->reference('posts_table') .
-                    '" WHERE "hashed_ip_address" = ?');
+                'SELECT "post_number", "parent_thread" FROM "' . $board_domain->reference('posts_table') .
+                '" WHERE "hashed_ip_address" = ?');
             $prepared->bindValue(1, $hashed_ip, PDO::PARAM_STR);
             $post_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
             $thread_ids = array();
 
-            foreach ($post_ids as $id)
-            {
+            foreach ($post_ids as $id) {
                 $content_id = new ContentID(ContentID::createIDString($id['parent_thread'], $id['post_number']));
                 $content_id->getInstanceFromID($board_domain)->remove();
                 $thread_ids[$content_id->threadID()] = true;
             }
 
-            foreach ($thread_ids as $thread_id => $value)
-            {
+            foreach ($thread_ids as $thread_id => $value) {
                 $this->regenThread($board_domain, $thread_id, $value);
             }
         }
@@ -293,13 +275,11 @@ class AdminThreads extends Admin
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if ($this->session_user->checkPermission($domain, $perm))
-        {
+        if ($this->session_user->checkPermission($domain, $perm)) {
             return;
         }
 
-        switch ($perm)
-        {
+        switch ($perm) {
             case 'perm_threads_access':
                 nel_derp(410, _gettext('You cannot access the threads control panel.'));
                 break;
