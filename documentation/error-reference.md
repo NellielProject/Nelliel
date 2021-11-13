@@ -108,6 +108,7 @@ Error 221: Expired session. (Account/Session.php)
 Error 222: Inactive user. (Account/Session.php)  
 
 Error 224: Must be logged in. (Account/Session.php)  
+Error 225: Cannot view PM. (PrivateMessage.php)  
 
 Error 230: User does not exist. (Admin/AdminUsers.php)  
 Error 231: Role does not exist. (Admin/AdminRoles.php)  

@@ -13,7 +13,7 @@ class DomainGlobal extends Domain implements NellielCacheInterface
 
     public function __construct(NellielPDO $database)
     {
-        $this->id = Domain::GLOBAL;
+        $this->domain_id = Domain::GLOBAL;
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();

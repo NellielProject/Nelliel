@@ -7,7 +7,6 @@ use Nelliel\Tables\TablePrivateMessages;
 use PDO;
 use Nelliel\Account\Session;
 use Nelliel\Output\OutputPrivateMessages;
-
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class PrivateMessage
@@ -27,8 +26,7 @@ class PrivateMessage
         $this->table = new TablePrivateMessages($this->database, $this->sql_compatibility);
         $this->changeData('entry', $message_id);
 
-        if ($message_id > 0)
-        {
+        if ($message_id > 0) {
             $this->message_id = $message_id;
             $this->load();
         }
@@ -40,8 +38,7 @@ class PrivateMessage
         $prepared->bindValue(1, $this->id(), PDO::PARAM_INT);
         $data = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
-        if (is_array($data))
-        {
+        if (is_array($data)) {
             $this->data = $data;
         }
     }
@@ -53,7 +50,8 @@ class PrivateMessage
 
     public function collectFromPOST(): void
     {
-        $this->changeData('sender', $this->session->user()->id());
+        $this->changeData('sender', $this->session->user()
+            ->id());
         $this->changeData('recipient', $_POST['recipient'] ?? '');
         $this->changeData('message', $_POST['message'] ?? '');
     }
@@ -91,8 +89,8 @@ class PrivateMessage
     {
         $this->changeData('time_sent', time());
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_PRIVATE_MESSAGES_TABLE .
-                '" ("sender", "recipient", "message", "time_sent") VALUES (?, ?, ?, ?) ');
+            'INSERT INTO "' . NEL_PRIVATE_MESSAGES_TABLE .
+            '" ("sender", "recipient", "message", "time_sent") VALUES (?, ?, ?, ?) ');
         $prepared->bindValue(1, $this->data('sender'), PDO::PARAM_STR);
         $prepared->bindValue(2, $this->data('recipient'), PDO::PARAM_STR);
         $prepared->bindValue(3, $this->data('message'), PDO::PARAM_STR);
@@ -100,15 +98,14 @@ class PrivateMessage
         $this->database->executePrepared($prepared);
 
         $prepared = $this->database->prepare(
-                'SELECT "entry" FROM "' . NEL_PRIVATE_MESSAGES_TABLE .
-                '" WHERE "sender" = ? AND "recipient" = ? AND "time_sent" = ?');
+            'SELECT "entry" FROM "' . NEL_PRIVATE_MESSAGES_TABLE .
+            '" WHERE "sender" = ? AND "recipient" = ? AND "time_sent" = ?');
         $prepared->bindValue(1, $this->data('sender'), PDO::PARAM_STR);
         $prepared->bindValue(2, $this->data('recipient'), PDO::PARAM_STR);
         $prepared->bindValue(3, $this->data('time_sent'), PDO::PARAM_INT);
         $message_id = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
-        if ($message_id !== false)
-        {
+        if ($message_id !== false) {
             $this->message_id = $message_id;
         }
     }
@@ -116,7 +113,7 @@ class PrivateMessage
     public function markRead(): void
     {
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_PRIVATE_MESSAGES_TABLE . '" SET "message_read" = 1 WHERE "entry" = ?');
+            'UPDATE "' . NEL_PRIVATE_MESSAGES_TABLE . '" SET "message_read" = 1 WHERE "entry" = ?');
         $prepared->bindValue(1, $this->message_id, PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
     }
@@ -126,5 +123,13 @@ class PrivateMessage
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "entry" = ?');
         $prepared->bindValue(1, $this->message_id, PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
+    }
+
+    public function canAccess()
+    {
+        if ($this->message_id > 0 && $this->data('sender') !== $this->session->user()->id() &&
+            $this->data('recipient') !== $this->session->user()->id()) {
+            nel_derp(225, _gettext('You are not allowed to view that message.'));
+        }
     }
 }

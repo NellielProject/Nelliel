@@ -66,6 +66,7 @@ class DispatchAccount extends Dispatch
                 }
 
                 $private_message = new PrivateMessage($this->domain->database(), $this->session, intval($inputs['message_id'] ?? 0));
+                $private_message->canAccess();
 
                 if ($inputs['method'] === 'GET') {
                     switch ($inputs['action']) {
