@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
 use Nelliel\NellielPDO;
 use PDOStatement;
-
-defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class SQLHelpers
 {
@@ -26,13 +26,11 @@ class SQLHelpers
         $multiple = $column_count > 1;
         $limit = $column_count - 1;
 
-        for ($i = 0; $i <= $limit; $i ++)
-        {
+        for ($i = 0; $i <= $limit; $i ++) {
             $columns .= '"' . $column_list[$i] . '"';
             $values .= ':' . $column_list[$i];
 
-            if ($multiple && $i < $limit)
-            {
+            if ($multiple && $i < $limit) {
                 $columns .= ', ';
                 $values .= ', ';
             }
@@ -51,12 +49,10 @@ class SQLHelpers
         $multiple = $column_count > 1;
         $limit = $column_count - 1;
 
-        for ($i = 0; $i < $column_count; $i ++)
-        {
+        for ($i = 0; $i < $column_count; $i ++) {
             $columns .= '"' . $column_list[$i] . '" =  :' . $column_list[$i];
 
-            if ($multiple && $i < $limit)
-            {
+            if ($multiple && $i < $limit) {
                 $columns .= ', ';
             }
         }
@@ -65,12 +61,10 @@ class SQLHelpers
         $multiple = $where_count > 1;
         $limit = $where_count - 1;
 
-        for ($i = 0; $i < $where_count; $i ++)
-        {
+        for ($i = 0; $i < $where_count; $i ++) {
             $where .= '"' . $where_columns[$i] . '" = :' . $where_keys[$i];
 
-            if ($multiple && $i < $limit)
-            {
+            if ($multiple && $i < $limit) {
                 $where .= ' AND ';
             }
         }
@@ -83,14 +77,10 @@ class SQLHelpers
     {
         $count = count($keys);
 
-        for ($i = 0; $i < $count; $i ++)
-        {
-            if (!is_null($pdo_types))
-            {
+        for ($i = 0; $i < $count; $i ++) {
+            if (!is_null($pdo_types)) {
                 $prepared->bindValue(':' . $keys[$i], $values[$i], $pdo_types[$i]);
-            }
-            else
-            {
+            } else {
                 $prepared->bindValue(':' . $keys[$i], $values[$i]);
             }
         }

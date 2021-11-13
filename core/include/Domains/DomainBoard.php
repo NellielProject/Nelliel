@@ -8,8 +8,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\FileTypes;
 use Nelliel\NellielCacheInterface;
 use Nelliel\NellielPDO;
-use PDO;
 use Nelliel\Content\ContentID;
+use PDO;
 
 class DomainBoard extends Domain implements NellielCacheInterface
 {
@@ -24,19 +24,19 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
-        $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))->getPath());
+        $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))
+            ->getPath());
     }
 
     protected function loadSettings(): void
     {
         $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
-                'domains/' . $this->domain_id);
+            'domains/' . $this->domain_id);
 
-        if (empty($settings))
-        {
+        if (empty($settings)) {
             $settings = $this->loadSettingsFromDatabase();
             $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
-                    'domains/' . $this->domain_id);
+                'domains/' . $this->domain_id);
         }
 
         $this->settings = $settings;
@@ -63,7 +63,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['banners_directory'] = $this->domain_id;
         $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_directory'] . '/';
         $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_directory']) .
-                '/';
+            '/';
         $new_reference['board_path'] = $board_path;
         $new_reference['board_web_path'] = $board_web_path;
         $new_reference['archive_path'] = $board_path . $new_reference['archive_directory'] . '/';
@@ -72,18 +72,18 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['src_web_path'] = $board_web_path . rawurlencode($new_reference['source_directory']) . '/';
         $new_reference['archive_src_path'] = $new_reference['archive_path'] . $new_reference['source_directory'] . '/';
         $new_reference['archive_src_web_path'] = $new_reference['archive_web_path'] .
-                rawurlencode($new_reference['source_directory']) . '/';
+            rawurlencode($new_reference['source_directory']) . '/';
         $new_reference['preview_path'] = $board_path . $new_reference['preview_directory'] . '/';
         $new_reference['preview_web_path'] = $board_web_path . rawurlencode($new_reference['preview_directory']) . '/';
         $new_reference['archive_preview_path'] = $new_reference['archive_path'] . $new_reference['preview_directory'] .
-                '/';
+            '/';
         $new_reference['archive_preview_web_path'] = $new_reference['archive_web_path'] .
-                rawurlencode($new_reference['preview_directory']) . '/';
+            rawurlencode($new_reference['preview_directory']) . '/';
         $new_reference['page_path'] = $board_path . $new_reference['page_directory'] . '/';
         $new_reference['page_web_path'] = $board_web_path . rawurlencode($new_reference['page_directory']) . '/';
         $new_reference['archive_page_path'] = $new_reference['archive_path'] . $new_reference['page_directory'] . '/';
         $new_reference['archive_page_web_path'] = $new_reference['archive_web_path'] .
-                rawurlencode($new_reference['page_directory']) . '/';
+            rawurlencode($new_reference['page_directory']) . '/';
         $new_reference['threads_table'] = $new_reference['db_prefix'] . '_threads';
         $new_reference['posts_table'] = $new_reference['db_prefix'] . '_posts';
         $new_reference['uploads_table'] = $new_reference['db_prefix'] . '_uploads';
@@ -98,13 +98,13 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $settings = array();
 
         $query = 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '" ON "' .
-                NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
-                NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "setting_category" = ?';
+            NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
+            NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "setting_category" = ?';
         $prepared = $this->database->prepare($query);
-        $config_list = $this->database->executePreparedFetchAll($prepared, [$this->domain_id, 'board'], PDO::FETCH_ASSOC);
+        $config_list = $this->database->executePreparedFetchAll($prepared, [$this->domain_id, 'board'],
+            PDO::FETCH_ASSOC);
 
-        foreach ($config_list as $config)
-        {
+        foreach ($config_list as $config) {
             $config['setting_value'] = nel_typecast($config['setting_value'], $config['data_type']);
             $settings[$config['setting_name']] = $config['setting_value'];
         }
@@ -121,8 +121,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function regenCache()
     {
-        if (NEL_USE_FILE_CACHE)
-        {
+        if (NEL_USE_FILE_CACHE) {
             $this->cacheSettings();
             $filetypes = new FileTypes($this->database());
             $filetypes->regenCache($this->domain_id);
@@ -131,8 +130,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function deleteCache()
     {
-        if (NEL_USE_FILE_CACHE)
-        {
+        if (NEL_USE_FILE_CACHE) {
             $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . 'domains/' . $this->domain_id);
         }
     }
@@ -141,20 +139,16 @@ class DomainBoard extends Domain implements NellielCacheInterface
     {
         $active_threads = array();
 
-        if ($index_sort)
-        {
+        if ($index_sort) {
             $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') .
-                    '" WHERE "old" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
-        }
-        else
-        {
+                '" WHERE "old" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
+        } else {
             $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') . '" WHERE "old" = 0';
         }
 
         $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
 
-        foreach ($thread_list as $thread)
-        {
+        foreach ($thread_list as $thread) {
             $content_id = new ContentID(ContentID::createIDString(intval($thread)));
             $active_threads[] = $content_id->getInstanceFromID($this);
         }

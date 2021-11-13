@@ -159,7 +159,7 @@ abstract class Domain implements NellielCacheInterface
 
     public static function validID(string $domain_id): bool
     {
-        $database = nel_database();
+        $database = nel_database('core');
         $prepared = $database->prepare('SELECT 1 FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');
         $prepared->bindValue(1, $domain_id, PDO::PARAM_STR);
         $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);

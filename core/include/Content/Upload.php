@@ -88,6 +88,7 @@ class Upload
 
         $filtered_data = $this->main_table->filterColumns($this->content_data);
         $filtered_data['moar'] = $this->getMoar()->getJSON();
+        $pdo_types = $this->main_table->getPDOTypes($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
 
@@ -98,14 +99,14 @@ class Upload
             $where_values = [$this->content_id->postID(), $this->content_id->orderID()];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
                     $where_columns, $where_keys);
-            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
+            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
             $this->database->executePrepared($prepared);
         }
         else
         {
             $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
-            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values);
+            $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->database->executePrepared($prepared);
         }
 

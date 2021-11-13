@@ -8,27 +8,25 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputBlotter;
 use Nelliel\Output\OutputCatalog;
+use Nelliel\Output\OutputHomePage;
 use Nelliel\Output\OutputIndex;
 use Nelliel\Output\OutputNews;
 use Nelliel\Output\OutputOverboard;
 use Nelliel\Output\OutputThread;
 use PDO;
-use Nelliel\Output\OutputHomePage;
 
 class Regen
 {
 
     function __construct()
-    {
-    }
+    {}
 
     public function threads(Domain $domain, bool $write, array $ids)
     {
         $threads = count($ids);
         $i = 0;
 
-        while ($i < $threads)
-        {
+        while ($i < $threads) {
             $output_thread = new OutputThread($domain, $write);
             $output_thread->render(['thread_id' => $ids[$i]], false);
             $i ++;
@@ -43,8 +41,7 @@ class Regen
 
     public function homePage(Domain $domain)
     {
-        if ($domain->setting('generate_home_page'))
-        {
+        if ($domain->setting('generate_home_page')) {
             $output_home_page = new OutputHomePage($domain, true);
             $output_home_page->render(array(), false);
         }
@@ -68,13 +65,11 @@ class Regen
     {
         $output_overboard = new OutputOverboard($domain, true);
 
-        if ($domain->setting('overboard_active'))
-        {
+        if ($domain->setting('overboard_active')) {
             $output_overboard->render([], false);
         }
 
-        if ($domain->setting('sfw_overboard_active'))
-        {
+        if ($domain->setting('sfw_overboard_active')) {
             $output_overboard->render(['sfw' => true], false);
         }
     }
@@ -83,19 +78,16 @@ class Regen
     {
         $domain = nel_site_domain();
         $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
-                PDO::FETCH_COLUMN);
+            PDO::FETCH_COLUMN);
 
-        foreach ($board_ids as $id)
-        {
+        foreach ($board_ids as $id) {
             $board_domain = Domain::getDomainFromID($id, $domain->database());
 
-            if ($cache)
-            {
+            if ($cache) {
                 $board_domain->regenCache();
             }
 
-            if ($pages)
-            {
+            if ($pages) {
                 $this->allBoardPages($board_domain);
             }
         }
@@ -111,7 +103,7 @@ class Regen
     public function allBoardPages(Domain $domain)
     {
         $result = $domain->database()->query(
-                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
+            'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $domain->database()->query('UPDATE "' . $domain->reference('posts_table') . '" SET regen_cache = 1');
         $this->threads($domain, true, $ids);
@@ -121,7 +113,7 @@ class Regen
     public function postCache(Domain $domain)
     {
         $result = $domain->database()->query(
-                'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
+            'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $this->threads($domain, true, $ids);
         $this->index($domain);

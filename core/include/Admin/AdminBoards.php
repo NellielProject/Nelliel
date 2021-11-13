@@ -213,25 +213,25 @@ class AdminBoards extends Admin
             return;
         }
 
-        if ($this->database->tableExists($domain->reference('uploads_table'), NEL_SQLTYPE)) {
+        if ($this->database->tableExists($domain->reference('uploads_table'))) {
             $this->database->query('DROP TABLE "' . $domain->reference('uploads_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('uploads_table')]);
         }
 
-        if ($this->database->tableExists($domain->reference('posts_table'), NEL_SQLTYPE)) {
+        if ($this->database->tableExists($domain->reference('posts_table'))) {
             $this->database->query('DROP TABLE "' . $domain->reference('posts_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('posts_table')]);
         }
 
-        if ($this->database->tableExists($domain->reference('threads_table'), NEL_SQLTYPE)) {
+        if ($this->database->tableExists($domain->reference('threads_table'))) {
             $this->database->query('DROP TABLE "' . $domain->reference('threads_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('threads_table')]);
         }
 
-        if ($this->database->tableExists($domain->reference('archives_table'), NEL_SQLTYPE)) {
+        if ($this->database->tableExists($domain->reference('archives_table'))) {
             $this->database->query('DROP TABLE "' . $domain->reference('archives_table') . '"');
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_VERSIONS_TABLE . '" WHERE "id" = ?');
             $this->database->executePrepared($prepared, [$domain->reference('archives_table')]);

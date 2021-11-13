@@ -32,76 +32,76 @@ $base_config['secure_session_only'] = false;
 
 // Database type
 // Currently supported types: MYSQL, MARIADB, POSTGRESQL, SQLITE
-$db_config['sqltype'] = 'MYSQL';
+$db_config['core']['sqltype'] = 'MYSQL';
 
 //
 // Configuration for MySQL
 //
 
 // Name of database
-$db_config['mysql_db'] = '';
+$db_config['core']['mysql']['database'] = '';
 
 // MySQL Server address
-$db_config['mysql_host'] = 'localhost';
+$db_config['core']['mysql']['host'] = 'localhost';
 
 // MySQL server port. Default is 3306
-$db_config['mysql_port'] = '3306';
+$db_config['core']['mysql']['port'] = '3306';
 
 // Name of database user
-$db_config['mysql_user'] = '';
+$db_config['core']['mysql']['user'] = '';
 
 // Password of database user
-$db_config['mysql_pass'] = '';
+$db_config['core']['mysql']['password'] = '';
 
 // The character encoding to use.
-$db_config['mysql_encoding'] = 'utf8mb4';
+$db_config['core']['mysql']['encoding'] = 'utf8mb4';
 
 //
 // Configuration for MariaDB
 //
 
 // Name of database
-$db_config['mariadb_db'] = '';
+$db_config['core']['mariadb']['database'] = '';
 
 // MySQL Server address
-$db_config['mariadb_host'] = 'localhost';
+$db_config['core']['mariadb']['host'] = 'localhost';
 
 // MySQL server port. Default is 3306
-$db_config['mariadb_port'] = '3306';
+$db_config['core']['mariadb']['port'] = '3306';
 
 // Name of database user
-$db_config['mariadb_user'] = '';
+$db_config['core']['mariadb']['user'] = '';
 
 // Password of database user
-$db_config['mariadb_pass'] = '';
+$db_config['core']['mariadb']['password'] = '';
 
 // The character encoding to use.
-$db_config['mariadb_encoding'] = 'utf8mb4';
+$db_config['core']['mariadb']['encoding'] = 'utf8mb4';
 
 //
 // Configuration for PostgreSQL
 //
 
 // Name of database
-$db_config['postgresql_db'] = '';
+$db_config['core']['postgresql']['database'] = '';
 
 // PostgreSQL Server address
-$db_config['postgresql_host'] = 'localhost';
+$db_config['core']['postgresql']['host'] = 'localhost';
 
 // PostgreSQL server port. Default is 5432
-$db_config['postgresql_port'] = '5432';
+$db_config['core']['postgresql']['port'] = '5432';
 
 // Name of database user
-$db_config['postgresql_user'] = '';
+$db_config['core']['postgresql']['user'] = '';
 
 // Password of database user
-$db_config['postgresql_password'] = '';
+$db_config['core']['postgresql']['password'] = '';
 
 // Which schema to use. Default is 'public'
-$db_config['postgresql_schema'] = 'public';
+$db_config['core']['postgresql']['schema'] = 'public';
 
 // The character encoding to use.
-$db_config['postgresql_encoding'] = 'UTF-8';
+$db_config['core']['postgresql']['encoding'] = 'UTF-8';
 
 //
 // Configuration for SQLite
@@ -112,13 +112,13 @@ $db_config['postgresql_encoding'] = 'UTF-8';
 // If this is not possible on your host, do not use SQLite for your database!
 
 // Filename of SQLite database
-$db_config['sqlite_db_name'] = 'nelliel.sqlite';
+$db_config['core']['sqlite']['file_name'] = 'nelliel.sqlite';
 
-// Path where the database is to be located. Defaults to the core directory.
-$db_config['sqlite_db_path'] = '';
+// Path where the database is to be located. Defaults to the core directory if empty.
+$db_config['core']['sqlite']['path'] = '';
 
 // The character encoding to use. Should be fine as-is
-$db_config['sqlite_encoding'] = 'UTF-8';
+$db_config['core']['sqlite']['encoding'] = 'UTF-8';
 
 //
 // === Technical Settings ===

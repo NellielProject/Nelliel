@@ -40,7 +40,7 @@ class Preparation
             require_once NEL_INCLUDE_PATH . 'wat/blank.php';
             nel_tpilb();
         }
-        $dnsbl = new DNSBL(nel_database());
+        $dnsbl = new DNSBL(nel_database('core'));
         $dnsbl->checkIP(nel_request_ip_address());
 
         if (isset($_GET['route'])) {
@@ -71,19 +71,19 @@ class Preparation
         // Add more options here when we implement further domain types
         if (nel_true_empty($inputs['domain_id'])) {
             if (!nel_true_empty($inputs['board_id']) && $inputs['board_id'] !== Domain::SITE) {
-                $domain = new DomainBoard($inputs['board_id'], nel_database());
+                $domain = new DomainBoard($inputs['board_id'], nel_database('core'));
             } else {
-                $domain = new DomainSite(nel_database());
+                $domain = new DomainSite(nel_database('core'));
             }
         } else {
-            $domain = new DomainSite(nel_database());
+            $domain = new DomainSite(nel_database('core'));
         }
 
         if ($inputs['module'] === 'new-post') {
-            $snacks = new Snacks($domain, new BansAccess(nel_database()));
+            $snacks = new Snacks($domain, new BansAccess(nel_database('core')));
             $snacks->applyBan();
             // $snacks->checkHoneypot();
-            $dnsbl = new DNSBL(nel_database());
+            $dnsbl = new DNSBL(nel_database('core'));
             $dnsbl->checkIP(nel_request_ip_address());
         }
 

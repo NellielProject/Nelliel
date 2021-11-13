@@ -158,7 +158,9 @@ class Setup
 
     public function checkDBEngine()
     {
-        if ((NEL_SQLTYPE === 'MYSQL' || NEL_SQLTYPE === 'MARIADB') && !$this->checkForInnoDB()) {
+        $config = $this->database->config();
+
+        if (($config['sqltype'] === 'MYSQL' || $config['sqltype'] === 'MARIADB') && !$this->checkForInnoDB()) {
             nel_derp(102,
                 _gettext('InnoDB engine is required for MySQL or MariaDB support but that engine is not available.'));
         } else {
@@ -285,7 +287,7 @@ class Setup
 
     public function createBoardTables(string $board_id, string $db_prefix)
     {
-        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
+        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database('core'));
 
         $archives_table = new TableThreadArchives($this->database, $this->sql_compatibility);
         $archives_table->tableName($domain->reference('archives_table'));
@@ -306,7 +308,7 @@ class Setup
 
     public function createBoardDirectories(string $board_id)
     {
-        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database());
+        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database('core'));
         $this->file_handler->createDirectory($domain->reference('src_path'), NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory($domain->reference('preview_path'), NEL_DIRECTORY_PERM, true);
         $this->file_handler->createDirectory($domain->reference('page_path'), NEL_DIRECTORY_PERM, true);

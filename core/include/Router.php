@@ -95,7 +95,7 @@ class Router
 
     public function dispatch(): bool
     {
-        $authorization = new Authorization(nel_database());
+        $authorization = new Authorization(nel_database('core'));
         $session = new Session();
         $routeInfo = $this->dispatcher->dispatch($_SERVER['REQUEST_METHOD'], $this->uri);
 
@@ -109,7 +109,7 @@ class Router
             case Dispatcher::FOUND:
                 $inputs = $routeInfo[2];
                 $inputs['method'] = $_SERVER['REQUEST_METHOD'];
-                $domain = Domain::getDomainFromID($inputs['domain_id'], nel_database());
+                $domain = Domain::getDomainFromID($inputs['domain_id'], nel_database('core'));
                 $inputs['module'] = $inputs['module'] ?? '';
                 $inputs['section'] = $inputs['section'] ?? '';
                 $inputs['action'] = $inputs['action'] ?? '';

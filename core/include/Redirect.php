@@ -44,7 +44,7 @@ class Redirect
         {
             if (self::$url === '')
             {
-                $site_domain = new DomainSite(nel_database());
+                $site_domain = new DomainSite(nel_database('core'));
                 self::$url = $site_domain->reference('home_page');
             }
 

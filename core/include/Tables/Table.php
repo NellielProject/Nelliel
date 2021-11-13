@@ -120,7 +120,7 @@ abstract class Table
         $missing_columns = array();
 
         foreach ($this->columns as $column) {
-            if (!$this->database->columnExists($this->table_name, $column, NEL_SQLTYPE)) {
+            if (!$this->database->columnExists($this->table_name, $column)) {
                 $missing_columns[] = $column;
             }
         }
@@ -130,7 +130,7 @@ abstract class Table
 
     public function checkAndRepair()
     {
-        if (!$this->database->tableExists($this->table_name, NEL_SQLTYPE)) {
+        if (!$this->database->tableExists($this->table_name)) {
             $this->createTable();
             $this->insertDefaults();
             return true;
@@ -181,7 +181,7 @@ abstract class Table
 
     public function createTableQuery($schema, $table_name)
     {
-        if ($this->database->tableExists($table_name, NEL_SQLTYPE)) {
+        if ($this->database->tableExists($table_name)) {
             return false;
         }
 
@@ -200,6 +200,20 @@ abstract class Table
     public function columnTypes(): array
     {
         return $this->column_types;
+    }
+
+    public function getPDOTypes(array $data): array
+    {
+        $keys = array_keys($data);
+        $types = array();
+
+        foreach ($keys as $key) {
+            if (isset($this->column_types[$key])) {
+                $types[] = $this->column_types[$key]['pdo_type'];
+            }
+        }
+
+        return $types;
     }
 
     public function filterColumns(array $data): array

@@ -57,11 +57,11 @@ function nel_derp(int $error_id, string $error_message, array $error_data = arra
 
     if(isset($error_data['board_id']) && $error_data['board_id'] !== Domain::SITE)
     {
-        $domain = new \Nelliel\Domains\DomainBoard($error_data['board_id'], nel_database());
+        $domain = new \Nelliel\Domains\DomainBoard($error_data['board_id'], nel_database('core'));
     }
     else
     {
-        $domain = new \Nelliel\Domains\DomainSite(nel_database());
+        $domain = new \Nelliel\Domains\DomainSite(nel_database('core'));
     }
 
     $output_derp = new \Nelliel\Output\OutputDerp($domain, false);

@@ -8,43 +8,35 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 class SQLCompatibility
 {
     private $database;
+    private $sqltype;
 
     function __construct($database)
     {
         $this->database = $database;
+        $this->sqltype = $this->database->config()['sqltype'];
     }
 
     public function autoincrementColumn($int_column)
     {
         $auto = '';
 
-        if (NEL_SQLTYPE === 'MYSQL')
-        {
+        if ($this->sqltype === 'MYSQL') {
             $auto = 'AUTO_INCREMENT';
-        }
-        else if (NEL_SQLTYPE === 'MARIADB')
-        {
+        } else if ($this->sqltype === 'MARIADB') {
             $auto = 'AUTO_INCREMENT';
-        }
-        else if (NEL_SQLTYPE === 'POSTGRESQL')
-        {
-            if ($int_column === 'SMALLINT')
-            {
+        } else if ($this->sqltype === 'POSTGRESQL') {
+            if ($int_column === 'SMALLINT') {
                 $int_column = 'SMALLSERIAL';
             }
 
-            if ($int_column === 'INTEGER')
-            {
+            if ($int_column === 'INTEGER') {
                 $int_column = 'SERIAL';
             }
 
-            if ($int_column === 'BIGINT')
-            {
+            if ($int_column === 'BIGINT') {
                 $int_column = 'BIGSERIAL';
             }
-        }
-        else if (NEL_SQLTYPE === 'SQLITE')
-        {
+        } else if ($this->sqltype === 'SQLITE') {
             $auto = 'AUTOINCREMENT';
         }
 
@@ -53,47 +45,28 @@ class SQLCompatibility
 
     public function sqlAlternatives($datatype, $length)
     {
-        if (NEL_SQLTYPE === 'MYSQL')
-        {
-            if ($datatype === "BINARY")
-            {
+        if ($this->sqltype === 'MYSQL') {
+            if ($datatype === "BINARY") {
                 return 'BINARY(' . $length . ')';
-            }
-            else if ($datatype === "VARBINARY")
-            {
+            } else if ($datatype === "VARBINARY") {
                 return 'VARBINARY(' . $length . ')';
             }
-        }
-        else if (NEL_SQLTYPE === 'MARIADB')
-        {
-            if ($datatype === "BINARY")
-            {
+        } else if ($this->sqltype === 'MARIADB') {
+            if ($datatype === "BINARY") {
                 return 'BINARY(' . $length . ')';
-            }
-            else if ($datatype === "VARBINARY")
-            {
+            } else if ($datatype === "VARBINARY") {
                 return 'VARBINARY(' . $length . ')';
             }
-        }
-        else if (NEL_SQLTYPE === 'POSTGRESQL')
-        {
-            if ($datatype === "BINARY")
-            {
+        } else if ($this->sqltype === 'POSTGRESQL') {
+            if ($datatype === "BINARY") {
+                return 'BYTEA';
+            } else if ($datatype === "VARBINARY") {
                 return 'BYTEA';
             }
-            else if ($datatype === "VARBINARY")
-            {
-                return 'BYTEA';
-            }
-        }
-        else if (NEL_SQLTYPE === 'SQLITE')
-        {
-            if ($datatype === "BINARY")
-            {
+        } else if ($this->sqltype === 'SQLITE') {
+            if ($datatype === "BINARY") {
                 return 'BLOB';
-            }
-            else if ($datatype === "VARBINARY")
-            {
+            } else if ($datatype === "VARBINARY") {
                 return 'BLOB';
             }
         }
@@ -103,13 +76,10 @@ class SQLCompatibility
     {
         $options = '';
 
-        if (NEL_SQLTYPE === 'MYSQL')
-        {
+        if ($this->sqltype === 'MYSQL') {
             $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
             $options .= ' ENGINE = InnoDB';
-        }
-        else if (NEL_SQLTYPE === 'MARIADB')
-        {
+        } else if ($this->sqltype === 'MARIADB') {
             $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
             $options .= ' ENGINE = InnoDB';
         }
@@ -119,26 +89,9 @@ class SQLCompatibility
 
     public function limitOffset($limit, $offset)
     {
-        if (NEL_SQLTYPE === 'MYSQL' || NEL_SQLTYPE === 'SQLITE' || NEL_SQLTYPE === 'MARIADB' ||
-                NEL_SQLTYPE === 'POSTGRESQL')
-        {
+        if ($this->sqltype === 'MYSQL' || $this->sqltype === 'SQLITE' || $this->sqltype === 'MARIADB' ||
+            $this->sqltype === 'POSTGRESQL') {
             return 'LIMIT ' . $limit . ' OFFSET ' . $offset;
-        }
-    }
-
-    public function return(string $sqltype): string
-    {
-        if ($sqltype === 'MYSQL' || $sqltype === 'MARIADB')
-        {
-            return 'RETURN';
-        }
-        else if ($sqltype === 'POSTGRESQL' || $sqltype === 'SQLITE')
-        {
-            return 'RETURNING';
-        }
-        else
-        {
-            return 'RETURN';
         }
     }
 }

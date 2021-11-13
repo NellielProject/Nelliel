@@ -3,7 +3,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 function nel_clean_exit()
 {
-    $authorization = new \Nelliel\Auth\Authorization(nel_database());
+    $authorization = new \Nelliel\Auth\Authorization(nel_database('core'));
     $authorization->saveUsers();
     $authorization->saveRoles();
     $redirect = new \Nelliel\Redirect();
