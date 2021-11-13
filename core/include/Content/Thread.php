@@ -156,7 +156,7 @@ class Thread
     public function verifyModifyPerms()
     {
         $post = new Post($this->content_id, $this->domain);
-        $post->content_id->changePostID($this->firstPost()
+        $post->contentID()->changePostID($this->firstPost()
             ->contentID()
             ->postID());
         return $post->verifyModifyPerms();

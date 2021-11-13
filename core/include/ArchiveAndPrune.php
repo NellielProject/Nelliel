@@ -24,8 +24,11 @@ class ArchiveAndPrune
 
     public function updateThreads()
     {
-        if ($this->domain->setting('old_threads') === 'NOTHING')
-        {
+        $early404 = $this->domain->setting('enable_early404');
+        $early404_replies = $this->domain->setting('early404_replies_threshold');
+        $early404_page = $this->domain->setting('early404_page_threshold');
+
+        if ($this->domain->setting('old_threads') === 'NOTHING' && !$early404) {
             return;
         }
 
@@ -37,55 +40,66 @@ class ArchiveAndPrune
         $archive = $this->domain->setting('old_threads') === 'ARCHIVE';
         $prune = $this->domain->setting('old_threads') === 'PRUNE';
         $thread_list = $this->getFullThreadList();
+        $page = 1;
+        $page_size = $this->domain->setting('threads_per_page');
+        $threads_on_page = 0;
 
-        foreach ($thread_list as $thread)
-        {
+        foreach ($thread_list as $thread) {
             $content_id = new ContentID();
             $content_id->changeThreadID($thread['thread_id']);
 
+            if ($thread['preserve'] != 1 && $early404 && $page > $early404_page &&
+                $thread['post_count'] - 1 < $early404_replies) {
+                $thread = $content_id->getInstanceFromID($this->domain);
+                $thread->remove(true);
+                continue;
+            }
+
             if ($line <= $last_active) // Thread is within active range
             {
-                if ($thread['old'] == 1)
-                {
+                if ($thread['old'] == 1) {
                     $thread = $content_id->getInstanceFromID($this->domain);
                     $thread->changeData('old', false);
                     $thread->writeToDatabase();
                 }
-            }
-            else if ($line <= $last_buffer) // Thread is within buffer range
+            } else if ($line <= $last_buffer) // Thread is within buffer range
             {
-                if ($thread['old'] == 0)
-                {
+                if ($thread['old'] == 0) {
                     $thread = $content_id->getInstanceFromID($this->domain);
                     $thread->changeData('old', true);
                     $thread->writeToDatabase();
                 }
-            }
-            else if ($line <= $last_archive) // Thread is past buffer range
+            } else if ($line <= $last_archive) // Thread is past buffer range
             {
-                if ($archive)
-                {
+                if ($archive) {
                     $thread = $content_id->getInstanceFromID($this->domain);
                     $thread->archive(false);
+                    continue;
                 }
-            }
-            else // Thread is beyond automatic archive range
+            } else // Thread is beyond automatic archive range
             {
-                if ($prune && $archive_prune)
-                {
+                if ($prune && $archive_prune) {
                     $thread = $content_id->getInstanceFromID($this->domain);
-                    $thread->remove();
+                    $thread->remove(true);
+                    continue;
                 }
             }
 
+            $threads_on_page ++;
+
+            if ($threads_on_page === $page_size) {
+                $page ++;
+                $threads_on_page = 0;
+            }
             $line ++;
         }
     }
 
     private function getFullThreadList()
     {
-        $query = 'SELECT "thread_id", "old" FROM "' . $this->domain->reference('threads_table') .
-                '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
+        $query = 'SELECT "thread_id", "post_count", "old", "preserve" FROM "' .
+            $this->domain->reference('threads_table') .
+            '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
         $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
         return $thread_list;
     }

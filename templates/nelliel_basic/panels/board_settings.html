@@ -650,6 +650,15 @@
 	{{# use_report_recaptcha }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_report_recaptcha }}
+	{{# enable_early404 }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_early404 }}
+	{{# early404_replies_threshold }}
+			{{> panels/pieces/settings/number }}
+	{{/ early404_replies_threshold }}
+	{{# early404_page_threshold }}
+			{{> panels/pieces/settings/number }}
+	{{/ early404_page_threshold }}
 		</tbody>
 		<tbody>
 			<tr>
