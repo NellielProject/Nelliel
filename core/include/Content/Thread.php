@@ -120,7 +120,19 @@ class Thread
             }
 
             if ($this->domain->reference('locked')) {
-                nel_derp(63, _gettext('Cannot remove thread. Board is locked.'));
+                nel_derp(63, _gettext('Cannot delete thread. Board is locked.'));
+            }
+
+            if ($this->domain->setting('thread_no_delete_replies') > 0 &&
+                $this->data('post_count') - 1 >= $this->domain->setting('thread_no_delete_replies')) {
+                nel_derp(65, _gettext('Thread has reached reply threshold and cannot be deleted.'));
+            }
+
+            $time_since_op = time() - $this->firstPost()->data('post_time');
+
+            if ($this->domain->setting('thread_no_delete_time') > 0 &&
+                $time_since_op > $this->domain->setting('thread_no_delete_time')) {
+                nel_derp(66, _gettext('Thread has reached age threshold and cannot be deleted.'));
             }
         }
 
@@ -175,9 +187,7 @@ class Thread
         $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
             PDO::FETCH_COLUMN);
 
-        $prepared = $this->database->prepare(
-            'UPDATE "' . $this->domain->reference('threads_table') . '" SET "post_count" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared, [$post_count, $this->content_id->threadID()]);
+        $this->changeData('post_count', $post_count);
 
         $prepared = $this->database->prepare(
             'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') . '" WHERE "parent_thread" = ?');
@@ -191,17 +201,16 @@ class Thread
             PDO::FETCH_COLUMN);
 
         $file_count = $total_uploads - $embed_count;
-        $prepared = $this->database->prepare(
-            'UPDATE "' . $this->domain->reference('threads_table') .
-            '" SET "total_uploads" = ?, "file_count" = ?, "embed_count" = ? WHERE "thread_id" = ?');
-        $this->database->executePrepared($prepared,
-            [$total_uploads, $file_count, $embed_count, $this->content_id->threadID()]);
+        $this->changeData('total_uploads', $total_uploads);
+        $this->changeData('file_count', $file_count);
+        $this->changeData('embed_count', $embed_count);
+        $this->writeToDatabase();
     }
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') &&
-            $this->data('post_count') > $this->domain->setting('max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
+            'max_bumps')) {
             return;
         }
 

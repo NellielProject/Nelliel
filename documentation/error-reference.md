@@ -54,6 +54,8 @@ Error 61: Board locked, can't remove file. (Content/ContentUpload.php)
 Error 62: Board locked, can't remove post. (Content/ContentPost.php)  
 Error 63: Board locked, can't remove thread. (Content/ContentThread.php)  
 Error 64: Delete cooldown. (Content/ContentPost.php)  
+Error 65: Replies threshold. (Content/ContentThread.php)  
+Error 66: Age threshold. (Content/ContentThread.php)  
 
 Error 70: CAPTCHA failed. (classes/CAPTCHA.php)  
 Error 71: reCAPTCHA failed. (classes/CAPTCHA.php)  

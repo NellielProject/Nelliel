@@ -299,6 +299,9 @@
 	{{# keep_deleted_upload_entry }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ keep_deleted_upload_entry }}
+	{{# store_exif_data }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ store_exif_data }}
 	{{# enabled_filetypes }}
 		<tr class="row1">
 			{{> panels/pieces/settings/setting_name }}
@@ -431,15 +434,18 @@
 	{{# do_archive_pruning }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ do_archive_pruning }}
-	{{# store_exif_data }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ store_exif_data }}
 	{{# max_slug_length }}
 			{{> panels/pieces/settings/number }}
 	{{/ max_slug_length }}
 	{{# slugify_thread_url }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ slugify_thread_url }}
+	{{# thread_no_delete_replies }}
+			{{> panels/pieces/settings/number }}
+	{{/ thread_no_delete_replies }}
+	{{# thread_no_delete_time }}
+			{{> panels/pieces/settings/number }}
+	{{/ thread_no_delete_time }}
 		</tbody>
 		<tbody>
 			<tr>

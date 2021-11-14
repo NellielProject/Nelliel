@@ -42,8 +42,7 @@ class Post
         $this->json = new PostJSON($this, nel_utilities()->fileHandler());
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
-        if ($load)
-        {
+        if ($load) {
             $this->loadFromDatabase(true);
         }
 
@@ -58,24 +57,21 @@ class Post
     public function loadFromDatabase(bool $populate = true): bool
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
+            'SELECT * FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_ASSOC);
 
-        if (empty($result))
-        {
+        if (empty($result)) {
             return false;
         }
 
-        if (!$populate)
-        {
+        if (!$populate) {
             return true;
         }
 
         $result['ip_address'] = nel_convert_ip_from_storage($result['ip_address']);
         $column_types = $this->main_table->columnTypes();
 
-        foreach ($result as $name => $value)
-        {
+        foreach ($result as $name => $value) {
             $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
         }
 
@@ -86,8 +82,7 @@ class Post
 
     public function writeToDatabase($temp_database = null): bool
     {
-        if (!$this->isLoaded() || empty($this->content_id->postID()))
-        {
+        if (!$this->isLoaded() || empty($this->content_id->postID())) {
             return false;
         }
 
@@ -98,19 +93,16 @@ class Post
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
 
-        if ($this->main_table->rowExists($filtered_data))
-        {
+        if ($this->main_table->rowExists($filtered_data)) {
             $where_columns = ['post_number'];
             $where_keys = ['where_post_number'];
             $where_values = [$this->content_id->postID()];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
-                    $where_columns, $where_keys);
+                $where_columns, $where_keys);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
             $this->database->executePrepared($prepared);
-        }
-        else
-        {
+        } else {
             $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->database->executePrepared($prepared);
@@ -121,15 +113,12 @@ class Post
 
     public function remove(bool $perm_override = false)
     {
-        if (!$perm_override)
-        {
-            if (!$this->verifyModifyPerms())
-            {
+        if (!$perm_override) {
+            if (!$this->verifyModifyPerms()) {
                 return false;
             }
 
-            if ($this->domain->reference('locked'))
-            {
+            if ($this->domain->reference('locked')) {
                 nel_derp(62, _gettext('Cannot remove post. Board is locked.'));
             }
 
@@ -137,33 +126,30 @@ class Post
             $user = $session->user();
             $bypass = false;
 
-            if ($user && $session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
-            {
+            if ($user && $session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
                 $bypass = true;
             }
 
             $delete_post_renzoku = $this->domain->setting('delete_post_renzoku');
 
-            if (!$bypass && $delete_post_renzoku > 0 && time() - $this->content_data['post_time'] < $delete_post_renzoku)
-            {
+            if (!$bypass && $delete_post_renzoku > 0 && time() - $this->content_data['post_time'] < $delete_post_renzoku) {
                 nel_derp(64,
-                        sprintf(_gettext('You must wait %d seconds after making a post before it can be deleted.'),
-                                $delete_post_renzoku));
+                    sprintf(_gettext('You must wait %d seconds after making a post before it can be deleted.'),
+                        $delete_post_renzoku));
             }
         }
 
         // It's possible to have a thread with no posts but for now we don't use that capability
-        if ($this->data('op'))
-        {
-            $this->getParent()->remove(true);
-        }
-        else
-        {
+        $parent_thread = $this->getParent();
+
+        if ($this->data('op')) {
+            $parent_thread->remove($perm_override);
+        } else {
             $this->removeFromDatabase();
             $this->removeFromDisk();
-            $this->getParent()->updateCounts();
-            $this->getParent()->updateBumpTime();
-            $this->getParent()->updateUpdateTime();
+            $parent_thread->updateCounts();
+            $parent_thread->updateBumpTime();
+            $parent_thread->updateUpdateTime();
         }
 
         $this->archive_prune->updateThreads();
@@ -172,13 +158,12 @@ class Post
 
     protected function removeFromDatabase()
     {
-        if (empty($this->content_id->postID()))
-        {
+        if (empty($this->content_id->postID())) {
             return false;
         }
 
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
+            'DELETE FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->postID()]);
         $cites = new Cites($this->database);
         $cites->updateForPost($this);
@@ -198,26 +183,21 @@ class Post
         $session = new \Nelliel\Account\Session();
         $user = $session->user();
 
-        if (empty($this->content_data))
-        {
+        if (empty($this->content_data)) {
             $this->loadFromDatabase();
         }
 
         $flag = false;
 
-        if ($session->isActive())
-        {
-            if ($user->checkPermission($this->domain, 'perm_delete_posts'))
-            {
+        if ($session->isActive()) {
+            if ($user->checkPermission($this->domain, 'perm_delete_posts')) {
                 if (!$user->isSiteOwner() && !empty($this->content_data['account_id']) &&
-                        $this->authorization->userExists($this->content_data['account_id']))
-                {
+                    $this->authorization->userExists($this->content_data['account_id'])) {
                     $mod_post_user = $this->authorization->getUser($this->content_data['account_id']);
-                    $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
-                            $mod_post_user->getDomainRole($this->domain)->id());
-                }
-                else
-                {
+                    $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)
+                        ->id(), $mod_post_user->getDomainRole($this->domain)
+                        ->id());
+                } else {
                     $flag = true;
                 }
             }
@@ -225,12 +205,10 @@ class Post
 
         $update_sekrit = $_POST['update_sekrit'] ?? '';
 
-        if (!$flag)
-        {
+        if (!$flag) {
             if (!isset($this->content_data['post_password']) ||
-                    !hash_equals($this->content_data['post_password'], nel_post_password_hash($update_sekrit)) ||
-                    !$this->domain->setting('user_delete_own'))
-            {
+                !hash_equals($this->content_data['post_password'], nel_post_password_hash($update_sekrit)) ||
+                !$this->domain->setting('user_delete_own')) {
                 nel_derp(60, _gettext('Password is wrong or you are not allowed to delete that.'));
             }
         }
@@ -240,8 +218,7 @@ class Post
 
     public function getParent(): Thread
     {
-        if (is_null($this->parent))
-        {
+        if (is_null($this->parent)) {
             $content_id = new ContentID();
             $content_id->changeThreadID($this->content_id->threadID());
             $this->parent = new Thread($content_id, $this->domain);
@@ -254,16 +231,16 @@ class Post
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
-                'INSERT INTO "' . $this->domain->reference('posts_table') .
-                '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
+            'INSERT INTO "' . $this->domain->reference('posts_table') .
+            '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
         $database->executePrepared($prepared, [$post_time, $post_time_milli, $hashed_ip_address]);
         $prepared = $database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ?');
+            'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ?');
         $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli, $hashed_ip_address],
-                PDO::FETCH_COLUMN, true);
+            PDO::FETCH_COLUMN, true);
         $this->content_id->changeThreadID(
-                ($this->content_id->threadID() === 0) ? $result : $this->content_id->threadID());
+            ($this->content_id->threadID() === 0) ? $result : $this->content_id->threadID());
         $this->changeData('parent_thread', $this->content_id->threadID());
         $this->content_id->changePostID($result);
     }
@@ -271,27 +248,27 @@ class Post
     public function updateCounts()
     {
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') . '" WHERE "post_ref" = ?');
+            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') . '" WHERE "post_ref" = ?');
         $total_uploads = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
-                PDO::FETCH_COLUMN, true);
+            PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "post_ref" = ? AND "embed_url" IS NULL');
+            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
+            '" WHERE "post_ref" = ? AND "embed_url" IS NULL');
         $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN,
-                true);
+            true);
 
         $prepared = $this->database->prepare(
-                'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "post_ref" = ? AND "embed_url" IS NOT NULL');
+            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
+            '" WHERE "post_ref" = ? AND "embed_url" IS NOT NULL');
         $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
-                PDO::FETCH_COLUMN, true);
+            PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('posts_table') .
-                '" SET "total_uploads" = ?, "file_count" = ?, "embed_count" = ? WHERE "post_number" = ?');
+            'UPDATE "' . $this->domain->reference('posts_table') .
+            '" SET "total_uploads" = ?, "file_count" = ?, "embed_count" = ? WHERE "post_number" = ?');
         $this->database->executePrepared($prepared,
-                [$total_uploads, $file_count, $embed_count, $this->content_id->postID()]);
+            [$total_uploads, $file_count, $embed_count, $this->content_id->postID()]);
     }
 
     public function convertToThread(): Thread
@@ -313,14 +290,15 @@ class Post
         $new_thread->createDirectories();
         $uploads = $this->getUploads();
 
-        foreach ($uploads as $upload)
-        {
-            $upload->changeData('parent_thread', $new_thread->contentID()->threadID());
+        foreach ($uploads as $upload) {
+            $upload->changeData('parent_thread', $new_thread->contentID()
+                ->threadID());
             $upload->writeToDatabase();
         }
 
         $this->loadFromDatabase();
-        $this->content_id->changeThreadID($new_thread->contentID()->threadID());
+        $this->content_id->changeThreadID($new_thread->contentID()
+            ->threadID());
         $this->changeData('parent_thread', $this->content_id->threadID());
         $this->changeData('op', 1);
         $this->createDirectories();
@@ -346,11 +324,10 @@ class Post
     public function getCache(): array
     {
         $prepared = $this->database->prepare(
-                'SELECT "cache" FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
+            'SELECT "cache" FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $cache = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN);
 
-        if (is_string($cache))
-        {
+        if (is_string($cache)) {
             return json_decode($cache, true);
         }
 
@@ -365,21 +342,21 @@ class Post
         $cache_array['backlink_data'] = $output_post->generateBacklinks($this);
         $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
         $prepared = $this->database->prepare(
-                'UPDATE "' . $this->domain->reference('posts_table') .
-                '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
+            'UPDATE "' . $this->domain->reference('posts_table') .
+            '" SET "cache" = ?, "regen_cache" = 0 WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$encoded_cache, $this->content_id->postID()]);
     }
 
     public function srcPath(): string
     {
         return $this->domain->reference('src_path') . $this->content_id->threadID() . '/' . $this->content_id->postID() .
-                '/';
+            '/';
     }
 
     public function previewPath(): string
     {
         return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/' .
-                $this->content_id->postID() . '/';
+            $this->content_id->postID() . '/';
     }
 
     public function storeMoar(Moar $moar)
@@ -394,8 +371,7 @@ class Post
 
     protected function contentDataOrDefault(string $data_name, $default)
     {
-        if (isset($this->content_data[$data_name]))
-        {
+        if (isset($this->content_data[$data_name])) {
             return $this->content_data[$data_name];
         }
 
@@ -436,15 +412,14 @@ class Post
     {
         $uploads = array();
         $prepared = $this->database->prepare(
-                'SELECT "upload_order" FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "post_ref" = ? ORDER BY "upload_order" ASC');
-        $upload_list = $this->database->executePreparedFetchAll($prepared, [$this->contentID()->postID()],
-                PDO::FETCH_COLUMN);
+            'SELECT "upload_order" FROM "' . $this->domain->reference('uploads_table') .
+            '" WHERE "post_ref" = ? ORDER BY "upload_order" ASC');
+        $upload_list = $this->database->executePreparedFetchAll($prepared, [$this->contentID()
+            ->postID()], PDO::FETCH_COLUMN);
 
-        foreach ($upload_list as $id)
-        {
+        foreach ($upload_list as $id) {
             $content_id = new ContentID(
-                    ContentID::createIDString($this->content_id->threadID(), $this->content_id->postID(), intval($id)));
+                ContentID::createIDString($this->content_id->threadID(), $this->content_id->postID(), intval($id)));
             $uploads[] = $content_id->getInstanceFromID($this->domain);
         }
 
