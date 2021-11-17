@@ -206,7 +206,7 @@ class OutputIndex extends Output
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
         if ($this->write_mode) {
-            $this->file_handler->writeFile($this->domain->reference('board_path') . $index_basename . NEL_PAGE_EXT,
+            $this->file_handler->writeFile($this->domain->reference('base_path') . $index_basename . NEL_PAGE_EXT,
                 $output, NEL_FILES_PERM, true);
         } else {
             echo $output;

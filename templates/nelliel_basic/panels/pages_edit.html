@@ -1,0 +1,20 @@
+<form accept-charset="utf-8" action="{{ form_action }}" method="post">
+	<input type="hidden" name="domain_id" value="{{ domain_id }}">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="title" class="display-cell" data-i18n="">Title</label>
+			<input id="title" class="display-cell" type="text" name="title" value="{{ title }}">
+		</div>
+		<div class="display-row">
+			<label for="uri" class="display-cell" data-i18n="">URI</label>
+			<input id="uri" class="display-cell" type="text" name="uri" value="{{ uri }}">
+		</div>
+		<div class="display-row">
+			<label for="text" class="display-cell" data-i18n="">Text</label>
+			<textarea id="text" class="display-cell" name="text" cols="64" rows="3">{{ text }}</textarea>
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Add Page" data-i18n-attributes="value">
+		</div>
+	</div>
+</form>

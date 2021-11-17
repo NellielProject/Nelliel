@@ -126,7 +126,7 @@ class OutputCatalog extends Output
 
         if ($this->write_mode)
         {
-            $file = $this->domain->reference('board_path') . 'catalog.html';
+            $file = $this->domain->reference('base_path') . 'catalog.html';
             $this->file_handler->writeFile($file, $output);
         }
         else

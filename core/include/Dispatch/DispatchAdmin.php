@@ -17,6 +17,7 @@ use Nelliel\Admin\AdminFiletypes;
 use Nelliel\Admin\AdminImageSets;
 use Nelliel\Admin\AdminLogs;
 use Nelliel\Admin\AdminNews;
+use Nelliel\Admin\AdminPages;
 use Nelliel\Admin\AdminPermissions;
 use Nelliel\Admin\AdminReports;
 use Nelliel\Admin\AdminRoles;
@@ -155,6 +156,11 @@ class DispatchAdmin extends Dispatch
 
             case 'blotter':
                 $admin_handler = new AdminBlotter($this->authorization, $this->domain, $this->session);
+                $admin_handler->dispatch($inputs);
+                break;
+
+            case 'pages':
+                $admin_handler = new AdminPages($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
                 break;
 

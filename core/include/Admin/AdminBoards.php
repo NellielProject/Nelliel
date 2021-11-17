@@ -238,7 +238,7 @@ class AdminBoards extends Admin
         }
 
         // This should wipe out everything in the board directory
-        nel_utilities()->fileHandler()->eraserGun($domain->reference('board_path'));
+        nel_utilities()->fileHandler()->eraserGun($domain->reference('base_path'));
         $domain->deleteCache();
         // Foreign key constraints allow this to handle any removals from site tables
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');

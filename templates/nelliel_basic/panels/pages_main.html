@@ -1,0 +1,29 @@
+<div>
+	<a href="{{ new_page_url }}">Add new page</a>
+</div>
+<hr>
+<table >
+	<caption data-i18n="">List of Pages</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Domain</th>
+			<th scope="col" data-i18n="">URI</th>
+			<th scope="col" data-i18n="">Title</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# pages_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ domain }}</td>
+			<td>{{ uri }}</td>
+			<td>{{ title }}</td>
+			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}">Edit</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
+			</td>
+		</tr>
+{{/ pages_list }}
+	</tbody>
+</table>
