@@ -22,28 +22,31 @@ class OutputPanelPages extends Output
         $this->setupTimer();
         $this->setBodyTemplate('panels/pages_main');
         $parameters['is_panel'] = true;
-        $parameters['panel'] = $parameters['panel'] ?? _gettext('Pages');
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Static Pages');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $pages = $this->database->executeFetchAll('SELECT * FROM "' . NEL_PAGES_TABLE . '"', PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = ?');
+        $pages = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
         $this->render_data['new_page_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'pages', 'actions' => 'new']);
+            http_build_query(
+                ['module' => 'admin', 'section' => 'pages', 'actions' => 'new', 'board-id' => $this->domain->id()]);
         $bgclass = 'row1';
 
         foreach ($pages as $page) {
             $page_data = array();
             $page_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $page_data['domain'] = $page['domain_id'];
             $page_data['uri'] = $page['uri'];
             $page_data['title'] = $page['page_title'];
             $page_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'pages', 'actions' => 'edit', 'page-id' => $page['entry']]);
+                http_build_query(
+                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'edit', 'page-id' => $page['entry']]);
             $page_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'pages', 'actions' => 'remove', 'page-id' => $page['entry']]);
+                http_build_query(
+                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'remove', 'page-id' => $page['entry']]);
             $this->render_data['pages_list'][] = $page_data;
         }
 
@@ -65,7 +68,7 @@ class OutputPanelPages extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/pages_edit');
-        $parameters['panel'] = $parameters['panel'] ?? _gettext('Pages');
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Static Pages');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -77,7 +80,8 @@ class OutputPanelPages extends Output
             $entry = $parameters['entry'] ?? 0;
             $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
-                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'update', 'page-id' => $entry]);
+                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'update', 'page-id' => $entry,
+                        'board-id' => $this->domain->id()]);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PAGES_TABLE . '" WHERE "entry" = ?');
             $page_data = $this->database->executePreparedFetch($prepared, [$entry], PDO::FETCH_ASSOC);
 
@@ -89,7 +93,8 @@ class OutputPanelPages extends Output
             }
         } else {
             $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'pages', 'actions' => 'add']);
+                http_build_query(
+                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'add', 'board-id' => $this->domain->id()]);
         }
 
         $this->render_data['form_action'] = $form_action;

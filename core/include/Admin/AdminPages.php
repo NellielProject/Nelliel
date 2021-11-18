@@ -74,11 +74,19 @@ class AdminPages extends Admin
 
     public function update(): void
     {
-        $domain_id = $_POST['domain_id'] ?? '';
+        $id = $_GET[$this->id_field] ?? 0;
+        $prepared = $this->domain->database()->prepare(
+            'SELECT "domain_id" FROM "' . NEL_PAGES_TABLE . '" WHERE "entry" = :id');
+        $prepared->bindValue(':id', $id);
+        $domain_id = $this->domain->database()->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+        if ($domain_id === false) {
+            return;
+        }
+
         $domain = Domain::getDomainFromID($domain_id, $this->database);
         $this->verifyPermissions($domain, 'perm_pages_manage');
         $page_info = array();
-        $id = $_GET[$this->id_field] ?? 0;
         $page_info['uri'] = $_POST['uri'] ?? '';
         $page_info['title'] = $_POST['title'] ?? '';
         $page_info['text'] = $_POST['text'] ?? '';

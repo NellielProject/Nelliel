@@ -69,12 +69,8 @@ class Preparation
         }
 
         // Add more options here when we implement further domain types
-        if (nel_true_empty($inputs['domain_id'])) {
-            if (!nel_true_empty($inputs['board_id']) && $inputs['board_id'] !== Domain::SITE) {
-                $domain = new DomainBoard($inputs['board_id'], nel_database('core'));
-            } else {
-                $domain = new DomainSite(nel_database('core'));
-            }
+        if (!nel_true_empty($inputs['board_id']) && $inputs['board_id'] !== Domain::SITE) {
+            $domain = new DomainBoard($inputs['board_id'], nel_database('core'));
         } else {
             $domain = new DomainSite(nel_database('core'));
         }
@@ -99,7 +95,6 @@ class Preparation
         $inputs['module'] = $_GET['module'] ?? '';
         $inputs['section'] = $_GET['section'] ?? '';
         $inputs['subsection'] = $_GET['subsection'] ?? '';
-        $inputs['domain_id'] = $_GET['domain-id'] ?? '';
         $inputs['board_id'] = $_GET['board-id'] ?? '';
         $inputs['raw_actions'] = $_GET['actions'] ?? '';
         $inputs['method'] = $_SERVER['REQUEST_METHOD'];
