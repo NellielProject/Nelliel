@@ -47,6 +47,7 @@ class AdminPages extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_pages_manage');
+        $this->checkLimit($this->domain);
         $page_info = array();
         $page_info['domain_id'] = $this->domain->id();
         $page_info['uri'] = $_POST['uri'] ?? '';
@@ -135,6 +136,20 @@ class AdminPages extends Admin
 
             default:
                 $this->defaultPermissionError();
+        }
+    }
+
+    private function checkLimit(Domain $domain): void
+    {
+        if ($domain->id() !== Domain::SITE) {
+            $prepared = $this->domain->database()->prepare(
+                'SELECT COUNT("entry") FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = :domain_id');
+            $prepared->bindValue(':domain_id', $domain->id());
+            $page_count = $this->domain->database()->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+            if ($page_count >= nel_site_domain()->setting('max_board_pages')) {
+                nel_derp(250, _gettext('The maximum number of static pages for this board has been reached.'));
+            }
         }
     }
 }

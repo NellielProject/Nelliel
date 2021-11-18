@@ -91,6 +91,9 @@
 	{{# site_footer_text }}
 		{{> panels/pieces/settings/textarea }}
 	{{/ site_footer_text }}
+	{{# max_board_pages }}
+		{{> panels/pieces/settings/number }}
+	{{/ max_board_pages }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -168,6 +171,9 @@
 	{{# site_referrer_policy }}
 		{{> panels/pieces/settings/select }}
 	{{/ site_referrer_policy }}
+	{{# external_link_referrer_policy }}
+		{{> panels/pieces/settings/select }}
+	{{/ external_link_referrer_policy }}
 	{{# nofollow_external_links }}
 		{{> panels/pieces/settings/checkbox }}
 	{{/ nofollow_external_links }}

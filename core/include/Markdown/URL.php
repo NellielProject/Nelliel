@@ -17,14 +17,11 @@ trait URL
         $url_regex = '#(' . $this->url_protocols . ')(:\/\/)[^\s]+#';
         $matches = array();
 
-        if (preg_match($url_regex, $text, $matches) === 1)
-        {
+        if (preg_match($url_regex, $text, $matches) === 1) {
             // Provides the suffix for the render function (i.e. render<suffix>)
             // Also provides string length as an offset so this isn't reparsed
             return [['url', $matches[0]], utf8_strlen($matches[0])];
-        }
-        else
-        {
+        } else {
             return [['text', substr($text, 0, 3)], 4]; // needs to be better
         }
     }
@@ -32,7 +29,8 @@ trait URL
     protected function renderURL(array $block): string
     {
         $rel = (nel_site_domain()->setting('nofollow_external_links')) ? 'rel="nofollow"' : '';
-        $open_tag = '<a href="' . $block[1] . '" ' . $rel . ' class="external-link">';
+        $policy = nel_site_domain()->setting('external_link_referrer_policy');
+        $open_tag = '<a href="' . $block[1] . '" ' . $rel . ' class="external-link" referrerpolicy="' . $policy . '">';
         return $open_tag . $block[1] . '</a>';
     }
 

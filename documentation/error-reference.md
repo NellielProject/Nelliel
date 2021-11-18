@@ -35,6 +35,7 @@ Error 33: Too many embeds. (NewPost/Uploads.php)
 Error 34: Max uploads for thread. (NewPost/Uploads.php)  
 Error 35: Duplicate embed. (NewPost/Uploads.php)  
 Error 36: Max total filesize. (NewPost/Uploads.php)  
+Error 37: Threads per hour limit. (NewPost/NewPost.php)  
 
 Error 40: No POST data. (NewPost/PostData.php)  
 Error 41: Name required. (NewPost/PostData.php)  
@@ -124,6 +125,8 @@ Error 245: Board URI too long. (Admin/AdminBoards.php)
 Error 246: Empty subdirectory name. (Admin/AdminBoards.php)  
 Error 247: Subdirectory name too long. (Admin/AdminBoards.php)  
 Error 248: Invalid directory characters. (Admin/AdminBoards.php)  
+
+Error 250: Maximum static pages. (Admin/AdminPages.php)  
 
 Error 300: Default permission error. (Admin/Admin.php)  
 

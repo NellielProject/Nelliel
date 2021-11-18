@@ -40,21 +40,18 @@ class NewPost
         $error_data = ['board_id' => $this->domain->id()];
         $captcha = new CAPTCHA($this->domain);
 
-        if ($this->domain->setting('use_post_captcha'))
-        {
+        if ($this->domain->setting('use_post_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha->verify($captcha_key, $captcha_answer);
         }
 
-        if ($this->domain->setting('use_post_recaptcha'))
-        {
+        if ($this->domain->setting('use_post_recaptcha')) {
             $captcha->verifyReCAPTCHA();
         }
 
         if ($this->domain->reference('locked') &&
-                !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_board'))
-        {
+            !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_board')) {
             nel_derp(11, _gettext('Board is locked. Cannot make new post.'), $error_data);
         }
 
@@ -70,8 +67,7 @@ class NewPost
         $this->isPostOk($post, $time['time']);
 
         // Process FGSFDS
-        if ($this->domain->setting('process_new_post_commands'))
-        {
+        if ($this->domain->setting('process_new_post_commands')) {
             $fgsfds = new FGSFDS();
             $post_fgsfds = $post->data('fgsfds') ?? '';
 
@@ -79,27 +75,23 @@ class NewPost
             $post_email = $post->data('email') ?? '';
 
             // If there are duplicates, the FGSFDS field takes precedence
-            if ($this->domain->setting('allow_email_commands'))
-            {
+            if ($this->domain->setting('allow_email_commands')) {
                 $email_parts = explode(' ', $post_email);
 
                 if ($email_parts !== false && count($email_parts) > 1 &&
-                        preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1)
-                {
+                    preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1) {
                     $fgsfds->addFromString($post_email, false);
                     $post->changeData('email', null);
                 }
             }
 
-            if (!$fgsfds->commandIsSet('noko') && $this->domain->setting('always_noko'))
-            {
+            if (!$fgsfds->commandIsSet('noko') && $this->domain->setting('always_noko')) {
                 $fgsfds->addCommand('noko', true);
             }
 
             $post->changeData('sage', false);
 
-            if ($this->domain->setting('allow_sage'))
-            {
+            if ($this->domain->setting('allow_sage')) {
                 $post->changeData('sage', $fgsfds->commandIsSet('sage'));
             }
         }
@@ -108,21 +100,17 @@ class NewPost
         $spoon = !empty($uploads);
         $post->changeData('total_uploads', count($uploads));
 
-        if (!$spoon)
-        {
-            if (!$post->data('comment'))
-            {
+        if (!$spoon) {
+            if (!$post->data('comment')) {
                 nel_derp(9, _gettext('Post contains zero content. What was the point of this?'), $error_data);
             }
         }
 
-        if (utf8_strlen($post->data('comment')) > $this->domain->setting('max_comment_length'))
-        {
+        if (utf8_strlen($post->data('comment')) > $this->domain->setting('max_comment_length')) {
             nel_derp(10, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
         }
 
-        if (!is_null($post->data('post_password')))
-        {
+        if (!is_null($post->data('post_password'))) {
             $post->changeData('post_password', nel_post_password_hash($post->data('post_password')));
         }
 
@@ -139,37 +127,38 @@ class NewPost
         $post->storeCache();
         $post->createDirectories();
 
-        if ($fgsfds->commandIsSet('noko'))
-        {
-            $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()->threadID());
+        if ($fgsfds->commandIsSet('noko')) {
+            $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()
+                ->threadID());
         }
 
         clearstatcache();
 
         // Add preview, file data and move uploads to final location if applicable
-        if ($spoon)
-        {
+        if ($spoon) {
             // Make previews and do final file processing
-            if ($this->domain->setting('create_static_preview') || $this->domain->setting('create_animated_preview'))
-            {
+            if ($this->domain->setting('create_static_preview') || $this->domain->setting('create_animated_preview')) {
                 $gen_previews = new Previews($this->domain);
                 $uploads = $gen_previews->generate($uploads, $post->previewPath());
             }
 
             $order = 1;
 
-            foreach ($uploads as $upload)
-            {
-                $upload->contentID()->changeThreadID($thread->contentID()->threadID());
-                $upload->changeData('parent_thread', $thread->contentID()->threadID());
-                $upload->contentID()->changePostID($post->contentID()->postID());
-                $upload->changeData('post_ref', $post->contentID()->postID());
+            foreach ($uploads as $upload) {
+                $upload->contentID()->changeThreadID($thread->contentID()
+                    ->threadID());
+                $upload->changeData('parent_thread', $thread->contentID()
+                    ->threadID());
+                $upload->contentID()->changePostID($post->contentID()
+                    ->postID());
+                $upload->changeData('post_ref', $post->contentID()
+                    ->postID());
                 $upload->contentID()->changeOrderID($order);
                 $upload->changeData('upload_order', $order);
 
-                if ($upload->data('category') !== 'embed')
-                {
-                    $file_handler->moveFile($upload->data('location'), $post->srcPath() . $upload->data('fullname'), false);
+                if ($upload->data('category') !== 'embed') {
+                    $file_handler->moveFile($upload->data('location'), $post->srcPath() . $upload->data('fullname'),
+                        false);
                     chmod($post->srcPath() . $upload->data('fullname'), octdec(NEL_FILES_PERM));
                     $upload->changeData('location', $post->srcPath() . $upload->data('fullname'));
                 }
@@ -184,14 +173,12 @@ class NewPost
         $thread->loadFromDatabase(); // Make sure we have any expected defaults set
         $automatic_gets = json_decode($this->domain->setting('automatic_gets'), true);
 
-        if (is_array($automatic_gets) && in_array($post->contentID()->postID(), $automatic_gets))
-        {
+        if (is_array($automatic_gets) && in_array($post->contentID()->postID(), $automatic_gets)) {
             $get_thread = $post->convertToThread();
             $get_thread->toggleSticky();
         }
 
-        if ($thread->data('cyclic') == 1)
-        {
+        if ($thread->data('cyclic') == 1) {
             $thread->cycle();
         }
 
@@ -203,11 +190,11 @@ class NewPost
 
         // Generate response page if it doesn't exist, otherwise update
         $regen = new Regen();
-        $regen->threads($this->domain, true, [$thread->contentID()->threadID()]);
+        $regen->threads($this->domain, true, [$thread->contentID()
+            ->threadID()]);
         $regen->index($this->domain);
 
-        if ($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active'))
-        {
+        if ($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active')) {
             $regen->overboard($site_domain);
         }
 
@@ -221,65 +208,65 @@ class NewPost
         // Check for flood
         // If post is a reply, also check if the thread still exists
 
-        if ($post->data('parent_thread') == 0)
-        {
+        if ($post->data('parent_thread') == 0) {
             $renzoku_setting = $time - $this->domain->setting('thread_renzoku');
             $op_value = 1;
-        }
-        else
-        {
+        } else {
             $renzoku_setting = $time - $this->domain->setting('reply_renzoku');
             $op_value = 0;
         }
 
         $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "post_time" > ? AND "op" = ? AND "hashed_ip_address" = ?');
-        $prepared->bindValue(1, $renzoku_setting, PDO::PARAM_STR);
+            'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "post_time" > ? AND "op" = ? AND "hashed_ip_address" = ?');
+        $prepared->bindValue(1, $renzoku_setting, PDO::PARAM_INT);
         $prepared->bindValue(2, $op_value, PDO::PARAM_INT);
         $prepared->bindValue(3, nel_request_ip_address(true), PDO::PARAM_STR);
         $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
-        if ($renzoku > 0 && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku'))
-        {
+        if ($renzoku > 0 && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
             nel_derp(3, _gettext("Flood detected! You're posting too fast, slow down."), $error_data);
         }
 
-        if ($post->data('parent_thread') != 0)
-        {
+        if ($post->data('parent_thread') != 0) {
             $prepared = $this->database->prepare(
-                    'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
+                'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
             $thread_info = $this->database->executePreparedFetch($prepared, [$post->data('parent_thread')],
-                    PDO::FETCH_ASSOC, true);
+                PDO::FETCH_ASSOC, true);
 
-            if (!empty($thread_info))
-            {
+            if (!empty($thread_info)) {
                 if ($thread_info['locked'] == 1 &&
-                        !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_thread'))
-                {
+                    !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_thread')) {
                     nel_derp(4, _gettext('This thread is locked, you cannot post in it.'), $error_data);
                 }
 
-                if ($thread_info['old'] != 0)
-                {
+                if ($thread_info['old'] != 0) {
                     nel_derp(5, _gettext('The thread you have tried posting in is currently inaccessible or archived.'),
-                            $error_data);
+                        $error_data);
                 }
-            }
-            else
-            {
+            } else {
                 nel_derp(6, _gettext('The thread you have tried posting in could not be found.'), $error_data);
             }
 
             if ($this->domain->setting('limit_post_count') && $thread_info['cyclic'] != 1 &&
-                    $thread_info['post_count'] >= $this->domain->setting('max_posts'))
-            {
+                $thread_info['post_count'] >= $this->domain->setting('max_posts')) {
                 nel_derp(7, _gettext('The thread has reached maximum posts.'), $error_data);
             }
 
-            if ($thread_info['old'] != 0)
-            {
+            if ($thread_info['old'] != 0) {
                 nel_derp(8, _gettext('The thread is archived or buffered and cannot be posted to.'), $error_data);
+            }
+        } else {
+            if ($this->domain->setting('threads_per_hour_limit') > 0) {
+                $prepared = $this->database->prepare(
+                    'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') .
+                    '" WHERE "post_time" > ? AND "op" = 1');
+                $prepared->bindValue(1, (time() - 3600), PDO::PARAM_INT);
+                $thread_count = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+                if ($thread_count >= $this->domain->setting('threads_per_hour_limit')) {
+                    nel_derp(37, _gettext('The maximum threads per hour has been reached.'), $error_data);
+                }
             }
         }
     }
@@ -288,19 +275,16 @@ class NewPost
     {
         $cites = new Cites($this->database);
 
-        if (nel_true_empty($post->data('comment')))
-        {
+        if (nel_true_empty($post->data('comment'))) {
             return;
         }
 
         $cite_list = $cites->getCitesFromText($post->data('comment'));
 
-        foreach ($cite_list as $cite)
-        {
+        foreach ($cite_list as $cite) {
             $cite_data = $cites->getCiteData($cite, $this->domain, $post->contentID());
 
-            if ($cite_data['exists'] || $cite_data['future'])
-            {
+            if ($cite_data['exists'] || $cite_data['future']) {
                 $cites->addCite($cite_data);
             }
         }
