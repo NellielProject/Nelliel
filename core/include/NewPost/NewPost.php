@@ -257,7 +257,8 @@ class NewPost
                 nel_derp(8, _gettext('The thread is archived or buffered and cannot be posted to.'), $error_data);
             }
         } else {
-            if ($this->domain->setting('threads_per_hour_limit') > 0) {
+            if ($this->domain->setting('threads_per_hour_limit') > 0 &&
+                !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
                 $prepared = $this->database->prepare(
                     'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') .
                     '" WHERE "post_time" > ? AND "op" = 1');
