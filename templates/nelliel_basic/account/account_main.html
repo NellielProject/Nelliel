@@ -14,12 +14,3 @@
 <div>
 	<a href="{{ private_messages_url }}" data-i18n="">View Private Messages</a>
 </div>
-<hr>
-<div>
-	<span data-i18n="">Boards you own or moderate:</span>
-</div>
-<div>
-{{# board_list }}
-	<div><a href="{{ board_url }}">{{ board_id }}</a> - <span data-i18n="">Role:</span>&nbsp;<span>{{ board_role }}</span></div>
-{{/ board_list }}
-</div>

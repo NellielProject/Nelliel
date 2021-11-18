@@ -31,6 +31,7 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPanelBoard;
 use Nelliel\Output\OutputPanelMain;
+use Nelliel\Output\OutputBoardlist;
 
 class DispatchAdmin extends Dispatch
 {
@@ -162,6 +163,11 @@ class DispatchAdmin extends Dispatch
             case 'pages':
                 $admin_handler = new AdminPages($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
+                break;
+
+            case 'boardlist':
+                $output_boardlist = new OutputBoardlist($this->domain, false);
+                $output_boardlist->render([], false);
                 break;
 
             default:

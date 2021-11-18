@@ -49,6 +49,7 @@ class OutputNavigation extends Output
         $render_data['home_url'] = $this->site_domain->reference('home_page');
         $render_data['news_url'] = NEL_BASE_WEB_PATH . 'news.html';
         $render_data['account_url'] = nel_build_router_url([Domain::SITE, 'account']);
+        $render_data['boardlist_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=boardlist';
         $render_data['overboard_active'] = $this->site_domain->setting('overboard_active');
         $render_data['overboard_url'] = NEL_BASE_WEB_PATH . $this->site_domain->setting('overboard_uri') . '/';
         $render_data['sfw_overboard_active'] = $this->site_domain->setting('sfw_overboard_active');
