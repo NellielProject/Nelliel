@@ -8,10 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 class CacheHandler
 {
     private static $hashes;
-    private $header = "<?php
-
-declare(strict_types=1);
- if(!defined('NELLIEL_VERSION')){die('NOPE.AVI');}\n";
 
     function __construct(bool $hash_load = true)
     {
@@ -51,7 +47,7 @@ declare(strict_types=1);
             }
 
             $exported_array = "\n$" . $array_variable . " = " . var_export($array, true) . ";\n";
-            $file_handler->writeFile($file_path, $this->header . $exported_array, true);
+            $file_handler->writeFile($file_path, NEL_INTERNAL_FILE_HEADER . $exported_array, true);
             // Make certain further cache loads use the new cache
             clearstatcache(true, $file_path);
             opcache_invalidate($file_path);
