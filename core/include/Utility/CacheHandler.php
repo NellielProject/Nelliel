@@ -18,10 +18,12 @@ class CacheHandler
 
     public function loadArrayFromFile(string $array_variable, string $filename, string $sub_directory = '')
     {
+        $file_handler = new FileHandler();
         $array = array();
 
         if (NEL_USE_FILE_CACHE) {
-            $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
+            $file_path = $file_handler->pathJoin(NEL_CACHE_FILES_PATH,
+                $file_handler->pathJoin($sub_directory, $filename));
 
             if (file_exists($file_path)) {
                 include $file_path;
@@ -35,7 +37,7 @@ class CacheHandler
     public function writeArrayToFile(string $array_variable, array $array, string $filename, string $sub_directory = '')
     {
         $file_handler = new FileHandler();
-        $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
+        $file_path = $file_handler->pathJoin(NEL_CACHE_FILES_PATH, $file_handler->pathJoin($sub_directory, $filename));
 
         if (NEL_USE_FILE_CACHE) {
             if (!is_writable(NEL_CACHE_FILES_PATH)) {

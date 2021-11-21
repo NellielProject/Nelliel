@@ -20,7 +20,11 @@ class FileHandler
         $temp_file = tempnam($this->write_file_path, 'nel_');
         $success = file_put_contents($temp_file, $output) !== false;
 
-        if ($success && $this->moveFile($temp_file, $file, $create_directories)) {
+        if ($success) {
+            $success = $this->moveFile($temp_file, $file, $create_directories);
+        }
+
+        if ($success) {
             $success = chmod($file, octdec($chmod));
         } else {
             unlink($temp_file);
@@ -43,7 +47,7 @@ class FileHandler
         clearstatcache();
 
         if (file_exists($directory)) {
-            return false;
+            return true;
         }
 
         $success = false;
@@ -86,19 +90,19 @@ class FileHandler
         clearstatcache();
         $success = file_exists($file);
 
-        if ($success && $create_directories) {
+        if ($success && !file_exists($destination) && $create_directories) {
             $success = $this->createDirectory(dirname($destination), $dir_chmod, true);
         }
 
-        if (!$success) {
-            return false;
+        if ($success) {
+            $success = rename($file, $destination);
         }
 
-        $success = rename($file, $destination);
         return $success;
     }
 
-    public function moveDirectory(string $directory, string $destination): bool
+    public function moveDirectory(string $directory, string $destination, bool $create_directories = false,
+        $dir_chmod = NEL_DIRECTORY_PERM): bool
     {
         clearstatcache();
 
@@ -106,7 +110,17 @@ class FileHandler
             return false;
         }
 
-        return rename($directory, $destination);
+        $success = false;
+
+        if (!file_exists($destination) && $create_directories) {
+            $success = $this->createDirectory(dirname($destination), $dir_chmod, true);
+        }
+
+        if ($success) {
+            $success = rename($directory, $destination);
+        }
+
+        return $success;
     }
 
     public function eraserGun(string $path, string $filename = ''): bool
@@ -137,12 +151,18 @@ class FileHandler
         return $success;
     }
 
-    public function pathJoin(string $path, string $path2): string
+    public function pathJoin(string $path, string $path2, bool $merge_separators = true): string
     {
         $separator = DIRECTORY_SEPARATOR;
+        $path_has_separator = substr($path, -1) === DIRECTORY_SEPARATOR;
+        $path2_has_separator = substr($path2, 0, 1) === DIRECTORY_SEPARATOR;
 
-        if (substr($path, -1) === DIRECTORY_SEPARATOR) {
+        if ($path_has_separator || $path2_has_separator) {
             $separator = '';
+        }
+
+        if ($merge_separators && $path_has_separator && $path2_has_separator) {
+            $path2 = substr($path2, 1);
         }
 
         return $path . $separator . $path2;

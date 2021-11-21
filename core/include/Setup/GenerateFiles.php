@@ -19,8 +19,7 @@ class GenerateFiles
     public function installDone(bool $replace = false)
     {
         if (!file_exists(NEL_GENERATED_FILES_PATH . 'install_done.php') || $replace) {
-            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'install_done.php', '', true);
-            return true;
+            return $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'install_done.php', '', true);
         }
 
         return false;
@@ -48,8 +47,7 @@ class GenerateFiles
     {
         if (!file_exists(NEL_GENERATED_FILES_PATH . 'create_owner.php') || $replace) {
             $text = '$install_id = \'' . $id . '\';';
-            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'create_owner.php', $text, true);
-            return true;
+            return $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'create_owner.php', $text, true);
         }
 
         return false;
@@ -63,9 +61,8 @@ class GenerateFiles
         }
 
         if (!file_exists(NEL_GENERATED_FILES_PATH . 'versions.php') || $replace) {
-            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'versions.php',
+            return $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'versions.php',
                 '$versions_data = ' . var_export($versions_data, true) . ';', true);
-            return true;
         }
 
         return false;

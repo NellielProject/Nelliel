@@ -74,6 +74,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_filetypes_manage', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_file_filters_manage', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_image_sets_manage', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_ip_notes_view', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_ip_notes_add', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_ip_notes_delete', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_logs_view', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_logs_manage', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_news_manage', 1]);
@@ -105,6 +108,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_as_staff', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_locked_thread', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_post_locked_board', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_move_threads', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_merge_threads', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_search_posts', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_custom_name', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_custom_capcode', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_bypass_renzoku', 1]);
@@ -127,6 +133,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_filetypes_manage', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_file_filters_manage', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_image_sets_manage', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_ip_notes_view', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_ip_notes_add', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_ip_notes_delete', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_logs_view', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_logs_manage', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_news_manage', 0]);
@@ -158,6 +167,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_as_staff', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_locked_thread', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_post_locked_board', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_move_threads', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_merge_threads', 1]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_search_posts', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_bypass_renzoku', 1]);
@@ -180,6 +192,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_filetypes_manage', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_file_filters_manage', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_image_sets_manage', 0]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_ip_notes_view', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_ip_notes_add', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_ip_notes_delete', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_logs_view', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_logs_manage', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_news_manage', 0]);
@@ -211,6 +226,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_post_as_staff', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_post_locked_thread', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_post_locked_board', 0]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_move_threads', 0]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_merge_threads', 1]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_search_posts', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_bypass_renzoku', 1]);
@@ -233,6 +251,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_filetypes_manage', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_file_filters_manage', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_image_sets_manage', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_ip_notes_view', 1]);
+        $this->insertDefaultRow(['JANITOR', 'perm_ip_notes_add', 1]);
+        $this->insertDefaultRow(['JANITOR', 'perm_ip_notes_delete', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_logs_view', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_logs_manage', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_news_manage', 0]);
@@ -264,6 +285,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_post_as_staff', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_post_locked_thread', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_post_locked_board', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_move_threads', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_merge_threads', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_search_posts', 1]);
         $this->insertDefaultRow(['JANITOR', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_bypass_renzoku', 0]);
@@ -286,6 +310,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_filetypes_manage', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_file_filters_manage', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_image_sets_manage', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_ip_notes_view', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_ip_notes_add', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_ip_notes_delete', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_logs_view', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_logs_manage', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_news_manage', 0]);
@@ -317,6 +344,9 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_post_as_staff', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_post_locked_thread', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_post_locked_board', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_move_threads', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_merge_threads', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_search_posts', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_custom_name', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_custom_capcode', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_bypass_renzoku', 0]);

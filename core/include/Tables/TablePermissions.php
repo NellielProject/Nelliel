@@ -66,12 +66,15 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_filetypes_manage', 'Manage filetypes.']);
         $this->insertDefaultRow(['perm_file_filters_manage', 'Manage file filters.']);
         $this->insertDefaultRow(['perm_image_sets_manage', 'Manage image sets.']);
+        $this->insertDefaultRow(['perm_ip_notes_view', 'View IP notes.']);
+        $this->insertDefaultRow(['perm_ip_notes_add', 'Add new IP notes.']);
+        $this->insertDefaultRow(['perm_ip_notes_delete', 'Delete IP notes.']);
         $this->insertDefaultRow(['perm_logs_view', 'View full logs.']);
         $this->insertDefaultRow(['perm_logs_manage', 'Manage logs.']);
         $this->insertDefaultRow(['perm_news_manage', 'Manage news entries.']);
-        $this->insertDefaultRow(['perm_noticeboard_view', 'View the staff noticeboard']);
-        $this->insertDefaultRow(['perm_noticeboard_post', 'Post on the staff noticeboard']);
-        $this->insertDefaultRow(['perm_noticeboard_delete', 'Delete posts on the staff noticeboard']);
+        $this->insertDefaultRow(['perm_noticeboard_view', 'View the staff noticeboard.']);
+        $this->insertDefaultRow(['perm_noticeboard_post', 'Post on the staff noticeboard.']);
+        $this->insertDefaultRow(['perm_noticeboard_delete', 'Delete posts on the staff noticeboard.']);
         $this->insertDefaultRow(['perm_pages_manage', 'Manage static pages.']);
         $this->insertDefaultRow(['perm_permissions_manage', 'Manage permissions.']);
         $this->insertDefaultRow(['perm_reports_view', 'View reports.']);
@@ -97,6 +100,9 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_post_as_staff', 'Post as staff (displays capcode).']);
         $this->insertDefaultRow(['perm_post_locked_thread', 'Post in a locked thread.']);
         $this->insertDefaultRow(['perm_post_locked_board', 'Post on a locked board.']);
+        $this->insertDefaultRow(['perm_move_threads', 'Move threads to another board.']);
+        $this->insertDefaultRow(['perm_merge_threads', 'Merge threads.']);
+        $this->insertDefaultRow(['perm_search_posts', 'Search through the text of posts.']);
         $this->insertDefaultRow(['perm_custom_name', 'Post as staff with a custom name.']);
         $this->insertDefaultRow(['perm_custom_capcode', 'Can use a custom capcode.']);
         $this->insertDefaultRow(['perm_bypass_renzoku', 'Bypass posting cooldowns.']);

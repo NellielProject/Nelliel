@@ -14,7 +14,7 @@ if (file_exists('nelliel_base.php')) {
 
 define('NEL_BASE_PATH', realpath($core_path) . '/'); // Base path where project resides
 define('NEL_CORE_DIRECTORY', 'core'); // Core directory name
-define('NEL_CORE_PATH', NEL_BASE_PATH . '/' . NEL_CORE_DIRECTORY . '/'); // Path to the core directory
+define('NEL_CORE_PATH', NEL_BASE_PATH . NEL_CORE_DIRECTORY . '/'); // Path to the core directory
 unset($core_path);
 
 define('NEL_INCLUDE_PATH', NEL_CORE_PATH . 'include/'); // Base include files path
