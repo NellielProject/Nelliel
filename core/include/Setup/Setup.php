@@ -277,11 +277,12 @@ class Setup
 
     public function createCoreDirectories()
     {
-        $this->file_handler->createDirectory(NEL_CACHE_FILES_PATH, NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory(NEL_GENERATED_FILES_PATH, NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory(NEL_GENERAL_FILES_PATH, NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH, NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory(NEL_BANNERS_FILES_PATH, NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory(NEL_CACHE_FILES_PATH);
+        $this->file_handler->createDirectory(NEL_GENERATED_FILES_PATH);
+        $this->file_handler->createDirectory(NEL_GENERAL_FILES_PATH);
+        $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH);
+        $this->file_handler->createDirectory(NEL_BANNERS_FILES_PATH);
+        $this->file_handler->createDirectory(NEL_TEMP_FILES_PATH);
         echo _gettext('Core directories created.'), '<br>';
     }
 
@@ -309,13 +310,13 @@ class Setup
     public function createBoardDirectories(string $board_id)
     {
         $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database('core'));
-        $this->file_handler->createDirectory($domain->reference('src_path'), NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($domain->reference('preview_path'), NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($domain->reference('page_path'), NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($domain->reference('banners_path'), NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($domain->reference('archive_src_path'), NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($domain->reference('archive_preview_path'), NEL_DIRECTORY_PERM, true);
-        $this->file_handler->createDirectory($domain->reference('archive_page_path'), NEL_DIRECTORY_PERM, true);
+        $this->file_handler->createDirectory($domain->reference('src_path'));
+        $this->file_handler->createDirectory($domain->reference('preview_path'));
+        $this->file_handler->createDirectory($domain->reference('page_path'));
+        $this->file_handler->createDirectory($domain->reference('banners_path'));
+        $this->file_handler->createDirectory($domain->reference('archive_src_path'));
+        $this->file_handler->createDirectory($domain->reference('archive_preview_path'));
+        $this->file_handler->createDirectory($domain->reference('archive_page_path'));
     }
 
     public function installCoreTemplates($overwrite = false): void

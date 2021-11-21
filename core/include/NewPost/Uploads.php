@@ -89,11 +89,13 @@ class Uploads
             $upload->changeData('filesize', $filesize);
             $upload->changeData('tmp_name', $tmp_name);
             $upload->changeData('original_filename', $file_original_name);
+            $this->checkHashes($upload);
+            $this->checkFileDuplicates($post, $upload);
             $this->setFilenameAndExtension($upload, $post);
             $this->checkFiletype($upload, $upload->data('extension'), $tmp_name);
             // We re-add the extension to help with processing
             $upload->changeData('location', $tmp_name . '.' . $upload->data('extension'));
-            nel_utilities()->fileHandler()->moveFile($tmp_name, $upload->data('location'), false);
+            nel_utilities()->fileHandler()->moveFile($tmp_name, $upload->data('location'));
             // Store this temporarily in case we need it for later processing
             $upload->changeData('temp_exif', @exif_read_data($upload->data('location'), '', true));
 
@@ -106,8 +108,6 @@ class Uploads
             }
 
             $this->removeEXIF($upload);
-            $this->checkHashes($upload);
-            $this->checkFileDuplicates($post, $upload);
 
             if ($this->domain->setting('enable_spoilers')) {
                 $spoiler = $_POST['form_spoiler'] ?? 0;
@@ -220,9 +220,14 @@ class Uploads
     {
         $snacks = new Snacks($this->domain, new BansAccess($this->database));
         $is_banned = false;
-        $file = $upload->data('location');
+        $file = $upload->data('tmp_name');
         $md5 = hash_file('md5', $file);
         $upload->changeData('md5', $md5);
+
+        if ($md5 === false) {
+            return;
+        }
+
         $is_banned = $snacks->fileHashIsBanned($md5, 'md5');
 
         if (!$is_banned) {

@@ -191,7 +191,7 @@ class OutputThread extends Output
             if ($this->write_mode) {
                 $this->file_handler->writeFile(
                     $this->domain->reference('page_path') . $thread_id . '/' . sprintf($first_posts_format, $increment) .
-                    NEL_PAGE_EXT, $first_output, NEL_FILES_PERM, true);
+                    NEL_PAGE_EXT, $first_output, true);
             }
         }
 
@@ -204,14 +204,14 @@ class OutputThread extends Output
             if ($this->write_mode) {
                 $this->file_handler->writeFile(
                     $this->domain->reference('page_path') . $thread_id . '/' . sprintf($last_posts_format, $increment) .
-                    NEL_PAGE_EXT, $last_output, NEL_FILES_PERM, true);
+                    NEL_PAGE_EXT, $last_output, true);
             }
         }
 
         if ($this->write_mode) {
             $this->file_handler->writeFile(
                 $this->domain->reference('page_path') . $thread_id . '/' . $thread->pageBasename() . NEL_PAGE_EXT,
-                $output, NEL_FILES_PERM, true);
+                $output, true);
             $thread->getJSON()->write();
         } else {
             echo $output;

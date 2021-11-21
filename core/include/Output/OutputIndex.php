@@ -89,8 +89,7 @@ class OutputIndex extends Output
         $this->render_data['footer_form'] = true;
         $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
         $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
-        $this->render_data['captcha_regen_url'] = nel_build_router_url(
-            [Domain::SITE, 'captcha', 'regenerate']);
+        $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
         $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['show_styles'] = true;
@@ -207,7 +206,7 @@ class OutputIndex extends Output
 
         if ($this->write_mode) {
             $this->file_handler->writeFile($this->domain->reference('base_path') . $index_basename . NEL_PAGE_EXT,
-                $output, NEL_FILES_PERM, true);
+                $output);
         } else {
             echo $output;
         }

@@ -303,8 +303,8 @@ class Post
         $this->changeData('op', 1);
         $this->createDirectories();
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->moveDirectory($original_src_path, $this->srcPath(), true);
-        $file_handler->moveDirectory($original_preview_path, $this->previewPath(), true);
+        $file_handler->moveDirectory($original_src_path, $this->srcPath());
+        $file_handler->moveDirectory($original_preview_path, $this->previewPath());
         $this->writeToDatabase();
         $new_thread->updateCounts();
         $this->getParent()->updateBumpTime();
@@ -317,8 +317,8 @@ class Post
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->srcPath(), NEL_DIRECTORY_PERM, true);
-        $file_handler->createDirectory($this->previewPath(), NEL_DIRECTORY_PERM, true);
+        $file_handler->createDirectory($this->srcPath());
+        $file_handler->createDirectory($this->previewPath());
     }
 
     public function getCache(): array

@@ -80,7 +80,7 @@ class Language
             foreach ($domain_output as $out_domain => $output) {
                 $directory = NEL_LANGUAGES_FILES_PATH . 'extracted/' . date('Y-m-d_H-i-s') . '/' .
                     self::$gettext->categoryToString($category_id);
-                $file_handler->createDirectory($directory, NEL_DIRECTORY_PERM, true);
+                $file_handler->createDirectory($directory);
                 $file = $directory . '/' . $out_domain . '.pot';
                 $file_handler->writeFile($file, $output);
             }

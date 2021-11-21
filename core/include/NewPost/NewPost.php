@@ -157,8 +157,7 @@ class NewPost
                 $upload->changeData('upload_order', $order);
 
                 if ($upload->data('category') !== 'embed') {
-                    $file_handler->moveFile($upload->data('location'), $post->srcPath() . $upload->data('fullname'),
-                        false);
+                    $file_handler->moveFile($upload->data('location'), $post->srcPath() . $upload->data('fullname'));
                     chmod($post->srcPath() . $upload->data('fullname'), octdec(NEL_FILES_PERM));
                     $upload->changeData('location', $post->srcPath() . $upload->data('fullname'));
                 }

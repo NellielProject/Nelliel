@@ -18,9 +18,8 @@ class GenerateFiles
 
     public function installDone(bool $replace = false)
     {
-        if (!file_exists(NEL_GENERATED_FILES_PATH . 'install_done.php') || $replace)
-        {
-            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'install_done.php', '', true, false);
+        if (!file_exists(NEL_GENERATED_FILES_PATH . 'install_done.php') || $replace) {
+            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'install_done.php', '', true);
             return true;
         }
 
@@ -29,8 +28,7 @@ class GenerateFiles
 
     public function peppers(bool $replace = false): bool
     {
-        if (!file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php') || $replace)
-        {
+        if (!file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php') || $replace) {
             $prepend = "\n" . '// DO NOT EDIT THESE VALUES OR REMOVE THIS FILE UNLESS YOU HAVE A DAMN GOOD REASON';
             $prepend .= "\n" . '// DOING SO WILL BREAK SECURE TRIPCODES, POST PASSWORDS AND OTHER THINGS';
             $peppers = array();
@@ -39,7 +37,7 @@ class GenerateFiles
             $peppers['poster_id_pepper'] = base64_encode(random_bytes(32));
             $peppers['post_password_pepper'] = base64_encode(random_bytes(32));
             $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'peppers.php',
-                    $prepend . "\n" . '$peppers = ' . var_export($peppers, true) . ';', true, false);
+                $prepend . "\n" . '$peppers = ' . var_export($peppers, true) . ';', true);
             return true;
         }
 
@@ -48,10 +46,9 @@ class GenerateFiles
 
     public function ownerCreate(string $id, bool $replace = false): bool
     {
-        if (!file_exists(NEL_GENERATED_FILES_PATH . 'create_owner.php') || $replace)
-        {
+        if (!file_exists(NEL_GENERATED_FILES_PATH . 'create_owner.php') || $replace) {
             $text = '$install_id = \'' . $id . '\';';
-            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'create_owner.php', $text, true, false);
+            $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'create_owner.php', $text, true);
             return true;
         }
 
@@ -60,16 +57,14 @@ class GenerateFiles
 
     public function versions(array $versions_data = array(), bool $replace = false): bool
     {
-        if(empty($versions_data))
-        {
+        if (empty($versions_data)) {
             $versions_data['original'] = NELLIEL_VERSION;
             $versions_data['installed'] = NELLIEL_VERSION;
         }
 
-        if (!file_exists(NEL_GENERATED_FILES_PATH . 'versions.php') || $replace)
-        {
+        if (!file_exists(NEL_GENERATED_FILES_PATH . 'versions.php') || $replace) {
             $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'versions.php',
-                    '$versions_data = ' . var_export($versions_data, true) . ';', true, false);
+                '$versions_data = ' . var_export($versions_data, true) . ';', true);
             return true;
         }
 

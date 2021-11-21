@@ -38,8 +38,7 @@ class Upload
         $this->json = new UploadJSON($this, nel_utilities()->fileHandler());
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
-        if ($load)
-        {
+        if ($load) {
             $this->loadFromDatabase(true);
         }
     }
@@ -52,25 +51,22 @@ class Upload
     public function loadFromDatabase(bool $populate = true): bool
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "post_ref" = ? AND "upload_order" = ?');
+            'SELECT * FROM "' . $this->domain->reference('uploads_table') .
+            '" WHERE "post_ref" = ? AND "upload_order" = ?');
         $result = $this->database->executePreparedFetch($prepared,
-                [$this->content_id->postID(), $this->content_id->orderID()], PDO::FETCH_ASSOC);
+            [$this->content_id->postID(), $this->content_id->orderID()], PDO::FETCH_ASSOC);
 
-        if (empty($result))
-        {
+        if (empty($result)) {
             return false;
         }
 
-        if (!$populate)
-        {
+        if (!$populate) {
             return true;
         }
 
         $column_types = $this->main_table->columnTypes();
 
-        foreach ($result as $name => $value)
-        {
+        foreach ($result as $name => $value) {
             $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
         }
 
@@ -81,8 +77,7 @@ class Upload
 
     public function writeToDatabase(): bool
     {
-        if (!$this->isLoaded() || empty($this->content_id->orderID()))
-        {
+        if (!$this->isLoaded() || empty($this->content_id->orderID())) {
             return false;
         }
 
@@ -92,19 +87,16 @@ class Upload
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
 
-        if ($this->main_table->rowExists($filtered_data))
-        {
+        if ($this->main_table->rowExists($filtered_data)) {
             $where_columns = ['post_ref', 'upload_order'];
             $where_keys = ['where_post_ref', 'where_upload_order'];
             $where_values = [$this->content_id->postID(), $this->content_id->orderID()];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
-                    $where_columns, $where_keys);
+                $where_columns, $where_keys);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
             $this->database->executePrepared($prepared);
-        }
-        else
-        {
+        } else {
             $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->database->executePrepared($prepared);
@@ -115,15 +107,12 @@ class Upload
 
     public function remove(bool $perm_override = false)
     {
-        if (!$perm_override)
-        {
-            if (!$this->verifyModifyPerms())
-            {
+        if (!$perm_override) {
+            if (!$this->verifyModifyPerms()) {
                 return false;
             }
 
-            if ($this->domain->reference('locked'))
-            {
+            if ($this->domain->reference('locked')) {
                 nel_derp(61, _gettext('Cannot remove file. Board is locked.'));
             }
         }
@@ -137,23 +126,19 @@ class Upload
 
     protected function removeFromDatabase()
     {
-        if (empty($this->content_id->orderID()))
-        {
+        if (empty($this->content_id->orderID())) {
             return false;
         }
 
-        if ($this->domain->setting('keep_deleted_upload_entry'))
-        {
+        if ($this->domain->setting('keep_deleted_upload_entry')) {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $this->domain->reference('uploads_table') .
-                    '" SET "deleted" = 1 WHERE "post_ref" = ? AND "upload_order" = ?');
+                'UPDATE "' . $this->domain->reference('uploads_table') .
+                '" SET "deleted" = 1 WHERE "post_ref" = ? AND "upload_order" = ?');
             $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
-        }
-        else
-        {
+        } else {
             $prepared = $this->database->prepare(
-                    'DELETE FROM "' . $this->domain->reference('uploads_table') .
-                    '" WHERE "post_ref" = ? AND "upload_order" = ?');
+                'DELETE FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE "post_ref" = ? AND "upload_order" = ?');
             $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
             return true;
         }
@@ -161,19 +146,17 @@ class Upload
 
     protected function removeFromDisk()
     {
-        if (!$this->isLoaded())
-        {
+        if (!$this->isLoaded()) {
             $this->loadFromDatabase();
         }
 
-        if (!nel_true_empty($this->data('embed_url')))
-        {
+        if (!nel_true_empty($this->data('embed_url'))) {
             return;
         }
 
         $file_handler = nel_utilities()->fileHandler();
         $file_handler->eraserGun($this->srcPath(),
-                $this->content_data['filename'] . '.' . $this->content_data['extension']);
+            $this->content_data['filename'] . '.' . $this->content_data['extension']);
         $file_handler->eraserGun($this->previewPath(), $this->content_data['static_preview_name']);
         $file_handler->eraserGun($this->previewPath(), $this->content_data['animated_preview_name']);
     }
@@ -185,8 +168,7 @@ class Upload
 
     public function getParent(): Post
     {
-        if (is_null($this->parent))
-        {
+        if (is_null($this->parent)) {
             $content_id = new ContentID();
             $content_id->changeThreadID($this->content_id->threadID());
             $content_id->changePostID($this->content_id->postID());
@@ -199,20 +181,20 @@ class Upload
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->srcPath(), NEL_DIRECTORY_PERM);
-        $file_handler->createDirectory($this->previewPath(), NEL_DIRECTORY_PERM);
+        $file_handler->createDirectory($this->srcPath());
+        $file_handler->createDirectory($this->previewPath());
     }
 
     public function srcPath()
     {
         return $this->domain->reference('src_path') . $this->content_id->threadID() . '/' . $this->content_id->postID() .
-                '/';
+            '/';
     }
 
     public function previewPath()
     {
         return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/' .
-                $this->content_id->postID() . '/';
+            $this->content_id->postID() . '/';
     }
 
     public function storeMoar(Moar $moar)
@@ -227,8 +209,7 @@ class Upload
 
     protected function contentDataOrDefault(string $data_name, $default)
     {
-        if (isset($this->content_data[$data_name]))
-        {
+        if (isset($this->content_data[$data_name])) {
             return $this->content_data[$data_name];
         }
 

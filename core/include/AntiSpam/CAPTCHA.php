@@ -80,7 +80,7 @@ class CAPTCHA
         $captcha_key = substr(hash('sha256', (random_bytes(16))), -32);
         setrawcookie('captcha-key', $captcha_key, time() + $this->site_domain->setting('captcha_timeout'),
             NEL_BASE_WEB_PATH);
-        $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH, NEL_DIRECTORY_PERM, true); // Just to be sure
+        $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH); // Just to be sure
         imagejpeg($captcha_image, NEL_CAPTCHA_FILES_PATH . $captcha_key . '.jpg');
         $captcha_data = array();
         $captcha_data['captcha_key'] = $captcha_key;
@@ -138,7 +138,8 @@ class CAPTCHA
             $size = $font_size - rand(0, intval($font_size * 0.35));
             $angle = rand(0, 50) - 25;
             $color = $text_colors[rand(0, $text_colors_size - 1)];
-            imagefttext($captcha_image, $size, $angle, intval($x), intval($y + rand(0, 5)), $color, $font_file, $character);
+            imagefttext($captcha_image, $size, $angle, intval($x), intval($y + rand(0, 5)), $color, $font_file,
+                $character);
             $x += $box[4] + $character_spacing;
         }
 

@@ -1,7 +1,5 @@
 <?php
-
-declare(strict_types=1);
-
+declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
@@ -17,8 +15,7 @@ declare(strict_types=1);
 
     function __construct(bool $hash_load = true)
     {
-        if (empty(self::$hashes) && $hash_load)
-        {
+        if (empty(self::$hashes) && $hash_load) {
             $this->loadHashes();
         }
     }
@@ -27,12 +24,10 @@ declare(strict_types=1);
     {
         $array = array();
 
-        if (NEL_USE_FILE_CACHE)
-        {
+        if (NEL_USE_FILE_CACHE) {
             $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
 
-            if (file_exists($file_path))
-            {
+            if (file_exists($file_path)) {
                 include $file_path;
                 $array = $$array_variable;
             }
@@ -46,22 +41,17 @@ declare(strict_types=1);
         $file_handler = new FileHandler();
         $file_path = NEL_CACHE_FILES_PATH . $sub_directory . '/' . $filename;
 
-        if (NEL_USE_FILE_CACHE)
-        {
-            if (!is_writable(NEL_CACHE_FILES_PATH))
-            {
-                if (!file_exists(NEL_CACHE_FILES_PATH))
-                {
+        if (NEL_USE_FILE_CACHE) {
+            if (!is_writable(NEL_CACHE_FILES_PATH)) {
+                if (!file_exists(NEL_CACHE_FILES_PATH)) {
                     $file_handler->createDirectory(NEL_CACHE_FILES_PATH);
-                }
-                else
-                {
+                } else {
                     return; // TODO: Work out so this can be a proper error
                 }
             }
 
             $exported_array = "\n$" . $array_variable . " = " . var_export($array, true) . ";\n";
-            $file_handler->writeFile($file_path, $this->header . $exported_array, NEL_FILES_PERM, true);
+            $file_handler->writeFile($file_path, $this->header . $exported_array, true);
             // Make certain further cache loads use the new cache
             clearstatcache(true, $file_path);
             opcache_invalidate($file_path);
@@ -75,8 +65,7 @@ declare(strict_types=1);
 
     public function loadHashes()
     {
-        if (file_exists(NEL_CACHE_FILES_PATH . 'hashes.php'))
-        {
+        if (file_exists(NEL_CACHE_FILES_PATH . 'hashes.php')) {
             $hashes = array();
             include NEL_CACHE_FILES_PATH . 'hashes.php';
             self::$hashes = $hashes;
