@@ -154,15 +154,15 @@ class FileHandler
     public function pathJoin(string $path, string $path2, bool $merge_separators = true): string
     {
         $separator = DIRECTORY_SEPARATOR;
-        $path_has_separator = substr($path, -1) === DIRECTORY_SEPARATOR;
-        $path2_has_separator = substr($path2, 0, 1) === DIRECTORY_SEPARATOR;
+        $path_has_separator = utf8_substr($path, -1) === DIRECTORY_SEPARATOR;
+        $path2_has_separator = utf8_substr($path2, 0, 1) === DIRECTORY_SEPARATOR;
 
         if ($path_has_separator || $path2_has_separator) {
             $separator = '';
         }
 
         if ($merge_separators && $path_has_separator && $path2_has_separator) {
-            $path2 = substr($path2, 1);
+            $path2 = utf8_substr($path2, 1);
         }
 
         return $path . $separator . $path2;

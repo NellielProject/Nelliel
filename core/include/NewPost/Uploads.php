@@ -148,7 +148,7 @@ class Uploads
             case 'original':
                 $filename = $this->filterBasename($filename);
                 $maxlength = 255 - utf8_strlen($extension) - 1;
-                $filename = substr($filename, 0, $maxlength);
+                $filename = utf8_substr($filename, 0, $maxlength);
                 break;
 
             case 'timestamp':

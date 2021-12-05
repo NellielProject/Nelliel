@@ -77,7 +77,7 @@ class AdminRoles extends Admin
                 $value = nel_form_input_default($value);
             }
 
-            if (substr($key, 0, 5) === 'perm_')
+            if (utf8_substr($key, 0, 5) === 'perm_')
             {
                 $value = ($value == 1) ? true : false;
                 $role->permissions->changeData($key, $value);

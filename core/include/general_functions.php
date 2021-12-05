@@ -53,7 +53,7 @@ function nel_numeric_html_entities_to_utf8(&$input)
 {
     $input = preg_replace_callback('#&\#[0-9]+;#Su',
         function ($matches) {
-            return utf8_chr(intval(substr($matches[0], 2, -1)));
+            return utf8_chr(intval(utf8_substr($matches[0], 2, -1)));
         }, $input);
 }
 
@@ -95,7 +95,7 @@ function nel_random_alphanumeric($length)
 
     $base = utf8_str_repeat('abcdefghijklmnopqrstuvwxyz0123456789', ceil($length / 36));
     $random = utf8_str_shuffle($base);
-    return substr($random, 0, $length);
+    return utf8_substr($random, 0, $length);
 }
 
 function nel_form_input_default(array $input)

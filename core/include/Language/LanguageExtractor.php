@@ -261,7 +261,7 @@ class LanguageExtractor
                 if ($node['type'] === Mustache_Tokenizer::T_SECTION && $node['name'] === 'gettext') {
                     $start = $node[Mustache_Tokenizer::INDEX];
                     $end = $node[Mustache_Tokenizer::END];
-                    $msgid = substr($template, $start, $end - $start);
+                    $msgid = utf8_substr($template, $start, $end - $start);
                     $entry['msgid'] = $file_id;
                     $entry['file'] = $file_id;
                     $entry['prefix'] = ''; // TODO: Change this handler when we add more support

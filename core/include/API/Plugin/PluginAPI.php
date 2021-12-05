@@ -148,7 +148,7 @@ class PluginAPI
 
     private function generateID()
     {
-        return substr(md5(random_bytes(16)), -8);
+        return utf8_substr(md5(random_bytes(16)), -8);
     }
 
     private function isValidHook(string $hook_name)

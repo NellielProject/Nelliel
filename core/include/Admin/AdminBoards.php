@@ -338,7 +338,7 @@ class AdminBoards extends Admin
             if (strlen($ascii_prefix) <= 0) {
                 $test_prefix = '_board_' . nel_random_alphanumeric(8);
             } else {
-                $truncated_prefix = substr($ascii_prefix, 0, 12);
+                $truncated_prefix = utf8_substr($ascii_prefix, 0, 12);
                 $test_prefix = '_board_' . strtolower($truncated_prefix);
             }
 

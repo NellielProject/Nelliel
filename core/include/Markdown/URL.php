@@ -22,7 +22,7 @@ trait URL
             // Also provides string length as an offset so this isn't reparsed
             return [['url', $matches[0]], utf8_strlen($matches[0])];
         } else {
-            return [['text', substr($text, 0, 3)], 4]; // needs to be better
+            return [['text', utf8_substr($text, 0, 3)], 4]; // needs to be better
         }
     }
 

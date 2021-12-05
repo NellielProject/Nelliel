@@ -9,7 +9,7 @@ function nel_autoload_core($class, $prefix, $base_directory): void
         return;
     }
 
-    $relative_class = substr($class, $len);
+    $relative_class = utf8_substr($class, $len);
     $file = $base_directory . utf8_str_replace('\\', '/', $relative_class) . '.php';
 
     if (file_exists($file)) {

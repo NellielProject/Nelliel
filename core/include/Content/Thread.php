@@ -384,7 +384,7 @@ class Thread
 
         // If the base text is actually one really long word or something, just truncate it
         if (empty($matches)) {
-            $slug = substr($slug, 0, $max_length);
+            $slug = utf8_substr($slug, 0, $max_length);
         } else {
             $slug = $matches[1];
         }

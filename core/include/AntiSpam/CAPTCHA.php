@@ -77,7 +77,7 @@ class CAPTCHA
         }
 
         $captcha_image = $this->render($captcha_text);
-        $captcha_key = substr(hash('sha256', (random_bytes(16))), -32);
+        $captcha_key = utf8_substr(hash('sha256', (random_bytes(16))), -32);
         setrawcookie('captcha-key', $captcha_key, time() + $this->site_domain->setting('captcha_timeout'),
             NEL_BASE_WEB_PATH);
         $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH); // Just to be sure

@@ -91,7 +91,7 @@ function nel_password_needs_rehash(string $password, int $algorithm, array $opti
 function nel_ip_hash(string $ip_address)
 {
     $hashed_ip = hash_hmac('sha256', $ip_address, NEL_IP_ADDRESS_PEPPER);
-    return substr($hashed_ip, 0, 32);
+    return utf8_substr($hashed_ip, 0, 32);
 }
 
 function nel_post_password_hash(string $post_password)

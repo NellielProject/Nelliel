@@ -15,10 +15,8 @@ class NellielTemplatesDOM
 
     public function templatePath($new_path = null)
     {
-        if (!is_null($new_path))
-        {
-            if (substr(new_path, -1) !== '/')
-            {
+        if (!is_null($new_path)) {
+            if (utf8_substr(new_path, -1) !== '/') {
                 $new_path .= '/';
             }
         }
@@ -40,13 +38,11 @@ class NellielTemplatesDOM
 
     public function loadTemplateFromFile($template)
     {
-        if (!isset($this->templates[$template]))
-        {
+        if (!isset($this->templates[$template])) {
             $this->initTemplateData($template);
         }
 
-        if (file_exists($this->template_path . $template))
-        {
+        if (file_exists($this->template_path . $template)) {
             $this->templates[$template]['contents'] = file_get_contents($this->template_path . $template);
         }
 
@@ -55,17 +51,13 @@ class NellielTemplatesDOM
 
     public function getTemplate($template, $do_fixes)
     {
-        if (!isset($this->templates[$template]))
-        {
+        if (!isset($this->templates[$template])) {
             $this->initTemplateData($template);
         }
 
-        if ($do_fixes)
-        {
+        if ($do_fixes) {
             return $this->fixInputHTML($template);
-        }
-        else
-        {
+        } else {
             return $this->templates[$template]['contents'];
         }
     }
@@ -74,8 +66,7 @@ class NellielTemplatesDOM
     {
         $output = $dom->saveHTML();
 
-        if (!is_null($template))
-        {
+        if (!is_null($template)) {
             $output = $this->fixOutputHTML($template, $output);
             $output = $this->html5Fixes($template, $output);
         }
@@ -97,18 +88,15 @@ class NellielTemplatesDOM
     {
         $template_contents = $this->templates[$template]['contents'];
 
-        if ($this->templates[$template]['fix_status']['html_open'])
-        {
+        if ($this->templates[$template]['fix_status']['html_open']) {
             $template_contents = '<html>' . $template_contents;
         }
 
-        if ($this->templates[$template]['fix_status']['html_close'])
-        {
+        if ($this->templates[$template]['fix_status']['html_close']) {
             $template_contents = $template_contents . '</html>';
         }
 
-        if ($this->templates[$template]['fix_status']['doctype'])
-        {
+        if ($this->templates[$template]['fix_status']['doctype']) {
             $template_contents = '<!DOCTYPE html>' . $template_contents;
         }
 
@@ -117,28 +105,23 @@ class NellielTemplatesDOM
 
     private function fixOutputHTML($template, $template_contents)
     {
-        if ($this->templates[$template]['fix_status']['doctype'])
-        {
+        if ($this->templates[$template]['fix_status']['doctype']) {
             $template_contents = preg_replace('#<!DOCTYPE html>#', '', $template_contents);
         }
 
-        if ($this->templates[$template]['fix_status']['html_open'])
-        {
+        if ($this->templates[$template]['fix_status']['html_open']) {
             $template_contents = preg_replace('#<html>#', '', $template_contents);
         }
 
-        if ($this->templates[$template]['fix_status']['body_open'])
-        {
+        if ($this->templates[$template]['fix_status']['body_open']) {
             $template_contents = preg_replace('#<body>#', '', $template_contents);
         }
 
-        if ($this->templates[$template]['fix_status']['html_close'])
-        {
+        if ($this->templates[$template]['fix_status']['html_close']) {
             $template_contents = preg_replace('#<\/html>#', '', $template_contents);
         }
 
-        if ($this->templates[$template]['fix_status']['body_close'])
-        {
+        if ($this->templates[$template]['fix_status']['body_close']) {
             $template_contents = preg_replace('#<\/body>#', '', $template_contents);
         }
 

@@ -32,53 +32,47 @@ class OutputPanelBans extends Output
         $this->render_data['can_modify'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_bans');
         $bans_access = new BansAccess($this->database);
 
-        if ($this->domain->id() !== Domain::SITE)
-        {
+        if ($this->domain->id() !== Domain::SITE) {
             $ban_list = $bans_access->getBans($this->domain->id());
             $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'admin', 'section' => 'bans', 'actions' => 'new',
-                                'board-id' => $this->domain->id()]);
-        }
-        else
-        {
+                http_build_query(
+                    ['module' => 'admin', 'section' => 'bans', 'actions' => 'new', 'board-id' => $this->domain->id()]);
+        } else {
             $ban_list = $bans_access->getBans();
             $this->render_data['new_ban_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(['module' => 'admin', 'section' => 'bans', 'actions' => 'new']);
+                http_build_query(['module' => 'admin', 'section' => 'bans', 'actions' => 'new']);
         }
 
         $bgclass = 'row1';
 
-        foreach ($ban_list as $ban_hammer)
-        {
+        foreach ($ban_list as $ban_hammer) {
             $ban_data = array();
             $ban_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $ban_data['ban_id'] = $ban_hammer->getData('ban_id');
-            $ban_data['ip_address'] = $this->formatIP($ban_hammer) ?? substr($ban_hammer->getData('hashed_ip_address'),
-                    0, 12);
+            $ban_data['ip_address'] = $this->formatIP($ban_hammer) ?? utf8_substr(
+                $ban_hammer->getData('hashed_ip_address'), 0, 12);
             $ban_data['board_id'] = $ban_hammer->getData('board_id');
 
-            if ($ban_data['board_id'] === Domain::GLOBAL)
-            {
+            if ($ban_data['board_id'] === Domain::GLOBAL) {
                 $ban_data['board_id'] = 'All Boards';
             }
 
             $ban_data['reason'] = $ban_hammer->getData('reason');
             $ban_data['seen'] = $ban_hammer->getData('seen');
             $ban_data['expiration'] = date("D F jS Y  H:i:s",
-                    intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')));
+                intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')));
             $ban_data['appeal'] = $ban_hammer->getData('appeal');
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
             $this->render_data['modify_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'admin', 'section' => 'bans', 'actions' => 'edit',
-                                'ban_id' => $ban_hammer->getData('ban_id'), 'board-id' => $this->domain->id()]);
+                http_build_query(
+                    ['module' => 'admin', 'section' => 'bans', 'actions' => 'edit',
+                        'ban_id' => $ban_hammer->getData('ban_id'), 'board-id' => $this->domain->id()]);
             $this->render_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'admin', 'section' => 'bans', 'actions' => 'remove',
-                                'ban_id' => $ban_hammer->getData('ban_id'), 'board-id' => $this->domain->id()]);
+                http_build_query(
+                    ['module' => 'admin', 'section' => 'bans', 'actions' => 'remove',
+                        'ban_id' => $ban_hammer->getData('ban_id'), 'board-id' => $this->domain->id()]);
             $this->render_data['ban_list'][] = $ban_data;
         }
 
@@ -100,16 +94,14 @@ class OutputPanelBans extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        if ($this->domain->id() !== Domain::SITE)
-        {
+        if ($this->domain->id() !== Domain::SITE) {
             $this->render_data['ban_board'] = $this->domain->id();
         }
 
         $this->render_data['ban_ip'] = $parameters['ban_ip'];
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                        ['module' => 'admin', 'section' => 'bans', 'actions' => 'add',
-                            'board-id' => $this->domain->id()]);
+            http_build_query(
+                ['module' => 'admin', 'section' => 'bans', 'actions' => 'add', 'board-id' => $this->domain->id()]);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -128,19 +120,15 @@ class OutputPanelBans extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                        ['module' => 'admin', 'section' => 'bans', 'actions' => 'update',
-                            'board-id' => $this->domain->id()]);
+            http_build_query(
+                ['module' => 'admin', 'section' => 'bans', 'actions' => 'update', 'board-id' => $this->domain->id()]);
         $ban_id = $_GET['ban_id'];
         $ban_hammer = new \Nelliel\BanHammer($this->database);
         $ban_hammer->loadFromID($ban_id);
 
-        if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip'))
-        {
+        if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
             $this->render_data['ban_ip'] = $this->formatIP($ban_hammer);
-        }
-        else
-        {
+        } else {
             $this->render_data['ban_ip'] = $ban_hammer->getData('hashed_ip_address');
         }
 
@@ -148,7 +136,7 @@ class OutputPanelBans extends Output
         $this->render_data['ban_board'] = $ban_hammer->getData('board_id');
         $this->render_data['start_time_formatted'] = date("D F jS Y  H:i:s", intval($ban_hammer->getData('start_time')));
         $this->render_data['expiration'] = date("D F jS Y  H:i:s",
-                intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')));
+            intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')));
         $times = $ban_hammer->getData('times');
         $this->render_data['years'] = $times['years'];
         $this->render_data['days'] = $times['days'];
@@ -173,17 +161,13 @@ class OutputPanelBans extends Output
     {
         $ip_address = null;
 
-        if (!is_null($ban_hammer->getData('ip_address_start')))
-        {
+        if (!is_null($ban_hammer->getData('ip_address_start'))) {
             $ip_address = $ban_hammer->getData('ip_address_start');
 
-            if (!is_null($ban_hammer->getData('ip_address_end')))
-            {
+            if (!is_null($ban_hammer->getData('ip_address_end'))) {
                 $ip_address .= ' - ' . $ban_hammer->getData('ip_address_end');
             }
-        }
-        else
-        {
+        } else {
             $ip_address = $ban_hammer->getData('hashed_ip_address');
         }
 

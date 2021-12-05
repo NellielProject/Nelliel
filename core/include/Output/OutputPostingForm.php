@@ -118,7 +118,7 @@ class OutputPostingForm extends Output
                         $extensions .= $extension . ', ';
                     }
 
-                    $extensions = substr($extensions, 0, -2);
+                    $extensions = utf8_substr($extensions, 0, -2);
                 }
 
                 $add = $extensions;
@@ -141,7 +141,7 @@ class OutputPostingForm extends Output
             }
 
             $supported_types .= $supported;
-            $this->render_data['posting_rules_items'][]['rules_text'] = substr($supported_types, 0,
+            $this->render_data['posting_rules_items'][]['rules_text'] = utf8_substr($supported_types, 0,
                 -utf8_strlen($joiner));
         }
 

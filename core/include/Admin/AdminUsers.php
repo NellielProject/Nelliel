@@ -97,7 +97,7 @@ class AdminUsers extends Admin
                 }
                 else
                 {
-                    $domain = new DomainBoard(substr($key, 12), $this->database);
+                    $domain = new DomainBoard(utf8_substr($key, 12), $this->database);
                 }
 
                 $update_user->modifyRole($domain->id(), $value);

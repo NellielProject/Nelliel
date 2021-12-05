@@ -153,7 +153,7 @@ class NellielPDO extends PDO
             $query .= ' "' . $final_columns[$i] . '" = :' . $final_columns[$i] . ' AND ';
         }
 
-        $query = substr($query, 0, -5);
+        $query = utf8_substr($query, 0, -5);
         $prepared = $this->prepare($query);
 
         for ($i = 0; $i < $count; $i ++) {

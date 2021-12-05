@@ -25,8 +25,10 @@ class Previews
         $i = 0;
         $files_count = count($files);
 
-        for ($i = 0; $i < $files_count; $i ++) {
-            if ($files[$i]->data('display_width') <= 0 && $files[$i]->data('display_height') <= 0) {
+        for ($i = 0; $i < $files_count; $i ++)
+        {
+            if ($files[$i]->data('display_width') <= 0 && $files[$i]->data('display_height') <= 0)
+            {
                 continue;
             }
 
@@ -36,27 +38,37 @@ class Previews
             $preview_made = false;
 
             // We favor command line in available as it tends to work better with more flexibility
-            if ($graphics_handler === 'GraphicsMagick') {
-                if (in_array('graphicsmagick', $magicks)) {
+            if ($graphics_handler === 'GraphicsMagick')
+            {
+                if (in_array('graphicsmagick', $magicks))
+                {
                     $preview_made = $this->graphicsMagick($files[$i], $preview_path);
-                } else if (in_array('gmagick', $magicks)) {
+                }
+                else if (in_array('gmagick', $magicks))
+                {
                     $preview_made = $this->gmagick($files[$i], $preview_path);
                 }
             }
 
-            if ($graphics_handler === 'ImageMagick') {
-                if (in_array('imagemagick', $magicks)) {
+            if ($graphics_handler === 'ImageMagick')
+            {
+                if (in_array('imagemagick', $magicks))
+                {
                     $preview_made = $this->imageMagick($files[$i], $preview_path);
-                } else if (in_array('imagick', $magicks)) {
+                }
+                else if (in_array('imagick', $magicks))
+                {
                     $preview_made = $this->imagick($files[$i], $preview_path);
                 }
             }
 
-            if ($graphics_handler === 'GD' || !$preview_made) {
+            if ($graphics_handler === 'GD' || !$preview_made)
+            {
                 $preview_made = $this->gd($files[$i], $preview_path);
             }
 
-            if (!$preview_made) {
+            if (!$preview_made)
+            {
                 $this->nullPreview($files[$i]);
             }
 
@@ -75,37 +87,43 @@ class Previews
         $static_preview_name = $this->staticPreviewName($file);
         $animated_preview_name = $this->animatedPreviewName($file);
 
-        if ($results['result_code'] === 0) {
+        if ($results['result_code'] === 0)
+        {
             $frame_count = count($results['output']);
         }
 
         $this->setPreviewDimensions($file);
 
-        if ($this->generateStatic($file)) {
+        if ($this->generateStatic($file))
+        {
             $resize_command = 'convert ' .
-                sprintf($this->site_domain->setting('imagemagick_args'), escapeshellarg($file->data('location') . '[0]'),
-                    $file->data('preview_width'), $file->data('preview_height'), $this->compressionValue(),
-                    escapeshellarg($preview_path . $static_preview_name));
+                    sprintf($this->site_domain->setting('imagemagick_args'),
+                            escapeshellarg($file->data('location') . '[0]'), $file->data('preview_width'),
+                            $file->data('preview_height'), $this->compressionValue(),
+                            escapeshellarg($preview_path . $static_preview_name));
             $results = nel_exec($resize_command);
             $has_static = $results['result_code'] === 0;
         }
 
-        if ($this->generateAnimated($file) && $frame_count > 1) {
+        if ($this->generateAnimated($file) && $frame_count > 1)
+        {
             $limit = '[0-' . $this->frameLimit() . ']';
             $resize_command = 'convert ' .
-                sprintf($this->site_domain->setting('imagemagick_animated_args'),
-                    escapeshellarg($file->data('location') . $limit), $file->data('preview_width'),
-                    $file->data('preview_height'), escapeshellarg($preview_path . $animated_preview_name));
+                    sprintf($this->site_domain->setting('imagemagick_animated_args'),
+                            escapeshellarg($file->data('location') . $limit), $file->data('preview_width'),
+                            $file->data('preview_height'), escapeshellarg($preview_path . $animated_preview_name));
             $results = nel_exec($resize_command);
             $has_animated = $results['result_code'] === 0;
         }
 
-        if ($has_static) {
+        if ($has_static)
+        {
             $file->changeData('static_preview_name', $static_preview_name);
             chmod($preview_path . $file->data('static_preview_name'), octdec(NEL_FILES_PERM));
         }
 
-        if ($has_animated) {
+        if ($has_animated)
+        {
             $file->changeData('animated_preview_name', $animated_preview_name);
             chmod($preview_path . $file->data('animated_preview_name'), octdec(NEL_FILES_PERM));
         }
@@ -124,10 +142,12 @@ class Previews
 
         $exif = $file->data('temp_exif');
 
-        if (is_array($exif)) {
+        if (is_array($exif))
+        {
             $correct = $this->correctEXIFOrientation($exif);
 
-            if ($correct['flip_horizontal']) {
+            if ($correct['flip_horizontal'])
+            {
                 $image->transverseimage();
             }
 
@@ -138,19 +158,22 @@ class Previews
         $file->changeData('display_height', $image->getimageheight());
         $this->setPreviewDimensions($file);
 
-        if ($this->generateStatic($file)) {
+        if ($this->generateStatic($file))
+        {
             $image->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
             $image->setimagecompressionquality($this->compressionValue());
             $image->setformat($this->domain->setting('static_preview_format'));
             $has_static = $image->writeimage($preview_path . $static_preview_name);
         }
 
-        if ($this->generateAnimated($file) && $frame_count > 1) {
+        if ($this->generateAnimated($file) && $frame_count > 1)
+        {
             $image = $image->coalesceimages();
             $limit = $this->frameLimit();
 
             // Straight thumbnail works for simple animations but not complex ones so we process frames individually
-            for ($i = 0; $i < $limit; $i ++) {
+            for ($i = 0; $i < $limit; $i ++)
+            {
                 $image[$i]->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
             }
 
@@ -158,11 +181,13 @@ class Previews
             $has_animated = $image->writeimages($preview_path . $animated_preview_name, true);
         }
 
-        if ($has_static) {
+        if ($has_static)
+        {
             $file->changeData('static_preview_name', $static_preview_name);
         }
 
-        if ($has_animated) {
+        if ($has_animated)
+        {
             $file->changeData('animated_preview_name', $animated_preview_name);
         }
 
@@ -178,38 +203,43 @@ class Previews
         $static_preview_name = $this->staticPreviewName($file);
         $animated_preview_name = $this->animatedPreviewName($file);
 
-        if ($results['result_code'] === 0) {
+        if ($results['result_code'] === 0)
+        {
             $frame_count = count($results['output']);
         }
 
         $this->setPreviewDimensions($file);
 
-        if ($this->generateStatic($file)) {
+        if ($this->generateStatic($file))
+        {
             $resize_command = 'gm convert ' .
-                sprintf($this->site_domain->setting('graphicsmagick_args'),
-                    escapeshellarg($file->data('location') . '[0]'), $file->data('preview_width'),
-                    $file->data('preview_height'), $this->compressionValue(),
-                    escapeshellarg($preview_path . $static_preview_name));
+                    sprintf($this->site_domain->setting('graphicsmagick_args'),
+                            escapeshellarg($file->data('location') . '[0]'), $file->data('preview_width'),
+                            $file->data('preview_height'), $this->compressionValue(),
+                            escapeshellarg($preview_path . $static_preview_name));
             $results = nel_exec($resize_command);
             $has_static = $results['result_code'] === 0;
         }
 
-        if ($this->generateAnimated($file) && $frame_count > 1) {
+        if ($this->generateAnimated($file) && $frame_count > 1)
+        {
             $limit = '[0-' . $this->frameLimit() . ']';
             $resize_command = 'gm convert ' .
-                sprintf($this->site_domain->setting('graphicsmagick_animated_args'),
-                    escapeshellarg($file->data('location') . $limit), $file->data('preview_width'),
-                    $file->data('preview_height'), escapeshellarg($preview_path . $animated_preview_name));
+                    sprintf($this->site_domain->setting('graphicsmagick_animated_args'),
+                            escapeshellarg($file->data('location') . $limit), $file->data('preview_width'),
+                            $file->data('preview_height'), escapeshellarg($preview_path . $animated_preview_name));
             $results = nel_exec($resize_command);
             $has_animated = $results['result_code'] === 0;
         }
 
-        if ($has_static) {
+        if ($has_static)
+        {
             $file->changeData('static_preview_name', $static_preview_name);
             chmod($preview_path . $file->data('static_preview_name'), octdec(NEL_FILES_PERM));
         }
 
-        if ($has_animated) {
+        if ($has_animated)
+        {
             $file->changeData('animated_preview_name', $animated_preview_name);
             chmod($preview_path . $file->data('animated_preview_name'), octdec(NEL_FILES_PERM));
         }
@@ -228,10 +258,12 @@ class Previews
 
         $exif = $file->data('temp_exif');
 
-        if (is_array($exif)) {
+        if (is_array($exif))
+        {
             $correct = $this->correctEXIFOrientation($exif);
 
-            if ($correct['flip_horizontal']) {
+            if ($correct['flip_horizontal'])
+            {
                 $image->flopimage();
             }
 
@@ -242,19 +274,22 @@ class Previews
         $file->changeData('display_height', $image->getimageheight());
         $this->setPreviewDimensions($file);
 
-        if ($this->generateStatic($file)) {
+        if ($this->generateStatic($file))
+        {
             $image->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
             $image->setCompressionQuality($this->compressionValue());
             $image->setFormat($this->domain->setting('static_preview_format'));
             $has_static = $image->writeImage($preview_path . $static_preview_name, false);
         }
 
-        if ($this->generateAnimated($file) && $frame_count > 1) {
+        if ($this->generateAnimated($file) && $frame_count > 1)
+        {
             $image = $image->coalesceImages();
             $limit = $this->frameLimit();
 
             // Straight thumbnail works for simple animations but not complex ones so we process frames individually
-            for ($i = 0; $i < $limit; $i ++) {
+            for ($i = 0; $i < $limit; $i ++)
+            {
                 $image[$i]->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
             }
 
@@ -262,11 +297,13 @@ class Previews
             $has_animated = $image->writeImage($preview_path . $animated_preview_name, true);
         }
 
-        if ($has_static) {
+        if ($has_static)
+        {
             $file->changeData('static_preview_name', $static_preview_name);
         }
 
-        if ($has_animated) {
+        if ($has_animated)
+        {
             $file->changeData('animated_preview_name', $animated_preview_name);
         }
 
@@ -275,39 +312,59 @@ class Previews
 
     public function gd(Upload $file, string $preview_path): bool
     {
-        if (!$this->generateStatic($file)) {
+        if (!$this->generateStatic($file))
+        {
             return false;
         }
 
         $has_static = false;
         $gd_test = gd_info();
 
-        if ($file->data('format') === 'jpeg' && $gd_test['JPEG Support']) {
+        if ($file->data('format') === 'jpeg' && $gd_test['JPEG Support'])
+        {
             $image = imagecreatefromjpeg($file->data('location'));
-        } else if ($file->data('format') === 'gif' && $gd_test['GIF Read Support']) {
+        }
+        else if ($file->data('format') === 'gif' && $gd_test['GIF Read Support'])
+        {
             $image = imagecreatefromgif($file->data('location'));
-        } else if ($file->data('format') === 'png' && $gd_test['PNG Support']) {
+        }
+        else if ($file->data('format') === 'png' && $gd_test['PNG Support'])
+        {
             $image = imagecreatefrompng($file->data('location'));
-        } else if ($file->data('format') === 'webp' && $gd_test['WebP Support']) {
+        }
+        else if ($file->data('format') === 'webp' && $gd_test['WebP Support'])
+        {
             $image = imagecreatefromwebp($file->data('location'));
-        } else if ($file->data('format') === 'bmp' && $gd_test['BMP Support']) {
+        }
+        else if ($file->data('format') === 'bmp' && $gd_test['BMP Support'])
+        {
             $image = imagecreatefrombmp($file->data('location'));
-        } else if ($file->data('format') === 'wbmp' && $gd_test['WBMP Support']) {
+        }
+        else if ($file->data('format') === 'wbmp' && $gd_test['WBMP Support'])
+        {
             $image = imagecreatefromwbmp($file->data('location'));
-        } else if ($file->data('format') === 'xbm' && $gd_test['XBM Support']) {
+        }
+        else if ($file->data('format') === 'xbm' && $gd_test['XBM Support'])
+        {
             $image = imagecreatefromxbm($file->data('location'));
-        } else if ($file->data('format') === 'xpm' && $gd_test['XPM Support']) {
+        }
+        else if ($file->data('format') === 'xpm' && $gd_test['XPM Support'])
+        {
             $image = imagecreatefromxpm($file->data('location'));
-        } else {
+        }
+        else
+        {
             return false;
         }
 
         $exif = $file->data('temp_exif');
 
-        if (is_array($exif)) {
+        if (is_array($exif))
+        {
             $correct = $this->correctEXIFOrientation($exif);
 
-            if ($correct['flip_horizontal']) {
+            if ($correct['flip_horizontal'])
+            {
                 $image = imageflip($image, IMG_FLIP_HORIZONTAL);
             }
 
@@ -319,7 +376,8 @@ class Previews
         $this->setPreviewDimensions($file);
         $preview = imagecreatetruecolor($file->data('preview_width'), $file->data('preview_height'));
 
-        if ($preview === false) {
+        if ($preview === false)
+        {
             return false;
         }
 
@@ -328,9 +386,10 @@ class Previews
         imagealphablending($preview, false);
         imagesavealpha($preview, true);
         imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->data('preview_width'), $file->data('preview_height'),
-            $file->data('display_width'), $file->data('display_height'));
+                $file->data('display_width'), $file->data('display_height'));
 
-        switch ($this->domain->setting('static_preview_format')) {
+        switch ($this->domain->setting('static_preview_format'))
+        {
             case 'jpg':
                 $has_static = imagejpeg($preview, $preview_path . $static_preview_name, $this->compressionValue());
                 break;
@@ -348,7 +407,8 @@ class Previews
                 break;
         }
 
-        if ($has_static) {
+        if ($has_static)
+        {
             $file->changeData('static_preview_name', $static_preview_name);
         }
 
@@ -361,8 +421,10 @@ class Previews
         $correct['gd_rotate'] = 0;
         $correct['magick_rotate'] = 0;
 
-        if (!empty($exif['IFD0']['Orientation'])) {
-            switch ($exif['IFD0']['Orientation']) {
+        if (!empty($exif['IFD0']['Orientation']))
+        {
+            switch ($exif['IFD0']['Orientation'])
+            {
                 case 2:
                     $correct['flip_horizontal'] = true;
                     break;
@@ -398,25 +460,26 @@ class Previews
 
     private function setPreviewDimensions(Upload $file): void
     {
-        if (empty($file->data('display_width')) || empty($file->data('display_height'))) {
+        if (empty($file->data('display_width')) || empty($file->data('display_height')))
+        {
             return;
         }
 
         $ratio = min(($this->domain->setting('max_preview_height') / $file->data('display_height')),
-            ($this->domain->setting('max_preview_width') / $file->data('display_width')));
+                ($this->domain->setting('max_preview_width') / $file->data('display_width')));
         $file->changeData('preview_width',
-            ($ratio < 1) ? intval($ratio * $file->data('display_width')) : $file->data('display_width'));
+                ($ratio < 1) ? intval($ratio * $file->data('display_width')) : $file->data('display_width'));
         $file->changeData('preview_height',
-            ($ratio < 1) ? intval($ratio * $file->data('display_height')) : $file->data('display_height'));
+                ($ratio < 1) ? intval($ratio * $file->data('display_height')) : $file->data('display_height'));
     }
 
     private function staticPreviewName(Upload $file): string
     {
         $suffix = '_spreview';
         $filename_maxlength = 255 - utf8_strlen($this->domain->setting('static_preview_format')) - 1 -
-            utf8_strlen($suffix);
-        $preview_name = substr($file->data('filename'), 0, $filename_maxlength) . $suffix . '.' .
-            $this->domain->setting('static_preview_format');
+                utf8_strlen($suffix);
+        $preview_name = utf8_substr($file->data('filename'), 0, $filename_maxlength) . $suffix . '.' .
+                $this->domain->setting('static_preview_format');
         return $preview_name;
     }
 
@@ -424,15 +487,16 @@ class Previews
     {
         $suffix = '_apreview';
         $filename_maxlength = 255 - utf8_strlen($this->domain->setting('animated_preview_format')) - 1 -
-            utf8_strlen($suffix);
-        $preview_name = substr($file->data('filename'), 0, $filename_maxlength) . $suffix . '.' .
-            $this->domain->setting('animated_preview_format');
+                utf8_strlen($suffix);
+        $preview_name = utf8_substr($file->data('filename'), 0, $filename_maxlength) . $suffix . '.' .
+                $this->domain->setting('animated_preview_format');
         return $preview_name;
     }
 
     private function compressionValue(): int
     {
-        switch ($this->domain->setting('static_preview_format')) {
+        switch ($this->domain->setting('static_preview_format'))
+        {
             case 'jpg':
                 $value = $this->domain->setting('jpeg_quality');
                 break;
@@ -459,11 +523,13 @@ class Previews
 
     private function generateStatic(Upload $file): bool
     {
-        if (!$this->domain->setting('create_static_preview')) {
+        if (!$this->domain->setting('create_static_preview'))
+        {
             return false;
         }
 
-        if ($this->domain->setting('static_preview_images_only') && $file->data('category') !== 'graphics') {
+        if ($this->domain->setting('static_preview_images_only') && $file->data('category') !== 'graphics')
+        {
             return false;
         }
 
@@ -472,11 +538,13 @@ class Previews
 
     private function generateAnimated(Upload $file): bool
     {
-        if (!$this->domain->setting('create_animated_preview')) {
+        if (!$this->domain->setting('create_animated_preview'))
+        {
             return false;
         }
 
-        if ($this->domain->setting('animated_preview_images_only') && $file->data('category') !== 'graphics') {
+        if ($this->domain->setting('animated_preview_images_only') && $file->data('category') !== 'graphics')
+        {
             return false;
         }
 
@@ -487,7 +555,8 @@ class Previews
     {
         $limit = intval($this->domain->setting('animated_preview_max_frames')) - 1; // Accounting for zero index
 
-        if ($limit < 1) {
+        if ($limit < 1)
+        {
             $limit = 1;
         }
 

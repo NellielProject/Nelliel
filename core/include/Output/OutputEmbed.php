@@ -29,14 +29,11 @@ class OutputEmbed extends Output
         $this->render_data['original_url'] = $embed->data('embed_url');
         $this->render_data['display_url'] = $embed->data('embed_url');
         $embed_regexes = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_ASSOC);
 
-        if ($embed_regexes !== false)
-        {
-            foreach ($embed_regexes as $regex)
-            {
-                if (preg_match($regex['data_regex'], $embed->data('embed_url')) === 1)
-                {
+        if ($embed_regexes !== false) {
+            foreach ($embed_regexes as $regex) {
+                if (preg_match($regex['data_regex'], $embed->data('embed_url')) === 1) {
                     $embed_url = preg_replace($regex['data_regex'], $regex['embed_url'], $embed->data('embed_url'));
                     $this->render_data['embed_url'] = $embed_url;
                     break;
@@ -44,35 +41,29 @@ class OutputEmbed extends Output
             }
         }
 
-        if (utf8_strlen($this->render_data['display_url']) > $this->domain->setting('embed_url_display_length'))
-        {
-            $this->render_data['display_url'] = substr($this->render_data['display_url'], 0,
-                    $this->domain->setting('embed_url_display_length')) . '...';
+        if (utf8_strlen($this->render_data['display_url']) > $this->domain->setting('embed_url_display_length')) {
+            $this->render_data['display_url'] = utf8_substr($this->render_data['display_url'], 0,
+                $this->domain->setting('embed_url_display_length')) . '...';
         }
 
-        if ($this->session->inModmode($this->domain))
-        {
+        if ($this->session->inModmode($this->domain)) {
             $this->render_data['in_modmode'] = true;
             $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=delete&content-id=' . $embed->ContentID()->getIDString() . '&modmode=true&goback=true';
+                '&actions=delete&content-id=' . $embed->ContentID()->getIDString() . '&modmode=true&goback=true';
         }
 
-        if ($catalog)
-        {
+        if ($catalog) {
             $this->render_data['max_preview_width'] = $this->domain->setting('max_catalog_display_width');
             $this->render_data['max_preview_height'] = $this->domain->setting('max_catalog_display_height');
             $multiple = false;
-        }
-        else
-        {
+        } else {
             $this->render_data['max_preview_width'] = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
-                    'max_embed_display_width');
+                'max_embed_display_width');
             $this->render_data['max_preview_height'] = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
-                    'max_embed_display_height');
+                'max_embed_display_height');
         }
 
-        if ($embed->data('deleted'))
-        {
+        if ($embed->data('deleted')) {
             $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_embed');
         }
 

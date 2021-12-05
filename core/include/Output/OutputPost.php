@@ -240,8 +240,8 @@ class OutputPost extends Output
             $raw_poster_id = hash_hmac('sha256',
                 nel_convert_ip_from_storage($post->data('ip_address'), NEL_POSTER_ID_PEPPER) . $this->domain->id() .
                 $thread->contentID()->threadID());
-            $poster_id = substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
-            $post_headers['id_color_code'] = '#' . substr($raw_poster_id, 0, 6);
+            $poster_id = utf8_substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
+            $post_headers['id_color_code'] = '#' . utf8_substr($raw_poster_id, 0, 6);
             $post_headers['poster_id'] = $poster_id;
             $post_headers['show_poster_id'] = true;
 
@@ -262,8 +262,9 @@ class OutputPost extends Output
 
         $post_headers['post_time'] = date($this->domain->setting('date_format'), intval($post->data('post_time')));
         $post_headers['post_number'] = $post->contentID()->postID();
-        $post_headers['post_number_url'] = $thread->getURL($this->session->inModmode($this->domain) && !$this->write_mode) . '#t' .
-            $post_content_id->threadID() . 'p' . $post_content_id->postID();
+        $post_headers['post_number_url'] = $thread->getURL(
+            $this->session->inModmode($this->domain) && !$this->write_mode) . '#t' . $post_content_id->threadID() . 'p' .
+            $post_content_id->postID();
         $post_headers['post_number_url_cite'] = $post_headers['post_number_url'] . 'cite';
 
         if ($this->domain->setting('display_post_backlinks')) {
