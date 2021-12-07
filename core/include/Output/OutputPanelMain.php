@@ -71,9 +71,11 @@ class OutputPanelMain extends Output
         $this->render_data['module_blotter'] = $this->session->user()->checkPermission($this->domain,
             'perm_blotter_manage');
         $this->render_data['blotter_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=blotter';
-        $this->render_data['module_pages'] = $this->session->user()->checkPermission($this->domain,
-            'perm_pages_manage');
+        $this->render_data['module_pages'] = $this->session->user()->checkPermission($this->domain, 'perm_pages_manage');
         $this->render_data['pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=pages';
+        $this->render_data['module_embeds'] = $this->session->user()->checkPermission($this->domain,
+            'perm_embeds_manage');
+        $this->render_data['embeds_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=embeds';
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_overboard');
         $this->render_data['regen_overboard_url'] = nel_build_router_url([Domain::SITE, 'regen', 'overboard']);

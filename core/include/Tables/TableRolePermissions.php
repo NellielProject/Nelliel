@@ -71,6 +71,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_config_modify', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_config_override', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_board_defaults_modify', 1]);
+        $this->insertDefaultRow(['SITE_ADMIN', 'perm_embeds_manage', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_filetypes_manage', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_file_filters_manage', 1]);
         $this->insertDefaultRow(['SITE_ADMIN', 'perm_image_sets_manage', 1]);
@@ -130,6 +131,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_config_modify', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_config_override', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_board_defaults_modify', 0]);
+        $this->insertDefaultRow(['BOARD_OWNER', 'perm_embeds_manage', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_filetypes_manage', 0]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_file_filters_manage', 1]);
         $this->insertDefaultRow(['BOARD_OWNER', 'perm_image_sets_manage', 0]);
@@ -189,6 +191,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['MODERATOR', 'perm_board_config_modify', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_board_config_override', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_board_defaults_modify', 0]);
+        $this->insertDefaultRow(['MODERATOR', 'perm_embeds_manage', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_filetypes_manage', 0]);
         $this->insertDefaultRow(['MODERATOR', 'perm_file_filters_manage', 1]);
         $this->insertDefaultRow(['MODERATOR', 'perm_image_sets_manage', 0]);
@@ -248,6 +251,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['JANITOR', 'perm_board_config_modify', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_config_override', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_board_defaults_modify', 0]);
+        $this->insertDefaultRow(['JANITOR', 'perm_embeds_manage', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_filetypes_manage', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_file_filters_manage', 0]);
         $this->insertDefaultRow(['JANITOR', 'perm_image_sets_manage', 0]);
@@ -307,6 +311,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_config_modify', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_config_override', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_board_defaults_modify', 0]);
+        $this->insertDefaultRow(['BASIC_USER', 'perm_embeds_manage', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_filetypes_manage', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_file_filters_manage', 0]);
         $this->insertDefaultRow(['BASIC_USER', 'perm_image_sets_manage', 0]);

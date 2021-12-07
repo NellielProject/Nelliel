@@ -176,6 +176,8 @@ Error 396: perm_users_manage (Admin/AdminUsers.php)
 
 Error 400: perm_word_filters_manage (Admin/AdminWordFilters.php)  
 
+Error 405: perm_embeds_manage (Admin/AdminEmbeds.php)  
+
 Error 410: perm_threads_access (Admin/AdminThreads.php)  
 Error 411: perm_post_status (Admin/AdminThreads.php)  
 Error 412: perm_post_type (Admin/AdminThreads.php)  

@@ -230,6 +230,8 @@ class Setup
         $noticeboard_table->createTable();
         $ip_notes_table = new TableIPNotes($this->database, $this->sql_compatibility);
         $ip_notes_table->createTable();
+        $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
+        $embeds_table->createTable();
 
         // NOTE: The following tables rely on the domain registry table
         // Domain registry must be created first!
