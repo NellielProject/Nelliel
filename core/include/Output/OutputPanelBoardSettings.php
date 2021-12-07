@@ -207,79 +207,20 @@ class OutputPanelBoardSettings extends Output
             $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
 
-        $this->render_data['settings_data']['default_style']['options'] = $this->stylesSelect(
+        $output_menu = new OutputMenu($this->domain, false);
+        $this->render_data['settings_data']['default_style']['options'] = $output_menu->configStyles(
             $this->render_data['settings_data']['default_style']['setting_value'] ?? '');
-        $this->render_data['settings_data']['ui_image_set']['options'] = $this->imageSetsSelect(
+        $this->render_data['settings_data']['ui_image_set']['options'] = $output_menu->configImageSets(
             $this->render_data['settings_data']['ui_image_set']['setting_value'] ?? '');
-        $this->render_data['settings_data']['filetype_image_set']['options'] = $this->imageSetsSelect(
+        $this->render_data['settings_data']['filetype_image_set']['options'] = $output_menu->configImageSets(
             $this->render_data['settings_data']['filetype_image_set']['setting_value'] ?? '');
-        $this->render_data['settings_data']['template_id']['options'] = $this->templatesSelect(
+        $this->render_data['settings_data']['template_id']['options'] = $output_menu->configTemplates(
             $this->render_data['settings_data']['template_id']['setting_value'] ?? '');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
-    }
-
-    private function stylesSelect(string $selected): array
-    {
-        $styles = $this->domain->frontEndData()->getAllStyles();
-        $options = array();
-
-        foreach ($styles as $style) {
-            $option_data = array();
-            $option_data['option_name'] = $style->id();
-            $option_data['option_label'] = $style->info('name');
-
-            if ($option_data['option_name'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
-        }
-
-        return $options;
-    }
-
-    private function imageSetsSelect(string $selected): array
-    {
-        $sets = $this->domain->frontEndData()->getAllImageSets();
-        $options = array();
-
-        foreach ($sets as $set) {
-            $option_data = array();
-            $option_data['option_name'] = $set->id();
-            $option_data['option_label'] = $set->info('name');
-
-            if ($option_data['option_name'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
-        }
-
-        return $options;
-    }
-
-    private function templatesSelect(string $selected): array
-    {
-        $templates = $this->domain->frontEndData()->getAllTemplates();
-        $options = array();
-
-        foreach ($templates as $template) {
-            $option_data = array();
-            $option_data['option_name'] = $template->id();
-            $option_data['option_label'] = $template->info('name');
-
-            if ($option_data['option_name'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
-        }
-
-        return $options;
     }
 
     private function defaultsList()

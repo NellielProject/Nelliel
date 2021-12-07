@@ -15,6 +15,66 @@ class OutputMenu extends Output
         parent::__construct($domain, $write_mode);
     }
 
+    public function configStyles(string $selected): array
+    {
+        $styles = $this->domain->frontEndData()->getAllStyles();
+        $options = array();
+
+        foreach ($styles as $style) {
+            $option_data = array();
+            $option_data['option_name'] = $style->id();
+            $option_data['option_label'] = $style->info('name');
+
+            if ($option_data['option_name'] === $selected) {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
+    }
+
+    public function configImageSets(string $selected): array
+    {
+        $sets = $this->domain->frontEndData()->getAllImageSets();
+        $options = array();
+
+        foreach ($sets as $set) {
+            $option_data = array();
+            $option_data['option_name'] = $set->id();
+            $option_data['option_label'] = $set->info('name');
+
+            if ($option_data['option_name'] === $selected) {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
+    }
+
+    public function configTemplates(string $selected): array
+    {
+        $templates = $this->domain->frontEndData()->getAllTemplates();
+        $options = array();
+
+        foreach ($templates as $template) {
+            $option_data = array();
+            $option_data['option_name'] = $template->id();
+            $option_data['option_label'] = $template->info('name');
+
+            if ($option_data['option_name'] === $selected) {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
+    }
+
     public function styles(array $parameters, bool $data_only)
     {
         $this->renderSetup();
@@ -22,10 +82,8 @@ class OutputMenu extends Output
         $render_data = array();
         $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
 
-        foreach ($styles as $style)
-        {
-            if ($this->domain->id() !== Domain::SITE && !in_array($style->id(), $enabled_styles))
-            {
+        foreach ($styles as $style) {
+            if ($this->domain->id() !== Domain::SITE && !in_array($style->id(), $enabled_styles)) {
                 continue;
             }
 
@@ -37,18 +95,11 @@ class OutputMenu extends Output
             $render_data[] = $style_data;
         }
 
-        usort($render_data, [$this, 'sortByStyleName']);
+        usort($render_data, function ($a, $b) {
+            return $a['style_name'] <=> $b['style_name'];
+        });
+
         return $render_data;
-    }
-
-    private function sortByStyleName($a, $b)
-    {
-        if ($a['style_name'] == $b['style_name'])
-        {
-            return $a['style_name'] - $b['style_name'];
-        }
-
-        return ($a['style_name'] < $b['style_name']) ? -1 : 1;
     }
 
     public function fgsfds(array $parameters, bool $data_only)
