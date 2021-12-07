@@ -1,0 +1,29 @@
+<table >
+	<caption data-i18n="">List of embeds</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Label</th>
+			<th scope="col" data-i18n="">URL</th>
+			<th scope="col" data-i18n="">Images Only</th>
+			<th scope="col" data-i18n="">Enabled</th>
+			<th scope="col" data-i18n="">Notes</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# content_ops_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ content_ops_label }}</td>
+			<td>{{ content_ops_url }}</td>
+			<td>{{ images_only }}</td>
+			<td>{{ enabled }}</td>
+			<td>{{ notes }}</td>
+			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
+			</td>
+		</tr>
+{{/ content_ops_list }}
+	</tbody>
+</table>

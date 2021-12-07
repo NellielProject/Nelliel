@@ -8,17 +8,17 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Output\OutputPanelEmbeds;
+use Nelliel\Output\OutputPanelContentOps;
 
-class AdminEmbeds extends Admin
+class AdminContentOps extends Admin
 {
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->data_table = NEL_EMBEDS_TABLE;
-        $this->id_field = 'embed-id';
-        $this->panel_name = _gettext('Embeds');
+        $this->data_table = NEL_CONTENT_OPS_TABLE;
+        $this->id_field = 'content-op-id';
+        $this->panel_name = _gettext('Content Ops');
     }
 
     public function dispatch(array $inputs): void
@@ -40,63 +40,64 @@ class AdminEmbeds extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
-        $output_panel = new OutputPanelEmbeds($this->domain, false);
+        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $output_panel = new OutputPanelContentOps($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
-        $output_panel = new OutputPanelEmbeds($this->domain, false);
+        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $output_panel = new OutputPanelContentOps($this->domain, false);
         $output_panel->new(['editing' => false], false);
         $this->outputMain(false);
     }
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
-        $embed_name = $_POST['embed_name'] ?? '';
-        $data_regex = $_POST['data_regex'] ?? '';
-        $embed_url = $_POST['embed_url'] ?? '';
+        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $content_op_label = $_POST['content_op_label'] ?? '';
+        $content_op_url = $_POST['content_op_url'] ?? '';
+        $images_only = $_POST['images_only'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
         $notes = $_POST['notes'] ?? null;
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table .
-            '" ("embed_name", "data_regex", "embed_url", "enabled", "notes") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$embed_name, $data_regex, $embed_url, $enabled, $notes]);
+            '" ("content_op_label", "content_op_url", "images_only", "enabled", "notes") VALUES (?, ?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$content_op_label, $content_op_url, $images_only, $enabled, $notes]);
         $this->outputMain(true);
     }
 
     public function editor(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
         $entry = $_GET[$this->id_field] ?? 0;
-        $output_panel = new OutputPanelEmbeds($this->domain, false);
+        $output_panel = new OutputPanelContentOps($this->domain, false);
         $output_panel->edit(['editing' => true, 'entry' => $entry], false);
         $this->outputMain(false);
     }
 
     public function update(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
         $entry = $_GET[$this->id_field] ?? 0;
-        $embed_name = $_POST['embed_name'] ?? '';
-        $data_regex = $_POST['data_regex'] ?? '';
-        $embed_url = $_POST['embed_url'] ?? '';
+        $content_op_label = $_POST['content_op_label'] ?? '';
+        $content_op_url = $_POST['content_op_url'] ?? '';
+        $images_only = $_POST['images_only'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
         $notes = $_POST['notes'] ?? null;
 
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table .
-            '" SET "embed_name" = ?, "data_regex" = ?, "embed_url" = ?, "enabled" = ?, "notes" = ? WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$embed_name, $data_regex, $embed_url, $enabled, $notes, $entry]);
+            '" SET "content_op_label" = ?, "content_op_url" = ?, "images_only" = ?, "enabled" = ?, "notes" = ? WHERE "entry" = ?');
+        $this->database->executePrepared($prepared,
+            [$content_op_label, $content_op_url, $images_only, $enabled, $notes, $entry]);
         $this->outputMain(true);
     }
 
     public function remove(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
         $id = $_GET[$this->id_field] ?? 0;
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$id]);
@@ -110,8 +111,8 @@ class AdminEmbeds extends Admin
         }
 
         switch ($perm) {
-            case 'perm_embeds_manage':
-                nel_derp(405, _gettext('You are not allowed to manage embeds.'));
+            case 'perm_content_ops_manage':
+                nel_derp(420, _gettext('You are not allowed to manage content_ops.'));
                 break;
 
             default:
@@ -121,7 +122,7 @@ class AdminEmbeds extends Admin
 
     public function enable()
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
         $id = $_GET[$this->id_field] ?? 0;
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$id]);
@@ -130,7 +131,7 @@ class AdminEmbeds extends Admin
 
     public function disable()
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
         $id = $_GET[$this->id_field] ?? 0;
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
         $this->database->executePrepared($prepared, [$id]);

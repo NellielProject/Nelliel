@@ -184,6 +184,8 @@ Error 412: perm_post_type (Admin/AdminThreads.php)
 Error 413: perm_edit_posts (Admin/AdminThreads.php)  
 Error 414: perm_delete_by_ip (Admin/AdminThreads.php)  
 
+Error 420: perm_content_ops_manage (Admin/AdminContentOps.php)  
+
 Error 500: perm_regen_pages (board) (Dispatch/DispatchModules.php)  
 Error 501: perm_regen_cache (board) (Dispatch/DispatchModules.php)  
 Error 502: perm_regen_cache (site) (Dispatch/DispatchModules.php)  

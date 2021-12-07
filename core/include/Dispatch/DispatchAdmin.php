@@ -12,6 +12,8 @@ use Nelliel\Admin\AdminBlotter;
 use Nelliel\Admin\AdminBoardDefaults;
 use Nelliel\Admin\AdminBoardSettings;
 use Nelliel\Admin\AdminBoards;
+use Nelliel\Admin\AdminContentOps;
+use Nelliel\Admin\AdminEmbeds;
 use Nelliel\Admin\AdminFileFilters;
 use Nelliel\Admin\AdminFiletypes;
 use Nelliel\Admin\AdminImageSets;
@@ -29,10 +31,9 @@ use Nelliel\Admin\AdminUsers;
 use Nelliel\Admin\AdminWordFilters;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputBoardlist;
 use Nelliel\Output\OutputPanelBoard;
 use Nelliel\Output\OutputPanelMain;
-use Nelliel\Output\OutputBoardlist;
-use Nelliel\Admin\AdminEmbeds;
 
 class DispatchAdmin extends Dispatch
 {
@@ -173,6 +174,11 @@ class DispatchAdmin extends Dispatch
 
             case 'embeds':
                 $admin_handler = new AdminEmbeds($this->authorization, $this->domain, $this->session);
+                $admin_handler->dispatch($inputs);
+                break;
+
+            case 'content-ops':
+                $admin_handler = new AdminContentOps($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
                 break;
 

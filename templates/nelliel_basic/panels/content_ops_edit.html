@@ -1,0 +1,27 @@
+<form accept-charset="utf-8" action="{{ form_action }}" method="post">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="content_op_label" class="display-cell" data-i18n="">Op label</label>
+			<input id="content_op_label" class="display-cell" type="text" name="content_op_label" size="30" value="{{ content_op_label }}">
+		</div>
+		<div class="display-row">
+			<label for="content_op_url" class="display-cell" data-i18n="">Op URL</label>
+			<textarea id="content_op_url" class="display-cell" name="content_op_url" cols="64" rows="3">{{ content_op_url }}</textarea>
+		</div>
+		<div class="display-row">
+			<label for="images_only" class="display-cell" data-i18n="">Images only</label>
+			<input id="images_only" class="display-cell" type="checkbox" value="1" name="images_only" {{ images_only }}>
+		</div>
+		<div class="display-row">
+			<label for="enabled" class="display-cell" data-i18n="">Enabled</label>
+			<input id="enabled" class="display-cell" type="checkbox" value="1" name="enabled" {{ enabled }}>
+		</div>
+		<div class="display-row">
+			<label for="notes" class="display-cell" data-i18n="">Notes</label>
+			<textarea id="notes" class="display-cell" name="notes" cols="64" rows="3">{{ notes }}</textarea>
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Update Content Op" data-i18n-attributes="value">
+		</div>
+	</div>
+</form>

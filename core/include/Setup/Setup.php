@@ -47,6 +47,7 @@ use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
+use Nelliel\Tables\TableContentOps;
 
 class Setup
 {
@@ -232,6 +233,8 @@ class Setup
         $ip_notes_table->createTable();
         $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
         $embeds_table->createTable();
+        $content_ops_table = new TableContentOps($this->database, $this->sql_compatibility);
+        $content_ops_table->createTable();
 
         // NOTE: The following tables rely on the domain registry table
         // Domain registry must be created first!
