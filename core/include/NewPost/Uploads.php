@@ -354,6 +354,7 @@ class Uploads
 
             $this->checkEmbedDuplicates($post, $embed_url);
             $embed = new Upload(new ContentID(), $this->domain);
+            $embed->parseEmbedURL($embed_url, true);
             $embed->changeData('category', 'embed');
             $embed->changeData('format', 'embed');
             $embed->changeData('embed_url', $embed_url);

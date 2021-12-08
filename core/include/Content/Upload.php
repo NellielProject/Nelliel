@@ -250,4 +250,28 @@ class Upload
     {
         return $this->json;
     }
+
+    public function parseEmbedURL(string $url, bool $error): string
+    {
+        $embed_regexes = $this->database->executeFetchAll(
+            'SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_ASSOC);
+
+        if ($embed_regexes !== false) {
+            foreach ($embed_regexes as $regex) {
+                if (preg_match($regex['data_regex'], $url) === 1) {
+                    $embed_url = preg_replace($regex['data_regex'], $regex['embed_url'], $url);
+
+                    if (is_string($embed_url)) {
+                        return $embed_url;
+                    }
+                }
+            }
+        }
+
+        if ($error) {
+            nel_derp(67, _gettext('Embed URL is malformed or not supported.'));
+        }
+
+        return '';
+    }
 }

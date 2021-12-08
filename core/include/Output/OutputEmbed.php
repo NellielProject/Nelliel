@@ -7,7 +7,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
-use PDO;
 
 class OutputEmbed extends Output
 {
@@ -28,18 +27,7 @@ class OutputEmbed extends Output
         $this->render_data['embed_content_id'] = $embed->contentID()->getIDString();
         $this->render_data['original_url'] = $embed->data('embed_url');
         $this->render_data['display_url'] = $embed->data('embed_url');
-        $embed_regexes = $this->database->executeFetchAll(
-            'SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_ASSOC);
-
-        if ($embed_regexes !== false) {
-            foreach ($embed_regexes as $regex) {
-                if (preg_match($regex['data_regex'], $embed->data('embed_url')) === 1) {
-                    $embed_url = preg_replace($regex['data_regex'], $regex['embed_url'], $embed->data('embed_url'));
-                    $this->render_data['embed_url'] = $embed_url;
-                    break;
-                }
-            }
-        }
+        $this->render_data['embed_url'] = $embed->parseEmbedURL($embed->data('embed_url'), false);
 
         if (utf8_strlen($this->render_data['display_url']) > $this->domain->setting('embed_url_display_length')) {
             $this->render_data['display_url'] = utf8_substr($this->render_data['display_url'], 0,
