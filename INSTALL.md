@@ -18,4 +18,4 @@ Basic installation guide. Please note that installing and running a modern image
 8. Navigate to `imgboard.php?install` in a browser and give it a moment to run the install routines. If anything goes wrong it should give a relevant error message.
 9. At the end of the install process, you will receive one of two messages:
  - It will ask you to create a site owner account. This account will have all permissions and cannot be deleted.
- - A message confirming a site owner account already exists and a link to the login page. You can also go to `imgboard.php?module=login` if the link does not work for some reason.
+ - A message confirming a site owner account already exists and a link to the login page. You can also go to `imgboard.php?route=/_site_/account/login` if the link does not work for some reason.
