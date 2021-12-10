@@ -1,6 +1,10 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
+			<label for="content_op_id" class="display-cell" data-i18n="">Unique ID</label>
+			<input id="content_op_id" class="display-cell" type="text" name="content_op_id" size="30" value="{{ content_op_id }}">
+		</div>
+		<div class="display-row">
 			<label for="content_op_label" class="display-cell" data-i18n="">Op label</label>
 			<input id="content_op_label" class="display-cell" type="text" name="content_op_label" size="30" value="{{ content_op_label }}">
 		</div>

@@ -22,6 +22,7 @@ class OutputFile extends Output
         $post = $file->getParent();
         $catalog = $parameters['catalog'] ?? false;
         $multiple = $post->data('file_count') > 1;
+        $template = ($multiple) ? 'thread/multiple_content' : 'thread/single_content';
         $this->render_data['is_file'] = true;
         $full_filename = $file->data('filename') . '.' . $file->data('extension');
         $this->render_data['file_container_id'] = 'file-container-' . $file->contentID()->getIDString();
@@ -50,7 +51,8 @@ class OutputFile extends Output
         }
 
         if (utf8_strlen($display_filename) > $this->domain->setting('filename_display_length')) {
-            $display_filename = utf8_substr($display_filename, 0, $this->domain->setting('filename_display_length')) . '...';
+            $display_filename = utf8_substr($display_filename, 0, $this->domain->setting('filename_display_length')) .
+                '...';
         }
 
         $this->render_data['display_filename'] = $display_filename;
@@ -177,7 +179,25 @@ class OutputFile extends Output
             $this->render_data['video_preview'] = $preview_type === 'video';
         }
 
-        $output = $this->output('thread/file_info', $data_only, true, $this->render_data);
+        $all_content_ops = $this->domain->frontEndData()->getAllContentOps(true);
+        $enabled_content_ops = json_decode($this->domain->setting('enabled_content_ops') ?? '', true);
+
+        foreach ($all_content_ops as $content_op) {
+            if (!in_array($content_op->id(), $enabled_content_ops)) {
+                continue;
+            }
+
+            if ($content_op->data('images_only') && $file->data('category') !== 'graphics') {
+                continue;
+            }
+
+            $displayed_op = array();
+            $displayed_op['button_url'] = $content_op->data('content_op_url') . $this->render_data['file_url'];
+            $displayed_op['button_text'] = $content_op->data('content_op_label');
+            $this->render_data['content_ops'][] = $displayed_op;
+        }
+
+        $output = $this->output($template, $data_only, true, $this->render_data);
         return $output;
     }
 }

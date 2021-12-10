@@ -616,6 +616,27 @@
 	{{# display_deleted_placeholder }}
 			{{> panels/pieces/settings/text }}
 	{{/ display_deleted_placeholder }}
+	{{# enabled_content_ops }}
+			<tr class="row1">
+			{{> panels/pieces/settings/setting_name }}
+				<td>
+		{{# content_ops }}
+			{{# entry }}
+					<input type="hidden" name="{{ input_name }}[default]" value="0">
+					<label>
+					<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
+					<span>{{ item_label }}</span>
+					</label>
+					<br>
+			{{/ entry }}
+		{{/ content_ops }}
+				</td>
+		{{# show_lock_update }}
+				{{> panels/pieces/settings/lock_update }}
+		{{/ show_lock_update }}
+				{{> panels/pieces/settings/setting_description }}
+			</tr>
+	{{/ enabled_content_ops }}
 		</tbody>
 		<tbody>
 			<tr>

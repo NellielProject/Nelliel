@@ -171,6 +171,30 @@ class OutputPanelBoardSettings extends Output
                 $this->render_data['settings_data']['styles'][] = $style_entries;
             }
 
+            if ($setting['setting_name'] === 'enabled_content_ops') {
+                $content_ops_edit_lock = $defaults_list['enabled_content_ops']['edit_lock'] == 1 && !$defaults &&
+                    !$user_lock_override;
+                $content_ops = $this->domain->frontEndData()->getAllContentOps(true);
+                $content_ops_array = json_decode($setting['setting_value'] ?? '', true);
+                $content_op_entries = array();
+
+                foreach ($content_ops as $content_op) {
+                    $content_op_id = $content_op->id();
+                    $set = array();
+                    $set['input_name'] = 'enabled_content_ops[' . $content_op_id . ']';
+                    $set['item_label'] = $content_op->data('content_op_label');
+                    $set['disabled'] = ($content_ops_edit_lock) ? 'disabled' : '';
+
+                    if (in_array($content_op_id, $content_ops_array)) {
+                        $set['checked'] = 'checked';
+                    }
+
+                    $content_op_entries['entry'][] = $set;
+                }
+
+                $this->render_data['settings_data']['content_ops'][] = $content_op_entries;
+            }
+
             foreach ($input_attributes as $attribute => $value) {
                 $setting_data['input_attributes']['input_' . $attribute] = $value;
             }

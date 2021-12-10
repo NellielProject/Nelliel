@@ -2,6 +2,7 @@
 	<caption data-i18n="">List of embeds</caption>
 	<thead>
 		<tr>
+			<th scope="col" data-i18n="">ID</th>
 			<th scope="col" data-i18n="">Label</th>
 			<th scope="col" data-i18n="">URL</th>
 			<th scope="col" data-i18n="">Images Only</th>
@@ -13,8 +14,9 @@
 	<tbody>
 {{# content_ops_list }}
 		<tr class="{{ bgclass }}">
-			<td>{{ content_ops_label }}</td>
-			<td>{{ content_ops_url }}</td>
+			<td>{{ content_op_id }}</td>
+			<td>{{ content_op_label }}</td>
+			<td>{{ content_op_url }}</td>
 			<td>{{ images_only }}</td>
 			<td>{{ enabled }}</td>
 			<td>{{ notes }}</td>

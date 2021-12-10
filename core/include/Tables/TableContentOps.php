@@ -19,6 +19,7 @@ class TableContentOps extends Table
         $this->table_name = NEL_CONTENT_OPS_TABLE;
         $this->column_types = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'content_op_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'content_op_label' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'content_op_url' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'images_only' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
@@ -27,8 +28,9 @@ class TableContentOps extends Table
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'entry' => ['row_check' => false, 'auto_inc' => true],
-            'content_op_label' => ['row_check' => true, 'auto_inc' => false],
-            'content_op_url' => ['row_check' => true, 'auto_inc' => false],
+            'content_op_id' => ['row_check' => true, 'auto_inc' => false],
+            'content_op_label' => ['row_check' => false, 'auto_inc' => false],
+            'content_op_url' => ['row_check' => false, 'auto_inc' => false],
             'images_only' => ['row_check' => false, 'auto_inc' => false],
             'enabled' => ['row_check' => false, 'auto_inc' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false],
@@ -43,6 +45,7 @@ class TableContentOps extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            content_op_id       VARCHAR(50) NOT NULL UNIQUE,
             content_op_label    VARCHAR(255) NOT NULL,
             content_op_url      TEXT NOT NULL,
             images_only         SMALLINT NOT NULL DEFAULT 0,
@@ -60,11 +63,11 @@ class TableContentOps extends Table
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['ImgOps', 'https://imgops.com/', 1, 1, 'Image Operations https://imgops.com/']);
-        $this->insertDefaultRow(['EXIF', 'http://regex.info/imageinfo.cgi?url=', 1, 1, 'Jeffrey\'s Image Metadata Viewer http://regex.info']);
-        $this->insertDefaultRow(['iqdb', 'http://iqdb.org/?url=', 1, 1, 'Multi-service image search https://iqdb.org']);
-        $this->insertDefaultRow(['TinEye', 'https://tineye.com/search/?url=', 1, 1, 'TinEye reverse image search https://tineye.com/']);
-        $this->insertDefaultRow(['Yandex', 'https://yandex.com/images/search?rpt=imageview&url=', 1, 1, 'Yandex https://yandex.com/']);
-        $this->insertDefaultRow(['ASSE', 'https://trace.moe/?url=', 1, 1, 'Anime Scene Search Engine https://trace.moe/']);
+        $this->insertDefaultRow(['imgops', 'ImgOps', 'https://imgops.com/', 1, 1, 'Image Operations https://imgops.com/']);
+        $this->insertDefaultRow(['exif', 'EXIF', 'http://regex.info/imageinfo.cgi?url=', 1, 1, 'Jeffrey\'s Image Metadata Viewer http://regex.info']);
+        $this->insertDefaultRow(['iqdb', 'iqdb', 'http://iqdb.org/?url=', 1, 1, 'Multi-service image search https://iqdb.org']);
+        $this->insertDefaultRow(['tineye', 'TinEye', 'https://tineye.com/search/?url=', 1, 1, 'TinEye reverse image search https://tineye.com/']);
+        $this->insertDefaultRow(['yandex', 'Yandex', 'https://yandex.com/images/search?rpt=imageview&url=', 1, 1, 'Yandex https://yandex.com/']);
+        $this->insertDefaultRow(['asse', 'ASSE', 'https://trace.moe/?url=', 1, 1, 'Anime Scene Search Engine https://trace.moe/']);
     }
 }

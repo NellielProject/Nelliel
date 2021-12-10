@@ -5,10 +5,10 @@ namespace Nelliel\FrontEnd;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\INIParser;
 use Nelliel\NellielPDO;
 use Nelliel\Utility\CacheHandler;
 use PDO;
-use Nelliel\INIParser;
 
 class FrontEndData
 {
@@ -18,6 +18,7 @@ class FrontEndData
     private static $image_sets = array();
     private static $styles = array();
     private static $templates = array();
+    private static $content_ops = array();
     private $core_image_set_ids = array();
     private $core_style_ids = array();
     private $core_template_ids = array();
@@ -40,8 +41,7 @@ class FrontEndData
 
     public function getImageSet(string $set_id): ImageSet
     {
-        if (!isset(self::$image_sets[$set_id]))
-        {
+        if (!isset(self::$image_sets[$set_id])) {
             self::$image_sets[$set_id] = new ImageSet($this->database, $this, $set_id);
         }
 
@@ -51,11 +51,10 @@ class FrontEndData
     public function getAllImageSets(): array
     {
         $set_ids = $this->database->executeFetchAll(
-                'SELECT "set_id" FROM "' . NEL_IMAGE_SETS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
+            'SELECT "set_id" FROM "' . NEL_IMAGE_SETS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
         $sets = array();
 
-        foreach ($set_ids as $set_id)
-        {
+        foreach ($set_ids as $set_id) {
             $sets[$set_id] = $this->getImageSet($set_id);
         }
 
@@ -79,8 +78,7 @@ class FrontEndData
 
     public function getStyle(string $style_id): Style
     {
-        if (!isset(self::$styles[$style_id]))
-        {
+        if (!isset(self::$styles[$style_id])) {
             self::$styles[$style_id] = new Style($this->database, $this, $style_id);
         }
 
@@ -90,11 +88,10 @@ class FrontEndData
     public function getAllStyles(): array
     {
         $style_ids = $this->database->executeFetchAll(
-                'SELECT "style_id" FROM "' . NEL_STYLES_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
+            'SELECT "style_id" FROM "' . NEL_STYLES_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
         $styles = array();
 
-        foreach ($style_ids as $style_id)
-        {
+        foreach ($style_ids as $style_id) {
             $styles[$style_id] = $this->getStyle($style_id);
         }
 
@@ -118,8 +115,7 @@ class FrontEndData
 
     public function getTemplate(string $template_id): Template
     {
-        if (!isset(self::$templates[$template_id]))
-        {
+        if (!isset(self::$templates[$template_id])) {
             self::$templates[$template_id] = new Template($this->database, $this, $template_id);
         }
 
@@ -129,14 +125,37 @@ class FrontEndData
     public function getAllTemplates(): array
     {
         $template_ids = $this->database->executeFetchAll(
-                'SELECT "template_id" FROM "' . NEL_TEMPLATES_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
+            'SELECT "template_id" FROM "' . NEL_TEMPLATES_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
         $templates = array();
 
-        foreach ($template_ids as $template_id)
-        {
+        foreach ($template_ids as $template_id) {
             $templates[$template_id] = $this->getTemplate($template_id);
         }
 
         return $templates;
+    }
+
+    public function getContentOp(string $content_op_id): ContentOp
+    {
+        if (!isset(self::$content_ops[$content_op_id])) {
+            self::$content_ops[$content_op_id] = new ContentOp($this->database, $this, $content_op_id);
+        }
+
+        return self::$content_ops[$content_op_id];
+    }
+
+    public function getAllContentOps(bool $enabled_only): array
+    {
+        $where_enabled = ($enabled_only) ? 'WHERE "enabled" = 1' : '';
+        $content_op_ids = $this->database->executeFetchAll(
+            'SELECT "content_op_id" FROM "' . NEL_CONTENT_OPS_TABLE . '" ' . $where_enabled . ' ORDER BY "entry" ASC',
+            PDO::FETCH_COLUMN);
+        $content_ops = array();
+
+        foreach ($content_op_ids as $content_op_id) {
+            $content_ops[$content_op_id] = $this->getContentOp($content_op_id);
+        }
+
+        return $content_ops;
     }
 }

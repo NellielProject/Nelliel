@@ -37,6 +37,7 @@ class OutputPanelContentOps extends Output
             $content_op_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $content_op_data['entry'] = $content_op['entry'];
+            $content_op_data['content_op_id'] = $content_op['content_op_id'];
             $content_op_data['content_op_label'] = $content_op['content_op_label'];
             $content_op_data['content_op_url'] = $content_op['content_op_url'];
             $content_op_data['images_only'] = $content_op['images_only'];
@@ -106,6 +107,7 @@ class OutputPanelContentOps extends Output
 
             if ($content_op_data !== false) {
                 $this->render_data['entry'] = $content_op_data['entry'];
+                $this->render_data['content_op_id'] = $content_op_data['content_op_id'];
                 $this->render_data['content_op_label'] = $content_op_data['content_op_label'];
                 $this->render_data['content_op_url'] = $content_op_data['content_op_url'];
                 $this->render_data['images_only'] = $content_op_data['images_only'] == 1 ? 'checked' : '';
