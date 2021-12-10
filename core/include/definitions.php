@@ -95,3 +95,8 @@ define('NEL_INTERNAL_FILE_HEADER',
 defined(\'NELLIEL_VERSION\') or die(\'NOPE.AVI\');
 ');
 
+define('NEL_WEB_PROTOCOL', (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') ? 'https' : 'http');
+define('NEL_SITE_DOMAIN', $_SERVER['HTTP_HOST'] ?? 'localhost');
+define('NEL_URL_BASE', NEL_WEB_PROTOCOL . '://' . NEL_SITE_DOMAIN);
+
+
