@@ -192,7 +192,7 @@ class OutputFile extends Output
             }
 
             $displayed_op = array();
-            $displayed_op['button_url'] = $content_op->data('content_op_url') . $this->render_data['file_url'];
+            $displayed_op['button_url'] = $content_op->data('content_op_url') . NEL_URL_BASE . $this->render_data['file_url'];
             $displayed_op['button_text'] = $content_op->data('content_op_label');
             $this->render_data['content_ops'][] = $displayed_op;
         }

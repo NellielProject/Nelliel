@@ -17,8 +17,8 @@
 {{# in_modmode }}
 	{{# mod_can_delete }}<span class="text-button">[<a href="{{ mod_delete_url }}">{{ mod_delete_label }}</a>]</span>{{/ mod_can_delete }}
 {{/ in_modmode }}
+	</span><br>
+	<span class="single content-ops">
+		{{> thread/pieces/content_ops }}
 	</span>
-</div>
-<div>
-{{> thread/pieces/content_ops }}
 </div>

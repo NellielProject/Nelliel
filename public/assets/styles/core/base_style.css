@@ -221,7 +221,7 @@ td {
 }
 
 .file-container {
-	
+
 }
 
 .single.file-container {
@@ -232,6 +232,7 @@ td {
 	float: left;
 	margin: 0.15em 0.25em;
 	text-align: center;
+	max-width: min-content;
 }
 
 .file-header {
@@ -248,6 +249,7 @@ td {
 
 .file-info {
 	font-size: 0.9em;
+	white-space: nowrap;
 }
 
 .single.file-info {
@@ -320,6 +322,19 @@ td {
 
 .catalog.embed-frame {
 	margin: 0.35em 1.5em 0.5em 1.25em;
+}
+
+/* Content Ops */
+.content-ops {
+	font-size: 0.9em;
+}
+
+.single.content-ops {
+	margin-left: 2.5em;
+}
+
+.multiple.content-ops {
+
 }
 
 /* General post */
