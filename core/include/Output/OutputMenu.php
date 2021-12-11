@@ -17,7 +17,7 @@ class OutputMenu extends Output
 
     public function configStyles(string $selected): array
     {
-        $styles = $this->domain->frontEndData()->getAllStyles();
+        $styles = $this->domain->frontEndData()->getAllStyles(true);
         $options = array();
 
         foreach ($styles as $style) {
@@ -37,7 +37,7 @@ class OutputMenu extends Output
 
     public function configImageSets(string $selected): array
     {
-        $sets = $this->domain->frontEndData()->getAllImageSets();
+        $sets = $this->domain->frontEndData()->getAllImageSets(true);
         $options = array();
 
         foreach ($sets as $set) {
@@ -57,7 +57,7 @@ class OutputMenu extends Output
 
     public function configTemplates(string $selected): array
     {
-        $templates = $this->domain->frontEndData()->getAllTemplates();
+        $templates = $this->domain->frontEndData()->getAllTemplates(true);
         $options = array();
 
         foreach ($templates as $template) {
@@ -78,7 +78,7 @@ class OutputMenu extends Output
     public function styles(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $styles = $this->domain->frontEndData()->getAllStyles();
+        $styles = $this->domain->frontEndData()->getAllStyles(true);
         $render_data = array();
         $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
 

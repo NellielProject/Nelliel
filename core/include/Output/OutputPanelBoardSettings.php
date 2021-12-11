@@ -150,7 +150,7 @@ class OutputPanelBoardSettings extends Output
             if ($setting['setting_name'] === 'enabled_styles') {
                 $styles_edit_lock = $defaults_list['enabled_styles']['edit_lock'] == 1 && !$defaults &&
                     !$user_lock_override;
-                $styles = $this->domain->frontEndData()->getAllStyles();
+                $styles = $this->domain->frontEndData()->getAllStyles(true);
                 $styles_array = json_decode($setting['setting_value'] ?? '', true);
                 $style_entries = array();
 

@@ -85,10 +85,12 @@ class FrontEndData
         return self::$styles[$style_id];
     }
 
-    public function getAllStyles(): array
+    public function getAllStyles(bool $enabled_only): array
     {
+        $where_enabled = ($enabled_only) ? 'WHERE "enabled" = 1' : '';
         $style_ids = $this->database->executeFetchAll(
-            'SELECT "style_id" FROM "' . NEL_STYLES_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
+            'SELECT "style_id" FROM "' . NEL_STYLES_TABLE . '" ' . $where_enabled . ' ORDER BY "entry" ASC',
+            PDO::FETCH_COLUMN);
         $styles = array();
 
         foreach ($style_ids as $style_id) {
@@ -122,10 +124,12 @@ class FrontEndData
         return self::$templates[$template_id];
     }
 
-    public function getAllTemplates(): array
+    public function getAllTemplates(bool $enabled_only): array
     {
+        $where_enabled = ($enabled_only) ? 'WHERE "enabled" = 1' : '';
         $template_ids = $this->database->executeFetchAll(
-            'SELECT "template_id" FROM "' . NEL_TEMPLATES_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
+            'SELECT "template_id" FROM "' . NEL_TEMPLATES_TABLE . '" ' . $where_enabled . ' ORDER BY "entry" ASC',
+            PDO::FETCH_COLUMN);
         $templates = array();
 
         foreach ($template_ids as $template_id) {

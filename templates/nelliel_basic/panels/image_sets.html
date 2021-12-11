@@ -5,6 +5,7 @@
 			<th scope="col" data-i18n="">Image Set ID</th>
 			<th scope="col" data-i18n="">Name</th>
 			<th scope="col" data-i18n="">Directory</th>
+			<th scope="col" data-i18n="">Enabled</th>
 			<th scope="col" data-i18n="">Actions</th>
 		</tr>
 	</thead>
@@ -14,7 +15,9 @@
 			<td>{{ id }}</td>
 			<td>{{ name }}</td>
 			<td>{{ directory }}</td>
+			<td>{{ enabled }}</td>
 			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
 				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Uninstall Image Set</a>]</span>
 			</td>
 		</tr>

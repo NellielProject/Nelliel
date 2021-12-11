@@ -11,7 +11,8 @@ use PDO;
 class ImageSet
 {
     private $database;
-    private $image_set_id;
+    private $image_set_id = '';
+    private $enabled = false;
     private $data = array();
     private $info = array();
     private $front_end_data;
@@ -26,7 +27,12 @@ class ImageSet
 
     public function id(): string
     {
-        return $this->image_set_id ?? '';
+        return $this->image_set_id;
+    }
+
+    public function enabled(): bool
+    {
+        return $this->enabled;
     }
 
     public function info(string $key): string
@@ -41,8 +47,7 @@ class ImageSet
 
     public function getFile(string $section, string $image, bool $fallback): string
     {
-        if ($this->data($section, $image) === '' && $fallback)
-        {
+        if ($this->data($section, $image) === '' && $fallback) {
             return $this->front_end_data->getBaseImageSet()->getFile($section, $image, false);
         }
 
@@ -51,15 +56,13 @@ class ImageSet
 
     public function getFilePath(string $section, string $image, bool $fallback): string
     {
-        if ($this->getFile($section, $image, false) === '' && $fallback)
-        {
+        if ($this->getFile($section, $image, false) === '' && $fallback) {
             return $this->front_end_data->getBaseImageSet()->getFilePath($section, $image, false);
         }
 
         $image_file = $this->data($section, $image);
 
-        if ($image_file !== '')
-        {
+        if ($image_file !== '') {
             return NEL_IMAGE_SETS_FILES_PATH . $this->info('directory') . '/' . $section . '/' . $image_file;
         }
 
@@ -68,15 +71,13 @@ class ImageSet
 
     public function getWebPath(string $section, string $image, bool $fallback): string
     {
-        if ($this->getFile($section, $image, false) === '' && $fallback)
-        {
+        if ($this->getFile($section, $image, false) === '' && $fallback) {
             return $this->front_end_data->getBaseImageSet()->getWebPath($section, $image, false);
         }
 
         $image_file = $this->data($section, $image);
 
-        if ($image_file !== '')
-        {
+        if ($image_file !== '') {
             return NEL_IMAGE_SETS_WEB_PATH . $this->info('directory') . '/' . $section . '/' . $image_file;
         }
 
@@ -87,20 +88,16 @@ class ImageSet
     {
         $image_set_inis = $this->front_end_data->getImageSetInis();
 
-        foreach ($image_set_inis as $ini)
-        {
-            if ($ini['set-info']['id'] === $this->id())
-            {
+        foreach ($image_set_inis as $ini) {
+            if ($ini['set-info']['id'] === $this->id()) {
                 $directory = $ini['set-info']['directory'];
                 break;
             }
         }
 
         if ($this->database->rowExists(NEL_IMAGE_SETS_TABLE, ['set_id'], [$this->id()],
-                [PDO::PARAM_STR, PDO::PARAM_STR]))
-        {
-            if (!$overwrite)
-            {
+            [PDO::PARAM_STR, PDO::PARAM_STR])) {
+            if (!$overwrite) {
                 return;
             }
 
@@ -108,8 +105,8 @@ class ImageSet
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_IMAGE_SETS_TABLE . '" ("set_id", "directory") VALUES (?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $directory]);
+            'INSERT INTO "' . NEL_IMAGE_SETS_TABLE . '" ("set_id", "directory", "enabled") VALUES (?, ?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $directory, 1]);
         $this->load();
     }
 
@@ -124,13 +121,27 @@ class ImageSet
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
         $directory = $data['directory'] ?? '';
+        $this->enabled = boolval($data['enabled'] ?? 0);
         $file = NEL_IMAGE_SETS_FILES_PATH . $directory . '/image_info.ini';
 
-        if (file_exists($file))
-        {
+        if (file_exists($file)) {
             $ini = parse_ini_file($file, true);
             $this->data = $ini ?? array();
             $this->info = $ini['set-info'] ?? array();
         }
+    }
+
+    public function enable(): void
+    {
+        $prepared = $this->database->prepare(
+            'UPDATE "' . NEL_IMAGE_SETS_TABLE . '" SET "enabled" = 1 WHERE "set_id" = ?');
+        $this->database->executePrepared($prepared, [$this->id()]);
+    }
+
+    public function disable(): void
+    {
+        $prepared = $this->database->prepare(
+            'UPDATE "' . NEL_IMAGE_SETS_TABLE . '" SET "enabled" = 0 WHERE "set_id" = ?');
+        $this->database->executePrepared($prepared, [$this->id()]);
     }
 }

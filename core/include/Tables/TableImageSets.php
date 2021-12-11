@@ -20,11 +20,13 @@ class TableImageSets extends Table
         $this->columns_data = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'set_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'directory' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+            'directory' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'enabled' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
         $this->columns_data = [
             'entry' => ['row_check' => false, 'auto_inc' => true],
             'set_id' => ['row_check' => true, 'auto_inc' => false],
-            'directory' => ['row_check' => false, 'auto_inc' => false]];
+            'directory' => ['row_check' => false, 'auto_inc' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 

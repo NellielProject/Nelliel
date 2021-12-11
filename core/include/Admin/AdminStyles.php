@@ -24,6 +24,18 @@ class AdminStyles extends Admin
     public function dispatch(array $inputs): void
     {
         parent::dispatch($inputs);
+
+        foreach ($inputs['actions'] as $action) {
+            switch ($action) {
+                case 'disable':
+                    $this->disable();
+                    break;
+
+                case 'enable':
+                    $this->enable();
+                    break;
+            }
+        }
     }
 
     public function panel(): void
@@ -34,8 +46,7 @@ class AdminStyles extends Admin
     }
 
     public function creator(): void
-    {
-    }
+    {}
 
     public function add(): void
     {
@@ -46,12 +57,10 @@ class AdminStyles extends Admin
     }
 
     public function editor(): void
-    {
-    }
+    {}
 
     public function update(): void
-    {
-    }
+    {}
 
     public function remove(): void
     {
@@ -63,13 +72,11 @@ class AdminStyles extends Admin
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if ($this->session_user->checkPermission($domain, $perm))
-        {
+        if ($this->session_user->checkPermission($domain, $perm)) {
             return;
         }
 
-        switch ($perm)
-        {
+        switch ($perm) {
             case 'perm_styles_manage':
                 nel_derp(385, _gettext('You are not allowed to manage styles.'));
                 break;
@@ -77,5 +84,21 @@ class AdminStyles extends Admin
             default:
                 $this->defaultPermissionError();
         }
+    }
+
+    public function enable()
+    {
+        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getStyle($id)->enable();
+        $this->outputMain(true);
+    }
+
+    public function disable()
+    {
+        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getStyle($id)->disable();
+        $this->outputMain(true);
     }
 }

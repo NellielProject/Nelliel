@@ -11,7 +11,8 @@ use PDO;
 class Style
 {
     private $database;
-    private $style_id;
+    private $style_id = '';
+    private $enabled = false;
     private $data = array();
     private $info = array();
     private $front_end_data;
@@ -26,7 +27,12 @@ class Style
 
     public function id(): string
     {
-        return $this->style_id ?? '';
+        return $this->style_id;
+    }
+
+    public function enabled(): bool
+    {
+        return $this->enabled;
     }
 
     public function info(string $key): string
@@ -41,7 +47,6 @@ class Style
 
     public function getMainFile(): string
     {
-
         return $this->info('main_file');
     }
 
@@ -49,8 +54,7 @@ class Style
     {
         $file_string = $this->getMainFile();
 
-        if ($file_string !== '')
-        {
+        if ($file_string !== '') {
             return NEL_STYLES_FILES_PATH . $this->info('directory') . '/' . $file_string;
         }
 
@@ -61,8 +65,7 @@ class Style
     {
         $file_string = $this->getMainFile();
 
-        if ($file_string !== '')
-        {
+        if ($file_string !== '') {
             return NEL_STYLES_WEB_PATH . $this->info('directory') . '/' . $file_string;
         }
 
@@ -74,19 +77,15 @@ class Style
         $style_inis = $this->front_end_data->getStyleInis();
         $directory = '';
 
-        foreach ($style_inis as $ini)
-        {
-            if ($ini['style-info']['id'] === $this->id())
-            {
+        foreach ($style_inis as $ini) {
+            if ($ini['style-info']['id'] === $this->id()) {
                 $directory = $ini['style-info']['directory'];
                 break;
             }
         }
 
-        if ($this->database->rowExists(NEL_STYLES_TABLE, ['style_id'], [$this->id()], [PDO::PARAM_STR, PDO::PARAM_STR]))
-        {
-            if (!$overwrite)
-            {
+        if ($this->database->rowExists(NEL_STYLES_TABLE, ['style_id'], [$this->id()], [PDO::PARAM_STR, PDO::PARAM_STR])) {
+            if (!$overwrite) {
                 return;
             }
 
@@ -94,8 +93,8 @@ class Style
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_STYLES_TABLE . '" ("style_id", "directory") VALUES (?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $directory]);
+            'INSERT INTO "' . NEL_STYLES_TABLE . '" ("style_id", "directory", "enabled") VALUES (?, ?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $directory, 1]);
         $this->load();
     }
 
@@ -110,13 +109,25 @@ class Style
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_STYLES_TABLE . '" WHERE "style_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
         $directory = $data['directory'] ?? '';
+        $this->enabled = boolval($data['enabled'] ?? 0);
         $file = NEL_STYLES_FILES_PATH . $directory . '/style_info.ini';
 
-        if (file_exists($file))
-        {
+        if (file_exists($file)) {
             $ini = parse_ini_file($file, true);
             $this->data = $ini ?? array();
             $this->info = $ini['style-info'] ?? array();
         }
+    }
+
+    public function enable(): void
+    {
+        $prepared = $this->database->prepare('UPDATE "' . NEL_STYLES_TABLE . '" SET "enabled" = 1 WHERE "style_id" = ?');
+        $this->database->executePrepared($prepared, [$this->id()]);
+    }
+
+    public function disable(): void
+    {
+        $prepared = $this->database->prepare('UPDATE "' . NEL_STYLES_TABLE . '" SET "enabled" = 0 WHERE "style_id" = ?');
+        $this->database->executePrepared($prepared, [$this->id()]);
     }
 }

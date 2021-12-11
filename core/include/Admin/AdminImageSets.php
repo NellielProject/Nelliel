@@ -24,6 +24,18 @@ class AdminImageSets extends Admin
     public function dispatch(array $inputs): void
     {
         parent::dispatch($inputs);
+
+        foreach ($inputs['actions'] as $action) {
+            switch ($action) {
+                case 'disable':
+                    $this->disable();
+                    break;
+
+                case 'enable':
+                    $this->enable();
+                    break;
+            }
+        }
     }
 
     public function panel(): void
@@ -34,8 +46,7 @@ class AdminImageSets extends Admin
     }
 
     public function creator(): void
-    {
-    }
+    {}
 
     public function add(): void
     {
@@ -46,12 +57,10 @@ class AdminImageSets extends Admin
     }
 
     public function editor(): void
-    {
-    }
+    {}
 
     public function update(): void
-    {
-    }
+    {}
 
     public function remove(): void
     {
@@ -63,13 +72,11 @@ class AdminImageSets extends Admin
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if ($this->session_user->checkPermission($domain, $perm))
-        {
+        if ($this->session_user->checkPermission($domain, $perm)) {
             return;
         }
 
-        switch ($perm)
-        {
+        switch ($perm) {
             case 'perm_image_sets_manage':
                 nel_derp(350, _gettext('You are not allowed to manage image sets.'));
                 break;
@@ -77,5 +84,21 @@ class AdminImageSets extends Admin
             default:
                 $this->defaultPermissionError();
         }
+    }
+
+    public function enable()
+    {
+        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getImageSet($id)->enable();
+        $this->outputMain(true);
+    }
+
+    public function disable()
+    {
+        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getImageSet($id)->disable();
+        $this->outputMain(true);
     }
 }

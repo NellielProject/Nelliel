@@ -20,11 +20,13 @@ class TableTemplates extends Table
         $this->column_types = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'template_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'directory' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
+            'directory' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'enabled' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
             'entry' => ['row_check' => false, 'auto_inc' => true],
             'template_id' => ['row_check' => true, 'auto_inc' => false],
-            'directory' => ['row_check' => false, 'auto_inc' => false]];
+            'directory' => ['row_check' => false, 'auto_inc' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => true]];
         $this->schema_version = 1;
     }
 

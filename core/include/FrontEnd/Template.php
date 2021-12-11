@@ -11,7 +11,8 @@ use PDO;
 class Template
 {
     private $database;
-    private $template_id;
+    private $template_id = '';
+    private $enabled = false;
     private $data = array();
     private $info = array();
     private $front_end_data;
@@ -27,6 +28,11 @@ class Template
     public function id(): string
     {
         return $this->template_id ?? '';
+    }
+
+    public function enabled(): bool
+    {
+        return $this->enabled;
     }
 
     public function info(string $key): string
@@ -48,8 +54,7 @@ class Template
     {
         $directory = $this->getDirectory();
 
-        if ($directory !== '')
-        {
+        if ($directory !== '') {
             return NEL_TEMPLATES_FILES_PATH . $directory . '/';
         }
 
@@ -60,20 +65,16 @@ class Template
     {
         $template_inis = $this->front_end_data->gettemplateInis();
 
-        foreach ($template_inis as $ini)
-        {
-            if ($ini['template-info']['id'] === $this->id())
-            {
+        foreach ($template_inis as $ini) {
+            if ($ini['template-info']['id'] === $this->id()) {
                 $directory = $ini['template-info']['directory'];
                 break;
             }
         }
 
         if ($this->database->rowExists(NEL_TEMPLATES_TABLE, ['template_id'], [$this->id()],
-                [PDO::PARAM_STR, PDO::PARAM_STR]))
-        {
-            if (!$overwrite)
-            {
+            [PDO::PARAM_STR, PDO::PARAM_STR])) {
+            if (!$overwrite) {
                 return;
             }
 
@@ -81,8 +82,8 @@ class Template
         }
 
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "directory") VALUES (?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $directory]);
+            'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "directory", "enabled") VALUES (?, ?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $directory, 1]);
         $this->load();
     }
 
@@ -97,13 +98,27 @@ class Template
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
         $directory = $data['directory'] ?? '';
+        $this->enabled = boolval($data['enabled'] ?? 0);
         $file = NEL_TEMPLATES_FILES_PATH . $directory . '/template_info.ini';
 
-        if (file_exists($file))
-        {
+        if (file_exists($file)) {
             $ini = parse_ini_file($file, true);
             $this->data = $ini ?? array();
             $this->info = $ini['template-info'] ?? array();
         }
+    }
+
+    public function enable(): void
+    {
+        $prepared = $this->database->prepare(
+            'UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "enabled" = 1 WHERE "template_id" = ?');
+        $this->database->executePrepared($prepared, [$this->id()]);
+    }
+
+    public function disable(): void
+    {
+        $prepared = $this->database->prepare(
+            'UPDATE "' . NEL_TEMPLATES_TABLE . '" SET "enabled" = 0 WHERE "template_id" = ?');
+        $this->database->executePrepared($prepared, [$this->id()]);
     }
 }
