@@ -82,7 +82,7 @@ class Router
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchNewPost';
-                        $r->addRoute(['POST'], '/{section:new-post}', $dispatch_class);
+                        $r->addRoute(['POST'], '/{section:new-post}[?{query_string:.+}]', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:[^\/]+}',

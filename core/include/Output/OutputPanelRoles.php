@@ -40,7 +40,7 @@ class OutputPanelRoles extends Output
             $role_data['role_id'] = $role['role_id'];
             $role_data['role_level'] = $role['role_level'];
             $role_data['role_title'] = $role['role_title'];
-            $role_data['capcode'] = $role['capcode'];
+            $role_data['capcode_id'] = $role['capcode_id'];
             $role_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=edit&role-id=' .
                     $role['role_id'];
             $role_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
@@ -87,7 +87,7 @@ class OutputPanelRoles extends Output
             $this->render_data['role_id'] = $role->getData('role_id');
             $this->render_data['role_level'] = $role->getData('role_level');
             $this->render_data['role_title'] = $role->getData('role_title');
-            $this->render_data['capcode'] = $role->getData('capcode');
+            $this->render_data['capcode_id'] = $role->getData('capcode_id');
         }
 
         $permissions_list = $this->database->executeFetchAll(

@@ -23,8 +23,9 @@ class DispatchNewPost extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        if ($this->session->modmodeRequested($this->domain)) {
+        if (isset($inputs['parameters']['modmode'])) {
             $this->session->init(true);
+            $this->session->toggleModMode();
         }
 
         $new_post = new NewPost($this->domain, $this->session);

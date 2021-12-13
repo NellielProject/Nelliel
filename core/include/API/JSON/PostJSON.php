@@ -23,7 +23,7 @@ class PostJSON extends JSON
         $this->raw_data['parent_thread'] = $this->source->data('parent_thread');
         $this->raw_data['reply_to'] = $this->source->data('reply_to');
         $this->raw_data['name'] = $this->source->data('name');
-        $this->raw_data['capcode'] = $this->source->data('capcode');
+        $this->raw_data['capcode_id'] = $this->source->data('capcode_id');
         $this->raw_data['tripcode'] = $this->source->data('tripcode');
         $this->raw_data['secure_tripcode'] = $this->source->data('secure_tripcode');
         $this->raw_data['email'] = $this->source->data('email');

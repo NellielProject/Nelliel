@@ -61,7 +61,7 @@ class PostData
                 $trip = $matches[3];
 
                 if ($staff_post && $type === '## ') {
-                    $post->changeData('capcode', $this->capcode($trip));
+                    $post->changeData('capcode_id', $this->capcode($trip));
                 }
 
                 if ($this->domain->setting('allow_tripcodes')) {
@@ -86,7 +86,7 @@ class PostData
             $this->session->ignore(true);
             $user = $this->session->user();
 
-            if (nel_true_empty($name) || !$user->checkPermission($this->domain, 'perm_custom_name')) {
+            if (!$user->checkPermission($this->domain, 'perm_custom_name')) {
                 $name = $user->getData('display_name');
             }
 
@@ -229,21 +229,14 @@ class PostData
 
     public function capcode(string $key): string
     {
-        $capcode = '';
+        $role = $this->session->user()->getDomainRole($this->domain);
 
-        if (!nel_true_empty($key) && $this->session->user()->checkPermission($this->domain, 'perm_custom_capcode')) {
-            $capcode = $key;
-        } else {
-            // TODO: Maybe allow this to be customized?
-            if ($this->session->user()->isSiteOwner()) {
-                $capcode = 'Site Owner';
-            } else {
-                $role = $this->session->user()->getDomainRole($this->domain);
-                $capcode = $role->getData('capcode');
-            }
+        if ($role->getData('capcode_id') !== $key &&
+            !$this->session->user()->checkPermission($this->domain, 'perm_custom_capcode')) {
+            return '';
         }
 
-        return $capcode;
+        return $key;
     }
 
     public function tripcodeCharsetConvert($text, $to, $from)

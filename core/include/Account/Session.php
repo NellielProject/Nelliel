@@ -189,16 +189,9 @@ class Session
         self::$modmode = !self::$modmode;
     }
 
-    public function modmodeRequested()
-    {
-        return (isset($_POST['modmode']) && $_POST['modmode'] === 'true') ||
-            (isset($_GET['modmode']) && $_GET['modmode'] === 'true');
-    }
-
     public function inModmode(Domain $domain)
     {
-        return $this->isActive() && ($this->modmodeRequested() || self::$modmode) &&
-            self::$user->checkPermission($domain, 'perm_mod_mode');
+        return $this->isActive() && self::$modmode && self::$user->checkPermission($domain, 'perm_mod_mode');
     }
 
     public function loggedInOrError()

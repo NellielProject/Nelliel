@@ -22,14 +22,14 @@ class TableRoles extends Table
             'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'role_level' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'role_title' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'capcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'capcode_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'entry' => ['row_check' => false, 'auto_inc' => true],
             'role_id' => ['row_check' => true, 'auto_inc' => false],
             'role_level' => ['row_check' => false, 'auto_inc' => false],
             'role_title' => ['row_check' => false, 'auto_inc' => false],
-            'capcode' => ['row_check' => false, 'auto_inc' => false],
+            'capcode_id' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -44,7 +44,7 @@ class TableRoles extends Table
             role_id         VARCHAR(50) NOT NULL UNIQUE,
             role_level      SMALLINT NOT NULL DEFAULT 0,
             role_title      VARCHAR(255) NOT NULL,
-            capcode         TEXT DEFAULT NULL,
+            capcode_id      VARCHAR(255) NOT NULL,
             moar            TEXT DEFAULT NULL
         ) " . $options . ";";
 

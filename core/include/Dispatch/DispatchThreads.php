@@ -20,8 +20,9 @@ class DispatchThreads extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        if ($this->session->modmodeRequested()) {
+        if (isset($inputs['parameters']['modmode'])) {
             $this->session->init(true);
+            $this->session->toggleModMode();
         }
 
         $redirect = new \Nelliel\Redirect();

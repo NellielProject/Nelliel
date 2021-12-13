@@ -11,6 +11,7 @@ use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use Nelliel\Markdown\ImageboardMarkdown;
+use Nelliel\FrontEnd\Capcode;
 
 class OutputPost extends Output
 {
@@ -256,8 +257,19 @@ class OutputPost extends Output
             $this->domain->setting('tripcode_marker') . $post->data('secure_tripcode') : '';
         $post_headers['tripline'] = $tripcode . $secure_tripcode;
 
-        if (!nel_true_empty($post->data('capcode'))) {
-            $post_headers['capcode'] = ' ## ' . $post->data('capcode');
+        if (!nel_true_empty($post->data('capcode_id'))) {
+            $capcode = new Capcode($this->database, $this->domain->frontEndData(), $post->data('capcode_id'));
+            $capcode->load();
+
+            // Most likely no matching capcode so assume it was custom
+            if (nel_true_empty($capcode->data('capcode_output'))) {
+                $capcode = new Capcode($this->database, $this->domain->frontEndData(), '');
+                $capcode->load();
+            }
+
+            if ($capcode->data('enabled')) {
+                $post_headers['capcode_output'] = sprintf($capcode->data('capcode_output'), $post->data('capcode_id'));
+            }
         }
 
         $post_headers['post_time'] = date($this->domain->setting('date_format'), intval($post->data('post_time')));

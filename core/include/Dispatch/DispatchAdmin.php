@@ -34,6 +34,7 @@ use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputBoardlist;
 use Nelliel\Output\OutputPanelBoard;
 use Nelliel\Output\OutputPanelMain;
+use Nelliel\Admin\AdminCapcodes;
 
 class DispatchAdmin extends Dispatch
 {
@@ -179,6 +180,11 @@ class DispatchAdmin extends Dispatch
 
             case 'content-ops':
                 $admin_handler = new AdminContentOps($this->authorization, $this->domain, $this->session);
+                $admin_handler->dispatch($inputs);
+                break;
+
+            case 'capcodes':
+                $admin_handler = new AdminCapcodes($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
                 break;
 

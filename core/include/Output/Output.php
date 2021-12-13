@@ -40,10 +40,6 @@ abstract class Output
         $this->output_filter = new Filter();
         $this->template_substitutes = new TemplateSubstitutes();
         $this->session = new \Nelliel\Account\Session();
-
-        if ($this->session->modmodeRequested()) {
-            $this->session->init(true);
-        }
     }
 
     protected function renderSetup()

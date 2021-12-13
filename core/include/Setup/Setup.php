@@ -12,8 +12,10 @@ use Nelliel\Tables\TableBoardConfigs;
 use Nelliel\Tables\TableBoardData;
 use Nelliel\Tables\TableBoardDefaults;
 use Nelliel\Tables\TableCache;
+use Nelliel\Tables\TableCapcodes;
 use Nelliel\Tables\TableCaptcha;
 use Nelliel\Tables\TableCites;
+use Nelliel\Tables\TableContentOps;
 use Nelliel\Tables\TableDomainRegistry;
 use Nelliel\Tables\TableEmbeds;
 use Nelliel\Tables\TableFileFilters;
@@ -47,7 +49,6 @@ use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
-use Nelliel\Tables\TableContentOps;
 
 class Setup
 {
@@ -235,6 +236,8 @@ class Setup
         $embeds_table->createTable();
         $content_ops_table = new TableContentOps($this->database, $this->sql_compatibility);
         $content_ops_table->createTable();
+        $capcodes_table = new TableCapcodes($this->database, $this->sql_compatibility);
+        $capcodes_table->createTable();
 
         // NOTE: The following tables rely on the domain registry table
         // Domain registry must be created first!

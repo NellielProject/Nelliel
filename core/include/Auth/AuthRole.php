@@ -59,20 +59,20 @@ class AuthRole extends AuthHandler
         {
             $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_ROLES_TABLE .
-                    '" SET "role_level" = :role_level, "role_title" = :role_title, "capcode" = :capcode WHERE "role_id" = :role_id');
+                    '" SET "role_level" = :role_level, "role_title" = :role_title, "capcode_id" = :capcode WHERE "role_id" = :role_id');
         }
         else
         {
             $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_ROLES_TABLE .
                     '" ("role_id", "role_level", "role_title", "capcode") VALUES
-                    (:role_id, :role_level, :role_title, :capcode)');
+                    (:role_id, :role_level, :role_title, :capcode_id)');
         }
 
         $prepared->bindValue(':role_id', $this->authDataOrDefault('role_id', $this->id()), PDO::PARAM_STR);
         $prepared->bindValue(':role_level', $this->authDataOrDefault('role_level', 0), PDO::PARAM_INT);
         $prepared->bindValue(':role_title', $this->authDataOrDefault('role_title', null), PDO::PARAM_STR);
-        $prepared->bindValue(':capcode', $this->authDataOrDefault('capcode', null), PDO::PARAM_STR);
+        $prepared->bindValue(':capcode_id', $this->authDataOrDefault('capcode_id', null), PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
         $this->permissions->writeToDatabase();
         return true;
