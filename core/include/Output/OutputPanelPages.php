@@ -30,7 +30,7 @@ class OutputPanelPages extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = ?');
         $pages = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
-        $this->render_data['new_page_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
             http_build_query(
                 ['module' => 'admin', 'section' => 'pages', 'actions' => 'new', 'board-id' => $this->domain->id()]);
         $bgclass = 'row1';

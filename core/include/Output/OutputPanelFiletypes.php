@@ -32,7 +32,7 @@ class OutputPanelFiletypes extends Output
             'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" ORDER BY "is_category", "entry" ASC', PDO::FETCH_ASSOC);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
             http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'add']);
-        $this->render_data['new_filetype_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
             http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'new']);
         $bgclass = 'row1';
 

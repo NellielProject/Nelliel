@@ -31,6 +31,8 @@ class OutputPanelEmbeds extends Output
         $embeds = $this->database->executeFetchAll('SELECT * FROM "' . NEL_EMBEDS_TABLE . '" ORDER BY "entry" DESC',
             PDO::FETCH_ASSOC);
         $bgclass = 'row1';
+        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+            http_build_query(['module' => 'admin', 'section' => 'embeds', 'actions' => 'new']);
 
         foreach ($embeds as $embed) {
             $embed_data = array();
