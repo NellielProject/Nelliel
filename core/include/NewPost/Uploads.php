@@ -91,7 +91,7 @@ class Uploads
             $upload->changeData('original_filename', $file_original_name);
             $this->checkHashes($upload);
             $this->checkFileDuplicates($post, $upload);
-            $this->deduplicate($upload, $post);
+            $this->deduplicate($upload);
             $this->setFilenameAndExtension($upload, $post);
             $this->checkFiletype($upload, $upload->data('extension'), $tmp_name);
             // We re-add the extension to help with processing
@@ -607,7 +607,7 @@ class Uploads
         }
     }
 
-    private function deduplicate(Upload $upload, Post $post): void
+    private function deduplicate(Upload $upload): void
     {
         if (!$this->domain->setting('file_deduplication')) {
             return;
@@ -626,7 +626,7 @@ class Uploads
 
         $fullname = $existing['filename'] . '.' . $existing['extension'];
 
-        if (!file_exists($post->srcFilePath() . $fullname)) {
+        if (!file_exists($upload->srcFilePath() . $fullname)) {
             return;
         }
 
