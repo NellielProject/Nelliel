@@ -158,15 +158,40 @@ class Upload
         }
 
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->eraserGun($this->srcFilePath(),
-            $this->content_data['filename'] . '.' . $this->content_data['extension']);
+
+        $prepared = $this->database->prepare(
+            'SELECT count("entry") FROM "' . $this->domain->reference('uploads_table') .
+            '" WHERE "filename" = ? AND "extension" = ?');
+        $filename_count = $this->database->executePreparedFetch($prepared,
+            [$this->content_data['filename'], $this->content_data['extension']], PDO::FETCH_COLUMN);
+
+        if ($filename_count <= 1) {
+            $file_handler->eraserGun($this->srcFilePath(),
+                $this->content_data['filename'] . '.' . $this->content_data['extension']);
+        }
 
         if (!nel_true_empty($this->content_data['static_preview_name'])) {
-            $file_handler->eraserGun($this->previewFilePath(), $this->content_data['static_preview_name']);
+            $prepared = $this->database->prepare(
+                'SELECT count("entry") FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE "static_preview_name" = ?');
+            $static_preview_count = $this->database->executePreparedFetch($prepared,
+                [$this->content_data['static_preview_name']], PDO::FETCH_COLUMN);
+
+            if ($static_preview_count <= 1) {
+                $file_handler->eraserGun($this->previewFilePath(), $this->content_data['static_preview_name']);
+            }
         }
 
         if (!nel_true_empty($this->content_data['animated_preview_name'])) {
-            $file_handler->eraserGun($this->previewFilePath(), $this->content_data['animated_preview_name']);
+            $prepared = $this->database->prepare(
+                'SELECT count("entry") FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE "animated_preview_name" = ?');
+            $static_preview_count = $this->database->executePreparedFetch($prepared,
+                [$this->content_data['animated_preview_name']], PDO::FETCH_COLUMN);
+
+            if ($static_preview_count <= 1) {
+                $file_handler->eraserGun($this->previewFilePath(), $this->content_data['animated_preview_name']);
+            }
         }
 
         $parent = $this->getParent();
