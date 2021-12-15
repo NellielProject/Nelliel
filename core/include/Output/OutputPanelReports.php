@@ -87,8 +87,7 @@ class OutputPanelReports extends Output
                         '" WHERE "parent_thread" = ? AND post_ref = ? AND "upload_order" = ?');
                 $filename = $this->database->executePreparedFetch($prepared,
                         [$content_id->threadID(), $content_id->postID(), $content_id->orderID()], PDO::FETCH_COLUMN);
-                $report_data['file_url'] = $current_domain->reference('src_web_path') . $content_id->threadID() . '/' .
-                        $content_id->postID() . '/' . $filename;
+                $report_data['file_url'] = $current_domain->reference('src_web_path') . $filename;
 
                 $content_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                         http_build_query(

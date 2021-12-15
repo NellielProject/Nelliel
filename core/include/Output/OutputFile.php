@@ -41,8 +41,7 @@ class OutputFile extends Output
                 $file->data('display_height');
         }
 
-        $this->render_data['file_url'] = $this->domain->reference('src_web_path') . $post->data('parent_thread') . '/' .
-            $post->data('post_number') . '/' . rawurlencode($full_filename);
+        $this->render_data['file_url'] = $file->srcWebPath() . rawurlencode($full_filename);
 
         if ($this->domain->setting('display_original_name') && !nel_true_empty($file->data('original_filename'))) {
             $display_filename = $file->data('original_filename');
@@ -94,7 +93,8 @@ class OutputFile extends Output
         $has_animated_preview = !nel_true_empty($file->data('animated_preview_name')) && $preview_size_not_zero;
         $preview_type = null;
 
-        if ($file->data('deleted')) {
+        if ($file->data('deleted') && $this->domain->setting('display_deleted_placeholder')) {
+            var_dump($this->domain->setting('display_deleted_placeholder'));
             $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_file');
             $preview_type = 'image';
         }
@@ -137,8 +137,7 @@ class OutputFile extends Output
             }
 
             if (!empty($preview_name)) {
-                $this->render_data['preview_url'] = $this->domain->reference('preview_web_path') .
-                    $post->data('parent_thread') . '/' . $post->data('post_number') . '/' . rawurlencode($preview_name);
+                $this->render_data['preview_url'] = $file->previewWebPath() . rawurlencode($preview_name);
 
                 if ($file->data('preview_width') > $max_width || $file->data('preview_height') > $max_height) {
                     $ratio = min(($max_height / $file->data('preview_height')),
@@ -192,7 +191,8 @@ class OutputFile extends Output
             }
 
             $displayed_op = array();
-            $displayed_op['button_url'] = $content_op->data('content_op_url') . NEL_URL_BASE . $this->render_data['file_url'];
+            $displayed_op['button_url'] = $content_op->data('content_op_url') . NEL_URL_BASE .
+                $this->render_data['file_url'];
             $displayed_op['button_text'] = $content_op->data('content_op_label');
             $this->render_data['content_ops'][] = $displayed_op;
         }

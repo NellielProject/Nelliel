@@ -9,6 +9,7 @@ use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Moar;
 use Nelliel\API\JSON\PostJSON;
+use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPost;
@@ -111,7 +112,7 @@ class Post
         return true;
     }
 
-    public function remove(bool $perm_override = false)
+    public function remove(bool $perm_override = false, bool $update = true)
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -122,7 +123,7 @@ class Post
                 nel_derp(62, _gettext('Cannot remove post. Board is locked.'));
             }
 
-            $session = new \Nelliel\Account\Session();
+            $session = new Session();
             $user = $session->user();
             $bypass = false;
 
@@ -142,11 +143,21 @@ class Post
         // It's possible to have a thread with no posts but for now we don't use that capability
         $parent_thread = $this->getParent();
 
+        $uploads = $this->getUploads();
+
+        foreach ($uploads as $upload) {
+            $upload->remove(true, false);
+        }
+
+        $this->removeFromDatabase();
+        $this->removeFromDisk();
+
+        // This needs to be called after removal or else we could get an infinite loop
         if ($this->data('op')) {
-            $parent_thread->remove($perm_override);
-        } else {
-            $this->removeFromDatabase();
-            $this->removeFromDisk();
+            $parent_thread->remove(true);
+        }
+
+        if (!$update) {
             $parent_thread->updateCounts();
             $parent_thread->updateBumpTime();
             $parent_thread->updateUpdateTime();
@@ -174,13 +185,20 @@ class Post
     protected function removeFromDisk()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->eraserGun($this->srcPath());
-        $file_handler->eraserGun($this->previewPath());
+        $parent = $this->getParent();
+
+        if ($parent->srcFilePath() !== $this->srcFilePath()) {
+            $file_handler->eraserGun($this->srcFilePath());
+        }
+
+        if ($parent->previewFilePath() !== $this->previewFilePath()) {
+            $file_handler->eraserGun($this->previewFilePath());
+        }
     }
 
-    public function verifyModifyPerms()
+    public function verifyModifyPerms(): bool
     {
-        $session = new \Nelliel\Account\Session();
+        $session = new Session();
         $user = $session->user();
 
         if (empty($this->content_data)) {
@@ -194,9 +212,8 @@ class Post
                 if (!$user->isSiteOwner() && !empty($this->content_data['account_id']) &&
                     $this->authorization->userExists($this->content_data['account_id'])) {
                     $mod_post_user = $this->authorization->getUser($this->content_data['account_id']);
-                    $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)
-                        ->id(), $mod_post_user->getDomainRole($this->domain)
-                        ->id());
+                    $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
+                        $mod_post_user->getDomainRole($this->domain)->id());
                 } else {
                     $flag = true;
                 }
@@ -273,8 +290,8 @@ class Post
 
     public function convertToThread(): Thread
     {
-        $original_src_path = $this->srcPath();
-        $original_preview_path = $this->previewPath();
+        $original_src_path = $this->srcFilePath();
+        $original_preview_path = $this->previewFilePath();
         $time = nel_get_microtime();
         $new_content_id = new ContentID();
         $new_content_id->changeThreadID($this->content_id->postID());
@@ -291,20 +308,18 @@ class Post
         $uploads = $this->getUploads();
 
         foreach ($uploads as $upload) {
-            $upload->changeData('parent_thread', $new_thread->contentID()
-                ->threadID());
+            $upload->changeData('parent_thread', $new_thread->contentID()->threadID());
             $upload->writeToDatabase();
         }
 
         $this->loadFromDatabase();
-        $this->content_id->changeThreadID($new_thread->contentID()
-            ->threadID());
+        $this->content_id->changeThreadID($new_thread->contentID()->threadID());
         $this->changeData('parent_thread', $this->content_id->threadID());
         $this->changeData('op', 1);
         $this->createDirectories();
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->moveDirectory($original_src_path, $this->srcPath());
-        $file_handler->moveDirectory($original_preview_path, $this->previewPath());
+        $file_handler->moveDirectory($original_src_path, $this->srcFilePath());
+        $file_handler->moveDirectory($original_preview_path, $this->previewFilePath());
         $this->writeToDatabase();
         $new_thread->updateCounts();
         $this->getParent()->updateBumpTime();
@@ -317,8 +332,8 @@ class Post
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->srcPath());
-        $file_handler->createDirectory($this->previewPath());
+        $file_handler->createDirectory($this->srcFilePath());
+        $file_handler->createDirectory($this->previewFilePath());
     }
 
     public function getCache(): array
@@ -347,16 +362,24 @@ class Post
         $this->database->executePrepared($prepared, [$encoded_cache, $this->content_id->postID()]);
     }
 
-    public function srcPath(): string
+    public function srcFilePath(): string
     {
-        return $this->domain->reference('src_path') . $this->content_id->threadID() . '/' . $this->content_id->postID() .
-            '/';
+        return $this->domain->reference('src_path');
     }
 
-    public function previewPath(): string
+    public function previewFilePath(): string
     {
-        return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/' .
-            $this->content_id->postID() . '/';
+        return $this->domain->reference('preview_path');
+    }
+
+    public function srcWebPath(): string
+    {
+        return $this->domain->reference('src_web_path');
+    }
+
+    public function previewWebPath(): string
+    {
+        return $this->domain->reference('preview_web_path');
     }
 
     public function storeMoar(Moar $moar)
@@ -414,8 +437,8 @@ class Post
         $prepared = $this->database->prepare(
             'SELECT "upload_order" FROM "' . $this->domain->reference('uploads_table') .
             '" WHERE "post_ref" = ? ORDER BY "upload_order" ASC');
-        $upload_list = $this->database->executePreparedFetchAll($prepared, [$this->contentID()
-            ->postID()], PDO::FETCH_COLUMN);
+        $upload_list = $this->database->executePreparedFetchAll($prepared, [$this->contentID()->postID()],
+            PDO::FETCH_COLUMN);
 
         foreach ($upload_list as $id) {
             $content_id = new ContentID(

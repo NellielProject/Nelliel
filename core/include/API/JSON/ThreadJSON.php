@@ -47,7 +47,7 @@ class ThreadJSON extends JSON
     public function write(): void
     {
         $filename = $this->source->contentID()->threadID() . NEL_JSON_EXT;
-        $this->file_handler->writeFile($this->source->pagePath() . $filename, $this->getJSON());
+        $this->file_handler->writeFile($this->source->pageFilePath() . $filename, $this->getJSON());
     }
 
     public function addPost(PostJSON $post): void

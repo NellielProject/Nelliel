@@ -105,7 +105,7 @@ class Upload
         return true;
     }
 
-    public function remove(bool $perm_override = false)
+    public function remove(bool $perm_override = false, bool $update = true)
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -119,9 +119,12 @@ class Upload
 
         $this->removeFromDisk();
         $this->removeFromDatabase();
-        $post = $this->getParent();
-        $post->updateCounts();
-        $post->getParent()->updateCounts();
+
+        if (!$update) {
+            $post = $this->getParent();
+            $post->updateCounts();
+            $post->getParent()->updateCounts();
+        }
     }
 
     protected function removeFromDatabase()
@@ -155,13 +158,29 @@ class Upload
         }
 
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->eraserGun($this->srcPath(),
+        $file_handler->eraserGun($this->srcFilePath(),
             $this->content_data['filename'] . '.' . $this->content_data['extension']);
-        $file_handler->eraserGun($this->previewPath(), $this->content_data['static_preview_name']);
-        $file_handler->eraserGun($this->previewPath(), $this->content_data['animated_preview_name']);
+
+        if (!nel_true_empty($this->content_data['static_preview_name'])) {
+            $file_handler->eraserGun($this->previewFilePath(), $this->content_data['static_preview_name']);
+        }
+
+        if (!nel_true_empty($this->content_data['animated_preview_name'])) {
+            $file_handler->eraserGun($this->previewFilePath(), $this->content_data['animated_preview_name']);
+        }
+
+        $parent = $this->getParent();
+
+        if ($parent->srcFilePath() !== $this->srcFilePath()) {
+            $file_handler->eraserGun($this->srcFilePath());
+        }
+
+        if ($parent->previewFilePath() !== $this->previewFilePath()) {
+            $file_handler->eraserGun($this->previewFilePath());
+        }
     }
 
-    public function verifyModifyPerms()
+    public function verifyModifyPerms(): bool
     {
         return $this->getParent()->verifyModifyPerms();
     }
@@ -181,20 +200,28 @@ class Upload
     public function createDirectories()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->createDirectory($this->srcPath());
-        $file_handler->createDirectory($this->previewPath());
+        $file_handler->createDirectory($this->srcFilePath());
+        $file_handler->createDirectory($this->previewFilePath());
     }
 
-    public function srcPath()
+    public function srcFilePath()
     {
-        return $this->domain->reference('src_path') . $this->content_id->threadID() . '/' . $this->content_id->postID() .
-            '/';
+        return $this->domain->reference('src_path');
     }
 
-    public function previewPath()
+    public function previewFilePath()
     {
-        return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/' .
-            $this->content_id->postID() . '/';
+        return $this->domain->reference('preview_path');
+    }
+
+    public function srcWebPath()
+    {
+        return $this->domain->reference('src_web_path');
+    }
+
+    public function previewWebPath()
+    {
+        return $this->domain->reference('preview_web_path');
     }
 
     public function storeMoar(Moar $moar)

@@ -139,7 +139,7 @@ class NewPost
             // Make previews and do final file processing
             if ($this->domain->setting('create_static_preview') || $this->domain->setting('create_animated_preview')) {
                 $gen_previews = new Previews($this->domain);
-                $uploads = $gen_previews->generate($uploads, $post->previewPath());
+                $uploads = $gen_previews->generate($uploads, $post->previewFilePath());
             }
 
             $order = 1;
@@ -157,9 +157,9 @@ class NewPost
                 $upload->changeData('upload_order', $order);
 
                 if ($upload->data('category') !== 'embed') {
-                    $file_handler->moveFile($upload->data('location'), $post->srcPath() . $upload->data('fullname'));
-                    chmod($post->srcPath() . $upload->data('fullname'), octdec(NEL_FILES_PERM));
-                    $upload->changeData('location', $post->srcPath() . $upload->data('fullname'));
+                    $file_handler->moveFile($upload->data('location'), $post->srcFilePath() . $upload->data('fullname'));
+                    chmod($post->srcFilePath() . $upload->data('fullname'), octdec(NEL_FILES_PERM));
+                    $upload->changeData('location', $post->srcFilePath() . $upload->data('fullname'));
                 }
 
                 $upload->writeToDatabase();

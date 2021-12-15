@@ -112,8 +112,9 @@ class Thread
         return true;
     }
 
-    public function remove(bool $perm_override = false)
+    public function remove(bool $perm_override = false, bool $update = true)
     {
+        var_dump($perm_override);
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
                 return false;
@@ -134,6 +135,12 @@ class Thread
                 $time_since_op > $this->domain->setting('thread_no_delete_time')) {
                 nel_derp(66, _gettext('Thread has reached age threshold and cannot be deleted.'));
             }
+        }
+
+        $posts = $this->getPosts();
+
+        foreach ($posts as $post) {
+            $post->remove(true, false);
         }
 
         $this->removeFromDatabase();
@@ -160,18 +167,23 @@ class Thread
     protected function removeFromDisk()
     {
         $file_handler = nel_utilities()->fileHandler();
-        $file_handler->eraserGun($this->srcPath());
-        $file_handler->eraserGun($this->previewPath());
-        $file_handler->eraserGun($this->pagePath());
+
+        if ($this->domain->reference('page_path') !== $this->pageFilePath()) {
+            $file_handler->eraserGun($this->pageFilePath());
+        }
+
+        if ($this->domain->reference('src_path') !== $this->srcFilePath()) {
+            $file_handler->eraserGun($this->srcFilePath());
+        }
+
+        if ($this->domain->reference('preview_path') !== $this->previewFilePath()) {
+            $file_handler->eraserGun($this->srcFilePath());
+        }
     }
 
-    public function verifyModifyPerms()
+    public function verifyModifyPerms(): bool
     {
-        $post = new Post($this->content_id, $this->domain);
-        $post->contentID()->changePostID($this->firstPost()
-            ->contentID()
-            ->postID());
-        return $post->verifyModifyPerms();
+        return $this->firstPost()->verifyModifyPerms();
     }
 
     public function getParent(): Thread
@@ -209,8 +221,8 @@ class Thread
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') &&
-            $this->data('post_count') > $this->domain->setting('max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
+            'max_bumps')) {
             return;
         }
 
@@ -247,7 +259,7 @@ class Thread
     public function createDirectories(): bool
     {
         $file_handler = nel_utilities()->fileHandler();
-        return $file_handler->createDirectory($this->pagePath());
+        return $file_handler->createDirectory($this->pageFilePath());
     }
 
     public function toggleSticky(): bool
@@ -301,7 +313,7 @@ class Thread
                 $post_content_id = new ContentID(
                     ContentID::createIDString($this->content_id->threadID(), $old_post['post_number'], 0));
                 $post = $post_content_id->getInstanceFromID($this->domain);
-                $post->remove(true);
+                $post->remove(true, true);
             }
         }
     }
@@ -421,19 +433,34 @@ class Thread
         return $base_path . $this->pageBasename() . NEL_PAGE_EXT;
     }
 
-    public function pagePath()
+    public function pageFilePath()
     {
         return $this->domain->reference('page_path') . $this->content_id->threadID() . '/';
     }
 
-    public function srcPath()
+    public function srcFilePath()
     {
-        return $this->domain->reference('src_path') . $this->content_id->threadID() . '/';
+        return $this->domain->reference('src_path');
     }
 
-    public function previewPath()
+    public function previewFilePath()
     {
-        return $this->domain->reference('preview_path') . $this->content_id->threadID() . '/';
+        return $this->domain->reference('preview_path');
+    }
+
+    public function pageWebPath()
+    {
+        return $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
+    }
+
+    public function srcWebPath()
+    {
+        return $this->domain->reference('src_web_path');
+    }
+
+    public function previewWebPath()
+    {
+        return $this->domain->reference('preview_web_path');
     }
 
     public function archive(bool $permanent): bool
@@ -446,8 +473,7 @@ class Thread
         $prepared->bindValue(2, $thread_data, PDO::PARAM_STR);
         $prepared->bindValue(3, time(), PDO::PARAM_INT);
         $prepared->bindValue(4, $permanent, PDO::PARAM_INT);
-        $prepared->bindValue(5, $this->getMoar()
-            ->get(), PDO::PARAM_STR);
+        $prepared->bindValue(5, $this->getMoar()->get(), PDO::PARAM_STR);
         $result = $this->database->executePrepared($prepared);
 
         if ($result !== true) {
@@ -550,8 +576,7 @@ class Thread
         // If no first post, assume this is a new thread
         if (!$first_post->exists()) {
             $this->createDirectories();
-            $this->changeData('thread_id', $post->contentID()
-                ->postID());
+            $this->changeData('thread_id', $post->contentID()->postID());
             $this->changeData('last_bump_time', $post->data('post_time'));
             $this->changeData('last_bump_time_milli', $post->data('post_time_milli'));
             $this->changeData('last_update', $post->data('post_time'));
