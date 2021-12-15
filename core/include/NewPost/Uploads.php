@@ -165,7 +165,7 @@ class Uploads
         $temp_fullname = $fullname;
         $duplicate_suffix = 1;
 
-        while (in_array($temp_fullname, $this->fullnames)) {
+        while (in_array($temp_fullname, $this->fullnames) || file_exists($post->srcFilePath() . $temp_fullname)) {
             $duplicate_suffix ++;
             $temp_fullname = $filename . '_' . $duplicate_suffix . '.' . $extension;
         }
@@ -274,8 +274,7 @@ class Uploads
             $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "parent_thread" = :parent_thread AND ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
             $prepared = $this->database->prepare($query);
-            $prepared->bindValue(':parent_thread', $post->contentID()
-                ->threadID(), PDO::PARAM_INT);
+            $prepared->bindValue(':parent_thread', $post->contentID()->threadID(), PDO::PARAM_INT);
             $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
             $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
         } else {
