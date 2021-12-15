@@ -94,7 +94,6 @@ class OutputFile extends Output
         $preview_type = null;
 
         if ($file->data('deleted') && $this->domain->setting('display_deleted_placeholder')) {
-            var_dump($this->domain->setting('display_deleted_placeholder'));
             $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_file');
             $preview_type = 'image';
         }

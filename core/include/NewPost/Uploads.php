@@ -91,6 +91,7 @@ class Uploads
             $upload->changeData('original_filename', $file_original_name);
             $this->checkHashes($upload);
             $this->checkFileDuplicates($post, $upload);
+            $this->deduplicate($upload, $post);
             $this->setFilenameAndExtension($upload, $post);
             $this->checkFiletype($upload, $upload->data('extension'), $tmp_name);
             // We re-add the extension to help with processing
@@ -124,6 +125,10 @@ class Uploads
 
     private function setFilenameAndExtension(Upload $upload, Post $post): void
     {
+        if ($upload->data('use_existing')) {
+            return;
+        }
+
         $file_info = new \SplFileInfo($upload->data('original_filename'));
         $extension = $file_info->getExtension();
         $filename = $file_info->getBasename('.' . $extension);
@@ -600,5 +605,35 @@ class Uploads
         if ($results['result_code'] === 0) {
             $this->checkHashes($upload);
         }
+    }
+
+    private function deduplicate(Upload $upload, Post $post): void
+    {
+        if (!$this->domain->setting('file_deduplication')) {
+            return;
+        }
+
+        $query = 'SELECT "filename", "extension" FROM "' . $this->domain->reference('uploads_table') .
+            '" WHERE "md5" = :md5 AND "sha1" = :sha1';
+        $prepared = $this->database->prepare($query);
+        $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
+        $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
+        $existing = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
+
+        if (!is_array($existing)) {
+            return;
+        }
+
+        $fullname = $existing['filename'] . '.' . $existing['extension'];
+
+        if (!file_exists($post->srcFilePath() . $fullname)) {
+            return;
+        }
+
+        $upload->changeData('use_existing', true);
+        $upload->changeData('extension', $existing['extension']);
+        $upload->changeData('filename', $existing['filename']);
+        $upload->changeData('fullname', $fullname);
+        array_push($this->fullnames, $fullname);
     }
 }

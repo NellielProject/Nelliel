@@ -70,10 +70,10 @@ class Previews
     {
         $frame_count = 1;
         $results = nel_exec('identify ' . escapeshellarg($file->data('location')));
-        $has_static = false;
-        $has_animated = false;
         $static_preview_name = $this->staticPreviewName($file);
         $animated_preview_name = $this->animatedPreviewName($file);
+        $has_static = $this->deduplicate($file, $static_preview_name);
+        $has_animated = $this->deduplicate($file, $animated_preview_name);
 
         if ($results['result_code'] === 0) {
             $frame_count = count($results['output']);
@@ -81,7 +81,7 @@ class Previews
 
         $this->setPreviewDimensions($file);
 
-        if ($this->generateStatic($file)) {
+        if ($this->generateStatic($file) && !$has_static) {
             $resize_command = 'convert ' .
                 sprintf($this->site_domain->setting('imagemagick_args'), escapeshellarg($file->data('location') . '[0]'),
                     $file->data('preview_width'), $file->data('preview_height'), $this->compressionValue(),
@@ -90,7 +90,7 @@ class Previews
             $has_static = $results['result_code'] === 0;
         }
 
-        if ($this->generateAnimated($file) && $frame_count > 1) {
+        if ($this->generateAnimated($file) && !$has_animated && $frame_count > 1) {
             $limit = '[0-' . $this->frameLimit() . ']';
             $resize_command = 'convert ' .
                 sprintf($this->site_domain->setting('imagemagick_animated_args'),
@@ -117,10 +117,10 @@ class Previews
     {
         $image = new \Imagick($file->data('location'));
         $frame_count = $image->getnumberimages();
-        $has_static = false;
-        $has_animated = false;
         $static_preview_name = $this->staticPreviewName($file);
         $animated_preview_name = $this->animatedPreviewName($file);
+        $has_static = $this->deduplicate($file, $static_preview_name);
+        $has_animated = $this->deduplicate($file, $animated_preview_name);
 
         $exif = $file->data('temp_exif');
 
@@ -138,14 +138,14 @@ class Previews
         $file->changeData('display_height', $image->getimageheight());
         $this->setPreviewDimensions($file);
 
-        if ($this->generateStatic($file)) {
+        if ($this->generateStatic($file) && !$has_static) {
             $image->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
             $image->setimagecompressionquality($this->compressionValue());
             $image->setformat($this->domain->setting('static_preview_format'));
             $has_static = $image->writeimage($preview_path . $static_preview_name);
         }
 
-        if ($this->generateAnimated($file) && $frame_count > 1) {
+        if ($this->generateAnimated($file) && !$has_animated && $frame_count > 1) {
             $image = $image->coalesceimages();
             $limit = $this->frameLimit();
 
@@ -173,10 +173,10 @@ class Previews
     {
         $frame_count = 1;
         $results = nel_exec('gm identify ' . escapeshellarg($file->data('location')));
-        $has_static = false;
-        $has_animated = false;
         $static_preview_name = $this->staticPreviewName($file);
         $animated_preview_name = $this->animatedPreviewName($file);
+        $has_static = $this->deduplicate($file, $static_preview_name);
+        $has_animated = $this->deduplicate($file, $animated_preview_name);
 
         if ($results['result_code'] === 0) {
             $frame_count = count($results['output']);
@@ -184,7 +184,7 @@ class Previews
 
         $this->setPreviewDimensions($file);
 
-        if ($this->generateStatic($file)) {
+        if ($this->generateStatic($file) && !$has_static) {
             $resize_command = 'gm convert ' .
                 sprintf($this->site_domain->setting('graphicsmagick_args'),
                     escapeshellarg($file->data('location') . '[0]'), $file->data('preview_width'),
@@ -194,7 +194,7 @@ class Previews
             $has_static = $results['result_code'] === 0;
         }
 
-        if ($this->generateAnimated($file) && $frame_count > 1) {
+        if ($this->generateAnimated($file) && !$has_animated && $frame_count > 1) {
             $limit = '[0-' . $this->frameLimit() . ']';
             $resize_command = 'gm convert ' .
                 sprintf($this->site_domain->setting('graphicsmagick_animated_args'),
@@ -221,10 +221,10 @@ class Previews
     {
         $image = new \Gmagick($file->data('location'));
         $frame_count = $image->getNumberImages();
-        $has_static = false;
-        $has_animated = false;
         $static_preview_name = $this->staticPreviewName($file);
         $animated_preview_name = $this->animatedPreviewName($file);
+        $has_static = $this->deduplicate($file, $static_preview_name);
+        $has_animated = $this->deduplicate($file, $animated_preview_name);
 
         $exif = $file->data('temp_exif');
 
@@ -242,14 +242,14 @@ class Previews
         $file->changeData('display_height', $image->getimageheight());
         $this->setPreviewDimensions($file);
 
-        if ($this->generateStatic($file)) {
+        if ($this->generateStatic($file) && !$has_static) {
             $image->thumbnailimage($file->data('preview_width'), $file->data('preview_height'));
             $image->setCompressionQuality($this->compressionValue());
             $image->setFormat($this->domain->setting('static_preview_format'));
             $has_static = $image->writeImage($preview_path . $static_preview_name, false);
         }
 
-        if ($this->generateAnimated($file) && $frame_count > 1) {
+        if ($this->generateAnimated($file) && !$has_animated && $frame_count > 1) {
             $image = $image->coalesceImages();
             $limit = $this->frameLimit();
 
@@ -324,28 +324,31 @@ class Previews
         }
 
         $static_preview_name = $this->staticPreviewName($file);
+        $has_static = $this->deduplicate($file, $static_preview_name);
         imagecolortransparent($preview, imagecolortransparent($image));
         imagealphablending($preview, false);
         imagesavealpha($preview, true);
         imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->data('preview_width'), $file->data('preview_height'),
             $file->data('display_width'), $file->data('display_height'));
 
-        switch ($this->domain->setting('static_preview_format')) {
-            case 'jpg':
-                $has_static = imagejpeg($preview, $preview_path . $static_preview_name, $this->compressionValue());
-                break;
+        if (!$has_static) {
+            switch ($this->domain->setting('static_preview_format')) {
+                case 'jpg':
+                    $has_static = imagejpeg($preview, $preview_path . $static_preview_name, $this->compressionValue());
+                    break;
 
-            case 'png':
-                $has_static = imagepng($preview, $preview_path . $static_preview_name);
-                break;
+                case 'png':
+                    $has_static = imagepng($preview, $preview_path . $static_preview_name);
+                    break;
 
-            case 'gif':
-                $has_static = imagegif($preview, $preview_path . $static_preview_name);
-                break;
+                case 'gif':
+                    $has_static = imagegif($preview, $preview_path . $static_preview_name);
+                    break;
 
-            case 'webp':
-                $has_static = imagewebp($preview, $preview_path . $static_preview_name, $this->compressionValue());
-                break;
+                case 'webp':
+                    $has_static = imagewebp($preview, $preview_path . $static_preview_name, $this->compressionValue());
+                    break;
+            }
         }
 
         if ($has_static) {
@@ -492,5 +495,14 @@ class Previews
         }
 
         return $limit;
+    }
+
+    private function deduplicate(Upload $file, string $preview_name): bool
+    {
+        if ($this->domain->setting('file_deduplication')) {
+            return false;
+        }
+
+        return file_exists($file->previewFilePath() . $preview_name);
     }
 }

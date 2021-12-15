@@ -114,7 +114,6 @@ class Thread
 
     public function remove(bool $perm_override = false, bool $update = true)
     {
-        var_dump($perm_override);
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
                 return false;
