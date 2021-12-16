@@ -49,6 +49,7 @@ use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
+use Nelliel\Tables\TableSettingOptions;
 
 class Setup
 {
@@ -204,6 +205,8 @@ class Setup
         // Settings table must exist before any config tables
         $settings_table = new TableSettings($this->database, $this->sql_compatibility);
         $settings_table->createTable();
+        $setting_options_table = new TableSettingOptions($this->database, $this->sql_compatibility);
+        $setting_options_table->createTable();
         $board_defaults_table = new TableBoardDefaults($this->database, $this->sql_compatibility);
         $board_defaults_table->createTable();
         $site_config_table = new TableSiteConfig($this->database, $this->sql_compatibility);

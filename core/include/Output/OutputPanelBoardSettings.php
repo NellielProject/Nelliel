@@ -118,16 +118,21 @@ class OutputPanelBoardSettings extends Output
 
         if ($defaults) {
             $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_DEFAULTS_TABLE . '" ON "' .
-                NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_DEFAULTS_TABLE . '"."setting_name" WHERE "' .
-                NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'');
+                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
+                LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE . '"."setting_name"
+                INNER JOIN "' . NEL_BOARD_DEFAULTS_TABLE . '"
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_DEFAULTS_TABLE . '"."setting_name"
+                WHERE "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'');
             $board_settings = $this->database->executePreparedFetchAll($prepared, [], PDO::FETCH_ASSOC);
         } else {
             $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '" ON "' .
-                NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
-                NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "' . NEL_SETTINGS_TABLE .
-                '"."setting_category" = \'board\'');
+                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
+                LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE . '"."setting_name"
+                INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '"
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name"
+                WHERE "' . NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'');
             $board_settings = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()],
                 PDO::FETCH_ASSOC);
         }
@@ -136,7 +141,6 @@ class OutputPanelBoardSettings extends Output
             $setting_data = array();
             $setting_data['setting_name'] = $setting['setting_name'];
             $setting_data['setting_description'] = _gettext($setting['setting_description']);
-            $setting_options = json_decode($setting['setting_options'], true) ?? array();
             $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
 
             if ($defaults_list[$setting['setting_name']]['edit_lock'] == 1) {
@@ -206,14 +210,16 @@ class OutputPanelBoardSettings extends Output
             } else {
                 $type = $input_attributes['type'] ?? null;
 
-                if ($type == 'radio' || $type == 'select') {
-                    foreach ($setting_options as $option => $values) {
-                        $options = array();
-                        $options['option_name'] = $option;
-                        $options['option_label'] = $values['label'] ?? $options['option_name'];
-                        $options['option_key'] = $setting_data['setting_name'] . '_' . $option;
+                if (($type == 'radio' || $type == 'select') && !nel_true_empty($setting['menu_data'])) {
+                    $menu_data = json_decode($setting['menu_data'], true) ?? array();
 
-                        if ($setting['setting_value'] === $option) {
+                    foreach ($menu_data as $label => $value) {
+                        $options = array();
+                        $options['option_label'] = $label;
+                        $options['option_value'] = $value;
+                        $options['option_key'] = $setting_data['setting_name'] . '_' . $label;
+
+                        if ($setting['setting_value'] === $value) {
                             if ($type == 'radio') {
                                 $options['option_checked'] = 'checked';
                             } else if ($type == 'select') {

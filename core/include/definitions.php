@@ -62,6 +62,7 @@ define('NEL_STYLES_TABLE', 'nelliel_styles');
 define('NEL_IMAGE_SETS_TABLE', 'nelliel_image_sets');
 define('NEL_CONTENT_OPS_TABLE', 'nelliel_content_ops');
 define('NEL_CAPCODES_TABLE', 'nelliel_capcodes');
+define('NEL_SETTING_OPTIONS_TABLE', 'nelliel_menu_data');
 
 define('NEL_ASSETS_FILES_PATH', NEL_PUBLIC_PATH . NEL_ASSETS_DIR . '/');
 define('NEL_CONFIG_FILES_PATH', NEL_BASE_PATH . 'configuration/');

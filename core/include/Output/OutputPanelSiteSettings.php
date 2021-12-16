@@ -31,15 +31,17 @@ class OutputPanelSiteSettings extends Output
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
             'module=admin&section=site-settings&actions=update';
         $site_settings = $this->database->query(
-            'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_SITE_CONFIG_TABLE . '" ON "' .
-            NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE .
-            '"."setting_name" WHERE "setting_category" = \'site\'')->fetchAll(PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
+            LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
+            ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE . '"."setting_name"
+            INNER JOIN "' . NEL_SITE_CONFIG_TABLE . '"
+            ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE .
+            '"."setting_name" WHERE "'.  NEL_SETTINGS_TABLE . '"."setting_category" = \'site\'')->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($site_settings as $setting) {
             $setting_data = array();
             $setting_data['setting_name'] = $setting['setting_name'];
             $setting_data['setting_description'] = _gettext($setting['setting_description']);
-            $setting_options = json_decode($setting['setting_options'], true) ?? array();
             $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
 
             foreach ($input_attributes as $attribute => $value) {
@@ -53,14 +55,16 @@ class OutputPanelSiteSettings extends Output
             } else {
                 $type = $input_attributes['type'] ?? null;
 
-                if ($type == 'radio' || $type == 'select') {
-                    foreach ($setting_options as $option => $values) {
-                        $options = array();
-                        $options['option_name'] = $option;
-                        $options['option_label'] = $values['label'] ?? $options['option_name'];
-                        $options['option_key'] = $setting_data['setting_name'] . '_' . $option;
+                if (($type == 'radio' || $type == 'select') && !nel_true_empty($setting['menu_data'])) {
+                    $menu_data = json_decode($setting['menu_data'], true) ?? array();
 
-                        if ($setting['setting_value'] === $option) {
+                    foreach ($menu_data as $label => $value) {
+                        $options = array();
+                        $options['option_label'] = $label;
+                        $options['option_value'] = $value;
+                        $options['option_key'] = $setting_data['setting_name'] . '_' . $label;
+
+                        if ($setting['setting_value'] === $value) {
                             if ($type == 'radio') {
                                 $options['option_checked'] = 'checked';
                             } else if ($type == 'select') {
