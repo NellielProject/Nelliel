@@ -268,7 +268,7 @@ class OutputPost extends Output
             }
 
             if ($capcode->data('enabled')) {
-                $post_headers['output'] = sprintf($capcode->data('output'), $post->data('capcode'));
+                $post_headers['capcode_output'] = sprintf($capcode->data('output'), $post->data('capcode'));
             }
         }
 
