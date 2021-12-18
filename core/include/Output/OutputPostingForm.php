@@ -102,12 +102,12 @@ class OutputPostingForm extends Output
     {
         $filetypes = new \Nelliel\FileTypes($this->domain->database());
 
-        foreach ($filetypes->enabledCategories($this->domain->id()) as $category) {
+        foreach ($filetypes->enabledCategories($this->domain) as $category) {
             $supported_types = sprintf(_gettext('Supported %s file types: '), $category);
             $supported = '';
             $joiner = '';
 
-            foreach ($filetypes->enabledFormats($this->domain->id(), $category) as $format) {
+            foreach ($filetypes->enabledFormats($this->domain, $category) as $format) {
                 $extensions = '';
                 $add = '';
 

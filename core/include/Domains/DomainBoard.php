@@ -123,8 +123,6 @@ class DomainBoard extends Domain implements NellielCacheInterface
     {
         if (NEL_USE_FILE_CACHE) {
             $this->cacheSettings();
-            $filetypes = new FileTypes($this->database());
-            $filetypes->regenCache($this->domain_id);
         }
     }
 

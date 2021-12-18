@@ -35,6 +35,7 @@ use Nelliel\Output\OutputBoardlist;
 use Nelliel\Output\OutputPanelBoard;
 use Nelliel\Output\OutputPanelMain;
 use Nelliel\Admin\AdminCapcodes;
+use Nelliel\Admin\AdminFiletypeCategories;
 
 class DispatchAdmin extends Dispatch
 {
@@ -185,6 +186,11 @@ class DispatchAdmin extends Dispatch
 
             case 'capcodes':
                 $admin_handler = new AdminCapcodes($this->authorization, $this->domain, $this->session);
+                $admin_handler->dispatch($inputs);
+                break;
+
+            case 'filetype-categories':
+                $admin_handler = new AdminFiletypeCategories($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
                 break;
 

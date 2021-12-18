@@ -10,14 +10,14 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Output\OutputPanelFiletypes;
 
-class AdminFiletypes extends Admin
+class AdminFiletypeCategories extends Admin
 {
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->data_table = NEL_FILETYPES_TABLE;
-        $this->id_field = 'filetype-id';
+        $this->data_table = NEL_FILETYPE_CATEGORIES_TABLE;
+        $this->id_field = 'category-id';
         $this->panel_name = _gettext('Filetypes');
     }
 
@@ -49,54 +49,42 @@ class AdminFiletypes extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
         $output_panel = new OutputPanelFiletypes($this->domain, false);
-        $output_panel->newFiletype(['editing' => false], false);
+        $output_panel->newCategory(['editing' => false], false);
         $this->outputMain(false);
     }
 
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $format = $_POST['format'] ?? '';
-        $extensions = $_POST['extensions'] ?? '';
-        $category = $_POST['category'] ?? null;
-        $mime = $_POST['mime'] ?? '';
-        $magic_regex = $_POST['magic_regex'] ?? '';
+        $category = $_POST['category'] ?? '';
         $label = $_POST['label'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
 
         $prepared = $this->database->prepare(
-            'INSERT INTO "' . $this->data_table .
-            '" ("format", "extensions", "category", "mime", "magic_regex", "label", "enabled") VALUES (?, ?, ?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared,
-            [$format, $extensions, $category, $mime, $magic_regex, $label, $enabled]);
+            'INSERT INTO "' . $this->data_table . '" ("category", "label", "enabled") VALUES (?, ?, ?)');
+        $this->database->executePrepared($prepared, [$category, $label, $enabled]);
         $this->outputMain(true);
     }
 
     public function editor(): void
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $format = $_GET['filetype-id'] ?? '';
+        $category = $_GET['category-id'] ?? '';
         $output_panel = new OutputPanelFiletypes($this->domain, false);
-        $output_panel->editFiletype(['editing' => true, 'format' => $format], false);
+        $output_panel->editCategory(['editing' => true, 'category' => $category], false);
         $this->outputMain(false);
     }
 
     public function update(): void
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $format = $_GET['filetype-id'] ?? '';
-        $extensions = $_POST['extensions'] ?? '';
-        $category = $_POST['category'] ?? null;
-        $mime = $_POST['mime'] ?? '';
-        $magic_regex = $_POST['magic_regex'] ?? '';
+        $category = $_GET['category-id'] ?? '';
         $label = $_POST['label'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
 
         $prepared = $this->database->prepare(
-            'UPDATE "' . $this->data_table .
-            '" SET "extensions" = ?, "category" = ?, "mime" = ?, "magic_regex" = ?, "label" = ?, "enabled" = ? WHERE "format" = ?');
-        $this->database->executePrepared($prepared,
-            [$extensions, $category, $mime, $magic_regex, $label, $enabled, $format]);
+            'UPDATE "' . $this->data_table . '" SET ""label" = ?, "enabled" = ? WHERE "category" = ?');
+        $this->database->executePrepared($prepared, [$label, $enabled, $category]);
         $this->outputMain(true);
     }
 
@@ -104,7 +92,7 @@ class AdminFiletypes extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
         $id = $_GET[$this->id_field] ?? '';
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "format" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "category" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
@@ -128,8 +116,9 @@ class AdminFiletypes extends Admin
     public function enable()
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "format" = ?');
+        $id = $_GET[$this->id_field] ?? '';
+        $prepared = $this->database->prepare(
+            'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "category" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
@@ -137,8 +126,9 @@ class AdminFiletypes extends Admin
     public function disable()
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "format" = ?');
+        $id = $_GET[$this->id_field] ?? '';
+        $prepared = $this->database->prepare(
+            'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "category" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }

@@ -50,6 +50,7 @@ use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
 use Nelliel\Tables\TableSettingOptions;
+use Nelliel\Tables\TableFiletypeCategories;
 
 class Setup
 {
@@ -217,8 +218,6 @@ class Setup
         $styles_table->createTable();
         $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
         $embeds_table->createTable();
-        $filetypes_table = new TableFiletypes($this->database, $this->sql_compatibility);
-        $filetypes_table->createTable();
         $rate_limit_table = new TableRateLimit($this->database, $this->sql_compatibility);
         $rate_limit_table->createTable();
         $templates_table = new TableTemplates($this->database, $this->sql_compatibility);
@@ -235,15 +234,22 @@ class Setup
         $content_ops_table->createTable();
         $capcodes_table = new TableCapcodes($this->database, $this->sql_compatibility);
         $capcodes_table->createTable();
+
+        // NOTE: The following tables rely on the filetype categories table
+        // Filetype categories must be created first!
+        $filetype_categories_table = new TableFiletypeCategories($this->database, $this->sql_compatibility);
+        $filetype_categories_table->createTable();
+        $filetypes_table = new TableFiletypes($this->database, $this->sql_compatibility);
+        $filetypes_table->createTable();
+
+        // NOTE: The following tables rely on the user, role and/or permission tables
+        // User, role and permission tables must be created first!
         $roles_table = new TableRoles($this->database, $this->sql_compatibility);
         $roles_table->createTable();
         $permissions_table = new TablePermissions($this->database, $this->sql_compatibility);
         $permissions_table->createTable();
         $users_table = new TableUsers($this->database, $this->sql_compatibility);
         $users_table->createTable();
-
-        // NOTE: The following tables rely on the user, role and/or permission tables
-        // User, role and permission tables must be created first!
         $role_permissions_table = new TableRolePermissions($this->database, $this->sql_compatibility);
         $role_permissions_table->createTable();
         $news_table = new TableNews($this->database, $this->sql_compatibility);

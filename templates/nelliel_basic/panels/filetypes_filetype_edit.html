@@ -1,12 +1,14 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
+{{# new_filetype }}
 		<div class="display-row">
 			<label for="format" class="display-cell" data-i18n="">Format</label>
-			<input id="format" class="display-cell" type="text" name="format" value="{{ format }}">
+			<input id="format" class="display-cell" type="text" name="format" value="{{ format }}" required="required">
 		</div>
+{{/ new_filetype }}
 		<div class="display-row">
 			<label for="extensions" class="display-cell" data-i18n="">Extensions (JSON array)</label>
-			<input id="extensions" class="display-cell" type="text" name="extensions" value="{{ extensions }}">
+			<input id="extensions" class="display-cell" type="text" name="extensions" value="{{ extensions }}" required="required">
 		</div>
 		<div class="display-row">
 			<label for="category" class="display-cell" data-i18n="">Category</label>
@@ -21,12 +23,8 @@
 			<input id="magic_regex" class="display-cell" type="text" name="magic_regex" value="{{ magic_regex }}">
 		</div>
 		<div class="display-row">
-			<label for="type_label" class="display-cell" data-i18n="">Label</label>
-			<input id="type_label" class="display-cell" type="text" name="type_label" value="{{ type_label }}" required="required">
-		</div>
-		<div class="display-row">
-			<label for="is_category" class="display-cell" data-i18n="">Category definition</label>
-			<input id="is_category" class="display-cell" type="checkbox" value="1" name="is_category" {{ is_category_checked }}>
+			<label for="label" class="display-cell" data-i18n="">Label</label>
+			<input id="label" class="display-cell" type="text" name="label" value="{{ label }}" required="required">
 		</div>
 		<div class="display-row">
 			<label for="enabled" class="display-cell" data-i18n="">Enabled</label>

@@ -331,7 +331,7 @@ class Uploads
             nel_derp(21, _gettext('Unrecognized file type.'));
         }
 
-        if (!$filetypes->extensionIsEnabled($this->domain->id(), $extension)) {
+        if (!$filetypes->extensionIsEnabled($this->domain, $extension)) {
             nel_derp(22, _gettext('File type is not allowed.'));
         }
 
