@@ -371,31 +371,51 @@ class Uploads
 
     private function checkEmbedDuplicates(Post $post, string $embed_url): void
     {
-        $active = ($this->domain->setting('only_active_embed_duplicates')) ? ' AND "old" = 0 ' : '';
-
         if ($this->domain->setting('check_board_embed_duplicates')) {
             $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . $this->domain->reference('uploads_table') . '" WHERE "embed_url" = ?' . $active);
-            $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
-            $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+                'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE "embed_url" = :embed_url');
+            $prepared->bindValue(':embed_url', $embed_url, PDO::PARAM_STR);
         } else if ($post->data('op') && $this->domain->setting('check_op_embed_duplicates')) {
             $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "parent_thread" = "post_ref" AND "embed_url" = ?' . $active);
-            $prepared->bindValue(1, $embed_url, PDO::PARAM_STR);
+                'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE "parent_thread" = "post_ref" AND "embed_url" = :embed_url');
+            $prepared->bindValue(':embed_url', $embed_url, PDO::PARAM_STR);
         } else if (!$post->data('op') && $this->domain->setting('check_thread_embed_duplicates')) {
             $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "parent_thread" = ? AND "embed_url" = ?' . $active);
-            $prepared->bindValue(1, $post->data('parent_thread'), PDO::PARAM_INT);
-            $prepared->bindValue(2, $embed_url, PDO::PARAM_STR);
+                'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
+                '" WHERE "parent_thread" = :parent_thread AND "embed_url" = :embed_url');
+            $prepared->bindValue(':parent_thread', $post->data('parent_thread'), PDO::PARAM_INT);
+            $prepared->bindValue(':embed_url', $embed_url, PDO::PARAM_STR);
         } else {
             return;
         }
 
-        $duplicates_found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+        $parent_threads = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
 
-        if ($duplicates_found) {
+        if (empty($parent_threads)) {
+            return;
+        }
+
+        $duplicate_found = false;
+
+        if ($this->domain->setting('only_active_file_duplicates')) {
+            foreach ($parent_threads as $thread_id) {
+                $prepared = $this->database->prepare(
+                    'SELECT 1 FROM "' . $this->domain->reference('threads_table') .
+                    '" WHERE "thread_id" = :thread_id AND "old" = 0');
+                $prepared->bindValue(':thread_id', $thread_id, PDO::PARAM_INT);
+
+                if ($this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN)) {
+                    $duplicate_found = true;
+                    break;
+                }
+            }
+        } else {
+            $duplicate_found = true;
+        }
+
+        if ($duplicate_found) {
             nel_derp(35, _gettext('Duplicate embed detected.'));
         }
     }

@@ -28,7 +28,7 @@ class OutputPanelEmbeds extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $embeds = $this->database->executeFetchAll('SELECT * FROM "' . NEL_EMBEDS_TABLE . '" ORDER BY "entry" DESC',
+        $embeds = $this->database->executeFetchAll('SELECT * FROM "' . NEL_EMBEDS_TABLE . '"',
             PDO::FETCH_ASSOC);
         $bgclass = 'row1';
         $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
@@ -38,21 +38,21 @@ class OutputPanelEmbeds extends Output
             $embed_data = array();
             $embed_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $embed_data['entry'] = $embed['entry'];
-            $embed_data['embed_name'] = $embed['embed_name'];
-            $embed_data['embed_url'] = $embed['embed_url'];
+            $embed_data['embed_id'] = $embed['embed_id'];
+            $embed_data['label'] = $embed['label'];
+            $embed_data['url'] = $embed['url'];
             $embed_data['enabled'] = $embed['enabled'];
             $embed_data['notes'] = $embed['notes'];
             $embed_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'embeds', 'actions' => 'edit',
-                        'embed-id' => $embed_data['entry']]);
+                        'embed-id' => $embed_data['embed_id']]);
 
             if ($embed_data['enabled'] == 1) {
                 $embed_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                         ['module' => 'admin', 'section' => 'embeds', 'actions' => 'disable',
-                            'embed-id' => $embed_data['entry']]);
+                            'embed-id' => $embed_data['embed_id']]);
                 $embed_data['enable_disable_text'] = _gettext('Disable');
             }
 
@@ -60,14 +60,14 @@ class OutputPanelEmbeds extends Output
                 $embed_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                         ['module' => 'admin', 'section' => 'embeds', 'actions' => 'enable',
-                            'embed-id' => $embed_data['entry']]);
+                            'embed-id' => $embed_data['embed_id']]);
                 $embed_data['enable_disable_text'] = _gettext('Enable');
             }
 
             $embed_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'embeds', 'actions' => 'remove',
-                        'embed-id' => $embed_data['entry']]);
+                        'embed-id' => $embed_data['embed_id']]);
             $this->render_data['embeds_list'][] = $embed_data;
         }
 
@@ -98,22 +98,23 @@ class OutputPanelEmbeds extends Output
         $editing = $parameters['editing'] ?? true;
 
         if ($editing) {
-            $entry = $parameters['entry'] ?? 0;
+            $embed_id = $parameters['embed_id'] ?? '';
             $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
-                    ['module' => 'admin', 'section' => 'embeds', 'actions' => 'update', 'embed-id' => $entry]);
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "entry" = ?');
-            $embed_data = $this->database->executePreparedFetch($prepared, [$entry], PDO::FETCH_ASSOC);
+                    ['module' => 'admin', 'section' => 'embeds', 'actions' => 'update', 'embed-id' => $embed_id]);
+            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "embed_id" = ?');
+            $embed_data = $this->database->executePreparedFetch($prepared, [$embed_id], PDO::FETCH_ASSOC);
 
             if ($embed_data !== false) {
-                $this->render_data['entry'] = $embed_data['entry'];
-                $this->render_data['embed_name'] = $embed_data['embed_name'];
-                $this->render_data['data_regex'] = $embed_data['data_regex'];
-                $this->render_data['embed_url'] = $embed_data['embed_url'];
+                $this->render_data['embed_id'] = $embed_data['embed_id'];
+                $this->render_data['label'] = $embed_data['label'];
+                $this->render_data['regex'] = $embed_data['regex'];
+                $this->render_data['url'] = $embed_data['url'];
                 $this->render_data['enabled'] = $embed_data['enabled'] == 1 ? 'checked' : '';
                 $this->render_data['notes'] = $embed_data['notes'];
             }
         } else {
+            $this->render_data['new_embed'] = true;
             $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(['module' => 'admin', 'section' => 'embeds', 'actions' => 'add']);
         }

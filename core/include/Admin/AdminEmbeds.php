@@ -56,49 +56,50 @@ class AdminEmbeds extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_embeds_manage');
-        $embed_name = $_POST['embed_name'] ?? '';
-        $data_regex = $_POST['data_regex'] ?? '';
-        $embed_url = $_POST['embed_url'] ?? '';
+        $embed_id = $_POST['embed_id'] ?? '';
+        $label = $_POST['label'] ?? '';
+        $regex = $_POST['regex'] ?? '';
+        $url = $_POST['url'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
         $notes = $_POST['notes'] ?? null;
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table .
-            '" ("embed_name", "data_regex", "embed_url", "enabled", "notes") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$embed_name, $data_regex, $embed_url, $enabled, $notes]);
+            '" ("embed_id", "label", "regex", "url", "enabled", "notes") VALUES (?, ?, ?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$embed_id, $label, $regex, $url, $enabled, $notes]);
         $this->outputMain(true);
     }
 
     public function editor(): void
     {
         $this->verifyPermissions($this->domain, 'perm_embeds_manage');
-        $entry = $_GET[$this->id_field] ?? 0;
+        $embed_id = $_GET[$this->id_field] ?? 0;
         $output_panel = new OutputPanelEmbeds($this->domain, false);
-        $output_panel->edit(['editing' => true, 'entry' => $entry], false);
+        $output_panel->edit(['editing' => true, 'embed_id' => $embed_id], false);
         $this->outputMain(false);
     }
 
     public function update(): void
     {
         $this->verifyPermissions($this->domain, 'perm_embeds_manage');
-        $entry = $_GET[$this->id_field] ?? 0;
-        $embed_name = $_POST['embed_name'] ?? '';
-        $data_regex = $_POST['data_regex'] ?? '';
-        $embed_url = $_POST['embed_url'] ?? '';
+        $embed_id = $_GET[$this->id_field] ?? '';
+        $label = $_POST['label'] ?? '';
+        $regex = $_POST['regex'] ?? '';
+        $url = $_POST['url'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
         $notes = $_POST['notes'] ?? null;
 
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table .
-            '" SET "embed_name" = ?, "data_regex" = ?, "embed_url" = ?, "enabled" = ?, "notes" = ? WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$embed_name, $data_regex, $embed_url, $enabled, $notes, $entry]);
+            '" SET "label" = ?, "regex" = ?, "url" = ?, "enabled" = ?, "notes" = ? WHERE "embed_id" = ?');
+        $this->database->executePrepared($prepared, [$label, $regex, $url, $enabled, $notes, $embed_id]);
         $this->outputMain(true);
     }
 
     public function remove(): void
     {
         $this->verifyPermissions($this->domain, 'perm_embeds_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
+        $id = $_GET[$this->id_field] ?? '';
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "embed_id" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
@@ -122,8 +123,8 @@ class AdminEmbeds extends Admin
     public function enable()
     {
         $this->verifyPermissions($this->domain, 'perm_embeds_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
+        $id = $_GET[$this->id_field] ?? '';
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "embed_id" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }
@@ -131,8 +132,8 @@ class AdminEmbeds extends Admin
     public function disable()
     {
         $this->verifyPermissions($this->domain, 'perm_embeds_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
+        $id = $_GET[$this->id_field] ?? '';
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "embed_id" = ?');
         $this->database->executePrepared($prepared, [$id]);
         $this->outputMain(true);
     }

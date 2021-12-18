@@ -6,8 +6,8 @@
 	<caption data-i18n="">List of embeds</caption>
 	<thead>
 		<tr>
-			<th scope="col" data-i18n="">Name</th>
-			<th scope="col" data-i18n="">Embed URL</th>
+			<th scope="col" data-i18n="">Label</th>
+			<th scope="col" data-i18n="">Prefix URL</th>
 			<th scope="col" data-i18n="">Enabled</th>
 			<th scope="col" data-i18n="">Notes</th>
 			<th scope="col" data-i18n="">Actions</th>
@@ -16,8 +16,8 @@
 	<tbody>
 {{# embeds_list }}
 		<tr class="{{ bgclass }}">
-			<td>{{ embed_name }}</td>
-			<td>{{ embed_url }}</td>
+			<td>{{ label }}</td>
+			<td>{{ url }}</td>
 			<td>{{ enabled }}</td>
 			<td>{{ notes }}</td>
 			<td>

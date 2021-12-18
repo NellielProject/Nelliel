@@ -310,8 +310,8 @@ class Upload
 
         if ($embed_regexes !== false) {
             foreach ($embed_regexes as $regex) {
-                if (preg_match($regex['data_regex'], $url) === 1) {
-                    $embed_url = preg_replace($regex['data_regex'], $regex['embed_url'], $url);
+                if (preg_match($regex['regex'], $url) === 1) {
+                    $embed_url = preg_replace($regex['regex'], $regex['url'], $url);
 
                     if (is_string($embed_url)) {
                         return $embed_url;

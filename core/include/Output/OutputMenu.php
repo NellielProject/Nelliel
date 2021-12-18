@@ -22,10 +22,10 @@ class OutputMenu extends Output
 
         foreach ($styles as $style) {
             $option_data = array();
-            $option_data['option_name'] = $style->id();
+            $option_data['option_value'] = $style->id();
             $option_data['option_label'] = $style->info('name');
 
-            if ($option_data['option_name'] === $selected) {
+            if ($option_data['option_value'] === $selected) {
                 $option_data['option_selected'] = 'selected';
             }
 
@@ -42,10 +42,10 @@ class OutputMenu extends Output
 
         foreach ($sets as $set) {
             $option_data = array();
-            $option_data['option_name'] = $set->id();
+            $option_data['option_value'] = $set->id();
             $option_data['option_label'] = $set->info('name');
 
-            if ($option_data['option_name'] === $selected) {
+            if ($option_data['option_value'] === $selected) {
                 $option_data['option_selected'] = 'selected';
             }
 
@@ -62,10 +62,10 @@ class OutputMenu extends Output
 
         foreach ($templates as $template) {
             $option_data = array();
-            $option_data['option_name'] = $template->id();
+            $option_data['option_value'] = $template->id();
             $option_data['option_label'] = $template->info('name');
 
-            if ($option_data['option_name'] === $selected) {
+            if ($option_data['option_value'] === $selected) {
                 $option_data['option_selected'] = 'selected';
             }
 

@@ -1,16 +1,22 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
+		{{# new_embed }}
 		<div class="display-row">
-			<label for="embed_name" class="display-cell" data-i18n="">Embed name</label>
-			<input id="embed_name" class="display-cell" type="text" name="embed_name" size="30" value="{{ embed_name }}">
+			<label for="embed_id" class="display-cell" data-i18n="">Unique ID</label>
+			<input id="embed_id" class="display-cell" type="text" name="embed_id" size="30" value="{{ embed_id }}">
+		</div>
+		{{/ new_embed }}
+		<div class="display-row">
+			<label for="label" class="display-cell" data-i18n="">Label</label>
+			<input id="label" class="display-cell" type="text" name="label" size="30" value="{{ label }}">
 		</div>
 		<div class="display-row">
-			<label for="data_regex" class="display-cell" data-i18n="">Regex</label>
-			<textarea id="data_regex" class="display-cell" name="data_regex" cols="64" rows="3">{{ data_regex }}</textarea>
+			<label for="regex" class="display-cell" data-i18n="">Regex</label>
+			<textarea id="regex" class="display-cell" name="regex" cols="64" rows="3">{{ regex }}</textarea>
 		</div>
 		<div class="display-row">
-			<label for="embed_url" class="display-cell" data-i18n="">Embed URL</label>
-			<input id="embed_url" class="display-cell" type="text" name="embed_url" size="30" value="{{ embed_url }}">
+			<label for="url" class="display-cell" data-i18n="">Prefix URL</label>
+			<input id="url" class="display-cell" type="text" name="url" size="30" value="{{ url }}">
 		</div>
 		<div class="display-row">
 			<label for="enabled" class="display-cell" data-i18n="">Enabled</label>
