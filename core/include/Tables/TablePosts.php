@@ -22,10 +22,10 @@ class TablePosts extends Table
             'parent_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'reply_to' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'post_password' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'password' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'tripcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'secure_tripcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'capcode_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'capcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'email' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'subject' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'comment' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
@@ -38,7 +38,7 @@ class TablePosts extends Table
             'embed_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'op' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'sage' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'account_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'mod_comment' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'content_hash' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'regen_cache' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
@@ -49,10 +49,10 @@ class TablePosts extends Table
             'parent_thread' => ['row_check' => false, 'auto_inc' => false],
             'reply_to' => ['row_check' => false, 'auto_inc' => false],
             'name' => ['row_check' => false, 'auto_inc' => false],
-            'post_password' => ['row_check' => false, 'auto_inc' => false],
+            'password' => ['row_check' => false, 'auto_inc' => false],
             'tripcode' => ['row_check' => false, 'auto_inc' => false],
             'secure_tripcode' => ['row_check' => false, 'auto_inc' => false],
-            'capcode_id' => ['row_check' => false, 'auto_inc' => false],
+            'capcode' => ['row_check' => false, 'auto_inc' => false],
             'email' => ['row_check' => false, 'auto_inc' => false],
             'subject' => ['row_check' => false, 'auto_inc' => false],
             'comment' => ['row_check' => false, 'auto_inc' => false],
@@ -65,7 +65,7 @@ class TablePosts extends Table
             'embed_count' => ['row_check' => false, 'auto_inc' => false],
             'op' => ['row_check' => false, 'auto_inc' => false],
             'sage' => ['row_check' => false, 'auto_inc' => false],
-            'account_id' => ['row_check' => false, 'auto_inc' => false],
+            'user_id' => ['row_check' => false, 'auto_inc' => false],
             'mod_comment' => ['row_check' => false, 'auto_inc' => false],
             'content_hash' => ['row_check' => false, 'auto_inc' => false],
             'regen_cache' => ['row_check' => false, 'auto_inc' => false],
@@ -84,10 +84,10 @@ class TablePosts extends Table
             parent_thread       INTEGER DEFAULT NULL,
             reply_to            INTEGER DEFAULT NULL,
             name                VARCHAR(255) DEFAULT NULL,
-            post_password       VARCHAR(255) DEFAULT NULL,
+            password            VARCHAR(255) DEFAULT NULL,
             tripcode            VARCHAR(255) DEFAULT NULL,
             secure_tripcode     VARCHAR(255) DEFAULT NULL,
-            capcode_id          VARCHAR(255) DEFAULT NULL,
+            capcode             VARCHAR(255) DEFAULT NULL,
             email               VARCHAR(255) DEFAULT NULL,
             subject             VARCHAR(255) DEFAULT NULL,
             comment             TEXT DEFAULT NULL,
@@ -100,16 +100,20 @@ class TablePosts extends Table
             embed_count         SMALLINT NOT NULL DEFAULT 0,
             op                  SMALLINT NOT NULL DEFAULT 0,
             sage                SMALLINT NOT NULL DEFAULT 0,
-            account_id          VARCHAR(50) DEFAULT NULL,
+            user_id             VARCHAR(50) DEFAULT NULL,
             mod_comment         TEXT DEFAULT NULL,
             content_hash        VARCHAR(128) DEFAULT NULL,
             regen_cache         SMALLINT NOT NULL DEFAULT 0,
             cache               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['threads_table'] . "
+            CONSTRAINT fk_" . $this->table_name . "_" . $other_tables['threads_table'] . "
             FOREIGN KEY (parent_thread) REFERENCES " . $other_tables['threads_table'] . " (thread_id)
             ON UPDATE CASCADE
-            ON DELETE CASCADE
+            ON DELETE CASCADE,
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_USERS_TABLE . "
+            FOREIGN KEY (user_id) REFERENCES " . NEL_USERS_TABLE . " (user_id)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL
         ) " . $options . ";";
 
         return $schema;

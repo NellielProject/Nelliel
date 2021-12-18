@@ -114,7 +114,12 @@ class TableUploads extends Table
             regen_cache             SMALLINT NOT NULL DEFAULT 0,
             cache                   TEXT DEFAULT NULL,
             moar                    TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . $other_tables['posts_table'] . "
+            CONSTRAINT uc_thread_post_order UNIQUE (parent_thread, post_ref, upload_order),
+            CONSTRAINT fk_" . $this->table_name . "_" . $other_tables['threads_table'] . "
+            FOREIGN KEY (parent_thread) REFERENCES " . $other_tables['threads_table'] . " (thread_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE,
+            CONSTRAINT fk_" . $this->table_name . "_" . $other_tables['posts_table'] . "
             FOREIGN KEY (post_ref) REFERENCES " . $other_tables['posts_table'] . " (post_number)
             ON UPDATE CASCADE
             ON DELETE CASCADE

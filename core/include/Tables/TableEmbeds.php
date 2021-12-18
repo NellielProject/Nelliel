@@ -48,7 +48,8 @@ class TableEmbeds extends Table
             embed_url   TEXT NOT NULL,
             enabled     SMALLINT NOT NULL DEFAULT 0,
             notes       TEXT DEFAULT NULL,
-            moar        TEXT DEFAULT NULL
+            moar        TEXT DEFAULT NULL,
+            CONSTRAINT uc_embed_name UNIQUE (embed_name)
         ) " . $options . ";";
 
         return $schema;

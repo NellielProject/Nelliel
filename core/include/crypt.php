@@ -94,8 +94,8 @@ function nel_ip_hash(string $ip_address)
     return utf8_substr($hashed_ip, 0, 32);
 }
 
-function nel_post_password_hash(string $post_password)
+function nel_post_password_hash(string $password)
 {
-    $hashed_password = hash_hmac('sha256', $post_password, NEL_POST_PASSWORD_PEPPER);
+    $hashed_password = hash_hmac('sha256', $password, NEL_POST_PASSWORD_PEPPER);
     return $hashed_password;
 }

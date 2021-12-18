@@ -19,18 +19,18 @@ class TableContentOps extends Table
         $this->table_name = NEL_CONTENT_OPS_TABLE;
         $this->column_types = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'content_op_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'content_op_label' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'content_op_url' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'op_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'label' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'url' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'images_only' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'entry' => ['row_check' => false, 'auto_inc' => true],
-            'content_op_id' => ['row_check' => true, 'auto_inc' => false],
-            'content_op_label' => ['row_check' => false, 'auto_inc' => false],
-            'content_op_url' => ['row_check' => false, 'auto_inc' => false],
+            'op_id' => ['row_check' => true, 'auto_inc' => false],
+            'label' => ['row_check' => false, 'auto_inc' => false],
+            'url' => ['row_check' => false, 'auto_inc' => false],
             'images_only' => ['row_check' => false, 'auto_inc' => false],
             'enabled' => ['row_check' => false, 'auto_inc' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false],
@@ -44,14 +44,15 @@ class TableContentOps extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            content_op_id       VARCHAR(50) NOT NULL UNIQUE,
-            content_op_label    VARCHAR(255) NOT NULL,
-            content_op_url      TEXT NOT NULL,
-            images_only         SMALLINT NOT NULL DEFAULT 0,
-            enabled             SMALLINT NOT NULL DEFAULT 0,
-            notes               TEXT DEFAULT NULL,
-            moar                TEXT DEFAULT NULL
+            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            op_id           VARCHAR(50) NOT NULL,
+            label           VARCHAR(255) NOT NULL,
+            url             TEXT NOT NULL,
+            images_only     SMALLINT NOT NULL DEFAULT 0,
+            enabled         SMALLINT NOT NULL DEFAULT 0,
+            notes           TEXT DEFAULT NULL,
+            moar            TEXT DEFAULT NULL,
+            CONSTRAINT uc_op_id UNIQUE (op_id)
         ) " . $options . ";";
 
         return $schema;

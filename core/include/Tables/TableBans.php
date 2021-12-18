@@ -60,7 +60,7 @@ class TableBans extends Table
         CREATE TABLE " . $this->table_name . " (
             ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             board_id            VARCHAR(50) NOT NULL,
-            creator             VARCHAR(50) NOT NULL,
+            creator             VARCHAR(50) DEFAULT NULL,
             ip_type             SMALLINT NOT NULL DEFAULT 0,
             ip_address_start    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
             ip_address_end      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
@@ -73,10 +73,14 @@ class TableBans extends Table
             appeal_response     TEXT DEFAULT NULL,
             appeal_status       SMALLINT NOT NULL DEFAULT 0,
             moar                TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
-            ON DELETE CASCADE
+            ON DELETE CASCADE,
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_USERS_TABLE . "
+            FOREIGN KEY (creator) REFERENCES " . NEL_USERS_TABLE . " (user_id)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL
         ) " . $options . ";";
 
         return $schema;

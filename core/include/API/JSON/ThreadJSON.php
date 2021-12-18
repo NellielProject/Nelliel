@@ -22,8 +22,8 @@ class ThreadJSON extends JSON
     {
         $this->raw_data['api_version'] = $this->api_version;
         $this->raw_data['thread_id'] = $this->source->data('thread_id');
-        $this->raw_data['last_bump_time'] = $this->source->data('last_bump_time');
-        $this->raw_data['last_bump_time_milli'] = $this->source->data('last_bump_time_milli');
+        $this->raw_data['bump_time'] = $this->source->data('bump_time');
+        $this->raw_data['bump_time_milli'] = $this->source->data('bump_time_milli');
         $this->raw_data['last_update'] = $this->source->data('last_update');
         $this->raw_data['last_update_milli'] = $this->source->data('last_update_milli');
         $this->raw_data['post_count'] = $this->source->data('post_count');

@@ -46,7 +46,7 @@ class TableFileFilters extends Table
             file_notes  TEXT DEFAULT NULL,
             board_id    VARCHAR(50) NOT NULL,
             moar        TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

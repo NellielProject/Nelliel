@@ -342,14 +342,14 @@ class LanguageExtractor
         }
 
         $permission_descriptions = $database->executeFetchAll(
-            'SELECT "perm_description" FROM "' . NEL_PERMISSIONS_TABLE . '"', PDO::FETCH_COLUMN);
+            'SELECT "description" FROM "' . NEL_PERMISSIONS_TABLE . '"', PDO::FETCH_COLUMN);
 
         foreach ($permission_descriptions as $description) {
             if ($description !== '' && !is_null($description)) {
                 $msgid = $description;
                 $entries[$default_category][$msgid]['msgid'] = $description;
                 $entries[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_PERMISSIONS_TABLE .
-                    ' | Column: perm_description'] = '#:';
+                    ' | Column: description'] = '#:';
             }
         }
 

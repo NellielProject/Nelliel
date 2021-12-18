@@ -209,9 +209,9 @@ class Post
 
         if ($session->isActive()) {
             if ($user->checkPermission($this->domain, 'perm_delete_posts')) {
-                if (!$user->isSiteOwner() && !empty($this->content_data['account_id']) &&
-                    $this->authorization->userExists($this->content_data['account_id'])) {
-                    $mod_post_user = $this->authorization->getUser($this->content_data['account_id']);
+                if (!$user->isSiteOwner() && !empty($this->content_data['user_id']) &&
+                    $this->authorization->userExists($this->content_data['user_id'])) {
+                    $mod_post_user = $this->authorization->getUser($this->content_data['user_id']);
                     $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
                         $mod_post_user->getDomainRole($this->domain)->id());
                 } else {
@@ -223,8 +223,8 @@ class Post
         $update_sekrit = $_POST['update_sekrit'] ?? '';
 
         if (!$flag) {
-            if (!isset($this->content_data['post_password']) ||
-                !hash_equals($this->content_data['post_password'], nel_post_password_hash($update_sekrit)) ||
+            if (!isset($this->content_data['password']) ||
+                !hash_equals($this->content_data['password'], nel_post_password_hash($update_sekrit)) ||
                 !$this->domain->setting('user_delete_own')) {
                 nel_derp(60, _gettext('Password is wrong or you are not allowed to delete that.'));
             }
@@ -298,8 +298,8 @@ class Post
         $new_content_id->changePostID($this->content_id->postID());
         $new_thread = new Thread($new_content_id, $this->domain);
         $new_thread->changeData('thread_id', $this->content_id->postID());
-        $new_thread->changeData('last_bump_time', $time['time']);
-        $new_thread->changeData('last_bump_time_milli', $time['milli']);
+        $new_thread->changeData('bump_time', $time['time']);
+        $new_thread->changeData('bump_time_milli', $time['milli']);
         $new_thread->changeData('last_update', $time['time']);
         $new_thread->changeData('last_update_milli', $time['milli']);
         $new_thread->writeToDatabase();

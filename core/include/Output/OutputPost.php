@@ -257,18 +257,18 @@ class OutputPost extends Output
             $this->domain->setting('tripcode_marker') . $post->data('secure_tripcode') : '';
         $post_headers['tripline'] = $tripcode . $secure_tripcode;
 
-        if (!nel_true_empty($post->data('capcode_id'))) {
-            $capcode = new Capcode($this->database, $this->domain->frontEndData(), $post->data('capcode_id'));
+        if (!nel_true_empty($post->data('capcode'))) {
+            $capcode = new Capcode($this->database, $this->domain->frontEndData(), $post->data('capcode'));
             $capcode->load();
 
             // Most likely no matching capcode so assume it was custom
-            if (nel_true_empty($capcode->data('capcode_output'))) {
+            if (nel_true_empty($capcode->data('output'))) {
                 $capcode = new Capcode($this->database, $this->domain->frontEndData(), '');
                 $capcode->load();
             }
 
             if ($capcode->data('enabled')) {
-                $post_headers['capcode_output'] = sprintf($capcode->data('capcode_output'), $post->data('capcode_id'));
+                $post_headers['output'] = sprintf($capcode->data('output'), $post->data('capcode'));
             }
         }
 

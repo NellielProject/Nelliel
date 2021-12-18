@@ -49,7 +49,7 @@ class TableCites extends Table
             target_board    VARCHAR(50) NOT NULL,
             target_thread   INTEGER DEFAULT NULL,
             target_post     INTEGER DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (source_board) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,

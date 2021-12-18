@@ -49,7 +49,7 @@ class TableWordFilters extends Table
             is_regex    SMALLINT NOT NULL DEFAULT 0,
             enabled     SMALLINT NOT NULL DEFAULT 0,
             moar        TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

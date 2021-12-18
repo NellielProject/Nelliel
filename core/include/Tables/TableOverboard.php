@@ -20,18 +20,18 @@ class TableOverboard extends Table
         $this->column_types = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'thread_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'last_bump_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'last_bump_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'sticky' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'bump_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'bump_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'sticky' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'entry' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => true],
             'thread_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'last_bump_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'last_bump_time_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'sticky' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
+            'bump_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'bump_time_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
+            'sticky' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -42,14 +42,14 @@ class TableOverboard extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            thread_id               INTEGER NOT NULL,
-            last_bump_time          BIGINT NOT NULL,
-            last_bump_time_milli    SMALLINT NOT NULL,
-            board_id                VARCHAR(50) NOT NULL,
-            sticky                  SMALLINT NOT NULL DEFAULT 0,
-            moar                    TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            thread_id           INTEGER NOT NULL,
+            board_id            VARCHAR(50) NOT NULL,
+            bump_time           BIGINT NOT NULL,
+            bump_time_milli     SMALLINT NOT NULL,
+            sticky              SMALLINT NOT NULL DEFAULT 0,
+            moar                TEXT DEFAULT NULL,
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

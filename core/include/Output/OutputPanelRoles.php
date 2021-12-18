@@ -40,7 +40,7 @@ class OutputPanelRoles extends Output
             $role_data['role_id'] = $role['role_id'];
             $role_data['role_level'] = $role['role_level'];
             $role_data['role_title'] = $role['role_title'];
-            $role_data['capcode_id'] = $role['capcode_id'];
+            $role_data['capcode'] = $role['capcode'];
             $role_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=edit&role-id=' .
                     $role['role_id'];
             $role_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
@@ -87,11 +87,11 @@ class OutputPanelRoles extends Output
             $this->render_data['role_id'] = $role->getData('role_id');
             $this->render_data['role_level'] = $role->getData('role_level');
             $this->render_data['role_title'] = $role->getData('role_title');
-            $this->render_data['capcode_id'] = $role->getData('capcode_id');
+            $this->render_data['capcode'] = $role->getData('capcode');
         }
 
         $permissions_list = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_ASSOC);
+                'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "permission" ASC', PDO::FETCH_ASSOC);
 
         foreach ($permissions_list as $permission)
         {
@@ -106,8 +106,8 @@ class OutputPanelRoles extends Output
             }
 
             $permission_data['permission'] = $permission['permission'];
-            $permission_data['perm_description'] = '(' . $permission['permission'] . ') - ' .
-                    $permission['perm_description'];
+            $permission_data['description'] = '(' . $permission['permission'] . ') - ' .
+                    $permission['description'];
             $this->render_data['permissions_list'][] = $permission_data;
         }
 

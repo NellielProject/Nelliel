@@ -45,7 +45,11 @@ class TableNoticeboard extends Table
             time        BIGINT NOT NULL,
             subject     TEXT NOT NULL,
             message     TEXT NOT NULL,
-            moar        TEXT DEFAULT NULL
+            moar        TEXT DEFAULT NULL,
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_USERS_TABLE . "
+            FOREIGN KEY (user_id) REFERENCES " . NEL_USERS_TABLE . " (user_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
         ) " . $options . ";";
 
         return $schema;

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -23,23 +22,20 @@ class Overboard
     public function addThread(Thread $thread): void
     {
         $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "thread_id" = ? AND "board_id" = ?');
+            'SELECT 1 FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "thread_id" = ? AND "board_id" = ?');
         $entry = $this->database->executePreparedFetch($prepared,
-                [$thread->contentID()->threadID(), $thread->domain()->id()], PDO::FETCH_COLUMN);
+            [$thread->contentID()->threadID(), $thread->domain()->id()], PDO::FETCH_COLUMN);
 
-        if (!empty($entry))
-        {
+        if (!empty($entry)) {
             $this->updateThread($thread);
-        }
-        else
-        {
+        } else {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_OVERBOARD_TABLE .
-                    '" ("thread_id", "last_bump_time", "last_bump_time_milli", "board_id", "sticky") VALUES
+                'INSERT INTO "' . NEL_OVERBOARD_TABLE .
+                '" ("thread_id", "bump_time", "bump_time_milli", "board_id", "sticky") VALUES
                     (?, ?, ?, ?, ?)');
             $this->database->executePrepared($prepared,
-                    [$thread->contentID()->threadID(), $thread->data('last_bump_time'),
-                        $thread->data('last_bump_time_milli'), $thread->domain()->id(), $thread->data('sticky')]);
+                [$thread->contentID()->threadID(), $thread->data('bump_time'), $thread->data('bump_time_milli'),
+                    $thread->domain()->id(), $thread->data('sticky')]);
         }
 
         $this->prune();
@@ -48,28 +44,28 @@ class Overboard
     public function updateThread(Thread $thread): void
     {
         $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_OVERBOARD_TABLE .
-                '" SET "last_bump_time" = ?, "last_bump_time_milli" = ?, "sticky" = ? WHERE "thread_id" = ? AND "board_id" = ?');
+            'UPDATE "' . NEL_OVERBOARD_TABLE .
+            '" SET "bump_time" = ?, "bump_time_milli" = ?, "sticky" = ? WHERE "thread_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared,
-                [$thread->data('last_bump_time'), $thread->data('last_bump_time_milli'), $thread->data('sticky'),
-                    $thread->contentID()->threadID(), $thread->domain()->id()]);
+            [$thread->data('bump_time'), $thread->data('bump_time_milli'), $thread->data('sticky'),
+                $thread->contentID()->threadID(), $thread->domain()->id()]);
     }
 
     public function removeThread(Thread $thread): void
     {
         $prepared = $this->database->prepare(
-                'DELETE FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "thread_id" = ? AND "board_id" = ?');
+            'DELETE FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "thread_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared, [$thread->contentID()->threadID(), $thread->domain()->id()]);
     }
 
     public function prune(): void
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_OVERBOARD_TABLE . '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');
+            'SELECT * FROM "' . NEL_OVERBOARD_TABLE .
+            '" ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC');
         $thread_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
 
-        if (!is_array($thread_list))
-        {
+        if (!is_array($thread_list)) {
             return;
         }
 
@@ -81,10 +77,8 @@ class Overboard
         $nsfl_limit = $limit;
         $board_domains = array();
 
-        foreach ($thread_list as $thread_data)
-        {
-            if (!isset($board_domains[$thread_data['board_id']]))
-            {
+        foreach ($thread_list as $thread_data) {
+            if (!isset($board_domains[$thread_data['board_id']])) {
                 $board_domains[$thread_data['board_id']] = new DomainBoard($thread_data['board_id'], $this->database);
             }
 
@@ -94,30 +88,22 @@ class Overboard
             $thread = $thread_content_id->getInstanceFromID($board_domain);
             $board_safety_level = $board_domain->setting('safety_level');
 
-            if ($board_safety_level === 'SFW')
-            {
-                if ($sfw_total === $sfw_limit)
-                {
+            if ($board_safety_level === 'SFW') {
+                if ($sfw_total === $sfw_limit) {
                     $this->removeThread($thread);
                     continue;
                 }
 
                 $sfw_total ++;
-            }
-            else if ($board_safety_level === 'NSFL')
-            {
-                if ($nsfl_total === $nsfl_limit)
-                {
+            } else if ($board_safety_level === 'NSFL') {
+                if ($nsfl_total === $nsfl_limit) {
                     $this->removeThread($thread);
                     continue;
                 }
 
                 $nsfl_total ++;
-            }
-            else
-            {
-                if ($total === $limit)
-                {
+            } else {
+                if ($total === $limit) {
                     $this->removeThread($thread);
                     continue;
                 }

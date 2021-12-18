@@ -49,7 +49,7 @@ class Regen
 
         $output_generic_page = new OutputGenericPage($domain, true);
         $file_handler = new FileHandler();
-        $output = $output_generic_page->render($page['page_title'], $page['page_text'], false);
+        $output = $output_generic_page->render($page['title'], $page['text'], false);
         $file_handler->writeFile($domain->reference('base_path') . $page['uri'] . '.html', $output);
     }
 

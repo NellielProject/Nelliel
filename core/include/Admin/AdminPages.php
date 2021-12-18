@@ -55,7 +55,7 @@ class AdminPages extends Admin
         $page_info['text'] = $_POST['text'] ?? '';
         $page_info['markup_type'] = 'html'; // TODO: Other types
         $query = 'INSERT INTO "' . $this->data_table .
-            '" ("domain_id", "uri", "page_title", "page_text", "markup_type") VALUES (?, ?, ?, ?, ?)';
+            '" ("domain_id", "uri", "title", "text", "markup_type") VALUES (?, ?, ?, ?, ?)';
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
             [$page_info['domain_id'], $page_info['uri'], $page_info['title'], $page_info['text'],
@@ -94,7 +94,7 @@ class AdminPages extends Admin
         $page_info['markup_type'] = 'html';
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_PAGES_TABLE .
-            '" SET "uri" = ?, "page_title" = ?, "page_text" = ?, "markup_type" = ? WHERE "entry" = ?');
+            '" SET "uri" = ?, "title" = ?, "text" = ?, "markup_type" = ? WHERE "entry" = ?');
         $this->database->executePrepared($prepared,
             [$page_info['uri'], $page_info['title'], $page_info['text'], $page_info['markup_type'], $id]);
         $regen = new Regen();

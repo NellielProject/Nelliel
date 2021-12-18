@@ -42,7 +42,8 @@ class TableVersions extends Table
             id          VARCHAR(100) NOT NULL,
             type        VARCHAR(50) NOT NULL,
             original    SMALLINT NOT NULL DEFAULT 0,
-            current     SMALLINT NOT NULL DEFAULT 0
+            current     SMALLINT NOT NULL DEFAULT 0,
+            CONSTRAINT uc_id_type UNIQUE (id, type)
         ) " . $options . ";";
 
         return $schema;

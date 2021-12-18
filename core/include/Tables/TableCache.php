@@ -46,7 +46,7 @@ class TableCache extends Table
             cache_data      TEXT NOT NULL,
             regen           SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (domain_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

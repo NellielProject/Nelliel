@@ -54,24 +54,30 @@ class PostData
             }
         } else {
             $matches = array();
+            $trip_string = '';
 
-            if (preg_match('/([^#]+)?(## |##|#)(.+)/', $name, $matches) === 1) {
+            if (preg_match('/([^#]+)?(##|#)(.+)/', $name, $matches) === 1) {
                 $name = $matches[1];
                 $type = $matches[2];
-                $trip = $matches[3];
+                $trip_string = $matches[3];
+            }
 
-                if ($staff_post && $type === '## ') {
-                    $post->changeData('capcode_id', $this->capcode($trip));
+            if (preg_match('/(.+)? ## (.+)/', $trip_string, $matches) === 1) {
+                $trip_string = $matches[1];
+                $capcode_string = $matches[2];
+
+                if ($staff_post) {
+                    $post->changeData('capcode', $this->capcode($capcode_string));
+                }
+            }
+
+            if ($this->domain->setting('allow_tripcodes')) {
+                if ($type === '##') {
+                    $post->changeData('secure_tripcode', $this->secureTripcode($trip_string));
                 }
 
-                if ($this->domain->setting('allow_tripcodes')) {
-                    if ($type === '##') {
-                        $post->changeData('secure_tripcode', $this->secureTripcode($trip));
-                    }
-
-                    if ($type === '#') {
-                        $post->changeData('tripcode', $this->tripcode($trip));
-                    }
+                if ($type === '#') {
+                    $post->changeData('tripcode', $this->tripcode($trip_string));
                 }
             }
         }
@@ -90,7 +96,7 @@ class PostData
                 $name = $user->getData('display_name');
             }
 
-            $post->changeData('account_id', $user->id());
+            $post->changeData('user_id', $user->id());
         }
 
         $post->changeData('name', $name);
@@ -133,8 +139,7 @@ class PostData
         }
 
         if ($this->domain->setting('enable_password_field')) {
-            $post->changeData('post_password',
-                $this->checkEntry($_POST['new_post']['post_info']['sekrit'] ?? '', 'string'));
+            $post->changeData('password', $this->checkEntry($_POST['new_post']['post_info']['sekrit'] ?? '', 'string'));
         }
 
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
@@ -231,7 +236,7 @@ class PostData
     {
         $role = $this->session->user()->getDomainRole($this->domain);
 
-        if ($role->getData('capcode_id') !== $key &&
+        if ($role->getData('capcode') !== $key &&
             !$this->session->user()->checkPermission($this->domain, 'perm_custom_capcode')) {
             return '';
         }

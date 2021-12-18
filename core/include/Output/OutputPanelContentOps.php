@@ -37,9 +37,9 @@ class OutputPanelContentOps extends Output
             $content_op_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $content_op_data['entry'] = $content_op['entry'];
-            $content_op_data['content_op_id'] = $content_op['content_op_id'];
-            $content_op_data['content_op_label'] = $content_op['content_op_label'];
-            $content_op_data['content_op_url'] = $content_op['content_op_url'];
+            $content_op_data['op_id'] = $content_op['op_id'];
+            $content_op_data['label'] = $content_op['label'];
+            $content_op_data['url'] = $content_op['url'];
             $content_op_data['images_only'] = $content_op['images_only'];
             $content_op_data['enabled'] = $content_op['enabled'];
             $content_op_data['notes'] = $content_op['notes'];
@@ -107,9 +107,9 @@ class OutputPanelContentOps extends Output
 
             if ($content_op_data !== false) {
                 $this->render_data['entry'] = $content_op_data['entry'];
-                $this->render_data['content_op_id'] = $content_op_data['content_op_id'];
-                $this->render_data['content_op_label'] = $content_op_data['content_op_label'];
-                $this->render_data['content_op_url'] = $content_op_data['content_op_url'];
+                $this->render_data['op_id'] = $content_op_data['op_id'];
+                $this->render_data['label'] = $content_op_data['label'];
+                $this->render_data['url'] = $content_op_data['url'];
                 $this->render_data['images_only'] = $content_op_data['images_only'] == 1 ? 'checked' : '';
                 $this->render_data['enabled'] = $content_op_data['enabled'] == 1 ? 'checked' : '';
                 $this->render_data['notes'] = $content_op_data['notes'];

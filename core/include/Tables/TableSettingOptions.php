@@ -44,7 +44,7 @@ class TableSettingOptions extends Table
             menu_data           TEXT NOT NULL,
             moar                TEXT DEFAULT NULL,
             UNIQUE (setting_category, setting_name),
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_SETTINGS_TABLE . "
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_SETTINGS_TABLE . "
             FOREIGN KEY (setting_category, setting_name) REFERENCES " . NEL_SETTINGS_TABLE . " (setting_category, setting_name)
             ON UPDATE CASCADE
             ON DELETE CASCADE

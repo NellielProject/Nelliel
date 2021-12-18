@@ -40,7 +40,7 @@ class OutputPanelPages extends Output
             $page_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $page_data['uri'] = $page['uri'];
-            $page_data['title'] = $page['page_title'];
+            $page_data['title'] = $page['title'];
             $page_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'pages', 'actions' => 'edit', 'page-id' => $page['entry']]);
@@ -87,8 +87,8 @@ class OutputPanelPages extends Output
 
             if ($page_data !== false) {
                 $this->render_data['uri'] = $page_data['uri'];
-                $this->render_data['title'] = $page_data['page_title'];
-                $this->render_data['text'] = $page_data['page_text'];
+                $this->render_data['title'] = $page_data['title'];
+                $this->render_data['text'] = $page_data['text'];
                 $this->render_data['domain_id'] = $page_data['domain_id'];
             }
         } else {

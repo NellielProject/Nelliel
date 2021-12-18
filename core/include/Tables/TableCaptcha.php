@@ -45,13 +45,14 @@ class TableCaptcha extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            captcha_key     VARCHAR(100) NOT NULL UNIQUE,
+            captcha_key     VARCHAR(100) NOT NULL,
             captcha_text    VARCHAR(255) NOT NULL,
             domain_id       VARCHAR(50) DEFAULT NULL,
             time_created    BIGINT NOT NULL,
             seen            SMALLINT DEFAULT 0,
             solved          SMALLINT DEFAULT 0,
             moar            TEXT DEFAULT NULL,
+            CONSTRAINT uc_captcha_key UNIQUE (captcha_key),
             CONSTRAINT fk2_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (domain_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE

@@ -43,7 +43,8 @@ class TableBoardConfigs extends Table
             setting_name    VARCHAR(50) NOT NULL,
             setting_value   TEXT NOT NULL,
             edit_lock       SMALLINT NOT NULL DEFAULT 0,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            CONSTRAINT uc_board_setting UNIQUE (board_id, setting_name),
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

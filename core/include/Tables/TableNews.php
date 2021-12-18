@@ -19,14 +19,16 @@ class TableNews extends Table
         $this->table_name = NEL_NEWS_TABLE;
         $this->column_types = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'poster_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'headline' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'text' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'entry' => ['row_check' => false, 'auto_inc' => true],
-            'poster_id' => ['row_check' => false, 'auto_inc' => false],
+            'user_id' => ['row_check' => false, 'auto_inc' => false],
+            'name' => ['row_check' => false, 'auto_inc' => false],
             'time' => ['row_check' => false, 'auto_inc' => false],
             'headline' => ['row_check' => false, 'auto_inc' => false],
             'text' => ['row_check' => false, 'auto_inc' => false],
@@ -40,13 +42,17 @@ class TableNews extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            poster_id       VARCHAR(50) NOT NULL,
-            name            VARCHAR(255) NOT NULL,
-            time            BIGINT NOT NULL,
-            headline        VARCHAR(255) NOT NULL,
-            text            TEXT NOT NULL,
-            moar            TEXT DEFAULT NULL
+            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            user_id     VARCHAR(50) NOT NULL,
+            name        VARCHAR(255) NOT NULL,
+            time        BIGINT NOT NULL,
+            headline    VARCHAR(255) NOT NULL,
+            text        TEXT NOT NULL,
+            moar        TEXT DEFAULT NULL,
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_USERS_TABLE . "
+            FOREIGN KEY (user_id) REFERENCES " . NEL_USERS_TABLE . " (user_id)
+            ON UPDATE CASCADE
+            ON DELETE CASCADE
         ) " . $options . ";";
 
         return $schema;

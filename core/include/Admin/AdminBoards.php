@@ -149,11 +149,9 @@ class AdminBoards extends Admin
                 sprintf(_gettext('Had trouble registering the board URI %s. May want to change it.'), $board_uri));
         }
 
-        $hashed_board_id = hash('sha256', $board_id);
         $prepared = $this->database->prepare(
-            'INSERT INTO "' . NEL_DOMAIN_REGISTRY_TABLE . '" ("domain_id", "hashed_domain_id") VALUES (?, ?)');
+            'INSERT INTO "' . NEL_DOMAIN_REGISTRY_TABLE . '" ("domain_id") VALUES (?)');
         $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
-        $prepared->bindValue(2, $hashed_board_id, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
 
         $prepared = $this->database->prepare(
@@ -277,7 +275,7 @@ class AdminBoards extends Admin
     public function unlock()
     {
         $this->verifyPermissions($this->domain, 'perm_boards_modify');
-        $board_id = $_GET['board_id'];
+        $board_id = $_GET['board-id'] ?? '';
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $this->outputMain(true);

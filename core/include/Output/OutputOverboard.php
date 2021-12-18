@@ -33,7 +33,7 @@ class OutputOverboard extends Output
         $this->render_data['header'] = $output_header->overboard(['uri' => $uri, 'sfw' => $sfw], true);
         $prepared = $this->database->prepare(
             'SELECT * FROM "' . NEL_OVERBOARD_TABLE .
-            '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC');
+            '" ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC');
         $thread_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $thread_count = count($thread_list);
         $threads_done = 0;

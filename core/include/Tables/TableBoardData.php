@@ -18,7 +18,6 @@ class TableBoardData extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_BOARD_DATA_TABLE;
         $this->column_types = [
-            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'db_prefix' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'board_uri' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
@@ -29,7 +28,6 @@ class TableBoardData extends Table
             'locked' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'entry' => ['row_check' => false, 'auto_inc' => true],
             'board_id' => ['row_check' => true, 'auto_inc' => false],
             'db_prefix' => ['row_check' => true, 'auto_inc' => false],
             'board_uri' => ['row_check' => false, 'auto_inc' => false],
@@ -44,21 +42,20 @@ class TableBoardData extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            board_id            VARCHAR(50) NOT NULL UNIQUE,
-            db_prefix           VARCHAR(20) NOT NULL UNIQUE,
+            board_id            VARCHAR(50) PRIMARY KEY NOT NULL,
+            db_prefix           VARCHAR(20) NOT NULL,
             board_uri           VARCHAR(255) NOT NULL,
-            source_directory       VARCHAR(255) NOT NULL,
+            source_directory    VARCHAR(255) NOT NULL,
             preview_directory   VARCHAR(255) NOT NULL,
             page_directory      VARCHAR(255) NOT NULL,
             archive_directory   VARCHAR(255) NOT NULL,
             locked              SMALLINT NOT NULL DEFAULT 0,
             moar                TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            CONSTRAINT uc_db_prefix UNIQUE (db_prefix),
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

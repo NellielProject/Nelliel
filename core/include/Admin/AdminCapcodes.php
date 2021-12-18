@@ -56,13 +56,13 @@ class AdminCapcodes extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_capcodes_manage');
-        $capcode_id = $_POST['capcode_id'] ?? '';
-        $capcode_output = $_POST['capcode_output'] ?? '';
+        $capcode = $_POST['capcode'] ?? '';
+        $output = $_POST['output'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table .
-            '" ("capcode_id", "capcode_output", "enabled") VALUES (?, ?, ?)');
-        $this->database->executePrepared($prepared, [$capcode_id, $capcode_output, $enabled]);
+            '" ("capcode", "output", "enabled") VALUES (?, ?, ?)');
+        $this->database->executePrepared($prepared, [$capcode, $output, $enabled]);
         $this->outputMain(true);
     }
 
@@ -79,15 +79,15 @@ class AdminCapcodes extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_capcodes_manage');
         $entry = $_GET[$this->id_field] ?? 0;
-        $capcode_id = $_POST['capcode_id'] ?? '';
-        $capcode_output = $_POST['capcode_output'] ?? '';
+        $capcode = $_POST['capcode'] ?? '';
+        $output = $_POST['output'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
 
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table .
-            '" SET "capcode_id" = ?, "capcode_output" = ?, "enabled" = ? WHERE "entry" = ?');
+            '" SET "capcode" = ?, "output" = ?, "enabled" = ? WHERE "entry" = ?');
         $this->database->executePrepared($prepared,
-            [$capcode_id, $capcode_output, $enabled, $entry]);
+            [$capcode, $output, $enabled, $entry]);
         $this->outputMain(true);
     }
 

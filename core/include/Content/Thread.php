@@ -231,15 +231,15 @@ class Thread
             return;
         }
 
-        if ($last_bump->data('post_time') === $this->data('last_bump_time')) {
-            $last_bump_lower = $last_bump->data('post_time_milli') < $this->data('last_bump_time_milli');
+        if ($last_bump->data('post_time') === $this->data('bump_time')) {
+            $last_bump_lower = $last_bump->data('post_time_milli') < $this->data('bump_time_milli');
         } else {
-            $last_bump_lower = $last_bump->data('post_time') < $this->data('last_bump_time');
+            $last_bump_lower = $last_bump->data('post_time') < $this->data('bump_time');
         }
 
         if (!$this->data('permasage') || $last_bump_lower) {
-            $this->changeData('last_bump_time', $last_bump->data('post_time'));
-            $this->changeData('last_bump_time_milli', $last_bump->data('post_time_milli'));
+            $this->changeData('bump_time', $last_bump->data('post_time'));
+            $this->changeData('bump_time_milli', $last_bump->data('post_time_milli'));
             $this->writeToDatabase();
         }
     }
@@ -576,8 +576,8 @@ class Thread
         if (!$first_post->exists()) {
             $this->createDirectories();
             $this->changeData('thread_id', $post->contentID()->postID());
-            $this->changeData('last_bump_time', $post->data('post_time'));
-            $this->changeData('last_bump_time_milli', $post->data('post_time_milli'));
+            $this->changeData('bump_time', $post->data('post_time'));
+            $this->changeData('bump_time_milli', $post->data('post_time_milli'));
             $this->changeData('last_update', $post->data('post_time'));
             $this->changeData('last_update_milli', $post->data('post_time_milli'));
             $this->changeData('post_count', 1);
@@ -590,8 +590,8 @@ class Thread
             if ((!$this->domain->setting('limit_bump_count') ||
                 ($this->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
                 !$this->data('permasage'))) {
-                $this->changeData('last_bump_time', $post->data('post_time'));
-                $this->changeData('last_bump_time_milli', $post->data('post_time_milli'));
+                $this->changeData('bump_time', $post->data('post_time'));
+                $this->changeData('bump_time_milli', $post->data('post_time_milli'));
             }
         }
 

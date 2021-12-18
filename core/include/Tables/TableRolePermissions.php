@@ -40,7 +40,7 @@ class TableRolePermissions extends Table
             role_id         VARCHAR(50) NOT NULL,
             permission      VARCHAR(50) NOT NULL,
             perm_setting    SMALLINT NOT NULL DEFAULT 0,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_ROLES_TABLE . "
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_ROLES_TABLE . "
             FOREIGN KEY (role_id) REFERENCES " . NEL_ROLES_TABLE . " (role_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,

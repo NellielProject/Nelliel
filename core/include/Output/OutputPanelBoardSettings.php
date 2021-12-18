@@ -120,19 +120,24 @@ class OutputPanelBoardSettings extends Output
             $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
                 LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
-                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE . '"."setting_name"
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE .
+                '"."setting_name"
                 INNER JOIN "' . NEL_BOARD_DEFAULTS_TABLE . '"
-                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_DEFAULTS_TABLE . '"."setting_name"
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_DEFAULTS_TABLE .
+                '"."setting_name"
                 WHERE "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'');
             $board_settings = $this->database->executePreparedFetchAll($prepared, [], PDO::FETCH_ASSOC);
         } else {
             $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
                 LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
-                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE . '"."setting_name"
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE .
+                '"."setting_name"
                 INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '"
-                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name"
-                WHERE "' . NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'');
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE .
+                '"."setting_name"
+                WHERE "' . NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "' . NEL_SETTINGS_TABLE .
+                '"."setting_category" = \'board\'');
             $board_settings = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()],
                 PDO::FETCH_ASSOC);
         }
@@ -183,13 +188,13 @@ class OutputPanelBoardSettings extends Output
                 $content_op_entries = array();
 
                 foreach ($content_ops as $content_op) {
-                    $content_op_id = $content_op->id();
+                    $op_id = $content_op->id();
                     $set = array();
-                    $set['input_name'] = 'enabled_content_ops[' . $content_op_id . ']';
-                    $set['item_label'] = $content_op->data('content_op_label');
+                    $set['input_name'] = 'enabled_content_ops[' . $op_id . ']';
+                    $set['item_label'] = $content_op->data('label');
                     $set['disabled'] = ($content_ops_edit_lock) ? 'disabled' : '';
 
-                    if (in_array($content_op_id, $content_ops_array)) {
+                    if (in_array($op_id, $content_ops_array)) {
                         $set['checked'] = 'checked';
                     }
 

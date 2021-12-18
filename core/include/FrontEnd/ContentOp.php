@@ -11,21 +11,21 @@ use PDO;
 class ContentOp
 {
     private $database;
-    private $content_op_id;
+    private $op_id;
     private $data = array();
     private $front_end_data;
 
-    function __construct(NellielPDO $database, FrontEndData $front_end_data, string $content_op_id)
+    function __construct(NellielPDO $database, FrontEndData $front_end_data, string $op_id)
     {
         $this->database = $database;
-        $this->content_op_id = $content_op_id;
+        $this->op_id = $op_id;
         $this->front_end_data = $front_end_data;
         $this->load();
     }
 
     public function id(): string
     {
-        return $this->content_op_id ?? '';
+        return $this->op_id ?? '';
     }
 
     public function data(string $key): string
@@ -35,21 +35,21 @@ class ContentOp
 
     public function update(): void
     {
-        if ($this->database->rowExists(NEL_CONTENT_OPS_TABLE, ['content_op_id'], [$this->id()],
+        if ($this->database->rowExists(NEL_CONTENT_OPS_TABLE, ['op_id'], [$this->id()],
             [PDO::PARAM_STR, PDO::PARAM_STR])) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_CONTENT_OPS_TABLE .
-                '" SET "content_op_label" = ?, "content_op_url" = ?, "images_only" = ?, "enabled" = ?, "notes" = ?, "moar" = ? WHERE "content_op_id" = ?');
+                '" SET "label" = ?, "url" = ?, "images_only" = ?, "enabled" = ?, "notes" = ?, "moar" = ? WHERE "op_id" = ?');
             $this->database->executePrepared($prepared,
-                [$this->data('content_op_label'), $this->data('content_op_url'), $this->data('images_only'),
-                    $this->data('enabled'), $this->data('notes'), $this->data('moar'), $this->id()]);
+                [$this->data('label'), $this->data('url'), $this->data('images_only'), $this->data('enabled'),
+                    $this->data('notes'), $this->data('moar'), $this->id()]);
         } else {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_CONTENT_OPS_TABLE .
-                '" {"content_op_label". "content_op_url", "images_only", "enabled", "notes", "moar") VALUES (?, ?, ?, ?, ?, ?');
+                '" {"label". "url", "images_only", "enabled", "notes", "moar") VALUES (?, ?, ?, ?, ?, ?');
             $this->database->executePrepared($prepared,
-                [$this->data('content_op_label'), $this->data('content_op_url'), $this->data('images_only'),
-                    $this->data('enabled'), $this->data('notes'), $this->data('moar'), $this->id()]);
+                [$this->data('label'), $this->data('url'), $this->data('images_only'), $this->data('enabled'),
+                    $this->data('notes'), $this->data('moar'), $this->id()]);
         }
 
         $this->load();
@@ -57,13 +57,13 @@ class ContentOp
 
     public function remove(): void
     {
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "content_op_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "op_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
     public function load(): void
     {
-        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "content_op_id" = ?');
+        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "op_id" = ?');
         $this->data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
     }
 }

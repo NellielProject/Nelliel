@@ -6,8 +6,8 @@
 			<input id="permission" class="display-cell" type="text" name="permission" size="30">
 		</div>
 		<div class="display-row">
-			<label for="perm_description" class="display-cell" data-i18n="">Short description</label>
-			<input id="perm_description" class="display-cell" type="text" name="perm_description" size="30">
+			<label for="description" class="display-cell" data-i18n="">Short description</label>
+			<input id="description" class="display-cell" type="text" name="description" size="30">
 		</div>
 		<div class="display-row">
 			<input type="submit" value="Add Permission" data-i18n-attributes="value">
@@ -28,7 +28,7 @@
 {{# permission_list }}
 		<tr class="{{ bgclass }}">
 			<td>{{ permission }}</td>
-			<td>{{ perm_description }}</td>
+			<td>{{ description }}</td>
 			<td>
 				<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove Permission</a>
 			</td>

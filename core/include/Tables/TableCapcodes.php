@@ -19,14 +19,14 @@ class TableCapcodes extends Table
         $this->table_name = NEL_CAPCODES_TABLE;
         $this->column_types = [
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'capcode_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'capcode_output' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'capcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'output' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'entry' => ['row_check' => false, 'auto_inc' => true],
-            'capcode_id' => ['row_check' => true, 'auto_inc' => false],
-            'capcode_output' => ['row_check' => false, 'auto_inc' => false],
+            'capcode' => ['row_check' => true, 'auto_inc' => false],
+            'output' => ['row_check' => false, 'auto_inc' => false],
             'enabled' => ['row_check' => true, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
@@ -38,11 +38,12 @@ class TableCapcodes extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            capcode_id          VARCHAR(255) NOT NULL UNIQUE,
-            capcode_output      TEXT NOT NULL,
-            enabled             SMALLINT NOT NULL DEFAULT 0,
-            moar                TEXT DEFAULT NULL
+            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+            capcode     VARCHAR(255) NOT NULL,
+            output      TEXT NOT NULL,
+            enabled     SMALLINT NOT NULL DEFAULT 0,
+            moar        TEXT DEFAULT NULL,
+            CONSTRAINT uc_capcode UNIQUE (capcode)
         ) " . $options . ";";
 
         return $schema;

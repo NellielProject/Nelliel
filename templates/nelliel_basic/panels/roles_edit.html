@@ -13,15 +13,15 @@
 			<input id="role_title" class="display-cell" type="text" name="role_title" size="30" value="{{ role_title }}">
 		</div>
 		<div class="display-row">
-			<label for="capcode_id" class="display-cell" data-i18n="">Capcode ID</label>
-			<input id="capcode_id" class="display-cell" type="text" name="capcode_id" size="30" value="{{ capcode_id }}">
+			<label for="capcode" class="display-cell" data-i18n="">Capcode ID</label>
+			<input id="capcode" class="display-cell" type="text" name="capcode" size="30" value="{{ capcode }}">
 		</div>
 		<hr>
 		{{# permissions_list }}
 		<div class="display-row">
 			<input type="hidden" name="{{ permission }}[default]" value="0">
 			<input id="{{ permission }}" type="checkbox" name="{{ permission }}[value]" value="1" {{ checked }}>
-			<label for="{{ permission }}">{{ perm_description }}</label>
+			<label for="{{ permission }}">{{ description }}</label>
 		</div>
 		{{/ permissions_list }}
 	</div>

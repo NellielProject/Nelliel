@@ -110,8 +110,8 @@ class NewPost
             nel_derp(10, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
         }
 
-        if (!is_null($post->data('post_password'))) {
-            $post->changeData('post_password', nel_post_password_hash($post->data('post_password')));
+        if (!is_null($post->data('password'))) {
+            $post->changeData('password', nel_post_password_hash($post->data('password')));
         }
 
         // Process if-thens for new post here

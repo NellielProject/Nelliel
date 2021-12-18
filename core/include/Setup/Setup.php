@@ -219,20 +219,14 @@ class Setup
         $embeds_table->createTable();
         $filetypes_table = new TableFiletypes($this->database, $this->sql_compatibility);
         $filetypes_table->createTable();
-        $news_table = new TableNews($this->database, $this->sql_compatibility);
-        $news_table->createTable();
         $rate_limit_table = new TableRateLimit($this->database, $this->sql_compatibility);
         $rate_limit_table->createTable();
         $templates_table = new TableTemplates($this->database, $this->sql_compatibility);
         $templates_table->createTable();
         $plugins_table = new TablePlugins($this->database, $this->sql_compatibility);
         $plugins_table->createTable();
-        $pms_table = new TablePrivateMessages($this->database, $this->sql_compatibility);
-        $pms_table->createTable();
         $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
         $blotter_table->createTable();
-        $noticeboard_table = new TableNoticeboard($this->database, $this->sql_compatibility);
-        $noticeboard_table->createTable();
         $ip_notes_table = new TableIPNotes($this->database, $this->sql_compatibility);
         $ip_notes_table->createTable();
         $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
@@ -241,9 +235,26 @@ class Setup
         $content_ops_table->createTable();
         $capcodes_table = new TableCapcodes($this->database, $this->sql_compatibility);
         $capcodes_table->createTable();
+        $roles_table = new TableRoles($this->database, $this->sql_compatibility);
+        $roles_table->createTable();
+        $permissions_table = new TablePermissions($this->database, $this->sql_compatibility);
+        $permissions_table->createTable();
+        $users_table = new TableUsers($this->database, $this->sql_compatibility);
+        $users_table->createTable();
+
+        // NOTE: The following tables rely on the user, role and/or permission tables
+        // User, role and permission tables must be created first!
+        $role_permissions_table = new TableRolePermissions($this->database, $this->sql_compatibility);
+        $role_permissions_table->createTable();
+        $news_table = new TableNews($this->database, $this->sql_compatibility);
+        $news_table->createTable();
+        $private_messages_table = new TablePrivateMessages($this->database, $this->sql_compatibility);
+        $private_messages_table->createTable();
+        $noticeboard_table = new TableNoticeboard($this->database, $this->sql_compatibility);
+        $noticeboard_table->createTable();
 
         // NOTE: The following tables rely on the domain registry table
-        // Domain registry must be created first!
+        // Domain registry table must be created first!
         $domain_registry_table = new TableDomainRegistry($this->database, $this->sql_compatibility);
         $domain_registry_table->createTable();
         $board_data_table = new TableBoardData($this->database, $this->sql_compatibility);
@@ -270,19 +281,9 @@ class Setup
         $pages_table->createTable();
         $cache_table = new TableCache($this->database, $this->sql_compatibility);
         $cache_table->createTable();
-
-        // NOTE: Tables must be created in order of:
-        // roles -> permissions -> role permissions -> users -> user roles
-        $roles_table = new TableRoles($this->database, $this->sql_compatibility);
-        $roles_table->createTable();
-        $permissions_table = new TablePermissions($this->database, $this->sql_compatibility);
-        $permissions_table->createTable();
-        $role_permissions_table = new TableRolePermissions($this->database, $this->sql_compatibility);
-        $role_permissions_table->createTable();
-        $users_table = new TableUsers($this->database, $this->sql_compatibility);
-        $users_table->createTable();
         $user_roles_table = new TableUserRoles($this->database, $this->sql_compatibility);
         $user_roles_table->createTable();
+
         echo _gettext('Core database tables created.'), '<br>';
     }
 
@@ -315,7 +316,8 @@ class Setup
         $posts_table->createTable(['threads_table' => $domain->reference('threads_table')]);
         $uploads_table = new TableUploads($this->database, $this->sql_compatibility);
         $uploads_table->tableName($domain->reference('uploads_table'));
-        $uploads_table->createTable(['posts_table' => $domain->reference('posts_table')]);
+        $uploads_table->createTable(
+            ['threads_table' => $domain->reference('threads_table'), 'posts_table' => $domain->reference('posts_table')]);
     }
 
     public function createBoardDirectories(string $board_id)

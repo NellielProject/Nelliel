@@ -141,7 +141,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
         if ($index_sort) {
             $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') .
-                '" WHERE "old" = 0 ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
+                '" WHERE "old" = 0 ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC';
         } else {
             $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') . '" WHERE "old" = 0';
         }

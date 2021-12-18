@@ -19,8 +19,8 @@ class TableThreads extends Table
         $this->table_name = '_threads';
         $this->column_types = [
             'thread_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'last_bump_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'last_bump_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'bump_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'bump_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'last_update' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'last_update_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'post_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
@@ -37,8 +37,8 @@ class TableThreads extends Table
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'thread_id' => ['row_check' => true, 'auto_inc' => false],
-            'last_bump_time' => ['row_check' => false, 'auto_inc' => false],
-            'last_bump_time_milli' => ['row_check' => false, 'auto_inc' => false],
+            'bump_time' => ['row_check' => false, 'auto_inc' => false],
+            'bump_time_milli' => ['row_check' => false, 'auto_inc' => false],
             'last_update' => ['row_check' => false, 'auto_inc' => false],
             'last_update_milli' => ['row_check' => false, 'auto_inc' => false],
             'post_count' => ['row_check' => false, 'auto_inc' => false],
@@ -58,27 +58,26 @@ class TableThreads extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (
-            thread_id               INTEGER PRIMARY KEY NOT NULL,
-            last_bump_time          BIGINT NOT NULL,
-            last_bump_time_milli    SMALLINT NOT NULL,
-            last_update             BIGINT NOT NULL,
-            last_update_milli       SMALLINT NOT NULL,
-            post_count              INTEGER NOT NULL DEFAULT 0,
-            total_uploads           INTEGER NOT NULL DEFAULT 0,
-            file_count              INTEGER NOT NULL DEFAULT 0,
-            embed_count             INTEGER NOT NULL DEFAULT 0,
-            permasage               SMALLINT NOT NULL DEFAULT 0,
-            sticky                  SMALLINT NOT NULL DEFAULT 0,
-            cyclic                  SMALLINT NOT NULL DEFAULT 0,
-            old                     SMALLINT NOT NULL DEFAULT 0,
-            preserve                SMALLINT NOT NULL DEFAULT 0,
-            locked                  SMALLINT NOT NULL DEFAULT 0,
-            slug                    TEXT DEFAULT NULL,
-            moar                    TEXT DEFAULT NULL
+            thread_id           INTEGER PRIMARY KEY NOT NULL,
+            bump_time           BIGINT NOT NULL,
+            bump_time_milli     SMALLINT NOT NULL,
+            last_update         BIGINT NOT NULL,
+            last_update_milli   SMALLINT NOT NULL,
+            post_count          INTEGER NOT NULL DEFAULT 0,
+            total_uploads       INTEGER NOT NULL DEFAULT 0,
+            file_count          INTEGER NOT NULL DEFAULT 0,
+            embed_count         INTEGER NOT NULL DEFAULT 0,
+            permasage           SMALLINT NOT NULL DEFAULT 0,
+            sticky              SMALLINT NOT NULL DEFAULT 0,
+            cyclic              SMALLINT NOT NULL DEFAULT 0,
+            old                 SMALLINT NOT NULL DEFAULT 0,
+            preserve            SMALLINT NOT NULL DEFAULT 0,
+            locked              SMALLINT NOT NULL DEFAULT 0,
+            slug                TEXT DEFAULT NULL,
+            moar                TEXT DEFAULT NULL
         ) " . $options . ";";
 
         return $schema;

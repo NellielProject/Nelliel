@@ -11,21 +11,21 @@ use PDO;
 class Capcode
 {
     private $database;
-    private $capcode_id = '';
+    private $capcode = '';
     private $data = array();
     private $front_end_data;
 
-    function __construct(NellielPDO $database, FrontEndData $front_end_data, string $capcode_id)
+    function __construct(NellielPDO $database, FrontEndData $front_end_data, string $capcode)
     {
         $this->database = $database;
-        $this->capcode_id = $capcode_id;
+        $this->capcode = $capcode;
         $this->front_end_data = $front_end_data;
         $this->load();
     }
 
     public function id(): string
     {
-        return $this->capcode_id;
+        return $this->capcode;
     }
 
     public function data(string $key): string
@@ -35,17 +35,17 @@ class Capcode
 
     public function update(): void
     {
-        if ($this->database->rowExists(NEL_CAPCODES_TABLE, ['capcode_id'], [$this->id()],
+        if ($this->database->rowExists(NEL_CAPCODES_TABLE, ['capcode'], [$this->id()],
             [PDO::PARAM_STR, PDO::PARAM_STR])) {
             $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_CAPCODES_TABLE . '" SET "capcode_output" = ?, "moar" = ? WHERE "capcode_id" = ?');
+                'UPDATE "' . NEL_CAPCODES_TABLE . '" SET "output" = ?, "moar" = ? WHERE "capcode" = ?');
             $this->database->executePrepared($prepared,
-                [$this->data('capcode_output'), $this->data('moar'), $this->id()]);
+                [$this->data('output'), $this->data('moar'), $this->id()]);
         } else {
             $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_CAPCODES_TABLE . '" {"capcode_id", "capcode_output", "moar") VALUES (?, ?, ?');
+                'INSERT INTO "' . NEL_CAPCODES_TABLE . '" {"capcode", "output", "moar") VALUES (?, ?, ?');
             $this->database->executePrepared($prepared,
-                [$this->id(), $this->data('capcode_output'), $this->data('moar')]);
+                [$this->id(), $this->data('output'), $this->data('moar')]);
         }
 
         $this->load();
@@ -53,13 +53,13 @@ class Capcode
 
     public function remove(): void
     {
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode_id" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
     public function load(): void
     {
-        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode_id" = ?');
+        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
         if (is_array($data)) {

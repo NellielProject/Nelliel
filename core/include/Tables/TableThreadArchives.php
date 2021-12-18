@@ -34,7 +34,6 @@ class TableThreadArchives extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
         $schema = "
         CREATE TABLE " . $this->table_name . " (

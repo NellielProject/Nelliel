@@ -43,12 +43,20 @@ class TablePrivateMessages extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            sender          VARCHAR(50) NOT NULL,
-            recipient       VARCHAR(50) NOT NULL,
+            sender          VARCHAR(50) DEFAULT NULL,
+            recipient       VARCHAR(50) DEFAULT NULL,
             message         TEXT NOT NULL,
             time_sent       BIGINT NOT NULL,
             message_read    SMALLINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL
+            moar            TEXT DEFAULT NULL,
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_USERS_TABLE . "
+            FOREIGN KEY (sender) REFERENCES " . NEL_USERS_TABLE . " (user_id)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
+            CONSTRAINT fk2_" . $this->table_name . "_" . NEL_USERS_TABLE . "
+            FOREIGN KEY (recipient) REFERENCES " . NEL_USERS_TABLE . " (user_id)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL
         ) " . $options . ";";
 
         return $schema;

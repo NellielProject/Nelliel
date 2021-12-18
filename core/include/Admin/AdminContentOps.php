@@ -56,15 +56,15 @@ class AdminContentOps extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
-        $content_op_label = $_POST['content_op_label'] ?? '';
-        $content_op_url = $_POST['content_op_url'] ?? '';
+        $label = $_POST['label'] ?? '';
+        $url = $_POST['url'] ?? '';
         $images_only = $_POST['images_only'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
         $notes = $_POST['notes'] ?? null;
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table .
-            '" ("content_op_label", "content_op_url", "images_only", "enabled", "notes") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$content_op_label, $content_op_url, $images_only, $enabled, $notes]);
+            '" ("label", "url", "images_only", "enabled", "notes") VALUES (?, ?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$label, $url, $images_only, $enabled, $notes]);
         $this->outputMain(true);
     }
 
@@ -81,17 +81,16 @@ class AdminContentOps extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
         $entry = $_GET[$this->id_field] ?? 0;
-        $content_op_label = $_POST['content_op_label'] ?? '';
-        $content_op_url = $_POST['content_op_url'] ?? '';
+        $label = $_POST['label'] ?? '';
+        $url = $_POST['url'] ?? '';
         $images_only = $_POST['images_only'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
         $notes = $_POST['notes'] ?? null;
 
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table .
-            '" SET "content_op_label" = ?, "content_op_url" = ?, "images_only" = ?, "enabled" = ?, "notes" = ? WHERE "entry" = ?');
-        $this->database->executePrepared($prepared,
-            [$content_op_label, $content_op_url, $images_only, $enabled, $notes, $entry]);
+            '" SET "label" = ?, "url" = ?, "images_only" = ?, "enabled" = ?, "notes" = ? WHERE "entry" = ?');
+        $this->database->executePrepared($prepared, [$label, $url, $images_only, $enabled, $notes, $entry]);
         $this->outputMain(true);
     }
 

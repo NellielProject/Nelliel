@@ -48,14 +48,14 @@ class TableSettings extends Table
         CREATE TABLE " . $this->table_name . " (
             entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             setting_category    VARCHAR(50) NOT NULL,
-            setting_owner       VARCHAR(50) NOT NULL,
+            setting_owner       VARCHAR(100) NOT NULL,
             data_type           VARCHAR(50) NOT NULL,
             setting_name        VARCHAR(50) NOT NULL,
             default_value       TEXT NOT NULL,
             setting_description TEXT NOT NULL,
             input_attributes    TEXT NOT NULL,
             moar                TEXT DEFAULT NULL,
-            UNIQUE (setting_category, setting_name)
+            CONSTRAINT uc_setting_category_name UNIQUE (setting_category, setting_name)
         ) " . $options . ";";
 
         return $schema;

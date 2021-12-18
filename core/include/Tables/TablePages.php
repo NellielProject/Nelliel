@@ -21,8 +21,8 @@ class TablePages extends Table
             'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'uri' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'page_title' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'page_text' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'title' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'text' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'markup_type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'show_link' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
@@ -30,8 +30,8 @@ class TablePages extends Table
             'entry' => ['row_check' => false, 'auto_inc' => true],
             'domain_id' => ['row_check' => true, 'auto_inc' => false],
             'uri' => ['row_check' => true, 'auto_inc' => false],
-            'page_title' => ['row_check' => false, 'auto_inc' => false],
-            'page_text' => ['row_check' => false, 'auto_inc' => false],
+            'title' => ['row_check' => false, 'auto_inc' => false],
+            'text' => ['row_check' => false, 'auto_inc' => false],
             'markup_type' => ['row_check' => false, 'auto_inc' => false],
             'show_link' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
@@ -47,12 +47,12 @@ class TablePages extends Table
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
             domain_id       VARCHAR(50) NOT NULL,
             uri             VARCHAR(255) NOT NULL,
-            page_title      VARCHAR(255) NOT NULL,
-            page_text       TEXT NOT NULL,
+            title           VARCHAR(255) NOT NULL,
+            text            TEXT NOT NULL,
             markup_type     VARCHAR(50) NOT NULL,
             show_link       SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL,
-            CONSTRAINT fk1_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
+            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
             FOREIGN KEY (domain_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

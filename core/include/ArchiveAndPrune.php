@@ -97,9 +97,8 @@ class ArchiveAndPrune
 
     private function getFullThreadList()
     {
-        $query = 'SELECT "thread_id", "post_count", "old", "preserve" FROM "' .
-            $this->domain->reference('threads_table') .
-            '" ORDER BY "sticky" DESC, "last_bump_time" DESC, "last_bump_time_milli" DESC';
+        $query = 'SELECT "thread_id", "post_count", "old", "preserve" FROM "' . $this->domain->reference(
+            'threads_table') . '" ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC';
         $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
         return $thread_list;
     }

@@ -39,8 +39,8 @@ class OutputPanelCapcodes extends Output
             $capcode_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $capcode_data['entry'] = $capcode['entry'];
-            $capcode_data['capcode_id'] = $capcode['capcode_id'];
-            $capcode_data['capcode_output'] = $capcode['capcode_output'];
+            $capcode_data['capcode'] = $capcode['capcode'];
+            $capcode_data['output'] = $capcode['output'];
             $capcode_data['enabled'] = $capcode['enabled'];
             $capcode_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
@@ -106,8 +106,8 @@ class OutputPanelCapcodes extends Output
 
             if ($capcode_data !== false) {
                 $this->render_data['entry'] = $capcode_data['entry'];
-                $this->render_data['capcode_id'] = $capcode_data['capcode_id'];
-                $this->render_data['capcode_output'] = $capcode_data['capcode_output'];
+                $this->render_data['capcode'] = $capcode_data['capcode'];
+                $this->render_data['output'] = $capcode_data['output'];
                 $this->render_data['enabled'] = $capcode_data['enabled'] == 1 ? 'checked' : '';
             }
         } else {

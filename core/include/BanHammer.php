@@ -174,7 +174,7 @@ class BanHammer
         {
             $ban_data['ip_type'] = intval($ban_data['ip_type']);
             $ban_data['ip_address_start'] = nel_convert_ip_from_storage($ban_data['ip_address_start']);
-            $ban_data['hashed_ip_address'] = nel_convert_hash_from_storage($ban_data['hashed_ip_address']);
+            $ban_data['hashed_ip_address'] = $ban_data['hashed_ip_address'];
             $ban_data['ip_address_end'] = nel_convert_ip_from_storage($ban_data['ip_address_end']);
             $ban_data['times'] = $this->secondsToTimeArray($ban_data['length']);
             $this->ban_data = $ban_data;

@@ -51,7 +51,7 @@ class FrontEndData
     public function getAllImageSets(): array
     {
         $set_ids = $this->database->executeFetchAll(
-            'SELECT "set_id" FROM "' . NEL_IMAGE_SETS_TABLE . '" ORDER BY "entry" ASC', PDO::FETCH_COLUMN);
+            'SELECT "set_id" FROM "' . NEL_IMAGE_SETS_TABLE . '" ORDER BY "set_id" ASC', PDO::FETCH_COLUMN);
         $sets = array();
 
         foreach ($set_ids as $set_id) {
@@ -89,7 +89,7 @@ class FrontEndData
     {
         $where_enabled = ($enabled_only) ? 'WHERE "enabled" = 1' : '';
         $style_ids = $this->database->executeFetchAll(
-            'SELECT "style_id" FROM "' . NEL_STYLES_TABLE . '" ' . $where_enabled . ' ORDER BY "entry" ASC',
+            'SELECT "style_id" FROM "' . NEL_STYLES_TABLE . '" ' . $where_enabled . ' ORDER BY "style_id" ASC',
             PDO::FETCH_COLUMN);
         $styles = array();
 
@@ -128,7 +128,7 @@ class FrontEndData
     {
         $where_enabled = ($enabled_only) ? 'WHERE "enabled" = 1' : '';
         $template_ids = $this->database->executeFetchAll(
-            'SELECT "template_id" FROM "' . NEL_TEMPLATES_TABLE . '" ' . $where_enabled . ' ORDER BY "entry" ASC',
+            'SELECT "template_id" FROM "' . NEL_TEMPLATES_TABLE . '" ' . $where_enabled . ' ORDER BY "template_id" ASC',
             PDO::FETCH_COLUMN);
         $templates = array();
 
@@ -139,25 +139,25 @@ class FrontEndData
         return $templates;
     }
 
-    public function getContentOp(string $content_op_id): ContentOp
+    public function getContentOp(string $op_id): ContentOp
     {
-        if (!isset(self::$content_ops[$content_op_id])) {
-            self::$content_ops[$content_op_id] = new ContentOp($this->database, $this, $content_op_id);
+        if (!isset(self::$content_ops[$op_id])) {
+            self::$content_ops[$op_id] = new ContentOp($this->database, $this, $op_id);
         }
 
-        return self::$content_ops[$content_op_id];
+        return self::$content_ops[$op_id];
     }
 
     public function getAllContentOps(bool $enabled_only): array
     {
         $where_enabled = ($enabled_only) ? 'WHERE "enabled" = 1' : '';
-        $content_op_ids = $this->database->executeFetchAll(
-            'SELECT "content_op_id" FROM "' . NEL_CONTENT_OPS_TABLE . '" ' . $where_enabled . ' ORDER BY "entry" ASC',
+        $op_ids = $this->database->executeFetchAll(
+            'SELECT "op_id" FROM "' . NEL_CONTENT_OPS_TABLE . '" ' . $where_enabled . ' ORDER BY "entry" ASC',
             PDO::FETCH_COLUMN);
         $content_ops = array();
 
-        foreach ($content_op_ids as $content_op_id) {
-            $content_ops[$content_op_id] = $this->getContentOp($content_op_id);
+        foreach ($op_ids as $op_id) {
+            $content_ops[$op_id] = $this->getContentOp($op_id);
         }
 
         return $content_ops;

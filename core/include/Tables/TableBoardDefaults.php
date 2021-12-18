@@ -37,9 +37,10 @@ class TableBoardDefaults extends Table
         $schema = "
         CREATE TABLE " . $this->table_name . " (
             entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
-            setting_name    VARCHAR(50) NOT NULL UNIQUE,
+            setting_name    VARCHAR(50) NOT NULL,
             setting_value   TEXT NOT NULL,
-            edit_lock       SMALLINT NOT NULL DEFAULT 0
+            edit_lock       SMALLINT NOT NULL DEFAULT 0,
+            CONSTRAINT uc_setting_name UNIQUE (setting_name)
         ) " . $options . ";";
 
         return $schema;
@@ -52,7 +53,7 @@ class TableBoardDefaults extends Table
     public function insertDefaults()
     {
         $query = 'SELECT "setting_name", "default_value" FROM "' . NEL_SETTINGS_TABLE .
-            '" WHERE "setting_category" = \'board\'';
+            '" WHERE "setting_category" = \'board\' ORDER BY "entry" ASC';
         $board_settings = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
         foreach ($board_settings as $setting) {
