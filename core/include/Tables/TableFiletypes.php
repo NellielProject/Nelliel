@@ -41,9 +41,9 @@ class TableFiletypes extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            format          VARCHAR(50) PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            format          VARCHAR(50) NOT NULL,
             extensions      TEXT NOT NULL,
             category        VARCHAR(50) DEFAULT NULL,
             mime            VARCHAR(255) NOT NULL,
@@ -51,11 +51,12 @@ class TableFiletypes extends Table
             label           VARCHAR(255) NOT NULL,
             enabled         SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_FILETYPE_CATEGORIES_TABLE . "
-            FOREIGN KEY (category) REFERENCES " . NEL_FILETYPE_CATEGORIES_TABLE . " (category)
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (format),
+            CONSTRAINT fk_filetypes__filetype_categories
+            FOREIGN KEY (category) REFERENCES ' . NEL_FILETYPE_CATEGORIES_TABLE . ' (category)
             ON UPDATE CASCADE
             ON DELETE SET NULL
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

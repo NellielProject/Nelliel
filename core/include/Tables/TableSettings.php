@@ -18,7 +18,6 @@ class TableSettings extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_SETTINGS_TABLE;
         $this->column_types = [
-            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'setting_category' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'setting_owner' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'data_type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
@@ -28,7 +27,6 @@ class TableSettings extends Table
             'input_attributes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'entry' => ['row_check' => false, 'auto_inc' => true],
             'setting_category' => ['row_check' => true, 'auto_inc' => false],
             'setting_owner' => ['row_check' => false, 'auto_inc' => false],
             'data_type' => ['row_check' => false, 'auto_inc' => false],
@@ -42,11 +40,9 @@ class TableSettings extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
             setting_category    VARCHAR(50) NOT NULL,
             setting_owner       VARCHAR(100) NOT NULL,
             data_type           VARCHAR(50) NOT NULL,
@@ -55,8 +51,8 @@ class TableSettings extends Table
             setting_description TEXT NOT NULL,
             input_attributes    TEXT NOT NULL,
             moar                TEXT DEFAULT NULL,
-            CONSTRAINT uc_setting_category_name UNIQUE (setting_category, setting_name)
-        ) " . $options . ";";
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (setting_category, setting_name)
+        ) ' . $options . ';';
 
         return $schema;
     }

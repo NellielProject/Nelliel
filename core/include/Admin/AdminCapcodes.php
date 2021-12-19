@@ -60,8 +60,7 @@ class AdminCapcodes extends Admin
         $output = $_POST['output'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
         $prepared = $this->database->prepare(
-            'INSERT INTO "' . $this->data_table .
-            '" ("capcode", "output", "enabled") VALUES (?, ?, ?)');
+            'INSERT INTO "' . $this->data_table . '" ("capcode", "output", "enabled") VALUES (?, ?, ?)');
         $this->database->executePrepared($prepared, [$capcode, $output, $enabled]);
         $this->outputMain(true);
     }
@@ -69,34 +68,32 @@ class AdminCapcodes extends Admin
     public function editor(): void
     {
         $this->verifyPermissions($this->domain, 'perm_capcodes_manage');
-        $entry = $_GET[$this->id_field] ?? 0;
+        $capcode_id = $_GET[$this->id_field] ?? 0;
         $output_panel = new OutputPanelCapcodes($this->domain, false);
-        $output_panel->edit(['editing' => true, 'entry' => $entry], false);
+        $output_panel->edit(['editing' => true, 'capcode_id' => $capcode_id], false);
         $this->outputMain(false);
     }
 
     public function update(): void
     {
         $this->verifyPermissions($this->domain, 'perm_capcodes_manage');
-        $entry = $_GET[$this->id_field] ?? 0;
+        $capcode_id = $_GET[$this->id_field] ?? 0;
         $capcode = $_POST['capcode'] ?? '';
         $output = $_POST['output'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
 
         $prepared = $this->database->prepare(
-            'UPDATE "' . $this->data_table .
-            '" SET "capcode" = ?, "output" = ?, "enabled" = ? WHERE "entry" = ?');
-        $this->database->executePrepared($prepared,
-            [$capcode, $output, $enabled, $entry]);
+            'UPDATE "' . $this->data_table . '" SET "capcode" = ?, "output" = ?, "enabled" = ? WHERE "capcode_id" = ?');
+        $this->database->executePrepared($prepared, [$capcode, $output, $enabled, $capcode_id]);
         $this->outputMain(true);
     }
 
     public function remove(): void
     {
         $this->verifyPermissions($this->domain, 'perm_capcodes_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
+        $capcode_id = $_GET[$this->id_field] ?? 0;
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "capcode_id" = ?');
+        $this->database->executePrepared($prepared, [$capcode_id]);
         $this->outputMain(true);
     }
 
@@ -119,18 +116,20 @@ class AdminCapcodes extends Admin
     public function enable()
     {
         $this->verifyPermissions($this->domain, 'perm_capcodes_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
+        $capcode_id = $_GET[$this->id_field] ?? 0;
+        $prepared = $this->database->prepare(
+            'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "capcode_id" = ?');
+        $this->database->executePrepared($prepared, [$capcode_id]);
         $this->outputMain(true);
     }
 
     public function disable()
     {
         $this->verifyPermissions($this->domain, 'perm_capcodes_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
+        $capcode_id = $_GET[$this->id_field] ?? 0;
+        $prepared = $this->database->prepare(
+            'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "capcode_id" = ?');
+        $this->database->executePrepared($prepared, [$capcode_id]);
         $this->outputMain(true);
     }
 }

@@ -226,8 +226,6 @@ class Setup
         $plugins_table->createTable();
         $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
         $blotter_table->createTable();
-        $ip_notes_table = new TableIPNotes($this->database, $this->sql_compatibility);
-        $ip_notes_table->createTable();
         $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
         $embeds_table->createTable();
         $content_ops_table = new TableContentOps($this->database, $this->sql_compatibility);
@@ -258,6 +256,8 @@ class Setup
         $private_messages_table->createTable();
         $noticeboard_table = new TableNoticeboard($this->database, $this->sql_compatibility);
         $noticeboard_table->createTable();
+        $ip_notes_table = new TableIPNotes($this->database, $this->sql_compatibility);
+        $ip_notes_table->createTable();
 
         // NOTE: The following tables rely on the domain registry table
         // Domain registry table must be created first!
@@ -319,11 +319,13 @@ class Setup
         $threads_table->createTable();
         $posts_table = new TablePosts($this->database, $this->sql_compatibility);
         $posts_table->tableName($domain->reference('posts_table'));
-        $posts_table->createTable(['threads_table' => $domain->reference('threads_table')]);
+        $posts_table->createTable(
+            ['threads_table' => $domain->reference('threads_table'), 'db_prefix' => $domain->reference('db_prefix')]);
         $uploads_table = new TableUploads($this->database, $this->sql_compatibility);
         $uploads_table->tableName($domain->reference('uploads_table'));
         $uploads_table->createTable(
-            ['threads_table' => $domain->reference('threads_table'), 'posts_table' => $domain->reference('posts_table')]);
+            ['threads_table' => $domain->reference('threads_table'), 'posts_table' => $domain->reference('posts_table'),
+                'db_prefix' => $domain->reference('db_prefix')]);
     }
 
     public function createBoardDirectories(string $board_id)

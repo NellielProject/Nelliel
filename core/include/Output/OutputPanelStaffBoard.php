@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -30,28 +29,26 @@ class OutputPanelStaffBoard extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $board_posts = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_STAFF_BOARD_TABLE . '" ORDER BY "post_time" ASC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . NEL_STAFF_BOARD_TABLE . '" ORDER BY "post_time" ASC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'staff-board', 'actions' => 'add']);
+            http_build_query(['module' => 'admin', 'section' => 'staff-board', 'actions' => 'add']);
 
-        foreach ($board_posts as $post)
-        {
+        foreach ($board_posts as $post) {
             $post_info = array();
             $post_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $post_info['user'] = $post['user_id'];
-            $post_info['domain'] = $post['domain_id'];
+            $post_info['domain'] = $post['domain'];
             $post_info['subject'] = $post['subject'];
             $post_info['message'] = $post['message'];
             $post_info['time'] = date('Y/m/d (D) H:i:s', intval($post['post_time']));
 
-            if($this->session->user()->checkPermission($this->domain, 'perm_noticeboard_delete'))
-            {
+            if ($this->session->user()->checkPermission($this->domain, 'perm_noticeboard_delete')) {
                 $post_info['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
+                    http_build_query(
                         ['module' => 'admin', 'section' => 'staff-board', 'actions' => 'remove',
-                        'entry' => $post['entry']]);
+                            'notice-id' => $post['notice_id']]);
             }
 
             $this->render_data['board_posts'][] = $post_info;

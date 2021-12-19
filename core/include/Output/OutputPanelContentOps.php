@@ -28,15 +28,16 @@ class OutputPanelContentOps extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
+        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        http_build_query(['module' => 'admin', 'section' => 'content-ops', 'actions' => 'new']);
         $content_ops = $this->database->executeFetchAll(
-            'SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '" ORDER BY "entry" DESC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '"', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
         foreach ($content_ops as $content_op) {
             $content_op_data = array();
             $content_op_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $content_op_data['entry'] = $content_op['entry'];
             $content_op_data['op_id'] = $content_op['op_id'];
             $content_op_data['label'] = $content_op['label'];
             $content_op_data['url'] = $content_op['url'];
@@ -46,13 +47,13 @@ class OutputPanelContentOps extends Output
             $content_op_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'edit',
-                        'content-op-id' => $content_op_data['entry']]);
+                        'content-op-id' => $content_op_data['op_id']]);
 
             if ($content_op_data['enabled'] == 1) {
                 $content_op_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                         ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'disable',
-                            'content-op-id' => $content_op_data['entry']]);
+                            'content-op-id' => $content_op_data['op_id']]);
                 $content_op_data['enable_disable_text'] = _gettext('Disable');
             }
 
@@ -60,14 +61,14 @@ class OutputPanelContentOps extends Output
                 $content_op_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
                         ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'enable',
-                            'content-op-id' => $content_op_data['entry']]);
+                            'content-op-id' => $content_op_data['op_id']]);
                 $content_op_data['enable_disable_text'] = _gettext('Enable');
             }
 
             $content_op_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'remove',
-                        'content-op-id' => $content_op_data['entry']]);
+                        'content-op-id' => $content_op_data['op_id']]);
             $this->render_data['content_ops_list'][] = $content_op_data;
         }
 
@@ -98,15 +99,14 @@ class OutputPanelContentOps extends Output
         $editing = $parameters['editing'] ?? true;
 
         if ($editing) {
-            $entry = $parameters['entry'] ?? 0;
+            $op_id = $parameters['op_id'] ?? '';
             $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
-                    ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'update', 'content-op-id' => $entry]);
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "entry" = ?');
-            $content_op_data = $this->database->executePreparedFetch($prepared, [$entry], PDO::FETCH_ASSOC);
+                    ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'update', 'content-op-id' => $op_id]);
+            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "op_id" = ?');
+            $content_op_data = $this->database->executePreparedFetch($prepared, [$op_id], PDO::FETCH_ASSOC);
 
             if ($content_op_data !== false) {
-                $this->render_data['entry'] = $content_op_data['entry'];
                 $this->render_data['op_id'] = $content_op_data['op_id'];
                 $this->render_data['label'] = $content_op_data['label'];
                 $this->render_data['url'] = $content_op_data['url'];

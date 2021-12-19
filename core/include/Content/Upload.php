@@ -160,7 +160,7 @@ class Upload
         $file_handler = nel_utilities()->fileHandler();
 
         $prepared = $this->database->prepare(
-            'SELECT count("entry") FROM "' . $this->domain->reference('uploads_table') .
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
             '" WHERE "filename" = ? AND "extension" = ?');
         $filename_count = $this->database->executePreparedFetch($prepared,
             [$this->content_data['filename'], $this->content_data['extension']], PDO::FETCH_COLUMN);
@@ -172,7 +172,7 @@ class Upload
 
         if (!nel_true_empty($this->content_data['static_preview_name'])) {
             $prepared = $this->database->prepare(
-                'SELECT count("entry") FROM "' . $this->domain->reference('uploads_table') .
+                'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "static_preview_name" = ?');
             $static_preview_count = $this->database->executePreparedFetch($prepared,
                 [$this->content_data['static_preview_name']], PDO::FETCH_COLUMN);
@@ -184,7 +184,7 @@ class Upload
 
         if (!nel_true_empty($this->content_data['animated_preview_name'])) {
             $prepared = $this->database->prepare(
-                'SELECT count("entry") FROM "' . $this->domain->reference('uploads_table') .
+                'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "animated_preview_name" = ?');
             $static_preview_count = $this->database->executePreparedFetch($prepared,
                 [$this->content_data['animated_preview_name']], PDO::FETCH_COLUMN);

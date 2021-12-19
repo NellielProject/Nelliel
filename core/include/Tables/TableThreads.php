@@ -59,9 +59,9 @@ class TableThreads extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            thread_id           INTEGER PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            thread_id           INTEGER NOT NULL,
             bump_time           BIGINT NOT NULL,
             bump_time_milli     SMALLINT NOT NULL,
             last_update         BIGINT NOT NULL,
@@ -77,8 +77,9 @@ class TableThreads extends Table
             preserve            SMALLINT NOT NULL DEFAULT 0,
             locked              SMALLINT NOT NULL DEFAULT 0,
             slug                TEXT DEFAULT NULL,
-            moar                TEXT DEFAULT NULL
-        ) " . $options . ";";
+            moar                TEXT DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (thread_id)
+        ) ' . $options . ';';
 
         return $schema;
     }

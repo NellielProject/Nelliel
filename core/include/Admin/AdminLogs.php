@@ -16,8 +16,8 @@ class AdminLogs extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_LOGS_TABLE;
-        $this->id_field = 'entry';
-        $this->id_column = 'entry';
+        $this->id_field = 'log-id';
+        $this->id_column = 'log_id';
         $this->panel_name = _gettext('Logs');
     }
 

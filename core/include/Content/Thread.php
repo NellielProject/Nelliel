@@ -201,12 +201,12 @@ class Thread
         $this->changeData('post_count', $post_count);
 
         $prepared = $this->database->prepare(
-            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') . '" WHERE "parent_thread" = ?');
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') . '" WHERE "parent_thread" = ?');
         $total_uploads = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
             PDO::FETCH_COLUMN);
 
         $prepared = $this->database->prepare(
-            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
             '" WHERE "parent_thread" = ? AND "embed_url" IS NOT NULL');
         $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
             PDO::FETCH_COLUMN);

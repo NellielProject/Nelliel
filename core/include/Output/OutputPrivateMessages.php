@@ -40,11 +40,11 @@ class OutputPrivateMessages extends Output
             $message_info['sender'] = $message['sender'];
             $message_info['message'] = $message['message'];
             $message_info['view_url'] = nel_build_router_url(
-                [Domain::SITE, 'account', 'private-messages', 'view', $message['entry']]);
+                [Domain::SITE, 'account', 'private-messages', 'view', $message['message_id']]);
             $message_info['mark_read_url'] = nel_build_router_url(
-                [Domain::SITE, 'account', 'private-messages', 'mark-read', $message['entry']]);
+                [Domain::SITE, 'account', 'private-messages', 'mark-read', $message['message_id']]);
             $message_info['delete_url'] = nel_build_router_url(
-                [Domain::SITE, 'account', 'private-messages', 'delete', $message['entry']]);
+                [Domain::SITE, 'account', 'private-messages', 'delete', $message['message_id']]);
             $this->render_data['private_messages'][] = $message_info;
         }
 
@@ -69,7 +69,7 @@ class OutputPrivateMessages extends Output
         $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'account', 'private-messages', 'send']);
 
         if (!is_null($reply_id)) {
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "entry" = ?');
+            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "message_id" = ?');
             $prepared->bindValue(1, $reply_id, PDO::PARAM_INT);
             $message = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
@@ -94,7 +94,7 @@ class OutputPrivateMessages extends Output
         $this->setupTimer();
         $this->setBodyTemplate('private_messages/view_message');
         $message_id = $parameters['message_id'] ?? null;
-        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "entry" = ?');
+        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "message_id" = ?');
         $prepared->bindValue(1, $message_id, PDO::PARAM_INT);
         $message = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
@@ -107,7 +107,7 @@ class OutputPrivateMessages extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['form_action'] = nel_build_router_url(
-            [Domain::SITE, 'account', 'private-messages', 'reply', $message['entry']]);
+            [Domain::SITE, 'account', 'private-messages', 'reply', $message['message_id']]);
         $this->render_data['sender'] = $message['sender'];
 
         foreach ($this->output_filter->newlinesToArray($message['message']) as $line) {

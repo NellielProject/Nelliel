@@ -43,10 +43,10 @@ class OutputPanelPages extends Output
             $page_data['title'] = $page['title'];
             $page_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
-                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'edit', 'page-id' => $page['entry']]);
+                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'edit', 'page-id' => $page['page_id']]);
             $page_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
-                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'remove', 'page-id' => $page['entry']]);
+                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'remove', 'page-id' => $page['page_id']]);
             $this->render_data['pages_list'][] = $page_data;
         }
 
@@ -77,13 +77,13 @@ class OutputPanelPages extends Output
         $editing = $parameters['editing'] ?? true;
 
         if ($editing) {
-            $entry = $parameters['entry'] ?? 0;
+            $page_id = $parameters['page_id'] ?? 0;
             $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
-                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'update', 'page-id' => $entry,
+                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'update', 'page-id' => $page_id,
                         'board-id' => $this->domain->id()]);
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PAGES_TABLE . '" WHERE "entry" = ?');
-            $page_data = $this->database->executePreparedFetch($prepared, [$entry], PDO::FETCH_ASSOC);
+            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PAGES_TABLE . '" WHERE "page_id" = ?');
+            $page_data = $this->database->executePreparedFetch($prepared, [$page_id], PDO::FETCH_ASSOC);
 
             if ($page_data !== false) {
                 $this->render_data['uri'] = $page_data['uri'];
@@ -92,6 +92,7 @@ class OutputPanelPages extends Output
                 $this->render_data['domain_id'] = $page_data['domain_id'];
             }
         } else {
+            $this->render_data['new_page'] = true;
             $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'pages', 'actions' => 'add', 'board-id' => $this->domain->id()]);

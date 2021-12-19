@@ -54,16 +54,16 @@ class TableBans extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER', false);
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            ban_id              " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            ban_id              ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             board_id            VARCHAR(50) NOT NULL,
             creator             VARCHAR(50) DEFAULT NULL,
             ip_type             SMALLINT NOT NULL DEFAULT 0,
-            ip_address_start    " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
-            ip_address_end      " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            ip_address_start    ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
+            ip_address_end      ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_ip_address   VARCHAR(128) DEFAULT NULL,
             reason              TEXT NOT NULL,
             start_time          BIGINT NOT NULL,
@@ -73,15 +73,16 @@ class TableBans extends Table
             appeal_response     TEXT DEFAULT NULL,
             appeal_status       SMALLINT NOT NULL DEFAULT 0,
             moar                TEXT DEFAULT NULL,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
-            FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (ban_id),
+            CONSTRAINT fk_bans__domain_registry
+            FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_USERS_TABLE . "
-            FOREIGN KEY (creator) REFERENCES " . NEL_USERS_TABLE . " (user_id)
+            CONSTRAINT fk_bans__users
+            FOREIGN KEY (creator) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
             ON UPDATE CASCADE
             ON DELETE SET NULL
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

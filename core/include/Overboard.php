@@ -35,7 +35,7 @@ class Overboard
                     (?, ?, ?, ?, ?)');
             $this->database->executePrepared($prepared,
                 [$thread->contentID()->threadID(), $thread->data('bump_time'), $thread->data('bump_time_milli'),
-                    $thread->domain()->id(), $thread->data('sticky')]);
+                    $thread->domain()->id(), (int) $thread->data('sticky')]);
         }
 
         $this->prune();

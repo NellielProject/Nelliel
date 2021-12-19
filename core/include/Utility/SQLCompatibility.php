@@ -16,7 +16,7 @@ class SQLCompatibility
         $this->sqltype = $this->database->config()['sqltype'];
     }
 
-    public function autoincrementColumn($int_column)
+    public function autoincrementColumn(string $int_column, bool $primary_declaration): array
     {
         $auto = '';
 
@@ -37,7 +37,11 @@ class SQLCompatibility
                 $int_column = 'BIGSERIAL';
             }
         } else if ($this->sqltype === 'SQLITE') {
-            $auto = 'AUTOINCREMENT';
+            if($primary_declaration) {
+                $auto = 'AUTOINCREMENT';
+            } else {
+                $auto = '';
+            }
         }
 
         return [$int_column, $auto];

@@ -152,7 +152,7 @@ class FrontEndData
     {
         $where_enabled = ($enabled_only) ? 'WHERE "enabled" = 1' : '';
         $op_ids = $this->database->executeFetchAll(
-            'SELECT "op_id" FROM "' . NEL_CONTENT_OPS_TABLE . '" ' . $where_enabled . ' ORDER BY "entry" ASC',
+            'SELECT "op_id" FROM "' . NEL_CONTENT_OPS_TABLE . '" ' . $where_enabled . '',
             PDO::FETCH_COLUMN);
         $content_ops = array();
 

@@ -32,12 +32,13 @@ class TableDomainRegistry extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            domain_id   VARCHAR(50) PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            domain_id   VARCHAR(50) NOT NULL,
             notes       TEXT DEFAULT NULL,
-            moar        TEXT DEFAULT NULL
-        ) " . $options . ";";
+            moar        TEXT DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (domain_id)
+        ) ' . $options . ';';
 
         return $schema;
     }

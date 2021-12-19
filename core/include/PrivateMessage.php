@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Nelliel;
 
-use Nelliel\Tables\TablePrivateMessages;
-use PDO;
 use Nelliel\Account\Session;
 use Nelliel\Output\OutputPrivateMessages;
+use Nelliel\Tables\TablePrivateMessages;
+use PDO;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class PrivateMessage
@@ -24,7 +24,7 @@ class PrivateMessage
         $this->session = $session;
         $this->sql_compatibility = nel_utilities()->sqlCompatibility();
         $this->table = new TablePrivateMessages($this->database, $this->sql_compatibility);
-        $this->changeData('entry', $message_id);
+        $this->changeData('message_id', $message_id);
 
         if ($message_id > 0) {
             $this->message_id = $message_id;
@@ -34,7 +34,8 @@ class PrivateMessage
 
     public function load(): void
     {
-        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "entry" = ?');
+        $prepared = $this->database->prepare(
+            'SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "message_id" = ?');
         $prepared->bindValue(1, $this->id(), PDO::PARAM_INT);
         $data = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
@@ -50,8 +51,7 @@ class PrivateMessage
 
     public function collectFromPOST(): void
     {
-        $this->changeData('sender', $this->session->user()
-            ->id());
+        $this->changeData('sender', $this->session->user()->id());
         $this->changeData('recipient', $_POST['recipient'] ?? '');
         $this->changeData('message', $_POST['message'] ?? '');
     }
@@ -98,7 +98,7 @@ class PrivateMessage
         $this->database->executePrepared($prepared);
 
         $prepared = $this->database->prepare(
-            'SELECT "entry" FROM "' . NEL_PRIVATE_MESSAGES_TABLE .
+            'SELECT "message_id" FROM "' . NEL_PRIVATE_MESSAGES_TABLE .
             '" WHERE "sender" = ? AND "recipient" = ? AND "time_sent" = ?');
         $prepared->bindValue(1, $this->data('sender'), PDO::PARAM_STR);
         $prepared->bindValue(2, $this->data('recipient'), PDO::PARAM_STR);
@@ -113,14 +113,14 @@ class PrivateMessage
     public function markRead(): void
     {
         $prepared = $this->database->prepare(
-            'UPDATE "' . NEL_PRIVATE_MESSAGES_TABLE . '" SET "message_read" = 1 WHERE "entry" = ?');
+            'UPDATE "' . NEL_PRIVATE_MESSAGES_TABLE . '" SET "message_read" = 1 WHERE "message_id" = ?');
         $prepared->bindValue(1, $this->message_id, PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
     }
 
     public function delete(): void
     {
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "entry" = ?');
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "message_id" = ?');
         $prepared->bindValue(1, $this->message_id, PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
     }

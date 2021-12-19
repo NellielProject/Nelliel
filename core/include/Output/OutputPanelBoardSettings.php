@@ -61,7 +61,7 @@ class OutputPanelBoardSettings extends Output
 
         foreach ($filetypes->categories() as $category) {
             $category_data = array();
-            $category_data['item_label'] = _gettext($category['type_label'] ?? '');
+            $category_data['item_label'] = _gettext($category['label'] ?? '');
             $category_data['category_select']['name'] = $category['category'];
             $category_data['category_select']['input_name'] = 'enabled_filetypes[' . $category['category'] . '][enabled]';
 
@@ -80,7 +80,7 @@ class OutputPanelBoardSettings extends Output
 
                 $set = array();
                 $set['input_name'] = 'enabled_filetypes[' . $data['category'] . '][formats][' . $format . ']';
-                $set['item_label'] = _gettext($data['type_label'] ?? '');
+                $set['item_label'] = _gettext($data['label'] ?? '');
 
                 if (!empty($enabled_formats) && isset($enabled_formats['formats']) &&
                     array_search($format, $enabled_formats['formats']) !== false) {

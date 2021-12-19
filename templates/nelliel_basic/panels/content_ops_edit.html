@@ -1,15 +1,11 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="op_id" class="display-cell" data-i18n="">Unique ID</label>
-			<input id="op_id" class="display-cell" type="text" name="op_id" size="30" value="{{ op_id }}">
-		</div>
-		<div class="display-row">
-			<label for="label" class="display-cell" data-i18n="">Op label</label>
+			<label for="label" class="display-cell" data-i18n="">Label</label>
 			<input id="label" class="display-cell" type="text" name="label" size="30" value="{{ label }}">
 		</div>
 		<div class="display-row">
-			<label for="url" class="display-cell" data-i18n="">Op URL</label>
+			<label for="url" class="display-cell" data-i18n="">URL</label>
 			<textarea id="url" class="display-cell" name="url" cols="64" rows="3">{{ url }}</textarea>
 		</div>
 		<div class="display-row">

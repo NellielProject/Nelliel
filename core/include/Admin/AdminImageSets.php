@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelImageSets;
 
 class AdminImageSets extends Admin
 {
@@ -17,7 +18,6 @@ class AdminImageSets extends Admin
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_IMAGE_SETS_TABLE;
         $this->id_field = 'image-set-id';
-        $this->id_column = 'set_id';
         $this->panel_name = _gettext('Image Sets');
     }
 
@@ -41,7 +41,7 @@ class AdminImageSets extends Admin
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelImageSets($this->domain, false);
+        $output_panel = new OutputPanelImageSets($this->domain, false);
         $output_panel->render([], false);
     }
 
@@ -51,8 +51,8 @@ class AdminImageSets extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getImageSet($id)->install();
+        $set_id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getImageSet($set_id)->install();
         $this->outputMain(true);
     }
 
@@ -65,8 +65,8 @@ class AdminImageSets extends Admin
     public function remove(): void
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getImageSet($id)->uninstall();
+        $set_id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getImageSet($set_id)->uninstall();
         $this->outputMain(true);
     }
 
@@ -89,16 +89,16 @@ class AdminImageSets extends Admin
     public function enable()
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getImageSet($id)->enable();
+        $set_id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getImageSet($set_id)->enable();
         $this->outputMain(true);
     }
 
     public function disable()
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getImageSet($id)->disable();
+        $set_id = $_GET[$this->id_field] ?? '';
+        $this->domain->frontEndData()->getImageSet($set_id)->disable();
         $this->outputMain(true);
     }
 }

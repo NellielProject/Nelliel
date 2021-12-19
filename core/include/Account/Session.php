@@ -119,7 +119,7 @@ class Session
 
         if (!empty(self::$user)) {
             $log_event = new LogEvent(nel_site_domain());
-            $log_event->changeContext('event_id', 'LOGOUT_SUCCESS');
+            $log_event->changeContext('event', 'LOGOUT_SUCCESS');
             $log_event->send(sprintf(_gettext("User %s logged out."), self::$user->id()));
         }
 
@@ -137,7 +137,7 @@ class Session
         self::$user = $login->validate();
         $_SESSION['user_id'] = self::$user->id();
         $log_event = new LogEvent(nel_site_domain());
-        $log_event->changeContext('event_id', 'LOGIN_SUCCESS');
+        $log_event->changeContext('event', 'LOGIN_SUCCESS');
         $log_event->send(sprintf(_gettext("User %s logged in."), self::$user->id()));
         $_SESSION['login_time'] = self::$user->getData('last_login');
         $_SESSION['last_activity'] = self::$user->getData('last_login');

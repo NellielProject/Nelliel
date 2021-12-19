@@ -34,8 +34,7 @@ class AdminPermissions extends Admin
     }
 
     public function creator(): void
-    {
-    }
+    {}
 
     public function add(): void
     {
@@ -43,37 +42,33 @@ class AdminPermissions extends Admin
         $permission = $_POST['permission'];
         $description = $_POST['description'];
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . $this->data_table . '" ("permission", "description") VALUES (?, ?)');
+            'INSERT INTO "' . $this->data_table . '" ("permission", "description") VALUES (?, ?)');
         $this->database->executePrepared($prepared, [$permission, $description]);
         $this->outputMain(true);
     }
 
     public function editor(): void
-    {
-    }
+    {}
 
     public function update(): void
-    {
-    }
+    {}
 
     public function remove(): void
     {
         $this->verifyPermissions($this->domain, 'perm_permissions_manage');
-        $id = $_GET[$this->id_field] ?? '';
+        $permission = $_GET[$this->id_field] ?? '';
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "permission" = ?');
-        $this->database->executePrepared($prepared, [$id]);
+        $this->database->executePrepared($prepared, [$permission]);
         $this->outputMain(true);
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if ($this->session_user->checkPermission($domain, $perm))
-        {
+        if ($this->session_user->checkPermission($domain, $perm)) {
             return;
         }
 
-        switch ($perm)
-        {
+        switch ($perm) {
             case 'perm_permissions_manage':
                 nel_derp(365, _gettext('You are not allowed to manage permissions.'));
                 break;

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -29,23 +28,22 @@ class OutputPanelBlotter extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $blotter_entries = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" ASC',
-                PDO::FETCH_ASSOC);
+        $blotter_entries = $this->database->executeFetchAll(
+            'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" ASC', PDO::FETCH_ASSOC);
         $bgclass = 'row1';
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'blotter', 'actions' => 'add']);
+            http_build_query(['module' => 'admin', 'section' => 'blotter', 'actions' => 'add']);
 
-        foreach ($blotter_entries as $entry)
-        {
+        foreach ($blotter_entries as $entry) {
             $entry_info = array();
             $entry_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $entry_info['time'] = date('Y/m/d', intval($entry['time']));
             $entry_info['text'] = $entry['text'];
             $entry_info['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'admin', 'section' => 'blotter', 'actions' => 'remove',
-                                'entry' => $entry['entry']]);
+                http_build_query(
+                    ['module' => 'admin', 'section' => 'blotter', 'actions' => 'remove',
+                        'record-id' => $entry['record_id']]);
             $this->render_data['blotter_entry'][] = $entry_info;
         }
 

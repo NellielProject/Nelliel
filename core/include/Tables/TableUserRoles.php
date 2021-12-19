@@ -18,12 +18,10 @@ class TableUserRoles extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_USER_ROLES_TABLE;
         $this->column_types = [
-            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'entry' => ['row_check' => false, 'auto_inc' => true],
             'user_id' => ['row_check' => true, 'auto_inc' => false],
             'role_id' => ['row_check' => true, 'auto_inc' => false],
             'domain_id' => ['row_check' => true, 'auto_inc' => false]];
@@ -32,27 +30,26 @@ class TableUserRoles extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            entry       " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
             user_id     VARCHAR(50) NOT NULL,
             role_id     VARCHAR(50) NOT NULL,
             domain_id   VARCHAR(50) NOT NULL,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_USERS_TABLE . "
-            FOREIGN KEY (user_id) REFERENCES " . NEL_USERS_TABLE . " (user_id)
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (user_id, role_id, domain_id),
+            CONSTRAINT fk_' . $this->table_name . '_' . NEL_USERS_TABLE . '
+            FOREIGN KEY (user_id) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_ROLES_TABLE . "
-            FOREIGN KEY (role_id) REFERENCES " . NEL_ROLES_TABLE . " (role_id)
+            CONSTRAINT fk_' . $this->table_name . '_' . NEL_ROLES_TABLE . '
+            FOREIGN KEY (role_id) REFERENCES ' . NEL_ROLES_TABLE . ' (role_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
-            FOREIGN KEY (domain_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
+            CONSTRAINT fk_' . $this->table_name . '_' . NEL_DOMAIN_REGISTRY_TABLE . '
+            FOREIGN KEY (domain_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

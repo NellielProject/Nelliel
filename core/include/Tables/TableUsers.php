@@ -41,17 +41,18 @@ class TableUsers extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            user_id         VARCHAR(50) PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            user_id         VARCHAR(50) NOT NULL,
             display_name    VARCHAR(255) NOT NULL,
             user_password   VARCHAR(255) NOT NULL,
             active          SMALLINT NOT NULL DEFAULT 0,
             locked          SMALLINT NOT NULL DEFAULT 0,
             owner           SMALLINT NOT NULL DEFAULT 0,
             last_login      BIGINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL
-        ) " . $options . ";";
+            moar            TEXT DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (user_id)
+        ) ' . $options . ';';
 
         return $schema;
     }

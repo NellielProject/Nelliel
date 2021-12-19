@@ -18,13 +18,11 @@ class TableSettingOptions extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_SETTING_OPTIONS_TABLE;
         $this->column_types = [
-            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'setting_category' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'setting_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'menu_data' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'entry' => ['row_check' => false, 'auto_inc' => true],
             'setting_category' => ['row_check' => true, 'auto_inc' => false],
             'setting_name' => ['row_check' => true, 'auto_inc' => false],
             'menu_data' => ['row_check' => false, 'auto_inc' => false],
@@ -34,21 +32,20 @@ class TableSettingOptions extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            entry               " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
             setting_category    VARCHAR(50) NOT NULL,
             setting_name        VARCHAR(50) NOT NULL,
             menu_data           TEXT NOT NULL,
             moar                TEXT DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (setting_category, setting_name),
             UNIQUE (setting_category, setting_name),
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_SETTINGS_TABLE . "
-            FOREIGN KEY (setting_category, setting_name) REFERENCES " . NEL_SETTINGS_TABLE . " (setting_category, setting_name)
+            CONSTRAINT fk_setting_options__settings
+            FOREIGN KEY (setting_category, setting_name) REFERENCES ' . NEL_SETTINGS_TABLE . ' (setting_category, setting_name)
             ON UPDATE CASCADE
             ON DELETE CASCADE
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

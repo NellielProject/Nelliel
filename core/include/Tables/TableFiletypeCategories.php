@@ -33,13 +33,14 @@ class TableFiletypeCategories extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            category        VARCHAR(50) PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            category        VARCHAR(50) NOT NULL,
             label           VARCHAR(255) NOT NULL,
             enabled         SMALLINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL
-        ) " . $options . ";";
+            moar            TEXT DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (category)
+        ) ' . $options . ';';
 
         return $schema;
     }

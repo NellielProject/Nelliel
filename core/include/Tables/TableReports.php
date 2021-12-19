@@ -38,22 +38,23 @@ class TableReports extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER', false);
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            report_id           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            report_id           ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             board_id            VARCHAR(50) NOT NULL,
             content_id          VARCHAR(255) NOT NULL,
-            reporter_ip         " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            reporter_ip         ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_reporter_ip  VARCHAR(128) NOT NULL,
             reason              TEXT NOT NULL,
             moar                TEXT DEFAULT NULL,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
-            FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (report_id),
+            CONSTRAINT fk_reports__domain_registry
+            FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

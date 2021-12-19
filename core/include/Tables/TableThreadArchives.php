@@ -35,14 +35,15 @@ class TableThreadArchives extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            thread_id       INTEGER PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            thread_id       INTEGER NOT NULL,
             thread_data     TEXT NOT NULL,
             time_archived   BIGINT NOT NULL,
             permanent       SMALLINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL
-        ) " . $options . ";";
+            moar            TEXT DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (thread_id)
+        ) ' . $options . ';';
 
         return $schema;
     }

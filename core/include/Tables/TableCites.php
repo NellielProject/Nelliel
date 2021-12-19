@@ -18,7 +18,7 @@ class TableCites extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CITES_TABLE;
         $this->column_types = [
-            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'cite_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'source_board' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'source_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'source_post' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
@@ -26,7 +26,7 @@ class TableCites extends Table
             'target_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'target_post' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
-            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'cite_id' => ['row_check' => false, 'auto_inc' => true],
             'source_board' => ['row_check' => true, 'auto_inc' => false],
             'source_thread' => ['row_check' => true, 'auto_inc' => false],
             'source_post' => ['row_check' => true, 'auto_inc' => false],
@@ -38,26 +38,27 @@ class TableCites extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER', false);
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            cite_id         ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             source_board    VARCHAR(50) NOT NULL,
             source_thread   INTEGER DEFAULT NULL,
             source_post     INTEGER DEFAULT NULL,
             target_board    VARCHAR(50) NOT NULL,
             target_thread   INTEGER DEFAULT NULL,
             target_post     INTEGER DEFAULT NULL,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
-            FOREIGN KEY (source_board) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (cite_id),
+            CONSTRAINT fk_cites__domain_registry
+            FOREIGN KEY (source_board) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk2_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
-            FOREIGN KEY (target_board) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
+            CONSTRAINT fk2_cites__domain_registry
+            FOREIGN KEY (target_board) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

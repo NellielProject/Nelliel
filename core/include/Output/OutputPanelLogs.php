@@ -37,16 +37,16 @@ class OutputPanelLogs extends Output
         switch ($log_type)
         {
             case 'staff':
-                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
+                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE . '") ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
                 break;
 
             case 'system':
-                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
+                $query = '(SELECT * FROM "' . NEL_LOGS_TABLE . '") ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
                 break;
 
             default:
                 $query = '(SELECT * FROM "' . NEL_LOGS_TABLE . '")
-                   UNION (SELECT * FROM "' . NEL_LOGS_TABLE . '") ORDER BY "time" DESC, "entry" DESC LIMIT ? OFFSET ?';
+                   UNION (SELECT * FROM "' . NEL_LOGS_TABLE . '") ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
                 break;
         }
 
@@ -62,9 +62,9 @@ class OutputPanelLogs extends Output
             $log_data = array();
             $log_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $log_data['entry'] = $log['entry'];
+            $log_data['log_id'] = $log['log_id'];
             $log_data['level'] = intval($log['level']);
-            $log_data['event_id'] = $log['event_id'];
+            $log_data['event'] = $log['event'];
             $log_data['originator'] = $log['originator'];
             $log_data['ip_address'] = nel_convert_ip_from_storage($log['ip_address']);
             $log_data['hashed_ip_address'] = $log['hashed_ip_address'];

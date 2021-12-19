@@ -265,18 +265,18 @@ class Post
     public function updateCounts()
     {
         $prepared = $this->database->prepare(
-            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') . '" WHERE "post_ref" = ?');
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') . '" WHERE "post_ref" = ?');
         $total_uploads = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
             PDO::FETCH_COLUMN, true);
 
         $prepared = $this->database->prepare(
-            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
             '" WHERE "post_ref" = ? AND "embed_url" IS NULL');
         $file_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()], PDO::FETCH_COLUMN,
             true);
 
         $prepared = $this->database->prepare(
-            'SELECT COUNT("entry") FROM "' . $this->domain->reference('uploads_table') .
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
             '" WHERE "post_ref" = ? AND "embed_url" IS NOT NULL');
         $embed_count = $this->database->executePreparedFetch($prepared, [$this->content_id->postID()],
             PDO::FETCH_COLUMN, true);

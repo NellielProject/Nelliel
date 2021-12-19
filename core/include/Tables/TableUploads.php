@@ -17,9 +17,9 @@ class TableUploads extends Table
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_uploads';
-        $this->increment_column = 'entry';
+        $this->increment_column = 'upload_id';
         $this->column_types = [
-            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'upload_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'parent_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'post_ref' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'upload_order' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
@@ -48,7 +48,7 @@ class TableUploads extends Table
             'cache' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'entry' => ['row_check' => false, 'auto_inc' => true],
+            'upload_id' => ['row_check' => false, 'auto_inc' => true],
             'parent_thread' => ['row_check' => false, 'auto_inc' => false],
             'post_ref' => ['row_check' => true, 'auto_inc' => false],
             'upload_order' => ['row_check' => true, 'auto_inc' => false],
@@ -82,11 +82,11 @@ class TableUploads extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER', false);
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            entry                   " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            upload_id               ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             parent_thread           INTEGER DEFAULT NULL,
             post_ref                INTEGER DEFAULT NULL,
             upload_order            SMALLINT NOT NULL DEFAULT 1,
@@ -114,16 +114,16 @@ class TableUploads extends Table
             regen_cache             SMALLINT NOT NULL DEFAULT 0,
             cache                   TEXT DEFAULT NULL,
             moar                    TEXT DEFAULT NULL,
-            CONSTRAINT uc_thread_post_order UNIQUE (parent_thread, post_ref, upload_order),
-            CONSTRAINT fk_" . $this->table_name . "_" . $other_tables['threads_table'] . "
-            FOREIGN KEY (parent_thread) REFERENCES " . $other_tables['threads_table'] . " (thread_id)
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (upload_id),
+            CONSTRAINT fk_' . $other_tables['db_prefix'] . '_uploads__threads
+            FOREIGN KEY (parent_thread) REFERENCES ' . $other_tables['threads_table'] . ' (thread_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk_" . $this->table_name . "_" . $other_tables['posts_table'] . "
-            FOREIGN KEY (post_ref) REFERENCES " . $other_tables['posts_table'] . " (post_number)
+            CONSTRAINT fk_' . $other_tables['db_prefix'] . '_uploads__posts
+            FOREIGN KEY (post_ref) REFERENCES ' . $other_tables['posts_table'] . ' (post_number)
             ON UPDATE CASCADE
             ON DELETE CASCADE
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

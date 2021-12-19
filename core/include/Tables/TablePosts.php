@@ -76,11 +76,11 @@ class TablePosts extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
+        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER', false);
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            post_number         " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            post_number         ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             parent_thread       INTEGER DEFAULT NULL,
             reply_to            INTEGER DEFAULT NULL,
             name                VARCHAR(255) DEFAULT NULL,
@@ -91,7 +91,7 @@ class TablePosts extends Table
             email               VARCHAR(255) DEFAULT NULL,
             subject             VARCHAR(255) DEFAULT NULL,
             comment             TEXT DEFAULT NULL,
-            ip_address          " . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . " DEFAULT NULL,
+            ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_ip_address   VARCHAR(128) NOT NULL,
             post_time           BIGINT NOT NULL,
             post_time_milli     SMALLINT NOT NULL,
@@ -106,15 +106,16 @@ class TablePosts extends Table
             regen_cache         SMALLINT NOT NULL DEFAULT 0,
             cache               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
-            CONSTRAINT fk_" . $this->table_name . "_" . $other_tables['threads_table'] . "
-            FOREIGN KEY (parent_thread) REFERENCES " . $other_tables['threads_table'] . " (thread_id)
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (post_number),
+            CONSTRAINT fk_' . $other_tables['db_prefix'] . '_posts__threads
+            FOREIGN KEY (parent_thread) REFERENCES ' . $other_tables['threads_table'] . ' (thread_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_USERS_TABLE . "
-            FOREIGN KEY (user_id) REFERENCES " . NEL_USERS_TABLE . " (user_id)
+            CONSTRAINT fk_' . $this->table_name . '__users
+            FOREIGN KEY (user_id) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
             ON UPDATE CASCADE
             ON DELETE SET NULL
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

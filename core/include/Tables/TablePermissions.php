@@ -31,12 +31,13 @@ class TablePermissions extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            permission      VARCHAR(50) PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            permission      VARCHAR(50) NOT NULL,
             description     TEXT NOT NULL,
-            moar            TEXT DEFAULT NULL
-        ) " . $options . ";";
+            moar            TEXT DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (permission)
+        ) ' . $options . ';';
 
         return $schema;
     }

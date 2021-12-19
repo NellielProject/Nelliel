@@ -56,7 +56,7 @@ class AdminContentOps extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
-        $label = $_POST['label'] ?? '';
+        $label = $_POST['label'] ?? 0;
         $url = $_POST['url'] ?? '';
         $images_only = $_POST['images_only'] ?? 0;
         $enabled = $_POST['enabled'] ?? 0;
@@ -71,16 +71,16 @@ class AdminContentOps extends Admin
     public function editor(): void
     {
         $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
-        $entry = $_GET[$this->id_field] ?? 0;
+        $op_id = $_GET[$this->id_field] ?? 0;
         $output_panel = new OutputPanelContentOps($this->domain, false);
-        $output_panel->edit(['editing' => true, 'entry' => $entry], false);
+        $output_panel->edit(['editing' => true, 'op_id' => $op_id], false);
         $this->outputMain(false);
     }
 
     public function update(): void
     {
         $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
-        $entry = $_GET[$this->id_field] ?? 0;
+        $op_id = $_GET[$this->id_field] ?? 0;
         $label = $_POST['label'] ?? '';
         $url = $_POST['url'] ?? '';
         $images_only = $_POST['images_only'] ?? 0;
@@ -89,17 +89,17 @@ class AdminContentOps extends Admin
 
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table .
-            '" SET "label" = ?, "url" = ?, "images_only" = ?, "enabled" = ?, "notes" = ? WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$label, $url, $images_only, $enabled, $notes, $entry]);
+            '" SET "label" = ?, "url" = ?, "images_only" = ?, "enabled" = ?, "notes" = ? WHERE "op_id" = ?');
+        $this->database->executePrepared($prepared, [$label, $url, $images_only, $enabled, $notes, $op_id]);
         $this->outputMain(true);
     }
 
     public function remove(): void
     {
         $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
+        $op_id = $_GET[$this->id_field] ?? 0;
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "op_id" = ?');
+        $this->database->executePrepared($prepared, [$op_id]);
         $this->outputMain(true);
     }
 
@@ -122,18 +122,18 @@ class AdminContentOps extends Admin
     public function enable()
     {
         $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
+        $op_id = $_GET[$this->id_field] ?? 0;
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "op_id" = ?');
+        $this->database->executePrepared($prepared, [$op_id]);
         $this->outputMain(true);
     }
 
     public function disable()
     {
         $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
-        $id = $_GET[$this->id_field] ?? 0;
-        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
+        $op_id = $_GET[$this->id_field] ?? 0;
+        $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "op_id" = ?');
+        $this->database->executePrepared($prepared, [$op_id]);
         $this->outputMain(true);
     }
 }

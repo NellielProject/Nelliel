@@ -98,7 +98,7 @@ class OutputPanelEmbeds extends Output
         $editing = $parameters['editing'] ?? true;
 
         if ($editing) {
-            $embed_id = $parameters['embed_id'] ?? '';
+            $embed_id = $parameters['embed_id'] ?? 0;
             $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'embeds', 'actions' => 'update', 'embed-id' => $embed_id]);

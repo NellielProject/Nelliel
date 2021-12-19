@@ -24,15 +24,14 @@ class NellielLogger extends AbstractLogger
 
     public function log($level, $message, array $context = array())
     {
-        if (!array_key_exists($level, $this->level_map) || $this->level_map[$level] < 0 || $this->level_map[$level] > 7)
-        {
+        if (!array_key_exists($level, $this->level_map) || $this->level_map[$level] < 0 || $this->level_map[$level] > 7) {
             throw new InvalidArgumentException(_gettext('Invalid log level. Level given: ') . $level);
         }
 
         $data = array();
         $data['domain'] = $context['domain'] ?? '';
         $data['level'] = $this->level_map[$level];
-        $data['event_id'] = $context['event_id'] ?? 'UNKNOWN';
+        $data['event'] = $context['event'] ?? 'UNKNOWN';
         $data['originator'] = $context['originator'] ?? '';
         $data['ip_address'] = $context['ip_address'] ?? null;
         $data['hashed_ip_address'] = $context['hashed_ip_address'] ?? null;
@@ -45,12 +44,12 @@ class NellielLogger extends AbstractLogger
     protected function dbInsert(string $table, array $data)
     {
         $prepared = $this->database->prepare(
-                'INSERT INTO "' . $table .
-                '" ("level", "domain_id",  "event_id", "originator", "ip_address", "hashed_ip_address", "time", "message")
-								VALUES (:level, :domain_id, :event_id, :originator, :ip_address, :hashed_ip_address, :time, :message)');
+            'INSERT INTO "' . $table .
+            '" ("level", "domain_id",  "event", "originator", "ip_address", "hashed_ip_address", "time", "message")
+								VALUES (:level, :domain_id, :event, :originator, :ip_address, :hashed_ip_address, :time, :message)');
         $prepared->bindValue(':level', $data['level'], PDO::PARAM_INT);
         $prepared->bindValue(':domain_id', $data['domain']->id(), PDO::PARAM_STR);
-        $prepared->bindValue(':event_id', $data['event_id'], PDO::PARAM_STR);
+        $prepared->bindValue(':event', $data['event'], PDO::PARAM_STR);
         $prepared->bindValue(':originator', $data['originator'], PDO::PARAM_STR);
         $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($data['ip_address']), PDO::PARAM_LOB);
         $prepared->bindValue(':hashed_ip_address', $data['hashed_ip_address'], PDO::PARAM_STR);

@@ -43,9 +43,9 @@ class TableBoardData extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            board_id            VARCHAR(50) PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            board_id            VARCHAR(50) NOT NULL,
             db_prefix           VARCHAR(20) NOT NULL,
             board_uri           VARCHAR(255) NOT NULL,
             source_directory    VARCHAR(255) NOT NULL,
@@ -54,12 +54,13 @@ class TableBoardData extends Table
             archive_directory   VARCHAR(255) NOT NULL,
             locked              SMALLINT NOT NULL DEFAULT 0,
             moar                TEXT DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (board_id),
             CONSTRAINT uc_db_prefix UNIQUE (db_prefix),
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_DOMAIN_REGISTRY_TABLE . "
-            FOREIGN KEY (board_id) REFERENCES " . NEL_DOMAIN_REGISTRY_TABLE . " (domain_id)
+            CONSTRAINT fk_board_data__domain_registry
+            FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

@@ -35,14 +35,15 @@ class TableRoles extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            role_id         VARCHAR(50) PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            role_id         VARCHAR(50) NOT NULL,
             role_level      SMALLINT NOT NULL DEFAULT 0,
             role_title      VARCHAR(255) NOT NULL,
-            capcode         VARCHAR(255) NOT NULL,
-            moar            TEXT DEFAULT NULL
-        ) " . $options . ";";
+            capcode         VARCHAR(255) DEFAULT NULL,
+            moar            TEXT DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (role_id)
+        ) ' . $options . ';';
 
         return $schema;
     }

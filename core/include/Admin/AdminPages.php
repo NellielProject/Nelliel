@@ -20,7 +20,7 @@ class AdminPages extends Admin
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_PAGES_TABLE;
         $this->id_field = 'page-id';
-        $this->id_column = 'entry';
+        $this->id_column = 'page_id';
         $this->panel_name = _gettext('Pages');
     }
 
@@ -69,16 +69,16 @@ class AdminPages extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_pages_manage');
         $output_panel = new OutputPanelPages($this->domain, false);
-        $output_panel->edit(['entry' => $_GET['page-id'] ?? 0], false);
+        $output_panel->edit(['page_id' => $_GET['page-id'] ?? 0], false);
         $this->outputMain(false);
     }
 
     public function update(): void
     {
-        $id = $_GET[$this->id_field] ?? 0;
+        $page_id = $_GET[$this->id_field] ?? 0;
         $prepared = $this->domain->database()->prepare(
-            'SELECT "domain_id" FROM "' . NEL_PAGES_TABLE . '" WHERE "entry" = :id');
-        $prepared->bindValue(':id', $id);
+            'SELECT "domain_id" FROM "' . NEL_PAGES_TABLE . '" WHERE "page_id" = :page_id');
+        $prepared->bindValue(':page_id', $page_id);
         $domain_id = $this->domain->database()->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if ($domain_id === false) {
@@ -94,9 +94,9 @@ class AdminPages extends Admin
         $page_info['markup_type'] = 'html';
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_PAGES_TABLE .
-            '" SET "uri" = ?, "title" = ?, "text" = ?, "markup_type" = ? WHERE "entry" = ?');
+            '" SET "uri" = ?, "title" = ?, "text" = ?, "markup_type" = ? WHERE "page_id" = ?');
         $this->database->executePrepared($prepared,
-            [$page_info['uri'], $page_info['title'], $page_info['text'], $page_info['markup_type'], $id]);
+            [$page_info['uri'], $page_info['title'], $page_info['text'], $page_info['markup_type'], $page_id]);
         $regen = new Regen();
         $regen->page($domain, $page_info['uri']);
         $this->outputMain(true);
@@ -104,10 +104,10 @@ class AdminPages extends Admin
 
     public function remove(): void
     {
-        $id = $_GET[$this->id_field] ?? 0;
+        $page_id = $_GET[$this->id_field] ?? 0;
         $prepared = $this->domain->database()->prepare(
-            'SELECT "uri", "domain_id" FROM "' . NEL_PAGES_TABLE . '" WHERE "entry" = :id');
-        $prepared->bindValue(':id', $id);
+            'SELECT "uri", "domain_id" FROM "' . NEL_PAGES_TABLE . '" WHERE "page_id" = :page_id');
+        $prepared->bindValue(':page_id', $page_id);
         $info = $this->domain->database()->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
         if ($info === false) {
@@ -117,8 +117,8 @@ class AdminPages extends Admin
         $domain_id = $info['domain_id'];
         $domain = Domain::getDomainFromID($domain_id, $this->database);
         $this->verifyPermissions($domain, 'perm_pages_manage');
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "entry" = ?');
-        $this->database->executePrepared($prepared, [$id]);
+        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "page_id" = ?');
+        $this->database->executePrepared($prepared, [$page_id]);
         nel_utilities()->fileHandler()->eraserGun($domain->reference('base_path'), $info['uri'] . '.html');
         $this->outputMain(true);
     }
@@ -143,7 +143,7 @@ class AdminPages extends Admin
     {
         if ($domain->id() !== Domain::SITE) {
             $prepared = $this->domain->database()->prepare(
-                'SELECT COUNT("entry") FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = :domain_id');
+                'SELECT COUNT("page_id") FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = :domain_id');
             $prepared->bindValue(':domain_id', $domain->id());
             $page_count = $this->domain->database()->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 

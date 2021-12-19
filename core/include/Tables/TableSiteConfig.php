@@ -29,12 +29,12 @@ class TableSiteConfig extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
             setting_name    VARCHAR(50) NOT NULL,
             setting_value   TEXT NOT NULL,
-            CONSTRAINT uc_setting_name UNIQUE (setting_name)
-        ) " . $options . ";";
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (setting_name)
+        ) ' . $options . ';';
 
         return $schema;
     }

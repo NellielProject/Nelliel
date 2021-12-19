@@ -29,11 +29,12 @@ class TableRateLimit extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            rate_id    VARCHAR(128) PRIMARY KEY NOT NULL,
-            record     TEXT NOT NULL
-        ) " . $options . ";";
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            rate_id    VARCHAR(128) NOT NULL,
+            record     TEXT NOT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (rate_id)
+        ) ' . $options . ';';
 
         return $schema;
     }

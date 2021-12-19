@@ -18,12 +18,10 @@ class TableRolePermissions extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_ROLE_PERMISSIONS_TABLE;
         $this->column_types = [
-            'entry' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'permission' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'perm_setting' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
-            'entry' => ['row_check' => false, 'auto_inc' => true],
             'role_id' => ['row_check' => true, 'auto_inc' => false],
             'permission' => ['row_check' => true, 'auto_inc' => false],
             'perm_setting' => ['row_check' => false, 'auto_inc' => false]];
@@ -32,23 +30,22 @@ class TableRolePermissions extends Table
 
     public function buildSchema(array $other_tables = null)
     {
-        $auto_inc = $this->sql_compatibility->autoincrementColumn('INTEGER');
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            entry           " . $auto_inc[0] . " PRIMARY KEY " . $auto_inc[1] . " NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
             role_id         VARCHAR(50) NOT NULL,
             permission      VARCHAR(50) NOT NULL,
             perm_setting    SMALLINT NOT NULL DEFAULT 0,
-            CONSTRAINT fk_" . $this->table_name . "_" . NEL_ROLES_TABLE . "
-            FOREIGN KEY (role_id) REFERENCES " . NEL_ROLES_TABLE . " (role_id)
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (role_id, permission),
+            CONSTRAINT fk_role_permissions__roles
+            FOREIGN KEY (role_id) REFERENCES ' . NEL_ROLES_TABLE . ' (role_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk2_" . $this->table_name . "_" . NEL_PERMISSIONS_TABLE . "
-            FOREIGN KEY (permission) REFERENCES " . NEL_PERMISSIONS_TABLE . " (permission)
+            CONSTRAINT fk_role_permissions__permissions
+            FOREIGN KEY (permission) REFERENCES ' . NEL_PERMISSIONS_TABLE . ' (permission)
             ON UPDATE CASCADE
             ON DELETE CASCADE
-        ) " . $options . ";";
+        ) ' . $options . ';';
 
         return $schema;
     }

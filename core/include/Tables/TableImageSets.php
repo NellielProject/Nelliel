@@ -31,12 +31,13 @@ class TableImageSets extends Table
     public function buildSchema(array $other_tables = null)
     {
         $options = $this->sql_compatibility->tableOptions();
-        $schema = "
-        CREATE TABLE " . $this->table_name . " (
-            set_id      VARCHAR(100) PRIMARY KEY NOT NULL,
+        $schema = '
+        CREATE TABLE ' . $this->table_name . ' (
+            set_id      VARCHAR(100) NOT NULL,
             directory   VARCHAR(255) NOT NULL,
-            enabled     SMALLINT NOT NULL DEFAULT 0
-        ) " . $options . ";";
+            enabled     SMALLINT NOT NULL DEFAULT 0,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (set_id)
+        ) ' . $options . ';';
 
         return $schema;
     }
