@@ -20,13 +20,11 @@ class IfThen
 
     public function getIfThens(string $set_id = null): array
     {
-        if (!$this->loaded)
-        {
+        if (!$this->loaded) {
             $this->loadIfThens();
         }
 
-        if (!is_null($set_id))
-        {
+        if (!is_null($set_id)) {
             return $this->if_thens[$set_id] ?? array();
         }
 
@@ -37,13 +35,11 @@ class IfThen
     {
         $if_thens = $this->getIfThens($set_id);
 
-        foreach ($if_thens as $if_then)
-        {
+        foreach ($if_thens as $if_then) {
             $conditions = $if_then['conditions'] ?? array();
             $conditions_met = $this->conditions->check($conditions);
 
-            if ($conditions_met)
-            {
+            if ($conditions_met) {
                 $actions = $if_then['actions'] ?? array();
                 $this->actions->do($actions);
             }
@@ -52,10 +48,13 @@ class IfThen
 
     private function loadIfThens(string $board_id = null): void
     {
-        include NEL_CONFIG_FILES_PATH . 'if_thens.php';
+        $if_thens = array();
 
-        if (is_array($if_thens))
-        {
+        if (file_exists(NEL_CONFIG_FILES_PATH . 'if_thens.php')) {
+            include NEL_CONFIG_FILES_PATH . 'if_thens.php';
+        }
+
+        if (is_array($if_thens)) {
             $this->if_thens = $if_thens;
             $this->loaded = true;
         }

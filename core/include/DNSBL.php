@@ -99,7 +99,11 @@ class DNSBL
     protected function getServices(): array
     {
         $services = array();
-        include NEL_CONFIG_FILES_PATH . 'dnsbl.php';
+
+        if (file_exists(NEL_CONFIG_FILES_PATH . 'dnsbl.php')) {
+            include NEL_CONFIG_FILES_PATH . 'dnsbl.php';
+        }
+
         return $services;
     }
 }

@@ -6,7 +6,10 @@ $db_config = array();
 $crypt_config = array();
 
 require_once NEL_CONFIG_FILES_PATH . 'config.php';
-require_once NEL_CONFIG_FILES_PATH . 'additional_databases.php';
+
+if (file_exists(NEL_CONFIG_FILES_PATH . 'additional_databases.php')) {
+    include NEL_CONFIG_FILES_PATH . 'additional_databases.php';
+}
 
 define('NEL_DEFAULT_TIME_ZONE', $base_config['default_time_zone'] ?? 'UTC');
 date_default_timezone_set(NEL_DEFAULT_TIME_ZONE);
