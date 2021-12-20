@@ -464,6 +464,7 @@ class Thread
 
     public function archive(bool $permanent): bool
     {
+        return false; // TODO: Update for flattened structure
         $thread_data = $this->getJSON()->getJSON();
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->domain->reference('archives_table') .

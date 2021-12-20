@@ -120,7 +120,7 @@ class Upload
         $this->removeFromDisk();
         $this->removeFromDatabase();
 
-        if (!$update) {
+        if ($update) {
             $post = $this->getParent();
             $post->updateCounts();
             $post->getParent()->updateCounts();

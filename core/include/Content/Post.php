@@ -157,7 +157,7 @@ class Post
             $parent_thread->remove(true);
         }
 
-        if (!$update) {
+        if ($update) {
             $parent_thread->updateCounts();
             $parent_thread->updateBumpTime();
             $parent_thread->updateUpdateTime();

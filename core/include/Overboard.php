@@ -47,7 +47,7 @@ class Overboard
             'UPDATE "' . NEL_OVERBOARD_TABLE .
             '" SET "bump_time" = ?, "bump_time_milli" = ?, "sticky" = ? WHERE "thread_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared,
-            [$thread->data('bump_time'), $thread->data('bump_time_milli'), $thread->data('sticky'),
+            [$thread->data('bump_time'), $thread->data('bump_time_milli'), (int) $thread->data('sticky'),
                 $thread->contentID()->threadID(), $thread->domain()->id()]);
     }
 
