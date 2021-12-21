@@ -260,7 +260,7 @@ class Cites
         return $return;
     }
 
-    public function createPostLinkURL(array $cite_data, Domain $source_domain)
+    public function createPostLinkURL(array $cite_data, Domain $source_domain, bool $dynamic)
     {
         $url = '';
 
@@ -278,7 +278,7 @@ class Cites
                         ContentID::createIDString($cite_data['target_thread'], $cite_data['target_post']));
                 $thread = new Thread($content_id, $target_domain);
                 $p_anchor = '#t' . $cite_data['target_thread'] . 'p' . $cite_data['target_post'];
-                $url = $thread->getURL() . $p_anchor;
+                $url = $thread->getURL($dynamic) . $p_anchor;
             }
         }
 

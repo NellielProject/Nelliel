@@ -8,27 +8,23 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\LogEvent;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputLoginPage;
 
 class Session
 {
-    protected $domain;
     protected static $setup_done = false;
     protected static $user;
+    protected static $modmode = false;
+    protected static $ignore = false;
     protected $session_name = 'NellielSession';
     protected $authorization;
-    protected $database;
-    protected $failed = false;
-    protected static $ignore = false;
+    protected $domain;
     protected $doing_login = false;
     protected $session_options = array();
-    protected static $modmode = false;
+
 
     function __construct()
     {
-        if ($this->failed) {
-            return;
-        }
-
         $this->session_options['use_strict_mode'] = true;
         $this->session_options['use_cookies'] = true;
         $this->session_options['use_only_cookies'] = true;
@@ -47,8 +43,7 @@ class Session
         }
 
         $this->domain = nel_site_domain();
-        $this->database = $this->domain->database();
-        $this->authorization = new Authorization($this->database);
+        $this->authorization = new Authorization(nel_database('core'));
 
         if (empty(self::$user)) {
             self::$user = $this->authorization->emptyUser();
@@ -80,14 +75,12 @@ class Session
 
         if (NEL_SECURE_SESSION_ONLY && (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == 'off')) {
             $this->terminate();
-            $this->failed = true;
             nel_derp(220, _gettext('Session requires a secure connection.'));
         }
 
         if (!empty($_SESSION)) {
             if ($this->isOld() && !$this->doing_login) {
                 $this->terminate();
-                $this->failed = true;
                 nel_derp(221, _gettext('Session has expired.'));
             }
         } else {
@@ -100,7 +93,6 @@ class Session
             $user = $this->authorization->getUser($_SESSION['user_id'] ?? '');
 
             if ($user->empty() || !$user->active()) {
-                $this->failed = true;
                 $this->terminate();
                 nel_derp(222, _gettext('User does not exist or is inactive.'));
             }
@@ -124,7 +116,7 @@ class Session
         }
 
         $this->terminate();
-        $output_login = new \Nelliel\Output\OutputLoginPage($this->domain, false);
+        $output_login = new OutputLoginPage($this->domain, false);
         $output_login->render([], false);
         nel_clean_exit(false);
     }
@@ -181,7 +173,7 @@ class Session
 
     public function isActive()
     {
-        return !$this->ignore() && self::$setup_done;
+        return !self::$ignore && self::$setup_done;
     }
 
     public function toggleModMode(): void
@@ -197,7 +189,6 @@ class Session
     public function loggedInOrError()
     {
         if (!$this->isActive() || (!$this->doing_login && empty(self::$user))) {
-            $this->failed = true;
             nel_derp(224, _gettext('You must be logged in for this action.'));
         }
     }

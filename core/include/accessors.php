@@ -2,8 +2,11 @@
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\DatabaseConnector;
+use Nelliel\API\Plugin\PluginAPI;
+use Nelliel\Account\Session;
 use Nelliel\Domains\DomainGlobal;
 use Nelliel\Domains\DomainSite;
+use Nelliel\Utility\Utilities;
 
 function nel_database(string $database_key)
 {
@@ -22,7 +25,7 @@ function nel_plugins()
     static $plugins;
 
     if (!isset($plugins)) {
-        $plugins = new \Nelliel\API\Plugin\PluginAPI();
+        $plugins = new PluginAPI();
     }
 
     return $plugins;
@@ -75,8 +78,19 @@ function nel_utilities()
     static $utilities;
 
     if (!isset($utilities)) {
-        $utilities = new \Nelliel\Utility\Utilities(nel_database('core'));
+        $utilities = new Utilities(nel_database('core'));
     }
 
     return $utilities;
+}
+
+function nel_session()
+{
+    static $session;
+
+    if (!isset($session)) {
+        $session = new Session();
+    }
+
+    return $session;
 }

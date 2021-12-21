@@ -21,6 +21,7 @@ class ImageboardMarkdown extends Parser
     protected $url_protocols;
     protected $cites;
     protected $post_content_id;
+    protected $dynamic = false;
 
     function __construct(Domain $domain, ContentID $post_content_id)
     {
@@ -28,6 +29,13 @@ class ImageboardMarkdown extends Parser
         $this->url_protocols = $this->domain->setting('url_protocols');
         $this->cites = new Cites($domain->database());
         $this->post_content_id = $post_content_id;
+    }
+
+    public function parseDynamic(string $text) {
+        $original = $this->dynamic;
+        $this->dynamic = true;
+        $this->parse($text);
+        $this->dynamic = $original;
     }
 
     public function parse($text)
@@ -151,7 +159,7 @@ class ImageboardMarkdown extends Parser
         $cite_data = $this->cites->getCiteData($block[1], $this->domain, $this->post_content_id);
 
         if (isset($cite_data['exists']) && $cite_data['exists']) {
-            $cite_url = $this->cites->createPostLinkURL($cite_data, $this->domain);
+            $cite_url = $this->cites->createPostLinkURL($cite_data, $this->domain, $this->dynamic);
             $this->cites->addCite($cite_data);
             return '<a href="' . $cite_url . '" class="post-cite" data-command="show-linked-post">' . $block[1] . '</a>';
         } else {

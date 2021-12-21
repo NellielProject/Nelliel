@@ -383,7 +383,8 @@ class OutputPost extends Output
             $cite_url = '';
 
             if ($cite_data['exists']) {
-                $cite_url = $cites->createPostLinkURL($cite_data, $this->domain);
+                $cite_url = $cites->createPostLinkURL($cite_data, $this->domain,
+                    $this->session->inModmode($this->domain) && !$this->write_mode);
                 $cites->addCite($cite_data);
 
                 if (!empty($cite_url)) {
@@ -418,7 +419,14 @@ class OutputPost extends Output
             $comment = $this->output_filter->filterZalgo($comment);
         }
 
-        $markdown = new ImageboardMarkdown($this->domain, $post_content_id);
-        return $markdown->parse($comment);
+        $imageboard_markdown = new ImageboardMarkdown($this->domain, $post_content_id);
+
+        if ($this->session->inModmode($this->domain) && !$this->write_mode) {
+            $parsed_markdown = $imageboard_markdown->parseDynamic($comment);
+        } else {
+            $parsed_markdown = $imageboard_markdown->parse($comment);
+        }
+
+        return $parsed_markdown;
     }
 }
