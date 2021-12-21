@@ -100,11 +100,11 @@ class OutputCatalog extends Output
 
                 if (nel_true_empty($upload->data('embed_url')))
                 {
-                    $file_data = $output_file_info->render($upload, ['catalog' => true], true);
+                    $file_data = $output_file_info->render($upload, $post, ['catalog' => true], true);
                 }
                 else
                 {
-                    $file_data = $output_embed_info->render($upload, ['catalog' => true], true);
+                    $file_data = $output_embed_info->render($upload, $post, ['catalog' => true], true);
                 }
 
                 $thread_data['preview'] = $file_data;

@@ -21,11 +21,11 @@ class Upload
     protected $content_moar;
     protected $authorization;
     protected $main_table;
-    protected $parent;
+    protected $parent = null;
     protected $json;
     protected $sql_helpers;
 
-    function __construct(ContentID $content_id, Domain $domain, Post $parent = null, bool $load = true)
+    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -34,8 +34,7 @@ class Upload
         $this->storeMoar(new Moar());
         $this->main_table = new TableUploads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('uploads_table'));
-        $this->parent = $parent;
-        $this->json = new UploadJSON($this, nel_utilities()->fileHandler());
+        $this->json = new UploadJSON();
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load) {

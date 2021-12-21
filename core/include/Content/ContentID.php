@@ -99,19 +99,16 @@ class ContentID
 
     public function getInstanceFromID(Domain $domain, bool $load = true)
     {
-        if ($this->isThread())
-        {
-            return new Thread($this, $domain, null, $load);
+        if ($this->isThread()) {
+            return new Thread($this, $domain, $load);
         }
 
-        if ($this->isPost())
-        {
-            return new Post($this, $domain, null, $load);
+        if ($this->isPost()) {
+            return new Post($this, $domain, $load);
         }
 
-        if ($this->isContent())
-        {
-            return new Upload($this, $domain, null, $load);
+        if ($this->isContent()) {
+            return new Upload($this, $domain, $load);
         }
 
         return null;

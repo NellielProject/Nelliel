@@ -27,11 +27,11 @@ class Thread
     protected $main_table;
     protected $archive_prune;
     protected $overboard;
-    protected $parent;
+    protected $parent = null;
     protected $json;
     protected $sql_helpers;
 
-    function __construct(ContentID $content_id, Domain $domain, Thread $parent = null, bool $load = true)
+    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -40,8 +40,7 @@ class Thread
         $this->storeMoar(new Moar());
         $this->main_table = new TableThreads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('threads_table'));
-        $this->parent = $parent;
-        $this->json = new ThreadJSON($this, nel_utilities()->fileHandler());
+        $this->json = new ThreadJSON();
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load) {
@@ -327,7 +326,7 @@ class Thread
             '" WHERE "parent_thread" = ? AND "op" = 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
-        $post = new Post($content_id, $this->domain, $this);
+        $post = new Post($content_id, $this->domain);
         return $post;
     }
 
@@ -338,7 +337,7 @@ class Thread
             '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC LIMIT 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
-        $post = new Post($content_id, $this->domain, $this);
+        $post = new Post($content_id, $this->domain);
         return $post;
     }
 
@@ -349,7 +348,7 @@ class Thread
             '" WHERE "parent_thread" = ? AND "permasage" = 0 ORDER BY "post_number" DESC LIMIT 1');
         $post_id = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()], PDO::FETCH_COLUMN);
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
-        $post = new Post($content_id, $this->domain, $this);
+        $post = new Post($content_id, $this->domain);
         return $post;
     }
 
@@ -362,7 +361,7 @@ class Thread
             PDO::FETCH_COLUMN);
         $post_id = $post_list[$nth_post - 1] ?? 0;
         $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), $post_id, 0));
-        $post = new Post($content_id, $this->domain, $this);
+        $post = new Post($content_id, $this->domain);
         return $post;
     }
 

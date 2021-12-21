@@ -148,7 +148,7 @@ class OutputIndex extends Output
                 $post_content_id = new ContentID(
                     ContentID::createIDString($thread->contentID()->threadID(), $post_data['post_number']));
                 $post = $post_content_id->getInstanceFromID($this->domain);
-                $post_json = new PostJSON($post, $this->file_handler);
+                $post_json = new PostJSON();
                 $parameters = ['gen_data' => $gen_data, 'post_json' => $post_json, 'in_thread_number' => $post_counter];
 
                 if ($post_data['op'] == 1) {

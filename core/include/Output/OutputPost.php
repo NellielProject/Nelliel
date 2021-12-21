@@ -63,12 +63,13 @@ class OutputPost extends Output
                     continue;
                 }
 
+                $file_data = array();
                 $post->getJSON()->addUpload($upload->getJSON());
 
                 if (nel_true_empty($upload->data('embed_url'))) {
-                    $file_data = $output_file_info->render($upload, [], true);
+                    $file_data = $output_file_info->render($upload, $post, [], true);
                 } else {
-                    $file_data = $output_embed_info->render($upload, [], true);
+                    $file_data = $output_embed_info->render($upload, $post, [], true);
                 }
 
                 $upload_row[] = $file_data;

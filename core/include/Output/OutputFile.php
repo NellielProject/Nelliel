@@ -5,6 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 
@@ -16,10 +17,10 @@ class OutputFile extends Output
         parent::__construct($domain, $write_mode);
     }
 
-    public function render(Upload $file, array $parameters, bool $data_only)
+    public function render(Upload $file, Post $post, array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $post = $file->getParent();
+        $template = 'thread/multiple_content';
         $catalog = $parameters['catalog'] ?? false;
         $multiple = $post->data('file_count') > 1;
         $template = ($multiple) ? 'thread/multiple_content' : 'thread/single_content';
@@ -28,6 +29,7 @@ class OutputFile extends Output
         $this->render_data['file_container_id'] = 'file-container-' . $file->contentID()->getIDString();
         $this->render_data['file_content_id'] = $file->contentID()->getIDString();
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
+
 
         if ($this->session->inModmode($this->domain)) {
             $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
@@ -58,7 +60,7 @@ class OutputFile extends Output
 
         if (!empty($file->data('md5'))) {
             $md5_data['metadata'] = 'MD5: ' . $file->data('md5');
-            $this->render_data['file_metadata'][] = $md5_data;
+           $this->render_data['file_metadata'][] = $md5_data;
         }
 
         if (!empty($file->data('sha1'))) {

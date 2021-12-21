@@ -26,11 +26,11 @@ class Post
     protected $authorization;
     protected $main_table;
     protected $archive_prune;
-    protected $parent;
+    protected $parent = null;
     protected $json;
     protected $sql_helpers;
 
-    function __construct(ContentID $content_id, Domain $domain, Thread $parent = null, bool $load = true)
+    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -39,8 +39,7 @@ class Post
         $this->storeMoar(new Moar());
         $this->main_table = new TablePosts($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('posts_table'));
-        $this->parent = $parent;
-        $this->json = new PostJSON($this, nel_utilities()->fileHandler());
+        $this->json = new PostJSON();
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load) {

@@ -5,6 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 
@@ -16,10 +17,9 @@ class OutputEmbed extends Output
         parent::__construct($domain, $write_mode);
     }
 
-    public function render(Upload $embed, array $parameters, bool $data_only)
+    public function render(Upload $embed, Post $post, array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $post = $embed->getParent();
         $catalog = $parameters['catalog'] ?? false;
         $multiple = $post->data('embed_count') > 1;
         $this->render_data['is_embed'] = true;
