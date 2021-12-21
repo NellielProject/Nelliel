@@ -122,6 +122,8 @@ class TablePosts extends Table
 
     public function postCreate(array $other_tables = null)
     {
+        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__parent_thread ON ' . $this->table_name . ' (parent_thread)');
+        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__hashed_ip_address ON ' . $this->table_name . ' (hashed_ip_address)');
     }
 
     public function insertDefaults()

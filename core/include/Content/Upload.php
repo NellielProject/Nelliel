@@ -105,7 +105,7 @@ class Upload
         return true;
     }
 
-    public function remove(bool $perm_override = false, bool $update = true)
+    public function remove(bool $perm_override = false, bool $parent_delete = false): bool
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -117,19 +117,21 @@ class Upload
             }
         }
 
-        $this->removeFromDisk();
-        $this->removeFromDatabase();
+        $this->removeFromDisk($parent_delete);
+        $this->removeFromDatabase($parent_delete);
 
-        if ($update) {
+        if (!$parent_delete) {
             $post = $this->getParent();
             $post->updateCounts();
             $post->getParent()->updateCounts();
         }
+
+        return true;
     }
 
-    protected function removeFromDatabase()
+    protected function removeFromDatabase(bool $parent_delete): bool
     {
-        if (empty($this->content_id->orderID())) {
+        if (empty($this->content_id->orderID()) || $parent_delete) {
             return false;
         }
 
@@ -143,21 +145,23 @@ class Upload
                 'DELETE FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "post_ref" = ? AND "upload_order" = ?');
             $this->database->executePrepared($prepared, [$this->content_id->postID(), $this->content_id->orderID()]);
-            return true;
         }
+
+        return true;
     }
 
-    protected function removeFromDisk()
+    protected function removeFromDisk(bool $parent_delete): bool
     {
         if (!$this->isLoaded()) {
             $this->loadFromDatabase();
         }
 
         if (!nel_true_empty($this->data('embed_url'))) {
-            return;
+            return false;
         }
 
         $file_handler = nel_utilities()->fileHandler();
+        $removed = false;
 
         $prepared = $this->database->prepare(
             'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
@@ -166,7 +170,7 @@ class Upload
             [$this->content_data['filename'], $this->content_data['extension']], PDO::FETCH_COLUMN);
 
         if ($filename_count <= 1) {
-            $file_handler->eraserGun($this->srcFilePath(),
+            $removed = $file_handler->eraserGun($this->srcFilePath(),
                 $this->content_data['filename'] . '.' . $this->content_data['extension']);
         }
 
@@ -178,7 +182,7 @@ class Upload
                 [$this->content_data['static_preview_name']], PDO::FETCH_COLUMN);
 
             if ($static_preview_count <= 1) {
-                $file_handler->eraserGun($this->previewFilePath(), $this->content_data['static_preview_name']);
+                $removed = $file_handler->eraserGun($this->previewFilePath(), $this->content_data['static_preview_name']);
             }
         }
 
@@ -190,19 +194,22 @@ class Upload
                 [$this->content_data['animated_preview_name']], PDO::FETCH_COLUMN);
 
             if ($static_preview_count <= 1) {
-                $file_handler->eraserGun($this->previewFilePath(), $this->content_data['animated_preview_name']);
+                $removed = $file_handler->eraserGun($this->previewFilePath(),
+                    $this->content_data['animated_preview_name']);
             }
         }
 
         $parent = $this->getParent();
 
         if ($parent->srcFilePath() !== $this->srcFilePath()) {
-            $file_handler->eraserGun($this->srcFilePath());
+            $removed = $file_handler->eraserGun($this->srcFilePath());
         }
 
         if ($parent->previewFilePath() !== $this->previewFilePath()) {
-            $file_handler->eraserGun($this->previewFilePath());
+            $removed = $file_handler->eraserGun($this->previewFilePath());
         }
+
+        return $removed;
     }
 
     public function verifyModifyPerms(): bool

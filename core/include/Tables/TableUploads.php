@@ -130,6 +130,11 @@ class TableUploads extends Table
 
     public function postCreate(array $other_tables = null)
     {
+        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__post_ref ON ' . $this->table_name . ' (post_ref)');
+        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__filename ON ' . $this->table_name . ' (filename)');
+        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__static_preview_name ON ' . $this->table_name . ' (static_preview_name)');
+        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__animated_preview_name ON ' . $this->table_name . ' (animated_preview_name)');
+        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__md5 ON ' . $this->table_name . ' (md5)');
     }
 
     public function insertDefaults()

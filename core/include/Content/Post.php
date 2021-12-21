@@ -112,7 +112,7 @@ class Post
         return true;
     }
 
-    public function remove(bool $perm_override = false, bool $update = true)
+    public function remove(bool $perm_override = false, bool $parent_delete = false): bool
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -140,36 +140,34 @@ class Post
             }
         }
 
-        // It's possible to have a thread with no posts but for now we don't use that capability
-        $parent_thread = $this->getParent();
+        // Threads can have just OP deleted but right now we don't use that.
+        if ($this->data('op') && !$parent_delete) {
+            return $this->getParent()->remove($perm_override);
+        }
 
         $uploads = $this->getUploads();
 
         foreach ($uploads as $upload) {
-            $upload->remove(true, false);
+            $upload->remove(true, true);
         }
 
-        $this->removeFromDatabase();
-        $this->removeFromDisk();
+        $this->removeFromDatabase($parent_delete);
+        $this->removeFromDisk($parent_delete);
 
-        // This needs to be called after removal or else we could get an infinite loop
-        if ($this->data('op')) {
-            $parent_thread->remove(true);
-        }
-
-        if ($update) {
+        if (!$parent_delete) {
+            $parent_thread = $this->getParent();
             $parent_thread->updateCounts();
             $parent_thread->updateBumpTime();
             $parent_thread->updateUpdateTime();
+            $this->archive_prune->updateThreads();
         }
 
-        $this->archive_prune->updateThreads();
         return true;
     }
 
-    protected function removeFromDatabase()
+    protected function removeFromDatabase(bool $parent_delete): bool
     {
-        if (empty($this->content_id->postID())) {
+        if (empty($this->content_id->postID()) || $parent_delete) {
             return false;
         }
 
@@ -182,18 +180,21 @@ class Post
         return true;
     }
 
-    protected function removeFromDisk()
+    protected function removeFromDisk(bool $parent_delete): bool
     {
         $file_handler = nel_utilities()->fileHandler();
         $parent = $this->getParent();
+        $removed = false;
 
         if ($parent->srcFilePath() !== $this->srcFilePath()) {
-            $file_handler->eraserGun($this->srcFilePath());
+            $removed = $file_handler->eraserGun($this->srcFilePath());
         }
 
         if ($parent->previewFilePath() !== $this->previewFilePath()) {
-            $file_handler->eraserGun($this->previewFilePath());
+            $removed = $file_handler->eraserGun($this->previewFilePath());
         }
+
+        return $removed;
     }
 
     public function verifyModifyPerms(): bool

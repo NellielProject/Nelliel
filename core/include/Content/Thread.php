@@ -112,7 +112,7 @@ class Thread
         return true;
     }
 
-    public function remove(bool $perm_override = false, bool $update = true)
+    public function remove(bool $perm_override = false, bool $parent_delete = false): bool
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -139,16 +139,16 @@ class Thread
         $posts = $this->getPosts();
 
         foreach ($posts as $post) {
-            $post->remove(true, false);
+            $post->remove(true, true);
         }
 
-        $this->removeFromDatabase();
-        $this->removeFromDisk();
+        $this->removeFromDatabase($parent_delete);
+        $this->removeFromDisk($parent_delete);
         $this->archive_prune->updateThreads();
         return true;
     }
 
-    protected function removeFromDatabase()
+    protected function removeFromDatabase(bool $parent_delete): bool
     {
         if (empty($this->content_id->threadID())) {
             return false;
@@ -163,21 +163,24 @@ class Thread
         return true;
     }
 
-    protected function removeFromDisk()
+    protected function removeFromDisk(bool $parent_delete): bool
     {
         $file_handler = nel_utilities()->fileHandler();
+        $removed = false;
 
         if ($this->domain->reference('page_path') !== $this->pageFilePath()) {
-            $file_handler->eraserGun($this->pageFilePath());
+            $removed = $file_handler->eraserGun($this->pageFilePath());
         }
 
         if ($this->domain->reference('src_path') !== $this->srcFilePath()) {
-            $file_handler->eraserGun($this->srcFilePath());
+            $removed = $file_handler->eraserGun($this->srcFilePath());
         }
 
         if ($this->domain->reference('preview_path') !== $this->previewFilePath()) {
-            $file_handler->eraserGun($this->srcFilePath());
+            $removed = $file_handler->eraserGun($this->srcFilePath());
         }
+
+        return $removed;
     }
 
     public function verifyModifyPerms(): bool
@@ -220,8 +223,8 @@ class Thread
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
-            'max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') &&
+            $this->data('post_count') > $this->domain->setting('max_bumps')) {
             return;
         }
 
