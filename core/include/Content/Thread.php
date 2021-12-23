@@ -156,9 +156,6 @@ class Thread
         $prepared = $this->database->prepare(
             'DELETE FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->threadID()]);
-        $cites = new Cites($this->database);
-        $cites->updateForThread($this);
-        $cites->removeForThread($this);
         return true;
     }
 

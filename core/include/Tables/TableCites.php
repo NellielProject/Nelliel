@@ -20,18 +20,14 @@ class TableCites extends Table
         $this->column_types = [
             'cite_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'source_board' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'source_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'source_post' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'target_board' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'target_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'target_post' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
             'cite_id' => ['row_check' => false, 'auto_inc' => true],
             'source_board' => ['row_check' => true, 'auto_inc' => false],
-            'source_thread' => ['row_check' => true, 'auto_inc' => false],
             'source_post' => ['row_check' => true, 'auto_inc' => false],
             'target_board' => ['row_check' => true, 'auto_inc' => false],
-            'target_thread' => ['row_check' => true, 'auto_inc' => false],
             'target_post' => ['row_check' => true, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -44,11 +40,9 @@ class TableCites extends Table
         CREATE TABLE ' . $this->table_name . ' (
             cite_id         ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             source_board    VARCHAR(50) NOT NULL,
-            source_thread   INTEGER DEFAULT NULL,
-            source_post     INTEGER DEFAULT NULL,
+            source_post     INTEGER NOT NULL DEFAULT 0,
             target_board    VARCHAR(50) NOT NULL,
-            target_thread   INTEGER DEFAULT NULL,
-            target_post     INTEGER DEFAULT NULL,
+            target_post     INTEGER NOT NULL DEFAULT 0,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (cite_id),
             CONSTRAINT fk_cites__domain_registry
             FOREIGN KEY (source_board) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

@@ -23,7 +23,7 @@ trait WhitespaceLine
 
     protected function renderWhitespaceLine(array $block): string
     {
-        $content = preg_replace('/^&(.*)\n/ui', "$1", $this->renderAbsy($block['content']));
+        $content = preg_replace('/^&(.*)\n/ui', "$1\n\n", $this->renderAbsy($block['content']));
         return $content;
     }
 

@@ -181,13 +181,15 @@ class NewPost
             $thread->cycle();
         }
 
-        $archive_and_prune = new ArchiveAndPrune($thread->domain(), $file_handler);
-        $archive_and_prune->updateThreads();
+        if($thread->data('op') || $thread->data('old')) {
+            $archive_and_prune = new ArchiveAndPrune($thread->domain(), $file_handler);
+            $archive_and_prune->updateThreads();
+        }
 
         $update_overboard = new Overboard($this->database);
         $update_overboard->addThread($thread);
 
-        // Generate response page if it doesn't exist, otherwise update
+        // Generate thread page if it doesn't exist, otherwise update
         $regen = new Regen();
         $regen->threads($this->domain, true, [$thread->contentID()
             ->threadID()]);

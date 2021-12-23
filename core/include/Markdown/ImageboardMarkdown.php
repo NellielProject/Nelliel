@@ -54,7 +54,9 @@ class ImageboardMarkdown extends Parser
         // We have to enclose empty and whitespace lines so the parser doesn't purge them
         // Newlines were removed from user input during the explode function
         // So we can use those to identify internal modifications
-        for ($i = 0; $i < count($blocks); $i ++) {
+        $block_count = count($blocks);
+
+        for ($i = 0; $i < $block_count; $i ++) {
             if (trim($blocks[$i]) === '') {
                 $blocks[$i] = '&' . $blocks[$i] . "\n";
             }
@@ -160,7 +162,6 @@ class ImageboardMarkdown extends Parser
 
         if (isset($cite_data['exists']) && $cite_data['exists']) {
             $cite_url = $this->cites->createPostLinkURL($cite_data, $this->domain, $this->dynamic);
-            $this->cites->addCite($cite_data);
             return '<a href="' . $cite_url . '" class="post-cite" data-command="show-linked-post">' . $block[1] . '</a>';
         } else {
             return '<s class="invalid-cite">' . $block[1] . '</s>';

@@ -385,14 +385,11 @@ class OutputPost extends Output
             if ($cite_data['exists']) {
                 $cite_url = $cites->createPostLinkURL($cite_data, $this->domain,
                     $this->session->inModmode($this->domain) && !$this->write_mode);
-                $cites->addCite($cite_data);
 
                 if (!empty($cite_url)) {
                     $backlink_data['backlink_url'] = $cite_url;
                     $backlinks[] = $backlink_data;
                 }
-
-                $cites->addCite($cite_data);
             }
         }
 
