@@ -87,9 +87,11 @@ class ImageSet
     public function install(bool $overwrite = false): void
     {
         $image_set_inis = $this->front_end_data->getImageSetInis();
+        $encoded_ini = '';
 
         foreach ($image_set_inis as $ini) {
             if ($ini['set-info']['id'] === $this->id()) {
+                $encoded_ini = json_encode($ini);
                 $directory = $ini['set-info']['directory'];
                 break;
             }
@@ -105,8 +107,9 @@ class ImageSet
         }
 
         $prepared = $this->database->prepare(
-            'INSERT INTO "' . NEL_IMAGE_SETS_TABLE . '" ("set_id", "directory", "enabled") VALUES (?, ?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $directory, 1]);
+            'INSERT INTO "' . NEL_IMAGE_SETS_TABLE .
+            '" ("set_id", "directory", "parsed_ini", "enabled") VALUES (?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $directory, $encoded_ini, 1]);
         $this->load();
     }
 
@@ -116,19 +119,25 @@ class ImageSet
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function load(): void
+    public function load(bool $original_ini = false): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
         $directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
-        $file = NEL_IMAGE_SETS_FILES_PATH . $directory . '/image_info.ini';
 
-        if (file_exists($file)) {
-            $ini = parse_ini_file($file, true);
-            $this->data = $ini ?? array();
-            $this->info = $ini['set-info'] ?? array();
+        if (nel_true_empty($data['parsed_ini']) || $original_ini) {
+            $file = NEL_STYLES_FILES_PATH . $directory . '/image_info.ini';
+
+            if (file_exists($file)) {
+                $ini = parse_ini_file($file, true);
+            }
+        } else {
+            $ini = json_decode($data['parsed_ini'], true);
         }
+
+        $this->data = $ini ?? array();
+        $this->info = $ini['set-info'] ?? array();
     }
 
     public function enable(): void

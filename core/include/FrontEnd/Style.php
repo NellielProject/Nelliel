@@ -76,9 +76,11 @@ class Style
     {
         $style_inis = $this->front_end_data->getStyleInis();
         $directory = '';
+        $encoded_ini = '';
 
         foreach ($style_inis as $ini) {
             if ($ini['style-info']['id'] === $this->id()) {
+                $encoded_ini = json_encode($ini);
                 $directory = $ini['style-info']['directory'];
                 break;
             }
@@ -93,8 +95,9 @@ class Style
         }
 
         $prepared = $this->database->prepare(
-            'INSERT INTO "' . NEL_STYLES_TABLE . '" ("style_id", "directory", "enabled") VALUES (?, ?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $directory, 1]);
+            'INSERT INTO "' . NEL_STYLES_TABLE .
+            '" ("style_id", "directory", "parsed_ini", "enabled") VALUES (?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $directory, $encoded_ini, 1]);
         $this->load();
     }
 
@@ -104,19 +107,25 @@ class Style
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function load(): void
+    public function load(bool $original_ini = false): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_STYLES_TABLE . '" WHERE "style_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
         $directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
-        $file = NEL_STYLES_FILES_PATH . $directory . '/style_info.ini';
 
-        if (file_exists($file)) {
-            $ini = parse_ini_file($file, true);
-            $this->data = $ini ?? array();
-            $this->info = $ini['style-info'] ?? array();
+        if (nel_true_empty($data['parsed_ini']) || $original_ini) {
+            $file = NEL_STYLES_FILES_PATH . $directory . '/style_info.ini';
+
+            if (file_exists($file)) {
+                $ini = parse_ini_file($file, true);
+            }
+        } else {
+            $ini = json_decode($data['parsed_ini'], true);
         }
+
+        $this->data = $ini ?? array();
+        $this->info = $ini['style-info'] ?? array();
     }
 
     public function enable(): void

@@ -64,9 +64,11 @@ class Template
     public function install(bool $overwrite = false): void
     {
         $template_inis = $this->front_end_data->gettemplateInis();
+        $encoded_ini = '';
 
         foreach ($template_inis as $ini) {
             if ($ini['template-info']['id'] === $this->id()) {
+                $encoded_ini = json_encode($ini);
                 $directory = $ini['template-info']['directory'];
                 break;
             }
@@ -82,8 +84,9 @@ class Template
         }
 
         $prepared = $this->database->prepare(
-            'INSERT INTO "' . NEL_TEMPLATES_TABLE . '" ("template_id", "directory", "enabled") VALUES (?, ?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $directory, 1]);
+            'INSERT INTO "' . NEL_TEMPLATES_TABLE .
+            '" ("template_id", "directory", "parsed_ini", "enabled") VALUES (?, ?, ?, ?)');
+        $this->database->executePrepared($prepared, [$this->id(), $directory, $encoded_ini, 1]);
         $this->load();
     }
 
@@ -93,19 +96,25 @@ class Template
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function load(): void
+    public function load(bool $original_ini = false): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
         $directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
-        $file = NEL_TEMPLATES_FILES_PATH . $directory . '/template_info.ini';
 
-        if (file_exists($file)) {
-            $ini = parse_ini_file($file, true);
-            $this->data = $ini ?? array();
-            $this->info = $ini['template-info'] ?? array();
+        if (nel_true_empty($data['parsed_ini']) || $original_ini) {
+            $file = NEL_STYLES_FILES_PATH . $directory . '/template_info.ini';
+
+            if (file_exists($file)) {
+                $ini = parse_ini_file($file, true);
+            }
+        } else {
+            $ini = json_decode($data['parsed_ini'], true);
         }
+
+        $this->data = $ini ?? array();
+        $this->info = $ini['template-info'] ?? array();
     }
 
     public function enable(): void
