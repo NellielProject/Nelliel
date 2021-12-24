@@ -340,6 +340,7 @@ class TableSettings extends Table
         // Uploads Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_static_preview', '1', 'Display static image previews when available.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_animated_preview', '0', 'Display animated image previews when available.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_original_as_preview', '0', 'Use the original image instead of the generated previews.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_video_preview', '1', 'Display an image preview for videos if available. Replaces video embedding.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'embed_video_files', '1', 'Embed uploaded video files. Currently supports MP4 and WebM.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_file_image', '1', 'Use filetype image when a preview is not available.', '{"type":"checkbox"}']);

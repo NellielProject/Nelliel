@@ -30,7 +30,6 @@ class OutputFile extends Output
         $this->render_data['file_content_id'] = $file->contentID()->getIDString();
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
-
         if ($this->session->inModmode($this->domain)) {
             $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                 '&actions=delete&content-id=' . $file->contentID()->getIDString() . '&modmode=true&goback=true';
@@ -60,7 +59,7 @@ class OutputFile extends Output
 
         if (!empty($file->data('md5'))) {
             $md5_data['metadata'] = 'MD5: ' . $file->data('md5');
-           $this->render_data['file_metadata'][] = $md5_data;
+            $this->render_data['file_metadata'][] = $md5_data;
         }
 
         if (!empty($file->data('sha1'))) {
@@ -138,16 +137,14 @@ class OutputFile extends Output
             }
 
             if (!empty($preview_name)) {
-                $this->render_data['preview_url'] = $file->previewWebPath() . rawurlencode($preview_name);
-
-                if ($file->data('preview_width') > $max_width || $file->data('preview_height') > $max_height) {
-                    $ratio = min(($max_height / $file->data('preview_height')),
-                        ($max_width / $file->data('preview_width')));
-                    $this->render_data['preview_width'] = intval($ratio * $file->data('preview_width'));
-                    $this->render_data['preview_height'] = intval($ratio * $file->data('preview_height'));
+                if ($this->domain->setting('use_original_as_preview')) {
+                    $preview_width = $file->data('display_width');
+                    $preview_height = $file->data('display_height');
+                    $this->render_data['preview_url'] = $this->render_data['file_url'];
                 } else {
-                    $this->render_data['preview_width'] = $file->data('preview_width');
-                    $this->render_data['preview_height'] = $file->data('preview_height');
+                    $preview_width = $file->data('preview_width');
+                    $preview_height = $file->data('preview_height');
+                    $this->render_data['preview_url'] = $file->previewWebPath() . rawurlencode($preview_name);
                 }
 
                 $preview_type = 'image';
@@ -165,10 +162,14 @@ class OutputFile extends Output
                     }
                 }
 
-                $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
-                $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
                 $this->render_data['preview_url'] = $web_path;
                 $preview_type = 'image';
+            }
+
+            if (!is_null($preview_type)) {
+                $ratio = min(($max_height / $preview_height), ($max_width / $preview_width));
+                $this->render_data['preview_width'] = intval($ratio * $preview_width);
+                $this->render_data['preview_height'] = intval($ratio * $preview_height);
             }
         }
 
@@ -192,8 +193,7 @@ class OutputFile extends Output
             }
 
             $displayed_op = array();
-            $displayed_op['button_url'] = $content_op->data('url') . NEL_URL_BASE .
-                $this->render_data['file_url'];
+            $displayed_op['button_url'] = $content_op->data('url') . NEL_URL_BASE . $this->render_data['file_url'];
             $displayed_op['button_text'] = $content_op->data('label');
             $this->render_data['content_ops'][] = $displayed_op;
         }
