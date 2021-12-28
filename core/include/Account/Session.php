@@ -5,7 +5,6 @@ namespace Nelliel\Account;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\LogEvent;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputLoginPage;
@@ -21,7 +20,6 @@ class Session
     protected $domain;
     protected $doing_login = false;
     protected $session_options = array();
-
 
     function __construct()
     {
@@ -110,9 +108,7 @@ class Session
         $this->init(true);
 
         if (!empty(self::$user)) {
-            $log_event = new LogEvent(nel_site_domain());
-            $log_event->changeContext('event', 'LOGOUT_SUCCESS');
-            $log_event->send(sprintf(_gettext("User %s logged out."), self::$user->id()));
+            nel_logger('system')->info('Sucessfully logged out.', ['event' => 'LOGOUT', 'user_id' => self::$user->id()]);
         }
 
         $this->terminate();
@@ -128,9 +124,6 @@ class Session
         $login = new Login($this->authorization, $this->domain);
         self::$user = $login->validate();
         $_SESSION['user_id'] = self::$user->id();
-        $log_event = new LogEvent(nel_site_domain());
-        $log_event->changeContext('event', 'LOGIN_SUCCESS');
-        $log_event->send(sprintf(_gettext("User %s logged in."), self::$user->id()));
         $_SESSION['login_time'] = self::$user->getData('last_login');
         $_SESSION['last_activity'] = self::$user->getData('last_login');
         session_regenerate_id();

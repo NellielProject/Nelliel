@@ -7,6 +7,9 @@ use Nelliel\Account\Session;
 use Nelliel\Domains\DomainGlobal;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Utility\Utilities;
+use Monolog\Logger;
+use Nelliel\Logging\NellielLogProcessor;
+use Nelliel\Logging\NellielDatabaseHandler;
 
 function nel_database(string $database_key)
 {
@@ -93,4 +96,18 @@ function nel_session()
     }
 
     return $session;
+}
+
+function nel_logger(string $channel): Logger
+{
+    static $loggers;
+
+    if (!isset($loggers[$channel])) {
+        $logger = new Logger($channel);
+        $logger->pushProcessor(new NellielLogProcessor());
+        $logger->pushHandler(new NellielDatabaseHandler(nel_database('core')));
+        $loggers[$channel] = $logger;
+    }
+
+    return $loggers[$channel];
 }

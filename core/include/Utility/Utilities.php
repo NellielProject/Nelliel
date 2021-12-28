@@ -3,15 +3,14 @@ declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
-use Nelliel\NellielPDO;
-
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use Nelliel\NellielPDO;
 
 class Utilities
 {
     private $cache_handler;
     private $file_handler;
-    private $logger;
     private $rate_limit;
     private $sql_compatibility;
     private $sql_helpers;
@@ -20,7 +19,6 @@ class Utilities
     {
         $this->cache_handler = new CacheHandler();
         $this->file_handler = new FileHandler();
-        $this->logger = new NellielLogger($database);
         $this->rate_limit = new RateLimit($database);
         $this->sql_compatibility = new SQLCompatibility($database);
         $this->sql_helpers = new SQLHelpers($database);
@@ -34,11 +32,6 @@ class Utilities
     public function fileHandler(): FileHandler
     {
         return $this->file_handler;
-    }
-
-    public function logger(): NellielLogger
-    {
-        return $this->logger;
     }
 
     public function rateLimit(): RateLimit
