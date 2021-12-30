@@ -44,7 +44,7 @@ class Router
                 $r->addGroup('/{domain_id:' . $site_domain . '}/{module:language}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchLanguage';
-                        $r->addRoute(['GET'], '/{section:extract-gettext}', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:gettext}[/{action:[^\/]+}]', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:' . $site_domain . '}/{module:captcha}',

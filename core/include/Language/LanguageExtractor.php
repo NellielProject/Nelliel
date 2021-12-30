@@ -6,6 +6,7 @@ namespace Nelliel\Language;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use Nelliel\Render\RenderCoreDOM;
 use SmallPHPGettext\SmallPHPGettext;
 use Mustache_Parser;
 use Mustache_Tokenizer;
@@ -155,7 +156,7 @@ class LanguageExtractor
                     if (!$function_found) {
                         $matches = array();
 
-                        if (preg_match('/^_*?(__|np|n|p|dn|dcn|dc|d)*?(?:gettext)*?$/u', $token[1], $matches)) {
+                        if (preg_match('/^_*?(_|np|n|p|dn|dcn|dc|d)*?(?:gettext)*?$/u', $token[1], $matches)) {
                             $entry['file'] = $file_id;
                             $entry['prefix'] = $matches[1] ?? '';
                             $entry['line_number'] = $token[2];
@@ -183,7 +184,7 @@ class LanguageExtractor
         $domain = '';
         $context = '';
 
-        if ($entry['prefix'] === '') {
+        if ($entry['prefix'] === '' || $entry['prefix'] === '_') {
             $msgid = $entry[1];
         } else if ($entry['prefix'] === 'n') {
             $msgid = $entry[1];
@@ -282,7 +283,7 @@ class LanguageExtractor
         $file_handler = nel_utilities()->fileHandler();
         $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/');
         $html_files = array_merge($html_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
-        $render = new \Nelliel\Render\RenderCoreDOM();
+        $render = new RenderCoreDOM();
 
         foreach ($html_files as $file) {
             $file_id = utf8_str_replace(NEL_BASE_PATH, '', $file->getPathname());
