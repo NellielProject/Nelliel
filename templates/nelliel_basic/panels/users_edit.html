@@ -1,16 +1,12 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="user_id" class="display-cell" data-i18n="">User ID</label>
-			<input id="user_id" class="display-cell" type="text" name="user_id" id="bname" size="30" value="{{ user_id }}">
+			<label for="username" class="display-cell" data-i18n="">User ID</label>
+			<input id="username" class="display-cell" type="text" name="username" id="bname" size="30" value="{{ username }}">
 		</div>
 		<div class="display-row">
 			<label for="user_password" class="display-cell" data-i18n="">New password (leave blank to keep current password)</label>
 			<input id="user_password" class="display-cell" type="text" name="user_password" size="30">
-		</div>
-		<div class="display-row">
-			<label for="display_name" class="display-cell" data-i18n="">User display name</label>
-			<input id="display_name" class="display-cell" type="text" name="display_name" size="30" value="{{ display_name }}">
 		</div>
 		{{^ is_site_owner }}
 		<div class="display-row">

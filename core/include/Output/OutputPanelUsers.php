@@ -35,15 +35,14 @@ class OutputPanelUsers extends Output
             $user_data = array();
             $user_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $user_data['user_id'] = $user_info['user_id'];
-            $user_data['display_name'] = $user_info['display_name'];
+            $user_data['username'] = $user_info['username'];
             $user_data['active'] = $user_info['active'];
 
             if ($user_info['owner'] == 0 || $this->session->user()->isSiteOwner()) {
                 $user_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=users&actions=edit&user-id=' . $user_info['user_id'];
+                    'module=admin&section=users&actions=edit&username=' . $user_info['username'];
                 $user_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=users&actions=remove&user-id=' . $user_info['user_id'];
+                    'module=admin&section=users&actions=remove&username=' . $user_info['username'];
             }
 
             $this->render_data['users_list'][] = $user_data;
@@ -69,25 +68,24 @@ class OutputPanelUsers extends Output
         $this->setBodyTemplate('panels/users_edit');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
-        $user_id = $parameters['user_id'] ?? '';
+        $username = $parameters['username'] ?? '';
         $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        if (empty($user_id)) {
+        if (empty($username)) {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=add';
         } else {
-            $edit_user = $authorization->getUser($user_id);
-            $this->render_data['user_id'] = $edit_user->getData('user_id');
-            $this->render_data['display_name'] = $edit_user->getData('display_name');
+            $edit_user = $authorization->getUser($username);
+            $this->render_data['username'] = $edit_user->getData('username');
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=admin&section=users&actions=update&user-id=' . $user_id;
+            'module=admin&section=users&actions=update&username=' . $username;
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 
-        if (!empty($user_id) && $edit_user->isSiteOwner()) {
+        if (!empty($username) && $edit_user->isSiteOwner()) {
             $this->render_data['is_site_owner'] = true;
         } else {
             $this->render_data['is_site_owner'] = false;
@@ -106,8 +104,8 @@ class OutputPanelUsers extends Output
                 $domain_role_data['select_name'] = 'domain_role_' . $domain['board_id'];
                 $domain_role_data['select_id'] = 'domain_role_' . $domain['board_id'];
                 $prepared = $this->database->prepare(
-                    'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "user_id" = ? AND "domain_id" = ?');
-                $role_id = $this->database->executePreparedFetch($prepared, [$user_id, $domain['board_id']],
+                    'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
+                $role_id = $this->database->executePreparedFetch($prepared, [$username, $domain['board_id']],
                     PDO::FETCH_COLUMN);
 
                 foreach ($roles as $role) {

@@ -115,11 +115,11 @@ class TableUploads extends Table
             cache                   TEXT DEFAULT NULL,
             moar                    TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (upload_id),
-            CONSTRAINT fk_' . $other_tables['db_prefix'] . '_uploads__threads
+            CONSTRAINT fk_' . $this->table_name . '__threads
             FOREIGN KEY (parent_thread) REFERENCES ' . $other_tables['threads_table'] . ' (thread_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk_' . $other_tables['db_prefix'] . '_uploads__posts
+            CONSTRAINT fk_' . $this->table_name . '__posts
             FOREIGN KEY (post_ref) REFERENCES ' . $other_tables['posts_table'] . ' (post_number)
             ON UPDATE CASCADE
             ON DELETE CASCADE
@@ -130,11 +130,11 @@ class TableUploads extends Table
 
     public function postCreate(array $other_tables = null)
     {
-        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__post_ref ON ' . $this->table_name . ' (post_ref)');
-        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__filename ON ' . $this->table_name . ' (filename)');
-        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__static_preview_name ON ' . $this->table_name . ' (static_preview_name)');
-        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__animated_preview_name ON ' . $this->table_name . ' (animated_preview_name)');
-        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__md5 ON ' . $this->table_name . ' (md5)');
+        $this->database->query('CREATE INDEX ix_' . $this->table_name . '__post_ref ON ' . $this->table_name . ' (post_ref)');
+        $this->database->query('CREATE INDEX ix_' . $this->table_name . '__filename ON ' . $this->table_name . ' (filename)');
+        $this->database->query('CREATE INDEX ix_' . $this->table_name . '__static_preview_name ON ' . $this->table_name . ' (static_preview_name)');
+        $this->database->query('CREATE INDEX ix_' . $this->table_name . '__animated_preview_name ON ' . $this->table_name . ' (animated_preview_name)');
+        $this->database->query('CREATE INDEX ix_' . $this->table_name . '__md5 ON ' . $this->table_name . ' (md5)');
     }
 
     public function insertDefaults()

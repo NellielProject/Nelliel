@@ -6,8 +6,7 @@
 	<caption data-i18n="">List of users</caption>
 	<thead>
 		<tr>
-			<th scope="col" data-i18n="">User ID</th>
-			<th scope="col" data-i18n="">Display Name</th>
+			<th scope="col" data-i18n="">Username</th>
 			<th scope="col" data-i18n="">Active</th>
 			<th scope="col" data-i18n="">Actions</th>
 		</tr>
@@ -15,8 +14,7 @@
 	<tbody>
 {{# users_list }}
 		<tr class="{{ bgclass }}">
-			<td>{{ user_id }}</td>
-			<td>{{ display_name }}</td>
+			<td>{{ username }}</td>
 			<td>{{ active }}</td>
 			<td>
 	{{# edit_url }}

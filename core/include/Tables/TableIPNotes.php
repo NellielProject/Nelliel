@@ -19,7 +19,7 @@ class TableIPNotes extends Table
         $this->table_name = NEL_IP_NOTES_TABLE;
         $this->columns_data = [
             'note_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
@@ -27,7 +27,7 @@ class TableIPNotes extends Table
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
             'note_id' => ['row_check' => false, 'auto_inc' => true],
-            'user_id' => ['row_check' => false, 'auto_inc' => false],
+            'username' => ['row_check' => false, 'auto_inc' => false],
             'ip_address' => ['row_check' => false, 'auto_inc' => false],
             'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false],
             'time' => ['row_check' => false, 'auto_inc' => false],
@@ -43,7 +43,7 @@ class TableIPNotes extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             note_id             ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            user_id             VARCHAR(50) DEFAULT NULL,
+            username            VARCHAR(50) DEFAULT NULL,
             ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_ip_address   VARCHAR(128) NOT NULL,
             time                BIGINT NOT NULL,
@@ -51,7 +51,7 @@ class TableIPNotes extends Table
             moar                TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (note_id),
             CONSTRAINT fk_ip_notes__users
-            FOREIGN KEY (user_id) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
+            FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
             ON DELETE SET NULL
         ) ' . $options . ';';

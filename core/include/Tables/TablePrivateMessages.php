@@ -51,11 +51,11 @@ class TablePrivateMessages extends Table
             moar            TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (message_id),
             CONSTRAINT fk_private_messages__users
-            FOREIGN KEY (sender) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
+            FOREIGN KEY (sender) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
             ON DELETE SET NULL,
             CONSTRAINT fk2_private_messages__users
-            FOREIGN KEY (recipient) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
+            FOREIGN KEY (recipient) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
             ON DELETE SET NULL
         ) ' . $options . ';';

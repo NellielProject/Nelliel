@@ -79,7 +79,7 @@ class TableBans extends Table
             ON UPDATE CASCADE
             ON DELETE CASCADE,
             CONSTRAINT fk_bans__users
-            FOREIGN KEY (creator) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
+            FOREIGN KEY (creator) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
             ON DELETE SET NULL
         ) ' . $options . ';';

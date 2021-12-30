@@ -18,14 +18,14 @@ class Authorization
         $this->database = $database;
     }
 
-    public function newUser(string $user_id, bool $db_load = true, bool $temp = false): AuthUser
+    public function newUser(string $username, bool $db_load = true, bool $temp = false): AuthUser
     {
-        $user_id_lower = utf8_strtolower($user_id);
-        $new_user = new AuthUser($this->database, $user_id, $db_load);
+        $username_lower = utf8_strtolower($username);
+        $new_user = new AuthUser($this->database, $username, $db_load);
         $new_user->setupNew();
 
         if (!$temp) {
-            self::$users[$user_id_lower] = $new_user;
+            self::$users[$username_lower] = $new_user;
         }
 
         return $new_user;
@@ -36,50 +36,50 @@ class Authorization
         return new AuthUser($this->database, '');
     }
 
-    public function userExists(string $user_id): bool
+    public function userExists(string $username): bool
     {
-        return $this->userLoaded($user_id) || $this->newUser($user_id, false, true)->loadFromDatabase();
+        return $this->userLoaded($username) || $this->newUser($username, false, true)->loadFromDatabase();
     }
 
-    public function userLoaded(string $user_id): bool
+    public function userLoaded(string $username): bool
     {
-        $user_id_lower = utf8_strtolower($user_id);
-        return isset(self::$users[$user_id_lower]);
+        $username_lower = utf8_strtolower($username);
+        return isset(self::$users[$username_lower]);
     }
 
-    public function getUser(string $user_id): AuthUser
+    public function getUser(string $username): AuthUser
     {
-        $user_id_lower = utf8_strtolower($user_id);
+        $username_lower = utf8_strtolower($username);
 
-        if ($this->userExists($user_id)) {
-            if (!$this->userLoaded($user_id)) {
-                $this->newUser($user_id);
+        if ($this->userExists($username)) {
+            if (!$this->userLoaded($username)) {
+                $this->newUser($username);
             }
 
-            return self::$users[$user_id_lower];
+            return self::$users[$username_lower];
         } else {
             return $this->emptyUser();
         }
     }
 
-    public function removeUser(string $user_id): bool
+    public function removeUser(string $username): bool
     {
-        $user_id_lower = utf8_strtolower($user_id);
+        $username_lower = utf8_strtolower($username);
 
-        if (!$this->userExists($user_id)) {
+        if (!$this->userExists($username)) {
             return false;
         }
 
-        $user = $this->getUser($user_id);
+        $user = $this->getUser($username);
         $user->remove();
-        unset(self::$users[$user_id_lower]);
+        unset(self::$users[$username_lower]);
         return true;
     }
 
-    public function isSiteOwner(string $user_id): bool
+    public function isSiteOwner(string $username): bool
     {
-        $user_id_lower = utf8_strtolower($user_id);
-        return self::$users[$user_id_lower]->isSiteOwner();
+        $username_lower = utf8_strtolower($username);
+        return self::$users[$username_lower]->isSiteOwner();
     }
 
     public function emptyRole(): AuthRole

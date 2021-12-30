@@ -58,7 +58,7 @@ class BanHammer
 
         if (empty($this->ban_data['creator']))
         {
-            $this->ban_data['creator'] = $_SESSION['user_id'];
+            $this->ban_data['creator'] = $_SESSION['username'];
         }
 
         $ip_address = $_POST['ban_ip'] ?? null;

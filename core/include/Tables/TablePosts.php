@@ -38,7 +38,7 @@ class TablePosts extends Table
             'embed_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'op' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'sage' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'mod_comment' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'content_hash' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'regen_cache' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
@@ -65,7 +65,7 @@ class TablePosts extends Table
             'embed_count' => ['row_check' => false, 'auto_inc' => false],
             'op' => ['row_check' => false, 'auto_inc' => false],
             'sage' => ['row_check' => false, 'auto_inc' => false],
-            'user_id' => ['row_check' => false, 'auto_inc' => false],
+            'username' => ['row_check' => false, 'auto_inc' => false],
             'mod_comment' => ['row_check' => false, 'auto_inc' => false],
             'content_hash' => ['row_check' => false, 'auto_inc' => false],
             'regen_cache' => ['row_check' => false, 'auto_inc' => false],
@@ -100,19 +100,19 @@ class TablePosts extends Table
             embed_count         SMALLINT NOT NULL DEFAULT 0,
             op                  SMALLINT NOT NULL DEFAULT 0,
             sage                SMALLINT NOT NULL DEFAULT 0,
-            user_id             VARCHAR(50) DEFAULT NULL,
+            username            VARCHAR(50) DEFAULT NULL,
             mod_comment         TEXT DEFAULT NULL,
             content_hash        VARCHAR(128) DEFAULT NULL,
             regen_cache         SMALLINT NOT NULL DEFAULT 0,
             cache               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (post_number),
-            CONSTRAINT fk_' . $other_tables['db_prefix'] . '_posts__threads
+            CONSTRAINT fk_' . $this->table_name . '__threads
             FOREIGN KEY (parent_thread) REFERENCES ' . $other_tables['threads_table'] . ' (thread_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
             CONSTRAINT fk_' . $this->table_name . '__users
-            FOREIGN KEY (user_id) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
+            FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
             ON DELETE SET NULL
         ) ' . $options . ';';
@@ -122,8 +122,8 @@ class TablePosts extends Table
 
     public function postCreate(array $other_tables = null)
     {
-        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__parent_thread ON ' . $this->table_name . ' (parent_thread)');
-        $this->database->query('CREATE INDEX ix_' . $other_tables['db_prefix'] . '__hashed_ip_address ON ' . $this->table_name . ' (hashed_ip_address)');
+        $this->database->query('CREATE INDEX ix_' . $this->table_name . '__parent_thread ON ' . $this->table_name . ' (parent_thread)');
+        $this->database->query('CREATE INDEX ix_' . $this->table_name . '__hashed_ip_address ON ' . $this->table_name . ' (hashed_ip_address)');
     }
 
     public function insertDefaults()

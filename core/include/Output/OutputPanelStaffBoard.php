@@ -38,7 +38,7 @@ class OutputPanelStaffBoard extends Output
             $post_info = array();
             $post_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $post_info['user'] = $post['user_id'];
+            $post_info['user'] = $post['username'];
             $post_info['domain'] = $post['domain'];
             $post_info['subject'] = $post['subject'];
             $post_info['message'] = $post['message'];

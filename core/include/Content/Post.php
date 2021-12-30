@@ -209,9 +209,9 @@ class Post
 
         if ($session->isActive()) {
             if ($user->checkPermission($this->domain, 'perm_delete_posts')) {
-                if (!$user->isSiteOwner() && !empty($this->content_data['user_id']) &&
-                    $this->authorization->userExists($this->content_data['user_id'])) {
-                    $mod_post_user = $this->authorization->getUser($this->content_data['user_id']);
+                if (!$user->isSiteOwner() && !empty($this->content_data['username']) &&
+                    $this->authorization->userExists($this->content_data['username'])) {
+                    $mod_post_user = $this->authorization->getUser($this->content_data['username']);
                     $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
                         $mod_post_user->getDomainRole($this->domain)->id());
                 } else {

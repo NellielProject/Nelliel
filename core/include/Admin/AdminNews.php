@@ -40,21 +40,21 @@ class AdminNews extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_news_manage');
         $news_info = array();
-        $news_info['user_id'] = $this->session_user->id();
+        $news_info['username'] = $this->session_user->id();
         $news_info['name'] = $_POST['name'] ?? '';
 
         if ($news_info['name'] === '' || !$this->session_user->checkPermission($this->domain, 'perm_custom_name')) {
-            $this->session_user->getData('display_name');
+            $this->session_user->id();
         }
 
         $news_info['headline'] = $_POST['headline'] ?? null;
         $news_info['time'] = time();
         $news_info['text'] = $_POST['text'] ?? null;
         $query = 'INSERT INTO "' . $this->data_table .
-            '" ("user_id", "name", "headline", "time", "text") VALUES (?, ?, ?, ?, ?)';
+            '" ("username", "name", "headline", "time", "text") VALUES (?, ?, ?, ?, ?)';
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
-            [$news_info['user_id'], $news_info['name'], $news_info['headline'], $news_info['time'], $news_info['text']]);
+            [$news_info['username'], $news_info['name'], $news_info['headline'], $news_info['time'], $news_info['text']]);
         $regen = new \Nelliel\Regen();
         $regen->news($this->domain);
         $this->outputMain(true);

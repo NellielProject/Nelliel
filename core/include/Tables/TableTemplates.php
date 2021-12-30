@@ -35,7 +35,7 @@ class TableTemplates extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
-            template_id     VARCHAR(100) NOT NULL,
+            template_id     VARCHAR(50) NOT NULL,
             directory       VARCHAR(255) NOT NULL,
             parsed_ini      TEXT NOT NULL,
             enabled         SMALLINT NOT NULL DEFAULT 0,

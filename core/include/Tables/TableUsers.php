@@ -18,8 +18,7 @@ class TableUsers extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_USERS_TABLE;
         $this->column_types = [
-            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'display_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'user_password' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'active' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'locked' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
@@ -27,8 +26,7 @@ class TableUsers extends Table
             'last_login' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'user_id' => ['row_check' => true, 'auto_inc' => false],
-            'display_name' => ['row_check' => false, 'auto_inc' => false],
+            'username' => ['row_check' => true, 'auto_inc' => false],
             'user_password' => ['row_check' => false, 'auto_inc' => false],
             'active' => ['row_check' => false, 'auto_inc' => false],
             'locked' => ['row_check' => false, 'auto_inc' => false],
@@ -43,15 +41,14 @@ class TableUsers extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
-            user_id         VARCHAR(50) NOT NULL,
-            display_name    VARCHAR(255) NOT NULL,
+            username        VARCHAR(50) NOT NULL,
             user_password   VARCHAR(255) NOT NULL,
             active          SMALLINT NOT NULL DEFAULT 0,
             locked          SMALLINT NOT NULL DEFAULT 0,
             owner           SMALLINT NOT NULL DEFAULT 0,
             last_login      BIGINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL,
-            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (user_id)
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (username)
         ) ' . $options . ';';
 
         return $schema;

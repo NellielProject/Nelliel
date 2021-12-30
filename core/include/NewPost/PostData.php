@@ -93,10 +93,10 @@ class PostData
             $user = $this->session->user();
 
             if (!$user->checkPermission($this->domain, 'perm_custom_name')) {
-                $name = $user->getData('display_name');
+                $name = $user->id();
             }
 
-            $post->changeData('user_id', $user->id());
+            $post->changeData('username', $user->id());
         }
 
         $post->changeData('name', $name);

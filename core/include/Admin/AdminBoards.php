@@ -86,9 +86,8 @@ class AdminBoards extends Admin
         }
 
         if ($board_uri === Domain::SITE || $board_uri === Domain::GLOBAL || $board_uri === NEL_ASSETS_DIR ||
-            $board_uri === NEL_CORE_DIRECTORY || $board_uri === $site_domain->setting('overboard_uri') ||
-            $board_uri === $site_domain->setting('sfw_overboard_uri') || $board_uri === NEL_DOCUMENTATION_DIR ||
-            $board_uri === NEL_ASSETS_DIR) {
+            $board_uri === $site_domain->setting('overboard_uri') ||
+            $board_uri === $site_domain->setting('sfw_overboard_uri')) {
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
@@ -149,8 +148,7 @@ class AdminBoards extends Admin
                 sprintf(_gettext('Had trouble registering the board URI %s. May want to change it.'), $board_uri));
         }
 
-        $prepared = $this->database->prepare(
-            'INSERT INTO "' . NEL_DOMAIN_REGISTRY_TABLE . '" ("domain_id") VALUES (?)');
+        $prepared = $this->database->prepare('INSERT INTO "' . NEL_DOMAIN_REGISTRY_TABLE . '" ("domain_id") VALUES (?)');
         $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
 
@@ -326,18 +324,18 @@ class AdminBoards extends Admin
     }
 
     // While most engines can handle unicode, there is potential for issues
-    // We also have to account for table name max lengths (especially postgresql's tiny 63 byte limit)
+    // We also have to account for table name max lengths (especially PostgreSQL's tiny 63 byte limit)
     private function generateDBPrefix(string $board_uri): string
     {
         $ascii_prefix = preg_replace('/[^a-zA-Z0-9_]/', '', $board_uri);
         $final_prefix = '';
 
         for ($i = 0; $i <= 10; $i ++) {
-            if (strlen($ascii_prefix) <= 0) {
-                $test_prefix = '_board_' . nel_random_alphanumeric(8);
+            if (utf8_strlen($ascii_prefix) <= 0) {
+                $test_prefix = '_' . nel_random_alphanumeric(8);
             } else {
-                $truncated_prefix = utf8_substr($ascii_prefix, 0, 12);
-                $test_prefix = '_board_' . strtolower($truncated_prefix);
+                $truncated_prefix = utf8_substr($ascii_prefix, 0, 18);
+                $test_prefix = '_' . utf8_strtolower($truncated_prefix);
             }
 
             $prepared = $this->database->prepare('SELECT 1 FROM "' . $this->data_table . '" WHERE "db_prefix" = ?');

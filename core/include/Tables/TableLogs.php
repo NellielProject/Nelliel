@@ -25,7 +25,7 @@ class TableLogs extends Table
             'message' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
             'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
@@ -37,7 +37,7 @@ class TableLogs extends Table
             'message' => ['row_check' => false, 'auto_inc' => false],
             'time' => ['row_check' => false, 'auto_inc' => false],
             'domain_id' => ['row_check' => false, 'auto_inc' => false],
-            'user_id' => ['row_check' => false, 'auto_inc' => false],
+            'username' => ['row_check' => false, 'auto_inc' => false],
             'ip_address' => ['row_check' => false, 'auto_inc' => false],
             'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
@@ -57,7 +57,7 @@ class TableLogs extends Table
             message             TEXT NOT NULL,
             time                BIGINT NOT NULL,
             domain_id           VARCHAR(50) NOT NULL,
-            user_id             VARCHAR(50) DEFAULT NULL,
+            username            VARCHAR(50) DEFAULT NULL,
             ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_ip_address   VARCHAR(128) DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
@@ -67,7 +67,7 @@ class TableLogs extends Table
             ON UPDATE CASCADE
             ON DELETE CASCADE,
             CONSTRAINT fk_logs__users
-            FOREIGN KEY (user_id) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
+            FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
         ) ' . $options . ';';
 

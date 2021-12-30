@@ -35,7 +35,7 @@ class TableVersions extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
-            id          VARCHAR(100) NOT NULL,
+            id          VARCHAR(50) NOT NULL,
             type        VARCHAR(50) NOT NULL,
             original    SMALLINT NOT NULL DEFAULT 0,
             current     SMALLINT NOT NULL DEFAULT 0,

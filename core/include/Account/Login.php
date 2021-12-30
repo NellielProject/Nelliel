@@ -38,8 +38,8 @@ class Login
 
         $attempt_time = time();
         $hashed_ip_address = nel_request_ip_address(true);
-        $form_user_id = strval($_POST['user_id'] ?? '');
-        $session_user_id = strval($_SESSION['user_id'] ?? '');
+        $form_username = strval($_POST['username'] ?? '');
+        $session_username = strval($_SESSION['username'] ?? '');
         $form_password = strval($_POST['super_sekrit'] ?? '');
         $rate_limit = nel_utilities()->rateLimit();
 
@@ -48,7 +48,7 @@ class Login
             nel_derp(203, _gettext('Detecting rapid login attempts. Wait a few seconds.'));
         }
 
-        if (empty($form_user_id)) {
+        if (empty($form_username)) {
             $rate_limit->updateAttempts($hashed_ip_address, 'login');
             nel_derp(200, _gettext('No user ID provided.'));
         }
@@ -58,28 +58,28 @@ class Login
             nel_derp(201, _gettext('No password provided.'));
         }
 
-        $user = $this->authorization->getUser($form_user_id);
+        $user = $this->authorization->getUser($form_username);
         $valid_user = false;
         $valid_password = false;
 
         if (!$user->empty()) {
             $valid_password = nel_password_verify($form_password, $user->getData('user_password'));
 
-            if (empty($session_user_id)) {
+            if (empty($session_username)) {
                 $valid_user = true;
             } else {
-                $valid_user = $session_user_id === $form_user_id;
+                $valid_user = $session_username === $form_username;
             }
         }
 
         if (!$valid_user || !$valid_password) {
             $rate_limit->updateAttempts($hashed_ip_address, 'login');
-            nel_derp(202, _gettext('User ID or password is incorrect.'));
+            nel_derp(202, _gettext('Username or password is incorrect.'));
         }
 
         $rate_limit->clearAttempts($hashed_ip_address, 'login', true);
         $user->changeData('last_login', $attempt_time);
-        nel_logger('system')->info('Sucessfully logged in.', ['event' => 'LOGIN', 'user_id' => $user->id()]);
+        nel_logger('system')->info('Sucessfully logged in.', ['event' => 'LOGIN', 'username' => $user->id()]);
         return $user;
     }
 }

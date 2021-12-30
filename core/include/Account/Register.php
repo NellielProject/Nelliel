@@ -35,7 +35,7 @@ class Register
             $captcha->verifyReCAPTCHA();
         }
 
-        $register_user_id = (isset($_POST['register_user_id'])) ? strval($_POST['register_user_id']) : '';
+        $register_username = (isset($_POST['register_username'])) ? strval($_POST['register_username']) : '';
         $register_password = (isset($_POST['register_super_sekrit'])) ? strval($_POST['register_super_sekrit']) : '';
         $register_password_confirm = (isset($_POST['register_super_sekrit_confirm'])) ? strval(
             $_POST['register_super_sekrit_confirm']) : '';
@@ -54,7 +54,7 @@ class Register
             }
         }
 
-        if (empty($register_user_id)) {
+        if (empty($register_username)) {
             nel_derp(210, _gettext('No user ID provided.'));
         }
 
@@ -62,7 +62,7 @@ class Register
             nel_derp(211, _gettext('No password provided.'));
         }
 
-        if ($this->authorization->userExists($register_user_id)) {
+        if ($this->authorization->userExists($register_username)) {
             nel_derp(212, _gettext('User already exists.'));
         }
 
@@ -70,7 +70,7 @@ class Register
             nel_derp(213, _gettext('Passwords do not match.'));
         }
 
-        $new_user = $this->authorization->newUser($register_user_id);
+        $new_user = $this->authorization->newUser($register_username);
         $new_user->updatePassword($register_password);
 
         if ($creating_owner) {
@@ -81,7 +81,6 @@ class Register
         }
 
         $new_user->changeData('active', 1);
-        $new_user->changeData('display_name', $register_user_id);
         $this->authorization->saveUsers();
 
         // Successful

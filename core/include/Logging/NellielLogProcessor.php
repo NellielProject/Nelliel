@@ -17,7 +17,7 @@ class NellielLogProcessor implements ProcessorInterface
         $record['extra']['ip_address'] = nel_request_ip_address();
         $record['extra']['hashed_ip_address'] = nel_request_ip_address(true);
         $record['extra']['domain_id'] = $record['context']['domain_id'] ?? Domain::SITE;
-        $record['extra']['user_id'] = $record['context']['user_id'] ?? nel_session()->user()->id();
+        $record['extra']['username'] = $record['context']['username'] ?? nel_session()->user()->id();
         $record['extra']['moar'] = $record['context']['moar'] ?? null;
         return $record;
     }

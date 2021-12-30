@@ -88,7 +88,7 @@ class Session
         }
 
         if (!$this->doing_login) {
-            $user = $this->authorization->getUser($_SESSION['user_id'] ?? '');
+            $user = $this->authorization->getUser($_SESSION['username'] ?? '');
 
             if ($user->empty() || !$user->active()) {
                 $this->terminate();
@@ -108,7 +108,7 @@ class Session
         $this->init(true);
 
         if (!empty(self::$user)) {
-            nel_logger('system')->info('Sucessfully logged out.', ['event' => 'LOGOUT', 'user_id' => self::$user->id()]);
+            nel_logger('system')->info('Sucessfully logged out.', ['event' => 'LOGOUT', 'username' => self::$user->id()]);
         }
 
         $this->terminate();
@@ -123,7 +123,7 @@ class Session
         $this->init(true);
         $login = new Login($this->authorization, $this->domain);
         self::$user = $login->validate();
-        $_SESSION['user_id'] = self::$user->id();
+        $_SESSION['username'] = self::$user->id();
         $_SESSION['login_time'] = self::$user->getData('last_login');
         $_SESSION['last_activity'] = self::$user->getData('last_login');
         session_regenerate_id();

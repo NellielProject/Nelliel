@@ -119,7 +119,7 @@ class Setup
 <input type="hidden" name="create_owner" value="' . $install_id . '"';
             echo '
 <div>
-    <span data-i18n="gettext">User ID: </span><input type="text" name="register_user_id" size="25" maxlength="255">
+    <span data-i18n="gettext">Username: </span><input type="text" name="register_username" size="25" maxlength="255">
 </div>';
             echo '
 <div>
@@ -319,13 +319,11 @@ class Setup
         $threads_table->createTable();
         $posts_table = new TablePosts($this->database, $this->sql_compatibility);
         $posts_table->tableName($domain->reference('posts_table'));
-        $posts_table->createTable(
-            ['threads_table' => $domain->reference('threads_table'), 'db_prefix' => $domain->reference('db_prefix')]);
+        $posts_table->createTable(['threads_table' => $domain->reference('threads_table')]);
         $uploads_table = new TableUploads($this->database, $this->sql_compatibility);
         $uploads_table->tableName($domain->reference('uploads_table'));
         $uploads_table->createTable(
-            ['threads_table' => $domain->reference('threads_table'), 'posts_table' => $domain->reference('posts_table'),
-                'db_prefix' => $domain->reference('db_prefix')]);
+            ['threads_table' => $domain->reference('threads_table'), 'posts_table' => $domain->reference('posts_table')]);
     }
 
     public function createBoardDirectories(string $board_id)

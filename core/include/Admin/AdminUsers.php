@@ -15,18 +15,18 @@ use Nelliel\Output\OutputPanelUsers;
 
 class AdminUsers extends Admin
 {
-    private $user_id;
+    private $username;
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->user_id = $_GET['user-id'] ?? null;
+        $this->username = $_GET['username'] ?? null;
         $this->data_table = NEL_USERS_TABLE;
-        $this->id_field = 'user-id';
-        $this->id_column = 'user_id';
+        $this->id_field = 'username';
+        $this->id_column = 'username';
         $this->panel_name = _gettext('Users');
 
-        if (!is_null($this->user_id) && !$this->authorization->userExists($this->user_id))
+        if (!is_null($this->username) && !$this->authorization->userExists($this->username))
         {
             nel_derp(230, _gettext('The specified user does not exist.'));
         }
@@ -48,14 +48,14 @@ class AdminUsers extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
         $output_panel = new OutputPanelUsers($this->domain, false);
-        $output_panel->new(['user_id' => $this->user_id], false);
+        $output_panel->new(['username' => $this->username], false);
         $this->outputMain(false);
     }
 
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
-        $this->user_id = $_POST['user_id'];
+        $this->username = $_POST['username'];
         $this->update();
         $this->outputMain(true);
     }
@@ -64,18 +64,18 @@ class AdminUsers extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
         $output_panel = new OutputPanelUsers($this->domain, false);
-        $output_panel->edit(['user_id' => $this->user_id], false);
+        $output_panel->edit(['username' => $this->username], false);
         $this->outputMain(false);
     }
 
     public function update(): void
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
-        $update_user = $this->authorization->getUser($this->user_id);
+        $update_user = $this->authorization->getUser($this->username);
 
         if ($update_user->empty())
         {
-            $update_user = $this->authorization->newUser($this->user_id);
+            $update_user = $this->authorization->newUser($this->username);
         }
 
         foreach ($_POST as $key => $value) // TODO: Improve this
@@ -125,7 +125,7 @@ class AdminUsers extends Admin
     public function remove(): void
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
-        $this->authorization->removeUser($this->user_id);
+        $this->authorization->removeUser($this->username);
         $this->outputMain(true);
     }
 

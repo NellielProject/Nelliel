@@ -18,11 +18,11 @@ class TableUserRoles extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_USER_ROLES_TABLE;
         $this->column_types = [
-            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'user_id' => ['row_check' => true, 'auto_inc' => false],
+            'username' => ['row_check' => true, 'auto_inc' => false],
             'role_id' => ['row_check' => true, 'auto_inc' => false],
             'domain_id' => ['row_check' => true, 'auto_inc' => false]];
         $this->schema_version = 1;
@@ -33,12 +33,12 @@ class TableUserRoles extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
-            user_id     VARCHAR(50) NOT NULL,
+            username    VARCHAR(50) NOT NULL,
             role_id     VARCHAR(50) NOT NULL,
             domain_id   VARCHAR(50) NOT NULL,
-            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (user_id, role_id, domain_id),
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (username, role_id, domain_id),
             CONSTRAINT fk_' . $this->table_name . '_' . NEL_USERS_TABLE . '
-            FOREIGN KEY (user_id) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
+            FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
             CONSTRAINT fk_' . $this->table_name . '_' . NEL_ROLES_TABLE . '

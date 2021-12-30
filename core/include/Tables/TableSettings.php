@@ -44,7 +44,7 @@ class TableSettings extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             setting_category    VARCHAR(50) NOT NULL,
-            setting_owner       VARCHAR(100) NOT NULL,
+            setting_owner       VARCHAR(50) NOT NULL,
             data_type           VARCHAR(50) NOT NULL,
             setting_name        VARCHAR(50) NOT NULL,
             default_value       TEXT NOT NULL,

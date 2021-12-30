@@ -19,14 +19,14 @@ class TableNoticeboard extends Table
         $this->table_name = NEL_NOTICEBOARD_TABLE;
         $this->column_types = [
             'notice_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'user_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'subject' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'message' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_types = [
             'notice_id' => ['row_check' => false, 'auto_inc' => true],
-            'user_id' => ['row_check' => false, 'auto_inc' => false],
+            'username' => ['row_check' => false, 'auto_inc' => false],
             'time' => ['row_check' => false, 'auto_inc' => false],
             'subject' => ['row_check' => false, 'auto_inc' => false],
             'message' => ['row_check' => false, 'auto_inc' => false],
@@ -41,14 +41,14 @@ class TableNoticeboard extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             notice_id   ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            user_id     VARCHAR(50) NOT NULL,
+            username    VARCHAR(50) NOT NULL,
             time        BIGINT NOT NULL,
             subject     TEXT NOT NULL,
             message     TEXT NOT NULL,
             moar        TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (notice_id),
             CONSTRAINT fk_noticeboard__users
-            FOREIGN KEY (user_id) REFERENCES ' . NEL_USERS_TABLE . ' (user_id)
+            FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
             ON DELETE CASCADE
         ) ' . $options . ';';
