@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputLoginPage;
+use Nelliel\Auth\AuthUser;
 
 class Session
 {
@@ -48,12 +49,12 @@ class Session
         }
     }
 
-    protected function started()
+    protected function started(): bool
     {
         return session_status() === PHP_SESSION_ACTIVE;
     }
 
-    public function init(bool $do_setup)
+    public function init(bool $do_setup): void
     {
         if (!$this->started()) {
             session_name($this->session_name);
@@ -65,7 +66,7 @@ class Session
         }
     }
 
-    protected function setup()
+    protected function setup(): void
     {
         if (self::$setup_done) {
             return;
@@ -103,7 +104,7 @@ class Session
         self::$setup_done = true;
     }
 
-    public function logout()
+    public function logout(): void
     {
         $this->init(true);
 
@@ -117,7 +118,7 @@ class Session
         nel_clean_exit(false);
     }
 
-    public function login()
+    public function login(): void
     {
         $this->doing_login = true;
         $this->init(true);
@@ -130,7 +131,7 @@ class Session
         $this->doing_login = false;
     }
 
-    public function terminate()
+    public function terminate(): void
     {
         $_SESSION = array();
         setcookie(session_name(), '', time() - NEL_OVER_9000, NEL_BASE_WEB_PATH);
@@ -140,7 +141,7 @@ class Session
         self::$ignore = false;
     }
 
-    public function ignore(bool $ignore = null)
+    public function ignore(bool $ignore = null): bool
     {
         if (!is_null($ignore)) {
             self::$ignore = $ignore;
@@ -149,7 +150,7 @@ class Session
         return self::$ignore;
     }
 
-    protected function isOld()
+    protected function isOld(): bool
     {
         if ($this->domain->setting('session_length') == 0) {
             return false;
@@ -159,12 +160,12 @@ class Session
         return (time() - $last_activity) > $this->domain->setting('session_length');
     }
 
-    public function user()
+    public function user(): AuthUser
     {
         return self::$user ?? $this->authorization->emptyUser();
     }
 
-    public function isActive()
+    public function isActive(): bool
     {
         return !self::$ignore && self::$setup_done;
     }
@@ -174,12 +175,12 @@ class Session
         self::$modmode = !self::$modmode;
     }
 
-    public function inModmode(Domain $domain)
+    public function inModmode(Domain $domain): bool
     {
         return $this->isActive() && self::$modmode && self::$user->checkPermission($domain, 'perm_mod_mode');
     }
 
-    public function loggedInOrError()
+    public function loggedInOrError(): void
     {
         if (!$this->isActive() || (!$this->doing_login && empty(self::$user))) {
             nel_derp(224, _gettext('You must be logged in for this action.'));

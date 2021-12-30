@@ -5,8 +5,10 @@ namespace Nelliel\Account;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\AntiSpam\CAPTCHA;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputRegisterPage;
 
 class Register
 {
@@ -21,9 +23,9 @@ class Register
         $this->database = $this->domain->database();
     }
 
-    public function new()
+    public function new(): void
     {
-        $captcha = new \Nelliel\AntiSpam\CAPTCHA($this->domain);
+        $captcha = new CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_register_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
@@ -89,7 +91,7 @@ class Register
             unlink(NEL_GENERATED_FILES_PATH . 'create_owner.php');
         }
 
-        $output_register = new \Nelliel\Output\OutputRegisterPage($this->domain, false);
+        $output_register = new OutputRegisterPage($this->domain, false);
         $output_register->render(['section' => 'registration-done'], false);
     }
 }
