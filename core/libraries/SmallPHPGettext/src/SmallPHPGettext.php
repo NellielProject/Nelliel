@@ -6,43 +6,32 @@ namespace SmallPHPGettext;
 class SmallPHPGettext
 {
     use Helpers;
-    private $domain_codesets = array();
-    private $default_codeset = 'UTF-8';
-    private $default_context;
-    private $default_locale_directory = '';
+    private $default_directory;
     private $default_plural_rule = '$plurals=2;$plural=$n!=1';
-    private $locale = 'en_US';
-    private $default_category;
-    private $default_domain = 'messages';
-    private $domain;
-    private $domain_directories = array();
     private $translations = array();
-    private $version = '2.1.1';
+    private $version = '3.0';
+    private $default_domain = 'messages';
+    private $domain_directories = array();
+    private $default_category;
     private $category_to_string = [0 => 'LC_ALL', 1 => 'LC_COLLATE', 2 => 'LC_CTYPE', 3 => 'LC_MONETARY',
         4 => 'LC_NUMERIC', 5 => 'LC_TIME', 6 => 'LC_MESSAGES'];
-    private $string_to_category = ['LC_ALL' => 0, 'LC_COLLATE' => 1, 'LC_CTYPE' => 2, 'LC_MONETARY' => 3,
-        'LC_NUMERIC' => 4, 'LC_TIME' => 5, 'LC_MESSAGES' => 6];
+    private $default_language = 'en_US';
+    private $languages = array();
 
     function __construct()
     {
-        // LC_MESSAGES may not be present if PHP is not compiled with libintl
-        if (!defined('LC_MESSAGES'))
-        {
-            define('LC_MESSAGES', 5);
-        }
-
-        $this->default_category = LC_MESSAGES;
-        $this->domain = $this->default_domain;
-        $this->domain_directories[$this->domain] = '';
-        $this->domain_codesets[$this->domain] = $this->default_codeset;
-        $this->translations[$this->default_category] = array();
-        $this->translations[$this->default_category][$this->domain] = array();
+        $this->default_directory = realpath(dirname($_SERVER['SCRIPT_FILENAME'])) . '/locale';
+        // LC_MESSAGES may be used to test for the presence of libintl so we won't define it
+        $this->default_category = defined('LC_MESSAGES') ? LC_MESSAGES : 6;
+        $this->languages = [LC_ALL => $this->default_language, LC_COLLATE => $this->default_language,
+            LC_CTYPE => $this->default_language, LC_MONETARY => $this->default_language,
+            LC_NUMERIC => $this->default_language, LC_TIME => $this->default_language, 6 => $this->default_language];
     }
 
     /**
-     * Defines a set of globally available functions to do translation.
+     * Defines a set of globally available alias functions to do translation.
      */
-    public function registerFunctions()
+    public function registerFunctions(): void
     {
         include_once 'gettext_functions.php';
         access_small_php_gettext($this);
@@ -50,77 +39,66 @@ class SmallPHPGettext
 
     public function gettext(string $msgid): string
     {
-        return $this->singularMessage($msgid, $this->domain, $this->default_category, null);
+        return $this->singularMessage($msgid, $this->default_domain, $this->default_category);
     }
 
     public function ngettext(string $msgid1, string $msgid2, int $n): string
     {
-        return $this->pluralMessage($msgid1, $msgid2, $n, $this->domain, $this->default_category, null);
+        return $this->pluralMessage($msgid1, $msgid2, $n, $this->default_domain, $this->default_category);
     }
 
     public function pgettext(string $context, string $msgid): string
     {
-        return $this->singularMessage($msgid, $this->domain, $this->default_category, $context);
+        return $this->singularMessage($msgid, $this->default_domain, $this->default_category, $context);
     }
 
     public function npgettext(string $context, string $msgid1, string $msgid2, int $n): string
     {
-        return $this->pluralMessage($msgid1, $msgid2, $n, $this->domain, $this->default_category, $context);
+        return $this->pluralMessage($msgid1, $msgid2, $n, $this->default_domain, $this->default_category, $context);
     }
 
     public function dgettext(string $domain, string $msgid): string
     {
-        return $this->singularMessage($msgid, $domain, $this->default_category, null);
+        return $this->singularMessage($msgid, $domain, $this->default_category);
     }
 
     public function dngettext(string $domain, string $msgid1, string $msgid2, int $n): string
     {
-        return $this->pluralMessage($msgid1, $msgid2, $n, $domain, $this->default_category, null);
+        return $this->pluralMessage($msgid1, $msgid2, $n, $domain, $this->default_category);
     }
 
     public function dcgettext(string $domain, string $msgid, int $category): string
     {
-        return $this->singularMessage($msgid, $domain, $category, null);
+        return $this->singularMessage($msgid, $domain, $category);
     }
 
     public function dcngettext(string $domain, string $msgid1, string $msgid2, int $n, int $category): string
     {
-        return $this->pluralMessage($msgid1, $msgid2, $n, $domain, $category, null);
+        return $this->pluralMessage($msgid1, $msgid2, $n, $domain, $category);
     }
 
     /**
-     * Converts integer form of the LC_* constants to string
+     * Gets the current message domain after optionally setting it.
      *
-     * @param int $category The category integer value.
-     * @return string The category string value.
-     */
-    public function categoryToString(int $category): string
-    {
-        return $this->category_to_string[$category] ?? '';
-    }
-
-    /**
-     * Gets or sets the current message domain.
-     *
-     * @param string [optional] $domain The message domain.
-     * @return string The currently set domain.
+     * @param string $domain [optional] The domain to set. If null, only returns currently set domain.
+     * @return string The currently set message domain.
      */
     public function textdomain(string $domain = null): string
     {
         if (!is_null($domain))
         {
-            $this->domain = $domain;
+            $this->default_domain = $domain;
         }
 
-        return $this->domain;
+        return $this->default_domain;
     }
 
     /**
-     * Binds a directory to the specified message domain.
+     * Gets the current base directory for a message domain after optionally setting it.
      *
      * @param string $domain The message domain.
-     * @param string [optional] $directory The directory to be bound to the domain. If null, returns the current directory.
-     * @return string The currently set domain directory or the default locale directory if a directory has never been set.
+     * @param string $directory [optional] The base directory to be bound to the domain. If null, only returns the current directory.
+     * @return string The currently set base directory or empty string if none is set.
      */
     public function bindtextdomain(string $domain, string $directory = null): string
     {
@@ -129,177 +107,165 @@ class SmallPHPGettext
             $this->domain_directories[$domain] = $directory;
         }
 
-        if (isset($this->domain_directories[$domain]))
-        {
-            return $this->domain_directories[$domain];
-        }
-        else
-        {
-            return $this->default_locale_directory;
-        }
+        return $this->domain_directories[$domain] ?? '';
     }
 
     /**
-     * Gets or sets the encoding for the specified domain.
+     * Gets the current language for the category after optionally setting it.
      *
-     * @param string $domain The message domain.
-     * @param string [optional] $codeset The encoding to use for the domain. If null, returns the current encoding.
-     * @return string The encoding currently set for the domain.
+     * @param int $category The category to use.
+     * @param string $language [optional] The language to set. If null, only returns the current language.
+     * @return string The language currently being used or empty string if not set.
      */
-    public function bind_textdomain_codeset(string $domain, string $codeset = null)
+    public function language(int $category, string $language = null): string
     {
-        if (!is_null($codeset))
+        if (!is_null($language))
         {
-            $this->domain_codesets[$domain] = $codeset;
+            if ($category === LC_ALL)
+            {
+                for ($i = 1; $i <= 6; $i ++)
+                {
+                    $this->languages[$i] = $language;
+                }
+            }
+            else
+            {
+                $this->languages[$category] = $language;
+            }
         }
 
-        return $this->domain_codesets[$domain] ?? $this->domain_codesets[$this->domain];
+        return $this->languages[$category] ?? '';
     }
 
     /**
-     * Gets or sets the locale.
+     * Gets the current default category after optionally setting it.
      *
-     * @param string [optional] $locale The locale to set. If null, returns the current locale.
-     * @return string The locale currently being used.
+     * @param int $category [optional] The category to set as default. If null, only returns currently set category.
+     * @return int The currently set default category.
      */
-    public function locale(string $locale = null): string
+    public function defaultCategory(int $category = null): int
     {
-        if (!is_null($locale))
+        if (!is_null($category))
         {
-            $this->locale = $locale;
+            $this->default_category = $category;
         }
 
-        return $this->locale;
+        return $this->default_category;
     }
 
     /**
-     * Stores a set of translations from the given array for the specified category.
+     * Loads a translation from a file at the standard location.
+     *
+     * @param string $domain The domain to load for.
+     * @param int $category [optional] The category to use. Uses default if not specified.
+     * @return bool True if successful, false if file does not exist or there were other problems.
+     */
+    public function loadTranslation(string $domain, int $category = null): bool
+    {
+        $category = $category ?? $this->default_category;
+        $file = $this->getStandardPath($this->languages[$category], $domain, $category, false);
+        return $this->loadTranslationFromFile($file, $domain, $category);
+    }
+
+    /**
+     * Loads a set of translations from the given array.
      *
      * @param array $translation Array of translations.
-     * @param string $domain The domain to use.
-     * @param int $category The category to use.
-     * @return bool True if sucessfully stored, false if something went wrong.
+     * @param string $domain The domain to load for.
+     * @param int $category [optional] The category to use. Uses default if not specified.
+     * @return bool True if sucessful, false if there were problems.
      */
-    public function addTranslationFromArray(array $translation, string $domain, int $category): bool
+    public function loadTranslationFromArray(array $translation, string $domain, int $category = null): bool
     {
+        $category = $category ?? $this->default_category;
         // Parse the plural rule here instead of trusting an outside version
         $translation['plural_rule'] = $this->parsePluralRule($translation['headers']['Plural-Forms'] ?? '');
         $this->translations[$category][$domain] = $translation;
-        return isset($this->translations[$category][$domain]);
+        return true;
     }
 
     /**
-     * Stores a translation from the given .po file for the specified category.
+     * Loads a translation from a specific .po file.
      *
      * @param string $file Path to the file.
      * @param string $domain The domain to use.
-     * @param int $category The category to use.
-     * @return bool True if sucessfully stored, false if something went wrong.
+     * @param int $category [optional] The category to use. Uses default if not specified.
+     * @return bool True if successful, false if file does not exist or there were other problems.
      */
-    public function addTranslationFromFile(string $file, string $domain, int $category): bool
+    public function loadTranslationFromFile(string $file, string $domain, int $category = null): bool
     {
-        $translation = $this->getTranslationFromFile($file, $domain, $category);
-        return $this->addTranslationFromArray($translation, $domain, $category);
+        if (!file_exists($file))
+        {
+            return false;
+        }
+
+        $category = $category ?? $this->default_category;
+        $po = new ParsePo();
+        $translation = $po->parseFile($file, $domain);
+        return $this->loadTranslationFromArray($translation, $domain, $category);
     }
 
     /**
      * Checks if a translation is loaded for the given domain and category.
      *
      * @param string $domain The domain to check.
-     * @param int $category The category to check.
-     * @param bool $load If true, attempts to load translation if it is not already loaded, then checks again.
+     * @param int $category [optional] The category to check. Uses default if not specified.
      * @return bool True if loaded, false if not.
      */
-    public function translationLoaded(string $domain, int $category, bool $load = false): bool
+    public function translationLoaded(string $domain, int $category = null): bool
     {
-        $loaded = isset($this->translations[$category][$domain]) && is_array($this->translations[$category][$domain]);
-
-        if ($load && !$loaded)
-        {
-            return $this->loadTranslation($domain, $category);
-        }
-
-        return $loaded;
+        $category = $category ?? $this->default_category;
+        return isset($this->translations[$category][$domain]) && is_array($this->translations[$category][$domain]);
     }
 
     /**
      * Gets the translation stored for the given domain and category.
      *
      * @param string $domain The domain to check.
-     * @param int $category The category to check.
+     * @param int $category [optional] The category to check. Uses default if not specified.
      * @return array The translation array. If nothing available, will return an empty array.
      */
-    public function getTranslation(string $domain, int $category): array
+    public function getTranslation(string $domain, int $category = null): array
     {
-        if (!$this->translationLoaded($domain, $category))
-        {
-            $this->loadTranslation($domain, $category);
-        }
-
-        if (isset($this->translations[$category][$domain]) && is_array($this->translations[$category][$domain]))
-        {
-            return $this->translations[$category][$domain];
-        }
-
-        return array();
+        $category = $category ?? $this->default_category;
+        return $this->translations[$category][$domain] ?? array();
     }
 
     /**
-     * Parses a Po file and returns the translation array.
+     * Get the standard path for a Po file based on the parameters.
      *
-     * @param string $file Path to the file.
+     * @param string $language The locale
      * @param string $domain The domain to use.
      * @param int $category The category to use.
-     * @return array The translation array. If nothing was parsed from file, will return an empty array.
+     * @param bool $relative True returns the relative path, false returns absolute path.
+     * @return string The file path.
      */
-    public function getTranslationFromFile(string $file, string $domain, int $category): array
-    {
-        $po = new ParsePo();
-        $translation = $po->parseFile($file, $domain);
-        return $translation;
-    }
-
-    /**
-     * Get the standard path for a Po file.
-     *
-     * @param string $file Path to the file.
-     * @param string $domain The domain to use.
-     * @param int $category The category to use.
-     * @return array The translation array. If nothing was parsed from file, will return an empty array.
-     */
-    public function getStandardPath(string $locale, string $domain, int $category, bool $relative): string
+    public function getStandardPath(string $language, string $domain, int $category, bool $relative): string
     {
         $base_directory = '';
 
         if (!$relative)
         {
-            $base_directory = $this->domain_directories[$domain] ?? $this->default_locale_directory;
+            $base_directory = $this->domain_directories[$domain] ?? $this->default_directory;
         }
 
-        return $base_directory . '/' . 'locale/' . $locale . '/' . $this->category_to_string[$category] . '/' . $domain .
-                '.po';
-    }
-
-    private function loadTranslation(string $domain, int $category): bool
-    {
-        if (isset($this->domain_directories[$domain]) && file_exists($this->domain_directories[$domain]))
-        {
-            $file = $this->domain_directories[$domain] . '/' . $this->locale . '/' . $this->category_to_string[$category] .
-                    '/' . $domain . '.po';
-            return $this->addTranslationFromFile($file, $domain, $category);
-        }
-
-        return false;
+        return $base_directory . '/' . $language . '/' . $this->category_to_string[$category] . '/' . $domain . '.po';
     }
 
     private function singularMessage(string $msgid, string $domain, int $category, string $context = null): string
     {
-        $po_msgid = $this->poEncode($msgid);
-        $valid = $this->translationLoaded($domain, $category, true);
         $message = '';
+        $valid = $this->translationLoaded($domain, $category);
+
+        if (!$valid)
+        {
+            $valid = $this->loadTranslation($domain, $category);
+        }
 
         if ($valid)
         {
+            $po_msgid = $this->poEncode($msgid);
+
             if (!is_null($context))
             {
                 $message = $this->translations[$category][$domain]['translations'][$po_msgid]['contexts'][$context]['msgstr'] ?? '';
@@ -323,12 +289,18 @@ class SmallPHPGettext
     private function pluralMessage(string $msgid1, string $msgid2, int $n, string $domain, int $category,
             string $context = null): string
     {
-        $po_msgid1 = $this->poEncode($msgid1);
-        $valid = $this->translationLoaded($domain, $category, true);
         $message = '';
+        $valid = $this->translationLoaded($domain, $category);
+
+        if (!$valid)
+        {
+            $valid = $this->loadTranslation($domain, $category);
+        }
 
         if ($valid)
         {
+            $po_msgid1 = $this->poEncode($msgid1);
+
             if (!is_null($context))
             {
                 $translation = $this->translations[$category][$domain]['translations'][$po_msgid1]['contexts'][$context] ?? null;

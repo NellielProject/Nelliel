@@ -120,12 +120,6 @@ abstract class Domain implements NellielCacheInterface
     public function updateLocale(string $locale)
     {
         $this->locale = $locale;
-        $this->language->accessGettext()->locale($this->locale);
-        $this->language->accessGettext()->textdomain('nelliel');
-
-        if (!$this->language->accessGettext()->translationLoaded('nelliel', LC_MESSAGES)) {
-            $this->language->loadLanguage($locale, 'nelliel', LC_MESSAGES);
-        }
     }
 
     public function frontEndData()
