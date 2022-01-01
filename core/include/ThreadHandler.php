@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -24,50 +23,69 @@ class ThreadHandler
     public function processContentDeletes()
     {
         $updates = array();
-        $deletes = array();
+        $threads = array();
+        $posts = array();
+        $uploads = array();
+        $delete_count = 0;
+        $max_deletes = nel_site_domain()->setting('max_delete_items');
 
-        foreach ($_POST as $name => $value)
-        {
-            if (ContentID::isContentID($name))
-            {
+        foreach ($_POST as $name => $value) {
+
+            if (ContentID::isContentID($name)) {
                 $content_id = new ContentID($name);
-            }
-            else
-            {
+            } else {
                 continue;
             }
 
-            if ($value === 'action')
-            {
-                $deletes[] = $content_id->getInstanceFromID($this->domain);
+            if ($value === 'action') {
+                $delete_count ++;
+
+                if ($delete_count > $max_deletes) {
+                    nel_derp(131,
+                        sprintf(_gettext('You are trying to delete too many items at once. Limit is %d.'), $max_deletes));
+                }
+
+                if ($content_id->isThread()) {
+                    $threads[] = $content_id;
+                } else if ($content_id->isPost()) {
+                    $posts[] = $content_id;
+                } else if ($content_id->isContent()) {
+                    $uploads[] = $content_id;
+                }
+            }
+        }
+
+        $delete_function = function (ContentID $content_id) use (&$updates) {
+            $instance = $content_id->getInstanceFromID($this->domain);
+
+            if (!$instance->exists()) {
+                return;
             }
 
-            if (!in_array($content_id->threadID(), $updates))
-            {
+            $instance->remove();
+
+            if (!in_array($content_id->threadID(), $updates)) {
                 array_push($updates, $content_id->threadID());
             }
+        };
+
+        foreach ($threads as $content_id) {
+            $delete_function($content_id);
         }
 
-        $delete_count = count($deletes);
-
-        if ($delete_count > nel_site_domain()->setting('max_delete_items'))
-        {
-            nel_derp(131,
-                    sprintf(_gettext('You are trying to delete too many items at once. Limit is %d.'),
-                            nel_site_domain()->setting('max_delete_items')));
+        foreach ($posts as $content_id) {
+            $delete_function($content_id);
         }
 
-        foreach ($deletes as $delete)
-        {
-            $delete->remove();
+        foreach ($uploads as $content_id) {
+            $delete_function($content_id);
         }
 
         $regen = new Regen();
         $regen->threads($this->domain, true, $updates);
         $this->site_domain = new DomainSite($this->database);
 
-        if ($this->site_domain->setting('overboard_active'))
-        {
+        if ($this->site_domain->setting('overboard_active')) {
             $regen->overboard($this->site_domain);
         }
 

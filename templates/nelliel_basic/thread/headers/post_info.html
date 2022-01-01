@@ -1,7 +1,12 @@
 {{# post_headers }}
 <span class="{{ op_reply }} post-header-info">
 	{{^ hide_post_select }}
+	{{# is_op }}
+	<input type="checkbox" name="{{ thread_content_id }}" value="action">
+	{{/ is_op }}
+	{{^ is_op }}
 	<input type="checkbox" name="{{ post_content_id }}" value="action">
+	{{/ is_op }}
 	{{/ hide_post_select }}
 	<span class="{{ op_reply }} subject">{{ subject }}</span>
 	{{> thread/pieces/poster_name }}{{> thread/pieces/tripline }}{{> thread/pieces/capcode }}

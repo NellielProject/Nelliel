@@ -162,9 +162,12 @@ class OutputPost extends Output
         $this->render_data['headers']['thread_page'] = sprintf($this->site_domain->setting('thread_filename_format'),
             $thread->contentID()->threadID()) . NEL_PAGE_EXT;
 
+        $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
+        $post_headers['thread_content_id'] = $thread->contentID()->getIDString();
+        $post_headers['post_content_id'] = $post_content_id->getIDString();
+        $post_headers['is_op'] = $post->data('op');
+
         if (!$response) {
-            $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
-            $thread_headers['post_content_id'] = $post_content_id->getIDString();
             $thread_headers['is_sticky'] = $thread->data('sticky');
             $thread_headers['sticky'] = $ui_image_set->getWebPath('ui', 'sticky', true);
             $thread_headers['is_locked'] = $thread->data('locked');
@@ -229,7 +232,6 @@ class OutputPost extends Output
         }
 
         $post_headers['in_thread_number'] = $in_thread_number;
-        $post_headers['post_content_id'] = $post_content_id->getIDString();
 
         if (!nel_true_empty($post->data('email'))) {
             $post_headers['mailto']['mailto_url'] = 'mailto:' . $post->data('email');
