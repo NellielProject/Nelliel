@@ -1,0 +1,30 @@
+<div>
+	<a href="{{ new_url }}" data-i18n="">New user</a>
+</div>
+<hr>
+<table >
+	<caption data-i18n="">List of users</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Username</th>
+			<th scope="col" data-i18n="">Active</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# users_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ username }}</td>
+			<td>{{ active }}</td>
+			<td>
+	{{# edit_url }}
+				<span class="text-button">[<a href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
+	{{/ edit_url }}
+	{{# remove_url }}
+				<span class="text-button">[<a href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
+	{{/ remove_url }}
+			</td>
+		</tr>
+{{/ users_list }}
+	</tbody>
+</table>

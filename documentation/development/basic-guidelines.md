@@ -17,22 +17,18 @@ Markup languages (HTML, CSS, etc) must use tabs for indentation.
 
 ### Other
  - Procedural is not evil. OOP is not the Holy Grail. A function is fine too.
- - Only minimal early loading and initialization should happen in `imgboard.php`.
- - Configurations should be stored in the database whenever possible.
  - Nelliel should cause no PHP errors, warnings or notices when `E_ALL` and `E_STRICT` are enabled.
  - If a class instance or mutable variable needs to exist in global scope it must only be accessed through a function.
  
 ## SQL and Queries
-All schemas and queries should follow SQL standard (ANSI) when reasonably possible. When something is not covered in the standard then a commonly implemented alternative can be used. If there is none widely used, a RDBMS-specific option may be added to the `SQLCompatibility` class. Likewise where a data type is not fully cross-compatible, the equivalent may be used so long as the behavior is indistinguishable.
+All schemas and queries should follow SQL standards or widely used alternatives. If something RDBMS-specific is necessary it may be added to the `SQLCompatibility` class.
 
-In addition:
- - Queries must be done using PDO classes or a PDO-extending class such as NellielPDO.
+ - Queries must be done through PDO or NellielPDO.
  - Queries must be parameterized unless the entire query is hardcoded.
- - Queries should use parameter or value binding with a PDO type whenever possible.
  - Identifiers must be placed in double quotes `" "`, except during table or column creation.
- - All identifiers should be treated as case sensitive.
+ - SQL keywords must be ALL CAPS.
  - Non-parameterized string literals must be placed inside single quotes `' '`.
- - SQL keywords should be ALL CAPS.
+ - All identifiers should be treated as case sensitive.
  
 ## Targets and Support
 Any core functions and features must target the software versions listed below in addition to maintaining compatibility with all later versions. If forward compatibility is not possible then an updated target version may be considered.
@@ -61,9 +57,10 @@ Nelliel returns a numeric error id along with an error message. This keeps the b
  - 1-199: General content, system and input errors.
  - 200-299: Management and account errors.
  - 300-599: Permissions errors.
- - 600+: Reserved.
+ - 600-999: Reserved.
+ - 1000: Plugin-generated error.
  
  All error codes in core must be listed in `error-reference.md`.
  
 ## Server-side vs Client-side
-Anything that can be practically implemented without client-side scripting should be implemented server-side first. Client-side scripting should only be required for niceties or features that cannot be done fully server-side.
+As much functionality as possible should be implemented server-side. Client-side scripting should only be used for niceties or features that cannot be done fully server-side.

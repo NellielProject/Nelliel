@@ -1,0 +1,31 @@
+<div>
+	<a href="{{ new_url }}" data-i18n="">New embed</a>
+</div>
+<hr>
+<table >
+	<caption data-i18n="">List of embeds</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Label</th>
+			<th scope="col" data-i18n="">Prefix URL</th>
+			<th scope="col" data-i18n="">Enabled</th>
+			<th scope="col" data-i18n="">Notes</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# embeds_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ label }}</td>
+			<td>{{ url }}</td>
+			<td>{{ enabled }}</td>
+			<td>{{ notes }}</td>
+			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
+			</td>
+		</tr>
+{{/ embeds_list }}
+	</tbody>
+</table>

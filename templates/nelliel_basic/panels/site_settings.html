@@ -1,0 +1,308 @@
+<form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
+{{# settings_data }}
+	<table>
+		<caption data-i18n="">Site configuration</caption>
+		<thead>
+			<tr>
+				<th scope="col" class="min-column-width" data-i18n="">Name</th>
+				<th scope="col" class="min-column-width" data-i18n="">Value</th>
+				<th scope="col" data-i18n="">Description</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">General</th>
+			</tr>
+	{{# name }}
+		{{> panels/pieces/settings/text }}
+	{{/ name }}
+	{{# show_name }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ show_name }}
+	{{# description }}
+		{{> panels/pieces/settings/text }}
+	{{/ description }}
+	{{# show_description }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ show_description }}
+	{{# favicon }}
+		{{> panels/pieces/settings/text }}
+	{{/ favicon }}
+	{{# show_favicon }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ show_favicon }}
+	{{# banner }}
+		{{> panels/pieces/settings/text }}
+	{{/ banner }}
+	{{# show_banner }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ show_banner }}
+	{{# home_page }}
+		{{> panels/pieces/settings/text }}
+	{{/ home_page }}
+	{{# generate_home_page }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ generate_home_page }}
+	{{# locale }}
+		{{> panels/pieces/settings/text }}
+	{{/ locale }}
+	{{# only_alphanumeric_board_ids }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ only_alphanumeric_board_ids }}
+	{{# default_source_subdirectory }}
+		{{> panels/pieces/settings/text }}
+	{{/ default_source_subdirectory }}
+	{{# default_preview_subdirectory }}
+		{{> panels/pieces/settings/text }}
+	{{/ default_preview_subdirectory }}
+	{{# default_page_subdirectory }}
+		{{> panels/pieces/settings/text }}
+	{{/ default_page_subdirectory }}
+	{{# default_archive_subdirectory }}
+		{{> panels/pieces/settings/text }}
+	{{/ default_archive_subdirectory }}
+	{{# allow_custom_subdirectories }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ allow_custom_subdirectories }}
+	{{# only_alphanumeric_subdirectories }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ only_alphanumeric_subdirectories }}
+	{{# max_subdirectory_length }}
+		{{> panels/pieces/settings/number }}
+	{{/ max_subdirectory_length }}
+	{{# max_report_items }}
+		{{> panels/pieces/settings/number }}
+	{{/ max_report_items }}
+	{{# max_delete_items }}
+		{{> panels/pieces/settings/number }}
+	{{/ max_delete_items }}
+	{{# global_announcement }}
+		{{> panels/pieces/settings/text }}
+	{{/ global_announcement }}
+	{{# uri_display_format }}
+		{{> panels/pieces/settings/text }}
+	{{/ uri_display_format }}
+	{{# shell_path }}
+		{{> panels/pieces/settings/text }}
+	{{/ shell_path }}
+	{{# site_content_disclaimer }}
+		{{> panels/pieces/settings/textarea }}
+	{{/ site_content_disclaimer }}
+	{{# site_footer_text }}
+		{{> panels/pieces/settings/textarea }}
+	{{/ site_footer_text }}
+	{{# max_board_pages }}
+		{{> panels/pieces/settings/number }}
+	{{/ max_board_pages }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">Banners</th>
+			</tr>
+	{{# show_banners }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ show_banners}}
+	{{# banner_display_width }}
+		{{> panels/pieces/settings/number }}
+	{{/ banner_display_width }}
+	{{# banner_display_height }}
+		{{> panels/pieces/settings/number }}
+	{{/ banner_display_height }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">Bans</th>
+			</tr>
+	{{# must_see_ban }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ must_see_ban }}
+	{{# allow_ban_appeals }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ allow_ban_appeals }}
+	{{# min_time_before_ban_appeal }}
+		{{> panels/pieces/settings/number }}
+	{{/ min_time_before_ban_appeal }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">Filenames and Structure</th>
+			</tr>
+	{{# index_filename_format }}
+		{{> panels/pieces/settings/text }}
+	{{/ index_filename_format }}
+	{{# first_index_filename_format }}
+		{{> panels/pieces/settings/text }}
+	{{/ first_index_filename_format }}
+	{{# thread_filename_format }}
+		{{> panels/pieces/settings/text }}
+	{{/ thread_filename_format }}
+	{{# slug_thread_filename_format }}
+		{{> panels/pieces/settings/text }}
+	{{/ slug_thread_filename_format }}
+	{{# first_posts_filename_format }}
+		{{> panels/pieces/settings/text }}
+	{{/ first_posts_filename_format }}
+	{{# last_posts_filename_format }}
+		{{> panels/pieces/settings/text }}
+	{{/ last_posts_filename_format }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">Rendering</th>
+			</tr>
+	{{# base_image_set }}
+		{{> panels/pieces/settings/select }}
+	{{/ base_image_set }}
+	{{# default_style }}
+		{{> panels/pieces/settings/select }}
+	{{/ default_style }}
+	{{# show_blotter }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ show_blotter }}
+	{{# small_blotter_limit }}
+		{{> panels/pieces/settings/number }}
+	{{/ small_blotter_limit }}
+	{{# template_id }}
+		{{> panels/pieces/settings/select }}
+	{{/ template_id }}
+	{{# display_render_timer }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ display_render_timer }}
+	{{# site_referrer_policy }}
+		{{> panels/pieces/settings/select }}
+	{{/ site_referrer_policy }}
+	{{# external_link_referrer_policy }}
+		{{> panels/pieces/settings/select }}
+	{{/ external_link_referrer_policy }}
+	{{# nofollow_external_links }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ nofollow_external_links }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">Uploads</th>
+			</tr>
+	{{# graphics_handler }}
+		{{> panels/pieces/settings/select }}
+	{{/ graphics_handler }}
+	{{# imagemagick_args }}
+		{{> panels/pieces/settings/text }}
+	{{/ imagemagick_args }}
+	{{# imagemagick_animated_args }}
+		{{> panels/pieces/settings/text }}
+	{{/ imagemagick_animated_args }}
+	{{# graphicsmagick_args }}
+		{{> panels/pieces/settings/text }}
+	{{/ graphicsmagick_args }}
+	{{# graphicsmagick_animated_args }}
+		{{> panels/pieces/settings/text }}
+	{{/ graphicsmagick_animated_args}}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">Hashing and Security</th>
+			</tr>
+	{{# post_password_algorithm }}
+		{{> panels/pieces/settings/text }}
+	{{/ post_password_algorithm }}
+	{{# secure_tripcode_algorithm }}
+		{{> panels/pieces/settings/text }}
+	{{/ secure_tripcode_algorithm }}
+	{{# do_password_rehash }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ do_password_rehash }}
+	{{# login_delay }}
+		{{> panels/pieces/settings/number }}
+	{{/ login_delay }}
+	{{# session_length }}
+		{{> panels/pieces/settings/number }}
+	{{/ session_length }}
+	{{# store_unhashed_ip }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ store_unhashed_ip }}
+	{{# use_dnsbl }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ use_dnsbl }}
+	{{# dnsbl_exceptions }}
+		{{> panels/pieces/settings/text }}
+	{{/ dnsbl_exceptions }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">CAPTCHA</th>
+			</tr>
+	{{# captcha_width }}
+		{{> panels/pieces/settings/number }}
+	{{/ captcha_width }}
+	{{# captcha_height }}
+		{{> panels/pieces/settings/number }}
+	{{/ captcha_height }}
+	{{# captcha_character_count }}
+		{{> panels/pieces/settings/number }}
+	{{/ captcha_character_count }}
+	{{# captcha_timeout }}
+		{{> panels/pieces/settings/number }}
+	{{/ captcha_timeout }}
+	{{# captcha_rate_limit }}
+		{{> panels/pieces/settings/number }}
+	{{/ captcha_rate_limit }}
+	{{# recaptcha_site_key }}
+		{{> panels/pieces/settings/text }}
+	{{/ recaptcha_site_key }}
+	{{# recaptcha_sekrit_key }}
+		{{> panels/pieces/settings/text }}
+	{{/ recaptcha_sekrit_key }}
+	{{# recaptcha_type }}
+		{{> panels/pieces/settings/select }}
+	{{/ recaptcha_type }}
+	{{# use_login_captcha }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ use_login_captcha }}
+	{{# use_login_recaptcha }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ use_login_recaptcha }}
+	{{# use_register_captcha }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ use_register_captcha }}
+	{{# use_register_recaptcha }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ use_register_recaptcha }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">Overboard</th>
+			</tr>
+	{{# overboard_active }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ overboard_active }}
+	{{# overboard_uri }}
+		{{> panels/pieces/settings/text }}
+	{{/ overboard_uri }}
+	{{# overboard_threads }}
+		{{> panels/pieces/settings/number }}
+	{{/ overboard_threads }}
+	{{# overboard_thread_replies }}
+		{{> panels/pieces/settings/number }}
+	{{/ overboard_thread_replies }}
+	{{# nsfl_on_overboard }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ nsfl_on_overboard }}
+	{{# sfw_overboard_active }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ sfw_overboard_active }}
+	{{# sfw_overboard_uri }}
+		{{> panels/pieces/settings/text }}
+	{{/ sfw_overboard_uri }}
+	{{# sfw_overboard_threads }}
+		{{> panels/pieces/settings/number }}
+	{{/ sfw_overboard_threads }}
+	{{# sfw_overboard_thread_replies }}
+		{{> panels/pieces/settings/number }}
+	{{/ sfw_overboard_thread_replies }}
+		</tbody>
+	</table>
+	<div class="table-button">
+		<input type="submit" value="Update Settings" data-i18n-attributes="value">
+	</div>
+{{/ settings_data }}
+</form>

@@ -1,0 +1,14 @@
+<tr>
+	{{> panels/pieces/settings/setting_name }}
+	<td>
+		<select name="{{ setting_name }}[value]" id="{{ setting_name }}" {{ setting_disabled }}>
+{{# options }}
+			<option value="{{ option_value }}" {{ option_selected }}>{{ option_label }}</option>
+{{/ options }}
+		</select>
+	</td>
+{{# show_lock_update }}
+	{{> panels/pieces/settings/lock_update }}
+{{/ show_lock_update }}
+	{{> panels/pieces/settings/setting_description }}
+</tr>

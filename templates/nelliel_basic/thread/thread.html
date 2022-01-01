@@ -1,0 +1,34 @@
+{{# return_link }}
+<div>
+	<span class="text-button">[<a href="{{ return_url }}" data-i18n="">Return</a>]</span>
+</div>
+{{/ return_link }}
+{{# posting_form }}
+	{{> thread/posting_form }}
+{{/ posting_form }}
+{{# show_blotter }}
+	{{> pieces/blotter_small }}
+{{/ show_blotter }}
+{{# show_global_announcement }}
+	{{> pieces/global_announcement }}
+{{/ show_global_announcement }}
+<hr class="clear">
+<form class="content-page" accept-charset="utf-8" action="{{ form_action }}" method="post">
+	<div id="{{ thread_corral_id }}" class="thread-corral" data-jsevents="click|mouseover|mouseout">
+{{# op_post }}
+		{{> thread/post }}
+{{/ op_post }}
+		<div id="{{ thread_expand_id }}">
+{{# thread_posts }}
+			{{> thread/post }}
+{{/ thread_posts }}
+		</div>
+	</div>
+	<hr class="clear">
+{{# footer_form }}
+	{{> thread/footer_form }}
+{{/ footer_form }}
+</form>
+{{# show_styles }}
+	{{> menu/styles }}
+{{/ show_styles }}

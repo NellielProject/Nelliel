@@ -1,0 +1,63 @@
+<div>
+	<a href="{{ new_category_url }}">New category</a>
+</div>
+<div>
+	<a href="{{ new_filetype_url }}">New filetype</a>
+</div>
+<hr>
+<table >
+	<caption data-i18n="">List of categories</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Category</th>
+			<th scope="col" data-i18n="">Label</th>
+			<th scope="col" data-i18n="">Enabled</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# category_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ category }}</td>
+			<td>{{ label }}</td>
+			<td>{{ enabled }}</td>
+			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}">Edit</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
+			</td>
+		</tr>
+{{/ category_list }}
+	</tbody>
+</table>
+<table >
+	<caption data-i18n="">List of filetypes</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Format</th>
+			<th scope="col" data-i18n="">Extensions</th>
+			<th scope="col" data-i18n="">Category</th>
+			<th scope="col" data-i18n="">Mime</th>
+			<th scope="col" data-i18n="">Label</th>
+			<th scope="col" data-i18n="">Enabled</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# filetype_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ format }}</td>
+			<td>{{ extensions }}</td>
+			<td>{{ category }}</td>
+			<td>{{ mime }}</td>
+			<td>{{ label }}</td>
+			<td>{{ enabled }}</td>
+			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}">Edit</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
+			</td>
+		</tr>
+{{/ filetype_list }}
+	</tbody>
+</table>

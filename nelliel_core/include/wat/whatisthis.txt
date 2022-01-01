@@ -1,3 +1,0 @@
-This is a speshul directory of things that should be available in any copy of Nelliel.
-
-I forget why it's named 'wat', but I'm not changing it.

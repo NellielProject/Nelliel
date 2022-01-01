@@ -1,0 +1,30 @@
+<div>
+	<a href="{{ new_url }}" data-i18n="">New role</a>
+</div>
+<hr>
+<table >
+	<caption data-i18n="">List of roles</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Role ID</th>
+			<th scope="col" data-i18n="">Level</th>
+			<th scope="col" data-i18n="">Title</th>
+			<th scope="col" data-i18n="">Capcode ID</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# roles_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ role_id }}</td>
+			<td>{{ role_level }}</td>
+			<td>{{ role_title }}</td>
+			<td>{{ capcode }}</td>
+			<td>
+				<span class="text-button">[<a href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
+				<span class="text-button">[<a href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
+			</td>
+		</tr>
+{{/ roles_list }}
+	</tbody>
+</table>

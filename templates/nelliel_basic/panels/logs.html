@@ -1,0 +1,34 @@
+<table >
+	<caption data-i18n="">List of logged events</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Level</th>
+			<th scope="col" data-i18n="">Event</th>
+			<th scope="col" data-i18n="">Originator</th>
+			<th scope="col" data-i18n="">IP Address</th>
+			<th scope="col" data-i18n="">Time</th>
+			<th scope="col" data-i18n="">Message</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# log_entry_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ level }}</td>
+			<td>{{ event }}</td>
+			<td>{{ originator }}</td>
+			<td>{{ ip_address }}</td>
+			<td>{{ time }}</td>
+			<td>{{ message }}</td>
+		</tr>
+{{/ log_entry_list }}
+	</tbody>
+</table>
+<div>
+{{> navigation/basic_pagination }}
+</div>
+<hr>
+<div>
+	<span class="text-button">[<a href="{{ staff_logs_url }}" data-i18n="">View Staff Logs</a>]</span>
+	<span class="text-button">[<a href="{{ system_logs_url }}" data-i18n="">View System Logs</a>]</span>
+	<span class="text-button">[<a href="{{ all_logs_url }}" data-i18n="">View All Logs</a>]</span>
+</div>

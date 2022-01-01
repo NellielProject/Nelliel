@@ -27,8 +27,8 @@ Contains information about a thread.
 |Attribute Key         |Type     |Possible Values      |Description|                               
 |:---------------------|:--------|:--------------------|:----------|
 |`thread_id`           |`integer`|0-2147483647         |ID of the thread.|
-|`last_bump_time`      |`integer`|64-bit Unix timestamp|Last thread bump time.|
-|`last_bump_time_milli`|`integer`|0-999                |Last thread bump time milliseconds. Used with `last_bump_time` when high precision is needed.|
+|`bump_time`           |`integer`|64-bit Unix timestamp|Last thread bump time.|
+|`bump_time_milli`     |`integer`|0-999                |Last thread bump time milliseconds. Used with `bump_time` when high precision is needed.|
 |`last_update`         |`integer`|64-bit Unix timestamp|Last thread update.|
 |`last_update_milli`   |`integer`|0-999                |Last thread update milliseconds. Used with `last_update` when high precision is needed.|
 |`post_count`          |`integer`|0-2147483647         |Total number of posts in the thread.|

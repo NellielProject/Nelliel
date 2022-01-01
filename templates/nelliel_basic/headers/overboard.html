@@ -1,0 +1,10 @@
+{{# show_banner }}
+{{> pieces/banner }}
+{{/ show_banner }}
+{{# sfw }}
+<h1 class="header-name" data-i18n="">SFW Overboard</h1>
+{{/ sfw }}
+{{^ sfw }}
+<h1 class="header-name" data-i18n="">Overboard</h1>
+{{/ sfw }}
+<h2 class="header-description">{{ description }}</h2>

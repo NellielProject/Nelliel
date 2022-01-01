@@ -9,6 +9,7 @@ These are only the bare minimum requirements for Nelliel to function. Even if an
 
 Required:
 - [PHP](https://www.php.net/) 7.2+
+- [Composer](https://getcomposer.org/)
 - [MySQL](https://www.mysql.com/) 5.7+, [MariaDB](https://mariadb.org/) 10.2+, [PostgreSQL](https://www.postgresql.org/) 10+ or [SQLite](https://www.sqlite.org/) 3.22+
 - [PHP PDO with corresponding support of your database choice](https://www.php.net/manual/en/book.pdo.php)
 - [PHP GD](https://www.php.net/manual/en/book.image.php)
@@ -20,10 +21,11 @@ Required:
 These requirements are well behind the leading edge and should be widely available. The PHP extensions required are usually included and enabled with a standard install; if not, they are almost always available in official repositories. If for some reason even the minimum cannot be provided, find a new host. Srsly.
 
 ## Optional Requirements
-These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not required and the software will work fine without them:
+These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not required and the software will work without them:
 - [ImageMagick](https://imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/)
 - [Imagick](https://www.php.net/manual/en/book.imagick.php) or [Gmagick](https://www.php.net/manual/en/book.gmagick.php) ([PECL](https://pecl.php.net/) extensions)
 - [mbstring](https://www.php.net/manual/en/book.mbstring.php)
+- [ExifTool](https://exiftool.org/)
 
 ## Installation
 See [INSTALL.md](INSTALL.md) for installation instructions.

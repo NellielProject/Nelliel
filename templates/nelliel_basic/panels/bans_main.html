@@ -1,0 +1,38 @@
+<table>
+	<caption data-i18n="">List of bans</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">IP</th>
+			<th scope="col" data-i18n="">Board</th>
+			<th scope="col" data-i18n="">Global</th>
+			<th scope="col" data-i18n="">Reason</th>
+			<th scope="col" data-i18n="">Expiration</th>
+			<th scope="col" data-i18n="">Appeal</th>
+			<th scope="col" data-i18n="">Response</th>
+			<th scope="col" data-i18n="">Status</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# ban_list }}
+		<tr class="row1">
+			<td>{{ ip_address }}</td>
+			<td>{{ board_id }}</td>
+			<td>{{ global }}</td>
+			<td>{{ reason }}</td>
+			<td>{{ expiration }}</td>
+			<td>{{ appeal }}</td>
+			<td>{{ appeal_response }}</td>
+			<td>{{ appeal_status }}</td>
+			<td>
+	{{# modify_url }}<span class="text-button">[<a href="{{ modify_url }}" data-i18n="">Modify</a>]</span>{{/ modify_url }}
+	{{# remove_url }}<span class="text-button">[<a href="{{ remove_url }}" data-i18n="">Remove</a>]</span>{{/ remove_url }}
+			</td>
+		</tr>
+{{/ ban_list }}
+	</tbody>
+</table>
+<hr>
+<div>
+	<a href="{{ new_ban_url }}" data-i18n="">Add New Ban</a>
+</div>

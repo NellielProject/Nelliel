@@ -35,6 +35,7 @@ Error 33: Too many embeds. (NewPost/Uploads.php)
 Error 34: Max uploads for thread. (NewPost/Uploads.php)  
 Error 35: Duplicate embed. (NewPost/Uploads.php)  
 Error 36: Max total filesize. (NewPost/Uploads.php)  
+Error 37: Threads per hour limit. (NewPost/NewPost.php)  
 
 Error 40: No POST data. (NewPost/PostData.php)  
 Error 41: Name required. (NewPost/PostData.php)  
@@ -49,11 +50,14 @@ Error 49: Email too long. (NewPost/PostData.php)
 Error 50: Subject too long. (NewPost/PostData.php)  
 Error 51: Comment too long. (NewPost/PostData.php)  
 
-Error 60: Password does not match post. (Content/ContentPost.php)  
-Error 61: Board locked, can't remove file. (Content/ContentUpload.php)  
-Error 62: Board locked, can't remove post. (Content/ContentPost.php)  
-Error 63: Board locked, can't remove thread. (Content/ContentThread.php)  
-Error 64: Delete cooldown. (Content/ContentPost.php)  
+Error 60: Password does not match post. (Content/Post.php)  
+Error 61: Board locked, can't remove file. (Content/Upload.php)  
+Error 62: Board locked, can't remove post. (Content/Post.php)  
+Error 63: Board locked, can't remove thread. (Content/Thread.php)  
+Error 64: Delete cooldown. (Content/Post.php)  
+Error 65: Replies threshold. (Content/Thread.php)  
+Error 66: Age threshold. (Content/Thread.php)  
+Error 67: Invalid embed URL. (Content/Upload.php)  
 
 Error 70: CAPTCHA failed. (classes/CAPTCHA.php)  
 Error 71: reCAPTCHA failed. (classes/CAPTCHA.php)  
@@ -64,7 +68,7 @@ Error 75: Post rejected by if-then. (NewPost/ActionsPost.php)
 Error 101: No acceptable password hashing. (crypt.php)  
 Error 102: InnoDB engine unavailable. (Setup/Setup.php)  
 Error 103: Failed to create database table. (classes/Table.php)  
-Error 104: nelliel_core not writable. (Setup/Setup.php)  
+Error 104: core directory not writable. (Setup/Setup.php)  
 Error 105: Main directory not writable. (Setup/Setup.php)  
 Error 106: Config directory not writable. (Setup/Setup.php)  
 Error 107: Install not done. (initializations.php)  
@@ -108,6 +112,7 @@ Error 221: Expired session. (Account/Session.php)
 Error 222: Inactive user. (Account/Session.php)  
 
 Error 224: Must be logged in. (Account/Session.php)  
+Error 225: Cannot view PM. (PrivateMessage.php)  
 
 Error 230: User does not exist. (Admin/AdminUsers.php)  
 Error 231: Role does not exist. (Admin/AdminRoles.php)  
@@ -121,6 +126,8 @@ Error 245: Board URI too long. (Admin/AdminBoards.php)
 Error 246: Empty subdirectory name. (Admin/AdminBoards.php)  
 Error 247: Subdirectory name too long. (Admin/AdminBoards.php)  
 Error 248: Invalid directory characters. (Admin/AdminBoards.php)  
+
+Error 250: Maximum static pages. (Admin/AdminPages.php)  
 
 Error 300: Default permission error. (Admin/Admin.php)  
 
@@ -140,13 +147,11 @@ Error 328: perm_boards_delete (Admin/AdminBoards.php)
 
 Error 330: perm_board_config_modify (Admin/AdminBoardSettings.php)   
 
-Error 335: perm_dnsbl_manage (Admin/AdminDNSBL.php)    
-
 Error 340: perm_file_filters_manage (Admin/AdminFileFilters.php)  
 
 Error 345: perm_filetypes_manage (Admin/AdminFiletypes.php)  
 
-Error 350: perm_icon_sets_manage (Admin/AdminIconSets.php)  
+Error 350: perm_image_sets_manage (Admin/AdminImageSets.php)  
 
 Error 355: perm_logs_view (Admin/AdminLogs.php)  
 Error 356: perm_logs_manage (Admin/AdminLogs.php)  
@@ -172,11 +177,17 @@ Error 396: perm_users_manage (Admin/AdminUsers.php)
 
 Error 400: perm_word_filters_manage (Admin/AdminWordFilters.php)  
 
+Error 405: perm_embeds_manage (Admin/AdminEmbeds.php)  
+
 Error 410: perm_threads_access (Admin/AdminThreads.php)  
 Error 411: perm_post_status (Admin/AdminThreads.php)  
 Error 412: perm_post_type (Admin/AdminThreads.php)  
 Error 413: perm_edit_posts (Admin/AdminThreads.php)  
 Error 414: perm_delete_by_ip (Admin/AdminThreads.php)  
+
+Error 420: perm_content_ops_manage (Admin/AdminContentOps.php)  
+
+Error 425: perm_capcodes_manage (Admin/AdminCapcodes.php)  
 
 Error 500: perm_regen_pages (board) (Dispatch/DispatchModules.php)  
 Error 501: perm_regen_cache (board) (Dispatch/DispatchModules.php)  
