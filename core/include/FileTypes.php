@@ -136,17 +136,28 @@ class FileTypes
 
     public function verifyFile(string $extension, string $file): bool
     {
+        return $this->getFileMime($extension, $file) !== '';
+    }
+
+    public function getFileMime(string $extension, string $file): string
+    {
         $extension_data = $this->extensionData($extension);
 
         if (empty($extension_data)) {
-            return false;
+            return '';
+        }
+
+        $valid_types = json_decode($extension_data['mimetypes'], true);
+
+        if(empty($valid_types)) {
+            return '';
         }
 
         // Test with PHP first as checks should generally be better (if libmagic has a matching entry)
         $mime = mime_content_type($file);
 
-        if ($mime !== 'application/octet-stream' && $mime === $extension_data['mime']) {
-            return true;
+        if ($mime !== 'application/octet-stream' && in_array($mime, $valid_types)) {
+            return $mime;
         }
 
         // Fallback to custom check if a match wasn't found
@@ -156,8 +167,13 @@ class FileTypes
         $end_offset = ($file_length < $end_buffer) ? $file_length : $file_length - $end_buffer;
         $file_test_begin = file_get_contents($file, false, null, 0, $start_buffer);
         $file_test_end = file_get_contents($file, false, null, $end_offset);
-        return preg_match('/' . $extension_data['magic_regex'] . '/s', $file_test_begin) ||
-            preg_match('/' . $extension_data['magic_regex'] . '/s', $file_test_end);
+
+        if (preg_match('/' . $extension_data['magic_regex'] . '/s', $file_test_begin) ||
+            preg_match('/' . $extension_data['magic_regex'] . '/s', $file_test_end)) {
+            return $valid_types[0];
+        }
+
+        return '';
     }
 
     public function enabledCategories(Domain $domain): array

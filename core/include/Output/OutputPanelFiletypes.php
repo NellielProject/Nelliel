@@ -31,10 +31,10 @@ class OutputPanelFiletypes extends Output
         $categories = $this->database->executeFetchAll(
             'SELECT * FROM "' . NEL_FILETYPE_CATEGORIES_TABLE . '" ORDER BY "category" ASC', PDO::FETCH_ASSOC);
         $filetypes = $this->database->executeFetchAll(
-            'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" ORDER BY "category" ASC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" ORDER BY "category" ASC, "format" ASC', PDO::FETCH_ASSOC);
         $this->render_data['new_category_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
             http_build_query(['module' => 'admin', 'section' => 'filetype-categories', 'actions' => 'new']);
-            $this->render_data['new_filetype_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+        $this->render_data['new_filetype_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
             http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'new']);
         $bgclass = 'row1';
 
@@ -81,18 +81,25 @@ class OutputPanelFiletypes extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $filetype_data['format'] = $filetype['format'];
             $filetype_data['category'] = $filetype['category'];
-            $filetype_data['mime'] = $filetype['mime'];
+            $filetype_data['mimetypes'] = $filetype['mimetypes'];
             $filetype_data['enabled'] = $filetype['enabled'];
             $sub_extensions = '';
 
             if (!empty($filetype['extensions'])) {
                 foreach (json_decode($filetype['extensions'], true) as $sub_extension) {
-                    $sub_extensions .= $sub_extension . ' ';
+                    $sub_extensions .= $sub_extension . ', ';
                 }
             }
 
-            $filetype_data['extensions'] = utf8_substr($sub_extensions, 0, -1);
-            $filetype_data['mime'] = $filetype['mime'];
+            $filetype_data['extensions'] = utf8_substr($sub_extensions, 0, -2);
+            $mimetypes = '';
+
+            if (!empty($filetype['mimetypes'])) {
+                foreach (json_decode($filetype['mimetypes'], true) as $mime) {
+                    $mimetypes .= $mime . ', ';
+                }
+            }
+            $filetype_data['mimetypes'] = utf8_substr($mimetypes, 0, -2);
             $filetype_data['magic_regex'] = $filetype['magic_regex'];
             $filetype_data['label'] = $filetype['label'];
             $filetype_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
@@ -168,7 +175,7 @@ class OutputPanelFiletypes extends Output
                 $this->render_data['format'] = $filetype_data['format'];
                 $this->render_data['extensions'] = $filetype_data['extensions'];
                 $this->render_data['category'] = $filetype_data['category'];
-                $this->render_data['mime'] = $filetype_data['mime'];
+                $this->render_data['mimetypes'] = $filetype_data['mimetypes'];
                 $this->render_data['magic_regex'] = $filetype_data['magic_regex'];
                 $this->render_data['label'] = $filetype_data['label'];
                 $this->render_data['enabled_checked'] = $filetype_data['enabled'] == 1 ? 'checked' : '';

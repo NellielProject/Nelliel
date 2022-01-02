@@ -335,14 +335,16 @@ class Uploads
             nel_derp(22, _gettext('File type is not allowed.'));
         }
 
-        if (!$filetypes->verifyFile($extension, $file)) {
+        $mime = $filetypes->getFileMime($extension, $file);
+
+        if ($mime === '') {
             nel_derp(23, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'));
         }
 
         $type_data = $filetypes->extensionData($extension);
         $upload->changeData('category', $type_data['category']);
         $upload->changeData('format', $type_data['format']);
-        $upload->changeData('mime', $type_data['mime']);
+        $upload->changeData('mime', $mime);
     }
 
     private function embeds(Post $post)
