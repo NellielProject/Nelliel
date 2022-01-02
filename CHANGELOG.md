@@ -1,4 +1,65 @@
 # Nelliel Changelog
+## v0.9.25 (2022/1/1)
+### Breaking
+ - Everything (for the last time)
+
+### Added
+ - Full Composer support
+ - Routing
+ - UI customizations
+ - Configuration for additional databases
+ - Permission check on private messages
+ - Early 404
+ - Optional delay before deleting own content
+ - Basic static pages
+ - Definition for internal file header
+ - Embeds control panel
+ - Content ops
+ - Embed URL validation
+ - Enable/disable for styles, templates and image sets
+ - Optional file deduplication
+ - Separate table for setting options
+ - INI parsing and storage for styles, templates and image sets
+ - Better logging and monolog library
+
+### Changed
+ - Restructured project
+ - Moved DNSBL to config file
+ - Config tables nowee import from settings on creation
+ - Updated banners settings and handling
+ - Icon sets changes to general image sets
+ - BMP filetype allowed by default
+ - Separate board list with menu link
+ - Updated `FileHandler`
+ - Corrected capcode system
+ - Flattened preview and upload file structures
+ - Database schema cleanup and debugging
+ - Updated filetype system
+ - Optimized JSON API classes
+ - Updated return types for `Register` and `Session`
+ - Updated SmallPHPGettext library
+ - Optimized content deletion
+
+
+### Fixed
+ - Content ID not being passed in `NewPost`
+ - Session expired message when logging in
+ - Overboard regen link
+ - Site owner creation
+ - Missed UTF8 string functions
+ - Permasage and cyclic
+ - Duplicates check
+ - Overboard not generating on enable
+ - Domain ID and banners path
+ - Multiple files sharing previews
+ - Login URI in `INSTALL.md`
+ - Optional config loading not optional
+ - Cites
+ - Language extractor
+
+### Removed
+ - Old honeypot system
+
 ## v0.9.24 (2021/10/4)
 ### Breaking
  - Database

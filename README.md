@@ -2,7 +2,7 @@
 ## About
 A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby/)-style imageboard.
 
-**WARNING: At present Nelliel is in a pre-release beta stage of development. It is still incomplete and undergoing some breaking changes. Try it out if you want but don't rely on it for long-term use yet!**
+**WARNING: At present Nelliel is in a beta stage of development. It is still incomplete and not yet recommended for production use.**
 
 ## Minimum Requirements
 These are only the bare minimum requirements for Nelliel to function. Even if an earlier version somehow works, you will not receive any support. **It is strongly recommended to use the latest software versions available.**
