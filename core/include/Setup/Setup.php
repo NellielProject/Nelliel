@@ -51,6 +51,10 @@ use Nelliel\Utility\SQLCompatibility;
 use PDO;
 use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableFiletypeCategories;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
+use Nelliel\Regen;
+use Nelliel\FrontEnd\FrontEndData;
 
 class Setup
 {
@@ -67,7 +71,14 @@ class Setup
 
     public function install()
     {
-        echo '<!DOCTYPE html><html><body>';
+        echo '
+<!DOCTYPE html>
+<html>
+<head>
+    <title>' . __('Installer') . '</title>
+</head>
+<body>
+    <p>';
 
         if ($this->checkInstallDone()) {
             nel_derp(108, _gettext('Installation has already been completed!'));
@@ -77,11 +88,9 @@ class Setup
         $this->checkDBEngine();
         $this->mainDirWritable();
         $this->coreDirWritable();
-        // $this->configDirWritable();
-
-        $file_handler = new \Nelliel\Utility\FileHandler();
-        $generate_files = new \Nelliel\Setup\GenerateFiles($file_handler);
-        $install_id = base64_encode(random_bytes(33));
+        $file_handler = new FileHandler();
+        $generate_files = new GenerateFiles($file_handler);
+        $install_id = base64_encode(random_bytes(32));
 
         if ($generate_files->peppers(false)) {
             echo _gettext('Peppers file has been created.'), '<br>';
@@ -94,8 +103,8 @@ class Setup
         $this->installCoreTemplates();
         $this->installCoreStyles();
         $this->installCoreImageSets();
-        $site_domain = new \Nelliel\Domains\DomainSite($this->database);
-        $regen = new \Nelliel\Regen();
+        $site_domain = new DomainSite($this->database);
+        $regen = new Regen();
         $site_domain->regenCache();
         $regen->news($site_domain);
         $generate_files->installDone();
@@ -109,31 +118,37 @@ class Setup
             echo '</body></html>';
             die();
         } else {
-            echo '<p>';
-            echo _gettext(
-                'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions by default. It is also necessary to use the site settings control panel.');
-            echo '</p>';
-            echo '<form accept-charset="utf-8" action="imgboard.php?route=/' . $site_domain->id() .
-                '/account/register" method="post">';
             echo '
-<input type="hidden" name="create_owner" value="' . $install_id . '"';
-            echo '
-<div>
-    <span data-i18n="gettext">Username: </span><input type="text" name="register_username" size="25" maxlength="255">
-</div>';
-            echo '
-<div>
-    <span data-i18n="gettext">Password: </span><input type="password" name="register_super_sekrit" size="25" maxlength="255">
-</div>';
-            echo '
-<div>
-    <span data-i18n="gettext">Confirm password: </span><input type="password" name="register_super_sekrit_confirm" size="25" maxlength="255">
-</div>';
-            echo '
-<div>
-    <input type="submit" value="Submit" data-i18n-attributes="gettext|value">
-</div>';
-            echo '</form></body></html>';
+    </p>
+    <p>
+' .
+                _gettext(
+                    'No problems so far! To complete setup, a site owner account needs to be created. This account will have all permissions by default. It is also necessary to use the site settings control panel.') .
+                '
+    </p>
+    <form accept-charset="utf-8" action="imgboard.php?route=/' . Domain::SITE .
+                '/account/register" method="post">
+        <input type="hidden" name="create_owner" value="' . $install_id . '"
+        <div>
+            <label for="register_username">' . __('Username:') .
+                '</label>
+            <input id="register_username" type="text" name="register_username" maxlength="255">
+        </div>
+        <div>
+            <label for="register_super_sekrit">' . __('Password:') .
+                '</label>
+            <input id="register_super_sekrit" type="password" name="register_super_sekrit" maxlength="255">
+        </div>
+        <div>
+            <label for="register_super_sekrit_confirm">' . __('Confirm password:') .
+                '</label>
+            <input id="register_super_sekrit_confirm" type="password" name="register_super_sekrit_confirm" maxlength="255">
+        </div>
+        <div>
+            <input type="submit" value="' . __('Submit') . '">
+        </div>
+    </form>
+</body></html>';
             $generate_files->ownerCreate($install_id);
             $generate_files->versions();
             die();
@@ -164,11 +179,13 @@ class Setup
     {
         $config = $this->database->config();
 
+        echo sprintf(__('Database type configured is: %s'), $config['sqltype']) . '<br>';
+
         if (($config['sqltype'] === 'MYSQL' || $config['sqltype'] === 'MARIADB') && !$this->checkForInnoDB()) {
             nel_derp(102,
                 _gettext('InnoDB engine is required for MySQL or MariaDB support but that engine is not available.'));
         } else {
-            echo _gettext('DB engine ok.'), '<br>';
+            echo _gettext('No database problems detected.'), '<br>';
         }
     }
 
@@ -187,15 +204,6 @@ class Setup
             nel_derp(105, _gettext('Nelliel project directory is not writable.'));
         } else {
             echo _gettext('Main directory is writable.'), '<br>';
-        }
-    }
-
-    public function configDirWritable()
-    {
-        if (!is_writable(NEL_CONFIG_FILES_PATH)) {
-            nel_derp(106, _gettext('Configuration directory is missing or not writable. Admin should check this out.'));
-        } else {
-            echo _gettext('The configuration directory is writable.'), '<br>';
         }
     }
 
@@ -358,7 +366,7 @@ class Setup
 
     public function installCoreStyles(bool $overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
+        $front_end_data = new FrontEndData($this->database);
         $style_inis = $front_end_data->getStyleInis();
 
         foreach ($style_inis as $ini) {
@@ -376,7 +384,7 @@ class Setup
 
     public function installCoreImageSets(bool $overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
+        $front_end_data = new FrontEndData($this->database);
         $image_set_inis = $front_end_data->getImageSetInis();
 
         foreach ($image_set_inis as $ini) {

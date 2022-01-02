@@ -19,10 +19,61 @@ class Upgrade
         $this->file_handler = $file_handler;
     }
 
+    public function displayLogin(): void
+    {
+        echo '
+<!DOCTYPE html>
+<html>
+<head>
+    <title>' . __('Site owner login') . '</title>
+</head>
+<body>
+    <p>' . __('Please log in with the site owner account to perform upgrades.') .
+            '</p>
+    <form accept-charset="utf-8" action="imgboard.php?upgrade" method="post">
+        <input type="hidden" name="upgrade_login" value="">
+        <div>
+            <label for="username">' . __('Username:') .
+            '</label>
+            <input id="username" type="text" name="username" maxlength="255">
+        </div>
+        <div>
+            <label for="super_sekrit">' . __('Password:') .
+            '</label>
+            <input id="super_sekrit" type="password" name="super_sekrit" maxlength="255">
+        </div>
+        <div>
+            <input type="submit" value="' . __('Submit') . '">
+        </div>
+    </form>
+</body></html>';
+    }
+
+    public function verifyLogin(): bool
+    {
+        $username = $_POST['username'] ?? '';
+        $form_password = $_POST['super_sekrit'] ?? '';
+        $prepared = nel_database('core')->prepare(
+            'SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "username" = :username AND "owner" = 1');
+        $prepared->bindValue(':username', $username);
+        $user_data = nel_database('core')->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
+        return is_array($user_data) && nel_password_verify($form_password, $user_data['user_password']);
+    }
+
     public function doUpgrades(): void
     {
         if (!$this->needsUpgrade()) {
-            echo __('Already up to date!') . '<br>';
+            echo __('Already up to date!');
+            return;
+        }
+
+        if (isset($_POST['upgrade_login'])) {
+            if (!$this->verifyLogin()) {
+                echo __('Username or password is wrong or that user is not a site owner account.');
+                return;
+            }
+        } else {
+            $this->displayLogin();
             return;
         }
 
@@ -127,7 +178,8 @@ class Upgrade
                 }
 
                 $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_FILETYPES_TABLE . '" SET "extensions" = \'["3gp", "3gpp"]\' WHERE "format" = \'3gp\'');
+                    'UPDATE "' . NEL_FILETYPES_TABLE .
+                    '" SET "extensions" = \'["3gp", "3gpp"]\' WHERE "format" = \'3gp\'');
                 echo __(' - Filetypes table updated.') . '<br>';
                 $migration_count ++;
         }
