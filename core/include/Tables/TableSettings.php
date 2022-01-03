@@ -362,6 +362,13 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_deleted_placeholder', '1', 'Display placeholder image for deleted uploads. If entry was fully removed from database nothing will be displayed.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'enabled_content_ops', '[]', 'Which content ops will be available.', '{"type":"text"}']);
 
+        // Posting Form Rendering
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_allowed_filetypes', '1', 'Show a list of allowed filetypes on the posting form.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_allowed_embeds', '1', 'Show a list of allowed embeds on the posting form.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_form_max_filesize', '1', 'Show the maximum allowed filesize.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_thumbnailed_message', '1', 'Show message about large images being thumbnailed.', '{"type":"checkbox"}']);
+
+
         // Other Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'template_id', 'template-nelliel-basic', 'ID of template for board to use.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'default_style', 'style-nelliel', 'ID of default style for board.', '{"type":"text"}']);

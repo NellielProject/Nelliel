@@ -5,6 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\FileTypes;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -20,7 +21,6 @@ class OutputPostingForm extends Output
     {
         $this->renderSetup();
         $response_to = $parameters['response_to'];
-        $this->render_data['allow_embeds'] = true; // TODO: Change this when we get a setting
         $this->render_data['response_to'] = $response_to;
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['not_anonymous_minlength'] = $this->domain->setting('min_name_length');
@@ -101,68 +101,77 @@ class OutputPostingForm extends Output
 
     private function postingRules()
     {
-        $filetypes = new \Nelliel\FileTypes($this->domain->database());
+        $filetypes = new FileTypes($this->domain->database());
 
-        foreach ($filetypes->enabledCategories($this->domain) as $category) {
-            $supported_types = sprintf(__('Supported %s file types:'), $category) . ' ';
-            $supported = '';
-            $joiner = '';
+        if ($this->domain->setting('display_allowed_filetypes') && $this->render_data['allow_files']) {
+            foreach ($filetypes->enabledCategories($this->domain) as $category) {
+                $supported_types = sprintf(__('Supported %s file types:'), $category) . ' ';
+                $supported = '';
+                $joiner = '';
 
-            foreach ($filetypes->enabledFormats($this->domain, $category) as $format) {
-                $extensions = '';
-                $add = '';
+                foreach ($filetypes->enabledFormats($this->domain, $category) as $format) {
+                    $extensions = '';
+                    $add = '';
 
-                if ($this->domain->setting('list_file_extensions')) {
-                    $joiner = ', ';
+                    if ($this->domain->setting('list_file_extensions')) {
+                        $joiner = ', ';
 
-                    foreach ($filetypes->formatExtensions($format) as $extension) {
-                        $extensions .= $extension . ', ';
+                        foreach ($filetypes->formatExtensions($format) as $extension) {
+                            $extensions .= $extension . ', ';
+                        }
+
+                        $extensions = utf8_substr($extensions, 0, -2);
                     }
 
-                    $extensions = utf8_substr($extensions, 0, -2);
-                }
+                    $add = $extensions;
 
-                $add = $extensions;
+                    if ($this->domain->setting('list_file_formats')) {
+                        $joiner = ', ';
 
-                if ($this->domain->setting('list_file_formats')) {
-                    $joiner = ', ';
+                        if ($extensions !== '') {
+                            $extensions = '(' . $extensions . ')';
+                        }
 
-                    if ($extensions !== '') {
-                        $extensions = '(' . $extensions . ')';
+                        $add = utf8_strtoupper($format) . '' . $extensions;
                     }
 
-                    $add = utf8_strtoupper($format) . '' . $extensions;
+                    $supported .= $add . $joiner;
                 }
 
-                $supported .= $add . $joiner;
+                if (empty($supported)) {
+                    continue;
+                }
+
+                $supported_types .= $supported;
+                $this->render_data['posting_rules_items'][]['rules_text'] = utf8_substr($supported_types, 0,
+                    -utf8_strlen($joiner));
+            }
+        }
+
+        if ($this->domain->setting('display_allowed_embeds') && $this->render_data['allow_embeds']) {
+            $embed_labels = $this->database->executeFetchAll(
+                'SELECT "label" FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_COLUMN);
+            $supported_embeds = '';
+
+            foreach ($embed_labels as $label) {
+                $supported_embeds .= $label . ', ';
             }
 
-            if (empty($supported)) {
-                continue;
+            if ($supported_embeds !== '') {
+                $this->render_data['posting_rules_items'][]['rules_text'] = utf8_substr(
+                    __('Supported embeds:') . ' ' . $supported_embeds, 0, -2);
             }
-
-            $supported_types .= $supported;
-            $this->render_data['posting_rules_items'][]['rules_text'] = utf8_substr($supported_types, 0,
-                -utf8_strlen($joiner));
         }
 
-        $embed_labels = $this->database->executeFetchAll(
-            'SELECT "label" FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_COLUMN);
-        $supported_embeds = '';
-
-        foreach ($embed_labels as $label) {
-            $supported_embeds .= $label . ', ';
+        if ($this->domain->setting('display_form_max_filesize') && $this->render_data['allow_files']) {
+            $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
+                _gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize') / 1024);
         }
 
-        if ($supported_embeds !== '') {
-            $this->render_data['posting_rules_items'][]['rules_text'] = utf8_substr(
-                __('Supported embeds:') . ' ' . $supported_embeds, 0, -2);
+        if ($this->domain->setting('display_thumbnailed_message') && $this->render_data['allow_files']) {
+            $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
+                _gettext('Images greater than %d x %d pixels will be thumbnailed.'),
+                $this->domain->setting('max_preview_width'), $this->domain->setting('max_preview_height'));
         }
-
-        $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
-            _gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize') / 1024);
-        $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
-            _gettext('Images greater than %d x %d pixels will be thumbnailed.'),
-            $this->domain->setting('max_preview_width'), $this->domain->setting('max_preview_height'));
     }
 }

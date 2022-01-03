@@ -646,6 +646,23 @@
 		</tbody>
 		<tbody>
 			<tr>
+				<th colspan="5" data-i18n="">Posting Form Rendering</th>
+			</tr>
+	{{# display_allowed_filetypes }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_allowed_filetypes }}
+	{{# display_allowed_embeds }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_allowed_embeds }}
+	{{# display_form_max_filesize }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_form_max_filesize }}
+	{{# display_thumbnailed_message }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_thumbnailed_message }}
+		</tbody>
+		<tbody>
+			<tr>
 				<th colspan="5" data-i18n="">Other Rendering</th>
 			</tr>
 	{{# template_id }}
