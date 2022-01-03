@@ -54,6 +54,8 @@ class OutputBanPage extends Output
         $this->render_data['ban_expiration'] = date("F jS, Y H:i e", intval($ban_expire));
         $this->render_data['ban_reason'] = $ban_hammer->getData('reason');
         $this->render_data['ban_ip'] = nel_request_ip_address();
+        $this->render_data['ban_page_extra_text'] = $this->site_domain()->setting('ban_page_extra_text');
+        $this->render_data['extra_text'] = !nel_true_empty($this->render_data['ban_page_extra_text']);
         $this->render_data['appealed'] = $ban_hammer->getData('appeal_status') != 0;
         $this->render_data['reviewed'] = $ban_hammer->getData('appeal_status') == 1;
         $this->render_data['responded'] = $ban_hammer->getData('appeal_status') > 1;

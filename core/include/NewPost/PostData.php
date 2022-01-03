@@ -80,6 +80,11 @@ class PostData
                     $post->changeData('tripcode', $this->tripcode($trip_string));
                 }
             }
+
+            if ($this->domain->setting('require_tripcode') && nel_true_empty($post->data('tripcode')) &&
+                nel_true_empty($post->data('secure_tripcode'))) {
+                nel_derp(41, _gettext('A tripcode or secure tripcode is required to post.'));
+            }
         }
 
         $raw_html = $this->checkEntry($_POST['raw_html'] ?? false, 'boolean');
