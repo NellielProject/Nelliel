@@ -37,7 +37,7 @@ class SQLCompatibility
                 $int_column = 'BIGSERIAL';
             }
         } else if ($this->sqltype === 'SQLITE') {
-            if($primary_declaration) {
+            if ($primary_declaration) {
                 $auto = 'AUTOINCREMENT';
             } else {
                 $auto = '';
@@ -97,5 +97,14 @@ class SQLCompatibility
             $this->sqltype === 'POSTGRESQL') {
             return 'LIMIT ' . $limit . ' OFFSET ' . $offset;
         }
+    }
+
+    public function textType(string $text)
+    {
+        if ($this->sqltype === 'SQLITE' || $this->sqltype === 'POSTGRESQL') {
+            return 'TEXT';
+        }
+
+        return $text;
     }
 }

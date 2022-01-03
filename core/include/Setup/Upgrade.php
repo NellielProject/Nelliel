@@ -134,7 +134,7 @@ class Upgrade
         $migration_count = 0;
 
         switch ($this->installedVersion()) {
-            case 'v0.9.25':
+            case 'v0.9.24':
                 $target_version = NELLIEL_VERSION;
                 echo sprintf(__('Updating from v0.9.25 to %s...'), $target_version) . '<br>';
                 $core_sqltype = nel_database('core')->config()['sqltype'];
@@ -188,10 +188,22 @@ class Upgrade
                     nel_database('core')->exec(
                         'ALTER TABLE "' . NEL_USERS_TABLE . '" CHANGE user_password password VARCHAR(255) NOT NULL');
                 } else {
-                    nel_database('core')->exec(
-                        'ALTER TABLE "' . NEL_USERS_TABLE . '" RENAME user_password TO password');
+                    nel_database('core')->exec('ALTER TABLE "' . NEL_USERS_TABLE . '" RENAME user_password TO password');
                 }
                 echo ' - ' . __('Users table updated.') . '<br>';
+
+                // Update archive table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    $prefixes = nel_database('core')->executeFetchAll(
+                        'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+
+                    foreach ($prefixes as $prefix) {
+                        nel_database('core')->exec(
+                            'ALTER TABLE "' . $prefix . '_archives' . '" MODIFY thread_data LONGTEXT NOT NULL');
+                    }
+
+                    echo ' - ' . __('Archive tables updated.') . '<br>';
+                }
 
                 $migration_count ++;
         }
