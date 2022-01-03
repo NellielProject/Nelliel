@@ -6,6 +6,7 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use PDO;
 
 class OutputPostingForm extends Output
 {
@@ -103,7 +104,7 @@ class OutputPostingForm extends Output
         $filetypes = new \Nelliel\FileTypes($this->domain->database());
 
         foreach ($filetypes->enabledCategories($this->domain) as $category) {
-            $supported_types = sprintf(_gettext('Supported %s file types: '), $category);
+            $supported_types = sprintf(__('Supported %s file types:'), $category) . ' ';
             $supported = '';
             $joiner = '';
 
@@ -143,6 +144,19 @@ class OutputPostingForm extends Output
             $supported_types .= $supported;
             $this->render_data['posting_rules_items'][]['rules_text'] = utf8_substr($supported_types, 0,
                 -utf8_strlen($joiner));
+        }
+
+        $embed_labels = $this->database->executeFetchAll(
+            'SELECT "label" FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_COLUMN);
+        $supported_embeds = '';
+
+        foreach ($embed_labels as $label) {
+            $supported_embeds .= $label . ', ';
+        }
+
+        if ($supported_embeds !== '') {
+            $this->render_data['posting_rules_items'][]['rules_text'] = utf8_substr(
+                __('Supported embeds:') . ' ' . $supported_embeds, 0, -2);
         }
 
         $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
