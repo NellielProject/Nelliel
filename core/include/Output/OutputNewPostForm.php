@@ -9,7 +9,7 @@ use Nelliel\FileTypes;
 use Nelliel\Domains\Domain;
 use PDO;
 
-class OutputPostingForm extends Output
+class OutputNewPostForm extends Output
 {
 
     function __construct(Domain $domain, bool $write_mode)
@@ -93,9 +93,9 @@ class OutputPostingForm extends Output
         $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['captcha_label'] = true;
-        $this->render_data['posting_submit'] = ($response_to) ? _gettext('Reply') : _gettext('New thread');
+        $this->render_data['new_post_submit'] = ($response_to) ? _gettext('Reply') : _gettext('New thread');
         $this->postingRules();
-        $output = $this->output('thread/posting_form', $data_only, true, $this->render_data);
+        $output = $this->output('thread/new_post_form', $data_only, true, $this->render_data);
         return $output;
     }
 

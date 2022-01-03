@@ -242,11 +242,11 @@ class NewPost
                 }
 
                 if ($thread_info['old'] != 0) {
-                    nel_derp(5, _gettext('The thread you have tried posting in is currently inaccessible or archived.'),
+                    nel_derp(5, _gettext('The thread you tried posting in is currently inaccessible or archived.'),
                         $error_data);
                 }
             } else {
-                nel_derp(6, _gettext('The thread you have tried posting in could not be found.'), $error_data);
+                nel_derp(6, _gettext('The thread you tried posting in could not be found.'), $error_data);
             }
 
             if ($this->domain->setting('limit_post_count') && $thread_info['cyclic'] != 1 &&
