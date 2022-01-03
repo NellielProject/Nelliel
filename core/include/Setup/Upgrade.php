@@ -57,7 +57,7 @@ class Upgrade
             'SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "username" = :username AND "owner" = 1');
         $prepared->bindValue(':username', $username);
         $user_data = nel_database('core')->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
-        return is_array($user_data) && nel_password_verify($form_password, $user_data['user_password']);
+        return is_array($user_data) && nel_password_verify($form_password, $user_data['password']);
     }
 
     public function doUpgrades(): void
@@ -139,6 +139,7 @@ class Upgrade
                 echo sprintf(__('Updating from v0.9.25 to %s...'), $target_version) . '<br>';
                 $core_sqltype = nel_database('core')->config()['sqltype'];
 
+                // Update filetypes table
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
                     nel_database('core')->exec(
                         'ALTER TABLE "' . NEL_FILETYPES_TABLE . '" CHANGE mime mimetypes TEXT NOT NULL');
@@ -180,7 +181,18 @@ class Upgrade
                 $prepared = nel_database('core')->exec(
                     'UPDATE "' . NEL_FILETYPES_TABLE .
                     '" SET "extensions" = \'["3gp", "3gpp"]\' WHERE "format" = \'3gp\'');
-                echo __(' - Filetypes table updated.') . '<br>';
+                echo ' - ' . __('Filetypes table updated.') . '<br>';
+
+                // Update users table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . NEL_USERS_TABLE . '" CHANGE user_password password VARCHAR(255) NOT NULL');
+                } else {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . NEL_USERS_TABLE . '" RENAME user_password TO password');
+                }
+                echo ' - ' . __('Users table updated.') . '<br>';
+
                 $migration_count ++;
         }
 
