@@ -1,6 +1,6 @@
 {{# post_headers }}
 <span class="{{ op_reply }} post-header-options">
-	<span class="hidden text-button" data-jsonly="">[<a class="toggle-post" href="#" data-command="hide-post" data-content-id="{{ post_content_id }}" data-alt-visual="{{ show_post_label }}">{{ hide_post_label }}</a>]</span>
-	<span class="{{ op_reply }} post-cite hidden text-button" data-jsonly="">[<a href="#" data-command="cite-post" data-content-id="{{ post_content_id }}">{{ cite_post_label }}</a>]</span>
+	<span class="hidden text-button" data-jsonly="">{{{ ui_content_delimiter_left }}}<a class="toggle-post" href="#" data-command="hide-post" data-content-id="{{ post_content_id }}" data-alt-visual="{{{ ui_content_show_post }}}">{{{ ui_content_hide_post }}}</a>{{ ui_content_delimiter_right }}}</span>
+	<span class="{{ op_reply }} post-cite hidden text-button" data-jsonly="">{{{ ui_content_delimiter_left }}}<a href="#" data-command="cite-post" data-content-id="{{ post_content_id }}">{{{ ui_content_cite_post }}}</a>{{{ ui_content_delimiter_right }}}</span>
 </span>
 {{/ post_headers }}

@@ -86,9 +86,7 @@ abstract class Output
         $substitutes = $this->template_substitutes->getAll();
 
         if ($this->core_id === 'mustache') {
-            $this->render_core->renderEngine()
-                ->getLoader()
-                ->updateSubstituteTemplates($substitutes);
+            $this->render_core->renderEngine()->getLoader()->updateSubstituteTemplates($substitutes);
 
             if ($data_only) {
                 return $render_data;
@@ -124,50 +122,57 @@ abstract class Output
             return;
         }
 
-        $this->render_data['hide_thread_label'] = $this->getUISetting('ui_hide_thread');
-        $this->render_data['show_thread_label'] = $this->getUISetting('ui_show_thread');
-        $this->render_data['hide_post_label'] = $this->getUISetting('ui_hide_post');
-        $this->render_data['show_post_label'] = $this->getUISetting('ui_hide_post');
-        $this->render_data['hide_file_label'] = $this->getUISetting('ui_hide_file');
-        $this->render_data['show_file_label'] = $this->getUISetting('ui_hide_file');
-        $this->render_data['cite_post_label'] = $this->getUISetting('ui_cite_post');
-        $this->render_data['reply_to_thread_label'] = $this->getUISetting('ui_reply_to_thread');
-        $this->render_data['more_file_info_label'] = $this->getUISetting('ui_more_file_info');
-        $this->render_data['less_file_info_label'] = $this->getUISetting('ui_less_file_info');
+        $this->render_data['ui_content_delimiter_left'] = $this->getUISetting('ui_content_delimiter_left');
+        $this->render_data['ui_content_delimiter_right'] = $this->getUISetting('ui_content_delimiter_right');
+        $this->render_data['ui_content_hide_thread'] = $this->getUISetting('ui_content_hide_thread');
+        $this->render_data['ui_content_show_thread'] = $this->getUISetting('ui_content_show_thread');
+        $this->render_data['ui_content_hide_post'] = $this->getUISetting('ui_content_hide_post');
+        $this->render_data['ui_content_show_post'] = $this->getUISetting('ui_content_show_post');
+        $this->render_data['ui_content_hide_file'] = $this->getUISetting('ui_content_hide_file');
+        $this->render_data['ui_content_show_file'] = $this->getUISetting('ui_content_show_file');
+        $this->render_data['ui_content_hide_embed'] = $this->getUISetting('ui_content_hide_embed');
+        $this->render_data['ui_content_show_embed'] = $this->getUISetting('ui_content_show_embed');
+        $this->render_data['ui_content_cite_post'] = $this->getUISetting('ui_content_cite_post');
+        $this->render_data['ui_content_reply_to_thread'] = $this->getUISetting('ui_content_reply_to_thread');
+        $this->render_data['ui_content_more_file_info'] = $this->getUISetting('ui_content_more_file_info');
+        $this->render_data['ui_content_less_file_info'] = $this->getUISetting('ui_content_less_file_info');
+
+        $this->render_data['ui_mod_delimiter_left'] = $this->getUISetting('ui_mod_delimiter_left');
+        $this->render_data['ui_mod_delimiter_right'] = $this->getUISetting('ui_mod_delimiter_right');
+        $this->render_data['ui_mod_lock'] = $this->getUISetting('ui_mod_lock');
+        $this->render_data['ui_mod_unlock'] = $this->getUISetting('ui_mod_unlock');
+        $this->render_data['ui_mod_sticky'] = $this->getUISetting('ui_mod_sticky');
+        $this->render_data['ui_mod_unsticky'] = $this->getUISetting('ui_mod_unsticky');
+        $this->render_data['ui_mod_permasage'] = $this->getUISetting('ui_mod_permasage');
+        $this->render_data['ui_mod_unpermasage'] = $this->getUISetting('ui_mod_unpermasage');
+        $this->render_data['ui_mod_cyclic'] = $this->getUISetting('ui_mod_cyclic');
+        $this->render_data['ui_mod_non_cyclic'] = $this->getUISetting('ui_mod_non_cyclic');
+        $this->render_data['ui_mod_ban'] = $this->getUISetting('ui_mod_ban');
+        $this->render_data['ui_mod_delete'] = $this->getUISetting('ui_mod_delete');
+        $this->render_data['ui_mod_delete_by_ip'] = $this->getUISetting('ui_mod_delete_by_ip');
+        $this->render_data['ui_mod_global_delete_by_ip'] = $this->getUISetting('ui_mod_global_delete_by_ip');
+        $this->render_data['ui_mod_ban_and_delete'] = $this->getUISetting('ui_mod_ban_and_delete');
+        $this->render_data['ui_mod_edit_post'] = $this->getUISetting('ui_mod_edit_post');
 
         if ($this->session->inModmode($this->domain)) {
-            $this->render_data['mod_lock_label'] = $this->getUISetting('ui_mod_lock');
-            $this->render_data['mod_unlock_label'] = $this->getUISetting('ui_mod_unlock');
             $this->render_data['mod_can_lock'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_status');
-            $this->render_data['mod_sticky_label'] = $this->getUISetting('ui_mod_sticky');
-            $this->render_data['mod_unsticky_label'] = $this->getUISetting('ui_mod_unsticky');
             $this->render_data['mod_can_sticky'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_status');
-            $this->render_data['mod_permasage_label'] = $this->getUISetting('ui_mod_permasage');
-            $this->render_data['mod_unpermasage_label'] = $this->getUISetting('ui_mod_unpermasage');
             $this->render_data['mod_can_permasage'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_status');
-            $this->render_data['mod_cyclic_label'] = $this->getUISetting('ui_mod_cyclic');
-            $this->render_data['mod_non_cyclic_label'] = $this->getUISetting('ui_mod_non_cyclic');
             $this->render_data['mod_can_cyclic'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_type');
-            $this->render_data['mod_ban_label'] = $this->getUISetting('ui_mod_ban');
             $this->render_data['mod_can_ban'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_bans');
-            $this->render_data['mod_delete_label'] = $this->getUISetting('ui_mod_delete');
             $this->render_data['mod_can_delete'] = $this->session->user()->checkPermission($this->domain,
                 'perm_delete_posts');
-            $this->render_data['mod_delete_by_ip_label'] = $this->getUISetting('ui_mod_delete_by_ip');
             $this->render_data['mod_can_by_ip'] = $this->session->user()->checkPermission($this->domain,
                 'perm_delete_by_ip');
-            $this->render_data['mod_global_delete_by_ip_label'] = $this->getUISetting('ui_mod_global_delete_by_ip');
             $this->render_data['mod_can_global_by_ip'] = $this->session->user()->checkPermission(nel_global_domain(),
                 'perm_delete_by_ip');
-            $this->render_data['mod_ban_and_delete_label'] = $this->getUISetting('ui_mod_ban_and_delete');
             $this->render_data['mod_can_ban_delete'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_bans') && $this->session->user()->checkPermission($this->domain, 'perm_delete_posts');
-            $this->render_data['mod_edit_label'] = $this->getUISetting('ui_mod_edit_post');
             $this->render_data['mod_can_edit'] = $this->session->user()->checkPermission($this->domain,
                 'perm_edit_posts');
         }

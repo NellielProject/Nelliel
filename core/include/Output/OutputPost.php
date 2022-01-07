@@ -122,23 +122,23 @@ class OutputPost extends Output
             $this->render_data['mod_ip_address'] = $ip;
 
             if (!$response) {
-                $lock_button = $thread->data('locked') ? 'mod_unlock_label' : 'mod_lock_label';
-                $this->render_data['mod_lock_option_label'] = $this->render_data[$lock_button];
+                $lock_button = $thread->data('locked') ? 'ui_mod_unlock' : 'ui_mod_lock';
+                $this->render_data['mod_lock_option'] = $this->render_data[$lock_button];
                 $this->render_data['mod_lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=lock&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
 
-                $sticky_button = $thread->data('sticky') ? 'mod_unsticky_label' : 'mod_sticky_label';
-                $this->render_data['mod_sticky_option_label'] = $this->render_data[$sticky_button];
+                $sticky_button = $thread->data('sticky') ? 'ui_mod_unsticky' : 'ui_mod_sticky';
+                $this->render_data['mod_sticky_option'] = $this->render_data[$sticky_button];
                 $this->render_data['mod_sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=sticky&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
 
-                $permasage_button = $thread->data('permasage') ? 'mod_unpermasage_label' : 'mod_permasage_label';
-                $this->render_data['mod_permasage_option_label'] = $this->render_data[$permasage_button];
+                $permasage_button = $thread->data('permasage') ? 'ui_mod_unpermasage' : 'ui_mod_permasage';
+                $this->render_data['mod_permasage_option'] = $this->render_data[$permasage_button];
                 $this->render_data['mod_permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=permasage&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
 
-                $cyclic_button = $thread->data('cyclic') ? 'mod_non_cyclic_label' : 'mod_cyclic_label';
-                $this->render_data['mod_cyclic_option_label'] = $this->render_data[$cyclic_button];
+                $cyclic_button = $thread->data('cyclic') ? 'ui_mod_non_cyclic' : 'ui_mod_cyclic';
+                $this->render_data['mod_cyclic_option'] = $this->render_data[$cyclic_button];
                 $this->render_data['mod_cyclic_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=cyclic&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
             }

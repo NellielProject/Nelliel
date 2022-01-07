@@ -718,40 +718,52 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Public UI</th>
+				<th colspan="5" data-i18n="">General UI</th>
 			</tr>
-	{{# ui_hide_thread }}
+	{{# ui_content_delimiter_left }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_hide_thread }}
-	{{# ui_show_thread }}
+	{{/ ui_content_delimiter_left }}
+	{{# ui_content_delimiter_right }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_show_thread }}
-	{{# ui_hide_post }}
+	{{/ ui_content_delimiter_right }}
+	{{# ui_content_hide_thread }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_hide_post }}
-	{{# ui_show_post }}
+	{{/ ui_content_hide_thread }}
+	{{# ui_content_show_thread }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_show_post }}
-	{{# ui_hide_file }}
+	{{/ ui_content_show_thread }}
+	{{# ui_content_hide_post }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_hide_file }}
-	{{# ui_show_file }}
+	{{/ ui_content_hide_post }}
+	{{# ui_content_show_post }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_show_file }}
-	{{# ui_cite_post }}
+	{{/ ui_content_show_post }}
+	{{# ui_content_hide_file }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_cite_post }}
-	{{# ui_reply_to_thread }}
+	{{/ ui_content_hide_file }}
+	{{# ui_content_show_file }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_reply_to_thread }}
-	{{# ui_more_file_info }}
+	{{/ ui_content_show_file }}
+	{{# ui_content_cite_post }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_more_file_info }}
+	{{/ ui_content_cite_post }}
+	{{# ui_content_reply_to_thread }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_content_reply_to_thread }}
+	{{# ui_content_more_file_info }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_content_more_file_info }}
 		</tbody>
 		<tbody>
 			<tr>
 				<th colspan="5" data-i18n="">Moderator UI</th>
 			</tr>
+	{{# ui_mod_delimiter_left }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_delimiter_left }}
+	{{# ui_mod_delimiter_right }}
+			{{> panels/pieces/settings/text }}
+	{{/ ui_mod_delimiter_right }}
 	{{# ui_mod_ban }}
 			{{> panels/pieces/settings/text }}
 	{{/ ui_mod_ban }}
