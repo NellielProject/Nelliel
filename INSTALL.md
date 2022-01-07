@@ -1,5 +1,5 @@
 ## Installation
-Basic installation guide. Please note that installing and running a modern imageboard requires some basic knowledge of web hosting and some use of a terminal or shell. The install process is kept as short and universal as possible but may need some modification for your environment.
+Basic installation guide. Please note that installing and running a modern imageboard requires basic knowledge of web hosting and possibly use of a terminal or shell. The install process is kept as short and universal as possible but may need modifications for your environment.
 
 1. Unarchive the files for Nelliel to the desired location. This must be somewhere outside of the web-accessible areas but is otherwise left to your discretion.
 2. Make sure the PHP process has read, write and execute permissions on the `public` directory, `public/assets` directory and `core` directory.
