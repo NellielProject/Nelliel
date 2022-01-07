@@ -72,14 +72,14 @@ class OutputPanelImageSets extends Output
             $set_data = array();
             $set_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $set_data['id'] = $image_set['set-info']['id'];
-            $set_data['name'] = $image_set['set-info']['name'];
-            $set_data['directory'] = $image_set['set-info']['directory'];
-            $set_data['is_installed'] = in_array($image_set['set-info']['id'], $installed_ids);
+            $set_data['id'] = $image_set['info']['id'];
+            $set_data['name'] = $image_set['info']['name'];
+            $set_data['directory'] = $image_set['info']['directory'];
+            $set_data['is_installed'] = in_array($image_set['info']['id'], $installed_ids);
             $set_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'image-sets', 'actions' => 'add',
-                        'image-set-id' => $image_set['set-info']['id']]);
+                        'image-set-id' => $image_set['info']['id']]);
             $this->render_data['available_list'][] = $set_data;
         }
 

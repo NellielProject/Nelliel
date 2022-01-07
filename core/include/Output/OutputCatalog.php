@@ -82,11 +82,11 @@ class OutputCatalog extends Output
             $thread_data['index_page'] = $index_page;
             $ui_image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('ui_image_set'));
             $thread_data['is_sticky'] = $thread->data('sticky');
-            $thread_data['sticky'] = $ui_image_set->getWebPath('ui', 'sticky', true);
+            $thread_data['status_sticky'] = $ui_image_set->getWebPath('ui', 'status_sticky', true);
             $thread_data['is_locked'] = $thread->data('locked');
-            $thread_data['locked'] = $ui_image_set->getWebPath('ui', 'locked', true);
+            $thread_data['status_locked'] = $ui_image_set->getWebPath('ui', 'status_locked', true);
             $thread_data['is_cyclic'] = $thread->data('cyclic');
-            $thread_data['cyclic'] = $ui_image_set->getWebPath('ui', 'cyclic', true);
+            $thread_data['status_cyclic'] = $ui_image_set->getWebPath('ui', 'status_cyclic', true);
             $uploads = $post->getUploads();
 
             if (count($uploads) > 0)

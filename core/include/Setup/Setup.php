@@ -352,7 +352,7 @@ class Setup
         $template_inis = $front_end_data->getTemplateInis();
 
         foreach ($template_inis as $ini) {
-            $template_id = $ini['template-info']['id'];
+            $template_id = $ini['info']['id'];
 
             if (!$front_end_data->templateIsCore($template_id)) {
                 continue;
@@ -370,7 +370,7 @@ class Setup
         $style_inis = $front_end_data->getStyleInis();
 
         foreach ($style_inis as $ini) {
-            $style_id = $ini['style-info']['id'];
+            $style_id = $ini['info']['id'];
 
             if (!$front_end_data->styleIsCore($style_id)) {
                 continue;
@@ -388,7 +388,7 @@ class Setup
         $image_set_inis = $front_end_data->getImageSetInis();
 
         foreach ($image_set_inis as $ini) {
-            $image_set_id = $ini['set-info']['id'];
+            $image_set_id = $ini['info']['id'];
 
             if (!$front_end_data->imageSetIsCore($image_set_id)) {
                 continue;

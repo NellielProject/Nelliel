@@ -45,40 +45,40 @@ class ImageSet
         return $this->data[$section][$key] ?? '';
     }
 
-    public function getFile(string $section, string $image, bool $fallback): string
+    public function getFile(string $section, string $key, bool $fallback): string
     {
-        if ($this->data($section, $image) === '' && $fallback) {
-            return $this->front_end_data->getBaseImageSet()->getFile($section, $image, false);
+        if ($this->data($section, $key) === '' && $fallback) {
+            return $this->front_end_data->getBaseImageSet()->getFile($section, $key, false);
         }
 
-        return $this->info[$section][$image] ?? '';
+        return $this->data($section, $key) ?? '';
     }
 
-    public function getFilePath(string $section, string $image, bool $fallback): string
+    public function getFilePath(string $section, string $key, bool $fallback): string
     {
-        if ($this->getFile($section, $image, false) === '' && $fallback) {
-            return $this->front_end_data->getBaseImageSet()->getFilePath($section, $image, false);
+        if ($this->getFile($section, $key, false) === '' && $fallback) {
+            return $this->front_end_data->getBaseImageSet()->getFilePath($section, $key, false);
         }
 
-        $image_file = $this->data($section, $image);
+        $file = $this->data($section, $key);
 
-        if ($image_file !== '') {
-            return NEL_IMAGE_SETS_FILES_PATH . $this->info('directory') . '/' . $section . '/' . $image_file;
+        if ($file !== '') {
+            return NEL_IMAGE_SETS_FILES_PATH . $this->info('directory') . '/' . $file;
         }
 
         return '';
     }
 
-    public function getWebPath(string $section, string $image, bool $fallback): string
+    public function getWebPath(string $section, string $key, bool $fallback): string
     {
-        if ($this->getFile($section, $image, false) === '' && $fallback) {
-            return $this->front_end_data->getBaseImageSet()->getWebPath($section, $image, false);
+        if ($this->getFile($section, $key, false) === '' && $fallback) {
+            return $this->front_end_data->getBaseImageSet()->getWebPath($section, $key, false);
         }
 
-        $image_file = $this->data($section, $image);
+        $file = $this->data($section, $key);
 
-        if ($image_file !== '') {
-            return NEL_IMAGE_SETS_WEB_PATH . $this->info('directory') . '/' . $section . '/' . $image_file;
+        if ($file !== '') {
+            return NEL_IMAGE_SETS_WEB_PATH . $this->info('directory') . '/' . $file;
         }
 
         return '';
@@ -90,9 +90,9 @@ class ImageSet
         $encoded_ini = '';
 
         foreach ($image_set_inis as $ini) {
-            if ($ini['set-info']['id'] === $this->id()) {
+            if ($ini['info']['id'] === $this->id()) {
                 $encoded_ini = json_encode($ini);
-                $directory = $ini['set-info']['directory'];
+                $directory = $ini['info']['directory'];
                 break;
             }
         }
@@ -137,7 +137,7 @@ class ImageSet
         }
 
         $this->data = $ini ?? array();
-        $this->info = $ini['set-info'] ?? array();
+        $this->info = $ini['info'] ?? array();
     }
 
     public function enable(): void

@@ -169,11 +169,11 @@ class OutputPost extends Output
 
         if (!$response) {
             $thread_headers['is_sticky'] = $thread->data('sticky');
-            $thread_headers['sticky'] = $ui_image_set->getWebPath('ui', 'sticky', true);
+            $thread_headers['status_sticky'] = $ui_image_set->getWebPath('ui', 'status_sticky', true);
             $thread_headers['is_locked'] = $thread->data('locked');
-            $thread_headers['locked'] = $ui_image_set->getWebPath('ui', 'locked', true);
+            $thread_headers['status_locked'] = $ui_image_set->getWebPath('ui', 'status_locked', true);
             $thread_headers['is_cyclic'] = $thread->data('cyclic');
-            $thread_headers['cyclic'] = $ui_image_set->getWebPath('ui', 'cyclic', true);
+            $thread_headers['status_cyclic'] = $ui_image_set->getWebPath('ui', 'status_cyclic', true);
 
             if ($gen_data['index_rendering']) {
                 $thread_headers['index_render'] = true;
