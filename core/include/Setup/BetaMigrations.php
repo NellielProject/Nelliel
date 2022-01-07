@@ -34,7 +34,7 @@ class BetaMigrations
                 // Update filetypes table
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
                     nel_database('core')->exec(
-                        'ALTER TABLE "' . NEL_FILETYPES_TABLE . '" CHANGE mime mimetypes TEXT NOT NULL');
+                        'ALTER TABLE "' . NEL_FILETYPES_TABLE . '" CHANGE COLUMN mime mimetypes TEXT NOT NULL');
                 } else {
                     nel_database('core')->exec('ALTER TABLE "' . NEL_FILETYPES_TABLE . '" RENAME mime TO mimetypes');
                     nel_database('core')->exec(
@@ -78,9 +78,11 @@ class BetaMigrations
                 // Update users table
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
                     nel_database('core')->exec(
-                        'ALTER TABLE "' . NEL_USERS_TABLE . '" CHANGE user_password password VARCHAR(255) NOT NULL');
+                        'ALTER TABLE "' . NEL_USERS_TABLE .
+                        '" CHANGE COLUMN user_password password VARCHAR(255) NOT NULL');
                 } else {
-                    nel_database('core')->exec('ALTER TABLE "' . NEL_USERS_TABLE . '" RENAME user_password TO password');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . NEL_USERS_TABLE . '" RENAME COLUMN user_password TO password');
                 }
 
                 echo ' - ' . __('Users table updated.') . '<br>';
@@ -92,7 +94,7 @@ class BetaMigrations
 
                     foreach ($prefixes as $prefix) {
                         nel_database('core')->exec(
-                            'ALTER TABLE "' . $prefix . '_archives' . '" MODIFY thread_data LONGTEXT NOT NULL');
+                            'ALTER TABLE "' . $prefix . '_archives' . '" MODIFY COLUMN thread_data LONGTEXT NOT NULL');
                     }
 
                     echo ' - ' . __('Archive tables updated.') . '<br>';
@@ -157,10 +159,24 @@ class BetaMigrations
                 $settings_table->insertDefaults();
                 $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $board_defaults_table->insertDefaults();
-
                 echo ' - ' . __('Settings and board config tables updated.') . '<br>';
 
+                // Update thread tables
+                $db_prefixes = nel_database('core')->executeFetchAll(
+                    'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN regen_cache SMALLINT NOT NULL DEFAULT 0');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN cache TEXT DEFAULT NULL');
+                    nel_database('core')->executePrepared($prepared);
+                }
+
+                echo ' - ' . __('Thread tables updated.') . '<br>';
+
                 $migration_count ++;
+                break;
         }
 
         return $migration_count;

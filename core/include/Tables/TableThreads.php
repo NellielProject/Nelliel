@@ -34,6 +34,8 @@ class TableThreads extends Table
             'preserve' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'locked' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'slug' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'regen_cache' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'cache' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'thread_id' => ['row_check' => true, 'auto_inc' => false],
@@ -52,6 +54,8 @@ class TableThreads extends Table
             'preserve' => ['row_check' => false, 'auto_inc' => false],
             'locked' => ['row_check' => false, 'auto_inc' => false],
             'slug' => ['row_check' => false, 'auto_inc' => false],
+            'regen_cache' => ['row_check' => false, 'auto_inc' => false],
+            'cache' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -77,6 +81,8 @@ class TableThreads extends Table
             preserve            SMALLINT NOT NULL DEFAULT 0,
             locked              SMALLINT NOT NULL DEFAULT 0,
             slug                TEXT DEFAULT NULL,
+            regen_cache         SMALLINT NOT NULL DEFAULT 0,
+            cache               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (thread_id)
         ) ' . $options . ';';
