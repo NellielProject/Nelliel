@@ -17,7 +17,7 @@ class AuthUser extends AuthHandler
     {
         $this->database = $database;
         $this->empty = nel_true_empty($username);
-        $this->auth_id = $username;
+        $this->auth_id = utf8_strtolower($username);
         $this->authorization = new Authorization($this->database);
 
         if ($db_load) {

@@ -20,7 +20,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function __construct(string $domain_id, NellielPDO $database)
     {
-        $this->domain_id = $domain_id;
+        $this->domain_id = utf8_strtolower($domain_id);
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();

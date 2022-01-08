@@ -51,7 +51,7 @@ class Upgrade
 
     public function verifyLogin(): bool
     {
-        $username = $_POST['username'] ?? '';
+        $username = utf8_strtolower($_POST['username'] ?? '');
         $form_password = $_POST['super_sekrit'] ?? '';
         $prepared = nel_database('core')->prepare(
             'SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "username" = :username AND "owner" = 1');

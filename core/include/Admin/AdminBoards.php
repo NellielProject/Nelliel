@@ -68,6 +68,7 @@ class AdminBoards extends Admin
         $this->verifyPermissions($this->domain, 'perm_boards_add');
         $site_domain = new DomainSite($this->database);
         $board_uri = trim($_POST['new_board_uri']);
+        $board_uri_lower = utf8_strtolower($board_uri);
 
         if (nel_true_empty($board_uri)) {
             nel_derp(243, _gettext('No board URI provided.'));
@@ -85,14 +86,14 @@ class AdminBoards extends Admin
             nel_derp(245, sprintf(_gettext('Board URI is too long. Maximum length is %d characters.'), $uri_max));
         }
 
-        if ($board_uri === Domain::SITE || $board_uri === Domain::GLOBAL || $board_uri === NEL_ASSETS_DIR ||
-            $board_uri === $site_domain->setting('overboard_uri') ||
-            $board_uri === $site_domain->setting('sfw_overboard_uri')) {
+        if ($board_uri_lower === Domain::SITE || $board_uri_lower === Domain::GLOBAL || $board_uri_lower === NEL_ASSETS_DIR ||
+            $board_uri_lower === $site_domain->setting('overboard_uri') ||
+            $board_uri_lower === $site_domain->setting('sfw_overboard_uri')) {
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
         $prepared = $this->database->prepare('SELECT 1 FROM "' . $this->data_table . '" WHERE "board_uri" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$board_uri], PDO::FETCH_COLUMN);
+        $result = $this->database->executePreparedFetch($prepared, [$board_uri_lower], PDO::FETCH_COLUMN);
 
         if ($result) {
             nel_derp(240, sprintf(_gettext('There is already a board with the URI %s.'), $board_uri));
@@ -140,8 +141,8 @@ class AdminBoards extends Admin
             }
         }
 
-        $board_id = $this->generateBoardID($board_uri);
-        $db_prefix = $this->generateDBPrefix($board_uri);
+        $board_id = $this->generateBoardID($board_uri_lower);
+        $db_prefix = $this->generateDBPrefix($board_uri_lower);
 
         if ($board_id === '' || $db_prefix === '') {
             nel_derp(241,

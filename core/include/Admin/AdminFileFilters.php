@@ -45,7 +45,8 @@ class AdminFileFilters extends Admin
             $board_id = $_POST['board_id'];
         }
 
-        $this->verifyPermissions(Domain::getDomainFromID($board_id, $this->database), 'perm_file_filters_manage');
+        $domain = Domain::getDomainFromID($board_id, $this->database);
+        $this->verifyPermissions($domain, 'perm_file_filters_manage');
         $type = $_POST['hash_type'];
         $notes = $_POST['notes'];
         $output_filter = new Filter();
@@ -55,7 +56,7 @@ class AdminFileFilters extends Admin
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . $this->data_table .
                 '" ("hash_type", "file_hash", "notes", "board_id") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$type, $hash, $notes, $board_id]);
+            $this->database->executePrepared($prepared, [$type, $hash, $notes, $domain->id()]);
         }
 
         $this->outputMain(true);

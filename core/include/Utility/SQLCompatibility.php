@@ -81,10 +81,10 @@ class SQLCompatibility
         $options = '';
 
         if ($this->sqltype === 'MYSQL') {
-            $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+            $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci';
             $options .= ' ENGINE = InnoDB';
         } else if ($this->sqltype === 'MARIADB') {
-            $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+            $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci';
             $options .= ' ENGINE = InnoDB';
         }
 

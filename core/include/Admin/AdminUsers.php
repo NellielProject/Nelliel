@@ -54,7 +54,7 @@ class AdminUsers extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
-        $this->username = $_POST['username'];
+        $this->username = utf8_strtolower($_POST['username']);
         $this->update();
         $this->outputMain(true);
     }
@@ -100,6 +100,10 @@ class AdminUsers extends Admin
                     $update_user->changeData('password', nel_password_hash($value, NEL_PASSWORD_ALGORITHM));
                 }
 
+                continue;
+            }
+
+            if ($key === 'username') {
                 continue;
             }
 

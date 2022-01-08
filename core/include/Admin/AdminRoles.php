@@ -51,7 +51,7 @@ class AdminRoles extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_roles_manage');
-        $this->role_id = $_POST['role_id'] ?? '';
+        $this->role_id = utf8_strtolower($_POST['role_id'] ?? '');
         $this->update();
         $this->outputMain(true);
     }
