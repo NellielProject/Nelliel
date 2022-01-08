@@ -31,30 +31,30 @@ class OutputPanelManageBoards extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
             http_build_query(['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'add']);
-        $board_data = $this->database->executeFetchAll(
-            'SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" ORDER BY "board_id" DESC', PDO::FETCH_ASSOC);
+        $board_ids = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
         $bgclass = 'row1';
 
-        foreach ($board_data as $board_info) {
+        foreach ($board_ids as $id) {
+            $domain = Domain::getDomainFromID($id, $this->database);
             $board_data = array();
             $board_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $board_data['board_uri'] = $board_info['board_uri'];
-            $board_data['board_url'] = NEL_BASE_WEB_PATH . $board_info['board_uri'] . '/';
-            $board_data['board_id'] = $board_info['board_id'];
-            $board_data['db_prefix'] = $board_info['db_prefix'];
+            $board_data['board_uri'] = $domain->reference('board_uri');
+            $board_data['board_url'] = $domain->reference('board_web_path');
+            $board_data['board_id'] = $domain->id();
+            $board_data['db_prefix'] = $domain->reference('db_prefix');
 
-            if ($board_info['locked'] == 0) {
+            if (!$domain->reference('locked')) {
                 $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
-                        ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $board_info['board_id'],
+                        ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $domain->id(),
                             'actions' => 'lock']);
-                $board_data['status'] = _gettext('Active');
-                $board_data['lock_text'] = _gettext('Lock Board');
+                $board_data['status'] = __('Active');
+                $board_data['lock_text'] = __('Lock Board');
             } else {
                 $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                     http_build_query(
-                        ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $board_info['board_id'],
+                        ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $domain->id(),
                             'actions' => 'unlock']);
                 $board_data['status'] = _gettext('Locked');
                 $board_data['lock_text'] = _gettext('Unlock Board');
@@ -62,7 +62,7 @@ class OutputPanelManageBoards extends Output
 
             $board_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
-                    ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $board_info['board_id'],
+                    ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $domain->id(),
                         'actions' => 'remove']);
             $this->render_data['board_list'][] = $board_data;
         }

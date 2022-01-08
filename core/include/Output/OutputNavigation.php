@@ -19,16 +19,18 @@ class OutputNavigation extends Output
     public function boardLinks(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $board_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
-        $board_count = count($board_data);
+        $board_ids = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
+            PDO::FETCH_COLUMN);
+        $board_count = count($board_ids);
         $end = $board_count - 1;
         $render_data = array();
 
         for ($i = 0; $i < $board_count; $i ++) {
+            $board = Domain::getDomainFromID($board_ids[$i], $this->database);
             $board_info = array();
-            $board_info['board_url'] = NEL_BASE_WEB_PATH . $board_data[$i]['board_uri'] . '/';
+            $board_info['board_url'] = $board->reference('board_web_path');
             $board_info['name'] = ''; // TODO: Get and use actual name
-            $board_info['board_uri'] = $board_data[$i]['board_uri'];
+            $board_info['board_uri'] = $board->reference('board_uri');
             $board_info['end'] = $i === $end;
             $render_data['boards'][] = $board_info;
         }

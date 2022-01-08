@@ -86,16 +86,17 @@ class AdminBoards extends Admin
             nel_derp(245, sprintf(_gettext('Board URI is too long. Maximum length is %d characters.'), $uri_max));
         }
 
-        if ($board_uri_lower === Domain::SITE || $board_uri_lower === Domain::GLOBAL || $board_uri_lower === NEL_ASSETS_DIR ||
-            $board_uri_lower === $site_domain->setting('overboard_uri') ||
+        if ($board_uri_lower === Domain::SITE || $board_uri_lower === Domain::GLOBAL ||
+            $board_uri_lower === NEL_ASSETS_DIR || $board_uri_lower === $site_domain->setting('overboard_uri') ||
             $board_uri_lower === $site_domain->setting('sfw_overboard_uri')) {
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
-        $prepared = $this->database->prepare('SELECT 1 FROM "' . $this->data_table . '" WHERE "board_uri" = ?');
-        $result = $this->database->executePreparedFetch($prepared, [$board_uri_lower], PDO::FETCH_COLUMN);
+        $board_uris = $this->database->executeFetch('SELECT "board_uri" FROM "' . $this->data_table . '"',
+            PDO::FETCH_COLUMN);
+        $uri_exists = in_array($board_uri_lower, array_map('strtolower', $board_uris));
 
-        if ($result) {
+        if ($uri_exists) {
             nel_derp(240, sprintf(_gettext('There is already a board with the URI %s.'), $board_uri));
         }
 
@@ -309,9 +310,9 @@ class AdminBoards extends Admin
         $base_id = utf8_substr($test_id, 0, 45);
         $final_id = '';
 
-        for ($i = 0; $i <= 10; $i ++) {
+        for ($i = 0; $i <= 20; $i ++) {
             $prepared = $this->database->prepare('SELECT 1 FROM "' . $this->data_table . '" WHERE "board_id" = ?');
-            $result = $this->database->executePreparedFetch($prepared, [$test_id], PDO::FETCH_COLUMN);
+            $result = $this->database->executePreparedFetch($prepared, [utf8_strtolower($test_id)], PDO::FETCH_COLUMN);
 
             if (!$result) {
                 $final_id = $test_id;

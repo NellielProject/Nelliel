@@ -68,7 +68,7 @@ class Login
             if (empty($session_username)) {
                 $valid_user = true;
             } else {
-                $valid_user = $session_username === $form_username;
+                $valid_user = $session_username === utf8_strtolower($form_username);
             }
         }
 
