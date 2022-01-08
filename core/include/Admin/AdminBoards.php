@@ -92,7 +92,7 @@ class AdminBoards extends Admin
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
-        $board_uris = $this->database->executeFetch('SELECT "board_uri" FROM "' . $this->data_table . '"',
+        $board_uris = $this->database->executeFetchAll('SELECT "board_uri" FROM "' . $this->data_table . '"',
             PDO::FETCH_COLUMN);
         $uri_exists = in_array($board_uri_lower, array_map('strtolower', $board_uris));
 
