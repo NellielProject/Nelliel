@@ -460,6 +460,9 @@
 			<tr>
 				<th colspan="5" data-i18n="">Index Rendering</th>
 			</tr>
+	{{# enable_index }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_index }}
 	{{# index_thread_replies }}
 			{{> panels/pieces/settings/number }}
 	{{/ index_thread_replies }}
@@ -496,6 +499,14 @@
 	{{# show_catalog_link }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_catalog_link }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="5" data-i18n="">Catalog Rendering</th>
+			</tr>
+	{{# enable_catalog }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_catalog }}
 		</tbody>
 		<tbody>
 			<tr>

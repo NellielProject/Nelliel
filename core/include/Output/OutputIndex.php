@@ -48,7 +48,7 @@ class OutputIndex extends Output
             $this->render_data['catalog_url'] = 'catalog.html';
         }
 
-        $this->render_data['show_catalog_link'] = $this->domain->setting('show_catalog_link');
+        $this->render_data['show_catalog_link'] = $this->domain->setting('enable_catalog') && $this->domain->setting('show_catalog_link');
         $threads = $this->domain->activeThreads(true);
         $thread_count = count($threads);
         $threads_done = 0;

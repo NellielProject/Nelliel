@@ -75,10 +75,15 @@ class Regen
 
     public function index(Domain $domain): void
     {
-        $output_index = new OutputIndex($domain, true);
-        $output_index->render([], false);
-        $output_catalog = new OutputCatalog($domain, true);
-        $output_catalog->render([], false);
+        if ($domain->setting('enable_index')) {
+            $output_index = new OutputIndex($domain, true);
+            $output_index->render([], false);
+        }
+
+        if ($domain->setting('enable_catalog')) {
+            $output_catalog = new OutputCatalog($domain, true);
+            $output_catalog->render([], false);
+        }
     }
 
     public function overboard(Domain $domain): void

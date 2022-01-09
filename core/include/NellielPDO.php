@@ -206,7 +206,7 @@ class NellielPDO extends PDO
             $result = $prepared->execute($parameters);
         }
 
-        if ($result !== false && $close_cursor) {
+        if ($close_cursor) {
             $prepared->closeCursor();
         }
 

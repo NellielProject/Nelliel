@@ -101,21 +101,18 @@ class BetaMigrations
                 }
 
                 // Update settings and config tables
-                $setting_names = nel_database('core')->executeFetchAll(
-                    'SELECT "setting_name" FROM "' . NEL_SETTINGS_TABLE . '"', PDO::FETCH_COLUMN);
+                $board_setting_names = nel_database('core')->executeFetchAll(
+                    'SELECT "setting_name" FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_category" = \'board\'',
+                    PDO::FETCH_COLUMN);
                 $ui_name_updates = ['ui_hide_thread', 'ui_show_thread', 'ui_hide_post', 'ui_show_post', 'ui_hide_file',
                     'ui_show_file', 'ui_cite_post', 'ui_reply_to_thread', 'ui_more_file_info', 'ui_less_file_info',
                     'ui_expand_thread', 'ui_collapse_thread'];
-                $new_settings = ['ui_content_delimiter_left', 'ui_content_delimiter_right', 'ui_mod_delimiter_left',
-                    'ui_mod_delimiter_right', 'ui_content_hide_embed', 'ui_content_show_embed'];
-                $board_ids = nel_database('core')->executeFetchAll(
-                    'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
 
-                foreach ($setting_names as $name) {
+                foreach ($board_setting_names as $name) {
                     if (in_array($name, $ui_name_updates)) {
                         $prepared = nel_database('core')->prepare(
                             'UPDATE "' . NEL_SETTINGS_TABLE .
-                            '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name');
+                            '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name AND "setting_category" = \'site\'');
                         $prepared->bindValue(':new_name', str_replace('ui_', 'ui_content_', $name));
                         $prepared->bindValue(':old_name', $name);
                         nel_database('core')->executePrepared($prepared, null);
@@ -134,31 +131,19 @@ class BetaMigrations
                         $prepared->bindValue(':old_name', $name);
                         nel_database('core')->executePrepared($prepared, null);
                     }
-
-                    if (in_array($name, $new_settings)) {
-                        $prepared = nel_database('core')->prepare(
-                            'SELECT "setting_value" FROM "' . NEL_BOARD_DEFAULTS_TABLE .
-                            '" WHERE "setting_name" = :setting_name');
-                        $prepared->bindValue(':setting_name', $name, PDO::PARAM_STR);
-                        $default = nel_database('core')->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
-
-                        $prepared = nel_database('core')->prepare(
-                            'INSERT INTO "' . NEL_BOARD_CONFIGS_TABLE .
-                            '" ("board_id", "setting_name", "setting_value") VALUES (?, ?, ?)');
-
-                        foreach ($board_ids as $board_id) {
-                            $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
-                            $prepared->bindValue(2, $name, PDO::PARAM_STR);
-                            $prepared->bindValue(3, $default, PDO::PARAM_STR);
-                            nel_database('core')->executePrepared($prepared);
-                        }
-                    }
                 }
 
+                $new_site_settings = [];
+                $new_board_settings = ['ui_content_delimiter_left', 'ui_content_delimiter_right',
+                    'ui_mod_delimiter_left', 'ui_mod_delimiter_right', 'ui_content_hide_embed', 'ui_content_show_embed',
+                    'enable_index', 'enable_catalog'];
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaults();
                 $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $board_defaults_table->insertDefaults();
+                $this->copyToSiteConfig($new_site_settings);
+                $this->copyToBoardConfig('test', $new_board_settings);
+
                 echo ' - ' . __('Settings and board config tables updated.') . '<br>';
 
                 // Update thread tables
@@ -170,7 +155,6 @@ class BetaMigrations
                         'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN regen_cache SMALLINT NOT NULL DEFAULT 0');
                     nel_database('core')->exec(
                         'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN cache TEXT DEFAULT NULL');
-                    nel_database('core')->executePrepared($prepared);
                 }
 
                 echo ' - ' . __('Thread tables updated.') . '<br>';
@@ -180,5 +164,31 @@ class BetaMigrations
         }
 
         return $migration_count;
+    }
+
+    private function copyToSiteConfig(array $setting_names): void
+    {
+        $prepared = nel_database('core')->prepare(
+            'INSERT INTO "' . NEL_SITE_CONFIG_TABLE .
+            '" ("setting_name", "setting_value") SELECT "setting_name", "default_value" FROM "' . NEL_SETTINGS_TABLE .
+            '" WHERE "setting_name" = ? AND "setting_category" = \'site\'');
+
+        foreach ($setting_names as $name) {
+            $prepared->bindValue(1, $name, PDO::PARAM_STR);
+            nel_database('core')->executePrepared($prepared);
+        }
+    }
+
+    private function copyToBoardConfig(string $board_id, array $setting_names): void
+    {
+        $prepared = nel_database('core')->prepare(
+            'INSERT INTO "' . NEL_BOARD_CONFIGS_TABLE . '" ("board_id", "setting_name", "setting_value") SELECT \'' .
+            $board_id . '\', "setting_name", "setting_value" FROM "' . NEL_BOARD_DEFAULTS_TABLE .
+            '" WHERE "setting_name" = ?');
+
+        foreach ($setting_names as $name) {
+            $prepared->bindValue(1, $name, PDO::PARAM_STR);
+            nel_database('core')->executePrepared($prepared);
+        }
     }
 }
