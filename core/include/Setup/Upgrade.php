@@ -51,7 +51,12 @@ class Upgrade
 
     public function verifyLogin(): bool
     {
-        $username = utf8_strtolower($_POST['username'] ?? '');
+        if($this->installedVersion() === 'v0.9.25') {
+            $username = $_POST['username'] ?? '';
+        } else {
+            $username = utf8_strtolower($_POST['username'] ?? '');
+        }
+
         $form_password = $_POST['super_sekrit'] ?? '';
         $prepared = nel_database('core')->prepare(
             'SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "username" = :username AND "owner" = 1');

@@ -9,6 +9,7 @@ use Nelliel\Tables\TableBoardDefaults;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Tables\TableSettingOptions;
 
 class BetaMigrations
 {
@@ -65,12 +66,12 @@ class BetaMigrations
 
                     $prepared = nel_database('core')->prepare(
                         'UPDATE "' . NEL_FILETYPES_TABLE . '" SET "mimetypes" = :mimetypes WHERE "format" = :format');
-                    $prepared->bindValue(':mimetypes', $new_value);
-                    $prepared->bindValue(':format', $data['format']);
+                    $prepared->bindValue(':mimetypes', $new_value, PDO::PARAM_STR);
+                    $prepared->bindValue(':format', $data['format'], PDO::PARAM_STR);
                     nel_database('core')->executePrepared($prepared, null);
                 }
 
-                $prepared = nel_database('core')->exec(
+                nel_database('core')->exec(
                     'UPDATE "' . NEL_FILETYPES_TABLE .
                     '" SET "extensions" = \'["3gp", "3gpp"]\' WHERE "format" = \'3gp\'');
                 echo ' - ' . __('Filetypes table updated.') . '<br>';
@@ -83,6 +84,18 @@ class BetaMigrations
                 } else {
                     nel_database('core')->exec(
                         'ALTER TABLE "' . NEL_USERS_TABLE . '" RENAME COLUMN user_password TO password');
+                }
+
+                $usernames = nel_database('core')->executeFetchAll('SELECT "username" FROM "' . NEL_USERS_TABLE . '"',
+                    PDO::FETCH_COLUMN);
+                $prepared = nel_database('core')->prepare(
+                    'UPDATE "' . NEL_USERS_TABLE . '" SET "username" = :username_lower WHERE "username" = :username');
+
+                foreach ($usernames as $username) {
+                    $username_lower = utf8_strtolower($username);
+                    $prepared->bindValue(':username_lower', $username_lower, PDO::PARAM_STR);
+                    $prepared->bindValue(':username', $username, PDO::PARAM_STR);
+                    nel_database('core')->executePrepared($prepared, null);
                 }
 
                 echo ' - ' . __('Users table updated.') . '<br>';
@@ -141,10 +154,41 @@ class BetaMigrations
                 $settings_table->insertDefaults();
                 $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $board_defaults_table->insertDefaults();
+
+                $new_site_textareas = ['description'];
+                $new_board_textareas = ['description'];
+
+                foreach ($new_site_textareas as $setting_name) {
+                    $prepared = nel_database('core')->prepare(
+                        'UPDATE "' . NEL_SETTINGS_TABLE .
+                        '" SET "input_attributes" = :textarea WHERE "setting_name" = :setting_name AND "setting_category" = \'site\'');
+                    $prepared->bindValue(':textarea', '{"type":"textarea"}', PDO::PARAM_STR);
+                    $prepared->bindValue(':setting_name', $setting_name);
+                    nel_database('core')->executePrepared($prepared, null);
+                }
+
+                foreach ($new_board_textareas as $setting_name) {
+                    $prepared = nel_database('core')->prepare(
+                        'UPDATE "' . NEL_SETTINGS_TABLE .
+                        '" SET "input_attributes" = :textarea WHERE "setting_name" = :setting_name AND "setting_category" = \'board\'');
+                    $prepared->bindValue(':textarea', '{"type":"textarea"}', PDO::PARAM_STR);
+                    $prepared->bindValue(':setting_name', $setting_name);
+                    nel_database('core')->executePrepared($prepared, null);
+                }
+
                 $this->copyToSiteConfig($new_site_settings);
                 $this->copyToBoardConfig('test', $new_board_settings);
 
                 echo ' - ' . __('Settings and board config tables updated.') . '<br>';
+
+                // Update setting options table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_SETTING_OPTIONS_TABLE . '" ADD COLUMN raw_output SMALLINT NOT NULL DEFAULT 0');
+                $setting_options_table = new TableSettingOptions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $setting_options_table->insertDefaults();
+
+                echo ' - ' . __('Setting options table updated.') . '<br>';
 
                 // Update thread tables
                 $db_prefixes = nel_database('core')->executeFetchAll(

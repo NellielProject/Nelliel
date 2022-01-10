@@ -68,7 +68,7 @@ class TableSettings extends Table
         // General
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'name', '', 'Site name.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_name', '1', 'Display site name in header.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'description', '', 'Site description.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'description', '', 'Site description.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_description', '1', 'Display site description in header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'favicon', '', 'Site favicon.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_favicon', '0', 'Show site favicon.', '{"type":"checkbox"}']);
@@ -168,7 +168,7 @@ class TableSettings extends Table
         // General
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'name', '', 'Board name', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_name', '1', 'Display board name in header.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'description', '', 'Board description.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'description', '', 'Board description.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_description', '1', 'Display board description in header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'favicon', '', 'Board favicon.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_favicon', '0', 'Show board favicon.', '{"type":"checkbox"}']);
@@ -373,7 +373,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_allowed_embeds', '1', 'Show a list of allowed embeds on the new post form.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_form_max_filesize', '1', 'Show the maximum allowed filesize.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_thumbnailed_message', '1', 'Show message about large images being thumbnailed.', '{"type":"checkbox"}']);
-
 
         // Other Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'template_id', 'template-nelliel-basic', 'ID of template for board to use.', '{"type":"text"}']);
