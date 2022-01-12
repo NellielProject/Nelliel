@@ -48,8 +48,8 @@ class AdminBoardSettings extends Admin
 
     public function update(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_board_config_modify');
-        $lock_override = $this->session_user->checkPermission($this->domain, 'perm_board_config_override');
+        $this->verifyPermissions($this->domain, 'perm_board_defaults_modify');
+        $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
         $prepared = $this->database->prepare(
             'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
                 LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
@@ -77,16 +77,16 @@ class AdminBoardSettings extends Admin
             if ($setting_name === 'enabled_filetypes') {
                 $filetypes_array = array();
 
-                foreach ($new_value as $type => $entries) {
-                    $type_enabled = nel_form_input_default($entries['enabled']) === '1';
-                    $filetypes_array[$type]['enabled'] = $type_enabled;
-                    $type_formats = $entries['formats'] ?? array();
+                foreach ($new_value as $category => $entries) {
+                    $category_enabled = nel_form_input_default($entries['enabled']) === '1';
+                    $filetypes_array[$category]['enabled'] = $category_enabled;
+                    $formats = $entries['formats'] ?? array();
 
-                    foreach ($type_formats as $format => $enabled) {
+                    foreach ($formats as $format => $enabled) {
                         $format_enabled = nel_form_input_default($enabled) === '1';
 
                         if ($format_enabled) {
-                            $filetypes_array[$type]['formats'][] = $format;
+                            $filetypes_array[$category]['formats'][] = $format;
                         }
                     }
                 }
@@ -126,7 +126,6 @@ class AdminBoardSettings extends Admin
             }
 
             if ($old_value != $new_value) {
-
                 $this->updateSetting($this->domain, $setting_name, $new_value, $lock_override);
                 $changes ++;
             }
@@ -162,12 +161,11 @@ class AdminBoardSettings extends Admin
         }
     }
 
-    private function setLock(DomainBoard $domain, $config_name, $setting)
+    private function setLock(string $setting_name)
     {
         $prepared = $this->database->prepare(
-            'UPDATE "' . $domain->reference('config_table') .
-            '" SET "edit_lock" = ? WHERE "setting_name" = ? AND "board_id" = ?');
-        $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
+            'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "edit_lock" = ? WHERE "setting_name" = ?');
+        $this->database->executePrepared($prepared, [$lock_value, $key]);
     }
 
     private function updateSetting(Domain $domain, $config_name, $setting, $lock_override)
