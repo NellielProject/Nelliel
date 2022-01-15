@@ -392,40 +392,22 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'early404_replies_threshold', '5', 'Minimum replies needed to avoid being pruned by early 404.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'early404_page_threshold', '3', 'Last page of the index before early 404 pruning begins. Threads beyond this page will be checked.', '{"type":"number"}']);
 
-        // Content UI
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_delimiter_left', '[', 'Delimiter on the left side of content-related links.', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_delimiter_right', ']', 'Delimiter on the right side of content-related links.', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_hide_thread', 'Hide Thread', 'Hide Thread', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_show_thread', 'Show Thread', 'Show Thread', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_hide_post', 'Hide Post', 'Hide Post', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_show_post', 'Show Post', 'Show Post', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_hide_file', 'Hide File', 'Hide File', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_show_file', 'Show File', 'Show File', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_hide_embed', 'Hide Embed', 'Hide Embed', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_show_embed', 'Show Embed', 'Show Embed', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_cite_post', 'Cite', 'Cite', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_reply_to_thread', 'Reply', 'Reply', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_more_file_info', 'More Info', 'More Info', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_less_file_info', 'Less Info', 'Less Info', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_expand_thread', 'Expand', 'Expand', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_content_collapse_thread', 'Collapse', 'Collapse', '{"type":"text"}']);
-
-        // Moderator UI
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_delimiter_left', '[', 'Delimiter on the left side of moderation links.', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_delimiter_right', ']', 'Delimiter on the right side of moderation links.', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_ban', 'Ban', 'Ban', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_delete', 'Delete', 'Delete', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_delete_by_ip', 'Delete By IP', 'Delete By IP', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_global_delete_by_ip', 'Global Delete By IP', 'Global Delete By IP', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_ban_and_delete', 'Ban + Delete', 'Ban + Delete', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_lock', 'Lock', 'Lock', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unlock', 'Unlock', 'Unlock', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_sticky', 'Sticky', 'Sticky', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unsticky', 'Unsticky', 'Unsticky', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_permasage', 'Permasage', 'Permasage', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unpermasage', 'Unpermasage', 'Unpermasage', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_cyclic', 'Cyclic', 'Cyclic', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_non_cyclic', 'Non-cyclic', 'Non-cyclic', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_edit_post', 'Edit', 'Edit', '{"type":"text"}']);
+        // Moderator Links
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delimiter_left', '[', 'Delimiter on the left side of moderation links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delimiter_right', ']', 'Delimiter on the right side of moderation links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_ban', 'Ban', 'Ban', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delete', 'Delete', 'Delete', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delete_by_ip', 'Delete By IP', 'Delete By IP', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_global_delete_by_ip', 'Global Delete By IP', 'Global Delete By IP', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_ban_and_delete', 'Ban + Delete', 'Ban + Delete', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_lock', 'Lock', 'Lock', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unlock', 'Unlock', 'Unlock', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_sticky', 'Sticky', 'Sticky', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unsticky', 'Unsticky', 'Unsticky', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_permasage', 'Permasage', 'Permasage', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unpermasage', 'Unpermasage', 'Unpermasage', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_cyclic', 'Cyclic', 'Cyclic', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_non_cyclic', 'Non-cyclic', 'Non-cyclic', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_edit_post', 'Edit', 'Edit', '{"type":"text"}']);
     }
 }

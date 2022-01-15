@@ -122,21 +122,6 @@ abstract class Output
             return;
         }
 
-        $this->render_data['ui_content_delimiter_left'] = $this->getUISetting('ui_content_delimiter_left');
-        $this->render_data['ui_content_delimiter_right'] = $this->getUISetting('ui_content_delimiter_right');
-        $this->render_data['ui_content_hide_thread'] = $this->getUISetting('ui_content_hide_thread');
-        $this->render_data['ui_content_show_thread'] = $this->getUISetting('ui_content_show_thread');
-        $this->render_data['ui_content_hide_post'] = $this->getUISetting('ui_content_hide_post');
-        $this->render_data['ui_content_show_post'] = $this->getUISetting('ui_content_show_post');
-        $this->render_data['ui_content_hide_file'] = $this->getUISetting('ui_content_hide_file');
-        $this->render_data['ui_content_show_file'] = $this->getUISetting('ui_content_show_file');
-        $this->render_data['ui_content_hide_embed'] = $this->getUISetting('ui_content_hide_embed');
-        $this->render_data['ui_content_show_embed'] = $this->getUISetting('ui_content_show_embed');
-        $this->render_data['ui_content_cite_post'] = $this->getUISetting('ui_content_cite_post');
-        $this->render_data['ui_content_reply_to_thread'] = $this->getUISetting('ui_content_reply_to_thread');
-        $this->render_data['ui_content_more_file_info'] = $this->getUISetting('ui_content_more_file_info');
-        $this->render_data['ui_content_less_file_info'] = $this->getUISetting('ui_content_less_file_info');
-
         $this->render_data['ui_mod_delimiter_left'] = $this->getUISetting('ui_mod_delimiter_left');
         $this->render_data['ui_mod_delimiter_right'] = $this->getUISetting('ui_mod_delimiter_right');
         $this->render_data['ui_mod_lock'] = $this->getUISetting('ui_mod_lock');

@@ -2,15 +2,15 @@
 {{^ hide_file_select }}
 	<input type="checkbox" name="{{ file_content_id }}" value="action">
 {{/ hide_file_select }}
-	<span class="hide-file hidden text-button" data-jsonly="">{{{ ui_content_delimiter_left }}}<a class="toggle-file" href="#" data-command="hide-file" data-content-id="{{ file_content_id }}" data-alt-visual="{{{ ui_content_hide_file }}}">{{{ ui_content_show_file }}}</a>{{{ ui_content_delimiter_right }}}</span>
-	<span class="hidden text-button" data-jsonly="">{{{ ui_content_delimiter_left }}}<a href="#" data-command="show-file-meta" data-content-id="{{ file_content_id }}" data-alt-visual="{{{ ui_content_less_file_info }}}">{{{ ui_content_more_file_info }}}</a>{{{ ui_content_delimiter_right }}}</span>
+	<span class="hide-file hidden text-button" data-jsonly="">[<a class="toggle-file" href="#" data-command="hide-file" data-content-id="{{ file_content_id }}" data-alt-visual="Hide File" data-i18n-attributes="data-alt-visual" data-i18n="">Show File</a>]</span>
+	<span class="hidden text-button" data-jsonly="">[<a href="#" data-command="show-file-meta" data-content-id="{{ file_content_id }}" data-alt-visual="Less Info" data-i18n-attributes="data-alt-visual" data-i18n="">More Info</a>]</span>
 	<span class="file-meta hidden">
 {{# file_metadata }}
 		<span class="file-hash">{{ metadata }}</span>
 {{/ file_metadata }}
 	</span>
 {{# in_modmode }}
-	| {{# mod_can_delete }}<span class="text-button">{{{ ui_mod_delimiter_left }}}<a href="{{ mod_delete_url }}">{{{ ui_mod_delete }}}</a>{{{ ui_mod_delimiter_right }}}</span>{{/ mod_can_delete }}
+	| {{# mod_can_delete }}<span class="text-button">[<a href="{{ mod_delete_url }}">{{{ ui_mod_delete }}}</a>{{{ ui_mod_delimiter_right }}}</span>{{/ mod_can_delete }}
 {{/ in_modmode }}
 </div>
 <div class="{{ op_reply }} multiple file-info">

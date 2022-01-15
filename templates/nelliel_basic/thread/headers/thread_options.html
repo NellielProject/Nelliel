@@ -1,16 +1,16 @@
 {{# thread_headers }}
 <span class="thread-header-options">
 	{{# index_render }}
-	<span class="hide-thread hidden text-button" data-jsonly="">{{{ ui_content_delimiter_left }}}<a class="toggle-thread" href="#" data-command="hide-thread" data-content-id="{{ post_content_id }}" data-alt-visual="{{{ ui_content_show_thread }}}">{{{ ui_content_hide_thread }}}</a>{{{ ui_content_delimiter_right }}}</span>
+	<span class="hide-thread hidden text-button" data-jsonly="">[<a class="toggle-thread" href="#" data-command="hide-thread" data-content-id="{{ post_content_id }}" data-alt-visual="Show Thread" data-i18n-attributes="data-alt-visual" data-i18n="">Hide Thread</a>]</span>
 		{{# abbreviate }}
-	<span class="expand-thread hidden text-button" data-jsonly="">{{{ ui_content_delimiter_left }}}<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-thread-page="{{ thread_page }}" data-alt-visual="{{{ ui_content_collapse_thread }}}">{{{ ui_content_expand_thread }}}</a>{{{ ui_content_delimiter_right }}}</span>
+	<span class="expand-thread hidden text-button" data-jsonly="">[<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-thread-page="{{ thread_page }}" data-alt-visual="Collapse" data-i18n-attributes="data-alt-visual" data-i18n="">Expand</a>]</span>
 		{{/ abbreviate }}
-	<span class="reply-thread text-button">{{{ ui_content_delimiter_left }}}<a href="{{ reply_to_url }}">{{{ ui_content_reply_to_thread }}}</a>{{{ ui_content_delimiter_right }}}</span>
+	<span class="reply-thread text-button">[<a href="{{ reply_to_url }}" data-i18n="">Reply</a>]</span>
 		{{# first_posts }}
-	<span class="first-posts text-button">{{{ ui_content_delimiter_left }}}<a href="{{ first_posts_url }}">{{{ ui_content_first_posts }}}</a>{{{ ui_content_delimiter_right }}}</span>
+	<span class="first-posts text-button">[<a href="{{ first_posts_url }}">{{ first_posts_label }}</a>]</span>
 		{{/ first_posts }}
 		{{# last_posts }}
-	<span class="last-posts text-button">{{{ ui_content_delimiter_left }}}<a href="{{ last_posts_url }}">{{{ ui_content_last_posts }}}</a>{{{ ui_content_delimiter_right }}}</span>
+	<span class="last-posts text-button">[<a href="{{ last_posts_url }}">{{ last_posts_label }}</a>]</span>
 		{{/ last_posts }}
 	{{/ index_render }}
 </span>

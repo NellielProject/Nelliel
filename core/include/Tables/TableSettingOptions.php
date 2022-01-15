@@ -74,6 +74,21 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['site', 'site_footer_text', '', 1]);
         $this->insertDefaultRow(['board', 'description', '', 1]);
         $this->insertDefaultRow(['board', 'board_content_disclaimer', '', 1]);
-        $this->insertDefaultRow(['board', 'board_footer_text', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_delimiter_left', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_delimiter_right', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_ban', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_delete', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_delete_by_ip', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_global_delete_by_ip', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_ban_and_delete', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_lock', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_unlock', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_sticky', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_unsticky', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_permasage', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_unpermasage', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_cyclic', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_non_cyclic', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_edit_post', '', 1]);
     }
 }

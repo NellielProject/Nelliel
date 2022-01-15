@@ -104,7 +104,7 @@ class Template
         $this->enabled = boolval($data['enabled'] ?? 0);
 
         if (nel_true_empty($data['parsed_ini']) || $original_ini) {
-            $file = NEL_STYLES_FILES_PATH . $directory . '/template_info.ini';
+            $file = NEL_TEMPLATES_FILES_PATH . $directory . '/template_info.ini';
 
             if (file_exists($file)) {
                 $ini = parse_ini_file($file, true);
