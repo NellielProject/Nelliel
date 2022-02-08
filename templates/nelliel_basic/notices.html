@@ -1,0 +1,9 @@
+<table class="notices">
+	<tbody>
+{{# notices }}
+		<tr id="{{ notice_id }}" class="notice">
+			<td>{{ user }} {{ time }} {{ subject }} {{ message }}</td>
+		</tr>
+{{/ notices }}
+	</tbody>
+</table>

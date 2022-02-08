@@ -82,6 +82,9 @@ class OutputPanelMain extends Output
         $this->render_data['module_capcodes'] = $this->session->user()->checkPermission($this->domain,
             'perm_capcodes_manage');
         $this->render_data['capcodes_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=capcodes';
+        $this->render_data['module_noticeboard'] = $this->session->user()->checkPermission($this->domain,
+            'perm_noticeboard_view');
+        $this->render_data['noticeboard_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=noticeboard';
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_overboard');
         $this->render_data['regen_overboard_url'] = nel_build_router_url([Domain::SITE, 'regen', 'overboard']);
