@@ -1,7 +1,32 @@
 # Nelliel Changelog
-## v0.9.25 (2022/1/1)
+## v0.9.26 (2022/2/25)
 ### Breaking
- - Everything (for the last time)
+ - Image sets
+
+### Added
+ - Site owner required for upgrades
+ - List of embed types in new post form
+ - Settings for new post form rules
+ - Options for extra text on ban page and requiring tripcode
+ - Cache columns on threads table
+ - Basic noticeboard functionality
+
+### Changed
+ - Mime handling updates
+ - Updated composer.json
+ - Renamed various things
+ - Migrations now split into different files for different dev stages and version ranges
+ - Use lowercase IDs as standard in database
+ - Poster ID now uses hashed IP address
+ - Improved handling of settings
+ - Cleaned up vichan-style mod options
+
+### Fixed
+ - Various minor things
+
+
+### Removed
+ - None!
 
 ### Added
  - Full Composer support
