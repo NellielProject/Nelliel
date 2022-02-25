@@ -26,8 +26,7 @@ class AdminUsers extends Admin
         $this->id_column = 'username';
         $this->panel_name = _gettext('Users');
 
-        if (!is_null($this->username) && !$this->authorization->userExists($this->username))
-        {
+        if (!is_null($this->username) && !$this->authorization->userExists($this->username)) {
             nel_derp(230, _gettext('The specified user does not exist.'));
         }
     }
@@ -55,7 +54,7 @@ class AdminUsers extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
-        $this->username = $_POST['username'];
+        $this->username = utf8_strtolower($_POST['username']);
         $this->update();
         $this->outputMain(true);
     }
@@ -73,30 +72,22 @@ class AdminUsers extends Admin
         $this->verifyPermissions($this->domain, 'perm_users_manage');
         $update_user = $this->authorization->getUser($this->username);
 
-        if ($update_user->empty())
-        {
+        if ($update_user->empty()) {
             $update_user = $this->authorization->newUser($this->username);
         }
 
         foreach ($_POST as $key => $value) // TODO: Improve this
         {
-            if (is_array($value))
-            {
+            if (is_array($value)) {
                 $value = nel_form_input_default($value);
             }
 
-            if (strpos($key, 'domain_role') !== false)
-            {
-                if (strpos($key, Domain::SITE))
-                {
+            if (strpos($key, 'domain_role') !== false) {
+                if (strpos($key, Domain::SITE)) {
                     $domain = new DomainSite($this->database);
-                }
-                else if (strpos($key, Domain::GLOBAL))
-                {
+                } else if (strpos($key, Domain::GLOBAL)) {
                     $domain = new DomainGlobal($this->database);
-                }
-                else
-                {
+                } else {
                     $domain = new DomainBoard(utf8_substr($key, 12), $this->database);
                 }
 
@@ -104,13 +95,15 @@ class AdminUsers extends Admin
                 continue;
             }
 
-            if ($key === 'user_password')
-            {
-                if (!empty($value))
-                {
-                    $update_user->changeData('user_password', nel_password_hash($value, NEL_PASSWORD_ALGORITHM));
+            if ($key === 'password') {
+                if (!empty($value)) {
+                    $update_user->changeData('password', nel_password_hash($value, NEL_PASSWORD_ALGORITHM));
                 }
 
+                continue;
+            }
+
+            if ($key === 'username') {
                 continue;
             }
 
@@ -131,13 +124,11 @@ class AdminUsers extends Admin
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if ($this->session_user->checkPermission($domain, $perm))
-        {
+        if ($this->session_user->checkPermission($domain, $perm)) {
             return;
         }
 
-        switch ($perm)
-        {
+        switch ($perm) {
             case 'perm_users_view':
                 nel_derp(395, _gettext('You are not allowed to view users.'));
                 break;

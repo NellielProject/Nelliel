@@ -69,15 +69,15 @@ class OutputPanelStyles extends Output
         foreach ($style_inis as $style) {
             $style_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $style_data['id'] = $style['style-info']['id'];
-            $style_data['style_type'] = strtoupper($style['style-info']['style_type']);
-            $style_data['name'] = $style['style-info']['name'];
-            $style_data['directory'] = $style['style-info']['directory'];
-            $style_data['is_installed'] = in_array($style['style-info']['id'], $installed_ids);
+            $style_data['id'] = $style['info']['id'];
+            $style_data['style_type'] = strtoupper($style['info']['style_type']);
+            $style_data['name'] = $style['info']['name'];
+            $style_data['directory'] = $style['info']['directory'];
+            $style_data['is_installed'] = in_array($style['info']['id'], $installed_ids);
             $style_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'styles', 'actions' => 'add',
-                        'style-id' => $style['style-info']['id'], 'style-type' => $style['style-info']['style_type']]);
+                        'style-id' => $style['info']['id'], 'style-type' => $style['info']['style_type']]);
             $this->render_data['available_list'][] = $style_data;
         }
 

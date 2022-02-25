@@ -7,15 +7,15 @@
 {{ display_image_dimensions }}{{ display_filesize}}
 	</span>
 	<span class="single file-header">
-		<span class="hide-file hidden text-button" data-jsonly="">[<a class="toggle-file" href="#" data-command="hide-file" data-content-id="{{ file_content_id }}" data-alt-visual="{{ show_file_label }}">{{ hide_file_label }}</a>]</span>
-		<span class="hidden text-button" data-jsonly="">[<a href="#" data-command="show-file-meta" data-content-id="{{ file_content_id }}" data-alt-visual="{{ less_file_info_label }}">{{ more_file_info_label }}</a>]</span>
+		<span class="hide-file hidden text-button" data-jsonly="">[<a class="toggle-file" href="#" data-command="hide-file" data-content-id="{{ file_content_id }}" data-alt-visual="Show File" data-i18n-attributes="data-alt-visual" data-i18n="">Hide File</a>]</span>
+		<span class="hidden text-button" data-jsonly="">[<a href="#" data-command="show-file-meta" data-content-id="{{ file_content_id }}" data-alt-visual="Less Info" data-i18n-attributes="data-alt-visual" data-i18n="">More Info</a>]</span>
 		<span class="file-meta hidden">
 {{# file_metadata }}
 			<span class="file-hash">{{ metadata }}</span>
 {{/ file_metadata }}
 		</span>
 {{# in_modmode }}
-	{{# mod_can_delete }}<span class="text-button">[<a href="{{ mod_delete_url }}">{{ mod_delete_label }}</a>]</span>{{/ mod_can_delete }}
+	| {{# mod_can_delete }}<span class="text-button">[<a href="{{ mod_delete_url }}">{{{ ui_mod_delete }}}</a>{{{ ui_mod_delimiter_right }}}</span>{{/ mod_can_delete }}
 {{/ in_modmode }}
 	</span><br>
 	<span class="single content-ops">

@@ -16,7 +16,7 @@ class AuthRole extends AuthHandler
     {
         $this->database = $database;
         $this->empty = nel_true_empty($role_id);
-        $this->auth_id = $role_id;
+        $this->auth_id = utf8_strtolower($role_id);
         $this->permissions = new AuthPermissions($this->database, $this->id());
 
         if ($db_load)

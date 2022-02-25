@@ -63,12 +63,12 @@ class Login
         $valid_password = false;
 
         if (!$user->empty()) {
-            $valid_password = nel_password_verify($form_password, $user->getData('user_password'));
+            $valid_password = nel_password_verify($form_password, $user->getData('password'));
 
             if (empty($session_username)) {
                 $valid_user = true;
             } else {
-                $valid_user = $session_username === $form_username;
+                $valid_user = $session_username === utf8_strtolower($form_username);
             }
         }
 

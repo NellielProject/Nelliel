@@ -24,7 +24,7 @@
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_name }}
 	{{# description }}
-			{{> panels/pieces/settings/text }}
+			{{> panels/pieces/settings/textarea }}
 	{{/ description }}
 	{{# show_description }}
 			{{> panels/pieces/settings/checkbox }}
@@ -186,6 +186,9 @@
 	{{# list_file_extensions }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ list_file_extensions }}
+	{{# require_tripcode }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ require_tripcode }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -457,6 +460,9 @@
 			<tr>
 				<th colspan="5" data-i18n="">Index Rendering</th>
 			</tr>
+	{{# enable_index }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_index }}
 	{{# index_thread_replies }}
 			{{> panels/pieces/settings/number }}
 	{{/ index_thread_replies }}
@@ -493,6 +499,14 @@
 	{{# show_catalog_link }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_catalog_link }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="5" data-i18n="">Catalog Rendering</th>
+			</tr>
+	{{# enable_catalog }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_catalog }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -646,6 +660,23 @@
 		</tbody>
 		<tbody>
 			<tr>
+				<th colspan="5" data-i18n="">New Post Form Rendering</th>
+			</tr>
+	{{# display_allowed_filetypes }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_allowed_filetypes }}
+	{{# display_allowed_embeds }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_allowed_embeds }}
+	{{# display_form_max_filesize }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_form_max_filesize }}
+	{{# display_thumbnailed_message }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_thumbnailed_message }}
+		</tbody>
+		<tbody>
+			<tr>
 				<th colspan="5" data-i18n="">Other Rendering</th>
 			</tr>
 	{{# template_id }}
@@ -698,82 +729,56 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Public UI</th>
+				<th colspan="5" data-i18n="">Moderator Links</th>
 			</tr>
-	{{# ui_hide_thread }}
+	{{# mod_links_delimiter_left }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_hide_thread }}
-	{{# ui_show_thread }}
+	{{/ mod_links_delimiter_left }}
+	{{# mod_links_delimiter_right }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_show_thread }}
-	{{# ui_hide_post }}
+	{{/ mod_links_delimiter_right }}
+	{{# mod_links_ban }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_hide_post }}
-	{{# ui_show_post }}
+	{{/ mod_links_ban }}
+	{{# mod_links_delete }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_show_post }}
-	{{# ui_hide_file }}
+	{{/ mod_links_delete }}
+	{{# mod_links_delete_by_ip }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_hide_file }}
-	{{# ui_show_file }}
+	{{/ mod_links_delete_by_ip }}
+	{{# mod_links_global_delete_by_ip }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_show_file }}
-	{{# ui_cite_post }}
+	{{/ mod_links_global_delete_by_ip }}
+	{{# mod_links_ban_and_delete }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_cite_post }}
-	{{# ui_reply_to_thread }}
+	{{/ mod_links_ban_and_delete }}
+	{{# mod_links_lock }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_reply_to_thread }}
-	{{# ui_more_file_info }}
+	{{/ mod_links_lock }}
+	{{# mod_links_unlock }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_more_file_info }}
-		</tbody>
-		<tbody>
-			<tr>
-				<th colspan="5" data-i18n="">Moderator UI</th>
-			</tr>
-	{{# ui_mod_ban }}
+	{{/ mod_links_unlock }}
+	{{# mod_links_sticky }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_ban }}
-	{{# ui_mod_delete }}
+	{{/ mod_links_sticky }}
+	{{# mod_links_unsticky }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_delete }}
-	{{# ui_mod_delete_by_ip }}
+	{{/ mod_links_unsticky }}
+	{{# mod_links_permasage }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_delete_by_ip }}
-	{{# ui_mod_global_delete_by_ip }}
+	{{/ mod_links_permasage }}
+	{{# mod_links_unpermasage }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_global_delete_by_ip }}
-	{{# ui_mod_ban_and_delete }}
+	{{/ mod_links_unpermasage }}
+	{{# mod_links_cyclic }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_ban_and_delete }}
-	{{# ui_mod_lock }}
+	{{/ mod_links_cyclic }}
+	{{# mod_links_non_cyclic }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_lock }}
-	{{# ui_mod_unlock }}
+	{{/ mod_links_non_cyclic }}
+	{{# mod_links_edit_post }}
 			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_unlock }}
-	{{# ui_mod_sticky }}
-			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_sticky }}
-	{{# ui_mod_unsticky }}
-			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_unsticky }}
-	{{# ui_mod_permasage }}
-			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_permasage }}
-	{{# ui_mod_unpermasage }}
-			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_unpermasage }}
-	{{# ui_mod_cyclic }}
-			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_cyclic }}
-	{{# ui_mod_non_cyclic }}
-			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_non_cyclic }}
-	{{# ui_mod_edit_post }}
-			{{> panels/pieces/settings/text }}
-	{{/ ui_mod_edit_post }}
+	{{/ mod_links_edit_post }}
 		</tbody>
 	</table>
 	<hr>

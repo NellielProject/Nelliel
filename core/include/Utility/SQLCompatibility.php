@@ -37,7 +37,7 @@ class SQLCompatibility
                 $int_column = 'BIGSERIAL';
             }
         } else if ($this->sqltype === 'SQLITE') {
-            if($primary_declaration) {
+            if ($primary_declaration) {
                 $auto = 'AUTOINCREMENT';
             } else {
                 $auto = '';
@@ -81,10 +81,10 @@ class SQLCompatibility
         $options = '';
 
         if ($this->sqltype === 'MYSQL') {
-            $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+            $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci';
             $options .= ' ENGINE = InnoDB';
         } else if ($this->sqltype === 'MARIADB') {
-            $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci';
+            $options = 'CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci';
             $options .= ' ENGINE = InnoDB';
         }
 
@@ -97,5 +97,14 @@ class SQLCompatibility
             $this->sqltype === 'POSTGRESQL') {
             return 'LIMIT ' . $limit . ' OFFSET ' . $offset;
         }
+    }
+
+    public function textType(string $text)
+    {
+        if ($this->sqltype === 'SQLITE' || $this->sqltype === 'POSTGRESQL') {
+            return 'TEXT';
+        }
+
+        return $text;
     }
 }

@@ -38,14 +38,19 @@ class DispatchOutput extends Dispatch
                     false);
 
             case 'catalog':
-                $output_thread = new OutputCatalog($this->domain, false);
-                $output_thread->render([], false);
+                if ($this->domain->setting('enable_catalog')) {
+                    $output_thread = new OutputCatalog($this->domain, false);
+                    $output_thread->render([], false);
+                }
+
                 break;
 
-            // Index
             default:
-                $output_index = new OutputIndex($this->domain, false);
-                $output_index->render(['page' => $inputs['page'] ?? 1], false);
+                if ($this->domain->setting('enable_index') || $this->session->inModmode($this->domain)) {
+                    $output_index = new OutputIndex($this->domain, false);
+                    $output_index->render(['page' => $inputs['page'] ?? 1], false);
+                }
+
                 break;
         }
     }

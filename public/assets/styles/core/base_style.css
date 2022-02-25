@@ -186,26 +186,26 @@ td {
 	margin-bottom: 3px;
 }
 
-/* Posting form */
-.posting-form {
+/* New post form */
+.new-post-form {
 	margin: auto;
 }
 
-.posting-form-row {
+.new-post-form-row {
 	display: table-row;
 }
 
-.posting-form-label {
+.new-post-form-label {
 	display: table-cell;
-	background: var(--posting-form-label-background);
+	background: var(--new-post-form-label-background);
 	font-weight: bold;
 	padding: 3px 5px 3px 5px;
 	background-clip: padding-box;
-	border: var(--posting-form-label-border);
+	border: var(--new-post-form-label-border);
 	vertical-align: middle;
 }
 
-.posting-form-input {
+.new-post-form-input {
 	display: table-cell;
 	padding: 5px;
 }

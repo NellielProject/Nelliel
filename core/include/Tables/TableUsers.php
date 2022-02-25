@@ -19,7 +19,7 @@ class TableUsers extends Table
         $this->table_name = NEL_USERS_TABLE;
         $this->column_types = [
             'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'user_password' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'password' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'active' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'locked' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'owner' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
@@ -27,7 +27,7 @@ class TableUsers extends Table
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'username' => ['row_check' => true, 'auto_inc' => false],
-            'user_password' => ['row_check' => false, 'auto_inc' => false],
+            'password' => ['row_check' => false, 'auto_inc' => false],
             'active' => ['row_check' => false, 'auto_inc' => false],
             'locked' => ['row_check' => false, 'auto_inc' => false],
             'owner' => ['row_check' => false, 'auto_inc' => false],
@@ -42,7 +42,7 @@ class TableUsers extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             username        VARCHAR(50) NOT NULL,
-            user_password   VARCHAR(255) NOT NULL,
+            password        VARCHAR(255) NOT NULL,
             active          SMALLINT NOT NULL DEFAULT 0,
             locked          SMALLINT NOT NULL DEFAULT 0,
             owner           SMALLINT NOT NULL DEFAULT 0,

@@ -98,8 +98,8 @@ class OutputThread extends Output
             $this->render_data['return_url'] = $return_url;
 
             $this->render_data['abbreviate'] = false;
-            $output_posting_form = new OutputPostingForm($this->domain, $this->write_mode);
-            $this->render_data['posting_form'] = $output_posting_form->render(['response_to' => $thread_id], true);
+            $output_new_post_form = new OutputNewPostForm($this->domain, $this->write_mode);
+            $this->render_data['new_post_form'] = $output_new_post_form->render(['response_to' => $thread_id], true);
             $this->render_data['show_styles'] = true;
             $output_menu = new OutputMenu($this->domain, $this->write_mode);
             $this->render_data['styles'] = $output_menu->styles([], true);

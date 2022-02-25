@@ -67,9 +67,9 @@ class Template
         $encoded_ini = '';
 
         foreach ($template_inis as $ini) {
-            if ($ini['template-info']['id'] === $this->id()) {
+            if ($ini['info']['id'] === $this->id()) {
                 $encoded_ini = json_encode($ini);
-                $directory = $ini['template-info']['directory'];
+                $directory = $ini['info']['directory'];
                 break;
             }
         }
@@ -104,7 +104,7 @@ class Template
         $this->enabled = boolval($data['enabled'] ?? 0);
 
         if (nel_true_empty($data['parsed_ini']) || $original_ini) {
-            $file = NEL_STYLES_FILES_PATH . $directory . '/template_info.ini';
+            $file = NEL_TEMPLATES_FILES_PATH . $directory . '/template_info.ini';
 
             if (file_exists($file)) {
                 $ini = parse_ini_file($file, true);
@@ -114,7 +114,7 @@ class Template
         }
 
         $this->data = $ini ?? array();
-        $this->info = $ini['template-info'] ?? array();
+        $this->info = $ini['info'] ?? array();
     }
 
     public function enable(): void

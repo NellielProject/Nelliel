@@ -59,16 +59,16 @@ class AdminFiletypes extends Admin
         $format = $_POST['format'] ?? '';
         $extensions = $_POST['extensions'] ?? '';
         $category = $_POST['category'] ?? null;
-        $mime = $_POST['mime'] ?? '';
+        $mimetypes = $_POST['mimetypes'] ?? '';
         $magic_regex = $_POST['magic_regex'] ?? '';
         $label = $_POST['label'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
 
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table .
-            '" ("format", "extensions", "category", "mime", "magic_regex", "label", "enabled") VALUES (?, ?, ?, ?, ?, ?, ?)');
+            '" ("format", "extensions", "category", "mimetypes", "magic_regex", "label", "enabled") VALUES (?, ?, ?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
-            [$format, $extensions, $category, $mime, $magic_regex, $label, $enabled]);
+            [$format, $extensions, $category, $mimetypes, $magic_regex, $label, $enabled]);
         $this->outputMain(true);
     }
 
@@ -87,16 +87,16 @@ class AdminFiletypes extends Admin
         $format = $_GET['filetype-id'] ?? '';
         $extensions = $_POST['extensions'] ?? '';
         $category = $_POST['category'] ?? null;
-        $mime = $_POST['mime'] ?? '';
+        $mimetypes = $_POST['mimetypes'] ?? '';
         $magic_regex = $_POST['magic_regex'] ?? '';
         $label = $_POST['label'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
 
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table .
-            '" SET "extensions" = ?, "category" = ?, "mime" = ?, "magic_regex" = ?, "label" = ?, "enabled" = ? WHERE "format" = ?');
+            '" SET "extensions" = ?, "category" = ?, "mimetypes" = ?, "magic_regex" = ?, "label" = ?, "enabled" = ? WHERE "format" = ?');
         $this->database->executePrepared($prepared,
-            [$extensions, $category, $mime, $magic_regex, $label, $enabled, $format]);
+            [$extensions, $category, $mimetypes, $magic_regex, $label, $enabled, $format]);
         $this->outputMain(true);
     }
 

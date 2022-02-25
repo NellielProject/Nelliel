@@ -14,7 +14,7 @@ class AuthPermissions extends AuthHandler
     function __construct(NellielPDO $database, string $role_id, bool $db_load = true)
     {
         $this->database = $database;
-        $this->auth_id = $role_id;
+        $this->auth_id = utf8_strtolower($role_id);
 
         if ($db_load)
         {

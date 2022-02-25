@@ -63,6 +63,7 @@ class AdminWordFilters extends Admin
             $board_id = $_POST['board_id'];
         }
 
+        $domain = Domain::getDomainFromID($board_id, $this->database);
         $text_match = $_POST['text_match'] ?? '';
         $replacement = $_POST['replacement'] ?? '';
         $is_regex = $_POST['is_regex'] ?? 0;
@@ -70,14 +71,14 @@ class AdminWordFilters extends Admin
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table .
             '" ("board_id", "text_match", "replacement", "is_regex", "enabled") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$board_id, $text_match, $replacement, $is_regex, $enabled]);
+        $this->database->executePrepared($prepared, [$domain->id(), $text_match, $replacement, $is_regex, $enabled]);
         $this->outputMain(true);
     }
 
     public function editor(): void
     {
         $filter_id = $_GET['wordfilter-id'] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
+        $entry_domain = $this->getEntryDomain($filter_id);
         $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
         $output_panel = new \Nelliel\Output\OutputPanelWordfilters($this->domain, false);
         $output_panel->edit(['editing' => true, 'filter_id' => $filter_id], false);
@@ -87,7 +88,7 @@ class AdminWordFilters extends Admin
     public function update(): void
     {
         $filter_id = $_GET['wordfilter-id'] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
+        $entry_domain = $this->getEntryDomain($filter_id);
         $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
         $text_match = $_POST['text_match'] ?? '';
         $replacement = $_POST['replacement'] ?? '';

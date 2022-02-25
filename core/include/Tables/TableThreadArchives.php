@@ -38,7 +38,7 @@ class TableThreadArchives extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             thread_id       INTEGER NOT NULL,
-            thread_data     TEXT NOT NULL,
+            thread_data     ' . $this->sql_compatibility->textType('LONGTEXT') . ',
             time_archived   BIGINT NOT NULL,
             permanent       SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL,

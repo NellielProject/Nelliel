@@ -68,7 +68,7 @@ class TableSettings extends Table
         // General
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'name', '', 'Site name.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_name', '1', 'Display site name in header.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'description', '', 'Site description.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'description', '', 'Site description.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_description', '1', 'Display site description in header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'favicon', '', 'Site favicon.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_favicon', '0', 'Show site favicon.', '{"type":"checkbox"}']);
@@ -101,6 +101,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'must_see_ban', '1', 'Bans must be seen at least once before expiration purge.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'allow_ban_appeals', '1', 'Allow ban appeals.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'min_time_before_ban_appeal', '3600', 'Minimum time before a ban can be appealed (seconds).', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'ban_page_extra_text', '', 'Extra text that can be displayed on the ban page.', '{"type":"text"}']);
 
         // Filenames and Structure
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'index_filename_format', 'index%d', 'Basename for board index pages after the first. (sprintf)', '{"type":"text"}']);
@@ -167,7 +168,7 @@ class TableSettings extends Table
         // General
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'name', '', 'Board name', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_name', '1', 'Display board name in header.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'description', '', 'Board description.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'description', '', 'Board description.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_description', '1', 'Display board description in header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'favicon', '', 'Board favicon.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_favicon', '0', 'Show board favicon.', '{"type":"checkbox"}']);
@@ -216,6 +217,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'forced_anonymous', '0', 'Force anonymous posting. This disables the name and email fields (overrides field settings).', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'list_file_formats', '0', 'List the enabled formats.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'list_file_extensions', '1', 'List the enabled extensions. If formats is selected as well the two will be combined.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_tripcode', '0', 'Require either a tripcode or secure tripcode when posting.', '{"type":"checkbox"}']);
 
         // Uploads
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_op_files', '1', 'Allow users to upload files when making a new thread.', '{"type":"checkbox"}']);
@@ -305,6 +307,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_no_delete_time', '0', 'Number of seconds after creating thread that OP cannot delete the thread. 0 to disable.', '{"type":"number"}']);
 
         // Index Rendering
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_index', '1', 'Render the index pages.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'index_thread_replies', '5', 'How many replies to a thread should be displayed on the index page.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'index_sticky_replies', '1', 'How many replies to a stickied thread should be displayed on the index page.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'threads_per_page', '10', 'Threads per page.', '{"type":"number"}']);
@@ -315,7 +318,10 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'first_posts_threshold', '200', 'Minimum posts in a thread before generating first X posts.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'last_posts_increments', '[50,100,200,500]', 'Increments for last X posts. Leave empty to disable. Enter as JSON array of integers.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'last_posts_threshold', '100', 'Minimum posts in a thread before generating last X posts.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_catalog_link', '1', 'Show link for the catalog in the index navigation.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_catalog_link', '1', 'Show link for the catalog in the index navigation. Will not display if catalog is disabled.', '{"type":"checkbox"}']);
+
+        // Catalog Rendering
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_catalog', '1', 'Render the catalog pages.', '{"type":"checkbox"}']);
 
         // Thread Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'subject_in_title', '1', 'Use the thread subject in the page title.', '{"type":"checkbox"}']);
@@ -362,6 +368,12 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_deleted_placeholder', '1', 'Display placeholder image for deleted uploads. If entry was fully removed from database nothing will be displayed.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'enabled_content_ops', '[]', 'Which content ops will be available.', '{"type":"text"}']);
 
+        // New Post Form Rendering
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_allowed_filetypes', '1', 'Show a list of allowed filetypes on the new post form.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_allowed_embeds', '1', 'Show a list of allowed embeds on the new post form.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_form_max_filesize', '1', 'Show the maximum allowed filesize.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_thumbnailed_message', '1', 'Show message about large images being thumbnailed.', '{"type":"checkbox"}']);
+
         // Other Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'template_id', 'template-nelliel-basic', 'ID of template for board to use.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'default_style', 'style-nelliel', 'ID of default style for board.', '{"type":"text"}']);
@@ -380,34 +392,22 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'early404_replies_threshold', '5', 'Minimum replies needed to avoid being pruned by early 404.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'early404_page_threshold', '3', 'Last page of the index before early 404 pruning begins. Threads beyond this page will be checked.', '{"type":"number"}']);
 
-        // Public UI
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_hide_thread', 'Hide Thread', 'Hide Thread', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_show_thread', 'Show Thread', 'Show Thread', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_hide_post', 'Hide Post', 'Hide Post', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_show_post', 'Show Post', 'Show Post', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_hide_file', 'Hide File', 'Hide File', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_show_file', 'Show File', 'Show File', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_cite_post', 'Cite', 'Cite', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_reply_to_thread', 'Reply', 'Reply', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_more_file_info', 'More Info', 'More Info', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_less_file_info', 'Less Info', 'Less Info', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_expand_thread', 'Expand', 'Expand', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_collapse_thread', 'Collapse', 'Collapse', '{"type":"text"}']);
-
-        // Moderator UI
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_ban', 'Ban', 'Ban', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_delete', 'Delete', 'Delete', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_delete_by_ip', 'Delete By IP', 'Delete By IP', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_global_delete_by_ip', 'Global Delete By IP', 'Global Delete By IP', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_ban_and_delete', 'Ban + Delete', 'Ban + Delete', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_lock', 'Lock', 'Lock', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unlock', 'Unlock', 'Unlock', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_sticky', 'Sticky', 'Sticky', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unsticky', 'Unsticky', 'Unsticky', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_permasage', 'Permasage', 'Permasage', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_unpermasage', 'Unpermasage', 'Unpermasage', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_cyclic', 'Cyclic', 'Cyclic', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_non_cyclic', 'Non-cyclic', 'Non-cyclic', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ui_mod_edit_post', 'Edit', 'Edit', '{"type":"text"}']);
+        // Moderator Links
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delimiter_left', '[', 'Delimiter on the left side of moderation links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delimiter_right', ']', 'Delimiter on the right side of moderation links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_ban', 'Ban', 'Ban', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delete', 'Delete', 'Delete', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delete_by_ip', 'Delete By IP', 'Delete By IP', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_global_delete_by_ip', 'Global Delete By IP', 'Global Delete By IP', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_ban_and_delete', 'Ban + Delete', 'Ban + Delete', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_lock', 'Lock', 'Lock', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unlock', 'Unlock', 'Unlock', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_sticky', 'Sticky', 'Sticky', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unsticky', 'Unsticky', 'Unsticky', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_permasage', 'Permasage', 'Permasage', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unpermasage', 'Unpermasage', 'Unpermasage', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_cyclic', 'Cyclic', 'Cyclic', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_non_cyclic', 'Non-cyclic', 'Non-cyclic', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_edit_post', 'Edit', 'Edit', '{"type":"text"}']);
     }
 }

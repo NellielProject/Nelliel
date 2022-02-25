@@ -17,7 +17,7 @@ class AuthUser extends AuthHandler
     {
         $this->database = $database;
         $this->empty = nel_true_empty($username);
-        $this->auth_id = $username;
+        $this->auth_id = utf8_strtolower($username);
         $this->authorization = new Authorization($this->database);
 
         if ($db_load) {
@@ -61,16 +61,16 @@ class AuthUser extends AuthHandler
         if ($result) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_USERS_TABLE .
-                '" SET "user_password" = :user_password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "username" = :username');
+                '" SET "password" = :password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "username" = :username');
         } else {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_USERS_TABLE .
-                '" ("username", "user_password", "active", "owner", "last_login") VALUES
-                    (:username, :user_password, :active, :owner, :last_login)');
+                '" ("username", "password", "active", "owner", "last_login") VALUES
+                    (:username, :password, :active, :owner, :last_login)');
         }
 
         $prepared->bindValue(':username', $this->authDataOrDefault('username', $this->id()), PDO::PARAM_STR);
-        $prepared->bindValue(':user_password', $this->authDataOrDefault('user_password', ''), PDO::PARAM_STR);
+        $prepared->bindValue(':password', $this->authDataOrDefault('password', ''), PDO::PARAM_STR);
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
         $prepared->bindValue(':owner', $this->authDataOrDefault('owner', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_login', $this->authDataOrDefault('last_login', 0), PDO::PARAM_INT);
@@ -117,7 +117,7 @@ class AuthUser extends AuthHandler
 
     public function updatePassword(string $new_password): void
     {
-        $this->changeData('user_password', nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM));
+        $this->changeData('password', nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM));
     }
 
     public function getDomainRole(Domain $domain): AuthRole

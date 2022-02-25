@@ -1,0 +1,47 @@
+<form accept-charset="utf-8" action="{{ form_action }}" method="post">
+	<div class="display-table">
+{{# custom_name }}
+		<div class="display-row">
+			<label for="name" class="display-cell" data-i18n="">Name</label>
+			<input id="name" class="display-cell" type="text" name="name" size="30">
+		</div>
+{{/ custom_name }}
+		<div class="display-row">
+			<label for="subject" class="display-cell" data-i18n="">Subject</label>
+			<input id="subject" class="display-cell" type="text" name="subject" size="30">
+		</div>
+		<div class="display-row">
+			<label for="message" class="display-cell" data-i18n="">Message</label>
+			<textarea id="message" class="display-cell" name="message" cols="80" rows="6"></textarea>
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Add notice" data-i18n-attributes="value">
+		</div>
+	</div>
+</form>
+<hr>
+<table >
+	<caption data-i18n="">Notices</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Name</th>
+			<th scope="col" data-i18n="">Subject</th>
+			<th scope="col" data-i18n="">Date</th>
+			<th scope="col" data-i18n="">Message</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# notice }}
+		<tr class="{{ bgclass }}">
+			<td>{{ name }}</td>
+			<td>{{ subject }}</td>
+			<td>{{ time }}</td>
+			<td>{{ message }}</td>
+			<td>
+				<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove</a>
+			</td>
+		</tr>
+{{/ notice }}
+	</tbody>
+</table>

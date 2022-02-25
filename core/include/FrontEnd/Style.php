@@ -79,9 +79,9 @@ class Style
         $encoded_ini = '';
 
         foreach ($style_inis as $ini) {
-            if ($ini['style-info']['id'] === $this->id()) {
+            if ($ini['info']['id'] === $this->id()) {
                 $encoded_ini = json_encode($ini);
-                $directory = $ini['style-info']['directory'];
+                $directory = $ini['info']['directory'];
                 break;
             }
         }
@@ -125,7 +125,7 @@ class Style
         }
 
         $this->data = $ini ?? array();
-        $this->info = $ini['style-info'] ?? array();
+        $this->info = $ini['info'] ?? array();
     }
 
     public function enable(): void

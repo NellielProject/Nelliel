@@ -37,7 +37,7 @@ class BanHammer
     {
         $ban_id = $_POST['ban_id'] ?? null;
         $existing_ban = (!is_null($ban_id)) ? $this->loadFromID($ban_id) : false;
-        $this->ban_data['board_id'] = $_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null;
+        $this->ban_data['board_id'] = utf8_strtolower($_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null);
         $this->ban_data['seen'] = $_POST['ban_seen'] ?? $this->ban_data['seen'] ?? 0;
         $global = $_POST['ban_global'] ?? 0;
 

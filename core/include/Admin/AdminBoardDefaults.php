@@ -39,112 +39,123 @@ class AdminBoardDefaults extends Admin
     }
 
     public function creator(): void
-    {
-    }
+    {}
 
     public function add(): void
-    {
-    }
+    {}
 
     public function editor(): void
-    {
-    }
+    {}
 
     public function update(): void
     {
-        $force_update_done = false;
         $this->verifyPermissions($this->domain, 'perm_board_defaults_modify');
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
         $board_domains = $this->getBoardDomains();
 
-        foreach ($_POST as $key => $value)
-        {
-            if (isset($value['lock']))
-            {
-                $lock_value = nel_form_input_default($value['lock']);
-                $prepared = $this->database->prepare(
-                        'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "edit_lock" = ? WHERE "setting_name" = ?');
-                $this->database->executePrepared($prepared, [$lock_value, $key]);
+        $board_settings = $this->database->executeFetchAll(
+            'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
+                LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE .
+            '"."setting_name"
+                INNER JOIN "' . NEL_BOARD_DEFAULTS_TABLE . '"
+                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_DEFAULTS_TABLE .
+            '"."setting_name"
+                WHERE "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'', PDO::FETCH_ASSOC);
+        $raw_html = $this->session_user->checkPermission($this->domain, 'perm_raw_html');
+        $changes = 0;
+        $force_updates = 0;
+
+        foreach ($board_settings as $setting) {
+            $setting_name = $setting['setting_name'];
+
+            if (!isset($_POST[$setting_name])) {
+                continue;
             }
 
-            $force_update = isset($value['force_update']) && $value['force_update'] == 1;
+            $lock = (bool) nel_form_input_default($_POST[$setting_name]['lock']);
+            $force_update = isset($_POST[$setting_name]['force_update']);
+            $old_value = $setting['setting_value'];
+            $new_value = $_POST[$setting_name];
 
-            if ($force_update)
-            {
-                $force_update_done = true;
-            }
-
-            if ($key === 'enabled_filetypes')
-            {
+            if ($setting_name === 'enabled_filetypes') {
                 $filetypes_array = array();
 
-                foreach ($value as $type => $entries)
-                {
-                    if ($type === 'lock' || $type === 'force_update')
-                    {
+                foreach ($new_value as $category => $entries) {
+                    if ($category === 'lock' || $category === 'force_update') {
                         continue;
                     }
 
-                    $type_enabled = nel_form_input_default($entries['enabled']) === '1';
-                    $filetypes_array[$type]['enabled'] = $type_enabled;
-                    $type_formats = $entries['formats'] ?? array();
+                    $category_enabled = nel_form_input_default($entries['enabled']) === '1';
+                    $filetypes_array[$category]['enabled'] = $category_enabled;
+                    $formats = $entries['formats'] ?? array();
 
-                    foreach ($type_formats as $format => $enabled)
-                    {
+                    foreach ($formats as $format => $enabled) {
                         $format_enabled = nel_form_input_default($enabled) === '1';
 
-                        if ($format_enabled)
-                        {
-                            $filetypes_array[$type]['formats'][] = $format;
+                        if ($format_enabled) {
+                            $filetypes_array[$category]['formats'][] = $format;
                         }
                     }
                 }
 
-                $value = json_encode($filetypes_array);
-                $key = 'enabled_filetypes';
-            }
-            else if ($key === 'enabled_styles')
-            {
+                $new_value = json_encode($filetypes_array);
+            } else if ($setting_name === 'enabled_styles') {
                 $styles_array = array();
 
-                foreach ($value as $style => $entries)
-                {
-                    if ($style === 'lock' || $style === 'force_update')
-                    {
-                        continue;
-                    }
-
+                foreach ($new_value as $style => $entries) {
                     $style_enabled = nel_form_input_default($entries) === '1';
 
-                    if ($style_enabled)
-                    {
+                    if ($style_enabled) {
                         $styles_array[] = $style;
                     }
                 }
 
-                $value = json_encode($styles_array);
-                $key = 'enabled_styles';
-            }
-            else
-            {
-                $value = nel_form_input_default($value);
-            }
+                $new_value = json_encode($styles_array);
+            } else if ($setting_name === 'enabled_content_ops') {
+                $content_ops_array = array();
 
-            if ($force_update)
-            {
-                foreach ($board_domains as $board_domain)
-                {
-                    $this->updateSetting($board_domain, $key, $value, $lock_override);
+                foreach ($new_value as $content_op => $entries) {
+                    $content_op_enabled = nel_form_input_default($entries) === '1';
+
+                    if ($content_op_enabled) {
+                        $content_ops_array[] = $content_op;
+                    }
+                }
+
+                $new_value = json_encode($content_ops_array);
+            } else {
+                $new_value = nel_form_input_default($new_value);
+                $new_value = nel_typecast($new_value, $setting_name);
+
+                if (is_string($new_value) && !$raw_html && ($setting['raw_output'] ?? false)) {
+                    $new_value = htmlspecialchars($new_value, ENT_QUOTES, 'UTF-8');
                 }
             }
 
-            $prepared = $this->database->prepare(
-                    'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "setting_value" = ? WHERE "setting_name" = ?');
-            $this->database->executePrepared($prepared, [$value, $key]);
+            if ($old_value != $new_value) {
+                $this->updateDefault($setting_name, $new_value);
+                $changes ++;
+            }
+
+            if ($force_update) {
+                $force_updates ++;
+
+                foreach ($board_domains as $board_domain) {
+                    $this->updateBoardSetting($board_domain, $setting_name, $new_value, $lock_override);
+                }
+            }
+
+            if ($lock && $setting['edit_lock'] == 0) {
+                $this->toggleLock($setting_name, 1);
+            }
+
+            if (!$lock && $setting['edit_lock'] == 1) {
+                $this->toggleLock($setting_name, 0);
+            }
         }
 
-        if ($force_update_done)
-        {
+        if ($force_updates > 0) {
             $regen = new Regen();
             $regen->allBoards(true, true);
         }
@@ -153,18 +164,15 @@ class AdminBoardDefaults extends Admin
     }
 
     public function remove(): void
-    {
-    }
+    {}
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if ($this->session_user->checkPermission($domain, $perm))
-        {
+        if ($this->session_user->checkPermission($domain, $perm)) {
             return;
         }
 
-        switch ($perm)
-        {
+        switch ($perm) {
             case 'perm_board_defaults_modify':
                 nel_derp(320, _gettext('You are not allowed to modify the default board configuration.'));
                 break;
@@ -174,28 +182,31 @@ class AdminBoardDefaults extends Admin
         }
     }
 
-    private function setLock(DomainBoard $domain, $config_name, $setting)
+    private function toggleLock(string $setting_name, int $new_status): void
     {
         $prepared = $this->database->prepare(
-                'UPDATE "' . $domain->reference('config_table') .
-                '" SET "edit_lock" = ? WHERE "setting_name" = ? AND "board_id" = ?');
-        $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
+            'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "edit_lock" = ? WHERE "setting_name" = ?');
+        $this->database->executePrepared($prepared, [$new_status, $setting_name]);
     }
 
-    private function updateSetting(Domain $domain, $config_name, $setting, $lock_override)
+    private function updateDefault(string $config_name, $setting): void
     {
-        if ($lock_override)
-        {
+        $prepared = $this->database->prepare(
+            'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "setting_value" = ? WHERE "setting_name" = ?');
+        $this->database->executePrepared($prepared, [$setting, $config_name]);
+    }
+
+    private function updateBoardSetting(Domain $domain, string $config_name, $setting, bool $lock_override): void
+    {
+        if ($lock_override) {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $domain->reference('config_table') .
-                    '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ?');
+                'UPDATE "' . NEL_BOARD_CONFIGS_TABLE .
+                '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ?');
             $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
-        }
-        else
-        {
+        } else {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . $domain->reference('config_table') .
-                    '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ? AND "edit_lock" = 0');
+                'UPDATE "' . NEL_BOARD_CONFIGS_TABLE .
+                '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ? AND "edit_lock" = 0');
             $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
         }
     }
@@ -206,8 +217,7 @@ class AdminBoardDefaults extends Admin
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
         $board_domains = array();
 
-        foreach ($board_ids as $board_id)
-        {
+        foreach ($board_ids as $board_id) {
             $board_domains[] = new DomainBoard($board_id, $this->database);
         }
 

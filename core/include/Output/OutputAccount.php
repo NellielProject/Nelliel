@@ -26,6 +26,8 @@ class OutputAccount extends Output
         $this->render_data['header'] = $output_header->general($parameters, true);
         $this->render_data['username'] = $this->session->user()->id();
         $this->render_data['last_login'] = $this->session->user()->getData('last_login');
+        $output_notices = new OutputNotices($this->domain, $this->write_mode);
+        $this->render_data['notices'] = $output_notices->render([], true)['notices']; // TODO: Short form
         $this->render_data['private_messages_url'] = nel_build_router_url([Domain::SITE, 'account', 'private-messages']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);

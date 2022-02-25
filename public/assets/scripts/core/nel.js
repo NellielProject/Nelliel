@@ -2,7 +2,7 @@ var nelliel = {};
 nelliel.setup = {};
 nelliel.core = {};
 nelliel.events = {};
-nelliel.posting_form = {};
+nelliel.new_post_form = {};
 nelliel.ui = {};
 
 function dataBin() {
@@ -103,8 +103,8 @@ nelliel.setup.fillForms = function(board) {
     var post_password = nelliel.core.retrieveFromLocalStorage("post_password", false);
 
     if (post_password !== null) {
-        if (document.getElementById("posting-form-sekrit") !== null) {
-            document.getElementById("posting-form-sekrit").value = post_password;
+        if (document.getElementById("new-post-form-sekrit") !== null) {
+            document.getElementById("new-post-form-sekrit").value = post_password;
         }
 
         if (document.getElementById("update-sekrit") !== null) {
@@ -180,7 +180,7 @@ nelliel.events.processChange = function(event) {
         var command = event.target.getAttribute("data-command");
 
         if (command === "reveal-file-input") {
-            nelliel.posting_form.showNextFileInput(event.target);
+            nelliel.new_post_form.showNextFileInput(event.target);
         } else if (command === "change-style") {
             setStyle(event.target.value, true);
         }
@@ -188,7 +188,7 @@ nelliel.events.processChange = function(event) {
 }
 
 nelliel.events.processInput = function(event) {
-	if (event.target.id === "posting-form-sekrit") {
+	if (event.target.id === "new-post-form-sekrit") {
 		updatePostPassword(event.target.value);
 	}
 
@@ -225,7 +225,7 @@ nelliel.core.retrieveFromSessionStorage = function(data_path, parse) {
     return data;
 }
 
-nelliel.posting_form.showNextFileInput = function (element) {
+nelliel.new_post_form.showNextFileInput = function (element) {
     var file_num = element.id.replace("up-file-", "");
     file_num++;
     var next_file = document.getElementById("form-file-" + file_num);

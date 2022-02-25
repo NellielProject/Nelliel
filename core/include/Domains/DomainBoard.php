@@ -20,14 +20,13 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function __construct(string $domain_id, NellielPDO $database)
     {
-        $this->domain_id = $domain_id;
+        $this->domain_id = utf8_strtolower($domain_id);
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
 
-        if($this->exists()) {
-            $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))
-                ->getPath());
+        if ($this->exists()) {
+            $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))->getPath());
         }
     }
 
@@ -53,7 +52,9 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $board_path = NEL_PUBLIC_PATH . $board_data['board_uri'] . '/';
         $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($board_data['board_uri']) . '/';
         $new_reference['board_directory'] = $board_data['board_uri'];
-        $new_reference['board_uri'] = sprintf(nel_site_domain()->setting('uri_display_format'), $board_data['board_uri']);
+        $new_reference['board_uri'] = $board_data['board_uri'];
+        $new_reference['formatted_board_uri'] = sprintf(nel_site_domain()->setting('uri_display_format'),
+            $board_data['board_uri']);
         $title = $new_reference['board_uri'];
         $title .= (!nel_true_empty($this->setting('name')) ? ' - ' . $this->setting('name') : '');
         $new_reference['title'] = $title;
