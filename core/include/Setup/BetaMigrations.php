@@ -235,7 +235,38 @@ class BetaMigrations
                 echo ' - ' . __('Thread tables updated.') . '<br>';
 
                 $migration_count ++;
-                break;
+
+            case 'v0.9.26':
+                // Update post tables
+                $db_prefixes = nel_database('core')->executeFetchAll(
+                'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_posts' . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL');
+                }
+
+                echo ' - ' . __('Post tables updated.') . '<br>';
+
+                // Update bans table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_BANS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL');
+
+                echo ' - ' . __('Bans table updated.') . '<br>';
+
+                // Update logs table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_LOGS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL');
+
+                echo ' - ' . __('Logs table updated.') . '<br>';
+
+                // Update reports table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_REPORTS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL');
+
+                echo ' - ' . __('Reports table updated.') . '<br>';
+
+                $migration_count ++;
         }
 
         return $migration_count;

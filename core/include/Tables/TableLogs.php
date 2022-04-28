@@ -28,6 +28,7 @@ class TableLogs extends Table
             'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
             'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'log_id' => ['row_check' => false, 'auto_inc' => true],
@@ -40,6 +41,7 @@ class TableLogs extends Table
             'username' => ['row_check' => false, 'auto_inc' => false],
             'ip_address' => ['row_check' => false, 'auto_inc' => false],
             'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false],
+            'visitor_id' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -60,6 +62,7 @@ class TableLogs extends Table
             username            VARCHAR(50) DEFAULT NULL,
             ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_ip_address   VARCHAR(128) DEFAULT NULL,
+            visitor_id          VARCHAR(128) DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (log_id),
             CONSTRAINT fk_logs__domain_registry
