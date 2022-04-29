@@ -234,6 +234,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 			if (request.status === 200) {
 				var expandHTML = request.response.getElementById("thread-expand-" + content_id.id_string).innerHTML;
 				target_element.innerHTML = expandHTML;
+				nelliel.core.unhideJSonly(target_element);
 			}
 		};
 
