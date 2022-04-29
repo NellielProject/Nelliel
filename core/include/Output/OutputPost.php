@@ -178,6 +178,7 @@ class OutputPost extends Output
             $thread->contentID()->threadID()) . NEL_PAGE_EXT;
 
         $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
+        $thread_headers['post_content_id'] = $post_content_id->getIDString();
         $post_headers['thread_content_id'] = $thread->contentID()->getIDString();
         $post_headers['post_content_id'] = $post_content_id->getIDString();
         $post_headers['is_op'] = $post->data('op');
