@@ -359,6 +359,10 @@ td {
 	font-weight: bold;
 }
 
+.post-backlinks-list {
+	font-size: 0.8rem;
+}
+
 .post-backlink {
 	font-size: 0.8rem;
 }

@@ -544,9 +544,6 @@
 	{{# filter_zalgo }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ filter_zalgo }}
-	{{# display_post_backlinks }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ display_post_backlinks }}
 	{{# display_poster_id }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ display_poster_id }}
@@ -565,6 +562,15 @@
 	{{# url_prefix }}
 			{{> panels/pieces/settings/text }}
 	{{/ url_prefix }}
+	{{# post_backlinks_header }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ post_backlinks_header }}
+	{{# post_backlinks_footer }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ post_backlinks_footer }}
+	{{# post_backlinks_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ post_backlinks_label }}
 		</tbody>
 		<tbody>
 			<tr>

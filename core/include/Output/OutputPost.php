@@ -46,6 +46,21 @@ class OutputPost extends Output
             $this->render_data['indents_marker'] = '';
         }
 
+        if ($this->domain->setting('post_backlinks_header') || $this->domain->setting('post_backlinks_footer')) {
+            $this->render_data['post_backlinks_header'] = $this->domain->setting('post_backlinks_header');
+            $this->render_data['post_backlinks_footer'] = $this->domain->setting('post_backlinks_footer');
+            $this->render_data['post_backlinks_label'] = $this->domain->setting('post_backlinks_label');
+
+            // TODO: Do cache check/fetch better
+            if (NEL_USE_RENDER_CACHE && isset($post->getCache()['backlink_data'])) {
+                $this->render_data['backlinks'] = $post->getCache()['backlink_data'];
+            } else {
+                $this->render_data['backlinks'] = $this->generateBacklinks($post);
+            }
+
+            $this->render_data['has_backlinks'] = count($this->render_data['backlinks']) > 0;
+        }
+
         $this->render_data['post_anchor_id'] = 't' . $post->contentID()->threadID() . 'p' . $post->contentID()->postID();
         $this->render_data['headers1'] = $this->postHeaders($response, $thread, $post, $gen_data, $in_thread_number);
 
@@ -280,16 +295,6 @@ class OutputPost extends Output
             $this->session->inModmode($this->domain) && !$this->write_mode) . '#t' . $post_content_id->threadID() . 'p' .
             $post_content_id->postID();
         $post_headers['post_number_url_cite'] = $post_headers['post_number_url'] . 'cite';
-
-        if ($this->domain->setting('display_post_backlinks')) {
-            // TODO: Do cache check/fetch better
-            if (NEL_USE_RENDER_CACHE && isset($post->getCache()['backlink_data'])) {
-                $post_headers['backlinks'] = $post->getCache()['backlink_data'];
-            } else {
-                $post_headers['backlinks'] = $this->generateBacklinks($post);
-            }
-        }
-
         $this->render_data['headers']['post_headers'] = $post_headers;
         return $header_data;
     }

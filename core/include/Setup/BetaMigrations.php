@@ -266,6 +266,50 @@ class BetaMigrations
 
                 echo ' - ' . __('Reports table updated.') . '<br>';
 
+                $new_site_settings = [];
+                $new_board_settings = ['post_backlinks_header', 'post_backlinks_footer', 'post_backlinks_label'];
+                $board_setting_removals = ['display_post_backlinks'];
+                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $settings_table->insertDefaults();
+                $setting_options_table = new TableSettingOptions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $setting_options_table->insertDefaults();
+                $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $board_defaults_table->insertDefaults();
+                $this->copyToSiteConfig($new_site_settings);
+                $board_ids = $this->getAllBoardIDs();
+
+                $board_setting_names = nel_database('core')->executeFetchAll(
+                    'SELECT "setting_name" FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_category" = \'board\'',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($board_ids as $id) {
+                    $this->copyToBoardConfig($id, $new_board_settings);
+                }
+
+                $settings_delete = nel_database('core')->prepare(
+                    'DELETE FROM "' . NEL_SETTINGS_TABLE .
+                    '" WHERE "setting_name" = :name AND "setting_category" = \'board\'');
+                $board_defaults_delete = nel_database('core')->prepare(
+                    'DELETE FROM "' . NEL_BOARD_DEFAULTS_TABLE . '" WHERE "setting_name" = :name');
+                $board_configs_delete = nel_database('core')->prepare(
+                    'DELETE FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "setting_name" = :name');
+
+                foreach ($board_setting_names as $setting) {
+                    if (in_array($setting, $board_setting_removals)) {
+                        $settings_delete->bindValue(':name', $setting);
+                        nel_database('core')->executePrepared($settings_delete);
+
+                        $board_defaults_delete->bindValue(':name', $setting);
+                        nel_database('core')->executePrepared($board_defaults_delete);
+
+                        $board_configs_delete->bindValue(':name', $setting);
+                        nel_database('core')->executePrepared($board_configs_delete);
+                    }
+                }
+
+                echo ' - ' . __('Settings and board config tables updated.') . '<br>';
+
                 $migration_count ++;
         }
 
