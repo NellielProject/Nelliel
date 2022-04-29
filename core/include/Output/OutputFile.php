@@ -43,6 +43,13 @@ class OutputFile extends Output
         }
 
         $this->render_data['file_url'] = $file->srcWebPath() . rawurlencode($full_filename);
+        $this->render_data['show_download_link'] = $this->domain->setting('show_download_link');
+
+        if ($this->domain->setting('download_original_name') && !nel_true_empty($file->data('original_filename'))) {
+            $this->render_data['download_filename'] = $file->data('original_filename');
+        } else {
+            $this->render_data['download_filename'] = $file->data('filename') . '.' . $file->data('extension');
+        }
 
         if ($this->domain->setting('display_original_name') && !nel_true_empty($file->data('original_filename'))) {
             $display_filename = $file->data('original_filename');

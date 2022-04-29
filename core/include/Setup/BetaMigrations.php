@@ -239,7 +239,7 @@ class BetaMigrations
             case 'v0.9.26':
                 // Update post tables
                 $db_prefixes = nel_database('core')->executeFetchAll(
-                'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+                    'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
 
                 foreach ($db_prefixes as $prefix) {
                     nel_database('core')->exec(
@@ -267,7 +267,8 @@ class BetaMigrations
                 echo ' - ' . __('Reports table updated.') . '<br>';
 
                 $new_site_settings = [];
-                $new_board_settings = ['post_backlinks_header', 'post_backlinks_footer', 'post_backlinks_label'];
+                $new_board_settings = ['post_backlinks_header', 'post_backlinks_footer', 'post_backlinks_label',
+                    'show_download_link', 'download_original_name'];
                 $board_setting_removals = ['display_post_backlinks'];
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaults();

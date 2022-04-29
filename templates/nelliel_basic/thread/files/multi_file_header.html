@@ -15,6 +15,9 @@
 </div>
 <div class="{{ op_reply }} multiple file-info">
 	<div>
+{{# show_download_link }}
+		<span class="text-button">[<a href="{{ file_url }}" class="download-link" download="{{ download_filename }}" data-i18n="">Download</a>]</span>
+{{/ show_download_link }}
 		<a href="{{ file_url }}" target="_blank" class="file-link">{{ display_filename }}</a>
 	</div>
 	<div>
