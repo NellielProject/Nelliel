@@ -362,6 +362,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_width', '120', 'Maximum display width for uploads in catalog', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_height', '120', 'Maximum display height for uploads in catalog', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_spoiler_cover', 'media/core/covers/spoiler.png', 'Cover image for spoilers.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'spoiler_display_name', 'spoiler.jpg', 'Displayed file name when spoiler cover is used. Leave blank to use normal display name.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_deleted_file', 'media/core/placeholders/deleted_file.png', 'Placeholder image for deleted file.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_deleted_embed', 'media/core/placeholders/deleted_embed.png', 'Placeholder image for deleted embed.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'filename_display_length', '25', 'Maximum characters of filename to display', '{"type":"number"}']);

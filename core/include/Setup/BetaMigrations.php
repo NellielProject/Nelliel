@@ -268,7 +268,7 @@ class BetaMigrations
 
                 $new_site_settings = [];
                 $new_board_settings = ['post_backlinks_header', 'post_backlinks_footer', 'post_backlinks_label',
-                    'show_download_link', 'download_original_name'];
+                    'show_download_link', 'download_original_name', 'spoiler_display_name'];
                 $board_setting_removals = ['display_post_backlinks'];
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaults();
