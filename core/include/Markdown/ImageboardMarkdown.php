@@ -17,6 +17,7 @@ class ImageboardMarkdown extends Parser
     use StrikeoutTrait;
     use WhitespaceLine;
     use URL;
+    use Spoiler;
     protected $domain;
     protected $url_protocols;
     protected $cites;
