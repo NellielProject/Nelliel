@@ -27,8 +27,8 @@ $base_config['default_locale'] = 'en_US';
 $base_config['secure_session_only'] = false;
 
 // Secret key that must be entered before running the install functions.
+// The key is used to prevent the installer from being hijacked before it's ready.
 // Install will not run if this is blank.
-// Should only need it once so make it a good one!
 $base_config['install_key'] = '';
 
 //
