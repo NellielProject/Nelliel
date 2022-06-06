@@ -244,18 +244,21 @@ class Post
         return $this->parent;
     }
 
-    public function reserveDatabaseRow($post_time, $post_time_milli, $hashed_ip_address, $temp_database = null)
+    public function reserveDatabaseRow($temp_database = null)
     {
         $database = (!is_null($temp_database)) ? $temp_database : $this->database;
         $prepared = $database->prepare(
             'INSERT INTO "' . $this->domain->reference('posts_table') .
-            '" ("post_time", "post_time_milli", "hashed_ip_address") VALUES (?, ?, ?)');
-        $database->executePrepared($prepared, [$post_time, $post_time_milli, $hashed_ip_address]);
+            '" ("post_time", "post_time_milli", "hashed_ip_address", "visitor_id") VALUES (?, ?, ?, ?)');
+        $database->executePrepared($prepared,
+            [$this->data('post_time'), $this->data('post_time_milli'), $this->data('hashed_ip_address'),
+                $this->data('visitor_id')]);
         $prepared = $database->prepare(
             'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-            '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ?');
-        $result = $database->executePreparedFetch($prepared, [$post_time, $post_time_milli, $hashed_ip_address],
-            PDO::FETCH_COLUMN, true);
+            '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ? AND "visitor_id" = ?');
+        $result = $database->executePreparedFetch($prepared,
+            [$this->data('post_time'), $this->data('post_time_milli'), $this->data('hashed_ip_address'),
+                $this->data('visitor_id')], PDO::FETCH_COLUMN, true);
         $this->content_id->changeThreadID(
             ($this->content_id->threadID() === 0) ? $result : $this->content_id->threadID());
         $this->changeData('parent_thread', $this->content_id->threadID());
@@ -406,11 +409,11 @@ class Post
         return $this->content_data[$key] ?? null;
     }
 
-    public function changeData(string $key, $new_data)
+    public function changeData(string $key, $new_data, bool $cast_null = true)
     {
         $column_types = $this->main_table->columnTypes();
         $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_typecast($new_data, $type);
+        $new_data = nel_typecast($new_data, $type, $cast_null);
         $old_data = $this->data($key);
         $this->content_data[$key] = $new_data;
         return $old_data;

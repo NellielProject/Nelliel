@@ -38,6 +38,7 @@ class PostData
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
         $post->changeData('ip_address', nel_request_ip_address());
         $post->changeData('hashed_ip_address', nel_request_ip_address(true));
+        $post->changeData('visitor_id', nel_generate_visitor_id(), false);
 
         $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'] ?? '', 'string');
         $name = $this->fieldLengthCheck('name', $name);
