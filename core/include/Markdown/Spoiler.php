@@ -8,28 +8,75 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 trait Spoiler
 {
 
-    /**
-     * Parses text spoilers.
-     *
-     * @marker ||
-     */
-    protected function parseSpoiler($markdown)
+    protected function identifySpoiler($line)
     {
-        $matches = array();
+        return preg_match('/\|\|/', $line) === 1;
+    }
 
-        if (preg_match('/\|\|(.*)\|\|/', $markdown, $matches) === 1) {
-            return [['spoiler', $this->parseInline($matches[1])], utf8_strlen($matches[0])];
+    protected function consumeSpoiler($lines, $current)
+    {
+        $processed = array();
+        $in_spoiler = false;
+
+        foreach ($lines as $line) {
+            if ($line !== '&' . "\n") {
+                $line .= "\n";
+            }
+
+            $sub_lines = explode('||', $line);
+            $sub_line_count = count($sub_lines);
+
+            for ($i = 0; $i < $sub_line_count; $i ++) {
+                $entry = array();
+
+                if (!$in_spoiler) {
+                    if ($i > 0 && $sub_line_count > 1) {
+                        $in_spoiler = true;
+                        $entry['type'] = 'spoiler_start';
+                        $entry['content'] = $this->parseBlocks([$sub_lines[$i]]);
+                    } else {
+                        continue;
+                    }
+                } else {
+                    if ($i > 0 && $sub_line_count > 1) {
+                        $in_spoiler = false;
+                        $entry['type'] = 'spoiler_end';
+                        $entry['content'] = $this->parseBlocks([$sub_lines[$i]]);
+                    } else {
+                        $entry['type'] = 'normal';
+                        $entry['content'] = $this->parseBlocks([$sub_lines[$i]]);
+                    }
+                }
+
+                $processed[] = $entry;
+            }
         }
 
-        return [['text', $markdown[0] . $markdown[1]], 2];
+        $block = ['spoiler', $processed];
+        return [$block, count($lines)];
     }
 
     protected function renderSpoiler($block)
     {
-        return '<span class="text-spoiler">' . $this->renderAbsy($block[1]) . '</span>';
+        $line = '';
+
+        foreach ($block[1] as $entry) {
+
+            if ($entry['type'] === 'spoiler_start') {
+                $line .= '<span class="text-spoiler">';
+            }
+
+            if ($entry['type'] === 'spoiler_end') {
+                $line .= '</span>';
+            }
+
+            $line .= $this->renderAbsy($entry['content']);
+        }
+
+        return $line;
     }
 
-    abstract protected function parseInline($text);
+    abstract protected function parseBlocks($lines);
 
-    abstract protected function renderAbsy($blocks);
+    abstract protected function renderAbsy($absy);
 }
