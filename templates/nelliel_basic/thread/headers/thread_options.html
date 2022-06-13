@@ -3,7 +3,7 @@
 	{{# index_render }}
 	<span class="hide-thread hidden text-button" data-jsonly="">[<a class="toggle-thread" href="#" data-command="hide-thread" data-content-id="{{ post_content_id }}" data-alt-visual="Show Thread" data-i18n-attributes="data-alt-visual" data-i18n="">Hide Thread</a>]</span>
 		{{# abbreviate }}
-	<span class="expand-thread hidden text-button" data-jsonly="">[<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-thread-page="{{ thread_page }}" data-alt-visual="Collapse" data-i18n-attributes="data-alt-visual" data-i18n="">Expand</a>]</span>
+	<span class="expand-thread hidden text-button" data-jsonly="">[<a href="#" data-command="expand-thread{{ render }}" data-content-id="{{ thread_content_id }}" data-thread-url="{{ thread_url }}" data-alt-visual="Collapse" data-i18n-attributes="data-alt-visual" data-i18n="">Expand</a>]</span>
 		{{/ abbreviate }}
 	<span class="reply-thread text-button">[<a href="{{ reply_to_url }}" data-i18n="">Reply</a>]</span>
 		{{# first_posts }}

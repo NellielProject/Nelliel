@@ -174,9 +174,7 @@ class OutputPost extends Output
                 '&actions=edit&content-id=' . $post_content_id->getIDString();
         }
 
-        $this->render_data['headers']['thread_page'] = sprintf($this->site_domain->setting('thread_filename_format'),
-            $thread->contentID()->threadID()) . NEL_PAGE_EXT;
-
+        $this->render_data['headers']['thread_url'] = $thread->getURL(!$this->write_mode);
         $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
         $thread_headers['post_content_id'] = $post_content_id->getIDString();
         $post_headers['thread_content_id'] = $thread->contentID()->getIDString();
