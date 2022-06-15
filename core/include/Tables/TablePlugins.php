@@ -20,11 +20,15 @@ class TablePlugins extends Table
         $this->column_types = [
             'plugin_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'directory' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'initializer' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'parsed_ini' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
             'plugin_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false],
-            'directory' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false],
-            'enabled' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'directory' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'initializer' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'parsed_ini' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false],
+            'enabled' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -35,6 +39,8 @@ class TablePlugins extends Table
         CREATE TABLE ' . $this->table_name . ' (
             plugin_id   VARCHAR(50) NOT NULL,
             directory   VARCHAR(255) NOT NULL,
+            initializer VARCHAR(255) NOT NULL,
+            parsed_ini  TEXT NOT NULL,
             enabled     SMALLINT NOT NULL DEFAULT 0,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (plugin_id)
         ) ' . $options . ';';
