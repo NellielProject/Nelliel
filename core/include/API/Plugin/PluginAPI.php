@@ -27,24 +27,6 @@ class PluginAPI
         return self::$api_revision;
     }
 
-    /*
-     * public function registerPlugin($plugin_directory, $initializer_file)
-     * {
-     * if (!NEL_ENABLE_PLUGINS) {
-     * return false;
-     * }
-     *
-     * if (array_key_exists($initializer_file, self::$parsed_ini_files)) {
-     * $plugin_id = $this->generateID();
-     * $new_plugin = new Plugin($plugin_id, $plugin_directory, self::$parsed_ini_files[$initializer_file]);
-     * self::$loaded_plugins[$new_plugin->getIniValue('id_string')] = true;
-     * self::$plugins[$plugin_id] = $new_plugin;
-     * return $plugin_id;
-     * }
-     *
-     * return false;
-     * }
-     */
     public function getPlugin(string $id): Plugin
     {
         $plugin = new Plugin($this->database, $id);
@@ -140,7 +122,7 @@ class PluginAPI
         return $plugins;
     }
 
-    public function loadPlugins()
+    public function loadPlugins(): void
     {
         if (!NEL_ENABLE_PLUGINS) {
             return;
@@ -156,17 +138,17 @@ class PluginAPI
         }
     }
 
-    private function generateID()
+    private function generateID(): string
     {
         return utf8_substr(md5(random_bytes(16)), -8);
     }
 
-    private function isValidHook(string $hook_name)
+    private function isValidHook(string $hook_name): bool
     {
         return isset(self::$hooks[$hook_name]) && self::$hooks[$hook_name] instanceof PluginHook;
     }
 
-    private function isValidPlugin($plugin_id)
+    private function isValidPlugin($plugin_id): bool
     {
         return isset(self::$plugins[$plugin_id]);
     }

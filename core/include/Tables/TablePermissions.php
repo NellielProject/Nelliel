@@ -76,6 +76,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_noticeboard_delete', 'Delete posts on the staff noticeboard.']);
         $this->insertDefaultRow(['perm_pages_manage', 'Manage static pages.']);
         $this->insertDefaultRow(['perm_permissions_manage', 'Manage permissions.']);
+        $this->insertDefaultRow(['perm_plugins_manage', 'Manage static pages.']);
         $this->insertDefaultRow(['perm_reports_view', 'View reports.']);
         $this->insertDefaultRow(['perm_reports_dismiss', 'Manage reports.']);
         $this->insertDefaultRow(['perm_roles_view', 'View roles.']);
