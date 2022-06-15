@@ -6,10 +6,12 @@ namespace Nelliel\Setup;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Tables\TableBoardDefaults;
+use Nelliel\Tables\TablePermissions;
+use Nelliel\Tables\TableRolePermissions;
+use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TableSettingOptions;
 
 class BetaMigrations
 {
@@ -29,7 +31,7 @@ class BetaMigrations
         switch ($this->upgrade->installedVersion()) {
             case 'v0.9.25':
                 $target_version = NELLIEL_VERSION;
-                echo sprintf(__('Updating from v0.9.25 to %s...'), $target_version) . '<br>';
+                echo sprintf(__('Updating from v0.9.25 to %s...'), 'v0.9.26') . '<br>';
                 $core_sqltype = nel_database('core')->config()['sqltype'];
 
                 // Update setting options table
@@ -237,6 +239,7 @@ class BetaMigrations
                 $migration_count ++;
 
             case 'v0.9.26':
+                echo sprintf(__('Updating from v0.9.26 to %s...'), $target_version) . '<br>';
                 // Update post tables
                 $db_prefixes = nel_database('core')->executeFetchAll(
                     'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
@@ -310,6 +313,22 @@ class BetaMigrations
                 }
 
                 echo ' - ' . __('Settings and board config tables updated.') . '<br>';
+
+                // Update plugins table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_PLUGINS_TABLE . '" ADD COLUMN initializer VARCHAR(255) NOT NULL');
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_PLUGINS_TABLE . '" ADD COLUMN parsed_ini TEXT NOT NULL');
+
+                echo ' - ' . __('Plugins table updated.') . '<br>';
+
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaults();
+                $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $role_permissions_table->insertDefaults();
+
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
                 $migration_count ++;
         }
