@@ -3,15 +3,16 @@ declare(strict_types = 1);
 
 namespace Nelliel\API\Plugin;
 
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use Nelliel\INIParser;
 use Nelliel\NellielPDO;
 use PDO;
-use Nelliel\INIParser;
-defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class PluginAPI
 {
+    public const API_version = 0;
     private $database;
-    private static $api_revision = 1;
     private static $hooks = array();
     private static $plugins = array();
     private $ini_parser;
@@ -22,23 +23,18 @@ class PluginAPI
         $this->ini_parser = new INIParser(nel_utilities()->fileHandler());
     }
 
-    public function apiRevision()
-    {
-        return self::$api_revision;
-    }
-
     public function getPlugin(string $id): Plugin
     {
         $plugin = new Plugin($this->database, $id);
         return $plugin;
     }
 
-    public function pluginLoaded(string $id_string)
+    public function pluginLoaded(string $id): bool
     {
-        return isset(self::$plugins[$id_string]);
+        return isset(self::$plugins[$id]);
     }
 
-    private function verifyOrCreateHook(string $hook_name, bool $new = true)
+    private function verifyOrCreateHook(string $hook_name, bool $new = true): bool
     {
         if (!$this->isValidHook($hook_name)) {
             if ($new) {
@@ -52,7 +48,7 @@ class PluginAPI
     }
 
     // Register hook functions here
-    public function addFunction(string $hook_name, string $function_name, string $plugin_id, int $priority = 10)
+    public function addFunction(string $hook_name, string $function_name, string $plugin_id, int $priority = 10): bool
     {
         if (!$this->isValidPlugin($plugin_id)) {
             return false;
@@ -64,7 +60,7 @@ class PluginAPI
     }
 
     // Register hook methods here
-    public function addMethod(string $hook_name, $class, string $method_name, string $plugin_id, int $priority = 10)
+    public function addMethod(string $hook_name, $class, string $method_name, string $plugin_id, int $priority = 10): bool
     {
         if (!$this->isValidPlugin($plugin_id)) {
             return false;
@@ -75,23 +71,23 @@ class PluginAPI
         return true;
     }
 
-    public function removeFunction(string $hook_name, string $function_name, string $plugin_id)
+    public function removeFunction(string $hook_name, string $function_name, string $plugin_id, int $priority = 10): bool
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id)) {
             return false;
         }
 
-        self::$hooks[$hook_name]->removeFunction($function_name, $plugin_id);
+        self::$hooks[$hook_name]->removeFunction($function_name, $plugin_id, $priority);
         return true;
     }
 
-    public function removeMethod(string $hook_name, $class, string $method_name, string $plugin_id)
+    public function removeMethod(string $hook_name, $class, string $method_name, string $plugin_id, int $priority = 10): bool
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id)) {
             return false;
         }
 
-        self::$hooks[$hook_name]->removeFunction($class, $method_name, $plugin_id);
+        self::$hooks[$hook_name]->removeFunction($class, $method_name, $plugin_id, $priority);
         return true;
     }
 
@@ -105,7 +101,8 @@ class PluginAPI
         return $returnable;
     }
 
-    public function getPluginInis(): array {
+    public function getPluginInis(): array
+    {
         return $this->ini_parser->parseDirectories(NEL_PLUGINS_FILES_PATH, 'nelliel-plugin.ini');
     }
 
@@ -128,7 +125,7 @@ class PluginAPI
             return;
         }
 
-        $plugins = $this->getinstalledPlugins();
+        $plugins = $this->getInstalledPlugins();
 
         foreach ($plugins as $plugin) {
             if ($plugin->enabled()) {
@@ -136,11 +133,6 @@ class PluginAPI
                 include_once $plugin->initializerFile();
             }
         }
-    }
-
-    private function generateID(): string
-    {
-        return utf8_substr(md5(random_bytes(16)), -8);
     }
 
     private function isValidHook(string $hook_name): bool
