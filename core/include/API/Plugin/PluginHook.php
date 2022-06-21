@@ -94,7 +94,12 @@ class PluginHook
         });
 
         $return_type = gettype($returnable);
-        array_unshift($args, $returnable);
+        $has_returnable = !is_null($returnable);
+
+        if ($has_returnable) {
+            array_unshift($args, $returnable);
+        }
+
         $modified = $returnable;
 
         foreach ($this->registered as $registered) {
@@ -105,11 +110,10 @@ class PluginHook
                 $return_value = call_user_func_array([$registered['class'], $registered['method_name']], $args);
             }
 
-            if (!is_null($return_type) && gettype($return_value) === $return_type) {
+            if ($has_returnable && gettype($return_value) === $return_type) {
                 $modified = $return_value;
+                $args[0] = $modified;
             }
-
-            $args[0] = $modified;
         }
 
         $this->in_progress = false;
