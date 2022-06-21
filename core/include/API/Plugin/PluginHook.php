@@ -10,23 +10,32 @@ class PluginHook
     private $name;
     private $registered = array();
     private $in_progress = false;
-    private $unsorted = true;
+    private $unsorted = false;
 
     function __construct(string $hook_name)
     {
         $this->name = $hook_name;
     }
 
+    /**
+     * Get the hook name.
+     */
     public function name(): string
     {
         return $this->name;
     }
 
+    /**
+     * Checks if the hook currently being processed.
+     */
     public function inProgress(): bool
     {
         return $this->in_progress;
     }
 
+    /**
+     * Registers a function to the specified hook.
+     */
     public function addFunction(string $function_name, string $plugin_id, int $priority): bool
     {
         if ($this->in_progress) {
@@ -39,7 +48,10 @@ class PluginHook
         return true;
     }
 
-    public function addMethod($class, string $method_name, string $plugin_id, int $priority): bool
+    /**
+     * Registers a method to the specified hook.
+     */
+    public function addMethod(object $class, string $method_name, string $plugin_id, int $priority): bool
     {
         if ($this->in_progress) {
             return false;
@@ -51,47 +63,93 @@ class PluginHook
         return true;
     }
 
+    /**
+     * Removes a function from the specified hook.
+     */
     public function removeFunction(string $function_name, string $plugin_id, int $priority): bool
     {
         if ($this->in_progress) {
             return false;
         }
 
-        foreach ($this->registered as $key => $registered) {
-            if (isset($registered['function_name']) && $registered['function_name'] === $function_name &&
-                $registered['plugin_id'] === $plugin_id && $registered['priority'] === $priority) {
-                unset($this->registered[$key]);
-                return true;
-            }
+        $key = $this->functionKey($function_name, $plugin_id, $priority);
+
+        if (!is_null($key)) {
+            unset($this->registered[$key]);
         }
 
-        return false;
+        return true;
     }
 
+    /**
+     * Removes a method from the specified hook.
+     */
     public function removeMethod($class, string $method_name, string $plugin_id, int $priority): bool
     {
         if ($this->in_progress) {
             return false;
         }
 
+        $key = $this->methodKey($method_name, $class, $plugin_id, $priority);
+
+        if (!is_null($key)) {
+            unset($this->registered[$key]);
+        }
+
+        return true;
+    }
+
+    /**
+     * Gets the index of the registered function.
+     */
+    private function functionKey(string $function_name, string $plugin_id, int $priority): ?int
+    {
         foreach ($this->registered as $key => $registered) {
-            if (isset($registered['method_name']) && $registered['method_name'] === $method_name &&
-                $registered['class'] === $class && $registered['plugin_id'] === $plugin_id &&
+            if (!isset($registered['type']) || $registered['type'] !== 'function') {
+                continue;
+            }
+
+            if ($registered['function_name'] === $function_name && $registered['plugin_id'] === $plugin_id &&
                 $registered['priority'] === $priority) {
-                unset($this->registered[$key]);
-                return true;
+                return $key;
             }
         }
 
-        return false;
+        return null;
     }
 
+    /**
+     * Gets the index of the registered method.
+     */
+    private function methodKey(string $method_name, object $class, string $plugin_id, int $priority): ?int
+    {
+        foreach ($this->registered as $key => $registered) {
+            if (!isset($registered['type']) || $registered['type'] !== 'method') {
+                continue;
+            }
+
+            if ($registered['method_name'] === $method_name && $registered['class'] === $class &&
+                $registered['plugin_id'] === $plugin_id && $registered['priority'] === $priority) {
+                return $key;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Sorts and processes all registered functions and methods.
+     */
     public function process(array $args, $returnable)
     {
         $this->in_progress = true;
-        usort($this->registered, function ($a, $b) {
-            return $a['priority'] <=> $b['priority'];
-        });
+
+        if ($this->unsorted) {
+            usort($this->registered, function ($a, $b) {
+                return $a['priority'] <=> $b['priority'];
+            });
+            $this->unsorted = false;
+        }
 
         $return_type = gettype($returnable);
         $has_returnable = !is_null($returnable);

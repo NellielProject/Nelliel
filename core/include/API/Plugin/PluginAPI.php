@@ -11,7 +11,7 @@ use PDO;
 
 class PluginAPI
 {
-    public const API_VERSION = 0;
+    public const API_VERSION = 1; // Only updates on breaking changes
     private $database;
     private static $hooks = array();
     private static $loaded_plugins = array();
@@ -24,17 +24,26 @@ class PluginAPI
         $this->ini_parser = new INIParser(nel_utilities()->fileHandler());
     }
 
-    public function getPlugin(string $id): Plugin
+    /**
+     * Gets a new Plugin instance.
+     */
+    public function getPlugin(string $plugin_id): Plugin
     {
-        $plugin = new Plugin($this->database, $id);
+        $plugin = new Plugin($this->database, $plugin_id);
         return $plugin;
     }
 
-    public function pluginLoaded(string $id): bool
+    /**
+     * Checks if a plugin has been loaded.
+     */
+    public function pluginLoaded(string $plugin_id): bool
     {
-        return isset(self::$loaded_plugins[$id]);
+        return isset(self::$loaded_plugins[$plugin_id]);
     }
 
+    /**
+     * Verifies if hook is valid. If it does not exist, creates the hook.
+     */
     private function verifyOrCreateHook(string $hook_name, bool $new = true): bool
     {
         if (!$this->isValidHook($hook_name)) {
@@ -48,7 +57,9 @@ class PluginAPI
         return true;
     }
 
-    // Register hook functions here
+    /**
+     * Registers a function to the specified hook.
+     */
     public function addFunction(string $hook_name, string $function_name, string $plugin_id, int $priority = 10): bool
     {
         if (!$this->isValidPlugin($plugin_id)) {
@@ -56,11 +67,12 @@ class PluginAPI
         }
 
         $this->verifyOrCreateHook($hook_name);
-        self::$hooks[$hook_name]->addFunction($function_name, $plugin_id, $priority);
-        return true;
+        return self::$hooks[$hook_name]->addFunction($function_name, $plugin_id, $priority);
     }
 
-    // Register hook methods here
+    /**
+     * Registers a method to the specified hook.
+     */
     public function addMethod(string $hook_name, object $class, string $method_name, string $plugin_id,
         int $priority = 10): bool
     {
@@ -69,20 +81,24 @@ class PluginAPI
         }
 
         $this->verifyOrCreateHook($hook_name);
-        self::$hooks[$hook_name]->addMethod($class, $method_name, $plugin_id, $priority);
-        return true;
+        return self::$hooks[$hook_name]->addMethod($class, $method_name, $plugin_id, $priority);
     }
 
+    /**
+     * Removes a function from the specified hook.
+     */
     public function removeFunction(string $hook_name, string $function_name, string $plugin_id, int $priority = 10): bool
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id)) {
             return false;
         }
 
-        self::$hooks[$hook_name]->removeFunction($function_name, $plugin_id, $priority);
-        return true;
+        return self::$hooks[$hook_name]->removeFunction($function_name, $plugin_id, $priority);
     }
 
+    /**
+     * Removes a method from the specified hook.
+     */
     public function removeMethod(string $hook_name, object $class, string $method_name, string $plugin_id,
         int $priority = 10): bool
     {
@@ -90,20 +106,26 @@ class PluginAPI
             return false;
         }
 
-        self::$hooks[$hook_name]->removeMethod($class, $method_name, $plugin_id, $priority);
-        return true;
+        return self::$hooks[$hook_name]->removeMethod($class, $method_name, $plugin_id, $priority);
     }
 
+    /**
+     * Processes all functions and methods registered to the specified hook.
+     */
     public function processHook(string $hook_name, array $args, $returnable = null)
     {
         if (!NEL_ENABLE_PLUGINS || !$this->isValidHook($hook_name)) {
             return $returnable;
         }
 
-        $returnable = self::$hooks[$hook_name]->process($args, $returnable);
-        return $returnable;
+        return self::$hooks[$hook_name]->process($args, $returnable);
     }
 
+    /**
+     * Gets all plugins currently in the plugins directory.
+     *
+     * @return (Plugin|string)[]
+     */
     public function getAvailablePlugins(bool $id_only = false): array
     {
         $inis = $this->ini_parser->parseDirectories(NEL_PLUGINS_FILES_PATH, 'nelliel-plugin.ini');
@@ -120,6 +142,11 @@ class PluginAPI
         return $plugins;
     }
 
+    /**
+     * Gets all plugins currently installed.
+     *
+     * @return (Plugin|string)[]
+     */
     public function getInstalledPlugins(bool $id_only = false): array
     {
         $query = 'SELECT "plugin_id" FROM "' . NEL_PLUGINS_TABLE . '"';
@@ -138,6 +165,11 @@ class PluginAPI
         return $plugins;
     }
 
+    /**
+     * Gets all plugins currently loaded.
+     *
+     * @return (Plugin|string)[]
+     */
     public function getLoadedPlugins(bool $id_only = false): array
     {
         if ($id_only) {
@@ -147,6 +179,9 @@ class PluginAPI
         return self::$loaded_plugins;
     }
 
+    /**
+     * Loads all enabled plugins.
+     */
     public function loadPlugins(): void
     {
         if (!NEL_ENABLE_PLUGINS) {
@@ -196,21 +231,31 @@ class PluginAPI
             }
 
             if ($load) {
+                if (!file_exists($plugin->initializerFile())) {
+                    continue;
+                }
+
                 self::$loaded_plugin_ids[] = $plugin->id();
                 self::$loaded_plugins[$plugin->id()] = $plugin;
                 include_once $plugin->initializerFile();
-                $this->processHook('in_after_plugin_loaded', [$plugin->id()]);
+                $this->processHook('nel-in-after-plugin-loaded', [$plugin->id()]);
             }
         }
 
-        $this->processHook('in_after_all_plugins_loaded', []);
+        $this->processHook('nel-in-after-all-plugins-loaded', []);
     }
 
+    /**
+     * Check that the specified hook ia valid.
+     */
     private function isValidHook(string $hook_name): bool
     {
         return isset(self::$hooks[$hook_name]) && self::$hooks[$hook_name] instanceof PluginHook;
     }
 
+    /**
+     * Check that the specified plugin is valid.
+     */
     private function isValidPlugin(string $plugin_id): bool
     {
         return isset(self::$loaded_plugins[$plugin_id]);
