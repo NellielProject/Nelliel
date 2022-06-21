@@ -11,7 +11,7 @@ use PDO;
 
 class PluginAPI
 {
-    public const API_version = 0;
+    public const API_VERSION = 0;
     private $database;
     private static $hooks = array();
     private static $loaded_plugins = array();
@@ -167,22 +167,43 @@ class PluginAPI
         }
 
         foreach ($enabled_plugins as $plugin) {
+            $min_php = $plugin->info('min_php');
+
+            if ($min_php !== '' && !version_compare(PHP_VERSION, $min_php, '>=')) {
+                continue;
+            }
+
+            $min_nelliel = $plugin->info('min_nelliel');
+
+            if ($min_nelliel !== '' && !version_compare(NELLIEL_VERSION, $min_nelliel, '>=')) {
+                continue;
+            }
+
+            $api_version = $plugin->info('api_version');
+
+            if ($api_version !== '' && $api_version != self::API_VERSION) {
+                continue;
+            }
+
             $dependencies = array_map('trim', explode(',', $plugin->info('dependencies')));
             $load = true;
 
             foreach ($dependencies as $dependency) {
-                if (!in_array($dependency, $enabled_plugin_ids)) {
+                if ($dependency !== '' && !in_array($dependency, $enabled_plugin_ids)) {
                     $load = false;
                     break;
                 }
             }
 
             if ($load) {
-                include_once $plugin->initializerFile();
                 self::$loaded_plugin_ids[] = $plugin->id();
                 self::$loaded_plugins[$plugin->id()] = $plugin;
+                include_once $plugin->initializerFile();
+                $this->processHook('in_after_plugin_loaded', [$plugin->id()]);
             }
         }
+
+        $this->processHook('in_after_all_plugins_loaded', []);
     }
 
     private function isValidHook(string $hook_name): bool
