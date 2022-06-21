@@ -63,18 +63,18 @@ class OutputPanelPlugins extends Output
             $this->render_data['installed_list'][] = $plugin_data;
         }
 
-        $plugin_inis = nel_plugins()->getPluginInis();
+        $plugins = nel_plugins()->getAvailablePlugins();
         $bgclass = 'row1';
 
-        foreach ($plugin_inis as $ini) {
+        foreach ($plugins as $plugin) {
             $plugin_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $plugin_data['id'] = $ini['id'];
-            $plugin_data['name'] = $ini['name'];
-            $plugin_data['is_installed'] = in_array($ini['id'], $installed_ids);
+            $plugin_data['id'] = $plugin->id();
+            $plugin_data['name'] = $plugin->info('name');
+            $plugin_data['is_installed'] = in_array($plugin->id(), $installed_ids);
             $plugin_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
-                    ['module' => 'admin', 'section' => 'plugins', 'actions' => 'add', 'plugin-id' => $ini['id']]);
+                    ['module' => 'admin', 'section' => 'plugins', 'actions' => 'add', 'plugin-id' => $plugin->id()]);
             $this->render_data['available_list'][] = $plugin_data;
         }
 

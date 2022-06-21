@@ -14,7 +14,8 @@ class PluginAPI
     public const API_version = 0;
     private $database;
     private static $hooks = array();
-    private static $plugins = array();
+    private static $loaded_plugins = array();
+    private static $loaded_plugin_ids = array();
     private $ini_parser;
 
     function __construct(NellielPDO $database)
@@ -31,7 +32,7 @@ class PluginAPI
 
     public function pluginLoaded(string $id): bool
     {
-        return isset(self::$plugins[$id]);
+        return isset(self::$loaded_plugins[$id]);
     }
 
     private function verifyOrCreateHook(string $hook_name, bool $new = true): bool
@@ -60,7 +61,8 @@ class PluginAPI
     }
 
     // Register hook methods here
-    public function addMethod(string $hook_name, $class, string $method_name, string $plugin_id, int $priority = 10): bool
+    public function addMethod(string $hook_name, object $class, string $method_name, string $plugin_id,
+        int $priority = 10): bool
     {
         if (!$this->isValidPlugin($plugin_id)) {
             return false;
@@ -81,13 +83,14 @@ class PluginAPI
         return true;
     }
 
-    public function removeMethod(string $hook_name, $class, string $method_name, string $plugin_id, int $priority = 10): bool
+    public function removeMethod(string $hook_name, object $class, string $method_name, string $plugin_id,
+        int $priority = 10): bool
     {
         if (!$this->isValidHook($hook_name) || !$this->isValidPlugin($plugin_id)) {
             return false;
         }
 
-        self::$hooks[$hook_name]->removeFunction($class, $method_name, $plugin_id, $priority);
+        self::$hooks[$hook_name]->removeMethod($class, $method_name, $plugin_id, $priority);
         return true;
     }
 
@@ -101,15 +104,31 @@ class PluginAPI
         return $returnable;
     }
 
-    public function getPluginInis(): array
+    public function getAvailablePlugins(bool $id_only = false): array
     {
-        return $this->ini_parser->parseDirectories(NEL_PLUGINS_FILES_PATH, 'nelliel-plugin.ini');
+        $inis = $this->ini_parser->parseDirectories(NEL_PLUGINS_FILES_PATH, 'nelliel-plugin.ini');
+        $plugins = array();
+
+        foreach ($inis as $ini) {
+            if ($id_only) {
+                $plugins[] = $ini['id'];
+            } else {
+                $plugins[] = $this->getPlugin($ini['id']);
+            }
+        }
+
+        return $plugins;
     }
 
-    public function getInstalledPlugins(): array
+    public function getInstalledPlugins(bool $id_only = false): array
     {
         $query = 'SELECT "plugin_id" FROM "' . NEL_PLUGINS_TABLE . '"';
         $plugin_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
+
+        if ($id_only) {
+            return $plugin_ids;
+        }
+
         $plugins = array();
 
         foreach ($plugin_ids as $id) {
@@ -119,6 +138,15 @@ class PluginAPI
         return $plugins;
     }
 
+    public function getLoadedPlugins(bool $id_only = false): array
+    {
+        if ($id_only) {
+            return self::$loaded_plugin_ids;
+        }
+
+        return self::$loaded_plugins;
+    }
+
     public function loadPlugins(): void
     {
         if (!NEL_ENABLE_PLUGINS) {
@@ -126,11 +154,33 @@ class PluginAPI
         }
 
         $plugins = $this->getInstalledPlugins();
+        $enabled_plugins = array();
+        $enabled_plugin_ids = array();
 
         foreach ($plugins as $plugin) {
-            if ($plugin->enabled()) {
-                self::$plugins[$plugin->id()] = $plugin;
+            if (!$plugin->enabled()) {
+                continue;
+            }
+
+            $enabled_plugin_ids[] = $plugin->id();
+            $enabled_plugins[$plugin->id()] = $plugin;
+        }
+
+        foreach ($enabled_plugins as $plugin) {
+            $dependencies = array_map('trim', explode(',', $plugin->info('dependencies')));
+            $load = true;
+
+            foreach ($dependencies as $dependency) {
+                if (!in_array($dependency, $enabled_plugin_ids)) {
+                    $load = false;
+                    break;
+                }
+            }
+
+            if ($load) {
                 include_once $plugin->initializerFile();
+                self::$loaded_plugin_ids[] = $plugin->id();
+                self::$loaded_plugins[$plugin->id()] = $plugin;
             }
         }
     }
@@ -140,8 +190,8 @@ class PluginAPI
         return isset(self::$hooks[$hook_name]) && self::$hooks[$hook_name] instanceof PluginHook;
     }
 
-    private function isValidPlugin($plugin_id): bool
+    private function isValidPlugin(string $plugin_id): bool
     {
-        return isset(self::$plugins[$plugin_id]);
+        return isset(self::$loaded_plugins[$plugin_id]);
     }
 }
