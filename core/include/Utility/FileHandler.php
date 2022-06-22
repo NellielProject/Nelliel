@@ -3,6 +3,9 @@ declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
+use FilesystemIterator;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class FileHandler
@@ -134,13 +137,15 @@ class FileHandler
             }
         } else {
             if (file_exists($path) && is_dir($path)) {
-                $files = glob($this->pathJoin($path, '*'));
+                $di = new RecursiveDirectoryIterator($path, FilesystemIterator::SKIP_DOTS);
+                $rii = new RecursiveIteratorIterator($di, RecursiveIteratorIterator::CHILD_FIRST,
+                    RecursiveIteratorIterator::CATCH_GET_CHILD);
 
-                foreach ($files as $file) {
-                    if (is_dir($file)) {
-                        $this->eraserGun($file);
-                    } else {
-                        unlink($file);
+                foreach ($rii as $fileInfo) {
+                    if ($fileInfo->isFile()) {
+                        unlink($fileInfo->getRealPath());
+                    } else if ($fileInfo->isDir()) {
+                        @rmdir($fileInfo->getRealpath());
                     }
                 }
 
