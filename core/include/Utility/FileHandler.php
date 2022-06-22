@@ -3,10 +3,11 @@ declare(strict_types = 1);
 
 namespace Nelliel\Utility;
 
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use FilesystemIterator;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
-use FilesystemIterator;
-defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class FileHandler
 {
