@@ -1,4 +1,26 @@
 # Nelliel Changelog
+## v0.9.27 (2022/6/23)
+### Added
+ - Columns for upcoming visitor ID
+ - Download link for files
+ - Setting for spoiler display name
+ - Install key
+ - Spoiler markdown
+
+### Changed
+ - Reverted login link to account
+ - Revised and finalized plugin API
+
+### Fixed
+ - Hide thread on overboard
+ - Post data input
+ - Expand/collapse URLs
+ - EraserGun
+ - Migrations
+
+### Removed
+ - ExamplePlugin
+ 
 ## v0.9.26 (2022/2/25)
 ### Breaking
  - Image sets
@@ -24,10 +46,10 @@
 ### Fixed
  - Various minor things
 
-
 ### Removed
  - None!
 
+## v0.9.25 (2022/1/1)
 ### Added
  - Full Composer support
  - Routing
