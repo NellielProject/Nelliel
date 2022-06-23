@@ -63,7 +63,7 @@ class Template
 
     public function install(bool $overwrite = false): void
     {
-        $template_inis = $this->front_end_data->gettemplateInis();
+        $template_inis = $this->front_end_data->getTemplateInis();
         $encoded_ini = '';
 
         foreach ($template_inis as $ini) {

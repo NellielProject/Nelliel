@@ -6,10 +6,12 @@ namespace Nelliel\Setup;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Tables\TableBoardDefaults;
+use Nelliel\Tables\TablePermissions;
+use Nelliel\Tables\TableRolePermissions;
+use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TableSettingOptions;
 
 class BetaMigrations
 {
@@ -28,8 +30,7 @@ class BetaMigrations
 
         switch ($this->upgrade->installedVersion()) {
             case 'v0.9.25':
-                $target_version = NELLIEL_VERSION;
-                echo sprintf(__('Updating from v0.9.25 to %s...'), $target_version) . '<br>';
+                echo __('Updating from v0.9.25 to v0.9.26...') . '<br>';
                 $core_sqltype = nel_database('core')->config()['sqltype'];
 
                 // Update setting options table
@@ -37,23 +38,14 @@ class BetaMigrations
                     'ALTER TABLE "nelliel_menu_data" RENAME TO ' . NEL_SETTING_OPTIONS_TABLE . '');
                 nel_database('core')->exec(
                     'ALTER TABLE "' . NEL_SETTING_OPTIONS_TABLE . '" ADD COLUMN raw_output SMALLINT NOT NULL DEFAULT 0');
-                $setting_options_table = new TableSettingOptions(nel_database('core'),
-                    nel_utilities()->sqlCompatibility());
-                $setting_options_table->insertDefaults();
 
                 echo ' - ' . __('Setting options table updated.') . '<br>';
 
                 // Update filetypes table
-                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
-                    nel_database('core')->exec(
-                        'ALTER TABLE "' . NEL_FILETYPES_TABLE . '" CHANGE COLUMN mime mimetypes TEXT NOT NULL');
-                } else {
-                    nel_database('core')->exec('ALTER TABLE "' . NEL_FILETYPES_TABLE . '" RENAME mime TO mimetypes');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "' . NEL_FILETYPES_TABLE . '" ALTER COLUMN mimetypes TYPE TEXT');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "' . NEL_FILETYPES_TABLE . '" ALTER COLUMN mimetypes SET NOT NULL');
-                }
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_FILETYPES_TABLE . '" ADD COLUMN mimetypes TEXT NOT NULL DEFAULT \'\'');
+                nel_database('core')->exec('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "mimetypes" = "mime"');
+                nel_database('core')->exec('ALTER TABLE "' . NEL_FILETYPES_TABLE . '" DROP COLUMN "mime"');
 
                 $old_data = nel_database('core')->executeFetchAll(
                     'SELECT "format", "mimetypes" FROM "' . NEL_FILETYPES_TABLE . '"', PDO::FETCH_ASSOC);
@@ -85,6 +77,7 @@ class BetaMigrations
                 nel_database('core')->exec(
                     'UPDATE "' . NEL_FILETYPES_TABLE .
                     '" SET "extensions" = \'["3gp", "3gpp"]\' WHERE "format" = \'3gp\'');
+
                 echo ' - ' . __('Filetypes table updated.') . '<br>';
 
                 // Update users table
@@ -235,7 +228,137 @@ class BetaMigrations
                 echo ' - ' . __('Thread tables updated.') . '<br>';
 
                 $migration_count ++;
-                break;
+
+            case 'v0.9.26':
+                echo __('Updating from v0.9.26 to v0.9.27...') . '<br>';
+
+                // Update post tables
+                $db_prefixes = nel_database('core')->executeFetchAll(
+                    'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_posts' .
+                        '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                }
+
+                echo ' - ' . __('Post tables updated.') . '<br>';
+
+                // Update bans table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_BANS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                echo ' - ' . __('Bans table updated.') . '<br>';
+
+                // Update logs table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_LOGS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                echo ' - ' . __('Logs table updated.') . '<br>';
+
+                // Update reports table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_REPORTS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                echo ' - ' . __('Reports table updated.') . '<br>';
+
+                $new_site_settings = [];
+                $new_board_settings = ['post_backlinks_header', 'post_backlinks_footer', 'post_backlinks_label',
+                    'show_download_link', 'download_original_name', 'spoiler_display_name'];
+                $board_setting_removals = ['display_post_backlinks'];
+                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $settings_table->insertDefaults();
+                $setting_options_table = new TableSettingOptions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $setting_options_table->insertDefaults();
+                $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $board_defaults_table->insertDefaults();
+                $this->copyToSiteConfig($new_site_settings);
+                $board_ids = $this->getAllBoardIDs();
+
+                $board_setting_names = nel_database('core')->executeFetchAll(
+                    'SELECT "setting_name" FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_category" = \'board\'',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($board_ids as $id) {
+                    $this->copyToBoardConfig($id, $new_board_settings);
+                }
+
+                $settings_delete = nel_database('core')->prepare(
+                    'DELETE FROM "' . NEL_SETTINGS_TABLE .
+                    '" WHERE "setting_name" = :name AND "setting_category" = \'board\'');
+                $board_defaults_delete = nel_database('core')->prepare(
+                    'DELETE FROM "' . NEL_BOARD_DEFAULTS_TABLE . '" WHERE "setting_name" = :name');
+                $board_configs_delete = nel_database('core')->prepare(
+                    'DELETE FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "setting_name" = :name');
+
+                foreach ($board_setting_names as $setting) {
+                    if (in_array($setting, $board_setting_removals)) {
+                        $settings_delete->bindValue(':name', $setting);
+                        nel_database('core')->executePrepared($settings_delete);
+
+                        $board_defaults_delete->bindValue(':name', $setting);
+                        nel_database('core')->executePrepared($board_defaults_delete);
+
+                        $board_configs_delete->bindValue(':name', $setting);
+                        nel_database('core')->executePrepared($board_configs_delete);
+                    }
+                }
+
+                echo ' - ' . __('Settings and board config tables updated.') . '<br>';
+
+                // Update plugins table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_PLUGINS_TABLE . '" ADD COLUMN initializer VARCHAR(255) NOT NULL DEFAULT \'\'');
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_PLUGINS_TABLE . '" ADD COLUMN parsed_ini TEXT NOT NULL DEFAULT \'\'');
+
+                echo ' - ' . __('Plugins table updated.') . '<br>';
+
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaults();
+                $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $role_permissions_table->insertDefaults();
+
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
+                $template_ini = nel_database('core')->executeFetch(
+                    'SELECT "parsed_ini" FROM "' . NEL_TEMPLATES_TABLE .
+                    '" WHERE "template_id" = \'template-nelliel-basic\'', PDO::FETCH_COLUMN);
+                $template_ini = str_replace('template-info', 'info', $template_ini);
+                $template_ini_update = nel_database('core')->prepare(
+                    'UPDATE "' . NEL_TEMPLATES_TABLE .
+                    '" SET "parsed_ini" = ? WHERE "template_id" = \'template-nelliel-basic\'');
+                nel_database('core')->executePrepared($template_ini_update, [$template_ini]);
+
+                echo ' - ' . __('Template info updated.') . '<br>';
+
+                $core_styles = ['style-nelliel', 'style-nelliel-2', 'style-nelliel-classic', 'style-futaba',
+                    'style-burichan', 'style-nigra'];
+                $style_ini_select = nel_database('core')->prepare(
+                    'SELECT "parsed_ini" FROM "' . NEL_STYLES_TABLE . '" WHERE "style_id" = ?');
+                $style_ini_update = nel_database('core')->prepare(
+                    'UPDATE "' . NEL_STYLES_TABLE . '" SET "parsed_ini" = ? WHERE "style_id" = ?');
+
+                foreach ($core_styles as $style) {
+                    $style_ini = nel_database('core')->executePreparedFetch($style_ini_select, [$style],
+                        PDO::FETCH_COLUMN);
+                    $style_ini = str_replace('style-info', 'info', $style_ini);
+                    $template_ini = nel_database('core')->executePrepared($style_ini_update, [$style_ini, $style]);
+                }
+
+                echo ' - ' . __('Style info updated.') . '<br>';
+
+                $image_set_ini = nel_database('core')->executeFetch(
+                    'SELECT "parsed_ini" FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = \'images-nelliel-basic\'',
+                    PDO::FETCH_COLUMN);
+                $image_set_ini = str_replace('set-info', 'info', $image_set_ini);
+                $image_set_ini_update = nel_database('core')->prepare(
+                    'UPDATE "' . NEL_IMAGE_SETS_TABLE .
+                    '" SET "parsed_ini" = ? WHERE "set_id" = \'images-nelliel-basic\'');
+                nel_database('core')->executePrepared($image_set_ini_update, [$image_set_ini]);
+
+                echo ' - ' . __('Image set info updated.') . '<br>';
+
+                $migration_count ++;
         }
 
         return $migration_count;

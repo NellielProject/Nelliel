@@ -335,13 +335,15 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'tripcode_marker', '!', 'Tripcode marker', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'no_comment_text', '(no comment)', 'Text when there is no comment', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'filter_zalgo', '1', 'Filter out Zalgo text. Note: There are rare cases where this may break text.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_post_backlinks', '1', 'Display backlinks for a post that has been referenced', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_poster_id', '0', 'Display ID for posters in a thread', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'poster_id_colors', '0', 'Use a color background for poster IDs', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'poster_id_length', '6', 'Characters for poster ID (limited by hash length)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'create_url_links', '1', 'Convert URLs into links', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'url_protocols', 'http|https|ftp|sftp|irc|nntp', 'Protocols which will be parsed to links (must be separated with |)', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'url_prefix', '', 'Prefix that will be added to URLs', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'post_backlinks_header', '1', 'Display reply backlinks in post header.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'post_backlinks_footer', '0', 'Display reply backlinks in post footer.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'post_backlinks_label', 'Replies: ', 'Label for reply backlinks.', '{"type":"text"}']);
 
         // Uploads Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_static_preview', '1', 'Display static image previews when available.', '{"type":"checkbox"}']);
@@ -360,13 +362,16 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_width', '120', 'Maximum display width for uploads in catalog', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_height', '120', 'Maximum display height for uploads in catalog', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_spoiler_cover', 'media/core/covers/spoiler.png', 'Cover image for spoilers.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'spoiler_display_name', 'spoiler.jpg', 'Displayed file name when spoiler cover is used. Leave blank to use normal display name.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_deleted_file', 'media/core/placeholders/deleted_file.png', 'Placeholder image for deleted file.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_deleted_embed', 'media/core/placeholders/deleted_embed.png', 'Placeholder image for deleted embed.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'filename_display_length', '25', 'Maximum characters of filename to display', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'embed_url_display_length', '25', 'Maximum characters of embed URL to display', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_original_name', '1', 'Display the original file name.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_original_name', '1', 'Display the original file name in the file link.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_deleted_placeholder', '1', 'Display placeholder image for deleted uploads. If entry was fully removed from database nothing will be displayed.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'enabled_content_ops', '[]', 'Which content ops will be available.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_download_link', '1', 'Display an immediate download link along with normal file link.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'download_original_name', '1', 'Download link will use original file name if available.', '{"type":"checkbox"}']);
 
         // New Post Form Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_allowed_filetypes', '1', 'Show a list of allowed filetypes on the new post form.', '{"type":"checkbox"}']);

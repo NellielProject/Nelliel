@@ -271,7 +271,7 @@ td {
 
 /* Embeds */
 .embed-container {
-	
+
 }
 
 .single.embed-container {
@@ -284,7 +284,7 @@ td {
 }
 
 .embed-header {
-	
+
 }
 
 .single.embed-header {
@@ -359,6 +359,10 @@ td {
 	font-weight: bold;
 }
 
+.post-backlinks-list {
+	font-size: 0.8rem;
+}
+
 .post-backlink {
 	font-size: 0.8rem;
 }
@@ -407,7 +411,7 @@ td {
 
 /* OP post */
 .op.post-header-info {
-	
+
 }
 
 .op.post {
@@ -439,7 +443,7 @@ td {
 
 /* Reply post */
 .reply.post-header-info {
-	
+
 }
 
 .reply.post {
@@ -614,4 +618,13 @@ td {
 
 .external-link {
 	text-decoration: var(--external-link);
+}
+
+.text-spoiler {
+	color: var(--spoiler-color, black);
+	background-color: var(--spoiler-color, black);
+}
+
+.text-spoiler:hover {
+	color: var(--unspoiler-color, white);
 }

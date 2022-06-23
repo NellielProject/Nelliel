@@ -26,6 +26,11 @@ $base_config['default_locale'] = 'en_US';
 // Once SSL is set up for the site, it is recommended that you set this to true.
 $base_config['secure_session_only'] = false;
 
+// Secret key that must be entered before running the install functions.
+// The key is used to prevent the installer from being hijacked before it's ready.
+// Install will not run if this is blank.
+$base_config['install_key'] = '';
+
 //
 // === Database Access Settings ===
 //

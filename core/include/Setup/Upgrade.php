@@ -51,7 +51,7 @@ class Upgrade
 
     public function verifyLogin(): bool
     {
-        if($this->installedVersion() === 'v0.9.25') {
+        if($this->installedVersion() <= 'v0.9.25') {
             $username = $_POST['username'] ?? '';
         } else {
             $username = utf8_strtolower($_POST['username'] ?? '');

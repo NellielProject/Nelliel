@@ -11,6 +11,11 @@
 			{{> thread/headers/thread_options }}
 		</div>
 	{{/ headers }}
+	{{# post_backlinks_header }}
+		<div>
+			{{> thread/pieces/backlink }}
+		</div>
+	{{/ post_backlinks_header }}
 		<div class="{{ op_reply }} content-container">
 	{{# single_file }}
 		{{> thread/single_content }}
@@ -22,5 +27,10 @@
 		{{> thread/post_comments }}
 	{{/ post_comments }}
 		</div>
+	{{# post_backlinks_footer }}
+		<div>
+			{{> thread/pieces/backlink }}
+		</div>
+	{{/ post_backlinks_footer }}
 	</div>
 </div>

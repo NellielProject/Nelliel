@@ -43,6 +43,13 @@ class OutputFile extends Output
         }
 
         $this->render_data['file_url'] = $file->srcWebPath() . rawurlencode($full_filename);
+        $this->render_data['show_download_link'] = $this->domain->setting('show_download_link');
+
+        if ($this->domain->setting('download_original_name') && !nel_true_empty($file->data('original_filename'))) {
+            $this->render_data['download_filename'] = $file->data('original_filename');
+        } else {
+            $this->render_data['download_filename'] = $file->data('filename') . '.' . $file->data('extension');
+        }
 
         if ($this->domain->setting('display_original_name') && !nel_true_empty($file->data('original_filename'))) {
             $display_filename = $file->data('original_filename');
@@ -103,6 +110,11 @@ class OutputFile extends Output
             $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_spoiler_cover');
             $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
             $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
+
+            if (!nel_true_empty($this->domain->setting('spoiler_display_name'))) {
+                $this->render_data['display_filename'] = $this->domain->setting('spoiler_display_name');
+            }
+
             $preview_type = 'image';
         }
 
@@ -123,11 +135,11 @@ class OutputFile extends Output
             }
         }
 
-        if (is_null($preview_type)) {
-            if ($file->data('category') === 'graphics') {
-                $this->render_data['alt_tag'] = "img";
-            }
+        if ($file->data('category') === 'graphics') {
+            $this->render_data['alt_tag'] = "img";
+        }
 
+        if (is_null($preview_type)) {
             if ($this->domain->setting('display_static_preview') && $has_static_preview) {
                 $preview_name = $file->data('static_preview_name');
             }

@@ -516,11 +516,11 @@ class Thread
         return $this->content_data[$key] ?? null;
     }
 
-    public function changeData(string $key, $new_data)
+    public function changeData(string $key, $new_data, bool $cast_null = true)
     {
         $column_types = $this->main_table->columnTypes();
         $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_typecast($new_data, $type);
+        $new_data = nel_typecast($new_data, $type, $cast_null);
         $old_data = $this->data($key);
         $this->content_data[$key] = $new_data;
         return $old_data;

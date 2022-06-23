@@ -191,7 +191,7 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 	}
 
 	var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
-	var thread_page = element.getAttribute("data-thread-page");
+	var thread_url = element.getAttribute("data-thread-url");
 	var target_element = document.getElementById("thread-expand-" + content_id.id_string);
 
 	if (!target_element) {
@@ -199,28 +199,21 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 	}
 
 	if (dynamic) {
-		var url = "imgboard.php?route=/"
-        + encodeURIComponent(dataBin.board_id)
-        + "/" + encodeURIComponent(dataBin.page_directory)
-        + "/" + encodeURIComponent(content_id.thread_id)
-        + "/" + encodeURIComponent(content_id.thread_id);
-
 		if (command === "expand-thread-render") {
-			url = url + "?expand";
+			thread_url = thread_url + "?expand";
 		}
 
 		if (command === "collapse-thread-render") {
-			url = url + "?collapse";
+			thread_url = thread_url + "?collapse";
 		}
 
 		if (dataBin.is_modmode) {
-			url = url + encodeURIComponent("&modmode");
+			thread_url = thread_url + encodeURIComponent("&modmode");
 		}
 
 		var command1 = "expand-thread-render";
 		var command2 = "collapse-thread-render";
 	} else {
-		var url = "threads/" + encodeURIComponent(content_id.thread_id) + "/" + encodeURIComponent(thread_page);
 		var command1 = "expand-thread";
 		var command2 = "collapse-thread";
 	}
@@ -228,12 +221,13 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 	if (command === "expand-thread" || command === "expand-thread-render") {
 		dataBin.collapsedThreads[content_id.id_string] = target_element.innerHTML;
 		var request = new XMLHttpRequest();
-		request.open('GET', url);
+		request.open('GET', thread_url);
 		request.responseType = "document";
 		request.onload = function() {
 			if (request.status === 200) {
 				var expandHTML = request.response.getElementById("thread-expand-" + content_id.id_string).innerHTML;
 				target_element.innerHTML = expandHTML;
+				nelliel.core.unhideJSonly(target_element);
 			}
 		};
 

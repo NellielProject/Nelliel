@@ -9,11 +9,9 @@
 {{/ sfw_overboard_active }}
 	<span class="text-button">[<a href="{{ about_nelliel_url }}" data-i18n="">About Nelliel</a>]</span>
 {{^ session_active }}
-	<span class="text-button">[<a href="{{ login_url }}" data-i18n="">Login</a>]</span>
+	<span class="text-button">[<a href="{{ account_url }}" data-i18n="">Account</a>]</span>
 {{/ session_active }}
-{{# session_active }}
-	<span class="text-button">[<a href="{{ logout_url }}" data-i18n="">Logout</a>]</span>
-{{/ session_active }}
+
 </nav>
 {{# session_active }}
 <nav class="site-navigation">
@@ -23,6 +21,7 @@
 	{{# board_area }}
 	<span class="text-button">[<a href="{{ board_panel_url }}" data-i18n="">Board Panel</a>]</span>
 	{{/ board_area }}
+	<span class="text-button">[<a href="{{ logout_url }}" data-i18n="">Logout</a>]</span>
 </nav>
 {{/ session_active }}
 

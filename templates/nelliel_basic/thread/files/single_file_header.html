@@ -3,6 +3,9 @@
 {{^ hide_file_select }}
 		<input type="checkbox" name="{{ file_content_id }}" value="action">
 {{/ hide_file_select }}
+{{# show_download_link }}
+		<span class="text-button">[<a href="{{ file_url }}" class="download-link" download="{{ download_filename }}" data-i18n="">Download</a>]</span>
+{{/ show_download_link }}
 		<a href="{{ file_url }}" target="_blank" class="file-link">{{ display_filename }}</a>
 {{ display_image_dimensions }}{{ display_filesize}}
 	</span>
@@ -15,7 +18,7 @@
 {{/ file_metadata }}
 		</span>
 {{# in_modmode }}
-	| {{# mod_can_delete }}<span class="text-button">[<a href="{{ mod_delete_url }}">{{{ ui_mod_delete }}}</a>{{{ ui_mod_delimiter_right }}}</span>{{/ mod_can_delete }}
+	| {{# mod_can_delete }}<span class="text-button">{{{ ui_mod_delimiter_left }}}<a href="{{ mod_delete_url }}">{{{ ui_mod_delete }}}</a>{{{ ui_mod_delimiter_right }}}</span>{{/ mod_can_delete }}
 {{/ in_modmode }}
 	</span><br>
 	<span class="single content-ops">

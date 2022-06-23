@@ -84,6 +84,16 @@ class Setup
             nel_derp(108, _gettext('Installation has already been completed!'));
         }
 
+        if (isset($_POST['install_key'])) {
+            if (!$this->verifyInstallKey()) {
+                nel_derp(114, _gettext('Install key does not match or is invalid.'));
+                die();
+            }
+        } else {
+            $this->displayInstallCheck();
+            die();
+        }
+
         $this->checkPHP();
         $this->checkDBEngine();
         $this->mainDirWritable();
@@ -153,6 +163,37 @@ class Setup
             $generate_files->versions();
             die();
         }
+    }
+
+    public function displayInstallCheck(): void
+    {
+        echo '
+<!DOCTYPE html>
+<html>
+<head>
+    <title>' . __('Install key check') . '</title>
+</head>
+<body>
+    <p>' . __('Enter the install key to continue.') .
+            '</p>
+    <form accept-charset="utf-8" action="imgboard.php?install" method="post">
+        <input type="hidden" name="install_key" value="">
+        <div>
+            <label for="install_key">' . __('Install Key:') .
+            '</label>
+            <input id="install_key" type="text" name="install_key" maxlength="255">
+        </div>
+        <div>
+            <input type="submit" value="' . __('Submit') . '">
+        </div>
+    </form>
+</body></html>';
+    }
+
+    public function verifyInstallKey()
+    {
+        $install_key = $_POST['install_key'] ?? '';
+        return !nel_true_empty(NEL_INSTALL_KEY) && $install_key === NEL_INSTALL_KEY;
     }
 
     public function checkPHP()

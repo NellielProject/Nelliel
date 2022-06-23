@@ -79,6 +79,7 @@ Error 110: Version mismatch. (initializations.php)
 Error 111: Invalid module. (Modules/DispatchErrors.php)   
 Error 112: Invalid section. (Modules/DispatchErrors.php)   
 Error 113: Invalid action. (Modules/DispatchErrors.php)   
+Error 114: Wrong install key. (Setup/Setup.php)   
 
 Error 130: Report item limit. (classes/Reports.php)  
 Error 131: Delete item limit. (classes/ThreadHandler.php)  

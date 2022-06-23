@@ -28,7 +28,7 @@ function nel_plugins()
     static $plugins;
 
     if (!isset($plugins)) {
-        $plugins = new PluginAPI();
+        $plugins = new PluginAPI(nel_database('core'));
     }
 
     return $plugins;

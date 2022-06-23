@@ -118,7 +118,7 @@ class NewPost
         $if_then = new IfThen(new ConditionsPost($post, $uploads), new ActionsPost($post, $uploads));
         $if_then->process('new_post');
 
-        $post->reserveDatabaseRow($time['time'], $time['milli'], nel_request_ip_address(true));
+        $post->reserveDatabaseRow();
         $thread_id = ($post->data('op')) ? $post->contentID()->postID() : $post->data('parent_thread');
         $thread = new Thread(new ContentID(ContentID::createIDString($thread_id, 0, 0)), $this->domain);
         $thread->addPost($post);

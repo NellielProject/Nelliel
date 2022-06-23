@@ -38,7 +38,7 @@ nelliel.setup.doImportantStuff = function() {
         nelliel.ui.applyHideContent();
     }
 
-    nelliel.core.unhideJSonly();
+    nelliel.core.unhideJSonly(document);
 }
 
 nelliel.setup.localStorageInitCheck = function() {
@@ -266,8 +266,8 @@ nelliel.core.contentID = function (id_string) {
     return content_id;
 }
 
-nelliel.core.unhideJSonly = function () {
-    var elements = document.querySelectorAll("[data-jsonly]");
+nelliel.core.unhideJSonly = function (element) {
+    var elements = element.querySelectorAll("[data-jsonly]");
     var element_count = elements.length;
     
     for (i = 0; i < element_count; i++) {

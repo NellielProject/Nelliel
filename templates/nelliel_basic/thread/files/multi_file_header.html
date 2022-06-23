@@ -10,11 +10,14 @@
 {{/ file_metadata }}
 	</span>
 {{# in_modmode }}
-	| {{# mod_can_delete }}<span class="text-button">[<a href="{{ mod_delete_url }}">{{{ ui_mod_delete }}}</a>{{{ ui_mod_delimiter_right }}}</span>{{/ mod_can_delete }}
+	| {{# mod_can_delete }}<span class="text-button">{{{ ui_mod_delimiter_left }}}<a href="{{ mod_delete_url }}">{{{ ui_mod_delete }}}</a>{{{ ui_mod_delimiter_right }}}</span>{{/ mod_can_delete }}
 {{/ in_modmode }}
 </div>
 <div class="{{ op_reply }} multiple file-info">
 	<div>
+{{# show_download_link }}
+		<span class="text-button">[<a href="{{ file_url }}" class="download-link" download="{{ download_filename }}" data-i18n="">Download</a>]</span>
+{{/ show_download_link }}
 		<a href="{{ file_url }}" target="_blank" class="file-link">{{ display_filename }}</a>
 	</div>
 	<div>

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\API\Plugin;
 
@@ -8,97 +7,174 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class PluginHook
 {
-    private $hook_name;
+    private $name;
     private $registered = array();
+    private $in_progress = false;
+    private $unsorted = false;
 
     function __construct(string $hook_name)
     {
-        $this->hook_name = $hook_name;
+        $this->name = $hook_name;
     }
 
-    public function hookName()
+    /**
+     * Get the hook name.
+     */
+    public function name(): string
     {
-        return $this->hook_name;
+        return $this->name;
     }
 
-    public function addFunction(string $function_name, string $plugin_id, int $priority)
+    /**
+     * Checks if the hook currently being processed.
+     */
+    public function inProgress(): bool
     {
+        return $this->in_progress;
+    }
+
+    /**
+     * Registers a function to the specified hook.
+     */
+    public function addFunction(string $function_name, string $plugin_id, int $priority): bool
+    {
+        if ($this->in_progress) {
+            return false;
+        }
+
         $this->registered[] = ['type' => 'function', 'function_name' => $function_name, 'plugin_id' => $plugin_id,
             'priority' => $priority];
+        $this->unsorted = true;
+        return true;
     }
 
-    public function addMethod($class, string $method_name, string $plugin_id, int $priority)
+    /**
+     * Registers a method to the specified hook.
+     */
+    public function addMethod(object $class, string $method_name, string $plugin_id, int $priority): bool
     {
+        if ($this->in_progress) {
+            return false;
+        }
+
         $this->registered[] = ['type' => 'method', 'class' => $class, 'method_name' => $method_name,
             'plugin_id' => $plugin_id, 'priority' => $priority];
+        $this->unsorted = true;
+        return true;
     }
 
-    public function removeFunction(string $function_name, string $plugin_id)
+    /**
+     * Removes a function from the specified hook.
+     */
+    public function removeFunction(string $function_name, string $plugin_id, int $priority): bool
     {
-        foreach ($this->registered as $key => $registered)
-        {
-            if (isset($registered['function_name']) && $registered['function_name'] === $function_name &&
-                    $registered['plugin_id'] === $plugin_id)
-            {
-                unset($this->registered[$key]);
-                return true;
+        if ($this->in_progress) {
+            return false;
+        }
+
+        $key = $this->functionKey($function_name, $plugin_id, $priority);
+
+        if (!is_null($key)) {
+            unset($this->registered[$key]);
+        }
+
+        return true;
+    }
+
+    /**
+     * Removes a method from the specified hook.
+     */
+    public function removeMethod($class, string $method_name, string $plugin_id, int $priority): bool
+    {
+        if ($this->in_progress) {
+            return false;
+        }
+
+        $key = $this->methodKey($method_name, $class, $plugin_id, $priority);
+
+        if (!is_null($key)) {
+            unset($this->registered[$key]);
+        }
+
+        return true;
+    }
+
+    /**
+     * Gets the index of the registered function.
+     */
+    private function functionKey(string $function_name, string $plugin_id, int $priority): ?int
+    {
+        foreach ($this->registered as $key => $registered) {
+            if (!isset($registered['type']) || $registered['type'] !== 'function') {
+                continue;
+            }
+
+            if ($registered['function_name'] === $function_name && $registered['plugin_id'] === $plugin_id &&
+                $registered['priority'] === $priority) {
+                return $key;
             }
         }
 
-        return false;
+        return null;
     }
 
-    public function removeMethod($class, string $method_name, string $plugin_id)
+    /**
+     * Gets the index of the registered method.
+     */
+    private function methodKey(string $method_name, object $class, string $plugin_id, int $priority): ?int
     {
-        foreach ($this->registered as $key => $registered)
-        {
-            if (isset($registered['method_name']) && $registered['method_name'] === $method_name &&
-                    $registered['class'] === $class && $registered['plugin_id'] === $plugin_id)
-            {
-                unset($this->registered[$key]);
-                return true;
+        foreach ($this->registered as $key => $registered) {
+            if (!isset($registered['type']) || $registered['type'] !== 'method') {
+                continue;
+            }
+
+            if ($registered['method_name'] === $method_name && $registered['class'] === $class &&
+                $registered['plugin_id'] === $plugin_id && $registered['priority'] === $priority) {
+                return $key;
             }
         }
 
-        return false;
+        return null;
     }
 
+    /**
+     * Sorts and processes all registered functions and methods.
+     */
     public function process(array $args, $returnable)
     {
-        usort($this->registered, [$this, 'sortByPriority']);
+        $this->in_progress = true;
+
+        if ($this->unsorted) {
+            usort($this->registered, function ($a, $b) {
+                return $a['priority'] <=> $b['priority'];
+            });
+            $this->unsorted = false;
+        }
+
         $return_type = gettype($returnable);
-        array_unshift($args, $returnable);
+        $has_returnable = !is_null($returnable);
+
+        if ($has_returnable) {
+            array_unshift($args, $returnable);
+        }
+
         $modified = $returnable;
 
-        foreach ($this->registered as $registered)
-        {
-            if ($registered['type'] === 'function' && function_exists($registered['function_name']))
-            {
+        foreach ($this->registered as $registered) {
+            if ($registered['type'] === 'function' && function_exists($registered['function_name'])) {
                 $return_value = call_user_func_array($registered['function_name'], $args);
-            }
-            else if ($registered['type'] === 'method' && method_exists($registered['class'], $registered['method_name']))
-            {
+            } else if ($registered['type'] === 'method' &&
+                method_exists($registered['class'], $registered['method_name'])) {
                 $return_value = call_user_func_array([$registered['class'], $registered['method_name']], $args);
             }
 
-            if (!is_null($return_type) && gettype($return_value) === $return_type)
-            {
+            if ($has_returnable && gettype($return_value) === $return_type) {
                 $modified = $return_value;
+                $args[0] = $modified;
             }
-
-            $args[0] = $modified;
         }
 
+        $this->in_progress = false;
         return $modified;
-    }
-
-    private function sortByPriority($a, $b)
-    {
-        if ($a['priority'] == $b['priority'])
-        {
-            return $a['priority'] - $b['priority'];
-        }
-
-        return ($a['priority'] < $b['priority']) ? -1 : 1;
     }
 }
