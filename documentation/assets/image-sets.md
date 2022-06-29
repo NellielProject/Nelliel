@@ -1,11 +1,11 @@
 # Image Sets
-Image sets contain one or more image files and a map of keys for reference. The keys provide a relative path within the image set which allows Nelliel to dynamically construct a complete file or web path to the image.
+Image sets contain one or more image files and a file named `set_info.ini` containing a map of keys for reference. The keys provide a relative path within the image set which allows Nelliel to dynamically construct a complete file or web path to the image.
 
 ## Creating
 To create an image set:
 1. Collect one or more image files in a folder. Subfolders and organization within the main folder can be done in any manner.
 2. Create a `set_info.ini` file in the root folder.
-3. In `set_info.ini` add an `[info]` section which will contain basic information about the image set. Required fields are `id`, `directory`, `name` and `version` (the current revision).
+3. In `set_info.ini` add an `[info]` section which will contain basic information about the image set. Required fields are `id`, `name` and `version` (the current revision).
 4. After the `[info]` section one or more sections are added which will contain the file keys. The available sections and keys to map are determined by Nelliel or plugins. All sections and keys are optional. If a key is added in the file but has no corresponding file it should be set as an empty string `""`.
 5. The assigned value for each key will be a relative path within the image set folder. Full URLs or files outside of the folder should never be used.
 

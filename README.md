@@ -4,6 +4,13 @@ A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby
 
 **WARNING: At present Nelliel is in a beta stage of development. It is still incomplete and not yet recommended for production use.**
 
+## Notable Features
+ - [Plugin API](documentation/plugins/plugin-api.md)
+ - [JSON API](documentation/JSON-API.md)
+ - Fully customizable filetypes
+ - Web-based control panels for most configuration and functions
+ - Flexible role and permission system.
+
 ## Minimum Requirements
 These are only the bare minimum requirements for Nelliel to function. Even if an earlier version somehow works, you will not receive any support. **It is strongly recommended to use the latest software versions available.**
 
@@ -30,8 +37,8 @@ These are optional things that Nelliel or one of its libraries can utilize for e
 ## Installation
 See [INSTALL.md](INSTALL.md) for installation instructions.
 
-## Plugin API
-Nelliel has a basic API for making plugins in the works. This will eventually allow extension of the software without having to worry about mods that can be easily broken during updates or having to mess with core code. Details about using the API available in [PLUGIN-DEV.md](documentation/plugins/PLUGIN-DEV.md).
+## Plugins
+Nelliel has a plugin system that will allow extension of the software without having to worry about mods that can be easily broken during updates. Details about using the API are available in [plugin-api.md](documentation/plugins/plugin-api.md).
 
 ## License
-Nelliel is released under the [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause). This can be viewed in [LICENSE.md](LICENSE.md) or the imageboard's About Nelliel page.
+Nelliel is released under the [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause). This can be viewed in [LICENSE.md](LICENSE.md) or the About Nelliel page.
