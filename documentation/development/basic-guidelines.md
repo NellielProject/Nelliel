@@ -64,3 +64,6 @@ Nelliel returns a numeric error id along with an error message. This keeps the b
  
 ## Server-side vs Client-side
 As much functionality as possible should be implemented server-side. Client-side scripting should only be used for niceties or features that cannot be done fully server-side.
+
+## AI Code 	Generation
+Current code generation AI (e.g. GitHub Copilot) raises issues with copyright and open source licenses with no practical method of vetting the original context. Until these tools become better actors or the legal concerns are reasonably settled, code from broad-sourced generators is prohibited.
