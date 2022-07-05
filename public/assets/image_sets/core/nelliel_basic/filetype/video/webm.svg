@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="104" height="128" version="1.1" viewBox="0 0 104 128" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <g transform="translate(-92.039 -110.24)">
+  <g transform="matrix(3.8246 0 0 3.7922 -260.1 -308.33)">
+   <g stroke="#7100b2" stroke-width=".2">
+    <path transform="matrix(2 0 0 2 89.135 110.3)" d="m2.6419 0.22837v16.477a0.1 0.1 45 0 0 0.1 0.1h11.185a0.1 0.1 135 0 0 0.1-0.1v-12.307a0.27837 0.27837 70.24 0 0-0.063635-0.17714l-3.312-4.0149a0.21213 0.21213 25.24 0 0-0.16364-0.07714h-7.7457a0.1 0.1 135 0 0-0.1 0.1z" fill="#d366ff"/>
+    <path transform="matrix(2 0 0 2 89.135 110.3)" d="m10.456 0.13118-0.044 4.1331a0.1 0.1 45.61 0 0 0.09893 0.10106l3.4717 0.036948" fill="#e199ff"/>
+    <path transform="matrix(2 0 0 2 89.135 110.3)" x="1.6356246" y="12.086752" width="13.3975" height="3.3495131" d="m1.7356 12.087h13.198a0.1 0.1 45 0 1 0.1 0.1v3.1495a0.1 0.1 135 0 1-0.1 0.1h-13.198a0.1 0.1 45 0 1-0.1-0.1v-3.1495a0.1 0.1 135 0 1 0.1-0.1z" fill="#f8e5ff" fill-rule="evenodd"/>
+   </g>
+   <text transform="scale(.99606 1.004)" x="106.25488" y="138.97762" fill="#262626" font-family="Helvetica" font-size="4.2333px" font-weight="bold" stroke-width=".5271" text-align="center" text-anchor="middle" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;line-height:1.25" xml:space="preserve"><tspan x="106.25488" y="138.97762" fill="#262626" font-family="Helvetica" font-size="4.2333px" font-weight="bold" stroke-width=".5271" text-align="center" text-anchor="middle" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal">WEBM</tspan></text>
+  </g>
+  <g transform="matrix(7.6493 0 0 7.5845 80.813 109.97)">
+   <g transform="translate(1.1197 12.769)" fill="none" stroke="#000">
+    <path x="2.8145213" y="-6.7023177" width="8.8003836" height="4.8003826" d="m3.0791-6.7023h8.2712a0.26458 0.26458 45 0 1 0.26458 0.26458v4.2712a0.26458 0.26458 135 0 1-0.26458 0.26458h-8.2712a0.26458 0.26458 45 0 1-0.26458-0.26458v-4.2712a0.26458 0.26458 135 0 1 0.26458-0.26458z" stroke-width=".2"/>
+    <g>
+     <path d="m2.7147-5.9271h9" stroke-width=".20057"/>
+     <g stroke-width=".4">
+      <path d="m3.7147-6.6771v0.75"/>
+      <path d="m4.7147-6.6771v0.75"/>
+      <path d="m5.7147-6.6771v0.75"/>
+      <path d="m6.7147-6.6771v0.75"/>
+      <path d="m7.7147-6.6771v0.75"/>
+      <path d="m8.7147-6.6771v0.75"/>
+      <path d="m9.7147-6.6771v0.75"/>
+      <path d="m10.715-6.6771v0.75"/>
+     </g>
+     <path d="m2.7147-2.7018h9" stroke-width=".20057"/>
+     <g stroke-width=".4">
+      <path d="m3.7147-1.9518v-0.75"/>
+      <path d="m4.7147-1.9518v-0.75"/>
+      <path d="m5.7147-1.9518v-0.75"/>
+      <path d="m6.7147-1.9518v-0.75"/>
+      <path d="m7.7147-1.9518v-0.75"/>
+      <path d="m8.7147-1.9518v-0.75"/>
+      <path d="m9.7147-1.9518v-0.75"/>
+      <path d="m10.715-1.9518v-0.75"/>
+      <path d="m5.7149-5.9054v3.25"/>
+      <path d="m8.7019-5.9054v3.25"/>
+     </g>
+     <g stroke-width=".2">
+      <path x="5.814364" y="-5.9203849" width="2.7840011" height="3.1956387" d="m5.9467-5.9204h2.5194l0.13229 0.13229v2.9311l-0.13229 0.13229h-2.5194l-0.13229-0.13229v-2.9311z"/>
+      <path x="2.814364" y="-5.9203849" width="2.7840011" height="3.1956387" d="m2.9467-5.9204h2.5194l0.13229 0.13229v2.9311l-0.13229 0.13229h-2.5194l-0.13229-0.13229v-2.9311z"/>
+      <path x="8.8143644" y="-5.9203849" width="2.7840011" height="3.1956387" d="m8.9467-5.9204h2.5194l0.13229 0.13229v2.9311l-0.13229 0.13229h-2.5194l-0.13229-0.13229v-2.9311z"/>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>OtakuMegane</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+   <cc:License rdf:about="http://creativecommons.org/licenses/by/4.0/">
+    <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+    <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+    <cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+    <cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+    <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+   </cc:License>
+  </rdf:RDF>
+ </metadata>
+</svg>

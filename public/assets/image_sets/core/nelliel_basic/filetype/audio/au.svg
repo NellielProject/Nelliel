@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="104" height="128" version="1.1" viewBox="0 0 104 128" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <g transform="translate(-92.039 -110.24)">
+  <g transform="matrix(3.8126 0 0 3.8126 -259.34 -310.3)">
+   <g>
+    <g stroke="#007be5">
+     <path d="m94.419 110.66v32.973a0.1 0.1 45 0 0 0.1 0.1h22.571a0.1 0.1 135 0 0 0.1-0.1v-24.68a0.2772 0.2772 70.163 0 0-0.0638-0.17697l-6.7512-8.1393a0.21287 0.21287 25.163 0 0-0.16384-0.077h-15.692a0.1 0.1 135 0 0-0.1 0.1z" fill="#4cbaff" stroke-width=".39999"/>
+     <path d="m110.05 110.57-0.089 8.3662a0.1 0.1 45.61 0 0 0.0989 0.10105l7.0434 0.0749" fill="#99d8ff" stroke-width=".4"/>
+     <path x="92.406624" y="134.47728" width="26.795" height="6.6990261" d="m92.507 134.48h26.595a0.1 0.1 45 0 1 0.1 0.1v6.499a0.1 0.1 135 0 1-0.1 0.1h-26.595a0.1 0.1 45 0 1-0.1-0.1v-6.499a0.1 0.1 135 0 1 0.1-0.1z" fill="#e5f5ff" fill-rule="evenodd" stroke-width=".4"/>
+    </g>
+    <text transform="scale(.99606 1.004)" x="106.2497" y="138.97762" fill="#262626" font-family="Helvetica" font-size="4.2333px" font-weight="bold" stroke-width=".5271" text-align="center" text-anchor="middle" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;line-height:1.25" xml:space="preserve"><tspan x="106.2497" y="138.97762" fill="#262626" font-family="Helvetica" font-size="4.2333px" font-weight="bold" stroke-width=".5271" text-align="center" text-anchor="middle" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal">AU</tspan></text>
+   </g>
+  </g>
+  <g transform="matrix(7.6252 0 0 7.6252 80.497 109.89)">
+   <g transform="translate(0 .81907)">
+    <g transform="translate(-.16688 -.29103)" fill="#262626">
+     <path x="5.4792604" y="6.7728977" width="1.2932811" height="2.3315432" d="m5.5057 6.7729h1.2404a0.026458 0.026458 45 0 1 0.026458 0.026458v2.2786a0.026458 0.026458 135 0 1-0.026458 0.026458h-1.2404a0.026458 0.026458 45 0 1-0.026458-0.026458v-2.2786a0.026458 0.026458 135 0 1 0.026458-0.026458z" stroke="#262626" stroke-width=".3175"/>
+     <path d="m6.7945 6.7485 1.4519-1.1744a0.012629 0.012629 25.515 0 1 0.020571 0.00982v4.7096a0.012629 0.012629 154.48 0 1-0.020571 0.0098l-1.4519-1.1744" stroke="#262626" stroke-width=".31932"/>
+     <g>
+      <path d="m9.5957 6.1068c0.96381 0.85331 1.0177 1.7654 0.84177 2.4665 0 0-0.18981 0.72778-0.59815 1.2142a0.16058 0.16058 0 1 0 0.24598 0.20648c0.46111-0.54933 0.66366-1.3425 0.66366-1.3425 0.20126-0.80185 0.12512-1.8418-0.94037-2.7852a0.16058 0.16058 0 1 0-0.21289 0.24045z"/>
+      <path d="m9.0659 6.635c0.61639 0.60491 0.65317 1.2582 0.54001 1.7579 0 0-0.1234 0.52217-0.38507 0.86772a0.16494 0.16494 0 1 0 0.26298 0.19915c0.5058-0.66793 0.50274-1.5251 0.50274-1.5251-0.0018227-0.21578-0.03643-0.44379-0.12039-0.67553-0.10535-0.29079-0.28555-0.58118-0.56921-0.85956a0.16494 0.16494 0 1 0-0.23106 0.23544z"/>
+      <path d="m10.137 5.578c1.2756 1.0984 1.3477 2.2733 1.1145 3.1773 0 0-0.24983 0.93397-0.79108 1.5611a0.16341 0.16341 0 1 0 0.24742 0.21354c0.59668-0.69135 0.86012-1.693 0.86012-1.693 0.26036-1.0089 0.16228-2.3184-1.2177-3.5067a0.16341 0.16341 0 1 0-0.21326 0.24766z"/>
+     </g>
+    </g>
+   </g>
+  </g>
+ </g>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>OtakuMegane</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+   <cc:License rdf:about="http://creativecommons.org/licenses/by/4.0/">
+    <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+    <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+    <cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+    <cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+    <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+   </cc:License>
+  </rdf:RDF>
+ </metadata>
+</svg>
