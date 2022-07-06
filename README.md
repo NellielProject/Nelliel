@@ -7,9 +7,10 @@ A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby
 ## Notable Features
  - [Plugin API](documentation/plugins/plugin-api.md)
  - [JSON API](documentation/JSON-API.md)
- - Fully customizable filetypes
+ - Fully customizable filetype checks with 65 formats included by default
+ - Over 300 settings
  - Web-based control panels for most configuration and functions
- - Flexible role and permission system.
+ - Flexible role and permission system
 
 ## Minimum Requirements
 These are only the bare minimum requirements for Nelliel to function. Even if an earlier version somehow works, you will not receive any support. **It is strongly recommended to use the latest software versions available.**
