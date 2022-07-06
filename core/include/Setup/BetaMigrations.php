@@ -276,20 +276,26 @@ class BetaMigrations
                 echo ' - ' . __('Image set info updated.') . '<br>';
 
                 // Update board settings
-                $new_settings = ['max_reply_preview_display_width', 'max_reply_preview_display_height',
+                $new_board_settings = ['max_reply_preview_display_width', 'max_reply_preview_display_height',
                     'max_reply_embed_display_width', 'max_reply_embed_display_height', 'max_reply_multi_display_width',
                     'max_reply_multi_display_height'];
-                $this->newBoardSettings($new_settings);
+                $this->newBoardSettings($new_board_settings);
 
-                $old_setting_names = ['max_preview_display_width', 'max_preview_display_height',
+                $old_board_setting_names = ['max_preview_display_width', 'max_preview_display_height',
                     'max_embed_display_width', 'max_embed_display_height', 'max_multi_display_width',
                     'max_multi_display_height'];
-                $new_setting_names = ['max_op_preview_display_width', 'max_op_preview_display_height',
+                $new_board_setting_names = ['max_op_preview_display_width', 'max_op_preview_display_height',
                     'max_op_embed_display_width', 'max_op_embed_display_height', 'max_op_multi_display_width',
                     'max_op_multi_display_height'];
-                $this->renameBoardSettings($old_setting_names, $new_setting_names);
+                $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
+
+                // Update site settings
+                $new_site_settings = ['visitor_id_lifespan'];
+                $this->newSiteSettings($new_site_settings);
+
+                echo ' - ' . __('Site settings updated.') . '<br>';
 
                 $migration_count ++;
         }

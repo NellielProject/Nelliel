@@ -138,6 +138,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'store_unhashed_ip', '1', 'Store unhashed IP addresses; (hashed IP will always be stored)', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_dnsbl', '0', 'Use DNSBL to check incoming posts', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'dnsbl_exceptions', '[]', 'IPs that are exempt from DNSBL checks. Enter as JSON array of strings.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'visitor_id_lifespan', '31536000', 'How long a visitor ID will be valid (seconds).', '{"type":"number"}']);
 
         // CAPTCHA
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_width', '250', 'Width of CAPTCHA image', '{"type":"number"}']);

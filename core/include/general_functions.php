@@ -225,9 +225,3 @@ function nel_build_router_url(array $uris, bool $end_slash = false, string $quer
 
     return $url;
 }
-
-function nel_generate_visitor_id(): string
-{
-    // TODO: Generate ID
-    return '';
-}
