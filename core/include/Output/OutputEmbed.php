@@ -45,11 +45,21 @@ class OutputEmbed extends Output
             $this->render_data['max_preview_height'] = $this->domain->setting('max_catalog_display_height');
             $multiple = false;
         } else {
-            $this->render_data['max_preview_width'] = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
-                'max_embed_display_width');
-            $this->render_data['max_preview_height'] = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
-                'max_embed_display_height');
+            if ($post->data('op')) {
+                $max_width = ($multiple) ? $this->domain->setting('max_op_multi_display_width') : $this->domain->setting(
+                    'max_op_embed_display_width');
+                $max_height = ($multiple) ? $this->domain->setting('max_op_multi_display_height') : $this->domain->setting(
+                    'max_op_embed_display_height');
+            } else {
+                $max_width = ($multiple) ? $this->domain->setting('max_reply_multi_display_width') : $this->domain->setting(
+                    'max_reply_embed_display_width');
+                $max_height = ($multiple) ? $this->domain->setting('max_reply_multi_display_height') : $this->domain->setting(
+                    'max_reply_embed_display_height');
+            }
         }
+
+        $this->render_data['max_preview_width'] = $max_width;
+        $this->render_data['max_preview_height'] = $max_height;
 
         if ($embed->data('deleted')) {
             $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_embed');

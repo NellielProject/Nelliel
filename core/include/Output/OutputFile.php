@@ -88,10 +88,17 @@ class OutputFile extends Output
             $max_width = $this->domain->setting('max_catalog_display_width');
             $max_height = $this->domain->setting('max_catalog_display_height');
         } else {
-            $max_width = ($multiple) ? $this->domain->setting('max_multi_display_width') : $this->domain->setting(
-                'max_preview_display_width');
-            $max_height = ($multiple) ? $this->domain->setting('max_multi_display_height') : $this->domain->setting(
-                'max_preview_display_height');
+            if ($post->data('op')) {
+                $max_width = ($multiple) ? $this->domain->setting('max_op_multi_display_width') : $this->domain->setting(
+                    'max_op_preview_display_width');
+                $max_height = ($multiple) ? $this->domain->setting('max_op_multi_display_height') : $this->domain->setting(
+                    'max_op_preview_display_height');
+            } else {
+                $max_width = ($multiple) ? $this->domain->setting('max_reply_multi_display_width') : $this->domain->setting(
+                    'max_reply_preview_display_width');
+                $max_height = ($multiple) ? $this->domain->setting('max_reply_multi_display_height') : $this->domain->setting(
+                    'max_reply_preview_display_height');
+            }
         }
 
         $this->render_data['max_width'] = $max_width;

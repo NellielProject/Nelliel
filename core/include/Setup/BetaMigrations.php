@@ -30,7 +30,7 @@ class BetaMigrations
 
         switch ($this->upgrade->installedVersion()) {
             case 'v0.9.25':
-                echo __('Updating from v0.9.25 to v0.9.26...') . '<br>';
+                echo '<br>' . __('Updating from v0.9.25 to v0.9.26...') . '<br>';
                 $core_sqltype = nel_database('core')->config()['sqltype'];
 
                 // Update setting options table
@@ -118,9 +118,6 @@ class BetaMigrations
                 }
 
                 // Update settings and config tables
-                $board_setting_names = nel_database('core')->executeFetchAll(
-                    'SELECT "setting_name" FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_category" = \'board\'',
-                    PDO::FETCH_COLUMN);
                 $ui_removals = ['ui_delimiter_left', 'ui_delimiter_right', 'ui_hide_thread', 'ui_show_thread',
                     'ui_hide_post', 'ui_show_post', 'ui_hide_file', 'ui_show_file', 'ui_hide_embed', 'ui_show_embed',
                     'ui_cite_post', 'ui_reply_to_thread', 'ui_more_file_info', 'ui_less_file_info', 'ui_expand_thread',
@@ -131,10 +128,10 @@ class BetaMigrations
                     'ui_mod_global_delete_by_ip', 'ui_mod_ban_and_delete', 'ui_mod_lock', 'ui_mod_unlock',
                     'ui_mod_sticky', 'ui_mod_unsticky', 'ui_mod_permasage', 'ui_mod_unpermasage', 'ui_mod_cyclic',
                     'ui_mod_non_cyclic', 'ui_mod_edit_post'];
-                $mod_links_new_names = ['mod_links__ban', 'mod_links__delete', 'mod_links__delete_by_ip',
-                    'mod_links__global_delete_by_ip', 'mod_links__ban_and_delete', 'mod_links__lock',
-                    'mod_links__unlock', 'mod_links__sticky', 'mod_links__unsticky', 'mod_links__permasage',
-                    'mod_links__unpermasage', 'mod_links__cyclic', 'mod_links__non_cyclic', 'mod_links__edit_post'];
+                $mod_links_new_names = ['mod_links_ban', 'mod_links_delete', 'mod_links_delete_by_ip',
+                    'mod_links_global_delete_by_ip', 'mod_links_ban_and_delete', 'mod_links_lock', 'mod_links_unlock',
+                    'mod_links_sticky', 'mod_links_unsticky', 'mod_links_permasage', 'mod_links_unpermasage',
+                    'mod_links_cyclic', 'mod_links_non_cyclic', 'mod_links_edit_post'];
                 $this->renameBoardSettings($mod_links_old_names, $mod_links_new_names);
 
                 $new_board_settings = ['mod_links_delimiter_left', 'mod_links_delimiter_right', 'enable_index',
@@ -181,7 +178,7 @@ class BetaMigrations
                 $migration_count ++;
 
             case 'v0.9.26':
-                echo __('Updating from v0.9.26 to v0.9.27...') . '<br>';
+                echo '<br>' . __('Updating from v0.9.26 to v0.9.27...') . '<br>';
 
                 // Update post tables
                 $db_prefixes = nel_database('core')->executeFetchAll(
@@ -214,31 +211,8 @@ class BetaMigrations
                     'show_download_link', 'download_original_name', 'spoiler_display_name'];
                 $this->newBoardSettings($new_board_settings);
 
-                $settings_delete = nel_database('core')->prepare(
-                    'DELETE FROM "' . NEL_SETTINGS_TABLE .
-                    '" WHERE "setting_name" = :name AND "setting_category" = \'board\'');
-                $board_defaults_delete = nel_database('core')->prepare(
-                    'DELETE FROM "' . NEL_BOARD_DEFAULTS_TABLE . '" WHERE "setting_name" = :name');
-                $board_configs_delete = nel_database('core')->prepare(
-                    'DELETE FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "setting_name" = :name');
-
                 $board_setting_removals = ['display_post_backlinks'];
-                $board_setting_names = nel_database('core')->executeFetchAll(
-                    'SELECT "setting_name" FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_category" = \'board\'',
-                    PDO::FETCH_COLUMN);
-
-                foreach ($board_setting_names as $setting) {
-                    if (in_array($setting, $board_setting_removals)) {
-                        $settings_delete->bindValue(':name', $setting);
-                        nel_database('core')->executePrepared($settings_delete);
-
-                        $board_defaults_delete->bindValue(':name', $setting);
-                        nel_database('core')->executePrepared($board_defaults_delete);
-
-                        $board_configs_delete->bindValue(':name', $setting);
-                        nel_database('core')->executePrepared($board_configs_delete);
-                    }
-                }
+                $this->removeBoardSettings($board_setting_removals);
 
                 echo ' - ' . __('Settings and board config tables updated.') . '<br>';
 
@@ -291,7 +265,7 @@ class BetaMigrations
                 $migration_count ++;
 
             case 'v0.9.27':
-                echo __('Updating from v0.9.27 to v0.9.28...') . '<br>';
+                echo '<br>' . __('Updating from v0.9.27 to v0.9.28...') . '<br>';
 
                 // Update core image set info
                 $image_set_instance = nel_site_domain()->frontEndData()->getImageSet('images-nelliel-basic');
@@ -300,6 +274,24 @@ class BetaMigrations
                 $image_set_instance->enable($enabled);
 
                 echo ' - ' . __('Image set info updated.') . '<br>';
+
+                // Update board settings
+                $new_settings = ['max_reply_preview_display_width', 'max_reply_preview_display_height',
+                    'max_reply_embed_display_width', 'max_reply_embed_display_height', 'max_reply_multi_display_width',
+                    'max_reply_multi_display_height'];
+                $this->newBoardSettings($new_settings);
+
+                $old_setting_names = ['max_preview_display_width', 'max_preview_display_height',
+                    'max_embed_display_width', 'max_embed_display_height', 'max_multi_display_width',
+                    'max_multi_display_height'];
+                $new_setting_names = ['max_op_preview_display_width', 'max_op_preview_display_height',
+                    'max_op_embed_display_width', 'max_op_embed_display_height', 'max_op_multi_display_width',
+                    'max_op_multi_display_height'];
+                $this->renameBoardSettings($old_setting_names, $new_setting_names);
+
+                echo ' - ' . __('Board settings updated.') . '<br>';
+
+                $migration_count ++;
         }
 
         return $migration_count;
@@ -362,50 +354,69 @@ class BetaMigrations
         }
     }
 
-    private function renameSiteSettings(array $old_names, array $new_names): void
+    // We do renames this way for the main table because inserting defaults will add the new names already
+    // We could get duplicate errors trying to rename directly
+    private function renameSiteSettings(array $source_names, array $target_names): void
     {
-        $settings_update = nel_database('core')->prepare(
-            'UPDATE "' . NEL_SETTINGS_TABLE .
-            '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name AND "setting_category" = \'site\'');
+        $this->newSiteSettings($target_names);
+
+        $site_config_select = nel_database('core')->prepare(
+            'SELECT "setting_value" FROM "' . NEL_SITE_CONFIGS_TABLE . '" WHERE "setting_name" = :source_name');
         $site_config_update = nel_database('core')->prepare(
-            'UPDATE "' . NEL_SITE_CONFIGS_TABLE . '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name');
-        $name_count = count($old_names);
+            'UPDATE "' . NEL_SITE_CONFIGS_TABLE .
+            '" SET "setting_value" = :new_value WHERE "setting_name" = :target_name');
+        $name_count = count($source_names);
 
         for ($i = 0; $i < $name_count; $i ++) {
-            $settings_update->bindValue(':new_name', $new_names[$i]);
-            $settings_update->bindValue(':old_name', $old_names[$i]);
-            nel_database('core')->executePrepared($settings_update);
-
-            $site_config_update->bindValue(':new_name', $new_names[$i]);
-            $site_config_update->bindValue(':old_name', $old_names[$i]);
+            $site_config_update->bindValue(':source_name', $source_names[$i]);
+            $value = nel_database('core')->executePreparedFetch($site_config_select, null, PDO::FETCH_COLUMN);
+            $site_config_update->bindValue(':new_value', $value);
+            $site_config_update->bindValue(':target_name', $target_names[$i]);
             nel_database('core')->executePrepared($site_config_update);
         }
+
+        $this->removeSiteSettings($source_names);
     }
 
-    private function renameBoardSettings(array $old_names, array $new_names): void
+    private function renameBoardSettings(array $source_names, array $target_names): void
     {
-        $settings_update = nel_database('core')->prepare(
-            'UPDATE "' . NEL_SETTINGS_TABLE .
-            '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name AND "setting_category" = \'board\'');
+        $this->newBoardSettings($target_names);
+
+        $board_defaults_select = nel_database('core')->prepare(
+            'SELECT "setting_value" FROM "' . NEL_BOARD_DEFAULTS_TABLE . '" WHERE "setting_name" = :source_name');
         $board_defaults_update = nel_database('core')->prepare(
-            'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name');
+            'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE .
+            '" SET "setting_value" = :new_value WHERE "setting_name" = :target_name');
+        $board_configs_select = nel_database('core')->prepare(
+            'SELECT "setting_value" FROM "' . NEL_BOARD_CONFIGS_TABLE .
+            '" WHERE "setting_name" = :source_name AND "board_id" = :board_id');
         $board_configs_update = nel_database('core')->prepare(
-            'UPDATE "' . NEL_BOARD_CONFIGS_TABLE . '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name');
-        $name_count = count($old_names);
+            'UPDATE "' . NEL_BOARD_CONFIGS_TABLE .
+            '" SET "setting_value" = :new_value WHERE "setting_name" = :target_name AND "board_id" = :board_id');
+        $name_count = count($source_names);
+        $board_ids = $this->getAllBoardIDs();
 
         for ($i = 0; $i < $name_count; $i ++) {
-            $settings_update->bindValue(':new_name', $new_names[$i]);
-            $settings_update->bindValue(':old_name', $old_names[$i]);
-            nel_database('core')->executePrepared($settings_update);
-
-            $board_defaults_update->bindValue(':new_name', $new_names[$i]);
-            $board_defaults_update->bindValue(':old_name', $old_names[$i]);
+            $board_defaults_select->bindValue(':source_name', $source_names[$i]);
+            $value = nel_database('core')->executePreparedFetch($board_defaults_select, null, PDO::FETCH_COLUMN);
+            $board_defaults_update->bindValue(':new_value', $value);
+            $board_defaults_update->bindValue(':target_name', $target_names[$i]);
             nel_database('core')->executePrepared($board_defaults_update);
-
-            $board_configs_update->bindValue(':new_name', $new_names[$i]);
-            $board_configs_update->bindValue(':old_name', $old_names[$i]);
-            nel_database('core')->executePrepared($board_configs_update);
         }
+
+        foreach ($board_ids as $board_id) {
+            for ($i = 0; $i < $name_count; $i ++) {
+                $board_configs_select->bindValue(':source_name', $source_names[$i]);
+                $board_configs_select->bindValue(':board_id', $board_id);
+                $value = nel_database('core')->executePreparedFetch($board_configs_select, null, PDO::FETCH_COLUMN);
+                $board_configs_update->bindValue(':new_value', $value);
+                $board_configs_update->bindValue(':target_name', $target_names[$i]);
+                $board_configs_update->bindValue(':board_id', $board_id);
+                nel_database('core')->executePrepared($board_configs_update);
+            }
+        }
+
+        $this->removeBoardSettings($source_names);
     }
 
     private function removeSiteSettings(array $names): void
