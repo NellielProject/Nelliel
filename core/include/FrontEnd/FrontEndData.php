@@ -36,7 +36,7 @@ class FrontEndData
 
     public function getImageSetInis(string $directory = null): array
     {
-        return $this->ini_parser->parseDirectories(NEL_IMAGE_SETS_FILES_PATH, 'image_info.ini');
+        return $this->ini_parser->parseDirectories(NEL_IMAGE_SETS_FILES_PATH, 'set_info.ini');
     }
 
     public function getImageSet(string $set_id): ImageSet

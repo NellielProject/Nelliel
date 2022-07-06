@@ -12,6 +12,7 @@ use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\FrontEnd\FrontEndData;
 
 class BetaMigrations
 {
@@ -313,6 +314,7 @@ class BetaMigrations
 
                 echo ' - ' . __('Plugins table updated.') . '<br>';
 
+                // Update permissions table
                 $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $permissions_table->insertDefaults();
                 $role_permissions_table = new TableRolePermissions(nel_database('core'),
@@ -321,45 +323,47 @@ class BetaMigrations
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
-                $template_ini = nel_database('core')->executeFetch(
-                    'SELECT "parsed_ini" FROM "' . NEL_TEMPLATES_TABLE .
-                    '" WHERE "template_id" = \'template-nelliel-basic\'', PDO::FETCH_COLUMN);
-                $template_ini = str_replace('template-info', 'info', $template_ini);
-                $template_ini_update = nel_database('core')->prepare(
-                    'UPDATE "' . NEL_TEMPLATES_TABLE .
-                    '" SET "parsed_ini" = ? WHERE "template_id" = \'template-nelliel-basic\'');
-                nel_database('core')->executePrepared($template_ini_update, [$template_ini]);
+                // Update core template info
+                $template_instance = nel_site_domain()->frontEndData()->getTemplate('template-nelliel-basic');
+                $enabled = $template_instance->enabled();
+                $template_instance->install(true);
+                $template_instance->enable($enabled);
 
                 echo ' - ' . __('Template info updated.') . '<br>';
 
+                // Update core style info
                 $core_styles = ['style-nelliel', 'style-nelliel-2', 'style-nelliel-classic', 'style-futaba',
                     'style-burichan', 'style-nigra'];
-                $style_ini_select = nel_database('core')->prepare(
-                    'SELECT "parsed_ini" FROM "' . NEL_STYLES_TABLE . '" WHERE "style_id" = ?');
-                $style_ini_update = nel_database('core')->prepare(
-                    'UPDATE "' . NEL_STYLES_TABLE . '" SET "parsed_ini" = ? WHERE "style_id" = ?');
 
                 foreach ($core_styles as $style) {
-                    $style_ini = nel_database('core')->executePreparedFetch($style_ini_select, [$style],
-                        PDO::FETCH_COLUMN);
-                    $style_ini = str_replace('style-info', 'info', $style_ini);
-                    $template_ini = nel_database('core')->executePrepared($style_ini_update, [$style_ini, $style]);
+                    $style_instance = nel_site_domain()->frontEndData()->getStyle($style);
+                    $enabled = $style_instance->enabled();
+                    $style_instance->install(true);
+                    $style_instance->enable($enabled);
                 }
 
                 echo ' - ' . __('Style info updated.') . '<br>';
 
-                $image_set_ini = nel_database('core')->executeFetch(
-                    'SELECT "parsed_ini" FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = \'images-nelliel-basic\'',
-                    PDO::FETCH_COLUMN);
-                $image_set_ini = str_replace('set-info', 'info', $image_set_ini);
-                $image_set_ini_update = nel_database('core')->prepare(
-                    'UPDATE "' . NEL_IMAGE_SETS_TABLE .
-                    '" SET "parsed_ini" = ? WHERE "set_id" = \'images-nelliel-basic\'');
-                nel_database('core')->executePrepared($image_set_ini_update, [$image_set_ini]);
+                // Update core image set info
+                $image_set_instance = nel_site_domain()->frontEndData()->getImageSet('images-nelliel-basic');
+                $enabled = $image_set_instance->enabled();
+                $image_set_instance->install(true);
+                $image_set_instance->enable($enabled);
 
                 echo ' - ' . __('Image set info updated.') . '<br>';
 
                 $migration_count ++;
+
+            case 'v0.9.27':
+                echo __('Updating from v0.9.27 to v0.9.28...') . '<br>';
+
+                // Update core image set info
+                $image_set_instance = nel_site_domain()->frontEndData()->getImageSet('images-nelliel-basic');
+                $enabled = $image_set_instance->enabled();
+                $image_set_instance->install(true);
+                $image_set_instance->enable($enabled);
+
+                echo ' - ' . __('Image set info updated.') . '<br>';
         }
 
         return $migration_count;

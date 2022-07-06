@@ -108,8 +108,6 @@ class OutputFile extends Output
 
         if (is_null($preview_type) && $file->data('spoiler')) {
             $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_spoiler_cover');
-            $this->render_data['preview_width'] = ($max_width < 128) ? $max_width : '128';
-            $this->render_data['preview_height'] = ($max_height < 128) ? $max_height : '128';
 
             if (!nel_true_empty($this->domain->setting('spoiler_display_name'))) {
                 $this->render_data['display_filename'] = $this->domain->setting('spoiler_display_name');
@@ -175,10 +173,10 @@ class OutputFile extends Output
                 }
 
                 $this->render_data['preview_url'] = $web_path;
-                $preview_type = 'image';
+                $preview_type = 'unsized_image';
             }
 
-            if (!is_null($preview_type)) {
+            if (!is_null($preview_type) && $preview_type === 'image') {
                 $ratio = min(($max_height / $preview_height), ($max_width / $preview_width));
                 $this->render_data['preview_width'] = intval($ratio * $preview_width);
                 $this->render_data['preview_height'] = intval($ratio * $preview_height);
@@ -190,6 +188,7 @@ class OutputFile extends Output
             $this->render_data['other_loc'] = $this->render_data['file_url'];
             $this->render_data['image_preview'] = $preview_type === 'image';
             $this->render_data['video_preview'] = $preview_type === 'video';
+            $this->render_data['unsized_image_preview'] = $preview_type === 'unsized_image';
         }
 
         $all_content_ops = $this->domain->frontEndData()->getAllContentOps(true);
