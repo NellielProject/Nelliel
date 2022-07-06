@@ -12,7 +12,6 @@ use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\FrontEnd\FrontEndData;
 
 class BetaMigrations
 {
@@ -126,72 +125,22 @@ class BetaMigrations
                     'ui_hide_post', 'ui_show_post', 'ui_hide_file', 'ui_show_file', 'ui_hide_embed', 'ui_show_embed',
                     'ui_cite_post', 'ui_reply_to_thread', 'ui_more_file_info', 'ui_less_file_info', 'ui_expand_thread',
                     'ui_collapse_thread'];
-                $mod_links_name_updates = ['ui_mod_ban', 'ui_mod_delete', 'ui_mod_delete_by_ip',
+                $this->removeBoardSettings($ui_removals);
+
+                $mod_links_old_names = ['ui_mod_ban', 'ui_mod_delete', 'ui_mod_delete_by_ip',
                     'ui_mod_global_delete_by_ip', 'ui_mod_ban_and_delete', 'ui_mod_lock', 'ui_mod_unlock',
                     'ui_mod_sticky', 'ui_mod_unsticky', 'ui_mod_permasage', 'ui_mod_unpermasage', 'ui_mod_cyclic',
                     'ui_mod_non_cyclic', 'ui_mod_edit_post'];
-                $settings_update = nel_database('core')->prepare(
-                    'UPDATE "' . NEL_SETTINGS_TABLE .
-                    '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name AND "setting_category" = \'board\'');
-                $board_defaults_update = nel_database('core')->prepare(
-                    'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE .
-                    '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name');
-                $board_configs_update = nel_database('core')->prepare(
-                    'UPDATE "' . NEL_BOARD_CONFIGS_TABLE .
-                    '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name');
-                $settings_delete = nel_database('core')->prepare(
-                    'DELETE FROM "' . NEL_SETTINGS_TABLE .
-                    '" WHERE "setting_name" = :name AND "setting_category" = \'board\'');
-                $board_defaults_delete = nel_database('core')->prepare(
-                    'DELETE FROM "' . NEL_BOARD_DEFAULTS_TABLE . '" WHERE "setting_name" = :name');
-                $board_configs_delete = nel_database('core')->prepare(
-                    'DELETE FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "setting_name" = :name');
+                $mod_links_new_names = ['mod_links__ban', 'mod_links__delete', 'mod_links__delete_by_ip',
+                    'mod_links__global_delete_by_ip', 'mod_links__ban_and_delete', 'mod_links__lock',
+                    'mod_links__unlock', 'mod_links__sticky', 'mod_links__unsticky', 'mod_links__permasage',
+                    'mod_links__unpermasage', 'mod_links__cyclic', 'mod_links__non_cyclic', 'mod_links__edit_post'];
+                $this->renameBoardSettings($mod_links_old_names, $mod_links_new_names);
 
-                foreach ($board_setting_names as $name) {
-                    if (in_array($name, $ui_removals)) {
-                        $settings_delete->bindValue(':name', $name);
-                        nel_database('core')->executePrepared($settings_delete);
-
-                        $board_defaults_delete->bindValue(':name', $name);
-                        nel_database('core')->executePrepared($board_defaults_delete);
-
-                        $board_configs_delete->bindValue(':name', $name);
-                        nel_database('core')->executePrepared($board_configs_delete);
-                    }
-
-                    if (in_array($name, $mod_links_name_updates)) {
-                        $new_name = str_replace('ui_mod_', 'mod_links_', $name);
-                        $settings_update->bindValue(':new_name', $new_name);
-                        $settings_update->bindValue(':old_name', $name);
-                        nel_database('core')->executePrepared($settings_update);
-
-                        $board_defaults_update->bindValue(':new_name', $new_name);
-                        $board_defaults_update->bindValue(':old_name', $name);
-                        nel_database('core')->executePrepared($board_defaults_update);
-
-                        $board_configs_update->bindValue(':new_name', $new_name);
-                        $board_configs_update->bindValue(':old_name', $name);
-                        nel_database('core')->executePrepared($board_configs_update);
-                    }
-                }
-
-                $new_site_settings = [];
                 $new_board_settings = ['mod_links_delimiter_left', 'mod_links_delimiter_right', 'enable_index',
                     'enable_catalog', 'display_allowed_filetypes', 'display_allowed_embeds', 'display_form_max_filesize',
                     'display_thumbnailed_message'];
-                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $settings_table->insertDefaults();
-                $setting_options_table = new TableSettingOptions(nel_database('core'),
-                    nel_utilities()->sqlCompatibility());
-                $setting_options_table->insertDefaults();
-                $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $board_defaults_table->insertDefaults();
-                $this->copyToSiteConfig($new_site_settings);
-                $board_ids = $this->getAllBoardIDs();
-
-                foreach ($board_ids as $id) {
-                    $this->copyToBoardConfig($id, $new_board_settings);
-                }
+                $this->newBoardSettings($new_board_settings);
 
                 $new_site_textareas = ['description'];
                 $new_board_textareas = ['description'];
@@ -261,27 +210,9 @@ class BetaMigrations
                     'ALTER TABLE "' . NEL_REPORTS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
                 echo ' - ' . __('Reports table updated.') . '<br>';
 
-                $new_site_settings = [];
                 $new_board_settings = ['post_backlinks_header', 'post_backlinks_footer', 'post_backlinks_label',
                     'show_download_link', 'download_original_name', 'spoiler_display_name'];
-                $board_setting_removals = ['display_post_backlinks'];
-                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $settings_table->insertDefaults();
-                $setting_options_table = new TableSettingOptions(nel_database('core'),
-                    nel_utilities()->sqlCompatibility());
-                $setting_options_table->insertDefaults();
-                $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $board_defaults_table->insertDefaults();
-                $this->copyToSiteConfig($new_site_settings);
-                $board_ids = $this->getAllBoardIDs();
-
-                $board_setting_names = nel_database('core')->executeFetchAll(
-                    'SELECT "setting_name" FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_category" = \'board\'',
-                    PDO::FETCH_COLUMN);
-
-                foreach ($board_ids as $id) {
-                    $this->copyToBoardConfig($id, $new_board_settings);
-                }
+                $this->newBoardSettings($new_board_settings);
 
                 $settings_delete = nel_database('core')->prepare(
                     'DELETE FROM "' . NEL_SETTINGS_TABLE .
@@ -290,6 +221,11 @@ class BetaMigrations
                     'DELETE FROM "' . NEL_BOARD_DEFAULTS_TABLE . '" WHERE "setting_name" = :name');
                 $board_configs_delete = nel_database('core')->prepare(
                     'DELETE FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "setting_name" = :name');
+
+                $board_setting_removals = ['display_post_backlinks'];
+                $board_setting_names = nel_database('core')->executeFetchAll(
+                    'SELECT "setting_name" FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_category" = \'board\'',
+                    PDO::FETCH_COLUMN);
 
                 foreach ($board_setting_names as $setting) {
                     if (in_array($setting, $board_setting_removals)) {
@@ -400,5 +336,114 @@ class BetaMigrations
         $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
         $board_ids = nel_database('core')->executeFetchAll($query, PDO::FETCH_COLUMN);
         return $board_ids;
+    }
+
+    private function newSiteSettings(array $names): void
+    {
+        $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+        $settings_table->insertDefaults();
+        $setting_options_table = new TableSettingOptions(nel_database('core'), nel_utilities()->sqlCompatibility());
+        $setting_options_table->insertDefaults();
+        $this->copyToSiteConfig($names);
+    }
+
+    private function newBoardSettings(array $names): void
+    {
+        $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+        $settings_table->insertDefaults();
+        $setting_options_table = new TableSettingOptions(nel_database('core'), nel_utilities()->sqlCompatibility());
+        $setting_options_table->insertDefaults();
+        $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());
+        $board_defaults_table->insertDefaults();
+        $board_ids = $this->getAllBoardIDs();
+
+        foreach ($board_ids as $id) {
+            $this->copyToBoardConfig($id, $names);
+        }
+    }
+
+    private function renameSiteSettings(array $old_names, array $new_names): void
+    {
+        $settings_update = nel_database('core')->prepare(
+            'UPDATE "' . NEL_SETTINGS_TABLE .
+            '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name AND "setting_category" = \'site\'');
+        $site_config_update = nel_database('core')->prepare(
+            'UPDATE "' . NEL_SITE_CONFIGS_TABLE . '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name');
+        $name_count = count($old_names);
+
+        for ($i = 0; $i < $name_count; $i ++) {
+            $settings_update->bindValue(':new_name', $new_names[$i]);
+            $settings_update->bindValue(':old_name', $old_names[$i]);
+            nel_database('core')->executePrepared($settings_update);
+
+            $site_config_update->bindValue(':new_name', $new_names[$i]);
+            $site_config_update->bindValue(':old_name', $old_names[$i]);
+            nel_database('core')->executePrepared($site_config_update);
+        }
+    }
+
+    private function renameBoardSettings(array $old_names, array $new_names): void
+    {
+        $settings_update = nel_database('core')->prepare(
+            'UPDATE "' . NEL_SETTINGS_TABLE .
+            '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name AND "setting_category" = \'board\'');
+        $board_defaults_update = nel_database('core')->prepare(
+            'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name');
+        $board_configs_update = nel_database('core')->prepare(
+            'UPDATE "' . NEL_BOARD_CONFIGS_TABLE . '" SET "setting_name" = :new_name WHERE "setting_name" = :old_name');
+        $name_count = count($old_names);
+
+        for ($i = 0; $i < $name_count; $i ++) {
+            $settings_update->bindValue(':new_name', $new_names[$i]);
+            $settings_update->bindValue(':old_name', $old_names[$i]);
+            nel_database('core')->executePrepared($settings_update);
+
+            $board_defaults_update->bindValue(':new_name', $new_names[$i]);
+            $board_defaults_update->bindValue(':old_name', $old_names[$i]);
+            nel_database('core')->executePrepared($board_defaults_update);
+
+            $board_configs_update->bindValue(':new_name', $new_names[$i]);
+            $board_configs_update->bindValue(':old_name', $old_names[$i]);
+            nel_database('core')->executePrepared($board_configs_update);
+        }
+    }
+
+    private function removeSiteSettings(array $names): void
+    {
+        $settings_delete = nel_database('core')->prepare(
+            'DELETE FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_name" = :name AND "setting_category" = \'site\'');
+        $site_config_delete = nel_database('core')->prepare(
+            'DELETE FROM "' . NEL_SITE_CONFIGS_TABLE . '" WHERE "setting_name" = :name');
+        $name_count = count($names);
+
+        for ($i = 0; $i < $name_count; $i ++) {
+            $settings_delete->bindValue(':name', $names[$i]);
+            nel_database('core')->executePrepared($settings_delete);
+
+            $site_config_delete->bindValue(':name', $names[$i]);
+            nel_database('core')->executePrepared($site_config_delete);
+        }
+    }
+
+    private function removeBoardSettings(array $names): void
+    {
+        $settings_delete = nel_database('core')->prepare(
+            'DELETE FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_name" = :name AND "setting_category" = \'board\'');
+        $board_defaults_delete = nel_database('core')->prepare(
+            'DELETE FROM "' . NEL_BOARD_DEFAULTS_TABLE . '" WHERE "setting_name" = :name');
+        $board_configs_delete = nel_database('core')->prepare(
+            'DELETE FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "setting_name" = :name');
+        $name_count = count($names);
+
+        for ($i = 0; $i < $name_count; $i ++) {
+            $settings_delete->bindValue(':name', $names[$i]);
+            nel_database('core')->executePrepared($settings_delete);
+
+            $board_defaults_delete->bindValue(':name', $names[$i]);
+            nel_database('core')->executePrepared($board_defaults_delete);
+
+            $board_configs_delete->bindValue(':name', $names[$i]);
+            nel_database('core')->executePrepared($board_configs_delete);
+        }
     }
 }
