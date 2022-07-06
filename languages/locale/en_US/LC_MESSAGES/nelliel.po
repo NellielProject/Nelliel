@@ -1,14 +1,14 @@
 # SOME DESCRIPTIVE TITLE.
-# Copyright (C) 2010-2021 Nelliel Project
+# Copyright (C) 2010-2022 Nelliel Project
 # This file is distributed under the same license as the Nelliel package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: Nelliel v0.9.24\n"
+"Project-Id-Version: Nelliel v0.9.27\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-12-30 04:48:11 UTC +0000\n"
+"POT-Creation-Date: 2022-07-06 05:27:32 UTC +0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -26,18 +26,6 @@ msgstr ""
 
 #: core/include/Domains/DomainSite.php:48
 msgid "Nelliel Imageboard"
-msgstr ""
-
-#: core/include/Database.php:41
-#: core/include/DatabaseConnector.php:41
-#: core/include/database_old.php:139
-msgid "Invalid database type given in config."
-msgstr ""
-
-#: core/include/Database.php:80
-#: core/include/DatabaseConnector.php:80
-#: core/include/database_old.php:87
-msgid "Error connecting to database."
 msgstr ""
 
 #: core/include/Dispatch/DispatchRegen.php:35
@@ -64,7 +52,7 @@ msgstr ""
 msgid "The selected module is invalid."
 msgstr ""
 
-#: core/include/Dispatch/DispatchAccount.php:65
+#: core/include/Dispatch/DispatchAccount.php:66
 msgid "You cannot use the private message system."
 msgstr ""
 
@@ -73,122 +61,259 @@ msgid "The selected items have been reported."
 msgstr ""
 
 #: core/include/Dispatch/DispatchThreads.php:43
-#: core/include/Output/OutputPost.php:350
-#: core/include/Output/OutputPost.php:360
+#: core/include/Output/OutputPost.php:355
+#: core/include/Output/OutputPost.php:365
 msgid "Click here if you are not automatically redirected"
 msgstr ""
 
-#: core/include/Setup/Upgrade.php:25
+#: core/include/Setup/BetaMigrations.php:33
+msgid "Updating from v0.9.25 to v0.9.26..."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:42
+msgid "Setting options table updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:81
+msgid "Filetypes table updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:105
+msgid "Users table updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:117
+msgid "Archive tables updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:163
+#: core/include/Setup/BetaMigrations.php:217
+msgid "Settings and board config tables updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:176
+msgid "Thread tables updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:181
+msgid "Updating from v0.9.26 to v0.9.27..."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:193
+msgid "Post tables updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:198
+msgid "Bans table updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:203
+msgid "Logs table updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:208
+msgid "Reports table updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:225
+msgid "Plugins table updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:234
+msgid "Permissions and role permissions tables updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:242
+msgid "Template info updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:255
+msgid "Style info updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:263
+#: core/include/Setup/BetaMigrations.php:276
+msgid "Image set info updated."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:268
+msgid "Updating from v0.9.27 to v0.9.28..."
+msgstr ""
+
+#: core/include/Setup/BetaMigrations.php:292
+msgid "Board settings updated."
+msgstr ""
+
+#: core/include/Setup/Upgrade.php:28
+msgid "Site owner login"
+msgstr ""
+
+#: core/include/Setup/Upgrade.php:31
+msgid "Please log in with the site owner account to perform upgrades."
+msgstr ""
+
+#: core/include/Setup/Upgrade.php:36
+#: core/include/Setup/Setup.php:143
+msgid "Username:"
+msgstr ""
+
+#: core/include/Setup/Upgrade.php:41
+#: core/include/Setup/Setup.php:148
+#: templates/nelliel_basic/account/register.html
+#: templates/nelliel_basic/account/login.html
+#: templates/nelliel_basic/thread/footer_form.html
+msgid "Password:"
+msgstr ""
+
+#: core/include/Setup/Upgrade.php:46
+#: core/include/Setup/Setup.php:158
+#: core/include/Setup/Setup.php:187
+#: templates/nelliel_basic/panels/blotter_main.html
+#: templates/nelliel_basic/account/register.html
+#: templates/nelliel_basic/account/login.html
+msgid "Submit"
+msgstr ""
+
+#: core/include/Setup/Upgrade.php:72
 msgid "Already up to date!"
 msgstr ""
 
-#: core/include/Setup/Upgrade.php:33
-#, php-format
-msgid "%d migrations have been completed."
+#: core/include/Setup/Upgrade.php:77
+msgid "Versions older than v0.9.25 do not have an upgrade path."
 msgstr ""
 
-#: core/include/Setup/Upgrade.php:37
+#: core/include/Setup/Upgrade.php:83
+msgid "Username or password is wrong or that user is not a site owner."
+msgstr ""
+
+#: core/include/Setup/Upgrade.php:94
+#, php-format
+msgid "%d migrations were completed."
+msgstr ""
+
+#: core/include/Setup/Upgrade.php:96
 msgid "No migrations were needed."
 msgstr ""
 
-#: core/include/Setup/Upgrade.php:45
+#: core/include/Setup/Upgrade.php:104
 msgid "Upgrades completed!"
 msgstr ""
 
-#: core/include/Setup/Setup.php:73
+#: core/include/Setup/Setup.php:78
+msgid "Installer"
+msgstr ""
+
+#: core/include/Setup/Setup.php:84
 msgid "Installation has already been completed!"
 msgstr ""
 
-#: core/include/Setup/Setup.php:87
+#: core/include/Setup/Setup.php:89
+msgid "Install key does not match or is invalid."
+msgstr ""
+
+#: core/include/Setup/Setup.php:106
 msgid "Peppers file has been created."
 msgstr ""
 
-#: core/include/Setup/Setup.php:89
+#: core/include/Setup/Setup.php:108
 msgid "Peppers file already present."
 msgstr ""
 
-#: core/include/Setup/Setup.php:104
+#: core/include/Setup/Setup.php:123
 msgid "Site owner account already created."
 msgstr ""
 
-#: core/include/Setup/Setup.php:105
+#: core/include/Setup/Setup.php:124
 msgid "Install has finished with no apparent problems! When you\\'re ready to "
 "continue, follow this link to the login page: "
 msgstr ""
 
-#: core/include/Setup/Setup.php:108
+#: core/include/Setup/Setup.php:127
 msgid "Login page"
 msgstr ""
 
-#: core/include/Setup/Setup.php:113
+#: core/include/Setup/Setup.php:135
 msgid "No problems so far! To complete setup, a site owner account needs to be "
 "created. This account will have all permissions by default. It is also "
 "necessary to use the site settings control panel."
 msgstr ""
 
-#: core/include/Setup/Setup.php:145
+#: core/include/Setup/Setup.php:153
+#: templates/nelliel_basic/account/register.html
+msgid "Confirm password:"
+msgstr ""
+
+#: core/include/Setup/Setup.php:174
+msgid "Install key check"
+msgstr ""
+
+#: core/include/Setup/Setup.php:177
+msgid "Enter the install key to continue."
+msgstr ""
+
+#: core/include/Setup/Setup.php:182
+msgid "Install Key:"
+msgstr ""
+
+#: core/include/Setup/Setup.php:201
 msgid "Minimum PHP version required: "
 msgstr ""
 
-#: core/include/Setup/Setup.php:146
+#: core/include/Setup/Setup.php:202
 msgid "PHP version detected: "
 msgstr ""
 
-#: core/include/Setup/Setup.php:149
+#: core/include/Setup/Setup.php:205
 msgid "This version of PHP is too old! Upgrade to a version supported by Nelliel."
 msgstr ""
 
-#: core/include/Setup/Setup.php:169
+#: core/include/Setup/Setup.php:223
+#, php-format
+msgid "Database type configured is: %s"
+msgstr ""
+
+#: core/include/Setup/Setup.php:227
 msgid "InnoDB engine is required for MySQL or MariaDB support but that engine is not "
 "available."
 msgstr ""
 
-#: core/include/Setup/Setup.php:171
-msgid "DB engine ok."
+#: core/include/Setup/Setup.php:229
+msgid "No database problems detected."
 msgstr ""
 
-#: core/include/Setup/Setup.php:178
+#: core/include/Setup/Setup.php:236
 msgid "The core directory not writable."
 msgstr ""
 
-#: core/include/Setup/Setup.php:180
+#: core/include/Setup/Setup.php:238
 msgid "The core directory is writable."
 msgstr ""
 
-#: core/include/Setup/Setup.php:187
+#: core/include/Setup/Setup.php:245
 msgid "Nelliel project directory is not writable."
 msgstr ""
 
-#: core/include/Setup/Setup.php:189
+#: core/include/Setup/Setup.php:247
 msgid "Main directory is writable."
 msgstr ""
 
-#: core/include/Setup/Setup.php:196
-msgid "Configuration directory is missing or not writable. Admin should check this "
-"out."
-msgstr ""
-
-#: core/include/Setup/Setup.php:198
-msgid "The configuration directory is writable."
-msgstr ""
-
-#: core/include/Setup/Setup.php:293
+#: core/include/Setup/Setup.php:342
 msgid "Core database tables created."
 msgstr ""
 
-#: core/include/Setup/Setup.php:304
+#: core/include/Setup/Setup.php:353
 msgid "Core directories created."
 msgstr ""
 
-#: core/include/Setup/Setup.php:356
+#: core/include/Setup/Setup.php:405
 msgid "Core templates installed."
 msgstr ""
 
-#: core/include/Setup/Setup.php:374
+#: core/include/Setup/Setup.php:423
 msgid "Core styles installed."
 msgstr ""
 
-#: core/include/Setup/Setup.php:392
+#: core/include/Setup/Setup.php:441
 msgid "Core image sets installed."
 msgstr ""
 
@@ -252,14 +377,15 @@ msgid "Styles"
 msgstr ""
 
 #: core/include/Admin/AdminStyles.php:81
+#: core/include/Admin/AdminPlugins.php:82
 msgid "You are not allowed to manage styles."
 msgstr ""
 
 #: core/include/Admin/AdminFiletypes.php:21
 #: core/include/Admin/AdminFiletypeCategories.php:21
 #: core/include/Output/OutputPanelFiletypes.php:25
-#: core/include/Output/OutputPanelFiletypes.php:151
-#: core/include/Output/OutputPanelFiletypes.php:194
+#: core/include/Output/OutputPanelFiletypes.php:158
+#: core/include/Output/OutputPanelFiletypes.php:201
 #: templates/nelliel_basic/panels/main.html
 msgid "Filetypes"
 msgstr ""
@@ -273,7 +399,7 @@ msgstr ""
 msgid "Default Board Configuration"
 msgstr ""
 
-#: core/include/Admin/AdminBoardDefaults.php:169
+#: core/include/Admin/AdminBoardDefaults.php:177
 msgid "You are not allowed to modify the default board configuration."
 msgstr ""
 
@@ -284,67 +410,67 @@ msgstr ""
 msgid "Manage Boards"
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:73
+#: core/include/Admin/AdminBoards.php:74
 msgid "No board URI provided."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:78
+#: core/include/Admin/AdminBoards.php:79
 msgid "Board URI contains invalid characters. Must be alphanumeric only."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:85
+#: core/include/Admin/AdminBoards.php:86
 #, php-format
 msgid "Board URI is too long. Maximum length is %d characters."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:91
+#: core/include/Admin/AdminBoards.php:92
 msgid "Board URI is reserved."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:98
+#: core/include/Admin/AdminBoards.php:100
 #, php-format
 msgid "There is already a board with the URI %s."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:117
+#: core/include/Admin/AdminBoards.php:119
 msgid "One or more of the provided subdirectory names is empty."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:123
+#: core/include/Admin/AdminBoards.php:125
 #, php-format
 msgid "One or more of the provided subdirectory names is too long. Maximum %d "
 "characters."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:131
+#: core/include/Admin/AdminBoards.php:133
 msgid "One or more of the provided subdirectory names contains invalid characters. "
 "Must be alphanumeric only."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:148
+#: core/include/Admin/AdminBoards.php:150
 #, php-format
 msgid "Had trouble registering the board URI %s. May want to change it."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:204
+#: core/include/Admin/AdminBoards.php:206
 msgid "Board does not appear to exist."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:253
+#: core/include/Admin/AdminBoards.php:255
 #, php-format
 #: core/include/Admin/AdminBans.php:110
 msgid "You do not have access to the %s control panel."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:257
+#: core/include/Admin/AdminBoards.php:259
 msgid "You cannot add new boards."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:261
+#: core/include/Admin/AdminBoards.php:263
 msgid "You cannot modify existing boards."
 msgstr ""
 
-#: core/include/Admin/AdminBoards.php:265
+#: core/include/Admin/AdminBoards.php:267
 msgid "You cannot delete existing boards."
 msgstr ""
 
@@ -368,7 +494,7 @@ msgstr ""
 msgid "File Filters"
 msgstr ""
 
-#: core/include/Admin/AdminFileFilters.php:88
+#: core/include/Admin/AdminFileFilters.php:89
 msgid "You are not allowed to manage file filters."
 msgstr ""
 
@@ -379,15 +505,15 @@ msgstr ""
 msgid "Users"
 msgstr ""
 
-#: core/include/Admin/AdminUsers.php:31
+#: core/include/Admin/AdminUsers.php:30
 msgid "The specified user does not exist."
 msgstr ""
 
-#: core/include/Admin/AdminUsers.php:142
+#: core/include/Admin/AdminUsers.php:133
 msgid "You are not allowed to view users."
 msgstr ""
 
-#: core/include/Admin/AdminUsers.php:146
+#: core/include/Admin/AdminUsers.php:137
 msgid "You are not allowed to manage users."
 msgstr ""
 
@@ -436,13 +562,13 @@ msgstr ""
 msgid "You are not allowed to dismiss reports."
 msgstr ""
 
-#: core/include/Admin/AdminBoardSettings.php:24
+#: core/include/Admin/AdminBoardSettings.php:25
 #: core/include/Output/OutputPanelBoardSettings.php:44
 #: templates/nelliel_basic/panels/board.html
 msgid "Board Settings"
 msgstr ""
 
-#: core/include/Admin/AdminBoardSettings.php:125
+#: core/include/Admin/AdminBoardSettings.php:156
 msgid "You are not allowed to modify the board settings."
 msgstr ""
 
@@ -460,7 +586,7 @@ msgstr ""
 msgid "Word Filters"
 msgstr ""
 
-#: core/include/Admin/AdminWordFilters.php:144
+#: core/include/Admin/AdminWordFilters.php:145
 msgid "You are not allowed to manage word filters."
 msgstr ""
 
@@ -483,6 +609,24 @@ msgstr ""
 
 #: core/include/Admin/AdminImageSets.php:81
 msgid "You are not allowed to manage image sets."
+msgstr ""
+
+#: core/include/Admin/AdminNoticeboard.php:22
+#: core/include/Output/OutputPanelNoticeboard.php:25
+#: templates/nelliel_basic/panels/main.html
+msgid "Noticeboard"
+msgstr ""
+
+#: core/include/Admin/AdminNoticeboard.php:84
+msgid "You are not allowed to manage the noticeboard"
+msgstr ""
+
+#: core/include/Admin/AdminNoticeboard.php:88
+msgid "You are not allowed to post notices."
+msgstr ""
+
+#: core/include/Admin/AdminNoticeboard.php:92
+msgid "You are not allowed to delete notices."
 msgstr ""
 
 #: core/include/Admin/AdminPermissions.php:21
@@ -552,11 +696,17 @@ msgstr ""
 msgid "You are not allowed to manage templates."
 msgstr ""
 
+#: core/include/Admin/AdminPlugins.php:22
+#: templates/nelliel_basic/panels/main.html
+msgid "Plugins"
+msgstr ""
+
 #: core/include/Output/OutputPanelEmbeds.php:26
 #: core/include/Output/OutputPanelRoles.php:26
 #: core/include/Output/OutputPanelTemplates.php:25
 #: core/include/Output/OutputPanelManageBoards.php:27
 #: core/include/Output/OutputPanelImageSets.php:25
+#: core/include/Output/OutputPanelNoticeboard.php:26
 #: core/include/Output/OutputPanelPermissions.php:27
 #: core/include/Output/OutputPanelContentOps.php:26
 #: core/include/Output/OutputPanelWordfilters.php:26
@@ -577,6 +727,7 @@ msgstr ""
 #: core/include/Output/OutputPanelMain.php:24
 #: core/include/Output/OutputPanelMain.php:25
 #: core/include/Output/OutputPanelBans.php:27
+#: core/include/Output/OutputPanelPlugins.php:25
 msgid "Main"
 msgstr ""
 
@@ -588,7 +739,8 @@ msgstr ""
 #: core/include/Output/OutputPanelStyles.php:50
 #: core/include/Output/OutputPanelCapcodes.php:55
 #: core/include/Output/OutputPanelFiletypes.php:58
-#: core/include/Output/OutputPanelFiletypes.php:108
+#: core/include/Output/OutputPanelFiletypes.php:115
+#: core/include/Output/OutputPanelPlugins.php:49
 msgid "Disable"
 msgstr ""
 
@@ -600,7 +752,8 @@ msgstr ""
 #: core/include/Output/OutputPanelStyles.php:57
 #: core/include/Output/OutputPanelCapcodes.php:63
 #: core/include/Output/OutputPanelFiletypes.php:66
-#: core/include/Output/OutputPanelFiletypes.php:116
+#: core/include/Output/OutputPanelFiletypes.php:123
+#: core/include/Output/OutputPanelPlugins.php:57
 msgid "Enable"
 msgstr ""
 
@@ -609,8 +762,8 @@ msgstr ""
 #: core/include/Output/OutputPanelContentOps.php:84
 #: core/include/Output/OutputPanelWordfilters.php:92
 #: core/include/Output/OutputPanelCapcodes.php:82
-#: core/include/Output/OutputPanelFiletypes.php:135
 #: core/include/Output/OutputPanelFiletypes.php:142
+#: core/include/Output/OutputPanelFiletypes.php:149
 #: core/include/Output/OutputPanelUsers.php:61
 #: core/include/Output/OutputPanelPages.php:62
 msgid "New"
@@ -621,8 +774,8 @@ msgstr ""
 #: core/include/Output/OutputPanelContentOps.php:94
 #: core/include/Output/OutputPanelWordfilters.php:107
 #: core/include/Output/OutputPanelCapcodes.php:92
-#: core/include/Output/OutputPanelFiletypes.php:152
-#: core/include/Output/OutputPanelFiletypes.php:195
+#: core/include/Output/OutputPanelFiletypes.php:159
+#: core/include/Output/OutputPanelFiletypes.php:202
 #: core/include/Output/OutputPanelUsers.php:70
 #: core/include/Output/OutputPanelPages.php:72
 #: core/include/Output/OutputPanelBoardSettings.php:26
@@ -635,41 +788,6 @@ msgstr ""
 #: templates/nelliel_basic/panels/word_filters_main.html
 #: (Database) Table: nelliel_settings | Column: setting_description
 msgid "Edit"
-msgstr ""
-
-#: core/include/Output/OutputPostingForm.php:84
-#, php-format
-msgid "Maximum files: %d"
-msgstr ""
-
-#: core/include/Output/OutputPostingForm.php:85
-#, php-format
-msgid "Maximum embeds: %d"
-msgstr ""
-
-#: core/include/Output/OutputPostingForm.php:95
-#: templates/nelliel_basic/private_messages/view_message.html
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Reply"
-msgstr ""
-
-#: core/include/Output/OutputPostingForm.php:95
-msgid "New thread"
-msgstr ""
-
-#: core/include/Output/OutputPostingForm.php:106
-#, php-format
-msgid "Supported %s file types: "
-msgstr ""
-
-#: core/include/Output/OutputPostingForm.php:149
-#, php-format
-msgid "Maximum file size allowed is %dKB"
-msgstr ""
-
-#: core/include/Output/OutputPostingForm.php:151
-#, php-format
-msgid "Images greater than %d x %d pixels will be thumbnailed."
 msgstr ""
 
 #: core/include/Output/OutputPanelManageBoards.php:52
@@ -704,6 +822,7 @@ msgstr ""
 #: templates/nelliel_basic/panels/pages_main.html
 #: templates/nelliel_basic/panels/word_filters_main.html
 #: templates/nelliel_basic/panels/manage_boards.html
+#: templates/nelliel_basic/panels/noticeboard.html
 #: templates/nelliel_basic/panels/permissions.html
 msgid "Remove"
 msgstr ""
@@ -730,21 +849,21 @@ msgstr ""
 msgid "Confirmed. Delete the board."
 msgstr ""
 
-#: core/include/Output/OutputPost.php:205
+#: core/include/Output/OutputPost.php:222
 #, php-format
 msgid "First %d Posts"
 msgstr ""
 
-#: core/include/Output/OutputPost.php:222
+#: core/include/Output/OutputPost.php:239
 #, php-format
 msgid "Last %d Posts"
 msgstr ""
 
-#: core/include/Output/OutputPost.php:348
+#: core/include/Output/OutputPost.php:353
 msgid "Post success!"
 msgstr ""
 
-#: core/include/Output/OutputPost.php:358
+#: core/include/Output/OutputPost.php:363
 msgid "The selected items have been deleted!"
 msgstr ""
 
@@ -893,6 +1012,49 @@ msgstr ""
 msgid "Modify Ban"
 msgstr ""
 
+#: core/include/Output/OutputNewPostForm.php:85
+#, php-format
+msgid "Maximum files: %d"
+msgstr ""
+
+#: core/include/Output/OutputNewPostForm.php:86
+#, php-format
+msgid "Maximum embeds: %d"
+msgstr ""
+
+#: core/include/Output/OutputNewPostForm.php:96
+#: templates/nelliel_basic/private_messages/view_message.html
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Reply"
+msgstr ""
+
+#: core/include/Output/OutputNewPostForm.php:96
+msgid "New thread"
+msgstr ""
+
+#: core/include/Output/OutputNewPostForm.php:108
+#, php-format
+msgid "Supported %s file types:"
+msgstr ""
+
+#: core/include/Output/OutputNewPostForm.php:162
+msgid "Supported embeds:"
+msgstr ""
+
+#: core/include/Output/OutputNewPostForm.php:168
+#, php-format
+msgid "Maximum file size allowed is %dKB"
+msgstr ""
+
+#: core/include/Output/OutputNewPostForm.php:173
+#, php-format
+msgid "Images greater than %d x %d pixels will be thumbnailed."
+msgstr ""
+
+#: core/include/Output/OutputPanelPlugins.php:24
+msgid "plugins"
+msgstr ""
+
 #: core/include/Output/OutputAboutNelliel.php:28
 msgid "Version: "
 msgstr ""
@@ -919,17 +1081,14 @@ msgid "Embed URL is malformed or not supported."
 msgstr ""
 
 #: core/include/Content/Thread.php:122
-#: core/include/Thread.php:122
 msgid "Cannot delete thread. Board is locked."
 msgstr ""
 
 #: core/include/Content/Thread.php:127
-#: core/include/Thread.php:127
 msgid "Thread has reached reply threshold and cannot be deleted."
 msgstr ""
 
 #: core/include/Content/Thread.php:134
-#: core/include/Thread.php:134
 msgid "Thread has reached age threshold and cannot be deleted."
 msgstr ""
 
@@ -937,7 +1096,7 @@ msgstr ""
 msgid "string"
 msgstr ""
 
-#: core/include/Language/Language.php:72
+#: core/include/Language/Language.php:78
 msgid "You are not allowed to extract the gettext strings."
 msgstr ""
 
@@ -948,6 +1107,14 @@ msgstr ""
 
 #: core/include/PrivateMessage.php:132
 msgid "You are not allowed to view that message."
+msgstr ""
+
+#: core/include/DatabaseConnector.php:41
+msgid "Invalid database type given in config."
+msgstr ""
+
+#: core/include/DatabaseConnector.php:80
+msgid "Error connecting to database."
 msgstr ""
 
 #: core/include/Snacks.php:71
@@ -1026,112 +1193,116 @@ msgstr ""
 msgid "File type is not allowed."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:339
+#: core/include/NewPost/Uploads.php:341
 msgid "Incorrect file type detected (does not match extension). Possible Hax."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:419
+#: core/include/NewPost/Uploads.php:421
 msgid "Duplicate embed detected."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:465
+#: core/include/NewPost/Uploads.php:467
 msgid "This post cannot have files or embedded content."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:471
+#: core/include/NewPost/Uploads.php:473
 #, php-format
 msgid "You have too many uploads in your post. Received %d embeds and %d files for a "
 "total of %d uploads. Maximum is %d."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:477
-#: templates/nelliel_basic/thread/posting_form.html
+#: core/include/NewPost/Uploads.php:479
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "At least one file is required."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:481
+#: core/include/NewPost/Uploads.php:483
 msgid "Files are not allowed in this post."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:486
+#: core/include/NewPost/Uploads.php:488
 #, php-format
 msgid "You have too many files in your post. Received %d files but the maximum is %d."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:491
+#: core/include/NewPost/Uploads.php:493
 msgid "Embedded content is required."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:495
+#: core/include/NewPost/Uploads.php:497
 msgid "Embedded content is not allowed in this post."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:500
+#: core/include/NewPost/Uploads.php:502
 #, php-format
 msgid "You have too many embeds in your post. Received %d embeds but the maximum is "
 "%d."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:506
+#: core/include/NewPost/Uploads.php:508
 msgid "This thread has reached the maximum number of uploads."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:533
+#: core/include/NewPost/Uploads.php:535
 msgid "Filename was empty or was purged by filter."
 msgstr ""
 
-#: core/include/NewPost/Uploads.php:598
+#: core/include/NewPost/Uploads.php:600
 #, php-format
 msgid "Image dimensions are too large. Maximum is %d x %d pixels."
 msgstr ""
 
-#: core/include/NewPost/PostData.php:105
+#: core/include/NewPost/PostData.php:87
+msgid "A tripcode or secure tripcode is required to post."
+msgstr ""
+
+#: core/include/NewPost/PostData.php:111
 msgid "A name is required to post."
 msgstr ""
 
-#: core/include/NewPost/PostData.php:114
+#: core/include/NewPost/PostData.php:120
 msgid "An email is required to post."
 msgstr ""
 
-#: core/include/NewPost/PostData.php:123
+#: core/include/NewPost/PostData.php:129
 msgid "A subject is required to post."
 msgstr ""
 
-#: core/include/NewPost/PostData.php:134
+#: core/include/NewPost/PostData.php:140
 msgid "A comment is required to post."
-msgstr ""
-
-#: core/include/NewPost/PostData.php:155
-#, php-format
-msgid "Comment contains too many cites. Maximum is %d."
 msgstr ""
 
 #: core/include/NewPost/PostData.php:161
 #, php-format
+msgid "Comment contains too many cites. Maximum is %d."
+msgstr ""
+
+#: core/include/NewPost/PostData.php:167
+#, php-format
 msgid "Comment contains too many cross-board cites. Maximum is %d."
 msgstr ""
 
-#: core/include/NewPost/PostData.php:170
+#: core/include/NewPost/PostData.php:176
 #, php-format
 msgid "Comment contains too many URLs. Maximum is %d."
 msgstr ""
 
-#: core/include/NewPost/PostData.php:275
+#: core/include/NewPost/PostData.php:281
 #, php-format
 msgid "Name must be between %s and %s characters."
 msgstr ""
 
-#: core/include/NewPost/PostData.php:282
+#: core/include/NewPost/PostData.php:288
 #, php-format
 msgid "Email must be between %s and %s characters."
 msgstr ""
 
-#: core/include/NewPost/PostData.php:289
+#: core/include/NewPost/PostData.php:295
 #, php-format
 msgid "Subject must be between %s and %s characters."
 msgstr ""
 
-#: core/include/NewPost/PostData.php:296
+#: core/include/NewPost/PostData.php:302
 #, php-format
 msgid "Comment must be between %s and %s characters."
 msgstr ""
@@ -1157,11 +1328,11 @@ msgid "This thread is locked, you cannot post in it."
 msgstr ""
 
 #: core/include/NewPost/NewPost.php:245
-msgid "The thread you have tried posting in is currently inaccessible or archived."
+msgid "The thread you tried posting in is currently inaccessible or archived."
 msgstr ""
 
 #: core/include/NewPost/NewPost.php:249
-msgid "The thread you have tried posting in could not be found."
+msgid "The thread you tried posting in could not be found."
 msgstr ""
 
 #: core/include/NewPost/NewPost.php:254
@@ -1176,11 +1347,11 @@ msgstr ""
 msgid "The maximum threads per hour has been reached."
 msgstr ""
 
-#: core/include/initializations.php:52
+#: core/include/initializations.php:53
 msgid "Installation has not been done yet or is not complete."
 msgstr ""
 
-#: core/include/initializations.php:65
+#: core/include/initializations.php:66
 msgid "Versions do not match. An upgrade may be in progress or something is broken. "
 "Try again later."
 msgstr ""
@@ -1236,7 +1407,7 @@ msgid "No acceptable password hashing algorithm has been found. We can't functio
 "this."
 msgstr ""
 
-#: core/include/ThreadHandler.php:56
+#: core/include/ThreadHandler.php:45
 #, php-format
 msgid "You are trying to delete too many items at once. Limit is %d."
 msgstr ""
@@ -1298,6 +1469,7 @@ msgstr ""
 #: templates/nelliel_basic/private_messages/message_list.html
 #: templates/nelliel_basic/panels/staff_board.html
 #: templates/nelliel_basic/panels/logs.html
+#: templates/nelliel_basic/panels/noticeboard.html
 msgid "Message"
 msgstr ""
 
@@ -1330,6 +1502,7 @@ msgid "Sender"
 msgstr ""
 
 #: templates/nelliel_basic/private_messages/message_list.html
+#: templates/nelliel_basic/panels/plugins.html
 #: templates/nelliel_basic/panels/roles_main.html
 #: templates/nelliel_basic/panels/image_sets.html
 #: templates/nelliel_basic/panels/filetypes_main.html
@@ -1347,6 +1520,7 @@ msgstr ""
 #: templates/nelliel_basic/panels/word_filters_main.html
 #: templates/nelliel_basic/panels/thread_expand.html
 #: templates/nelliel_basic/panels/thread.html
+#: templates/nelliel_basic/panels/noticeboard.html
 msgid "Actions"
 msgstr ""
 
@@ -1360,8 +1534,6 @@ msgstr ""
 
 #: templates/nelliel_basic/private_messages/message_list.html
 #: templates/nelliel_basic/thread/footer_form.html
-#: templates/nelliel_basic/thread/embeds/multiple_embed_header.html
-#: templates/nelliel_basic/thread/embeds/single_embed_header.html
 #: (Database) Table: nelliel_settings | Column: setting_description
 msgid "Delete"
 msgstr ""
@@ -1434,6 +1606,7 @@ msgid "Submit Appeal"
 msgstr ""
 
 #: templates/nelliel_basic/panels/threads_edit_post.html
+#: templates/nelliel_basic/panels/plugins.html
 #: templates/nelliel_basic/panels/image_sets.html
 #: templates/nelliel_basic/panels/styles.html
 #: templates/nelliel_basic/panels/site_settings.html
@@ -1441,13 +1614,14 @@ msgstr ""
 #: templates/nelliel_basic/panels/templates.html
 #: templates/nelliel_basic/panels/thread_expand.html
 #: templates/nelliel_basic/panels/thread.html
+#: templates/nelliel_basic/panels/noticeboard.html
 #: templates/nelliel_basic/panels/board_settings.html
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Name"
 msgstr ""
 
 #: templates/nelliel_basic/panels/threads_edit_post.html
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "E-mail"
 msgstr ""
 
@@ -1455,18 +1629,79 @@ msgstr ""
 #: templates/nelliel_basic/panels/staff_board.html
 #: templates/nelliel_basic/panels/thread_expand.html
 #: templates/nelliel_basic/panels/thread.html
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/panels/noticeboard.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Subject"
 msgstr ""
 
 #: templates/nelliel_basic/panels/threads_edit_post.html
 #: templates/nelliel_basic/panels/thread_expand.html
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Comment"
 msgstr ""
 
 #: templates/nelliel_basic/panels/threads_edit_post.html
 msgid "Update Post"
+msgstr ""
+
+#: templates/nelliel_basic/panels/plugins.html
+msgid "Installed plugins"
+msgstr ""
+
+#: templates/nelliel_basic/panels/plugins.html
+msgid "Plugin ID"
+msgstr ""
+
+#: templates/nelliel_basic/panels/plugins.html
+#: templates/nelliel_basic/panels/image_sets.html
+#: templates/nelliel_basic/panels/filetypes_main.html
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/capcodes_edit.html
+#: templates/nelliel_basic/panels/capcodes_main.html
+#: templates/nelliel_basic/panels/templates.html
+#: templates/nelliel_basic/panels/word_filters_edit.html
+#: templates/nelliel_basic/panels/content_ops_main.html
+#: templates/nelliel_basic/panels/filetypes_filetype_edit.html
+#: templates/nelliel_basic/panels/embeds_main.html
+#: templates/nelliel_basic/panels/embeds_edit.html
+#: templates/nelliel_basic/panels/content_ops_edit.html
+#: templates/nelliel_basic/panels/filetypes_category_edit.html
+msgid "Enabled"
+msgstr ""
+
+#: templates/nelliel_basic/panels/plugins.html
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+msgid "Uninstall"
+msgstr ""
+
+#: templates/nelliel_basic/panels/plugins.html
+msgid "Available plugins"
+msgstr ""
+
+#: templates/nelliel_basic/panels/plugins.html
+#: templates/nelliel_basic/panels/image_sets.html
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+msgid "Installed"
+msgstr ""
+
+#: templates/nelliel_basic/panels/plugins.html
+#: templates/nelliel_basic/panels/image_sets.html
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+msgid "No"
+msgstr ""
+
+#: templates/nelliel_basic/panels/plugins.html
+#: templates/nelliel_basic/panels/image_sets.html
+#: templates/nelliel_basic/panels/styles.html
+#: templates/nelliel_basic/panels/templates.html
+msgid "Yes"
+msgstr ""
+
+#: templates/nelliel_basic/panels/plugins.html
+msgid "Install Plugin"
 msgstr ""
 
 #: templates/nelliel_basic/panels/roles_main.html
@@ -1513,45 +1748,11 @@ msgid "Directory"
 msgstr ""
 
 #: templates/nelliel_basic/panels/image_sets.html
-#: templates/nelliel_basic/panels/filetypes_main.html
-#: templates/nelliel_basic/panels/styles.html
-#: templates/nelliel_basic/panels/capcodes_edit.html
-#: templates/nelliel_basic/panels/capcodes_main.html
-#: templates/nelliel_basic/panels/templates.html
-#: templates/nelliel_basic/panels/word_filters_edit.html
-#: templates/nelliel_basic/panels/content_ops_main.html
-#: templates/nelliel_basic/panels/filetypes_filetype_edit.html
-#: templates/nelliel_basic/panels/embeds_main.html
-#: templates/nelliel_basic/panels/embeds_edit.html
-#: templates/nelliel_basic/panels/content_ops_edit.html
-#: templates/nelliel_basic/panels/filetypes_category_edit.html
-msgid "Enabled"
-msgstr ""
-
-#: templates/nelliel_basic/panels/image_sets.html
 msgid "Uninstall Image Set"
 msgstr ""
 
 #: templates/nelliel_basic/panels/image_sets.html
 msgid "Available image sets"
-msgstr ""
-
-#: templates/nelliel_basic/panels/image_sets.html
-#: templates/nelliel_basic/panels/styles.html
-#: templates/nelliel_basic/panels/templates.html
-msgid "Installed"
-msgstr ""
-
-#: templates/nelliel_basic/panels/image_sets.html
-#: templates/nelliel_basic/panels/styles.html
-#: templates/nelliel_basic/panels/templates.html
-msgid "No"
-msgstr ""
-
-#: templates/nelliel_basic/panels/image_sets.html
-#: templates/nelliel_basic/panels/styles.html
-#: templates/nelliel_basic/panels/templates.html
-msgid "Yes"
 msgstr ""
 
 #: templates/nelliel_basic/panels/image_sets.html
@@ -1604,8 +1805,7 @@ msgid "Extensions"
 msgstr ""
 
 #: templates/nelliel_basic/panels/filetypes_main.html
-#: templates/nelliel_basic/panels/filetypes_filetype_edit.html
-msgid "Mime"
+msgid "Mimetypes"
 msgstr ""
 
 #: templates/nelliel_basic/panels/staff_board.html
@@ -1630,11 +1830,6 @@ msgstr ""
 
 #: templates/nelliel_basic/panels/styles.html
 msgid "Type"
-msgstr ""
-
-#: templates/nelliel_basic/panels/styles.html
-#: templates/nelliel_basic/panels/templates.html
-msgid "Uninstall"
 msgstr ""
 
 #: templates/nelliel_basic/panels/styles.html
@@ -1722,7 +1917,7 @@ msgid "Hashing and Security"
 msgstr ""
 
 #: templates/nelliel_basic/panels/site_settings.html
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "CAPTCHA"
 msgstr ""
 
@@ -1797,12 +1992,6 @@ msgstr ""
 
 #: templates/nelliel_basic/panels/blotter_main.html
 msgid "List of blotter entries"
-msgstr ""
-
-#: templates/nelliel_basic/panels/blotter_main.html
-#: templates/nelliel_basic/account/register.html
-#: templates/nelliel_basic/account/login.html
-msgid "Submit"
 msgstr ""
 
 #: templates/nelliel_basic/panels/users_main.html
@@ -1882,6 +2071,7 @@ msgid "List of news articles"
 msgstr ""
 
 #: templates/nelliel_basic/panels/news.html
+#: templates/nelliel_basic/panels/noticeboard.html
 msgid "Date"
 msgstr ""
 
@@ -2031,6 +2221,10 @@ msgid "Extensions (JSON array)"
 msgstr ""
 
 #: templates/nelliel_basic/panels/filetypes_filetype_edit.html
+msgid "Mimetypes (JSON array)"
+msgstr ""
+
+#: templates/nelliel_basic/panels/filetypes_filetype_edit.html
 msgid "Magic regex"
 msgstr ""
 
@@ -2171,11 +2365,11 @@ msgid "Only alphanumeric directory names are allowed!"
 msgstr ""
 
 #: templates/nelliel_basic/panels/manage_boards.html
-msgid "Directory for storing uploads:"
+msgid "Directory for uploads:"
 msgstr ""
 
 #: templates/nelliel_basic/panels/manage_boards.html
-msgid "Directory for storing previews:"
+msgid "Directory for previews:"
 msgstr ""
 
 #: templates/nelliel_basic/panels/manage_boards.html
@@ -2252,6 +2446,15 @@ msgstr ""
 
 #: templates/nelliel_basic/panels/thread.html
 msgid "Total Files"
+msgstr ""
+
+#: templates/nelliel_basic/panels/noticeboard.html
+#: templates/nelliel_basic/account/account_main.html
+msgid "Notices"
+msgstr ""
+
+#: templates/nelliel_basic/panels/noticeboard.html
+msgid "Add notice"
 msgstr ""
 
 #: templates/nelliel_basic/panels/permissions.html
@@ -2337,6 +2540,10 @@ msgid "Index Rendering"
 msgstr ""
 
 #: templates/nelliel_basic/panels/board_settings.html
+msgid "Catalog Rendering"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board_settings.html
 msgid "Thread Rendering"
 msgstr ""
 
@@ -2349,6 +2556,10 @@ msgid "Uploads Rendering"
 msgstr ""
 
 #: templates/nelliel_basic/panels/board_settings.html
+msgid "New Post Form Rendering"
+msgstr ""
+
+#: templates/nelliel_basic/panels/board_settings.html
 msgid "Other Rendering"
 msgstr ""
 
@@ -2357,11 +2568,7 @@ msgid "Anti-spam"
 msgstr ""
 
 #: templates/nelliel_basic/panels/board_settings.html
-msgid "Public UI"
-msgstr ""
-
-#: templates/nelliel_basic/panels/board_settings.html
-msgid "Moderator UI"
+msgid "Moderator Links"
 msgstr ""
 
 #: templates/nelliel_basic/navigation/site_links.html
@@ -2378,14 +2585,6 @@ msgid "About Nelliel"
 msgstr ""
 
 #: templates/nelliel_basic/navigation/site_links.html
-msgid "Login"
-msgstr ""
-
-#: templates/nelliel_basic/navigation/site_links.html
-msgid "Logout"
-msgstr ""
-
-#: templates/nelliel_basic/navigation/site_links.html
 msgid "Account"
 msgstr ""
 
@@ -2399,6 +2598,10 @@ msgstr ""
 
 #: templates/nelliel_basic/navigation/site_links.html
 msgid "Board Panel"
+msgstr ""
+
+#: templates/nelliel_basic/navigation/site_links.html
+msgid "Logout"
 msgstr ""
 
 #: templates/nelliel_basic/pieces/render_stats.html
@@ -2457,16 +2660,6 @@ msgid "User ID:"
 msgstr ""
 
 #: templates/nelliel_basic/account/register.html
-#: templates/nelliel_basic/account/login.html
-#: templates/nelliel_basic/thread/footer_form.html
-msgid "Password:"
-msgstr ""
-
-#: templates/nelliel_basic/account/register.html
-msgid "Confirm password:"
-msgstr ""
-
-#: templates/nelliel_basic/account/register.html
 msgid "Already have an account?"
 msgstr ""
 
@@ -2506,6 +2699,59 @@ msgstr ""
 msgid "No."
 msgstr ""
 
+#: templates/nelliel_basic/thread/headers/post_options.html
+msgid "Hide Post"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/post_options.html
+msgid "Cite"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/post_options.html
+msgid "Show Post"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Hide Thread"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Expand"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Show Thread"
+msgstr ""
+
+#: templates/nelliel_basic/thread/headers/thread_options.html
+msgid "Collapse"
+msgstr ""
+
+#: templates/nelliel_basic/thread/files/single_file_header.html
+#: templates/nelliel_basic/thread/files/multi_file_header.html
+msgid "Download"
+msgstr ""
+
+#: templates/nelliel_basic/thread/files/single_file_header.html
+#: templates/nelliel_basic/thread/files/multi_file_header.html
+msgid "Hide File"
+msgstr ""
+
+#: templates/nelliel_basic/thread/files/single_file_header.html
+#: templates/nelliel_basic/thread/files/multi_file_header.html
+msgid "More Info"
+msgstr ""
+
+#: templates/nelliel_basic/thread/files/single_file_header.html
+#: templates/nelliel_basic/thread/files/multi_file_header.html
+msgid "Show File"
+msgstr ""
+
+#: templates/nelliel_basic/thread/files/single_file_header.html
+#: templates/nelliel_basic/thread/files/multi_file_header.html
+msgid "Less Info"
+msgstr ""
+
 #: templates/nelliel_basic/thread/footer_form.html
 msgid "Report Reason:"
 msgstr ""
@@ -2524,232 +2770,60 @@ msgstr ""
 msgid "Show Embed"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Files"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "{{ file_max_message }}"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Spoiler"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Embed URLs"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "{{ embed_max_message }}"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Embeds will replace all files"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Password"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Used for deletion"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Flags"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Post as staff"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Raw HTML"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "reCAPTCHA"
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "At least one embed is required."
 msgstr ""
 
-#: templates/nelliel_basic/thread/posting_form.html
+#: templates/nelliel_basic/thread/new_post_form.html
 msgid "Clear form"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "JPEG"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "GIF"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "PNG"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "JPEG2000"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "TIFF"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "BMP"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Icon"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Photoshop"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Truevision TGA"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "QuickDraw/PICT"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "AOL ART"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Kisekae CEL"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Kisekae Pallete"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Windows Animated Cursor"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Mac OS Icon"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Adobe Illustrator"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "PostScript"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Encapsulated PostScript"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "WebP"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Wireless Bitmap"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "X BitMap"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "X PixMap"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "WAVE"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "AIFF"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "MP3"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "MPEG-4 Audio"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "FLAC"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "AAC"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "OGG Audio"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "AU"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "AC3"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Windows Media Audio"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "MIDI"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Matroska Audio"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "MPEG-1/MPEG-2"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Quicktime"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "AVI"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Windows Media Video"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "MPEG-4"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Apple MPEG-4"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Matroska Video"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Flash Video"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "WebM"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
@@ -2757,15 +2831,59 @@ msgid "3GP"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
-msgid "Ogg Video"
+msgid "7z"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
-msgid "Rich Text"
+msgid "AAC"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
-msgid "PDF"
+msgid "AC3"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "AIFF"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Windows Animated Cursor"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "AOL ART"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "AU"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "AVI"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "BinHex"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Blorb"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "BMP"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "bzip2"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Kisekae CEL"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Apple Disk Image"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
@@ -2777,11 +2895,187 @@ msgid "MS Open XML Word"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
+msgid "Encapsulated PostScript"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "FLAC"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Flash Video"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "GIF"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "GZip"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Mac OS Icon"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Icon"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Adobe Illustrator"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "ISO Disk Image"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "JPEG"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "JPEG2000"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Kisekae Pallete"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "LHA"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "MPEG-4 Audio"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Apple MPEG-4"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "MIDI"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Matroska Audio"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Matroska Video"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "MP3"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "MPEG-1/MPEG-2"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "MPEG-4"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "OGG Audio"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Ogg Video"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "PDF"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Photoshop"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "QuickDraw/PICT"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Plaintext"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "PNG"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "PostScript"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
 msgid "MS PowerPoint"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
 msgid "MS Open XML Presentation"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Quicktime"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "RAR"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Rich Text"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "StuffIt"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Flash/Shockwave"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "TAR"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Truevision TGA"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "TIFF"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "WAVE"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Wireless Bitmap"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "WebM"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "WebP"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Windows Media Audio"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "Windows Media Video"
+msgstr ""
+
+#: (Database) Table: nelliel_filetypes | Column: label
+msgid "X BitMap"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
@@ -2793,63 +3087,11 @@ msgid "MS Open XML Spreadsheet"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
-msgid "Plaintext"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "GZip"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "bzip2"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "TAR"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "7z"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "BinHex"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "LHA"
+msgid "X PixMap"
 msgstr ""
 
 #: (Database) Table: nelliel_filetypes | Column: label
 msgid "Zip"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "RAR"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "StuffIt"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "ISO Disk Image"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Apple Disk Image"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Flash/Shockwave"
-msgstr ""
-
-#: (Database) Table: nelliel_filetypes | Column: label
-msgid "Blorb"
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "View existing bans."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2857,31 +3099,19 @@ msgid "Add new bans."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "Modify existing bans."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
 msgid "Delete existing bans."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
+msgid "Modify existing bans."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "View existing bans."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
 msgid "Manage blotter entries."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "View full list of boards."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Add new boards."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Modify existing boards."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Delete boards."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2897,7 +3127,47 @@ msgid "Modify the default board configuration."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
+msgid "Add new boards."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Delete boards."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Modify existing boards."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "View full list of boards."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Bypass posting cooldowns."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
 msgid "Manage content ops."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Can use a custom capcode."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Post as staff with a custom name."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Delete all content from a specific IP."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Delete posts and threads."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Edit posts made by others."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2905,7 +3175,7 @@ msgid "Manage embeds."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "Manage filetypes."
+msgid "Extract Gettext strings."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2913,11 +3183,11 @@ msgid "Manage file filters."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "Manage image sets."
+msgid "Manage filetypes."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "View IP notes."
+msgid "Manage image sets."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2929,7 +3199,7 @@ msgid "Delete IP notes."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "View full logs."
+msgid "View IP notes."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2937,11 +3207,27 @@ msgid "Manage logs."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
+msgid "View full logs."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Merge threads."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Access to Moderator Mode."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Move threads to another board."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
 msgid "Manage news entries."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "View the staff noticeboard."
+msgid "Delete posts on the staff noticeboard."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2949,7 +3235,7 @@ msgid "Post on the staff noticeboard."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "Delete posts on the staff noticeboard."
+msgid "View the staff noticeboard."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2961,7 +3247,43 @@ msgid "Manage permissions."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "View reports."
+msgid "Post as staff (displays capcode)."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Post on a locked board."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Post in a locked thread."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Change the status of a thread or post."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Change the type of a thread or post."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "View and send private messages."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Can use raw HTML input."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Regenerate caches."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Regenerate overboard."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Regenerate pages."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2969,11 +3291,19 @@ msgid "Manage reports."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "View roles."
+msgid "View reports."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
 msgid "Manage roles."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "View roles."
+msgstr ""
+
+#: (Database) Table: nelliel_permissions | Column: description
+msgid "Search through the text of posts."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -2993,91 +3323,11 @@ msgid "Access the threads panel."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "View users."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
 msgid "Manage users."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "Manage word filters."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Regenerate caches."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Regenerate pages."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Regenerate overboard."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Extract Gettext strings."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Change the status of a thread or post."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Change the type of a thread or post."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Edit posts made by others."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Delete all content from a specific IP."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Access to Moderator Mode."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Post as staff (displays capcode)."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Post in a locked thread."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Post on a locked board."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Move threads to another board."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Merge threads."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Search through the text of posts."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Post as staff with a custom name."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Can use a custom capcode."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Bypass posting cooldowns."
-msgstr ""
-
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Delete posts and threads."
+msgid "View users."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
@@ -3085,522 +3335,15 @@ msgid "View unhashed IP addresses."
 msgstr ""
 
 #: (Database) Table: nelliel_permissions | Column: description
-msgid "View and send private messages."
+msgid "Manage word filters."
 msgstr ""
 
-#: (Database) Table: nelliel_permissions | Column: description
-msgid "Can use raw HTML input."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Site name."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display site name in header."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Site description."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display site description in header."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Site favicon."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Show site favicon."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Site home page. If empty, will default to the base web path."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Generate a standard home page."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Locale for site (use ISO language + country code)."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Allow only alphanumeric board IDs."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Default name for the source subdirectory."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Default name for the preview subdirectory."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Default name for the page subdirectory."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Default name for the archive subdirectory."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Allow custom subdirectory names when creating a board."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Allow only alphanumeric characters for custom subdirectory names."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum characters allowed in a custom board subdirectory name."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum items that can be reported at one time."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum items that can be deleted at one time."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Global announcement shown on all boards."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Format to use when displaying board URIs."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Append this to the path when executing shell commands. Multiple directories "
-"must be separated by :"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Site-wide disclaimer added to the bottom of posts."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Additional text to put in the footer site-wide."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum static pages that can be created for a specific board."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display site banners if available."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display width of site banners."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display height of site banners."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Bans must be seen at least once before expiration purge."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Allow ban appeals."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Minimum time before a ban can be appealed (seconds)."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Basename for board index pages after the first. (sprintf)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Basename for the first board index page. (sprintf)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Basename format for thread files. (sprintf)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Basename format for thread files when using slugified URLs. (sprintf)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Format of string appended to basename for first posts."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Format of string appended to basename for last posts."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Base image set."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Default style for site pages and control panels."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Show the short list of blotter entries."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum entries to show in the blotter short list."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "ID of default template for site"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display rendering timer."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Referrer policy for the site."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Referrer policy for external links. Overrides site policy if different."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Add rel=\"nofollow\" to external links."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Preferred graphics handler"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Arguments given to ImageMagick for creating still image previews."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Arguments given to ImageMagick for creating animated previews."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Arguments given to GraphicsMagick for creating still image previews."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Arguments given to GraphicsMagick for creating animated previews."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Post password hash algorithm"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Secure tripcode hash algorithm"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Rehash account passwords"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Delay between login attempts"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Session timeout (seconds)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Store unhashed IP addresses; (hashed IP will always be stored)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use DNSBL to check incoming posts"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "IPs that are exempt from DNSBL checks. Enter as JSON array of strings."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Width of CAPTCHA image"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Height of CAPTCHA image"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Number of characters in CAPTCHA"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "CAPTCHA timeout (seconds)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "CAPTCHA requests per IP in one minute (0 to disable check)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "reCAPTCHA site key"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "reCAPTCHA secret key"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "reCAPTCHA type"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use CAPTCHA for login"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use reCAPTCHA for login"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use CAPTCHA for registration"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use reCAPTCHA for registration"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Enable overboard"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Overboard URI"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum threads on overboard"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "How many replies to a thread should be displayed on the overboard"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Include NSFL content on overboard"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Enable SFW overboard"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "SFW overboard URI"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum threads on SFW overboard"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "How many replies to a thread should be displayed on the SFW overboard"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Board name"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display board name in header."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Board description."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display board description in header."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Board favicon."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Show board favicon."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Locale for the board (use ISO language + country code)."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Exclude threads on this board from the overboards."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Let users delete own posts and content."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Cooldown after posting before user can delete their post."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "General safety level of content on this board."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Disclaimer added to the bottom of posts on this board."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Additional text to put in the footer for this board."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Styles which users can choose from."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display board banners if available."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Enable the name field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Require something in the name field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Minimum length of name."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum length of name."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Name field placeholder text."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Enable the email field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Require something in the email field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Minimum length of email."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum length of email."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Email field placeholder text."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Enable the subject field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Require something in the subject field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Minimum length of subject."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum length of subject."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Subject field placeholder text."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Enable the comment field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Require something in the comment field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Minimum length of comment."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum length of comment."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Comment field placeholder text."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display the FGSFDS field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "FGSFDS field placeholder text."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display name of FGSFDS field"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Replace the FGSFDS field with a menu of preset options."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Enable the password field."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Password field placeholder text."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Truncate fields that are too long instead of giving an error."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Force anonymous posting. This disables the name and email fields (overrides "
-"field settings)."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "List the enabled formats."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "List the enabled extensions. If formats is selected as well the two will be "
-"combined."
-msgstr ""
-
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Allow users to upload files when making a new thread."
+msgid "Active threads (shown in index) before buffer."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Require a file when making a new thread."
+msgid "Allow commands in the email field"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -3608,27 +3351,7 @@ msgid "Allow embedded content when making a new thread."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Require embedded content when making a new thread."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum number of files in first post of a thread."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum number of embeds in first post of a thread."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum number of all uploads combined in first post of a thread."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Allow users to upload files when replying."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Require a file when replying."
+msgid "Allow users to upload files when making a new thread."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -3636,126 +3359,7 @@ msgid "Allow embedded content in replies."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Require embedded content when replying."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum number of files in a reply post."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum number of embeds in a reply post."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum number of all uploads combined in a reply post."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "If embed URLs are given along with files, the files will be discarded and the "
-"embeds will be counted as files."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Check for duplicate files in all posts on the board."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Check for duplicate files in other thread OPs when creating new thread."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Check for duplicate files in current thread when replying."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Check for duplicate embed URLs in all posts on the board."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Check for duplicate embed URLs in other thread OPs when creating new thread."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Check for duplicate embed URLs in current thread when replying."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Only check for duplicate files in active threads (excludes the old thread "
-"buffer)."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "1"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Only check for duplicate embeds in active threads (excludes the old thread "
-"buffer)."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum number of uploads in a thread."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum size of each file uploaded. (bytes)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum total size of all files uploaded in one post. (bytes)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum width of images (if detectable)."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum height of images (if detectable)."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Enable spoilers for uploads."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Remove EXIF data from an image. Requires ExifTool."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "When removing EXIF data, keep ICC color profiles."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Generate SHA256 hash for uploaded files."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Generate SHA512 hash for uploaded files."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Preferred filename for uploads. If original filename is chosen, the filename "
-"will still go through some basicfiltering to avoid problems. If the preferred "
-"option is not available the name will default to timestamp."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "When deleting an upload, remove it and any previews but retain the database "
-"entry instead of removing it entirely."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Store EXIF data from images (if present)."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Which filetypes are enabled for uploading."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "If an uploaded file already exists, it will be referenced instead of processing "
-"the duplicate."
+msgid "Allow users to upload files when replying."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -3767,47 +3371,19 @@ msgid "Allow use of tripcodes"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Process user commands (noko, sage, etc) when making a new post"
+msgid "Always return to thread (noko) after making a post."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Allow commands in the email field"
+msgid "Format used for animated previews."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Cooldown for new threads (seconds)"
+msgid "Only create animated previews for images. Strongly recommended."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Cooldown for new replies (seconds)"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum new threads per hour. O to disable."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum cite in a comment."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum cross-board cites in a comment."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum URL links allowed in a comment."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Trim extra newlines and whitespace at start of comment"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Trim extra newlines and whitespace at the end of comment"
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use the list of anonymous names when name field is empty or disabled"
+msgid "Maximum number of frames to use in animated previews."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -3816,24 +3392,52 @@ msgid "Names that can be randomly chosen when a name is not provided or forced "
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Always return to thread (noko) after making a post."
-msgstr ""
-
-#: (Database) Table: nelliel_settings | Column: setting_description
 msgid "List of post numbers to be automatically stickied as a GET. Enter as JSON array "
 "of integers."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Create a static image preview whenever possible."
+msgid "Display height of site banners."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Only create static previews for images."
+msgid "Display width of site banners."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Format used for static previews."
+msgid "Disclaimer added to the bottom of posts on this board."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Additional text to put in the footer for this board."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Check for duplicate embed URLs in all posts on the board."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Check for duplicate files in all posts on the board."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Check for duplicate embed URLs in other thread OPs when creating new thread."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Check for duplicate files in other thread OPs when creating new thread."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Check for duplicate embed URLs in current thread when replying."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Check for duplicate files in current thread when replying."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Comment field placeholder text."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -3841,63 +3445,72 @@ msgid "Create an animated image preview when appropriate. Requires extra librari
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Only create animated previews for images. Strongly recommended."
+msgid "Create a static image preview whenever possible."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Format used for animated previews."
+msgid "Convert URLs into links"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum number of frames to use in animated previews."
+msgid "Format for post time (uses PHP date() function)"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "JPEG quality (1-100)."
+msgid "ID of default style for board."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "WebP quality (1-100)."
+msgid "Cooldown after posting before user can delete their post."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum width when generating previews."
+msgid "Board description."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum height when generating previews."
+msgid "Show a list of allowed embeds on the new post form."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Limit the number of posts in a thread."
+msgid "Show a list of allowed filetypes on the new post form."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum posts per thread."
+msgid "Display animated image previews when available."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Limit the number of bumps a thread can have."
+msgid "Display placeholder image for deleted uploads. If entry was fully removed from "
+"database nothing will be displayed."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum bumps per thread."
+msgid "Show the maximum allowed filesize."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Active threads (shown in index) before buffer."
+msgid "Display the original file name."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum old threads kept in buffer before archive/prune."
+msgid "Display ID for posters in a thread"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "How to handle old threads."
+msgid "Display the rendering timer."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum threads kept in archive (excluding permanent threads)."
+msgid "Display static image previews when available."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Show message about large images being thumbnailed."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display an image preview for videos if available. Replaces video embedding."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -3905,44 +3518,119 @@ msgid "Prune oldest threads in archive when limit is reached."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum characters in the thread URL slug."
+msgid "Download link will use original file name if available."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use semantic URL (slug) for thread."
+msgid "Last page of the index before early 404 pruning begins. Threads beyond this "
+"page will be checked."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Minimum number of replies to prevent OP from deleting the thread. 0 to disable."
+msgid "Minimum replies needed to avoid being pruned by early 404."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Number of seconds after creating thread that OP cannot delete the thread. 0 to "
-"disable."
+msgid "Email field placeholder text."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "How many replies to a thread should be displayed on the index page."
+msgid "If embed URLs are given along with files, the files will be discarded and the "
+"embeds will be counted as files."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "How many replies to a stickied thread should be displayed on the index page."
+msgid "Maximum characters of embed URL to display"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Threads per page."
+msgid "Embed uploaded video files. Currently supports MP4 and WebM."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "How many lines of comment to display when abbreviated."
+msgid "Render the catalog pages."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display index navigation at top of page."
+msgid "Enable the comment field."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display index navigation at bottom of page."
+msgid "Enable early 404. Threads past the specified page with less than the specified "
+"number of posts will be pruned when a new thread is made."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Enable the email field."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display the FGSFDS field."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Render the index pages."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Enable the name field."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Enable the password field."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Enable spoilers for uploads."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Enable the subject field."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Which content ops will be available."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Which filetypes are enabled for uploading."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Styles which users can choose from."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Exclude threads on this board from the overboards."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Board favicon."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "FGSFDS field placeholder text."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display name of FGSFDS field"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "If an uploaded file already exists, it will be referenced instead of processing "
+"the duplicate."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum characters of filename to display"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Image set to use for filetypes."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Filter out Zalgo text. Note: There are rare cases where this may break text."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -3955,6 +3643,73 @@ msgid "Minimum posts in a thread before generating first X posts."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Force anonymous posting. This disables the name and email fields (overrides "
+"field settings)."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Generate catalog for this board."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Generate SHA256 hash for uploaded files."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Generate SHA512 hash for uploaded files."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Placeholder image for deleted embed."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Placeholder image for deleted file."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "If a selected image set doesn't have an entry for something, attempt to get it "
+"from the base image set."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Cover image for spoilers."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Indent marker next to replies"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display index navigation at bottom of page."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display index navigation at top of page."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "How many replies to a stickied thread should be displayed on the index page."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "How many replies to a thread should be displayed on the index page."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "JPEG quality (1-100)."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "When deleting an upload, remove it and any previews but retain the database "
+"entry instead of removing it entirely."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "When removing EXIF data, keep ICC color profiles."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
 msgid "Increments for last X posts. Leave empty to disable. Enter as JSON array of "
 "integers."
 msgstr ""
@@ -3964,36 +3719,264 @@ msgid "Minimum posts in a thread before generating last X posts."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Show link for the catalog in the index navigation."
+msgid "Limit the number of bumps a thread can have."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use the thread subject in the page title."
+msgid "Limit the number of posts in a thread."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use the generated thread slug in the page title (replaces ubject)."
+msgid "1"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "If subject and slug are both empty or not being used, use the thread number in "
-"the page title."
+msgid "List the enabled extensions. If formats is selected as well the two will be "
+"combined."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Prefix the board title (URI and name) to the page title of threads."
+msgid "List the enabled formats."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Format for post time (uses PHP date() function)"
+msgid "Locale for the board (use ISO language + country code)."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Indent marker next to replies"
+msgid "Maximum threads kept in archive (excluding permanent threads)."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Tripcode marker"
+msgid "Maximum bumps per thread."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display height for uploads in catalog"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display width for uploads in catalog"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum cite in a comment."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum length of comment."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum URL links allowed in a comment."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum cross-board cites in a comment."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum length of email."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum size of each file uploaded. (bytes)"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum total size of all files uploaded in one post. (bytes)"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum height of images (if detectable)."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum width of images (if detectable)."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "How many lines of comment to display when abbreviated."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum length of name."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display height for embedded OP content."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display width for embedded OP content."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum number of embeds in first post of a thread."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum number of files in first post of a thread."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display height for OP multiple uploads."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display width for OP multiple uploads."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display height for OP file previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display width for OP file previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum number of all uploads combined in first post of a thread."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum posts per thread."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum height when generating previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum width when generating previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display height for embedded reply content."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display width for embedded reply content."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum number of embeds in a reply post."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum number of files in a reply post."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display height for multiple replyuploads."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display width for multiple reply uploads."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display height for reply file previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum display width for reply file previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum number of all uploads combined in a reply post."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum characters in the thread URL slug."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum length of subject."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum number of uploads in a thread."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum number of uploads to display in each row."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Minimum length of comment."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Minimum length of email."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Minimum length of name."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Minimum length of subject."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Ban"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Ban + Delete"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Cyclic"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Delete By IP"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Delimiter on the left side of moderation links."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Delimiter on the right side of moderation links."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Global Delete By IP"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Non-cyclic"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Permasage"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Sticky"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Unlock"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Unpermasage"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Unsticky"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Board name"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Name field placeholder text."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -4001,15 +3984,33 @@ msgid "Text when there is no comment"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Filter out Zalgo text. Note: There are rare cases where this may break text."
+msgid "How to handle old threads."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display backlinks for a post that has been referenced"
+msgid "Only check for duplicate embeds in active threads (excludes the old thread "
+"buffer)."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display ID for posters in a thread"
+msgid "Only check for duplicate files in active threads (excludes the old thread "
+"buffer)."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Password field placeholder text."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display reply backlinks in post footer."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display reply backlinks in post header."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Label for reply backlinks."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -4021,108 +4022,122 @@ msgid "Characters for poster ID (limited by hash length)"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Convert URLs into links"
+msgid "Preferred filename for uploads. If original filename is chosen, the filename "
+"will still go through some basicfiltering to avoid problems. If the preferred "
+"option is not available the name will default to timestamp."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Protocols which will be parsed to links (must be separated with |)"
+msgid "Prefix the board title (URI and name) to the page title of threads."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Prefix that will be added to URLs"
+msgid "Process user commands (noko, sage, etc) when making a new post"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display static image previews when available."
+msgid "Cooldown for new replies (seconds)"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display animated image previews when available."
+msgid "Require something in the comment field."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use the original image instead of the generated previews."
+msgid "Require something in the email field."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display an image preview for videos if available. Replaces video embedding."
+msgid "Require something in the name field."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Embed uploaded video files. Currently supports MP4 and WebM."
+msgid "Require embedded content when making a new thread."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Use filetype image when a preview is not available."
+msgid "Require a file when making a new thread."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum number of uploads to display in each row."
+msgid "Require embedded content when replying."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum display width for file previews."
+msgid "Require a file when replying."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum display height for file previews."
+msgid "Require something in the subject field."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum display width for embedded content."
+msgid "Require either a tripcode or secure tripcode when posting."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum display height for embedded content."
+msgid "General safety level of content on this board."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum display width for multiple uploads."
+msgid "Display board banners if available."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum display height for multiple uploads."
+msgid "Show link for the catalog in the index navigation."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum display width for uploads in catalog"
+msgid "Display board description in header."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum display height for uploads in catalog"
+msgid "Display an immediate download link along with normal file link."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Cover image for spoilers."
+msgid "Show board favicon."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Placeholder image for deleted file."
+msgid "Display board name in header."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Placeholder image for deleted embed."
+msgid "Use the generated thread slug in the page title (replaces ubject)."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum characters of filename to display"
+msgid "Use semantic URL (slug) for thread."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Maximum characters of embed URL to display"
+msgid "Displayed file name when spoiler cover is used. Leave blank to use normal "
+"display name."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display the original file name."
+msgid "Format used for static previews."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display placeholder image for deleted uploads. If entry was fully removed from "
-"database nothing will be displayed."
+msgid "Only create static previews for images."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Which content ops will be available."
+msgid "Store EXIF data from images (if present)."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Remove EXIF data from an image. Requires ExifTool."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Subject field placeholder text."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Use the thread subject in the page title."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -4130,7 +4145,49 @@ msgid "ID of template for board to use."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "ID of default style for board."
+msgid "Maximum old threads kept in buffer before archive/prune."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Minimum number of replies to prevent OP from deleting the thread. 0 to disable."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Number of seconds after creating thread that OP cannot delete the thread. 0 to "
+"disable."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "If subject and slug are both empty or not being used, use the thread number in "
+"the page title."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Cooldown for new threads (seconds)"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum new threads per hour. O to disable."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Threads per page."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Trim extra newlines and whitespace at the end of comment"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Trim extra newlines and whitespace at start of comment"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Tripcode marker"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Truncate fields that are too long instead of giving an error."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -4138,20 +4195,27 @@ msgid "Image set to use for UI elements."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Image set to use for filetypes."
+msgid "Prefix that will be added to URLs"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "If a selected image set doesn't have an entry for something, attempt to get it "
-"from the base image set."
+msgid "Protocols which will be parsed to links (must be separated with |)"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Display the rendering timer."
+msgid "Use the list of anonymous names when name field is empty or disabled"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Generate catalog for this board."
+msgid "Replace the FGSFDS field with a menu of preset options."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Use filetype image when a preview is not available."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Use the original image instead of the generated previews."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
@@ -4171,103 +4235,326 @@ msgid "Use reCAPTCHA for making reports"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Enable early 404. Threads past the specified page with less than the specified "
-"number of posts will be pruned when a new thread is made."
+msgid "Let users delete own posts and content."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Minimum replies needed to avoid being pruned by early 404."
+msgid "WebP quality (1-100)."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Last page of the index before early 404 pruning begins. Threads beyond this "
-"page will be checked."
+msgid "Allow ban appeals."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Hide Thread"
+msgid "Allow custom subdirectory names when creating a board."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Show Thread"
+msgid "Extra text that can be displayed on the ban page."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Hide Post"
+msgid "Base image set."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Show Post"
+msgid "Number of characters in CAPTCHA"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Hide File"
+msgid "Height of CAPTCHA image"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Show File"
+msgid "CAPTCHA requests per IP in one minute (0 to disable check)"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Cite"
+msgid "CAPTCHA timeout (seconds)"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "More Info"
+msgid "Width of CAPTCHA image"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Less Info"
+msgid "Default name for the archive subdirectory."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Expand"
+msgid "Default name for the page subdirectory."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Collapse"
+msgid "Default name for the preview subdirectory."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Ban"
+msgid "Default name for the source subdirectory."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Delete By IP"
+msgid "Default style for site pages and control panels."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Global Delete By IP"
+msgid "Site description."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Ban + Delete"
+msgid "Display rendering timer."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Unlock"
+msgid "IPs that are exempt from DNSBL checks. Enter as JSON array of strings."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Sticky"
+msgid "Rehash account passwords"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Unsticky"
+msgid "Referrer policy for external links. Overrides site policy if different."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Permasage"
+msgid "Site favicon."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Unpermasage"
+msgid "Basename for the first board index page. (sprintf)"
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Cyclic"
+msgid "Format of string appended to basename for first posts."
 msgstr ""
 
 #: (Database) Table: nelliel_settings | Column: setting_description
-msgid "Non-cyclic"
+msgid "Generate a standard home page."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Global announcement shown on all boards."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Preferred graphics handler"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Arguments given to GraphicsMagick for creating animated previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Arguments given to GraphicsMagick for creating still image previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Site home page. If empty, will default to the base web path."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Arguments given to ImageMagick for creating animated previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Arguments given to ImageMagick for creating still image previews."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Basename for board index pages after the first. (sprintf)"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Format of string appended to basename for last posts."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Locale for site (use ISO language + country code)."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Delay between login attempts"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum static pages that can be created for a specific board."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum items that can be deleted at one time."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum items that can be reported at one time."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum characters allowed in a custom board subdirectory name."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Minimum time before a ban can be appealed (seconds)."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Bans must be seen at least once before expiration purge."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Site name."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Add rel=\"nofollow\" to external links."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Include NSFL content on overboard"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Allow only alphanumeric board IDs."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Allow only alphanumeric characters for custom subdirectory names."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Enable overboard"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "How many replies to a thread should be displayed on the overboard"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum threads on overboard"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Overboard URI"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Post password hash algorithm"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "reCAPTCHA secret key"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "reCAPTCHA site key"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "reCAPTCHA type"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Secure tripcode hash algorithm"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Session timeout (seconds)"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Enable SFW overboard"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "How many replies to a thread should be displayed on the SFW overboard"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum threads on SFW overboard"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "SFW overboard URI"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Append this to the path when executing shell commands. Multiple directories "
+"must be separated by :"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display site banners if available."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Show the short list of blotter entries."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display site description in header."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Show site favicon."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Display site name in header."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Site-wide disclaimer added to the bottom of posts."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Additional text to put in the footer site-wide."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Referrer policy for the site."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Basename format for thread files when using slugified URLs. (sprintf)"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Maximum entries to show in the blotter short list."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Store unhashed IP addresses; (hashed IP will always be stored)"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "ID of default template for site"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Basename format for thread files. (sprintf)"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Format to use when displaying board URIs."
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Use DNSBL to check incoming posts"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Use CAPTCHA for login"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Use reCAPTCHA for login"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Use CAPTCHA for registration"
+msgstr ""
+
+#: (Database) Table: nelliel_settings | Column: setting_description
+msgid "Use reCAPTCHA for registration"
 msgstr ""
