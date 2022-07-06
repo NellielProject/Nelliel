@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg width="104" height="128" version="1.1" viewBox="0 0 104 128" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+ <g transform="translate(-92.232 -110.31)">
+  <g transform="matrix(3.8239 0 0 3.7922 -260.35 -308.2)">
+   <g stroke="#969900" stroke-width=".2">
+    <path transform="matrix(2 0 0 2 89.135 110.3)" d="m2.6419 0.22837v16.477a0.1 0.1 45 0 0 0.1 0.1h11.185a0.1 0.1 135 0 0 0.1-0.1v-12.307a0.27837 0.27837 70.24 0 0-0.063635-0.17714l-3.312-4.0149a0.21213 0.21213 25.24 0 0-0.16364-0.07714h-7.7457a0.1 0.1 135 0 0-0.1 0.1z" fill="#fe0"/>
+    <path transform="matrix(2 0 0 2 89.135 110.3)" d="m10.456 0.13118-0.044 4.1331a0.1 0.1 45.61 0 0 0.09893 0.10106l3.4717 0.036948" fill="#fff780"/>
+    <path transform="matrix(2 0 0 2 89.135 110.3)" x="1.6357105" y="12.086752" width="13.397328" height="3.3495131" d="m1.7357 12.087h13.197a0.1 0.1 45 0 1 0.1 0.1v3.1495a0.1 0.1 135 0 1-0.1 0.1h-13.197a0.1 0.1 45 0 1-0.1-0.1v-3.1495a0.1 0.1 135 0 1 0.1-0.1z" fill="#fffee5" fill-rule="evenodd"/>
+   </g>
+   <text transform="scale(.99606 1.004)" x="106.08744" y="138.97762" fill="#262626" font-family="Helvetica" font-size="4.2333px" font-weight="bold" stroke-width=".5271" text-align="center" text-anchor="middle" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal;line-height:1.25" xml:space="preserve"><tspan x="106.08744" y="138.97762" fill="#262626" font-family="Helvetica" font-size="4.2333px" font-weight="bold" stroke-width=".5271" text-align="center" text-anchor="middle" style="font-variant-caps:normal;font-variant-east-asian:normal;font-variant-ligatures:normal;font-variant-numeric:normal">ARCHIVE</tspan></text>
+  </g>
+  <g transform="matrix(3.7743 0 0 3.6596 -255.11 -287.36)" fill="none" stroke="#262626">
+   <path x="100.48392" y="123.36801" width="10.640406" height="9.2684174" d="m100.51 123.37h10.587a0.026458 0.026458 45 0 1 0.0265 0.0265v9.2155a0.026458 0.026458 135 0 1-0.0265 0.0265h-10.587a0.026458 0.026458 45 0 1-0.0265-0.0265v-9.2155a0.026458 0.026458 135 0 1 0.0265-0.0265z" stroke-linejoin="round" stroke-width=".4"/>
+   <g stroke-linecap="round">
+    <path d="m100.5 123.35 1.2094-3.6667" stroke-width=".4"/>
+    <path d="m111.12 123.35-1.2094-3.6667" stroke-width=".4"/>
+    <path d="m101.74 119.67h8.1207" stroke-width=".39766"/>
+   </g>
+   <g stroke-width=".25">
+    <path d="m104.97 123.37 0.32496-3.6848"/>
+    <path d="m106.72 123.37-0.39294-3.6848"/>
+    <rect x="104.97" y="123.35" width="1.7331" height="3.7262"/>
+   </g>
+  </g>
+ </g>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <cc:license rdf:resource="http://creativecommons.org/licenses/by/4.0/"/>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>OtakuMegane</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+   <cc:License rdf:about="http://creativecommons.org/licenses/by/4.0/">
+    <cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction"/>
+    <cc:permits rdf:resource="http://creativecommons.org/ns#Distribution"/>
+    <cc:requires rdf:resource="http://creativecommons.org/ns#Notice"/>
+    <cc:requires rdf:resource="http://creativecommons.org/ns#Attribution"/>
+    <cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks"/>
+   </cc:License>
+  </rdf:RDF>
+ </metadata>
+</svg>
