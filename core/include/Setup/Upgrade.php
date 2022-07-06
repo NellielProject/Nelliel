@@ -51,7 +51,7 @@ class Upgrade
 
     public function verifyLogin(): bool
     {
-        if($this->installedVersion() <= 'v0.9.25') {
+        if (version_compare($this->installedVersion(), 'v0.9.25', '<=')) {
             $username = $_POST['username'] ?? '';
         } else {
             $username = utf8_strtolower($_POST['username'] ?? '');
@@ -73,9 +73,14 @@ class Upgrade
             return;
         }
 
+        if (version_compare($this->installedVersion(), 'v0.9.25', '<')) {
+            echo __('Versions older than v0.9.25 do not have an upgrade path.');
+            return;
+        }
+
         if (isset($_POST['upgrade_login'])) {
             if (!$this->verifyLogin()) {
-                echo __('Username or password is wrong or that user is not a site owner account.');
+                echo __('Username or password is wrong or that user is not a site owner.');
                 return;
             }
         } else {

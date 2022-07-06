@@ -176,7 +176,8 @@ class BetaMigrations
 
                 $new_site_settings = [];
                 $new_board_settings = ['mod_links_delimiter_left', 'mod_links_delimiter_right', 'enable_index',
-                    'enable_catalog'];
+                    'enable_catalog', 'display_allowed_filetypes', 'display_allowed_embeds', 'display_form_max_filesize',
+                    'display_thumbnailed_message'];
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaults();
                 $setting_options_table = new TableSettingOptions(nel_database('core'),
