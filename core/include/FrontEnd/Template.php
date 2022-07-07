@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\NellielPDO;
 use PDO;
+use Nelliel\INIParser;
 
 class Template
 {
@@ -15,6 +16,7 @@ class Template
     private $enabled = false;
     private $data = array();
     private $info = array();
+    private $directory = '';
     private $front_end_data;
 
     function __construct(NellielPDO $database, FrontEndData $front_end_data, string $template_id)
@@ -45,14 +47,14 @@ class Template
         return $this->data[$section][$key] ?? '';
     }
 
-    public function getDirectory(): string
+    public function directory(): string
     {
-        return $this->info('directory');
+        return $this->directory;
     }
 
     public function getPath(): string
     {
-        $directory = $this->getDirectory();
+        $directory = $this->directory;
 
         if ($directory !== '') {
             return NEL_TEMPLATES_FILES_PATH . $directory . '/';
@@ -63,13 +65,14 @@ class Template
 
     public function install(bool $overwrite = false): void
     {
-        $template_inis = $this->front_end_data->getTemplateInis();
+        $ini_parser = new INIParser(nel_utilities()->fileHandler());
+        $ini_files = $ini_parser->parseDirectories(NEL_TEMPLATES_FILES_PATH, 'template_info.ini', true);
         $encoded_ini = '';
 
-        foreach ($template_inis as $ini) {
-            if ($ini['info']['id'] === $this->id()) {
-                $encoded_ini = json_encode($ini);
-                $directory = $ini['info']['directory'];
+        foreach ($ini_files as $ini_file) {
+            if ($ini_file->parsed()['info']['id'] === $this->id()) {
+                $encoded_ini = json_encode($ini_file->parsed());
+                $directory = basename(dirname($ini_file->fileInfo()->getRealPath()));
                 break;
             }
         }
@@ -100,11 +103,11 @@ class Template
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_TEMPLATES_TABLE . '" WHERE "template_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
-        $directory = $data['directory'] ?? '';
+        $this->directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
 
         if (nel_true_empty($data['parsed_ini']) || $original_ini) {
-            $file = NEL_TEMPLATES_FILES_PATH . $directory . '/template_info.ini';
+            $file = NEL_TEMPLATES_FILES_PATH . $this->directory . '/template_info.ini';
 
             if (file_exists($file)) {
                 $ini = parse_ini_file($file, true);

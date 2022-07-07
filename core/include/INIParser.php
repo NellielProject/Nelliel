@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -17,26 +16,28 @@ class INIParser
         $this->file_handler = $file_handler;
     }
 
-    public function parseDirectories(string $path, string $filename = '', int $recursion_depth = -1)
+    public function parseDirectories(string $path, string $filename = '', bool $as_object = false,
+        int $recursion_depth = -1): array
     {
-        $ini_files = $this->file_handler->recursiveFileList($path, $recursion_depth);
-        $parsed_ini = array();
+        $files = $this->file_handler->recursiveFileList($path, $recursion_depth);
+        $parsed = array();
 
-        foreach ($ini_files as $file)
-        {
-            if ($file->getExtension() !== 'ini')
-            {
+        foreach ($files as $file) {
+            if ($file->getExtension() !== 'ini') {
                 continue;
             }
 
-            if ($filename !== '' && $file->getFilename() !== $filename)
-            {
+            if ($filename !== '' && $file->getFilename() !== $filename) {
                 continue;
             }
 
-            $parsed_ini[] = parse_ini_file($file->getPathname(), true);
+            if ($as_object) {
+                $parsed[] = new INIFile($file);
+            } else {
+                $parsed[] = parse_ini_file($file->getPathname(), true);
+            }
         }
 
-        return $parsed_ini;
+        return $parsed;
     }
 }

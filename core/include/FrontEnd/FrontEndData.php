@@ -34,7 +34,7 @@ class FrontEndData
         $this->core_template_ids = ['template-nelliel-basic'];
     }
 
-    public function getImageSetInis(string $directory = null): array
+    public function getImageSetInis(): array
     {
         return $this->ini_parser->parseDirectories(NEL_IMAGE_SETS_FILES_PATH, 'set_info.ini');
     }
