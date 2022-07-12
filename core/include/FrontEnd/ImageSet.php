@@ -96,11 +96,12 @@ class ImageSet
         $ini_parser = new INIParser(nel_utilities()->fileHandler());
         $ini_files = $ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'set_info.ini', true);
         $encoded_ini = '';
+        $directory = $this->front_end_data->imageSetIsCore($this->id()) ? 'core/' : 'custom/';
 
         foreach ($ini_files as $ini_file) {
             if ($ini_file->parsed()['info']['id'] === $this->id()) {
                 $encoded_ini = json_encode($ini_file->parsed());
-                $directory = basename(dirname($ini_file->fileInfo()->getRealPath()));
+                $directory .= basename(dirname($ini_file->fileInfo()->getRealPath()));
                 break;
             }
         }
