@@ -25,27 +25,50 @@ class Plugin
         $this->loadData();
     }
 
+    /**
+     * Returns the string ID of the plugin.
+     */
     public function id(): string
     {
         return $this->plugin_id;
     }
 
+    /**
+     * Check if the plugin is enabled.
+     */
     public function enabled(): bool
     {
         return $this->enabled;
     }
 
+    /**
+     * Returns plugin information matching the given key.
+     */
     public function info(string $key): string
     {
         return $this->info[$key] ?? '';
     }
 
+    /**
+     * Gets the sub-directory where the plugin files are located.
+     */
+    public function directory(): string
+    {
+        return $this->directory;
+    }
+
+    /**
+     * Provides the full file path for the initializer.
+     */
     public function initializerFile(): string
     {
         return NEL_PLUGINS_FILES_PATH . $this->directory . '/' . $this->initializer;
     }
 
-    public function install(bool $overwrite = false): void
+    /**
+     * Writes the plugin information to the database for faster access.
+     */
+    public function install(bool $reinstall = false): void
     {
         $file_handler = new FileHandler();
         $plugin_files = $file_handler->recursiveFileList(NEL_PLUGINS_FILES_PATH);
@@ -70,7 +93,7 @@ class Plugin
 
         if ($this->database->rowExists(NEL_PLUGINS_TABLE, ['plugin_id'], [$this->id()],
             [PDO::PARAM_STR, PDO::PARAM_STR])) {
-            if (!$overwrite) {
+            if (!$reinstall) {
                 return;
             }
 
@@ -83,18 +106,24 @@ class Plugin
         $this->database->executePrepared($prepared, [$this->id(), $directory, $initializer_file, $encoded_ini, 1]);
     }
 
+    /**
+     * Removes the plugin from the database.
+     */
     public function uninstall(): void
     {
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PLUGINS_TABLE . '" WHERE "plugin_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
-    public function loadData(bool $original_ini = false): void
+    /**
+     * Loads the plugin data.
+     */
+    public function loadData(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PLUGINS_TABLE . '" WHERE "plugin_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
-        if(!is_array($data)) {
+        if (!is_array($data)) {
             return;
         }
 
@@ -104,6 +133,9 @@ class Plugin
         $this->enabled = boolval($data['enabled'] ?? 0);
     }
 
+    /**
+     * Enables the plugin for loading on script startup.
+     */
     public function enable(): void
     {
         $prepared = $this->database->prepare(
@@ -111,6 +143,9 @@ class Plugin
         $this->database->executePrepared($prepared, [$this->id()]);
     }
 
+    /**
+     * Disables the plugin without uninstalling it.
+     */
     public function disable(): void
     {
         $prepared = $this->database->prepare(
