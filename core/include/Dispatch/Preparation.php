@@ -26,6 +26,10 @@ class Preparation
 
     public function prepare()
     {
+        if (nel_visitor_id() === '') {
+            nel_visitor_id(true);
+        }
+
         if (empty($_GET) && empty($_POST)) {
             return;
         }

@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\NellielPDO;
 use PDO;
+use Nelliel\INIParser;
 
 class ImageSet
 {
@@ -15,6 +16,7 @@ class ImageSet
     private $enabled = false;
     private $data = array();
     private $info = array();
+    private $directory = '';
     private $front_end_data;
 
     function __construct(NellielPDO $database, FrontEndData $front_end_data, string $image_set_id)
@@ -45,6 +47,11 @@ class ImageSet
         return $this->data[$section][$key] ?? '';
     }
 
+    public function directory(): string
+    {
+        return $this->directory;
+    }
+
     public function getFile(string $section, string $key, bool $fallback): string
     {
         if ($this->data($section, $key) === '' && $fallback) {
@@ -63,7 +70,7 @@ class ImageSet
         $file = $this->data($section, $key);
 
         if ($file !== '') {
-            return NEL_IMAGE_SETS_FILES_PATH . $this->info('directory') . '/' . $file;
+            return NEL_IMAGE_SETS_FILES_PATH . $this->directory . '/' . $file;
         }
 
         return '';
@@ -78,7 +85,7 @@ class ImageSet
         $file = $this->data($section, $key);
 
         if ($file !== '') {
-            return NEL_IMAGE_SETS_WEB_PATH . $this->info('directory') . '/' . $file;
+            return NEL_IMAGE_SETS_WEB_PATH . $this->directory . '/' . $file;
         }
 
         return '';
@@ -86,13 +93,15 @@ class ImageSet
 
     public function install(bool $overwrite = false): void
     {
-        $image_set_inis = $this->front_end_data->getImageSetInis();
+        $ini_parser = new INIParser(nel_utilities()->fileHandler());
+        $ini_files = $ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'set_info.ini', true);
         $encoded_ini = '';
+        $directory = $this->front_end_data->imageSetIsCore($this->id()) ? 'core/' : 'custom/';
 
-        foreach ($image_set_inis as $ini) {
-            if ($ini['info']['id'] === $this->id()) {
-                $encoded_ini = json_encode($ini);
-                $directory = $ini['info']['directory'];
+        foreach ($ini_files as $ini_file) {
+            if ($ini_file->parsed()['info']['id'] === $this->id()) {
+                $encoded_ini = json_encode($ini_file->parsed());
+                $directory .= basename(dirname($ini_file->fileInfo()->getRealPath()));
                 break;
             }
         }
@@ -123,11 +132,11 @@ class ImageSet
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
-        $directory = $data['directory'] ?? '';
+        $this->directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
 
         if (nel_true_empty($data['parsed_ini']) || $original_ini) {
-            $file = NEL_ASSETS_FILES_PATH . $directory . '/set_info.ini';
+            $file = NEL_ASSETS_FILES_PATH . $this->directory . '/set_info.ini';
 
             if (file_exists($file)) {
                 $ini = parse_ini_file($file, true);

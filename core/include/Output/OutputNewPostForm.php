@@ -30,16 +30,29 @@ class OutputNewPostForm extends Output
         $this->render_data['verb_minlength'] = $this->domain->setting('min_subject_length');
         $this->render_data['verb_maxlength'] = $this->domain->setting('max_subject_length');
         $this->render_data['forced_anonymous'] = $this->domain->setting('forced_anonymous');
-        $this->render_data['display_name_field'] = $this->domain->setting('enable_name_field');
-        $this->render_data['display_email_field'] = $this->domain->setting('enable_email_field');
-        $this->render_data['display_subject_field'] = $this->domain->setting('enable_subject_field');
-        $this->render_data['display_comment_field'] = $this->domain->setting('enable_comment_field');
         $this->render_data['display_fgsfds_field'] = $this->domain->setting('enable_fgsfds_field');
         $this->render_data['display_password_field'] = $this->domain->setting('enable_password_field');
-        $this->render_data['require_name'] = $this->domain->setting('require_name') ? 'required' : '';
-        $this->render_data['require_email'] = $this->domain->setting('require_email') ? 'required' : '';
-        $this->render_data['require_subject'] = $this->domain->setting('require_subject') ? 'required' : '';
-        $this->render_data['require_comment'] = $this->domain->setting('require_comment') ? 'required' : '';
+
+        if (!$response_to) {
+            $this->render_data['display_name_field'] = $this->domain->setting('enable_op_name_field');
+            $this->render_data['display_email_field'] = $this->domain->setting('enable_op_email_field');
+            $this->render_data['display_subject_field'] = $this->domain->setting('enable_op_subject_field');
+            $this->render_data['display_comment_field'] = $this->domain->setting('enable_op_comment_field');
+            $this->render_data['require_name'] = $this->domain->setting('require_op_name') ? 'required' : '';
+            $this->render_data['require_email'] = $this->domain->setting('require_op_email') ? 'required' : '';
+            $this->render_data['require_subject'] = $this->domain->setting('require_op_subject') ? 'required' : '';
+            $this->render_data['require_comment'] = $this->domain->setting('require_op_comment') ? 'required' : '';
+        } else {
+            $this->render_data['display_name_field'] = $this->domain->setting('enable_reply_name_field');
+            $this->render_data['display_email_field'] = $this->domain->setting('enable_reply_email_field');
+            $this->render_data['display_subject_field'] = $this->domain->setting('enable_reply_subject_field');
+            $this->render_data['display_comment_field'] = $this->domain->setting('enable_reply_comment_field');
+            $this->render_data['require_name'] = $this->domain->setting('require_reply_name') ? 'required' : '';
+            $this->render_data['require_email'] = $this->domain->setting('require_reply_email') ? 'required' : '';
+            $this->render_data['require_subject'] = $this->domain->setting('require_reply_subject') ? 'required' : '';
+            $this->render_data['require_comment'] = $this->domain->setting('require_reply_comment') ? 'required' : '';
+        }
+
         $this->render_data['name_field_placeholder'] = $this->domain->setting('name_field_placeholder');
         $this->render_data['email_field_placeholder'] = $this->domain->setting('email_field_placeholder');
         $this->render_data['subject_field_placeholder'] = $this->domain->setting('subject_field_placeholder');

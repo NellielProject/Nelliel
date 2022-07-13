@@ -96,12 +96,18 @@
 			<tr>
 				<th colspan="5" data-i18n="">New Post Form</th>
 			</tr>
-	{{# enable_name_field }}
+	{{# enable_op_name_field }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ enable_name_field }}
-	{{# require_name }}
+	{{/ enable_op_name_field }}
+	{{# require_op_name }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ require_name }}
+	{{/ require_op_name }}
+	{{# enable_reply_name_field }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_reply_name_field }}
+	{{# require_reply_name }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ require_reply_name }}
 	{{# min_name_length }}
 			{{> panels/pieces/settings/number }}
 	{{/ min_name_length }}
@@ -111,12 +117,18 @@
 	{{# name_field_placeholder }}
 			{{> panels/pieces/settings/text }}
 	{{/ name_field_placeholder }}
-	{{# enable_email_field }}
+	{{# enable_op_email_field }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ enable_email_field }}
-	{{# require_email }}
+	{{/ enable_op_email_field }}
+	{{# require_op_email }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ require_email }}
+	{{/ require_op_email }}
+	{{# enable_reply_email_field }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_reply_email_field }}
+	{{# require_reply_email }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ require_reply_email }}
 	{{# min_email_length }}
 			{{> panels/pieces/settings/number }}
 	{{/ min_email_length }}
@@ -126,12 +138,18 @@
 	{{# email_field_placeholder }}
 			{{> panels/pieces/settings/text }}
 	{{/ email_field_placeholder }}
-	{{# enable_subject_field }}
+	{{# enable_op_subject_field }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ enable_subject_field }}
-	{{# require_subject }}
+	{{/ enable_op_subject_field }}
+	{{# require_op_subject }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ require_subject }}
+	{{/ require_op_subject }}
+	{{# enable_reply_subject_field }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_reply_subject_field }}
+	{{# require_reply_subject }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ require_reply_subject }}
 	{{# min_subject_length }}
 			{{> panels/pieces/settings/number }}
 	{{/ min_subject_length }}
@@ -141,12 +159,18 @@
 	{{# subject_field_placeholder }}
 			{{> panels/pieces/settings/text }}
 	{{/ subject_field_placeholder }}
-	{{# enable_comment_field }}
+	{{# enable_op_comment_field }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ enable_comment_field }}
-	{{# require_comment }}
+	{{/ enable_op_comment_field }}
+	{{# require_op_comment }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ require_comment }}
+	{{/ require_op_comment }}
+	{{# enable_reply_comment_field }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_reply_comment_field }}
+	{{# require_reply_comment }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ require_reply_comment }}
 	{{# min_comment_length }}
 			{{> panels/pieces/settings/number }}
 	{{/ min_comment_length }}

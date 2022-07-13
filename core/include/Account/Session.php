@@ -108,7 +108,7 @@ class Session
     {
         $this->init(true);
 
-        if (!empty(self::$user)) {
+        if (!empty(self::$user) && self::$user->id() !== '') {
             nel_logger('system')->info('Sucessfully logged out.', ['event' => 'LOGOUT', 'username' => self::$user->id()]);
         }
 
@@ -134,7 +134,7 @@ class Session
     public function terminate(): void
     {
         $_SESSION = array();
-        setcookie(session_name(), '', time() - NEL_OVER_9000, NEL_BASE_WEB_PATH);
+        setcookie(session_name(), '', time() - NEL_OVER_9000, NEL_BASE_WEB_PATH, '', false, true);
         session_destroy();
         self::$setup_done = false;
         self::$user = null;

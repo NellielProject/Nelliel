@@ -111,3 +111,20 @@ function nel_logger(string $channel): Logger
 
     return $loggers[$channel];
 }
+
+function nel_visitor_id(bool $regenerate = false): string
+{
+    static $visitor_id;
+
+    if ($regenerate) {
+        $visitor_id = hash('sha256', (random_bytes(16)));
+        setcookie('visitor-id', $visitor_id, time() + nel_site_domain()->setting('visitor_id_lifespan'),
+            NEL_BASE_WEB_PATH . '; samesite=strict', '', false, true);
+    }
+
+    if (!isset($visitor_id)) {
+        $visitor_id = $_COOKIE['visitor-id'] ?? '';
+    }
+
+    return $visitor_id;
+}

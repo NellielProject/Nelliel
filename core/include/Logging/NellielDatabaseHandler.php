@@ -24,8 +24,8 @@ class NellielDatabaseHandler extends AbstractProcessingHandler
     {
         $prepared = $this->database->prepare(
             'INSERT INTO "' . NEL_LOGS_TABLE .
-            '" ("level", "channel", "event", "message", "time", "domain_id", "username", "ip_address", "hashed_ip_address", "moar")
-								VALUES (:level, :channel, :event, :message, :time, :domain_id, :username, :ip_address, :hashed_ip_address, :moar)');
+            '" ("level", "channel", "event", "message", "time", "domain_id", "username", "ip_address", "hashed_ip_address", "visitor_id", "moar")
+								VALUES (:level, :channel, :event, :message, :time, :domain_id, :username, :ip_address, :hashed_ip_address, :visitor_id, :moar)');
         $prepared->bindValue(':level', $record['level'], PDO::PARAM_INT);
         $prepared->bindValue(':channel', $record['channel'], PDO::PARAM_STR);
         $prepared->bindValue(':event', $record['extra']['event'], PDO::PARAM_STR);
@@ -35,6 +35,7 @@ class NellielDatabaseHandler extends AbstractProcessingHandler
         $prepared->bindValue(':username', $record['extra']['username'], PDO::PARAM_STR);
         $prepared->bindValue(':ip_address', $record['extra']['ip_address'], PDO::PARAM_LOB);
         $prepared->bindValue(':hashed_ip_address', $record['extra']['hashed_ip_address'], PDO::PARAM_STR);
+        $prepared->bindValue(':visitor_id', $record['extra']['visitor_id'], PDO::PARAM_STR);
         $prepared->bindValue(':moar', $record['extra']['moar'], PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
     }

@@ -38,14 +38,30 @@ class PostData
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
         $post->changeData('ip_address', nel_request_ip_address());
         $post->changeData('hashed_ip_address', nel_request_ip_address(true));
-        $post->changeData('visitor_id', nel_generate_visitor_id(), false);
+        $post->changeData('visitor_id', nel_visitor_id(), false);
 
         $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'] ?? '', 'string');
         $name = $this->fieldLengthCheck('name', $name);
         $staff_post = $this->staffPost();
 
-        if (nel_true_empty($name) || !$this->domain->setting('enable_name_field') ||
-            $this->domain->setting('forced_anonymous')) {
+        $enable_name = $post->data('op') ? $this->domain->setting('enable_op_name_field') : $this->domain->setting(
+            'enable_reply_name_field');
+        $enable_email = $post->data('op') ? $this->domain->setting('enable_op_email_field') : $this->domain->setting(
+            'enable_reply_email_field');
+        $enable_subject = $post->data('op') ? $this->domain->setting('enable_op_subject_field') : $this->domain->setting(
+            'enable_reply_subject_field');
+        $enable_comment = $post->data('op') ? $this->domain->setting('enable_op_comment_field') : $this->domain->setting(
+            'enable_reply_comment_field');
+        $require_name = $post->data('op') ? $this->domain->setting('require_op_name') : $this->domain->setting(
+            'require_reply_name');
+        $require_email = $post->data('op') ? $this->domain->setting('require_op_email') : $this->domain->setting(
+            'require_reply_email');
+        $require_subject = $post->data('op') ? $this->domain->setting('require_op_subject') : $this->domain->setting(
+            'require_reply_subject');
+        $require_comment = $post->data('op') ? $this->domain->setting('require_op_comment') : $this->domain->setting(
+            'require_reply_comment');
+
+        if (nel_true_empty($name) || !$enable_name || $this->domain->setting('forced_anonymous')) {
             $name_choices = json_decode($this->domain->setting('anonymous_names'), true);
 
             if ($this->domain->setting('use_anonymous_names') && !is_null($name_choices)) {
@@ -56,6 +72,7 @@ class PostData
         } else {
             $matches = array();
             $trip_string = '';
+            $type = '';
 
             if (preg_match('/([^#]+)?(##|#)(.+)/', $name, $matches) === 1) {
                 $name = $matches[1];
@@ -107,36 +124,36 @@ class PostData
 
         $post->changeData('name', $name);
 
-        if (nel_true_empty($post->data('name')) && $this->domain->setting('require_name')) {
+        if (nel_true_empty($post->data('name')) && $require_name) {
             nel_derp(41, _gettext('A name is required to post.'));
         }
 
-        if ($this->domain->setting('enable_email_field') && !$this->domain->setting('forced_anonymous')) {
+        if ($enable_email && !$this->domain->setting('forced_anonymous')) {
             $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'] ?? '', 'string');
             $post->changeData('email', $this->fieldLengthCheck('email', $email));
         }
 
-        if (nel_true_empty($post->data('email')) && $this->domain->setting('require_email')) {
+        if (nel_true_empty($post->data('email')) && $require_email) {
             nel_derp(42, _gettext('An email is required to post.'));
         }
 
-        if ($this->domain->setting('enable_subject_field')) {
+        if ($enable_subject) {
             $subject = $this->checkEntry($_POST['new_post']['post_info']['verb'] ?? '', 'string');
             $post->changeData('subject', $this->fieldLengthCheck('subject', $subject));
         }
 
-        if (nel_true_empty($post->data('subject')) && $this->domain->setting('require_subject')) {
+        if (nel_true_empty($post->data('subject')) && $require_subject) {
             nel_derp(43, _gettext('A subject is required to post.'));
         }
 
-        if ($this->domain->setting('enable_comment_field')) {
+        if ($enable_comment) {
             $original_comment = $_POST['new_post']['post_info']['wordswordswords'] ?? '';
             $comment = $this->checkEntry($original_comment, 'string');
             $post->changeData('original_comment', $comment);
             $post->changeData('comment', $this->fieldLengthCheck('comment', $comment));
         }
 
-        if (nel_true_empty($post->data('comment')) && $this->domain->setting('require_comment')) {
+        if (nel_true_empty($post->data('comment')) && $require_comment) {
             nel_derp(44, _gettext('A comment is required to post.'));
         }
 

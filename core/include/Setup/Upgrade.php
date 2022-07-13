@@ -96,6 +96,8 @@ class Upgrade
             echo __('No migrations were needed.') . '<br>';
         }
 
+        nel_site_domain()->deleteCache();
+        nel_global_domain()->deleteCache();
         $generate_files = new GenerateFiles($this->file_handler);
         $versions_data = array();
         $versions_data['original'] = $this->originalVersion();

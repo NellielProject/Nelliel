@@ -26,7 +26,7 @@ class PluginHook
     }
 
     /**
-     * Checks if the hook currently being processed.
+     * Checks if the hook is currently being processed.
      */
     public function inProgress(): bool
     {
@@ -100,7 +100,7 @@ class PluginHook
     }
 
     /**
-     * Gets the index of the registered function.
+     * Gets the index of the specified function. Returns null if not found.
      */
     private function functionKey(string $function_name, string $plugin_id, int $priority): ?int
     {
@@ -119,7 +119,7 @@ class PluginHook
     }
 
     /**
-     * Gets the index of the registered method.
+     * Gets the index of the specified method. Returns null if not found.
      */
     private function methodKey(string $method_name, object $class, string $plugin_id, int $priority): ?int
     {

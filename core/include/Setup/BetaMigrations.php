@@ -276,20 +276,32 @@ class BetaMigrations
                 echo ' - ' . __('Image set info updated.') . '<br>';
 
                 // Update board settings
-                $new_settings = ['max_reply_preview_display_width', 'max_reply_preview_display_height',
+                $new_board_settings = ['max_reply_preview_display_width', 'max_reply_preview_display_height',
                     'max_reply_embed_display_width', 'max_reply_embed_display_height', 'max_reply_multi_display_width',
-                    'max_reply_multi_display_height'];
-                $this->newBoardSettings($new_settings);
+                    'max_reply_multi_display_height', 'enable_reply_name_field', 'require_reply_name', 'enable_reply_email_field',
+                    'require_reply_email', 'enable_reply_subject_field', 'require_reply_subject', 'enable_reply_comment_field',
+                    'require_reply_comment'];
+                $this->newBoardSettings($new_board_settings);
 
-                $old_setting_names = ['max_preview_display_width', 'max_preview_display_height',
+                $old_board_setting_names = ['max_preview_display_width', 'max_preview_display_height',
                     'max_embed_display_width', 'max_embed_display_height', 'max_multi_display_width',
-                    'max_multi_display_height'];
-                $new_setting_names = ['max_op_preview_display_width', 'max_op_preview_display_height',
+                    'max_multi_display_height', 'enable_name_field', 'require_name', 'enable_email_field',
+                    'require_email', 'enable_subject_field', 'require_subject', 'enable_comment_field',
+                    'require_comment'];
+                $new_board_setting_names = ['max_op_preview_display_width', 'max_op_preview_display_height',
                     'max_op_embed_display_width', 'max_op_embed_display_height', 'max_op_multi_display_width',
-                    'max_op_multi_display_height'];
-                $this->renameBoardSettings($old_setting_names, $new_setting_names);
+                    'max_op_multi_display_height', 'enable_op_name_field', 'require_op_name', 'enable_op_email_field',
+                    'require_op_email', 'enable_op_subject_field', 'require_op_subject', 'enable_op_comment_field',
+                    'require_op_comment'];
+                $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
+
+                // Update site settings
+                $new_site_settings = ['visitor_id_lifespan'];
+                $this->newSiteSettings($new_site_settings);
+
+                echo ' - ' . __('Site settings updated.') . '<br>';
 
                 $migration_count ++;
         }

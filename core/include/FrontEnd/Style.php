@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\NellielPDO;
 use PDO;
+use Nelliel\INIParser;
 
 class Style
 {
@@ -15,6 +16,7 @@ class Style
     private $enabled = false;
     private $data = array();
     private $info = array();
+    private $directory = '';
     private $front_end_data;
 
     function __construct(NellielPDO $database, FrontEndData $front_end_data, string $style_id)
@@ -45,6 +47,11 @@ class Style
         return $this->data[$section][$key] ?? '';
     }
 
+    public function directory(): string
+    {
+        return $this->directory;
+    }
+
     public function getMainFile(): string
     {
         return $this->info('main_file');
@@ -55,7 +62,7 @@ class Style
         $file_string = $this->getMainFile();
 
         if ($file_string !== '') {
-            return NEL_STYLES_FILES_PATH . $this->info('directory') . '/' . $file_string;
+            return NEL_STYLES_FILES_PATH . $this->directory . '/' . $file_string;
         }
 
         return $file_string;
@@ -66,7 +73,7 @@ class Style
         $file_string = $this->getMainFile();
 
         if ($file_string !== '') {
-            return NEL_STYLES_WEB_PATH . $this->info('directory') . '/' . $file_string;
+            return NEL_STYLES_WEB_PATH . $this->directory . '/' . $file_string;
         }
 
         return $file_string;
@@ -74,14 +81,15 @@ class Style
 
     public function install(bool $overwrite = false): void
     {
-        $style_inis = $this->front_end_data->getStyleInis();
-        $directory = '';
+        $ini_parser = new INIParser(nel_utilities()->fileHandler());
+        $ini_files = $ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'style_info.ini', true);
         $encoded_ini = '';
+        $directory = $this->front_end_data->styleIsCore($this->id()) ? 'core/' : 'custom/';
 
-        foreach ($style_inis as $ini) {
-            if ($ini['info']['id'] === $this->id()) {
-                $encoded_ini = json_encode($ini);
-                $directory = $ini['info']['directory'];
+        foreach ($ini_files as $ini_file) {
+            if ($ini_file->parsed()['info']['id'] === $this->id()) {
+                $encoded_ini = json_encode($ini_file->parsed());
+                $directory .= basename(dirname($ini_file->fileInfo()->getRealPath()));
                 break;
             }
         }
@@ -111,11 +119,11 @@ class Style
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_STYLES_TABLE . '" WHERE "style_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
-        $directory = $data['directory'] ?? '';
+        $this->directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
 
         if (nel_true_empty($data['parsed_ini']) || $original_ini) {
-            $file = NEL_STYLES_FILES_PATH . $directory . '/style_info.ini';
+            $file = NEL_STYLES_FILES_PATH . $this->directory . '/style_info.ini';
 
             if (file_exists($file)) {
                 $ini = parse_ini_file($file, true);
