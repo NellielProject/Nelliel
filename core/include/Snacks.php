@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use IPTools\IP;
 use IPTools\Range;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputBanPage;
 use PDO;
 
 class Snacks
@@ -34,6 +35,9 @@ class Snacks
         $this->hashed_ip_address = nel_request_ip_address(true);
     }
 
+    /**
+     * Check if the provided file hash is banned.
+     */
     public function fileHashIsBanned(string $file_hash, string $hash_type): bool
     {
         if (empty($this->file_filters[$this->domain->id()])) {
@@ -58,6 +62,9 @@ class Snacks
         return in_array($file_hash, $this->file_filters[$this->domain->id()][$hash_type]);
     }
 
+    /**
+     * Process a ban appeal.
+     */
     public function banAppeal(): void
     {
         $bawww = $_POST['bawww'] ?? null;
@@ -91,6 +98,9 @@ class Snacks
         }
     }
 
+    /**
+     * Apply any bans relevant to the current request.
+     */
     public function applyBan(): void
     {
         $this->banAppeal();
@@ -98,6 +108,9 @@ class Snacks
         $this->checkIPBans();
     }
 
+    /**
+     * Check if a ban has expired and optionally remove it.
+     */
     public function checkExpired(BanHammer $ban_hammer, bool $remove): bool
     {
         if ($ban_hammer->expired()) {
@@ -115,15 +128,21 @@ class Snacks
         return false;
     }
 
+    /**
+     * Output the ban page.
+     */
     public function banPage(BanHammer $ban_hammer): void
     {
         $ban_hammer->modifyData('seen', 1);
         $ban_hammer->apply();
-        $output_ban_page = new \Nelliel\Output\OutputBanPage($this->domain, false);
+        $output_ban_page = new OutputBanPage($this->domain, false);
         $output_ban_page->render(['ban_hammer' => $ban_hammer], false);
         nel_clean_exit();
     }
 
+    /**
+     * Check through existing range bans to see if any are applicable.
+     */
     private function checkRangeBans(): void
     {
         $bans_range = $this->bans_access->getBansByType(BansAccess::RANGE, $this->domain->id());
@@ -145,6 +164,9 @@ class Snacks
         }
     }
 
+    /**
+     * Check through existing IP bans to see if any are applicable.
+     */
     private function checkIPBans(): void
     {
         if (nel_site_domain()->setting('store_unhashed_ip')) {
