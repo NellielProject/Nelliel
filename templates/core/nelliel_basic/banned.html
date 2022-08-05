@@ -28,11 +28,16 @@
 	<span class="label" data-i18n="">The reason for your ban:</span>
 	<span class="bold">{{ ban_reason }}</span>
 </p>
-{{# extra_text }}
+{{# site_extra_text }}
 <p>
-	{{ ban_page_extra_text }}
+	{{ site_extra_text }}
 </p>
-{{/ extra_text }}
+{{/ site_extra_text }}
+{{# board_extra_text }}
+<p>
+	{{ board_extra_text }}
+</p>
+{{/ board_extra_text }}
 {{# appeal_allowed }}
 	{{^ appealed }}
 <form accept-charset="utf-8" name="ban_appeal_form" action="{{ form_action }}" method="post" enctype="multipart/form-data">
