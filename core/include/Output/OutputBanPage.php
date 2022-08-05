@@ -1,12 +1,13 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use DateInterval;
+use DateTime;
 
 class OutputBanPage extends Output
 {
@@ -27,34 +28,33 @@ class OutputBanPage extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['ban_board'] = ($ban_hammer->getData('board_id') === Domain::GLOBAL) ? _gettext('All Boards') : $ban_hammer->getData(
-                'board_id');
+            'board_id');
         $this->render_data['ban_time'] = date("F jS, Y H:i e", intval($ban_hammer->getData('start_time')));
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
         $ban_expire = $ban_hammer->getData('length') + $ban_hammer->getData('start_time');
         $expire_interval = ($ban_expire - time() >= 0) ? $ban_expire - time() : 0;
-        $dt = new \DateTime();
-        $dt->add(new \DateInterval('PT' . ($expire_interval) . 'S'));
-        $interval = $dt->diff(new \DateTime());
+        $dt = new DateTime();
+        $dt->add(new DateInterval('PT' . ($expire_interval) . 'S'));
+        $interval = $dt->diff(new DateTime());
         $duration = '';
 
-        if ($interval->d > 0)
-        {
+        if ($interval->d > 0) {
             $duration .= $interval->format('%a days %h hours');
-        }
-        else if ($interval->h > 0)
-        {
+        } else if ($interval->h > 0) {
             $duration .= $interval->format('%h hours %i minutes');
-        }
-        else
-        {
+        } else {
             $duration .= $interval->format('%i minutes');
+        }
+
+        if ($this->domain->setting('show_ban_mod_name')) {
+            $this->render_data['creator'] = $ban_hammer->getData('creator');
         }
 
         $this->render_data['ban_length'] = $duration;
         $this->render_data['ban_expiration'] = date("F jS, Y H:i e", intval($ban_expire));
         $this->render_data['ban_reason'] = $ban_hammer->getData('reason');
         $this->render_data['ban_ip'] = nel_request_ip_address();
-        $this->render_data['ban_page_extra_text'] = $this->site_domain()->setting('ban_page_extra_text');
+        $this->render_data['ban_page_extra_text'] = $this->site_domain->setting('ban_page_extra_text');
         $this->render_data['extra_text'] = !nel_true_empty($this->render_data['ban_page_extra_text']);
         $this->render_data['appealed'] = $ban_hammer->getData('appeal_status') != 0;
         $this->render_data['reviewed'] = $ban_hammer->getData('appeal_status') == 1;
@@ -62,29 +62,22 @@ class OutputBanPage extends Output
         $appeal_min_time = $this->site_domain->setting('min_time_before_ban_appeal');
 
         if ($ban_hammer->getData('length') < $appeal_min_time ||
-                time() - $ban_hammer->getData('start_time') < $appeal_min_time)
-        {
+            time() - $ban_hammer->getData('start_time') < $appeal_min_time) {
             $this->render_data['min_time_met'] = false;
-        }
-        else
-        {
+        } else {
             $this->render_data['min_time_met'] = true;
         }
 
         if ($this->render_data['min_time_met'] && $this->site_domain->setting('allow_ban_appeals') &&
-                $ban_hammer->getData('appeal_status') == 0 && empty($ban_hammer->getData('ip_address_end')))
-        {
+            $ban_hammer->getData('appeal_status') == 0 && empty($ban_hammer->getData('ip_address_end'))) {
             $this->render_data['appeal_allowed'] = true;
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(['module' => 'ban-page', 'actions' => 'add-appeal']);
+                http_build_query(['module' => 'ban-page', 'actions' => 'add-appeal']);
 
-            if (!empty($ban_hammer->getData('board_id')))
-            {
+            if (!empty($ban_hammer->getData('board_id'))) {
                 $this->render_data['form_action'] .= '&board-id=' . $ban_hammer->getData('board_id');
             }
-        }
-        else
-        {
+        } else {
             $this->render_data['appeal_allowed'] = false;
             $this->render_data['appeal_denied'] = $ban_hammer->getData('appeal_status') == 2;
             $this->render_data['appeal_modified'] = $ban_hammer->getData('appeal_status') == 3;
