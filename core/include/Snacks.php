@@ -74,27 +74,32 @@ class Snacks
             return;
         }
 
-        if (!nel_site_domain()->setting('allow_ban_appeals')) {
-            nel_derp(156, _gettext('Ban appeals are not enabled.'));
+        if (!$this->domain->setting('allow_ban_appeals')) {
+            nel_derp(156, __('Ban appeals are not enabled.'));
         }
 
         $ban_hammer = new BanHammer($this->database);
 
+        if (($ban_hammer->getData('length') < $this->domain->setting('min_time_before_ban_appeal') ||
+            time() - $ban_hammer->getData('start_time') < $this->domain->setting('min_time_before_ban_appeal'))) {
+            nel_derp(159, __('Minimum time before you can appeal has not been reached or ban is too short for appeals.'));
+        }
+
         if (!$ban_hammer->loadFromID($ban_id)) {
-            nel_derp(150, _gettext('Invalid ban ID given.'));
+            nel_derp(150, __('Invalid ban ID given.'));
         }
 
         if ($ban_hammer->getData('ip_type') == BansAccess::RANGE) {
-            nel_derp(151, _gettext('You cannot appeal a range ban.'));
+            nel_derp(151, __('You cannot appeal a range ban.'));
         }
 
         if ($this->ip_address !== $ban_hammer->getData('ip_address_start') &&
             $this->hashed_ip_address !== $ban_hammer->getData('hashed_ip_address')) {
-            nel_derp(152, _gettext('Your IP address does not match the one on the ban.'));
+            nel_derp(152, __('Your IP address does not match the one on the ban.'));
         }
 
         if (!$ban_hammer->addAppeal($bawww)) {
-            nel_derp(153, _gettext('You have already appealed your ban.'));
+            nel_derp(153, __('You have already appealed your ban.'));
         }
     }
 
@@ -114,7 +119,7 @@ class Snacks
     public function checkExpired(BanHammer $ban_hammer, bool $remove): bool
     {
         if ($ban_hammer->expired()) {
-            if (nel_site_domain()->setting('must_see_ban') && !$ban_hammer->getData('seen')) {
+            if ($this->domain->setting('must_see_ban') && !$ban_hammer->getData('seen')) {
                 return false;
             }
 

@@ -77,9 +77,6 @@
 				{{> panels/pieces/settings/setting_description }}
 			</tr>
 	{{/ enabled_styles }}
-	{{# ban_page_extra_text }}
-			{{> panels/pieces/settings/textarea }}
-	{{/ ban_page_extra_text }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -94,6 +91,26 @@
 	{{# banner_display_height }}
 		{{> panels/pieces/settings/number }}
 	{{/ banner_display_height }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th colspan="3" data-i18n="">Bans</th>
+			</tr>
+	{{# must_see_ban }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ must_see_ban }}
+	{{# allow_ban_appeals }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ allow_ban_appeals }}
+	{{# min_time_before_ban_appeal }}
+			{{> panels/pieces/settings/number }}
+	{{/ min_time_before_ban_appeal }}
+	{{# ban_page_extra_text }}
+			{{> panels/pieces/settings/text }}
+	{{/ ban_page_extra_text }}
+	{{# show_ban_mod_name }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_ban_mod_name }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -760,9 +777,6 @@
 	{{# generate_catalog }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ generate_catalog }}
-	{{# show_ban_mod_name }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ show_ban_mod_name }}
 		</tbody>
 		<tbody>
 			<tr>

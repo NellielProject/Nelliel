@@ -55,18 +55,14 @@ class OutputBanPage extends Output
         $this->render_data['ban_reason'] = $ban_hammer->getData('reason');
         $this->render_data['ban_ip'] = nel_request_ip_address();
 
-        if (!nel_true_empty($this->site_domain->setting('ban_page_extra_text'))) {
-            $this->render_data['site_extra_text'] = $this->site_domain->setting('ban_page_extra_text');
-        }
-
         if (!nel_true_empty($this->domain->setting('ban_page_extra_text'))) {
-            $this->render_data['board_extra_text'] = $this->domain->setting('ban_page_extra_text');
+            $this->render_data['extra_text'] = $this->domain->setting('ban_page_extra_text');
         }
 
         $this->render_data['appealed'] = $ban_hammer->getData('appeal_status') != 0;
         $this->render_data['reviewed'] = $ban_hammer->getData('appeal_status') == 1;
         $this->render_data['responded'] = $ban_hammer->getData('appeal_status') > 1;
-        $appeal_min_time = $this->site_domain->setting('min_time_before_ban_appeal');
+        $appeal_min_time = $this->domain->setting('min_time_before_ban_appeal');
 
         if ($ban_hammer->getData('length') < $appeal_min_time ||
             time() - $ban_hammer->getData('start_time') < $appeal_min_time) {
@@ -75,15 +71,10 @@ class OutputBanPage extends Output
             $this->render_data['min_time_met'] = true;
         }
 
-        if ($this->render_data['min_time_met'] && $this->site_domain->setting('allow_ban_appeals') &&
+        if ($this->render_data['min_time_met'] && $this->domain->setting('allow_ban_appeals') &&
             $ban_hammer->getData('appeal_status') == 0 && empty($ban_hammer->getData('ip_address_end'))) {
             $this->render_data['appeal_allowed'] = true;
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'ban-page', 'actions' => 'add-appeal']);
-
-            if (!empty($ban_hammer->getData('board_id'))) {
-                $this->render_data['form_action'] .= '&board-id=' . $ban_hammer->getData('board_id');
-            }
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'snacks', 'user-bans', 'file-appeal']);
         } else {
             $this->render_data['appeal_allowed'] = false;
             $this->render_data['appeal_denied'] = $ban_hammer->getData('appeal_status') == 2;

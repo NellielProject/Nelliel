@@ -301,6 +301,9 @@ class BetaMigrations
                 $new_site_settings = ['visitor_id_lifespan'];
                 $this->newSiteSettings($new_site_settings);
 
+                $old_site_settings = ['must_see_ban', 'allow_ban_appeals', 'min_time_before_ban_appeal', 'ban_page_extra_text'];
+                $this->removeSiteSettings($old_site_settings);
+
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
                 $migration_count ++;
