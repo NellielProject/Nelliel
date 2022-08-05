@@ -79,14 +79,6 @@ class Preparation
             $domain = new DomainSite(nel_database('core'));
         }
 
-        if ($inputs['module'] === 'new-post') {
-            $snacks = new Snacks($domain, new BansAccess(nel_database('core')));
-            $snacks->applyBan();
-            // $snacks->checkHoneypot();
-            $dnsbl = new DNSBL(nel_database('core'));
-            $dnsbl->checkIP(nel_request_ip_address());
-        }
-
         $authorization = new Authorization($domain->database());
         $session = new Session();
         $module_dispatch = new DispatchModules($authorization, $domain, $session);
