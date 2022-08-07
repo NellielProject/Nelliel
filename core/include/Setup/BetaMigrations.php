@@ -12,6 +12,7 @@ use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Tables\TableBanAppeals;
 
 class BetaMigrations
 {
@@ -305,6 +306,11 @@ class BetaMigrations
                 $this->removeSiteSettings($old_site_settings);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
+
+                $ban_appeals_table = new TableBanAppeals($this->database, $this->sql_compatibility);
+                $ban_appeals_table->createTable();
+
+                echo ' - ' . __('Ban appeals table added.') . '<br>';
 
                 $migration_count ++;
         }

@@ -80,10 +80,10 @@ class Snacks
 
         $ban_hammer = new BanHammer($this->database);
 
-        if (($ban_hammer->getData('length') < $this->domain->setting('min_time_before_ban_appeal') ||
+        /*if (($ban_hammer->getData('length') < $this->domain->setting('min_time_before_ban_appeal') ||
             time() - $ban_hammer->getData('start_time') < $this->domain->setting('min_time_before_ban_appeal'))) {
             nel_derp(159, __('Minimum time before you can appeal has not been reached or ban is too short for appeals.'));
-        }
+        }*/
 
         if (!$ban_hammer->loadFromID($ban_id)) {
             nel_derp(150, __('Invalid ban ID given.'));
@@ -99,7 +99,7 @@ class Snacks
         }
 
         if (!$ban_hammer->addAppeal($bawww)) {
-            nel_derp(153, __('You have already appealed your ban.'));
+            //nel_derp(153, __('You have already appealed your ban.'));
         }
     }
 

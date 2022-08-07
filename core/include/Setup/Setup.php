@@ -55,6 +55,7 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Regen;
 use Nelliel\FrontEnd\FrontEndData;
+use Nelliel\Tables\TableBanAppeals;
 
 class Setup
 {
@@ -328,6 +329,8 @@ class Setup
         $logs_table->createTable();
         $bans_table = new TableBans($this->database, $this->sql_compatibility);
         $bans_table->createTable();
+        $ban_appeals_table = new TableBanAppeals($this->database, $this->sql_compatibility);
+        $ban_appeals_table->createTable();
         $captcha_table = new TableCaptcha($this->database, $this->sql_compatibility);
         $captcha_table->createTable();
         $board_configs_table = new TableBoardConfigs($this->database, $this->sql_compatibility);
