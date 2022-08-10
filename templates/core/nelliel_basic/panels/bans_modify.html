@@ -74,10 +74,19 @@
 				<textarea id="ban_reason" name="ban_reason" cols="25" rows="3">{{ ban_reason }}</textarea>
 			</span>
 		</div>
+{{# has_appeal }}
 		<div class="display-row">
+			<input type="hidden" name="appeal_id" value="{{ appeal_id }}">
+		{{# pending_appeal }}
+			<span class="display-cell">
+				<span data-i18n="">Appeal (awaiting response)</span>
+			</span>
+		{{/ pending_appeal }}
+		{{^ pending_appeal }}
 			<span class="display-cell">
 				<span data-i18n="">Appeal</span>
 			</span>
+		{{/ pending_appeal }}
 			<span class="display-cell">{{ appeal }}</span>
 		</div>
 		<div class="display-row">
@@ -90,15 +99,31 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
-				<label for="address_type" data-i18n="">Appeal status:</label>
+				<input type="hidden" name="appeal_denied[default]" value="0">
+				<input id="appeal_denied" type="checkbox" name="appeal_denied[value]" value="1" {{ denied }}>
+				<label for="appeal_denied" data-i18n="">Mark appeal as denied.</label>
 			</span>
+		</div>
+{{/ has_appeal }}
+		<div class="display-row">
 			<span class="display-cell">
-				<select id="ban_appeal_status" name="ban_appeal_status">
-					<option value="0" data-i18n="" {{ appeal_status_0 }}>No appeal received</option>
-					<option value="1" data-i18n="" {{ appeal_status_1 }}>Appeal received; not reviewed</option>
-					<option value="2" data-i18n="" {{ appeal_status_2 }}>Appeal denied</option>
-					<option value="3" data-i18n="" {{ appeal_status_3 }}>Appeal accepted; ban modified</option>
-				</select>
+				<input type="hidden" name="ban_global[default]" value="0">
+				<input id="ban_global" type="checkbox" name="ban_global[value]" value="1" {{ global }}>
+				<label for="ban_global" data-i18n="">Ban from all boards. This overrides specific boards.</label>
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<input type="hidden" name="appeal_allowed[default]" value="0">
+				<input id="appeal_allowed" type="checkbox" name="appeal_allowed[value]" value="1" {{ appeal_allowed }}>
+				<label for="appeal_allowed" data-i18n="">Allow appeals. Does not affect existing appeals.</label>
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<input type="hidden" name="remove_ban[default]" value="0">
+				<input id="remove_ban" type="checkbox" name="remove_ban[value]" value="1">
+				<label for="remove_ban" data-i18n="">Remove this ban and any associated appeals.</label>
 			</span>
 		</div>
 		<div class="display-row">

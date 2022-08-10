@@ -30,9 +30,7 @@ class TableBans extends Table
             'start_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'length' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'seen' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'appeal' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'appeal_response' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'appeal_status' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'appeal_allowed' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'ban_id' => ['row_check' => true, 'auto_inc' => true],
@@ -47,9 +45,7 @@ class TableBans extends Table
             'start_time' => ['row_check' => false, 'auto_inc' => false],
             'length' => ['row_check' => false, 'auto_inc' => false],
             'seen' => ['row_check' => false, 'auto_inc' => false],
-            'appeal' => ['row_check' => false, 'auto_inc' => false],
-            'appeal_response' => ['row_check' => false, 'auto_inc' => false],
-            'appeal_status' => ['row_check' => false, 'auto_inc' => false],
+            'appeal_allowed' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -72,9 +68,7 @@ class TableBans extends Table
             start_time          BIGINT NOT NULL,
             length              BIGINT NOT NULL,
             seen                SMALLINT NOT NULL DEFAULT 0,
-            appeal              TEXT DEFAULT NULL,
-            appeal_response     TEXT DEFAULT NULL,
-            appeal_status       SMALLINT NOT NULL DEFAULT 0,
+            appeal_allowed      SMALLINT NOT NULL DEFAULT 0,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (ban_id),
             CONSTRAINT fk_bans__domain_registry

@@ -23,14 +23,16 @@ class TableBanAppeals extends Table
             'time' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
             'appeal' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_STR],
             'response' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'status' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT]];
+            'pending' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
+            'denied' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
             'appeal_id' => ['row_check' => true, 'auto_inc' => true],
             'ban_id' => ['row_check' => false, 'auto_inc' => false],
             'time' => ['row_check' => false, 'auto_inc' => false],
             'appeal' => ['row_check' => false, 'auto_inc' => false],
             'response' => ['row_check' => false, 'auto_inc' => false],
-            'status' => ['row_check' => false, 'auto_inc' => false]];
+            'pending' => ['row_check' => false, 'auto_inc' => false],
+            'denied' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
 
@@ -45,6 +47,7 @@ class TableBanAppeals extends Table
             time        BIGINT NOT NULL,
             appeal      TEXT DEFAULT NULL,
             response    TEXT DEFAULT NULL,
+            pending     SMALLINT NOT NULL DEFAULT 0,
             denied      SMALLINT NOT NULL DEFAULT 0,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (appeal_id),
             CONSTRAINT fk_ban_appeals__bans

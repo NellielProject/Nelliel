@@ -5,11 +5,11 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Exception;
 use IPTools\Range;
-use PDO;
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
+use Nelliel\Domains\Domain;
+use Exception;
+use PDO;
 
 class BanHammer
 {
@@ -37,6 +37,19 @@ class BanHammer
     {
         $ban_id = $_POST['ban_id'] ?? null;
         $existing_ban = (!is_null($ban_id)) ? $this->loadFromID($ban_id) : false;
+
+        if ($existing_ban) {
+            $remove_ban = $_POST['remove_ban'] ?? 0;
+
+            if (is_array($remove_ban)) {
+                $remove_ban = nel_form_input_default($remove_ban);
+
+                if ($remove_ban > 0) {
+                    $this->remove();
+                    return;
+                }
+            }
+        }
         $this->ban_data['board_id'] = utf8_strtolower($_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null);
         $this->ban_data['seen'] = $_POST['ban_seen'] ?? $this->ban_data['seen'] ?? 0;
         $global = $_POST['ban_global'] ?? 0;
@@ -100,9 +113,6 @@ class BanHammer
         }
 
         $this->ban_data['reason'] = $_POST['ban_reason'] ?? $this->ban_data['reason'] ?? null;
-        $this->ban_data['appeal'] = $_POST['ban_appeal'] ?? $this->ban_data['appeal'] ?? null;
-        $this->ban_data['appeal_response'] = $_POST['ban_appeal_response'] ?? $this->ban_data['appeal_response'] ?? null;
-        $this->ban_data['appeal_status'] = $_POST['ban_appeal_status'] ?? $this->ban_data['appeal_status'] ?? 0;
 
         if (empty($this->ban_data['start_time']) && !isset($_POST['ban_start_time'])) {
             $this->ban_data['start_time'] = time();
@@ -111,6 +121,11 @@ class BanHammer
         }
 
         $this->ban_data['length'] = $this->timeArrayToSeconds($this->ban_data['times']);
+        $this->ban_data['appeal_allowed'] = $_POST['appeal_allowed'] ?? 0;
+
+        if (is_array($this->ban_data['appeal_allowed'])) {
+            $this->ban_data['appeal_allowed'] = nel_form_input_default($this->ban_data['appeal_allowed']);
+        }
     }
 
     private function secondsToTimeArray($seconds)
@@ -175,7 +190,7 @@ class BanHammer
                 $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_BANS_TABLE .
                     '" ("board_id", "ip_type", "creator", "ip_address_start", "hashed_ip_address",
-                 "ip_address_end", "reason", "length", "seen", "start_time") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
+                 "ip_address_end", "reason", "start_time", "length", "seen", "appeal_allowed") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
                 $prepared->bindValue(1, $this->ban_data['board_id'], PDO::PARAM_STR);
                 $prepared->bindValue(2, $this->ban_data['ip_type'], PDO::PARAM_INT);
                 $prepared->bindValue(3, $this->ban_data['creator'], PDO::PARAM_STR);
@@ -185,9 +200,11 @@ class BanHammer
                 $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
                     PDO::PARAM_LOB);
                 $prepared->bindValue(7, $this->ban_data['reason'], PDO::PARAM_STR);
-                $prepared->bindValue(8, $this->ban_data['length'], PDO::PARAM_INT);
-                $prepared->bindValue(9, $this->ban_data['seen'], PDO::PARAM_INT);
-                $prepared->bindValue(10, $this->ban_data['start_time'], PDO::PARAM_INT);
+                $prepared->bindValue(8, $this->ban_data['start_time'], PDO::PARAM_INT);
+                $prepared->bindValue(9, $this->ban_data['length'], PDO::PARAM_INT);
+                $prepared->bindValue(10, $this->ban_data['seen'], PDO::PARAM_INT);
+                $prepared->bindValue(11, $this->ban_data['appeal_allowed'], PDO::PARAM_INT);
+
                 $this->database->executePrepared($prepared);
             }
         } else {
@@ -195,8 +212,7 @@ class BanHammer
                 'UPDATE "' . NEL_BANS_TABLE .
                 '" SET "board_id" = ?, "ip_type" = ?, "creator" = ?,
                  "ip_address_start" = ?, "hashed_ip_address" = ?, "ip_address_end" = ?,
-                 "reason" = ?, "length" = ?, "seen" = ?, "start_time" = ?, "appeal_response" = ?,
-                 "appeal_status" = ? WHERE "ban_id" = ?');
+                 "reason" = ?, "start_time" = ?, "length" = ?, "seen" = ?, "appeal_allowed" = ? WHERE "ban_id" = ?');
             $prepared->bindValue(1, $this->ban_data['board_id'], PDO::PARAM_STR);
             $prepared->bindValue(2, $this->ban_data['ip_type'], PDO::PARAM_INT);
             $prepared->bindValue(3, $this->ban_data['creator'], PDO::PARAM_STR);
@@ -206,12 +222,11 @@ class BanHammer
             $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
                 PDO::PARAM_LOB);
             $prepared->bindValue(7, $this->ban_data['reason'], PDO::PARAM_STR);
-            $prepared->bindValue(8, $this->ban_data['length'], PDO::PARAM_INT);
-            $prepared->bindValue(9, $this->ban_data['seen'], PDO::PARAM_INT);
-            $prepared->bindValue(10, $this->ban_data['start_time'], PDO::PARAM_INT);
-            $prepared->bindValue(11, $this->ban_data['appeal_response'], PDO::PARAM_STR);
-            $prepared->bindValue(12, $this->ban_data['appeal_status'], PDO::PARAM_INT);
-            $prepared->bindValue(13, $this->ban_data['ban_id'], PDO::PARAM_INT);
+            $prepared->bindValue(8, $this->ban_data['start_time'], PDO::PARAM_INT);
+            $prepared->bindValue(9, $this->ban_data['length'], PDO::PARAM_INT);
+            $prepared->bindValue(10, $this->ban_data['seen'], PDO::PARAM_INT);
+            $prepared->bindValue(11, $this->ban_data['appeal_allowed'], PDO::PARAM_INT);
+            $prepared->bindValue(12, $this->ban_data['ban_id'], PDO::PARAM_INT);
             $this->database->executePrepared($prepared);
         }
     }
@@ -237,19 +252,36 @@ class BanHammer
         }
 
         $prepared = $this->database->prepare(
-            'INSERT INTO "' . NEL_BAN_APPEALS_TABLE . '" ("ban_id", "time", "appeal") VALUES (:ban_id, :time, :appeal)');
+            'INSERT INTO "' . NEL_BAN_APPEALS_TABLE .
+            '" ("ban_id", "time", "appeal", "pending") VALUES (:ban_id, :time, :appeal, :pending)');
         $prepared->bindValue(':ban_id', $this->ban_data['ban_id'], PDO::PARAM_INT);
         $prepared->bindValue(':time', time(), PDO::PARAM_INT);
         $prepared->bindValue(':appeal', $appeal, PDO::PARAM_STR);
+        $prepared->bindValue(':pending', 1, PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
     }
 
-    public function addAppealResponse(string $response): void
+    public function updateAppealFromPOST(): void
     {
+        $appeal_id = intval($_POST['appeal_id'] ?? null);
+
+        if (is_null($appeal_id)) {
+            return;
+        }
+
+        $appeal_response = $_POST['ban_appeal_response'] ?? '';
+        $appeal_denied = $_POST['appeal_denied'] ?? 0;
+
+        if (is_array($appeal_denied)) {
+            $appeal_denied = nel_form_input_default($appeal_denied);
+        }
+
         $prepared = $this->database->prepare(
-            'UPDATE "' . NEL_BAN_APPEALS_TABLE . '" SET "response" = :response AND "pending" = :pending');
-        $prepared->bindValue(':response', $response, PDO::PARAM_STR);
-        $prepared->bindValue(':pending', 0, PDO::PARAM_INT);
+            'UPDATE "' . NEL_BAN_APPEALS_TABLE .
+            '" SET "response" = :response, "pending" = 0, "denied" = :denied WHERE "appeal_id" = :appeal_id');
+        $prepared->bindValue(':response', $appeal_response, PDO::PARAM_STR);
+        $prepared->bindValue(':denied', $appeal_denied, PDO::PARAM_INT);
+        $prepared->bindValue(':appeal_id', $appeal_id, PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
     }
 }
