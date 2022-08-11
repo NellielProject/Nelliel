@@ -34,16 +34,19 @@
 </p>
 {{/ extra_text }}
 {{# appeal_allowed }}
-	{{^ appealed }}
+	{{^ pending }}
 <form accept-charset="utf-8" name="ban_appeal_form" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<input type="hidden" name="ban_id" value="{{ ban_id }}">
 	<p>
-		<label for="bawww" data-i18n="">If you wish, you may appeal this ban. Enter your reason why you should get unbanned in the box below. A staff member will (probably) review it.</label>
+		<label for="bawww" data-i18n="">If you wish, you may appeal this ban. Enter your reason why you should get unbanned in the field below. A staff member will (probably) review it.</label>
 	</p>
 	<textarea id="bawww" name="bawww" cols="30" rows="6"></textarea>
 	<input class="display-block" type="submit" value="Submit Appeal" data-i18n-attributes="value">
 </form>
-	{{/ appealed }}
+	{{/ pending }}
+{{/ appeal_allowed }}
+{{^ appeal_allowed }}
+<p data-i18n="">You are not allowed to appeal this ban.</p>
 {{/ appeal_allowed }}
 {{# is_range }}
 <p data-i18n="">This is part of a range ban. You cannot appeal it.</p>
@@ -52,21 +55,21 @@
 <p data-i18n="">The minimum time before appealing has not elapsed or the ban is too short to appeal.</p>
 {{/ min_time_met }}
 {{# appealed }}
-	{{# reviewed }}
-<p data-i18n="">You have already appealed this ban but the appeal has not been reviewed yet.</p>
-	{{/ reviewed }}
-	{{# responded }}
-		{{# appeal_denied }}
-<p data-i18n="">You appeal has been reviewed and denied. You cannot appeal again.</p>
-		{{/ appeal_denied }}
-		{{# appeal_modified }}
-<p data-i18n="">Your appeal has been reviewed and the ban has been altered.</p>
-		{{/ appeal_modified }}
+	{{# pending }}
+<p data-i18n="">This ban has been appealed but the appeal has not been reviewed yet.</p>
+	{{/ pending }}
+	{{# previous_responded }}
+		{{# previous_denied }}
+<p data-i18n="">Your last appeal was reviewed and denied.</p>
+		{{/ previous_denied }}
+		{{# previous_modified }}
+<p data-i18n="">Your last appeal has been reviewed and the ban has been altered.</p>
+		{{/ previous_modified }}
 		{{# show_response }}
 <p>
-	<span class="label" data-i18n="">This is the response to your appeal:</span>
-	<span>{{ appeal_response }}</span>
+	<span class="label" data-i18n="">This is the response to your last appeal:</span>
+	<span>{{ previous_response }}</span>
 </p>
 		{{/ show_response }}
-	{{/ responded }}
+	{{/ previous_responded }}
 {{/ appealed }}

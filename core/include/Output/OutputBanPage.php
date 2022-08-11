@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Domains\Domain;
 use DateInterval;
 use DateTime;
+use PDO;
 
 class OutputBanPage extends Output
 {
@@ -59,9 +60,6 @@ class OutputBanPage extends Output
             $this->render_data['extra_text'] = $this->domain->setting('ban_page_extra_text');
         }
 
-        $this->render_data['appealed'] = $ban_hammer->getData('appeal_status') != 0;
-        $this->render_data['reviewed'] = $ban_hammer->getData('appeal_status') == 1;
-        $this->render_data['responded'] = $ban_hammer->getData('appeal_status') > 1;
         $appeal_min_time = $this->domain->setting('min_time_before_ban_appeal');
 
         if ($ban_hammer->getData('length') < $appeal_min_time ||
@@ -71,17 +69,44 @@ class OutputBanPage extends Output
             $this->render_data['min_time_met'] = true;
         }
 
+        $this->render_data['is_range'] = !empty($ban_hammer->getData('ip_address_end'));
+
+        $prepared = $this->database->prepare(
+            'SELECT * FROM "' . NEL_BAN_APPEALS_TABLE . '" WHERE "ban_id" = ? ORDER BY "time" DESC');
+        $appeals = $this->database->executePreparedFetchAll($prepared, [$ban_hammer->getData('ban_id')],
+            PDO::FETCH_ASSOC);
+        $pending_appeal = false;
+        $previous_appeal = false;
+        $this->render_data['appealed'] = count($appeals) > 0;
+        $this->render_data['pending'] = false;
+
+        foreach ($appeals as $appeal) {
+            if (!$pending_appeal && $appeal['pending'] == 1) {
+                $this->render_data['pending'] = true;
+                $pending_appeal = true;
+                continue;
+            }
+
+            if (!$previous_appeal && $appeal['pending'] == 0) {
+                $previous_appeal = true;
+                $this->render_data['previous_response'] = $appeal['response'];
+                $this->render_data['previous_denied'] = $appeal['denied'] == 1;
+                $this->render_data['previous_responded'] = !nel_true_empty($appeal['response']);
+                $this->render_data['responded'] = !nel_true_empty($appeal['response']);
+                $this->render_data['show_response'] = !nel_true_empty($appeal['response']) && $appeal['pending'] == 0;
+                $this->render_data['previous_modified'] = $appeal['pending'] == 0 && $appeal['denied'] == 0;
+                $this->render_data['reviewed'] = $appeal['pending'] == 0;
+                continue;
+            }
+        }
+
         if ($this->render_data['min_time_met'] && $this->domain->setting('allow_ban_appeals') &&
-            $ban_hammer->getData('appeal_status') == 0 && empty($ban_hammer->getData('ip_address_end'))) {
+            empty($ban_hammer->getData('ip_address_end')) && $ban_hammer->getData('appeal_allowed')) {
             $this->render_data['appeal_allowed'] = true;
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'snacks', 'user-bans', 'file-appeal']);
+            $this->render_data['form_action'] = nel_build_router_url(
+                [$this->domain->id(), 'snacks', 'user-bans', 'file-appeal']);
         } else {
             $this->render_data['appeal_allowed'] = false;
-            $this->render_data['appeal_denied'] = $ban_hammer->getData('appeal_status') == 2;
-            $this->render_data['appeal_modified'] = $ban_hammer->getData('appeal_status') == 3;
-            $this->render_data['show_response'] = $ban_hammer->getData('appeal_response') != '';
-            $this->render_data['appeal_response'] = $ban_hammer->getData('appeal_response');
-            $this->render_data['is_range'] = !empty($ban_hammer->getData('ip_address_end'));
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

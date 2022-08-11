@@ -148,21 +148,23 @@ class OutputPanelBans extends Output
         $this->render_data['ban_reason'] = $ban_hammer->getData('reason');
         $this->render_data['seen'] = $ban_hammer->getData('seen');
         $this->render_data['creator'] = $ban_hammer->getData('creator');
-        $this->render_data['appeal_allowed'] = $ban_hammer->getData('appeal_allowed') ==1 ? 'checked' : '';
+        $this->render_data['appeal_allowed'] = $ban_hammer->getData('appeal_allowed') == 1 ? 'checked' : '';
 
         $prepared = $this->database->prepare(
-            'SELECT * FROM "' . NEL_BAN_APPEALS_TABLE . '" WHERE "ban_id" = ? ORDER BY "time" ASC LIMIT 1');
-        $appeal = $this->database->executePreparedFetch($prepared, [$ban_hammer->getData('ban_id')], PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . NEL_BAN_APPEALS_TABLE . '" WHERE "ban_id" = ? ORDER BY "time" DESC');
+        $appeals = $this->database->executePreparedFetchAll($prepared, [$ban_hammer->getData('ban_id')],
+            PDO::FETCH_ASSOC);
 
-        if (is_array($appeal)) {
-            $this->render_data['appeal_id'] = $appeal['appeal_id'];
-            $this->render_data['appeal'] = $appeal['appeal'];
-            $this->render_data['appeal_response'] = $appeal['response'];
-            $this->render_data['has_appeal'] = true;
-            $this->render_data['pending_appeal'] = boolval($appeal['pending']);
-            $this->render_data['denied'] = $appeal['denied'] == 1 ? 'checked' : '';
-        } else {
-            $this->render_data['has_appeal'] = false;
+        foreach ($appeals as $appeal) {
+            if ($appeal['pending'] == 1) {
+                $this->render_data['appeal_id'] = $appeal['appeal_id'];
+                $this->render_data['appeal'] = $appeal['appeal'];
+                $this->render_data['appeal_response'] = $appeal['response'];
+                $this->render_data['has_appeal'] = true;
+                $this->render_data['pending_appeal'] = boolval($appeal['pending']);
+                $this->render_data['denied'] = $appeal['denied'] == 1 ? 'checked' : '';
+                break;
+            }
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
