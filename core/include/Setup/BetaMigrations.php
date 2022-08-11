@@ -279,9 +279,9 @@ class BetaMigrations
                 // Update board settings
                 $new_board_settings = ['max_reply_preview_display_width', 'max_reply_preview_display_height',
                     'max_reply_embed_display_width', 'max_reply_embed_display_height', 'max_reply_multi_display_width',
-                    'max_reply_multi_display_height', 'enable_reply_name_field', 'require_reply_name', 'enable_reply_email_field',
-                    'require_reply_email', 'enable_reply_subject_field', 'require_reply_subject', 'enable_reply_comment_field',
-                    'require_reply_comment'];
+                    'max_reply_multi_display_height', 'enable_reply_name_field', 'require_reply_name',
+                    'enable_reply_email_field', 'require_reply_email', 'enable_reply_subject_field',
+                    'require_reply_subject', 'enable_reply_comment_field', 'require_reply_comment'];
                 $this->newBoardSettings($new_board_settings);
 
                 $old_board_setting_names = ['max_preview_display_width', 'max_preview_display_height',
@@ -302,7 +302,8 @@ class BetaMigrations
                 $new_site_settings = ['visitor_id_lifespan'];
                 $this->newSiteSettings($new_site_settings);
 
-                $old_site_settings = ['must_see_ban', 'allow_ban_appeals', 'min_time_before_ban_appeal', 'ban_page_extra_text'];
+                $old_site_settings = ['must_see_ban', 'allow_ban_appeals', 'min_time_before_ban_appeal',
+                    'ban_page_extra_text'];
                 $this->removeSiteSettings($old_site_settings);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
@@ -311,6 +312,17 @@ class BetaMigrations
                 $ban_appeals_table->createTable();
 
                 echo ' - ' . __('Ban appeals table added.') . '<br>';
+
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal');
+                    nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal_response');
+                    nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal_status');
+                }
+
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_BANS_TABLE . '" ADD COLUMN appeal_allowed SMALLINT NOT NULL DEFAULT 0');
+
+                echo ' - ' . __('Updated bans table.') . '<br>';
 
                 $migration_count ++;
         }
