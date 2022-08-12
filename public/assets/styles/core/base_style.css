@@ -164,6 +164,20 @@ td {
 	color: var(--table-row2-color);
 }
 
+/* Ban page */
+.ban-message {
+	background: var(--news-article-background, inherit);
+	margin: auto;
+	max-width: 60rem;
+	border: 2px solid;
+}
+
+.ban-paragraph {
+	text-align: left;
+	color: var(--news-paragraph-color, inherit);
+	margin: 1.0rem 0.5rem;
+}
+
 /* Catalog */
 .catalog-entry {
 	float: left;
@@ -505,7 +519,7 @@ td {
 .news-paragraph {
 	text-align: left;
 	color: var(--news-paragraph-color, inherit);
-	margin: 1.0rem 0.25rem;
+	margin: 1.0rem 0.5rem;
 }
 
 /* Other */
