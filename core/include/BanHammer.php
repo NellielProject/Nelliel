@@ -244,13 +244,6 @@ class BanHammer
 
     public function addAppeal(string $appeal): void
     {
-        $domain = Domain::getDomainFromID($this->ban_data['board_id'], $this->database);
-
-        if (($this->getData('length') < $domain->setting('min_time_before_ban_appeal') ||
-            time() - $this->getData('start_time') < $domain->setting('min_time_before_ban_appeal'))) {
-            nel_derp(159, __('Minimum time before you can appeal has not been reached or ban is too short for appeals.'));
-        }
-
         $prepared = $this->database->prepare(
             'INSERT INTO "' . NEL_BAN_APPEALS_TABLE .
             '" ("ban_id", "time", "appeal", "pending") VALUES (:ban_id, :time, :appeal, :pending)');

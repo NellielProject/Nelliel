@@ -29,15 +29,15 @@
 	</form>
 	{{/ pending }}
 {{/ appeal_allowed }}
-{{^ appeal_allowed }}
+{{# not_this_ban }}
 	<p class="ban-paragraph" data-i18n="">You are not allowed to appeal this ban.</p>
-{{/ appeal_allowed }}
-{{# is_range }}
+{{/ not_this_ban }}
+{{# no_ip_range }}
 	<p class="ban-paragraph" data-i18n="">This is part of a range ban. You cannot appeal it.</p>
-{{/ is_range }}
-{{^ min_time_met }}
+{{/ no_ip_range }}
+{{# min_time_not_met }}
 	<p class="ban-paragraph" data-i18n="">The minimum time before appealing has not elapsed or the ban is too short to appeal.</p>
-{{/ min_time_met }}
+{{/ min_time_not_met }}
 {{# appealed }}
 	{{# pending }}
 	<p class="ban-paragraph" data-i18n="">An appeal was been filed for this ban but has not been reviewed yet.</p>

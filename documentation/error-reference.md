@@ -94,7 +94,8 @@ Error 156: Ban appeals disabled. (Snacks.php)
 Error 157: DNSBL (DNSBL.php)  
 Error 158: No board or domain. (BanHammer.php)  
 Error 159: Not minimum appeal time. (Snacks.php)  
-Error 160: Board doesn't exist. (Admin/AdminBoards.php) 
+
+Error 180: Board doesn't exist. (Admin/AdminBoards.php) 
 
 Error 200: No user ID. (Account/Login.php)  
 Error 201: No password. (Account/Login.php)  

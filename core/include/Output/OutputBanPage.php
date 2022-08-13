@@ -9,6 +9,7 @@ use Nelliel\Domains\Domain;
 use DateInterval;
 use DateTime;
 use PDO;
+use Nelliel\BansAccess;
 
 class OutputBanPage extends Output
 {
@@ -60,17 +61,6 @@ class OutputBanPage extends Output
             $this->render_data['extra_text'] = $this->domain->setting('ban_page_extra_text');
         }
 
-        $appeal_min_time = $this->domain->setting('min_time_before_ban_appeal');
-
-        if ($ban_hammer->getData('length') < $appeal_min_time ||
-            time() - $ban_hammer->getData('start_time') < $appeal_min_time) {
-            $this->render_data['min_time_met'] = false;
-        } else {
-            $this->render_data['min_time_met'] = true;
-        }
-
-        $this->render_data['is_range'] = !empty($ban_hammer->getData('ip_address_end'));
-
         $prepared = $this->database->prepare(
             'SELECT * FROM "' . NEL_BAN_APPEALS_TABLE . '" WHERE "ban_id" = ? ORDER BY "time" DESC');
         $appeals = $this->database->executePreparedFetchAll($prepared, [$ban_hammer->getData('ban_id')],
@@ -100,13 +90,18 @@ class OutputBanPage extends Output
             }
         }
 
-        if ($this->render_data['min_time_met'] && $this->domain->setting('allow_ban_appeals') &&
-            empty($ban_hammer->getData('ip_address_end')) && $ban_hammer->getData('appeal_allowed')) {
-            $this->render_data['appeal_allowed'] = true;
-            $this->render_data['form_action'] = nel_build_router_url(
-                [$this->domain->id(), 'snacks', 'user-bans', 'file-appeal']);
-        } else {
-            $this->render_data['appeal_allowed'] = false;
+        if ($this->domain->setting('allow_ban_appeals')) {
+            if (!$ban_hammer->getData('appeal_allowed')) {
+                $this->render_data['not_this_ban'] = true;
+            } else if ($ban_hammer->getData('length') < $this->domain->setting('min_time_before_ban_appeal') ||
+                time() - $ban_hammer->getData('start_time') < $this->domain->setting('min_time_before_ban_appeal')) {
+                $this->render_data['min_time_not_met'] = true;
+            } else if ($ban_hammer->getData('ip_type') == BansAccess::RANGE &&
+                !$this->domain->setting('allow_ip_range_ban_appeals')) {
+                $this->render_data['no_ip_range'] = true;
+            } else {
+                $this->render_data['appeal_allowed'] = true;
+            }
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

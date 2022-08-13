@@ -182,7 +182,7 @@ class OutputPanelBans extends Output
             $ip_address = $ban_hammer->getData('ip_address_start');
 
             if (!is_null($ban_hammer->getData('ip_address_end'))) {
-                $ip_address .= ' - ' . $ban_hammer->getData('ip_address_end');
+                $ip_address .= '-' . $ban_hammer->getData('ip_address_end');
             }
         } else {
             $ip_address = $ban_hammer->getData('hashed_ip_address');

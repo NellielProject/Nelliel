@@ -203,7 +203,7 @@ class AdminBoards extends Admin
         $domain = new DomainBoard($board_id, $this->database);
 
         if (!$domain->exists()) {
-            nel_derp(160, _gettext('Board does not appear to exist.'));
+            nel_derp(180, _gettext('Board does not appear to exist.'));
         }
 
         if (!$this->remove_confirmed) {
