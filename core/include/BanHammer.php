@@ -277,5 +277,23 @@ class BanHammer
         $prepared->bindValue(':appeal_id', $appeal_id, PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
     }
+
+    public function appealCount(): int
+    {
+        $prepared = $this->database->prepare(
+            'SELECT COUNT(*) FROM "' . NEL_BAN_APPEALS_TABLE . '" WHERE "ban_id" = :ban_id');
+        $prepared->bindValue(':ban_id', $this->ban_data['ban_id'], PDO::PARAM_INT);
+        $count = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+        return intval($count);
+    }
+
+    public function appealPending(): bool
+    {
+        $prepared = $this->database->prepare(
+            'SELECT 1 FROM "' . NEL_BAN_APPEALS_TABLE . '" WHERE "ban_id" = :ban_id AND "pending" = 1');
+        $prepared->bindValue(':ban_id', $this->ban_data['ban_id'], PDO::PARAM_INT);
+        $found = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+        return boolval($found);
+    }
 }
 

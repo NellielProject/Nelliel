@@ -99,15 +99,18 @@
 	{{# must_see_ban }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ must_see_ban }}
+	{{# ban_page_extra_text }}
+			{{> panels/pieces/settings/text }}
+	{{/ ban_page_extra_text }}
 	{{# allow_ban_appeals }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ allow_ban_appeals }}
 	{{# min_time_before_ban_appeal }}
 			{{> panels/pieces/settings/number }}
 	{{/ min_time_before_ban_appeal }}
-	{{# ban_page_extra_text }}
-			{{> panels/pieces/settings/text }}
-	{{/ ban_page_extra_text }}
+	{{# max_ban_appeals }}
+			{{> panels/pieces/settings/number }}
+	{{/ max_ban_appeals }}
 	{{# allow_ban_appeals }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ allow_ban_appeals }}

@@ -32,11 +32,14 @@
 {{# not_this_ban }}
 	<p class="ban-paragraph" data-i18n="">You are not allowed to appeal this ban.</p>
 {{/ not_this_ban }}
+{{# max_appeals }}
+	<p class="ban-paragraph" data-i18n="">This ban has reached the maxmimum number of appeals.</p>
+{{/ max_appeals }}
 {{# no_ip_range }}
 	<p class="ban-paragraph" data-i18n="">This is part of a range ban. You cannot appeal it.</p>
 {{/ no_ip_range }}
 {{# min_time_not_met }}
-	<p class="ban-paragraph" data-i18n="">The minimum time before appealing has not elapsed or the ban is too short to appeal.</p>
+	<p class="ban-paragraph" data-i18n="">Minimum time before appealing this ban has not been reached.</p>
 {{/ min_time_not_met }}
 {{# appealed }}
 	{{# pending }}

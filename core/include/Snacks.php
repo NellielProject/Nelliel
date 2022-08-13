@@ -80,16 +80,25 @@ class Snacks
 
         $ban_hammer = new BanHammer($this->database);
 
-        if (($this->getData('length') < $this->domain->setting('min_time_before_ban_appeal') ||
-            time() - $this->getData('start_time') < $this->domain->setting('min_time_before_ban_appeal'))) {
-            nel_derp(159, __('Minimum time before you can appeal has not been reached or ban is too short for appeals.'));
-        }
-
         if (!$ban_hammer->loadFromID($ban_id)) {
             nel_derp(150, __('Invalid ban ID given.'));
         }
 
-        if ($ban_hammer->getData('ip_type') == BansAccess::RANGE && $this->domain->setting('allow_ip_range_ban_appeals')) {
+        if (!$ban_hammer->getData('appeal_allowed')) {
+            nel_derp(160, __('This ban cannot be appealed.'));
+        }
+
+        if ($ban_hammer->appealCount() >= $this->domain->setting('max_ban_appeals')) {
+            nel_derp(161, __('This ban has reached the maximum number of appeals.'));
+        }
+
+        if (($ban_hammer->getData('length') < $this->domain->setting('min_time_before_ban_appeal') ||
+            time() - $ban_hammer->getData('start_time') < $this->domain->setting('min_time_before_ban_appeal'))) {
+            nel_derp(159, __('Minimum time before appealing this ban has not been reached.'));
+        }
+
+        if ($ban_hammer->getData('ip_type') == BansAccess::RANGE && !$this->domain->setting(
+            'allow_ip_range_ban_appeals')) {
             nel_derp(151, __('You cannot appeal a range ban.'));
         }
 
@@ -98,9 +107,11 @@ class Snacks
             nel_derp(152, __('Your IP address does not match the one on the ban.'));
         }
 
-        if (!$ban_hammer->addAppeal($bawww)) {
-            // nel_derp(153, __('You have already appealed your ban.'));
+        if ($ban_hammer->appealPending()) {
+            nel_derp(153, __('There is already a pending appeal for this ban.'));
         }
+
+        $ban_hammer->addAppeal($bawww);
     }
 
     /**

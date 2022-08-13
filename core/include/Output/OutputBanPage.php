@@ -93,6 +93,8 @@ class OutputBanPage extends Output
         if ($this->domain->setting('allow_ban_appeals')) {
             if (!$ban_hammer->getData('appeal_allowed')) {
                 $this->render_data['not_this_ban'] = true;
+            } else if ($ban_hammer->appealCount() >= $this->domain->setting('max_ban_appeals')) {
+                $this->render_data['max_appeals'] = true;
             } else if ($ban_hammer->getData('length') < $this->domain->setting('min_time_before_ban_appeal') ||
                 time() - $ban_hammer->getData('start_time') < $this->domain->setting('min_time_before_ban_appeal')) {
                 $this->render_data['min_time_not_met'] = true;
