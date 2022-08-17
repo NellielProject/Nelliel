@@ -308,11 +308,13 @@ class BetaMigrations
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
+                // Update ban appeals
                 $ban_appeals_table = new TableBanAppeals($this->database, $this->sql_compatibility);
                 $ban_appeals_table->createTable();
 
                 echo ' - ' . __('Ban appeals table added.') . '<br>';
 
+                // Update bans
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
                     nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal');
                     nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal_response');
@@ -323,6 +325,16 @@ class BetaMigrations
                     'ALTER TABLE "' . NEL_BANS_TABLE . '" ADD COLUMN appeal_allowed SMALLINT NOT NULL DEFAULT 0');
 
                 echo ' - ' . __('Updated bans table.') . '<br>';
+
+                // Update users
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_USERS_TABLE . '" ADD COLUMN display_name VARCHAR(255) NOT NULL DEFAULT \'\'');
+
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec('ALTER TABLE "' . NEL_USERS_TABLE . '" DROP COLUMN locked');
+                }
+
+                echo ' - ' . __('Updated users table.') . '<br>';
 
                 $migration_count ++;
         }

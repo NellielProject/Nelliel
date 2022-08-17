@@ -61,15 +61,16 @@ class AuthUser extends AuthHandler
         if ($result) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_USERS_TABLE .
-                '" SET "password" = :password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "username" = :username');
+                '" SET "display_name" = :display_name, "password" = :password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "username" = :username');
         } else {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_USERS_TABLE .
-                '" ("username", "password", "active", "owner", "last_login") VALUES
-                    (:username, :password, :active, :owner, :last_login)');
+                '" ("username", "display_name", "password", "active", "owner", "last_login") VALUES
+                    (:username, :display_name, :password, :active, :owner, :last_login)');
         }
 
         $prepared->bindValue(':username', $this->authDataOrDefault('username', $this->id()), PDO::PARAM_STR);
+        $prepared->bindValue(':display_name', $this->authDataOrDefault('display_name', ''), PDO::PARAM_STR);
         $prepared->bindValue(':password', $this->authDataOrDefault('password', ''), PDO::PARAM_STR);
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
         $prepared->bindValue(':owner', $this->authDataOrDefault('owner', 0), PDO::PARAM_INT);

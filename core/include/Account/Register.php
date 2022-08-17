@@ -73,6 +73,7 @@ class Register
         }
 
         $new_user = $this->authorization->newUser($register_username);
+        $new_user->changeData('display_name', $register_username);
         $new_user->updatePassword($register_password);
 
         if ($creating_owner) {

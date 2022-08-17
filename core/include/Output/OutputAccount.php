@@ -25,6 +25,7 @@ class OutputAccount extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general($parameters, true);
         $this->render_data['username'] = $this->session->user()->id();
+        $this->render_data['display_name'] = $this->session->user()->getData('display_name');
         $this->render_data['last_login'] = $this->session->user()->getData('last_login');
         $output_notices = new OutputNotices($this->domain, $this->write_mode);
         $this->render_data['notices'] = $output_notices->render([], true)['notices']; // TODO: Short form
