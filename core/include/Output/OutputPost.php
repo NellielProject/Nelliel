@@ -258,7 +258,7 @@ class OutputPost extends Output
         $post_headers['subject'] = $post->data('subject');
         $post_headers['name'] = $post->data('name');
 
-        if ($this->domain->setting('display_poster_id')) {
+        if ($this->domain->setting('show_poster_id')) {
             $raw_poster_id = hash_hmac('sha256', $post->data('hashed_ip_address'),
                 NEL_POSTER_ID_PEPPER . $this->domain->id() . $thread->contentID()->threadID());
             $poster_id = utf8_substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));

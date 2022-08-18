@@ -77,7 +77,7 @@ abstract class Output
 
     protected function setupTimer(bool $formatted = true, int $precision = 4)
     {
-        if ($this->domain->setting('display_render_timer')) {
+        if ($this->domain->setting('show_render_timer')) {
             $this->timer = new Timer();
             $this->timer->start();
             $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction($formatted, $precision);

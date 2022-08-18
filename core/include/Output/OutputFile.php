@@ -51,7 +51,7 @@ class OutputFile extends Output
             $this->render_data['download_filename'] = $file->data('filename') . '.' . $file->data('extension');
         }
 
-        if ($this->domain->setting('display_original_name') && !nel_true_empty($file->data('original_filename'))) {
+        if ($this->domain->setting('show_original_name') && !nel_true_empty($file->data('original_filename'))) {
             $display_filename = $file->data('original_filename');
         } else {
             $display_filename = $file->data('filename') . '.' . $file->data('extension');
@@ -127,7 +127,7 @@ class OutputFile extends Output
             $this->render_data['alt_tag'] = "video";
 
             if (is_null($preview_type) &&
-                (!$this->domain->setting('display_video_preview') || (!$has_static_preview && !$has_animated_preview))) {
+                (!$this->domain->setting('show_video_preview') || (!$has_static_preview && !$has_animated_preview))) {
                 if ($this->domain->setting('embed_video_files') &&
                     ($file->data('format') == 'webm' || $file->data('format') == 'mpeg4')) {
                     $this->render_data['video_width'] = $max_width;
@@ -145,11 +145,11 @@ class OutputFile extends Output
         }
 
         if (is_null($preview_type)) {
-            if ($this->domain->setting('display_static_preview') && $has_static_preview) {
+            if ($this->domain->setting('show_static_preview') && $has_static_preview) {
                 $preview_name = $file->data('static_preview_name');
             }
 
-            if ($this->domain->setting('display_animated_preview') && $has_animated_preview) {
+            if ($this->domain->setting('show_animated_preview') && $has_animated_preview) {
                 $preview_name = $file->data('animated_preview_name');
             }
 
