@@ -357,6 +357,12 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'post_backlinks_header', '1', 'Display reply backlinks in post header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'post_backlinks_footer', '0', 'Display reply backlinks in post footer.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'post_backlinks_label', 'Replies: ', 'Label for reply backlinks.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_poster_name', '1', 'Show poster name.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_tripcodes', '1', 'Show poster tripcodes.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_capcode', '1', 'Show poster capcode.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_post_subject', '1', 'Show the post subject.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_user_comments', '1', 'Show the user comments.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_mod_comments', '1', 'Show the mod comments.', '{"type":"checkbox"}']);
 
         // Uploads Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'display_static_preview', '1', 'Display static image previews when available.', '{"type":"checkbox"}']);
