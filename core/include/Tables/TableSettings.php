@@ -278,6 +278,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_tripcodes', '1', 'Allow use of tripcodes', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'process_new_post_commands', '1', 'Process user commands (noko, sage, etc) when making a new post', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_email_commands', '1', 'Allow commands in the email field', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'keep_email_commands', '0', 'Keep the email field input when it has commands.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_renzoku', '120', 'Cooldown for new threads (seconds)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'reply_renzoku', '30', 'Cooldown for new replies (seconds)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'threads_per_hour_limit', '0', 'Maximum new threads per hour. O to disable.', '{"type":"number"}']);
