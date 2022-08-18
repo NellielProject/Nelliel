@@ -94,7 +94,7 @@ class ImageSet
     public function install(bool $overwrite = false): void
     {
         $ini_parser = new INIParser(nel_utilities()->fileHandler());
-        $ini_files = $ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'set_info.ini', true);
+        $ini_files = $ini_parser->parseDirectories(NEL_IMAGE_SETS_FILES_PATH, 'set_info.ini', true);
         $encoded_ini = '';
         $directory = $this->front_end_data->imageSetIsCore($this->id()) ? 'core/' : 'custom/';
 
