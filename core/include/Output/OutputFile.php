@@ -185,8 +185,10 @@ class OutputFile extends Output
 
             if (!is_null($preview_type) && $preview_type === 'image') {
                 $ratio = min(($max_height / $preview_height), ($max_width / $preview_width));
-                $this->render_data['preview_width'] = intval($ratio * $preview_width);
-                $this->render_data['preview_height'] = intval($ratio * $preview_height);
+                $this->render_data['preview_width'] = ($ratio < 1) ? intval($ratio * $preview_width) : $file->data(
+                    'preview_width');
+                $this->render_data['preview_height'] = ($ratio < 1) ? intval($ratio * $preview_height) : $file->data(
+                    'preview_height');
             }
         }
 
