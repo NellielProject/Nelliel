@@ -39,6 +39,9 @@ $base_config['install_key'] = '';
 // Currently supported types: MYSQL, MARIADB, POSTGRESQL, SQLITE
 $db_config['core']['sqltype'] = 'MYSQL';
 
+// Timeout for the database connection
+$db_config['core']['timeout'] = 30;
+
 //
 // Configuration for MySQL
 //
