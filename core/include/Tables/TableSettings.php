@@ -304,6 +304,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'webp_quality', '75', 'WebP quality (1-100).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_width', '250', 'Maximum width when generating previews.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_height', '250', 'Maximum height when generating previews.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_copy_for_small_preview', '0', 'For images smaller than preview dimensions, just use a copy of the original.', '{"type":"checkbox"}']);
 
         // Threads
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_post_count', '1', 'Limit the number of posts in a thread.', '{"type":"checkbox"}']);

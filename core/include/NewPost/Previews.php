@@ -26,17 +26,25 @@ class Previews
         $files_count = count($files);
 
         for ($i = 0; $i < $files_count; $i ++) {
-            if ($files[$i]->data('display_width') <= 0 && $files[$i]->data('display_height') <= 0) {
+            if ($files[$i]->data('display_width') <= 0 || $files[$i]->data('display_height') <= 0) {
                 continue;
             }
 
+            clearstatcache();
             $file_handler->createDirectory($preview_path);
-            $magicks = nel_magick_available();
-            $graphics_handler = $this->site_domain->setting('graphics_handler');
             $preview_made = false;
 
-            // We favor command line in available as it tends to work better with more flexibility
-            if ($graphics_handler === 'GraphicsMagick') {
+            if ($this->domain->setting('use_copy_for_small_preview') &&
+                $files[$i]->data('display_width') <= $this->domain->setting('max_preview_width') &&
+                $files[$i]->data('display_height') <= $this->domain->setting('max_preview_height')) {
+                $preview_made = $this->useOriginal($files[$i], $preview_path);
+            }
+
+            $magicks = nel_magick_available();
+            $graphics_handler = $this->site_domain->setting('graphics_handler');
+
+            // We favor command line if available as it tends to work better with more flexibility
+            if (!$preview_made && $graphics_handler === 'GraphicsMagick') {
                 if (in_array('graphicsmagick', $magicks)) {
                     $preview_made = $this->graphicsMagick($files[$i], $preview_path);
                 } else if (in_array('gmagick', $magicks)) {
@@ -44,7 +52,7 @@ class Previews
                 }
             }
 
-            if ($graphics_handler === 'ImageMagick') {
+            if (!$preview_made && $graphics_handler === 'ImageMagick') {
                 if (in_array('imagemagick', $magicks)) {
                     $preview_made = $this->imageMagick($files[$i], $preview_path);
                 } else if (in_array('imagick', $magicks)) {
@@ -52,18 +60,52 @@ class Previews
                 }
             }
 
-            if ($graphics_handler === 'GD' || !$preview_made) {
+            if (!$preview_made && $graphics_handler === 'GD') {
                 $preview_made = $this->gd($files[$i], $preview_path);
             }
 
             if (!$preview_made) {
                 $this->nullPreview($files[$i]);
             }
-
-            clearstatcache();
         }
 
         return $files;
+    }
+
+    public function useOriginal(Upload $file, $preview_path): bool
+    {
+        $this->setPreviewDimensions($file);
+
+        if ($this->generateStatic($file) &&
+            ($file->data('format') === 'jpeg' || $file->data('format') === 'png' || $file->data('format') === 'webp')) {
+            $static_preview_name = $this->staticPreviewName($file);
+            $has_static = $this->deduplicate($file, $static_preview_name);
+
+            if (!$has_static) {
+                $has_static = copy($file->data('location'), $preview_path . $static_preview_name);
+            }
+
+            if ($has_static) {
+                $file->changeData('static_preview_name', $static_preview_name);
+                return true;
+            }
+        }
+
+        if ($this->generateAnimated($file) && $file->data('format') === 'gif') {
+            $animated_preview_name = $this->animatedPreviewName($file);
+            $has_animated = $this->deduplicate($file, $animated_preview_name);
+
+            if (!$has_animated) {
+                $has_animated = copy($file->data('location'), $preview_path . $animated_preview_name);
+            }
+
+            if ($has_animated) {
+                $file->changeData('animated_preview_name', $animated_preview_name);
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function imageMagick(Upload $file, $preview_path): bool
@@ -407,10 +449,10 @@ class Previews
 
         $ratio = min(($this->domain->setting('max_preview_height') / $file->data('display_height')),
             ($this->domain->setting('max_preview_width') / $file->data('display_width')));
-        $file->changeData('preview_width',
-            ($ratio < 1) ? intval($ratio * $file->data('display_width')) : $file->data('display_width'));
-        $file->changeData('preview_height',
-            ($ratio < 1) ? intval($ratio * $file->data('display_height')) : $file->data('display_height'));
+        $preview_width = ($ratio < 1) ? intval($ratio * $file->data('display_width')) : $file->data('display_width');
+        $preview_height = ($ratio < 1) ? intval($ratio * $file->data('display_height')) : $file->data('display_height');
+        $file->changeData('preview_width', $preview_width);
+        $file->changeData('preview_height', $preview_height);
     }
 
     private function staticPreviewName(Upload $file): string
