@@ -10,8 +10,12 @@ use Nelliel\Content\Upload;
 class UploadJSON extends JSON
 {
 
-    function __construct()
-    {}
+    function __construct(Upload $upload = null)
+    {
+        if (!is_null($upload)) {
+            $this->generateFromContent($upload);
+        }
+    }
 
     public function generateFromContent(Upload $upload): void
     {
@@ -39,6 +43,12 @@ class UploadJSON extends JSON
         $this->raw_data['spoiler'] = $upload->data('spoiler');
         $this->raw_data['deleted'] = $upload->data('deleted');
         $this->raw_data['exif'] = $upload->data('exif');
-        $this->generateFromRawData($this->raw_data);
+        $this->generate();
+    }
+
+    protected function generate(): void
+    {
+        $this->json = json_encode($this->raw_data);
+        $this->json_needs_update = false;
     }
 }

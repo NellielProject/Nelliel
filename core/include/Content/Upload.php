@@ -71,6 +71,7 @@ class Upload
 
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
+        $this->json->generateFromContent($this);
         return true;
     }
 

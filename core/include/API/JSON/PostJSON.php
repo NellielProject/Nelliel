@@ -10,8 +10,12 @@ class PostJSON extends JSON
 {
     protected $uploads = array();
 
-    function __construct()
-    {}
+    function __construct(Post $post = null)
+    {
+        if (!is_null($post)) {
+            $this->generateFromContent($post);
+        }
+    }
 
     public function generateFromContent(Post $post): void
     {
@@ -35,16 +39,22 @@ class PostJSON extends JSON
         $this->raw_data['sage'] = $post->data('sage');
         $this->raw_data['mod_comment'] = $post->data('mod_comment');
         $this->raw_data['uploads'] = array();
+        $this->generate();
+    }
 
+    protected function generate(): void
+    {
         foreach ($this->uploads as $upload) {
             $this->raw_data['uploads'][] = $upload->getRawData();
         }
 
-        $this->generateFromRawData($this->raw_data);
+        $this->json = json_encode($this->raw_data);
+        $this->json_needs_update = false;
     }
 
     public function addUpload(UploadJSON $upload): void
     {
         $this->uploads[] = $upload;
+        $this->json_needs_update = true;
     }
 }

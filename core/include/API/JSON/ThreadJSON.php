@@ -11,8 +11,12 @@ class ThreadJSON extends JSON
 {
     protected $posts = array();
 
-    function __construct()
-    {}
+    function __construct(Thread $thread = null)
+    {
+        if (!is_null($thread)) {
+            $this->generateFromContent($thread);
+        }
+    }
 
     public function generateFromContent(Thread $thread): void
     {
@@ -30,16 +34,22 @@ class ThreadJSON extends JSON
         $this->raw_data['sticky'] = $thread->data('sticky');
         $this->raw_data['locked'] = $thread->data('locked');
         $this->raw_data['cyclic'] = $thread->data('cyclic');
+        $this->generate();
+    }
 
+    protected function generate(): void
+    {
         foreach ($this->posts as $post) {
             $this->raw_data['posts'][] = $post->getRawData();
         }
 
-        $this->generateFromRawData($this->raw_data);
+        $this->json = json_encode($this->raw_data);
+        $this->json_needs_update = false;
     }
 
     public function addPost(PostJSON $post): void
     {
         $this->posts[] = $post;
+        $this->json_needs_update = true;
     }
 }
