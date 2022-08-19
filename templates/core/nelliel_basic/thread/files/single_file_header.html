@@ -7,7 +7,7 @@
 		<span class="text-button">[<a href="{{ file_url }}" class="download-link" download="{{ download_filename }}" data-i18n="">Download</a>]</span>
 {{/ show_download_link }}
 		<a href="{{ file_url }}" target="_blank" class="file-link">{{ display_filename }}</a>
-{{ display_image_dimensions }}{{ display_filesize}}
+{{ display_image_dimensions }} {{ display_filesize}} {{ display_ratio }}
 	</span>
 	<span class="single file-header">
 		<span class="hide-file hidden text-button" data-jsonly="">[<a class="toggle-file" href="#" data-command="hide-file" data-content-id="{{ file_content_id }}" data-alt-visual="Show File" data-i18n-attributes="data-alt-visual" data-i18n="">Hide File</a>]</span>

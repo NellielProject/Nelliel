@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
+use Lamansky\Fraction\Fraction;
 
 class OutputFile extends Output
 {
@@ -35,11 +36,17 @@ class OutputFile extends Output
                 '&actions=delete&content-id=' . $file->contentID()->getIDString() . '&modmode=true&goback=true';
         }
 
-        $this->render_data['display_filesize'] = ' (' . round(((int) $file->data('filesize') / 1024), 2) . ' KB)';
+        $this->render_data['display_filesize'] = '(' . round(((int) $file->data('filesize') / 1024), 2) . ' KB)';
+        $has_dimensions = $file->data('display_width') > 0 && $file->data('display_height') > 0;
 
-        if (!empty($file->data('display_width')) && !empty($file->data('display_height'))) {
+        if ($has_dimensions) {
             $this->render_data['display_image_dimensions'] = $file->data('display_width') . ' x ' .
                 $file->data('display_height');
+
+            if ($this->domain->setting('show_display_ratio')) {
+                $fraction = new Fraction($file->data('display_width'), $file->data('display_height'));
+                $this->render_data['display_ratio'] = $fraction->getNumerator() . ':' . $fraction->getDenominator();
+            }
         }
 
         $this->render_data['file_url'] = $file->srcWebPath() . rawurlencode($full_filename);
