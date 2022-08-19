@@ -18,8 +18,8 @@ $base_config['default_time_zone'] = 'UTC';
 // The fallback default value for locale.
 // If a locale is specified elsewhere, but no language file exists for it, this value will be used instead.
 // If the language file for this value is also missing, Nelliel will fallback to 'en_US' which is included in standard distribution.
-// Locale should follow the standard format using ISO-639 language and ISO-3166 country codes, e.g. 'en_US' for 'English (United States)'
-// The available locales and their translations can be found in the directory 'languages/locale'
+// Locale should follow the standard format using ISO-639 language and ISO-3166 country codes, e.g. 'en_US' for 'English (United States)'.
+// The available locales and their translations can be found in the directory 'languages/locale'.
 $base_config['default_locale'] = 'en_US';
 
 // Forces Nelliel to only allow sessions over a secure connection.
@@ -35,30 +35,30 @@ $base_config['install_key'] = '';
 // === Database Access Settings ===
 //
 
-// Database type
+// Database type.
 // Currently supported types: MYSQL, MARIADB, POSTGRESQL, SQLITE
 $db_config['core']['sqltype'] = 'MYSQL';
 
-// Timeout for the database connection
+// Timeout for the database connection.
 $db_config['core']['timeout'] = 30;
 
 //
 // Configuration for MySQL
 //
 
-// Name of database
+// Name of database.
 $db_config['core']['mysql']['database'] = '';
 
-// MySQL Server address
+// MySQL Server address.
 $db_config['core']['mysql']['host'] = 'localhost';
 
-// MySQL server port. Default is 3306
+// MySQL server port. Default is 3306.
 $db_config['core']['mysql']['port'] = '3306';
 
-// Name of database user
+// Name of database user.
 $db_config['core']['mysql']['user'] = '';
 
-// Password of database user
+// Password of database user.
 $db_config['core']['mysql']['password'] = '';
 
 // The character encoding to use.
@@ -68,19 +68,19 @@ $db_config['core']['mysql']['encoding'] = 'utf8mb4';
 // Configuration for MariaDB
 //
 
-// Name of database
+// Name of database.
 $db_config['core']['mariadb']['database'] = '';
 
-// MySQL Server address
+// MySQL Server address.
 $db_config['core']['mariadb']['host'] = 'localhost';
 
-// MySQL server port. Default is 3306
+// MySQL server port. Default is 3306.
 $db_config['core']['mariadb']['port'] = '3306';
 
-// Name of database user
+// Name of database user.
 $db_config['core']['mariadb']['user'] = '';
 
-// Password of database user
+// Password of database user.
 $db_config['core']['mariadb']['password'] = '';
 
 // The character encoding to use.
@@ -90,22 +90,22 @@ $db_config['core']['mariadb']['encoding'] = 'utf8mb4';
 // Configuration for PostgreSQL
 //
 
-// Name of database
+// Name of database.
 $db_config['core']['postgresql']['database'] = '';
 
-// PostgreSQL Server address
+// PostgreSQL Server address.
 $db_config['core']['postgresql']['host'] = 'localhost';
 
-// PostgreSQL server port. Default is 5432
+// PostgreSQL server port. Default is 5432.
 $db_config['core']['postgresql']['port'] = '5432';
 
-// Name of database user
+// Name of database user.
 $db_config['core']['postgresql']['user'] = '';
 
-// Password of database user
+// Password of database user.
 $db_config['core']['postgresql']['password'] = '';
 
-// Which schema to use. Default is 'public'
+// Which schema to use. Default is 'public'.
 $db_config['core']['postgresql']['schema'] = 'public';
 
 // The character encoding to use.
@@ -119,13 +119,13 @@ $db_config['core']['postgresql']['encoding'] = 'UTF-8';
 // Otherwise someone could just download the whole thing.
 // If this is not possible on your host, do not use SQLite for your database!
 
-// Filename of SQLite database
+// Filename of SQLite database.
 $db_config['core']['sqlite']['file_name'] = 'nelliel.sqlite';
 
 // Path where the database is to be located. Defaults to the core directory if empty.
 $db_config['core']['sqlite']['path'] = '';
 
-// The character encoding to use. Should be fine as-is
+// The character encoding to use. Should be fine as-is.
 $db_config['core']['sqlite']['encoding'] = 'UTF-8';
 
 //
@@ -138,8 +138,11 @@ $db_config['core']['sqlite']['encoding'] = 'UTF-8';
 $base_config['directory_perm'] = '0755';
 $base_config['file_perm'] = '0644';
 
-// Enable/disable plugins
+// Enable/disable plugins.
 $base_config['enable_plugins'] = true;
+
+// Enable/disable JSON API.
+$base_config['enable_json_api'] = true;
 
 // Enable/disable template caching for Mustache.
 $base_config['use_mustache_cache'] = true;
@@ -158,25 +161,23 @@ $base_config['use_render_cache'] = true;
 // === Crypt Settings ===
 //
 
-// The hashing algorithm to use for staff logins and other higher security things
-// If a selected algorithm is not available, Nelliel will use the PASSWORD_DEFAULT
+// The hashing algorithm to use for staff logins and other higher security things.
+// If a selected algorithm is not available, Nelliel will use the PASSWORD_DEFAULT.
 // Current valid options: BCRYPT, ARGON2
 $crypt_config['password_algorithm'] = 'BCRYPT';
 
 // Bcrypt
 
-// PHP default cost is 10; Nelliel default is 12; 04 is the minimum; 31 is maximum
+// PHP default cost is 10; Nelliel default is 12; 04 is the minimum; 31 is maximum.
 $crypt_config['password_bcrypt_cost'] = 12;
 
 // Argon2
-// Only available in PHP 7.2+
-// If not available, Nelliel will attempt a fallback to bcrypt
 
-// PHP default memory cost is 1024; Nelliel default is 1024
+// PHP default memory cost is 1024; Nelliel default is 1024.
 $crypt_config['password_argon2_memory_cost'] = 1024;
 
-// PHP default time cost is 2; Nelliel default is 2
+// PHP default time cost is 2; Nelliel default is 2.
 $crypt_config['password_argon2_time_cost'] = 2;
 
-// PHP default threads is 2; Nelliel default is 2
+// PHP default threads is 2; Nelliel default is 2.
 $crypt_config['password_argon2_threads'] = 2;

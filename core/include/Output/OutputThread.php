@@ -212,8 +212,11 @@ class OutputThread extends Output
             $this->file_handler->writeFile(
                 $this->domain->reference('page_path') . $thread_id . '/' . $thread->pageBasename() . NEL_PAGE_EXT,
                 $output, true);
-            $json_filename = $thread->contentID()->threadID() . NEL_JSON_EXT;
-            $this->file_handler->writeFile($thread->pageFilePath() . $json_filename, $thread->getJSON()->getJSON());
+
+            if(NEL_ENABLE_JSON_API) {
+                $json_filename = $thread->contentID()->threadID() . NEL_JSON_EXT;
+                $this->file_handler->writeFile($thread->pageFilePath() . $json_filename, $thread->getJSON()->getJSON());
+            }
         } else {
             echo $output;
             nel_clean_exit();
