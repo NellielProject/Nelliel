@@ -138,7 +138,6 @@ class OutputThread extends Output
             }
 
             $posts_from_end = $post_count - $post_counter;
-            $thread->getJSON()->addPost($post->getJSON());
             $parameters = ['gen_data' => $gen_data, 'in_thread_number' => $post_counter];
             $post_render = $output_post->render($post, $parameters, true);
 

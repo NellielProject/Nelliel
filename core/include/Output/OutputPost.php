@@ -79,7 +79,7 @@ class OutputPost extends Output
                 }
 
                 $file_data = array();
-                $post->getJSON()->addUpload($upload->getJSON());
+                //$post->getJSON()->addUpload($upload->getJSON());
 
                 if (nel_true_empty($upload->data('embed_url'))) {
                     $file_data = $output_file_info->render($upload, $post, [], true);

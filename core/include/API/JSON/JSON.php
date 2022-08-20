@@ -10,13 +10,13 @@ abstract class JSON
     protected $api_version = 0;
     protected $json = '';
     protected $raw_data = array();
-    protected $json_needs_update = false;
+    protected $needs_update = true;
 
     abstract protected function generate(): void;
 
     public function getJSON(): string
     {
-        if ($this->json_needs_update) {
+        if ($this->needs_update) {
             $this->generate();
         }
 
@@ -25,6 +25,10 @@ abstract class JSON
 
     public function getRawData(): array
     {
+        if ($this->needs_update) {
+            $this->generate();
+        }
+
         return $this->raw_data;
     }
 }

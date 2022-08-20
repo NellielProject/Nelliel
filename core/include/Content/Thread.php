@@ -39,7 +39,7 @@ class Thread
         $this->storeMoar(new Moar());
         $this->main_table = new TableThreads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('threads_table'));
-        $this->json = new ThreadJSON();
+        $this->json = new ThreadJSON($this);
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load) {
@@ -77,7 +77,6 @@ class Thread
 
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
-        $this->json->generateFromContent($this);
         return true;
     }
 

@@ -39,7 +39,7 @@ class Post
         $this->storeMoar(new Moar());
         $this->main_table = new TablePosts($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('posts_table'));
-        $this->json = new PostJSON();
+        $this->json = new PostJSON($this);
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load) {
@@ -77,7 +77,6 @@ class Post
 
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
-        $this->json->generateFromContent($this);
         return true;
     }
 
