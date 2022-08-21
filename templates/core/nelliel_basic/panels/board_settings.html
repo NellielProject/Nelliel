@@ -120,6 +120,9 @@
 	{{# show_ban_mod_name }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_ban_mod_name }}
+	{{# ban_page_date_format }}
+			{{> panels/pieces/settings/text }}
+	{{/ ban_page_date_format }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -588,9 +591,9 @@
 			<tr>
 				<th colspan="5" data-i18n="">Post Rendering</th>
 			</tr>
-	{{# date_format }}
+	{{# post_date_format }}
 			{{> panels/pieces/settings/text }}
-	{{/ date_format }}
+	{{/ post_date_format }}
 	{{# indent_marker }}
 			{{> panels/pieces/settings/text }}
 	{{/ indent_marker }}

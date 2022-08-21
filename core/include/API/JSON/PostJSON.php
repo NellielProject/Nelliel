@@ -30,7 +30,7 @@ class PostJSON extends JSON
         $this->raw_data['comment'] = $this->post->data('comment');
         $this->raw_data['post_time'] = $this->post->data('post_time');
         $this->raw_data['post_time_milli'] = $this->post->data('post_time_milli');
-        $this->raw_data['formatted_time'] = date($this->post->domain()->setting('date_format'),
+        $this->raw_data['formatted_time'] = date($this->post->domain()->setting('post_date_format'),
             $this->post->data('post_time'));
         $this->raw_data['total_uploads'] = $this->post->data('total_uploads');
         $this->raw_data['file_count'] = $this->post->data('file_count');

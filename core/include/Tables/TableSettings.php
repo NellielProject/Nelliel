@@ -190,6 +190,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_ban_appeals', '1', 'Allow ban appeals.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_ip_range_ban_appeals', '0', 'Allow appeals for IP range bans.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_ban_mod_name', '0', 'Display the username of who set the ban.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ban_page_date_format', 'F jS, Y H:i e', 'Format for times on the ban page (PHP date() function).', '{"type":"text"}']);
 
         // New Post Form
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_op_name_field', '1', 'Enable the name field for new threads.', '{"type":"checkbox"}']);
@@ -345,7 +346,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'prefix_board_title', '1', 'Prefix the board title (URI and name) to the page title of threads.', '{"type":"checkbox"}']);
 
         // Post Rendering
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'date_format', 'Y/m/d (D) H:i:s', 'Format for post time (uses PHP date() function).', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'date_format', 'Y/m/d (D) H:i:s', 'Format for post time (PHP date() function).', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'indent_marker', '>>', 'Indent marker next to replies.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'tripcode_marker', '!', 'Tripcode marker.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'no_comment_text', '(no comment)', 'Text when there is no comment.', '{"type":"text"}']);

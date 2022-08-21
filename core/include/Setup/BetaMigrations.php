@@ -290,14 +290,15 @@ class BetaMigrations
                     'require_email', 'enable_subject_field', 'require_subject', 'enable_comment_field',
                     'require_comment', 'display_render_timer', 'display_poster_id', 'display_static_preview',
                     'display_animated_preview', 'display_original_name', 'display_allowed_filetypes',
-                    'display_allowed_embeds', 'display_form_max_filesize', 'display_thumbnailed_message', 'display_video_preview'];
+                    'display_allowed_embeds', 'display_form_max_filesize', 'display_thumbnailed_message',
+                    'display_video_preview', 'date_format'];
                 $new_board_setting_names = ['max_op_preview_display_width', 'max_op_preview_display_height',
                     'max_op_embed_display_width', 'max_op_embed_display_height', 'max_op_multi_display_width',
                     'max_op_multi_display_height', 'enable_op_name_field', 'require_op_name', 'enable_op_email_field',
                     'require_op_email', 'enable_op_subject_field', 'require_op_subject', 'enable_op_comment_field',
                     'require_op_comment', 'show_render_timer', 'show_poster_id', 'show_static_preview',
                     'show_animated_preview', 'show_original_name', 'show_allowed_filetypes', 'show_allowed_embeds',
-                    'show_form_max_filesize', 'show_thumbnailed_message', 'show_video_preview'];
+                    'show_form_max_filesize', 'show_thumbnailed_message', 'show_video_preview', 'post_date_format'];
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';

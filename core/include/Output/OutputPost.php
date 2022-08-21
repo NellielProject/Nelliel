@@ -292,7 +292,7 @@ class OutputPost extends Output
             }
         }
 
-        $post_headers['post_time'] = date($this->domain->setting('date_format'), intval($post->data('post_time')));
+        $post_headers['post_time'] = date($this->domain->setting('post_date_format'), intval($post->data('post_time')));
         $post_headers['post_number'] = $post->contentID()->postID();
         $post_headers['post_number_url'] = $thread->getURL(
             $this->session->inModmode($this->domain) && !$this->write_mode) . '#t' . $post_content_id->threadID() . 'p' .
