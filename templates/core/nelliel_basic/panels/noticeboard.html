@@ -20,28 +20,4 @@
 	</div>
 </form>
 <hr>
-<table >
-	<caption data-i18n="">Notices</caption>
-	<thead>
-		<tr>
-			<th scope="col" data-i18n="">Name</th>
-			<th scope="col" data-i18n="">Subject</th>
-			<th scope="col" data-i18n="">Date</th>
-			<th scope="col" data-i18n="">Message</th>
-			<th scope="col" data-i18n="">Actions</th>
-		</tr>
-	</thead>
-	<tbody>
-{{# notice }}
-		<tr class="{{ bgclass }}">
-			<td>{{ name }}</td>
-			<td>{{ subject }}</td>
-			<td>{{ time }}</td>
-			<td>{{ message }}</td>
-			<td>
-				<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove</a>
-			</td>
-		</tr>
-{{/ notice }}
-	</tbody>
-</table>
+{{> notices }}

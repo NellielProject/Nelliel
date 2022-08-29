@@ -493,6 +493,35 @@ td {
 	float: left;
 }
 
+/* Message List */
+.notice-list {
+	margin: auto;
+	max-width: 60rem;
+}
+
+.notice {
+	background: var(--news-article-background, inherit);
+	border: 2px solid;
+	margin: 0.5em;
+}
+
+.notice-header {
+	background: var(--news-article-header-background, inherit);
+	padding: 0.15em;
+}
+
+.notice-subject {
+	color: var(--news-headline-color, inherit);
+	font-size: 1.25rem;
+	text-align: left;
+}
+
+.notice-text {
+	text-align: left;
+	color: var(--news-paragraph-color, inherit);
+	margin: 1.0rem 0.5rem;
+}
+
 /* News */
 .news-page {
 	margin: auto;
