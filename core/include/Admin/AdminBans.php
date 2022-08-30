@@ -85,6 +85,7 @@ class AdminBans extends Admin
         $this->ban_hammer->loadFromID($_POST['ban_id']);
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
+        $this->ban_hammer->updateAppealFromPOST();
         $this->outputMain(true);
     }
 

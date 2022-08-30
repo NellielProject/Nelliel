@@ -79,7 +79,7 @@ class OutputPost extends Output
                 }
 
                 $file_data = array();
-                $post->getJSON()->addUpload($upload->getJSON());
+                //$post->getJSON()->addUpload($upload->getJSON());
 
                 if (nel_true_empty($upload->data('embed_url'))) {
                     $file_data = $output_file_info->render($upload, $post, [], true);
@@ -125,6 +125,10 @@ class OutputPost extends Output
         $thread_headers = array();
         $this->render_data['headers']['response'] = $response;
         $post_content_id = $post->contentID();
+        $this->render_data['show_poster_name'] = $this->domain->setting('show_poster_name');
+        $this->render_data['show_tripcodes'] = $this->domain->setting('show_tripcodes');
+        $this->render_data['show_capcode'] = $this->domain->setting('show_capcode');
+        $this->render_data['show_post_subject'] = $this->domain->setting('show_post_subject');
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
@@ -254,7 +258,7 @@ class OutputPost extends Output
         $post_headers['subject'] = $post->data('subject');
         $post_headers['name'] = $post->data('name');
 
-        if ($this->domain->setting('display_poster_id')) {
+        if ($this->domain->setting('show_poster_id')) {
             $raw_poster_id = hash_hmac('sha256', $post->data('hashed_ip_address'),
                 NEL_POSTER_ID_PEPPER . $this->domain->id() . $thread->contentID()->threadID());
             $poster_id = utf8_substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
@@ -288,7 +292,7 @@ class OutputPost extends Output
             }
         }
 
-        $post_headers['post_time'] = date($this->domain->setting('date_format'), intval($post->data('post_time')));
+        $post_headers['post_time'] = date($this->domain->setting('post_date_format'), intval($post->data('post_time')));
         $post_headers['post_number'] = $post->contentID()->postID();
         $post_headers['post_number_url'] = $thread->getURL(
             $this->session->inModmode($this->domain) && !$this->write_mode) . '#t' . $post_content_id->threadID() . 'p' .
@@ -302,7 +306,9 @@ class OutputPost extends Output
     {
         $comment_data = array();
         $comment_data['post_contents_id'] = 'post-contents-' . $post->contentID()->getIDString();
-        $comment_data['mod_comment'] = $post->data('mod_comment') ?? null;
+        $comment_data['show_mod_comments'] = $this->domain->setting('show_mod_comments');
+        $comment_data['mod_comments'] = $post->data('mod_comment') ?? null;
+        $comment_data['show_user_comments'] = $this->domain->setting('show_user_comments');
         $comment_data['nofollow_external_links'] = $this->site_domain->setting('nofollow_external_links');
         $comment = $post->data('comment');
 

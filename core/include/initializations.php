@@ -21,6 +21,7 @@ define('NEL_USE_RENDER_CACHE', $base_config['use_render_cache'] ?? true);
 define('NEL_USE_MUSTACHE_CACHE', $base_config['use_mustache_cache'] ?? true);
 define('NEL_DEFAULT_LOCALE', $base_config['default_locale'] ?? 'en_US');
 define('NEL_ENABLE_PLUGINS', $base_config['enable_plugins'] ?? true);
+define('NEL_ENABLE_JSON_API', $base_config['enable_json_api'] ?? true);
 define('NEL_SECURE_SESSION_ONLY', $base_config['secure_session_only'] ?? false);
 define('NEL_DATABASES', $db_config);
 define('NEL_PASSWORD_PREFERRED_ALGORITHM', $crypt_config['password_algorithm'] ?? 'BCRYPT');

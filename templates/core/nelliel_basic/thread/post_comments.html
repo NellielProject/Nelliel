@@ -1,8 +1,10 @@
 <div class="{{ op_reply }} comment-container">
+{{# show_user_comments }}
 	{{> thread/pieces/comment_markdown }}
-{{# mod_comment }}
-	{{> thread/pieces/mod_comment }}
-{{/ mod_comment }}
+{{/ show_user_comments }}
+{{# show_mod_comments }}
+	{{> thread/pieces/mod_comments }}
+{{/ show_mod_comments }}
 {{# long_comment }}
 	{{> thread/pieces/long_comment }}
 {{/ long_comment }}

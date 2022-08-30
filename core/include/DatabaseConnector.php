@@ -52,10 +52,12 @@ class DatabaseConnector
 
     protected function setValues(): void
     {
-        $this->options = [PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC, PDO::ATTR_EMULATE_PREPARES => false,
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION];
-
         $db_config = NEL_DATABASES[$this->database_key] ?? array();
+        $this->options[PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_ASSOC;
+        $this->options[PDO::ATTR_EMULATE_PREPARES] = false;
+        $this->options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
+        $this->options[PDO::ATTR_TIMEOUT] = $db_config['timeout'];
+
         $this->config['sqltype'] = $db_config['sqltype'] ?? '';
         $type = utf8_strtolower($this->config['sqltype']);
         $this->config['database'] = $db_config[$type]['database'] ?? '';

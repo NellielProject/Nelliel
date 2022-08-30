@@ -116,7 +116,7 @@ class OutputNewPostForm extends Output
     {
         $filetypes = new FileTypes($this->domain->database());
 
-        if ($this->domain->setting('display_allowed_filetypes') && $this->render_data['allow_files']) {
+        if ($this->domain->setting('show_allowed_filetypes') && $this->render_data['allow_files']) {
             foreach ($filetypes->enabledCategories($this->domain) as $category) {
                 $supported_types = sprintf(__('Supported %s file types:'), $category) . ' ';
                 $supported = '';
@@ -161,7 +161,7 @@ class OutputNewPostForm extends Output
             }
         }
 
-        if ($this->domain->setting('display_allowed_embeds') && $this->render_data['allow_embeds']) {
+        if ($this->domain->setting('show_allowed_embeds') && $this->render_data['allow_embeds']) {
             $embed_labels = $this->database->executeFetchAll(
                 'SELECT "label" FROM "' . NEL_EMBEDS_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_COLUMN);
             $supported_embeds = '';
@@ -176,12 +176,12 @@ class OutputNewPostForm extends Output
             }
         }
 
-        if ($this->domain->setting('display_form_max_filesize') && $this->render_data['allow_files']) {
+        if ($this->domain->setting('show_form_max_filesize') && $this->render_data['allow_files']) {
             $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
                 _gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize') / 1024);
         }
 
-        if ($this->domain->setting('display_thumbnailed_message') && $this->render_data['allow_files']) {
+        if ($this->domain->setting('show_thumbnailed_message') && $this->render_data['allow_files']) {
             $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
                 _gettext('Images greater than %d x %d pixels will be thumbnailed.'),
                 $this->domain->setting('max_preview_width'), $this->domain->setting('max_preview_height'));

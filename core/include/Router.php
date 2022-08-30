@@ -92,6 +92,12 @@ class Router
                         $dispatch_class = '\Nelliel\Dispatch\DispatchThreads';
                         $r->addRoute(['POST'], '/{section:threads}', $dispatch_class);
                     });
+
+                $r->addGroup('/{domain_id:[^\/]+}/{module:snacks}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchSnacks';
+                        $r->addRoute(['POST'], '/{section:user-bans}[/{action:[^\/]+}]', $dispatch_class);
+                    });
             }, ['cacheFile' => NEL_CACHE_FILES_PATH . 'route.php']);
     }
 

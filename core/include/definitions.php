@@ -26,6 +26,7 @@ define('NEL_MAIN_INDEX', 'index');
 define('NEL_PAGE_EXT', '.html');
 define('NEL_JSON_EXT', '.json');
 
+define('NEL_BAN_APPEALS_TABLE', 'nelliel_ban_appeals');
 define('NEL_BANS_TABLE', 'nelliel_bans');
 define('NEL_BLOTTER_TABLE', 'nelliel_blotter');
 define('NEL_BOARD_DATA_TABLE', 'nelliel_board_data');

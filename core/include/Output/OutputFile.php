@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
+use Lamansky\Fraction\Fraction;
 
 class OutputFile extends Output
 {
@@ -35,11 +36,17 @@ class OutputFile extends Output
                 '&actions=delete&content-id=' . $file->contentID()->getIDString() . '&modmode=true&goback=true';
         }
 
-        $this->render_data['display_filesize'] = ' (' . round(((int) $file->data('filesize') / 1024), 2) . ' KB)';
+        $this->render_data['display_filesize'] = '(' . round(((int) $file->data('filesize') / 1024), 2) . ' KB)';
+        $has_dimensions = $file->data('display_width') > 0 && $file->data('display_height') > 0;
 
-        if (!empty($file->data('display_width')) && !empty($file->data('display_height'))) {
+        if ($has_dimensions) {
             $this->render_data['display_image_dimensions'] = $file->data('display_width') . ' x ' .
                 $file->data('display_height');
+
+            if ($this->domain->setting('show_display_ratio')) {
+                $fraction = new Fraction($file->data('display_width'), $file->data('display_height'));
+                $this->render_data['display_ratio'] = $fraction->getNumerator() . ':' . $fraction->getDenominator();
+            }
         }
 
         $this->render_data['file_url'] = $file->srcWebPath() . rawurlencode($full_filename);
@@ -51,7 +58,7 @@ class OutputFile extends Output
             $this->render_data['download_filename'] = $file->data('filename') . '.' . $file->data('extension');
         }
 
-        if ($this->domain->setting('display_original_name') && !nel_true_empty($file->data('original_filename'))) {
+        if ($this->domain->setting('show_original_name') && !nel_true_empty($file->data('original_filename'))) {
             $display_filename = $file->data('original_filename');
         } else {
             $display_filename = $file->data('filename') . '.' . $file->data('extension');
@@ -127,7 +134,7 @@ class OutputFile extends Output
             $this->render_data['alt_tag'] = "video";
 
             if (is_null($preview_type) &&
-                (!$this->domain->setting('display_video_preview') || (!$has_static_preview && !$has_animated_preview))) {
+                (!$this->domain->setting('show_video_preview') || (!$has_static_preview && !$has_animated_preview))) {
                 if ($this->domain->setting('embed_video_files') &&
                     ($file->data('format') == 'webm' || $file->data('format') == 'mpeg4')) {
                     $this->render_data['video_width'] = $max_width;
@@ -145,11 +152,11 @@ class OutputFile extends Output
         }
 
         if (is_null($preview_type)) {
-            if ($this->domain->setting('display_static_preview') && $has_static_preview) {
+            if ($this->domain->setting('show_static_preview') && $has_static_preview) {
                 $preview_name = $file->data('static_preview_name');
             }
 
-            if ($this->domain->setting('display_animated_preview') && $has_animated_preview) {
+            if ($this->domain->setting('show_animated_preview') && $has_animated_preview) {
                 $preview_name = $file->data('animated_preview_name');
             }
 
@@ -185,8 +192,10 @@ class OutputFile extends Output
 
             if (!is_null($preview_type) && $preview_type === 'image') {
                 $ratio = min(($max_height / $preview_height), ($max_width / $preview_width));
-                $this->render_data['preview_width'] = intval($ratio * $preview_width);
-                $this->render_data['preview_height'] = intval($ratio * $preview_height);
+                $this->render_data['preview_width'] = ($ratio < 1) ? intval($ratio * $preview_width) : $file->data(
+                    'preview_width');
+                $this->render_data['preview_height'] = ($ratio < 1) ? intval($ratio * $preview_height) : $file->data(
+                    'preview_height');
             }
         }
 

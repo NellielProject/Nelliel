@@ -1,15 +1,17 @@
 {{# post_headers }}
 <span class="{{ op_reply }} post-header-info">
 	{{^ hide_post_select }}
-	{{# is_op }}
+		{{# is_op }}
 	<input type="checkbox" name="{{ thread_content_id }}" value="action">
-	{{/ is_op }}
-	{{^ is_op }}
+		{{/ is_op }}
+		{{^ is_op }}
 	<input type="checkbox" name="{{ post_content_id }}" value="action">
-	{{/ is_op }}
+		{{/ is_op }}
 	{{/ hide_post_select }}
+	{{# show_post_subject }}
 	<span class="{{ op_reply }} subject">{{ subject }}</span>
-	{{> thread/pieces/poster_name }}{{> thread/pieces/tripline }}{{> thread/pieces/capcode }}
+	{{/ show_post_subject }}
+	{{# show_poster_name }}{{> thread/pieces/poster_name }}{{/ show_poster_name }}{{# show_tripcodes }}{{> thread/pieces/tripline }}{{/ show_tripcodes }}{{# show_capcode }}{{> thread/pieces/capcode }}{{/ show_capcode }}
 	<span class="post-time">{{ post_time }}</span>
 	{{> thread/pieces/poster_id }}
 	<a href="{{ post_number_url }}" class="post-number-link" data-i18n="">No.</a>

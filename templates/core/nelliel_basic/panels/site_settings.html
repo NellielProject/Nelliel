@@ -111,23 +111,6 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Bans</th>
-			</tr>
-	{{# must_see_ban }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ must_see_ban }}
-	{{# allow_ban_appeals }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ allow_ban_appeals }}
-	{{# min_time_before_ban_appeal }}
-			{{> panels/pieces/settings/number }}
-	{{/ min_time_before_ban_appeal }}
-	{{# ban_page_extra_text }}
-			{{> panels/pieces/settings/text }}
-	{{/ ban_page_extra_text }}
-		</tbody>
-		<tbody>
-			<tr>
 				<th colspan="3" data-i18n="">Filenames and Structure</th>
 			</tr>
 	{{# index_filename_format }}
@@ -168,9 +151,9 @@
 	{{# template_id }}
 			{{> panels/pieces/settings/select }}
 	{{/ template_id }}
-	{{# display_render_timer }}
+	{{# show_render_timer }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_render_timer }}
+	{{/ show_render_timer }}
 	{{# site_referrer_policy }}
 			{{> panels/pieces/settings/select }}
 	{{/ site_referrer_policy }}

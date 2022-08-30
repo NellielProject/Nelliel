@@ -78,10 +78,13 @@ class NewPost
             if ($this->domain->setting('allow_email_commands')) {
                 $email_parts = explode(' ', $post_email);
 
-                if ($email_parts !== false && count($email_parts) > 1 &&
+                if (is_array($email_parts) && count($email_parts) > 0 &&
                     preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1) {
                     $fgsfds->addFromString($post_email, false);
-                    $post->changeData('email', null);
+
+                    if (!$this->domain->setting('keep_email_commands')) {
+                        $post->changeData('email', null);
+                    }
                 }
             }
 
@@ -128,8 +131,7 @@ class NewPost
         $post->createDirectories();
 
         if ($fgsfds->commandIsSet('noko')) {
-            $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()
-                ->threadID());
+            $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()->threadID());
         }
 
         clearstatcache();
@@ -145,14 +147,10 @@ class NewPost
             $order = 1;
 
             foreach ($uploads as $upload) {
-                $upload->contentID()->changeThreadID($thread->contentID()
-                    ->threadID());
-                $upload->changeData('parent_thread', $thread->contentID()
-                    ->threadID());
-                $upload->contentID()->changePostID($post->contentID()
-                    ->postID());
-                $upload->changeData('post_ref', $post->contentID()
-                    ->postID());
+                $upload->contentID()->changeThreadID($thread->contentID()->threadID());
+                $upload->changeData('parent_thread', $thread->contentID()->threadID());
+                $upload->contentID()->changePostID($post->contentID()->postID());
+                $upload->changeData('post_ref', $post->contentID()->postID());
                 $upload->contentID()->changeOrderID($order);
                 $upload->changeData('upload_order', $order);
 
@@ -181,7 +179,7 @@ class NewPost
             $thread->cycle();
         }
 
-        if($thread->data('op') || $thread->data('old')) {
+        if ($thread->data('op') || $thread->data('old')) {
             $archive_and_prune = new ArchiveAndPrune($thread->domain(), $file_handler);
             $archive_and_prune->updateThreads();
         }
@@ -191,8 +189,7 @@ class NewPost
 
         // Generate thread page if it doesn't exist, otherwise update
         $regen = new Regen();
-        $regen->threads($this->domain, true, [$thread->contentID()
-            ->threadID()]);
+        $regen->threads($this->domain, true, [$thread->contentID()->threadID()]);
         $regen->index($this->domain);
 
         if ($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active')) {

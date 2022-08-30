@@ -10,19 +10,25 @@ abstract class JSON
     protected $api_version = 0;
     protected $json = '';
     protected $raw_data = array();
+    protected $needs_update = true;
+
+    abstract protected function generate(): void;
 
     public function getJSON(): string
     {
+        if ($this->needs_update) {
+            $this->generate();
+        }
+
         return $this->json;
     }
 
     public function getRawData(): array
     {
-        return $this->raw_data;
-    }
+        if ($this->needs_update) {
+            $this->generate();
+        }
 
-    public function generateFromRawData(array $raw_data): void
-    {
-        $this->json = json_encode($raw_data);
+        return $this->raw_data;
     }
 }

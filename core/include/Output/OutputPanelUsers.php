@@ -36,6 +36,7 @@ class OutputPanelUsers extends Output
             $user_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $user_data['username'] = $user_info['username'];
+            $user_data['display_name'] = $user_info['display_name'];
             $user_data['active'] = $user_info['active'];
 
             if ($user_info['owner'] == 0 || $this->session->user()->isSiteOwner()) {

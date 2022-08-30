@@ -12,6 +12,7 @@ use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Tables\TableBanAppeals;
 
 class BetaMigrations
 {
@@ -278,21 +279,26 @@ class BetaMigrations
                 // Update board settings
                 $new_board_settings = ['max_reply_preview_display_width', 'max_reply_preview_display_height',
                     'max_reply_embed_display_width', 'max_reply_embed_display_height', 'max_reply_multi_display_width',
-                    'max_reply_multi_display_height', 'enable_reply_name_field', 'require_reply_name', 'enable_reply_email_field',
-                    'require_reply_email', 'enable_reply_subject_field', 'require_reply_subject', 'enable_reply_comment_field',
-                    'require_reply_comment'];
+                    'max_reply_multi_display_height', 'enable_reply_name_field', 'require_reply_name',
+                    'enable_reply_email_field', 'require_reply_email', 'enable_reply_subject_field',
+                    'require_reply_subject', 'enable_reply_comment_field', 'require_reply_comment'];
                 $this->newBoardSettings($new_board_settings);
 
                 $old_board_setting_names = ['max_preview_display_width', 'max_preview_display_height',
                     'max_embed_display_width', 'max_embed_display_height', 'max_multi_display_width',
                     'max_multi_display_height', 'enable_name_field', 'require_name', 'enable_email_field',
                     'require_email', 'enable_subject_field', 'require_subject', 'enable_comment_field',
-                    'require_comment'];
+                    'require_comment', 'display_render_timer', 'display_poster_id', 'display_static_preview',
+                    'display_animated_preview', 'display_original_name', 'display_allowed_filetypes',
+                    'display_allowed_embeds', 'display_form_max_filesize', 'display_thumbnailed_message',
+                    'display_video_preview', 'date_format'];
                 $new_board_setting_names = ['max_op_preview_display_width', 'max_op_preview_display_height',
                     'max_op_embed_display_width', 'max_op_embed_display_height', 'max_op_multi_display_width',
                     'max_op_multi_display_height', 'enable_op_name_field', 'require_op_name', 'enable_op_email_field',
                     'require_op_email', 'enable_op_subject_field', 'require_op_subject', 'enable_op_comment_field',
-                    'require_op_comment'];
+                    'require_op_comment', 'show_render_timer', 'show_poster_id', 'show_static_preview',
+                    'show_animated_preview', 'show_original_name', 'show_allowed_filetypes', 'show_allowed_embeds',
+                    'show_form_max_filesize', 'show_thumbnailed_message', 'show_video_preview', 'post_date_format'];
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
@@ -301,7 +307,43 @@ class BetaMigrations
                 $new_site_settings = ['visitor_id_lifespan'];
                 $this->newSiteSettings($new_site_settings);
 
+                $old_site_setting_names = ['display_render_timer'];
+                $new_site_setting_names = ['show_render_timer'];
+                $this->renameSiteSettings($old_site_setting_names, $new_site_setting_names);
+
+                $old_site_settings = ['must_see_ban', 'allow_ban_appeals', 'min_time_before_ban_appeal',
+                    'ban_page_extra_text'];
+                $this->removeSiteSettings($old_site_settings);
+
                 echo ' - ' . __('Site settings updated.') . '<br>';
+
+                // Update ban appeals
+                $ban_appeals_table = new TableBanAppeals($this->database, $this->sql_compatibility);
+                $ban_appeals_table->createTable();
+
+                echo ' - ' . __('Ban appeals table added.') . '<br>';
+
+                // Update bans
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal');
+                    nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal_response');
+                    nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal_status');
+                }
+
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_BANS_TABLE . '" ADD COLUMN appeal_allowed SMALLINT NOT NULL DEFAULT 0');
+
+                echo ' - ' . __('Updated bans table.') . '<br>';
+
+                // Update users
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_USERS_TABLE . '" ADD COLUMN display_name VARCHAR(255) NOT NULL DEFAULT \'\'');
+
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec('ALTER TABLE "' . NEL_USERS_TABLE . '" DROP COLUMN locked');
+                }
+
+                echo ' - ' . __('Updated users table.') . '<br>';
 
                 $migration_count ++;
         }

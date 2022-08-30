@@ -64,19 +64,23 @@ abstract class Output
         $this->core_id = $core_id;
     }
 
-    protected function timerTotalFunction(bool $rounded = true, int $precision = 4)
+    protected function timerTotalFunction(bool $formatted = true, int $precision = 4)
     {
-        return function () use ($rounded, $precision) {
-            return $this->timer->elapsed($rounded, $precision);
+        return function () use ($formatted, $precision) {
+            if ($formatted) {
+                return $this->timer->elapsedFormatted($precision);
+            } else {
+                return $this->timer->elapsed();
+            }
         };
     }
 
-    protected function setupTimer(bool $rounded = true, int $precision = 4)
+    protected function setupTimer(bool $formatted = true, int $precision = 4)
     {
-        if ($this->domain->setting('display_render_timer')) {
+        if ($this->domain->setting('show_render_timer')) {
             $this->timer = new Timer();
             $this->timer->start();
-            $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction($rounded, $precision);
+            $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction($formatted, $precision);
         }
     }
 

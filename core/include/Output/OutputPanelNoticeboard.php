@@ -46,7 +46,7 @@ class OutputPanelNoticeboard extends Output
                 http_build_query(
                     ['module' => 'admin', 'section' => 'noticeboard', 'actions' => 'remove',
                         'notice-id' => $notice['notice_id']]);
-            $this->render_data['notice'][] = $notice_info;
+            $this->render_data['notices'][] = $notice_info;
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

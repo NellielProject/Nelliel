@@ -34,7 +34,7 @@ class Upload
         $this->storeMoar(new Moar());
         $this->main_table = new TableUploads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('uploads_table'));
-        $this->json = new UploadJSON();
+        $this->json = new UploadJSON($this);
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load) {

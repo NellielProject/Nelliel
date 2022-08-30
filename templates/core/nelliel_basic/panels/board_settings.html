@@ -94,6 +94,38 @@
 		</tbody>
 		<tbody>
 			<tr>
+				<th colspan="3" data-i18n="">Bans</th>
+			</tr>
+	{{# must_see_ban }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ must_see_ban }}
+	{{# ban_page_extra_text }}
+			{{> panels/pieces/settings/text }}
+	{{/ ban_page_extra_text }}
+	{{# allow_ban_appeals }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ allow_ban_appeals }}
+	{{# min_time_before_ban_appeal }}
+			{{> panels/pieces/settings/number }}
+	{{/ min_time_before_ban_appeal }}
+	{{# max_ban_appeals }}
+			{{> panels/pieces/settings/number }}
+	{{/ max_ban_appeals }}
+	{{# allow_ban_appeals }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ allow_ban_appeals }}
+	{{# allow_ip_range_ban_appeals }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ allow_ip_range_ban_appeals }}
+	{{# show_ban_mod_name }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_ban_mod_name }}
+	{{# ban_page_date_format }}
+			{{> panels/pieces/settings/text }}
+	{{/ ban_page_date_format }}
+		</tbody>
+		<tbody>
+			<tr>
 				<th colspan="5" data-i18n="">New Post Form</th>
 			</tr>
 	{{# enable_op_name_field }}
@@ -361,6 +393,9 @@
 	{{# allow_email_commands }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ allow_email_commands }}
+	{{# keep_email_commands }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ keep_email_commands }}
 	{{# thread_renzoku }}
 			{{> panels/pieces/settings/number }}
 	{{/ thread_renzoku }}
@@ -435,6 +470,9 @@
 	{{# max_preview_height }}
 			{{> panels/pieces/settings/number }}
 	{{/ max_preview_height }}
+	{{# use_copy_for_small_preview}}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ use_copy_for_small_preview }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -553,9 +591,9 @@
 			<tr>
 				<th colspan="5" data-i18n="">Post Rendering</th>
 			</tr>
-	{{# date_format }}
+	{{# post_date_format }}
 			{{> panels/pieces/settings/text }}
-	{{/ date_format }}
+	{{/ post_date_format }}
 	{{# indent_marker }}
 			{{> panels/pieces/settings/text }}
 	{{/ indent_marker }}
@@ -568,9 +606,9 @@
 	{{# filter_zalgo }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ filter_zalgo }}
-	{{# display_poster_id }}
+	{{# show_poster_id }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_poster_id }}
+	{{/ show_poster_id }}
 	{{# poster_id_colors }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ poster_id_colors }}
@@ -595,23 +633,41 @@
 	{{# post_backlinks_label }}
 			{{> panels/pieces/settings/text }}
 	{{/ post_backlinks_label }}
+	{{# show_poster_name }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_poster_name }}
+	{{# show_tripcodes }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_tripcodes }}
+	{{# show_capcode }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_capcode }}
+	{{# show_post_subject }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_post_subject }}
+	{{# show_user_comments }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_user_comments }}
+	{{# show_mod_comments }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_mod_comments }}
 		</tbody>
 		<tbody>
 			<tr>
 				<th colspan="5" data-i18n="">Uploads Rendering</th>
 			</tr>
-	{{# display_static_preview }}
+	{{# show_static_preview }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_static_preview }}
-	{{# display_animated_preview }}
+	{{/ show_static_preview }}
+	{{# show_animated_preview }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_animated_preview }}
+	{{/ show_animated_preview }}
 	{{# use_original_as_preview }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_original_as_preview }}
-	{{# display_video_preview }}
+	{{# show_video_preview }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_video_preview }}
+	{{/ show_video_preview }}
 	{{# embed_video_files }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ embed_video_files }}
@@ -681,18 +737,12 @@
 	{{# embed_url_display_length }}
 			{{> panels/pieces/settings/number }}
 	{{/ embed_url_display_length }}
-	{{# display_original_name }}
+	{{# show_original_name }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_original_name }}
+	{{/ show_original_name }}
 	{{# display_deleted_placeholder }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ display_deleted_placeholder }}
-	{{# show_download_link }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ show_download_link }}
-	{{# download_original_name }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ download_original_name }}
 	{{# enabled_content_ops }}
 			<tr class="row1">
 			{{> panels/pieces/settings/setting_name }}
@@ -714,23 +764,32 @@
 				{{> panels/pieces/settings/setting_description }}
 			</tr>
 	{{/ enabled_content_ops }}
+	{{# show_download_link }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_download_link }}
+	{{# download_original_name }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ download_original_name }}
+	{{# show_display_ratio }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_display_ratio }}
 		</tbody>
 		<tbody>
 			<tr>
 				<th colspan="5" data-i18n="">New Post Form Rendering</th>
 			</tr>
-	{{# display_allowed_filetypes }}
+	{{# show_allowed_filetypes }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_allowed_filetypes }}
-	{{# display_allowed_embeds }}
+	{{/ show_allowed_filetypes }}
+	{{# show_allowed_embeds }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_allowed_embeds }}
-	{{# display_form_max_filesize }}
+	{{/ show_allowed_embeds }}
+	{{# show_form_max_filesize }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_form_max_filesize }}
-	{{# display_thumbnailed_message }}
+	{{/ show_form_max_filesize }}
+	{{# show_thumbnailed_message }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_thumbnailed_message }}
+	{{/ show_thumbnailed_message }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -751,9 +810,9 @@
 	{{# image_set_fallback }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ image_set_fallback }}
-	{{# display_render_timer }}
+	{{# show_render_timer }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ display_render_timer }}
+	{{/ show_render_timer }}
 	{{# generate_catalog }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ generate_catalog }}

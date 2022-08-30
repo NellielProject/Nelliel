@@ -19,17 +19,17 @@ class TableUsers extends Table
         $this->table_name = NEL_USERS_TABLE;
         $this->column_types = [
             'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'display_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'password' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'active' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'locked' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'owner' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'last_login' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'username' => ['row_check' => true, 'auto_inc' => false],
+            'display_name' => ['row_check' => false, 'auto_inc' => false],
             'password' => ['row_check' => false, 'auto_inc' => false],
             'active' => ['row_check' => false, 'auto_inc' => false],
-            'locked' => ['row_check' => false, 'auto_inc' => false],
             'owner' => ['row_check' => false, 'auto_inc' => false],
             'last_login' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
@@ -42,9 +42,9 @@ class TableUsers extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             username        VARCHAR(50) NOT NULL,
+            display_name    VARCHAR(255) NOT NULL,
             password        VARCHAR(255) NOT NULL,
             active          SMALLINT NOT NULL DEFAULT 0,
-            locked          SMALLINT NOT NULL DEFAULT 0,
             owner           SMALLINT NOT NULL DEFAULT 0,
             last_login      BIGINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL,

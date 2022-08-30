@@ -19,6 +19,9 @@ class Overboard
         $this->database = $database;
     }
 
+    /**
+     * Add a thread reference to the overboard.
+     */
     public function addThread(Thread $thread): void
     {
         $prepared = $this->database->prepare(
@@ -41,6 +44,9 @@ class Overboard
         $this->prune();
     }
 
+    /**
+     * Update a thread reference on the overboard.
+     */
     public function updateThread(Thread $thread): void
     {
         $prepared = $this->database->prepare(
@@ -51,6 +57,9 @@ class Overboard
                 $thread->contentID()->threadID(), $thread->domain()->id()]);
     }
 
+    /**
+     * Remove a thread reference from the overboard.
+     */
     public function removeThread(Thread $thread): void
     {
         $prepared = $this->database->prepare(
@@ -58,6 +67,9 @@ class Overboard
         $this->database->executePrepared($prepared, [$thread->contentID()->threadID(), $thread->domain()->id()]);
     }
 
+    /**
+     * Prune overboard threads.
+     */
     public function prune(): void
     {
         $prepared = $this->database->prepare(

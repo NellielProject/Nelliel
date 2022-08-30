@@ -12,6 +12,9 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\NewPost\NewPost;
 use Nelliel\Output\OutputPost;
+use Nelliel\Snacks;
+use Nelliel\BansAccess;
+use Nelliel\DNSBL;
 
 class DispatchNewPost extends Dispatch
 {
@@ -23,6 +26,11 @@ class DispatchNewPost extends Dispatch
 
     public function dispatch(array $inputs)
     {
+        $snacks = new Snacks($this->domain, new BansAccess(nel_database('core')));
+        $snacks->applyBan();
+        $dnsbl = new DNSBL(nel_database('core'));
+        $dnsbl->checkIP(nel_request_ip_address());
+
         if (isset($inputs['parameters']['modmode'])) {
             $this->session->init(true);
             $this->session->toggleModMode();

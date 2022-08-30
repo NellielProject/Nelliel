@@ -144,7 +144,7 @@ class DispatchModules extends Dispatch
                 break;*/
 
             default:
-                nel_derp(250, _gettext('The selected module is invalid.'));
+                nel_derp(111, _gettext('The selected module is invalid.'));
                 break;
         }
     }

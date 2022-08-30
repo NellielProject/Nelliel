@@ -19,7 +19,6 @@ class ImageboardMarkdown extends Parser
     use URL;
     use Spoiler;
     use QuoteAndCite;
-
     protected $domain;
     protected $url_protocols;
     protected $cites;
@@ -34,15 +33,16 @@ class ImageboardMarkdown extends Parser
         $this->post_content_id = $post_content_id;
     }
 
-    public function parseDynamic(string $text)
+    public function parseDynamic(string $text): string
     {
         $original = $this->dynamic;
         $this->dynamic = true;
-        $this->parse($text);
+        $parsed = $this->parse($text);
         $this->dynamic = $original;
+        return $parsed;
     }
 
-    public function parse($text)
+    public function parse($text): string
     {
         $this->prepare();
 

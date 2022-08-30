@@ -6,7 +6,6 @@ namespace Nelliel\Content;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
-use Nelliel\Cites;
 use Nelliel\FGSFDS;
 use Nelliel\Moar;
 use Nelliel\Overboard;
@@ -40,7 +39,7 @@ class Thread
         $this->storeMoar(new Moar());
         $this->main_table = new TableThreads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('threads_table'));
-        $this->json = new ThreadJSON();
+        $this->json = new ThreadJSON($this);
         $this->sql_helpers = nel_utilities()->sqlHelpers();
 
         if ($load) {
@@ -219,8 +218,8 @@ class Thread
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') &&
-            $this->data('post_count') > $this->domain->setting('max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
+            'max_bumps')) {
             return;
         }
 
