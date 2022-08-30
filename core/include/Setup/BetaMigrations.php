@@ -28,11 +28,11 @@ class BetaMigrations
     public function doMigrations(): int
     {
         $migration_count = 0;
+        $core_sqltype = nel_database('core')->config()['sqltype'];
 
         switch ($this->upgrade->installedVersion()) {
             case 'v0.9.25':
                 echo '<br>' . __('Updating from v0.9.25 to v0.9.26...') . '<br>';
-                $core_sqltype = nel_database('core')->config()['sqltype'];
 
                 // Update setting options table
                 nel_database('core')->exec(
@@ -318,7 +318,7 @@ class BetaMigrations
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
                 // Update ban appeals
-                $ban_appeals_table = new TableBanAppeals($this->database, $this->sql_compatibility);
+                $ban_appeals_table = new TableBanAppeals(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $ban_appeals_table->createTable();
 
                 echo ' - ' . __('Ban appeals table added.') . '<br>';
@@ -415,9 +415,9 @@ class BetaMigrations
         $this->newSiteSettings($target_names);
 
         $site_config_select = nel_database('core')->prepare(
-            'SELECT "setting_value" FROM "' . NEL_SITE_CONFIGS_TABLE . '" WHERE "setting_name" = :source_name');
+            'SELECT "setting_value" FROM "' . NEL_SITE_CONFIG_TABLE . '" WHERE "setting_name" = :source_name');
         $site_config_update = nel_database('core')->prepare(
-            'UPDATE "' . NEL_SITE_CONFIGS_TABLE .
+            'UPDATE "' . NEL_SITE_CONFIG_TABLE .
             '" SET "setting_value" = :new_value WHERE "setting_name" = :target_name');
         $name_count = count($source_names);
 
@@ -478,7 +478,7 @@ class BetaMigrations
         $settings_delete = nel_database('core')->prepare(
             'DELETE FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_name" = :name AND "setting_category" = \'site\'');
         $site_config_delete = nel_database('core')->prepare(
-            'DELETE FROM "' . NEL_SITE_CONFIGS_TABLE . '" WHERE "setting_name" = :name');
+            'DELETE FROM "' . NEL_SITE_CONFIG_TABLE . '" WHERE "setting_name" = :name');
         $name_count = count($names);
 
         for ($i = 0; $i < $name_count; $i ++) {
