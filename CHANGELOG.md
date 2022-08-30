@@ -1,4 +1,51 @@
 # Nelliel Changelog
+## v0.9.28 (2022/8/30)
+### Added
+ - New filetype icons
+ - Migration helpers
+ - Separate settings for OP and reply preview dimensions
+ - Separate field settings for Op and reply
+ - Visitor ID generation and storage
+ - Directory detection for templates, styles and image sets
+ - More docblocks
+ - Option for mod name on ban page
+ - Optional board-specific text on ban page
+ - Appeal handling and related settings
+ - Database timeout setting
+ - More post rendering settings
+ - Option to keep email field after processing commands
+ - Option to copy original image for very small previews
+ - Fraction library and option for showing display ratio
+ - Setting to enable/disable JSON API
+ - Setting for date format on ban page
+
+### Changed
+ - Updated documentation
+ - Updated language file
+ - Updated attributions
+ - Updated plugin classes
+ - Updated `Timer` class
+ - Ban settings moved from site-level to board-level
+ - Cleaned up ban page
+ - More consistent setting names
+ - Cleanup of `JSON` classes
+ - Refinement of noticeboard and notices
+
+### Fixed
+ - Missing migrations for settings
+ - Placeholder images
+ - Logout error
+ - Parsed text not being returned from markdown
+ - Some bans not being applied
+ - General migration debugging
+ - Image set installation
+ - JSON files not being generated
+ - Styles and template panel output
+ - Language extractor skipping templates
+
+### Removed
+ - Old filetype icons
+ 
 ## v0.9.27 (2022/6/23)
 ### Added
  - Columns for upcoming visitor ID
