@@ -65,22 +65,22 @@ class OutputPanelTemplates extends Output
             $this->render_data['installed_list'][] = $template_data;
         }
 
-        $template_inis = $this->domain->frontEndData()->getTemplateInis();
+        $template_inis = $this->domain->frontEndData()->getAllTemplates(false);
         $bgclass = 'row1';
 
         foreach ($template_inis as $template) {
             $template_data = array();
             $template_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $template_data['id'] = $template['info']['id'];
-            $template_data['name'] = $template['info']['name'];
-            $template_data['directory'] = $template['info']['directory'];
-            $template_data['output'] = $template['info']['output_type'];
-            $template_data['is_installed'] = in_array($template['info']['id'], $installed_ids);
+            $template_data['id'] = $template->id();
+            $template_data['name'] = $template->info('name');
+            $template_data['directory'] = $template->info('directory');
+            $template_data['output'] = $template->info('output_type');
+            $template_data['is_installed'] = in_array($template->id(), $installed_ids);
             $template_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'templates', 'actions' => 'add',
-                        'template-id' => $template['info']['id']]);
+                        'template-id' => $template->id()]);
             $this->render_data['available_list'][] = $template_data;
         }
 
