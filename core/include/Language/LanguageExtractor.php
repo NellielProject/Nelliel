@@ -240,11 +240,13 @@ class LanguageExtractor
         return $data;
     }
 
+    // Experimental attempt at providing a mustache-based gettext option
+    // More flexibility on start/finish and possibly more than singular
     private function parseMustacheTemplates(int $default_category): array
     {
         $entries = array();
         $file_handler = nel_utilities()->fileHandler();
-        $template_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/');
+        $template_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'core/nelliel_basic/');
         $template_files = array_merge($template_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
 
         foreach ($template_files as $file) {
@@ -281,7 +283,7 @@ class LanguageExtractor
     {
         $entries = array();
         $file_handler = nel_utilities()->fileHandler();
-        $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'nelliel_basic/');
+        $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'core/nelliel_basic/');
         $html_files = array_merge($html_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
         $render = new RenderCoreDOM();
 
