@@ -33,6 +33,10 @@ class OutputPanelNoticeboard extends Output
         $bgclass = 'row1';
         $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
             http_build_query(['module' => 'admin', 'section' => 'noticeboard', 'actions' => 'add']);
+        $this->render_data['can_post_notice'] = $this->session->user()->checkPermission($this->domain,
+            'perm_noticeboard_post');
+        $this->render_data['can_delete_notice'] = $this->session->user()->checkPermission($this->domain,
+            'perm_noticeboard_delete');
 
         foreach ($notices as $notice) {
             $notice_info = array();
@@ -42,7 +46,7 @@ class OutputPanelNoticeboard extends Output
             $notice_info['message'] = $notice['message'];
             $notice_info['subject'] = $notice['subject'];
             $notice_info['time'] = date('Y/m/d (D) H:i:s', intval($notice['time']));
-            $notice_info['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+            $notice_info['delete_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'noticeboard', 'actions' => 'remove',
                         'notice-id' => $notice['notice_id']]);

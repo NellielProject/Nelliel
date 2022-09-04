@@ -6,6 +6,7 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use PDO;
 
 class OutputAccount extends Output
 {
@@ -27,8 +28,22 @@ class OutputAccount extends Output
         $this->render_data['username'] = $this->session->user()->id();
         $this->render_data['display_name'] = $this->session->user()->getData('display_name');
         $this->render_data['last_login'] = $this->session->user()->getData('last_login');
-        $output_notices = new OutputNotices($this->domain, $this->write_mode);
-        $this->render_data['notices'] = $output_notices->render([], true)['notices']; // TODO: Short form
+
+        $notices = $this->database->executeFetchAll(
+            'SELECT * FROM "' . NEL_NOTICEBOARD_TABLE . '" ORDER BY "time" DESC', PDO::FETCH_ASSOC);
+
+        foreach ($notices as $notice) {
+            $info = array();
+            $info['notice_id'] = $notice['notice_id'];
+            $info['user'] = $notice['username'];
+            $info['subject'] = $notice['subject'];
+            $info['time'] = date('Y/m/d', intval($notice['time']));
+            $info['message'] = $notice['message'];
+            $info['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+            http_build_query(['module' => 'admin', 'section' => 'noticeboard']) . '#' . $notice['notice_id'];
+            $this->render_data['notices'][] = $info;
+        }
+
         $this->render_data['private_messages_url'] = nel_build_router_url([Domain::SITE, 'account', 'private-messages']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);

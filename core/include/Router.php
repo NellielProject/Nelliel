@@ -38,8 +38,6 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{section:register}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'],
                             '/{section:private-messages}[/{action:[^\/]+}[/{message_id:[^\/]+}]]', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'],
-                            '/{section:noticeboard}', $dispatch_class);
                         $r->addRoute(['GET'], '', $dispatch_class);
                     });
 

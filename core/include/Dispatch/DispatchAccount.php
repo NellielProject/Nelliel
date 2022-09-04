@@ -14,7 +14,6 @@ use Nelliel\Output\OutputAccount;
 use Nelliel\Output\OutputLoginPage;
 use Nelliel\Output\OutputPrivateMessages;
 use Nelliel\Output\OutputRegisterPage;
-use Nelliel\Output\OutputNotices;
 
 class DispatchAccount extends Dispatch
 {
@@ -106,11 +105,6 @@ class DispatchAccount extends Dispatch
 
                 $output_private_messages = new OutputPrivateMessages($this->domain, false);
                 $output_private_messages->messageList([], false);
-                break;
-
-            case 'noticeboard':
-                $output_noticeboard = new OutputNotices($this->domain, false);
-                echo $output_noticeboard->render([], false);
                 break;
 
             default:

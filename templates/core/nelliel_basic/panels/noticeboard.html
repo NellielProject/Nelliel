@@ -1,11 +1,12 @@
+{{# can_post_notice }}
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
-{{# custom_name }}
+	{{# custom_name }}
 		<div class="display-row">
 			<label for="name" class="display-cell" data-i18n="">Name</label>
 			<input id="name" class="display-cell" type="text" name="name" size="30">
 		</div>
-{{/ custom_name }}
+	{{/ custom_name }}
 		<div class="display-row">
 			<label for="subject" class="display-cell" data-i18n="">Subject</label>
 			<input id="subject" class="display-cell" type="text" name="subject" size="30">
@@ -20,4 +21,9 @@
 	</div>
 </form>
 <hr>
-{{> notices }}
+{{/ can_post_notice }}
+<main class="notice-list">
+{{# notices }}
+	{{> pieces/notice }}
+{{/ notices }}
+</main>
