@@ -21,6 +21,10 @@ class NellielPDO extends PDO
 
     public function databaseExists(string $database_name): bool
     {
+        if (empty($database_name)) {
+            return false;
+        }
+
         switch ($this->sql_type) {
             case 'MYSQL':
                 $prepared = $this->prepare('SELECT 1 FROM "information_schema"."schemata" WHERE "schema_name" = ?');
@@ -50,6 +54,10 @@ class NellielPDO extends PDO
 
     public function tableExists(string $table_name): bool
     {
+        if (empty($table_name)) {
+            return false;
+        }
+
         switch ($this->config['sqltype']) {
             case 'MYSQL':
                 $prepared = $this->prepare(
@@ -86,6 +94,10 @@ class NellielPDO extends PDO
 
     public function columnExists(string $table_name, string $column_name): bool
     {
+        if (empty($table_name) || empty($column_name)) {
+            return false;
+        }
+
         switch ($this->config['sqltype']) {
             case 'MYSQL':
                 $prepared = $this->prepare(
@@ -132,6 +144,10 @@ class NellielPDO extends PDO
 
     public function rowExists(string $table_name, array $columns, array $values, array $pdo_types = null): bool
     {
+        if (empty($table_name) || empty($columns) || empty($values)) {
+            return false;
+        }
+
         $query = 'SELECT 1 FROM "' . $table_name . '" WHERE ';
         $count = count($columns);
         $final_values = $values;
