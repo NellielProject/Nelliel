@@ -126,6 +126,7 @@ class OutputPanelThreads extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/thread_expand');
+        $parameters['is_panel'] = true;
         $thread_id = $parameters['thread_id'] ?? 0;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -174,6 +175,7 @@ class OutputPanelThreads extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/threads_edit_post');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit Post');
         $post = $parameters['post'] ?? null;

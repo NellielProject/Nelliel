@@ -89,6 +89,7 @@ class OutputPanelEmbeds extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/embeds_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Embeds');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);

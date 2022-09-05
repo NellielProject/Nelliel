@@ -88,6 +88,7 @@ class OutputPanelCapcodes extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/capcodes_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Capcodes');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);

@@ -66,6 +66,7 @@ class OutputPanelRoles extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/roles_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Roles');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $role_id = $parameters['role_id'] ?? '';

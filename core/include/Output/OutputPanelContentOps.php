@@ -90,6 +90,7 @@ class OutputPanelContentOps extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/content_ops_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Content Ops');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);

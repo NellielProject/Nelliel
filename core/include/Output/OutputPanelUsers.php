@@ -67,6 +67,7 @@ class OutputPanelUsers extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/users_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $username = $parameters['username'] ?? '';

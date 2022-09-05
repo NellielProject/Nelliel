@@ -88,6 +88,7 @@ class OutputPanelBans extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/bans_new');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('New Ban');
         $output_head = new OutputHead($this->domain, $this->write_mode);

@@ -68,6 +68,7 @@ class OutputPanelPages extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/pages_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Static Pages');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);

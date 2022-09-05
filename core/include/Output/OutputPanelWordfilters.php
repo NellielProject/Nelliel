@@ -99,6 +99,7 @@ class OutputPanelWordfilters extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/word_filters_edit');
+        $parameters['is_panel'] = true;
         $editing = $parameters['editing'] ?? false;
         $this->render_data['submit_add'] = $parameters['submit_add'] ?? false;
         $this->render_data['submit_edit'] = $editing;
