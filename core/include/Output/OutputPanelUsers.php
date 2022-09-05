@@ -39,13 +39,17 @@ class OutputPanelUsers extends Output
             $user_data['display_name'] = $user_info['display_name'];
             $user_data['active'] = $user_info['active'];
 
-            if ($user_info['owner'] == 0 || $this->session->user()->isSiteOwner()) {
-                $user_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=users&actions=edit&username=' . $user_info['username'];
-                $user_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=users&actions=remove&username=' . $user_info['username'];
+            if ($user_info['owner'] > 0) {
+                $this->render_data['can_modify'] = $this->session->user()->isSiteOwner();
+            } else {
+                $this->render_data['can_modify'] = $this->session->user()->checkPermission($this->domain,
+                    'perm_users_manage');
             }
 
+            $user_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=edit&username=' .
+                $user_info['username'];
+            $user_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                'module=admin&section=users&actions=remove&username=' . $user_info['username'];
             $this->render_data['users_list'][] = $user_data;
         }
 
@@ -83,7 +87,7 @@ class OutputPanelUsers extends Output
             $edit_user = $authorization->getUser($username);
             $this->render_data['username'] = $edit_user->getData('username');
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            'module=admin&section=users&actions=update&username=' . $username;
+                'module=admin&section=users&actions=update&username=' . $username;
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 

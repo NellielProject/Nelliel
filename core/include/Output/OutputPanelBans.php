@@ -30,7 +30,7 @@ class OutputPanelBans extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['can_modify'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_bans');
+        $this->render_data['can_add'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_add');
         $bans_access = new BansAccess($this->database);
 
         if ($this->domain->id() !== Domain::SITE) {
@@ -66,6 +66,8 @@ class OutputPanelBans extends Output
             $ban_data['appeal'] = $ban_hammer->getData('appeal');
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
+            $ban_data['can_modify'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_modify');
+            $ban_data['can_remove'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_delete');
             $this->render_data['modify_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
                     ['module' => 'admin', 'section' => 'bans', 'actions' => 'edit',

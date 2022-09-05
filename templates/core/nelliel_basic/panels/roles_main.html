@@ -21,8 +21,10 @@
 			<td>{{ role_title }}</td>
 			<td>{{ capcode }}</td>
 			<td>
+	{{# can_modify }}
 				<span class="text-button">[<a href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
 				<span class="text-button">[<a href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
+	{{/ can_modify }}
 			</td>
 		</tr>
 {{/ roles_list }}

@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use PDO;
+use Nelliel\Auth\Authorization;
 
 class OutputPanelRoles extends Output
 {
@@ -29,11 +30,12 @@ class OutputPanelRoles extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $roles = $this->database->executeFetchAll('SELECT * FROM "' . NEL_ROLES_TABLE . '" ORDER BY "role_level" DESC',
-                PDO::FETCH_ASSOC);
+            PDO::FETCH_ASSOC);
         $bgclass = 'row1';
+        $authorization = new Authorization($this->database);
+        $user_role = $this->session->user()->getDomainRole($this->domain)->id();
 
-        foreach ($roles as $role)
-        {
+        foreach ($roles as $role) {
             $role_data = array();
             $role_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
@@ -41,10 +43,12 @@ class OutputPanelRoles extends Output
             $role_data['role_level'] = $role['role_level'];
             $role_data['role_title'] = $role['role_title'];
             $role_data['capcode'] = $role['capcode'];
+            $this->render_data['can_modify'] = $authorization->roleLevelCheck($user_role, $role['role_id']) &&
+                $this->session->user()->checkPermission($this->domain, 'perm_roles_manage');
             $role_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=edit&role-id=' .
-                    $role['role_id'];
+                $role['role_id'];
             $role_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=roles&actions=remove&role-id=' . $role['role_id'];
+                'module=admin&section=roles&actions=remove&role-id=' . $role['role_id'];
             $this->render_data['roles_list'][] = $role_data;
         }
 
@@ -77,14 +81,11 @@ class OutputPanelRoles extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        if ($role->empty())
-        {
+        if ($role->empty()) {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=add';
-        }
-        else
-        {
+        } else {
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=roles&actions=update&role-id=' . $role->id();
+                'module=admin&section=roles&actions=update&role-id=' . $role->id();
             $this->render_data['role_id'] = $role->getData('role_id');
             $this->render_data['role_level'] = $role->getData('role_level');
             $this->render_data['role_title'] = $role->getData('role_title');
@@ -92,23 +93,19 @@ class OutputPanelRoles extends Output
         }
 
         $permissions_list = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "permission" ASC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "permission" ASC', PDO::FETCH_ASSOC);
 
-        foreach ($permissions_list as $permission)
-        {
+        foreach ($permissions_list as $permission) {
             $permission_data = array();
 
-            if (!empty($role_id))
-            {
-                if ($role->checkPermission($permission['permission']))
-                {
+            if (!empty($role_id)) {
+                if ($role->checkPermission($permission['permission'])) {
                     $permission_data['checked'] = 'checked';
                 }
             }
 
             $permission_data['permission'] = $permission['permission'];
-            $permission_data['description'] = '(' . $permission['permission'] . ') - ' .
-                    $permission['description'];
+            $permission_data['description'] = '(' . $permission['permission'] . ') - ' . $permission['description'];
             $this->render_data['permissions_list'][] = $permission_data;
         }
 

@@ -1,3 +1,9 @@
+<div>
+{{# can_add }}
+	<a href="{{ new_ban_url }}" data-i18n="">New Ban</a>
+{{/ can_add }}
+</div>
+<hr>
 <table>
 	<caption data-i18n="">List of bans</caption>
 	<thead>
@@ -25,14 +31,14 @@
 			<td>{{ appeal_response }}</td>
 			<td>{{ appeal_status }}</td>
 			<td>
-	{{# modify_url }}<span class="text-button">[<a href="{{ modify_url }}" data-i18n="">Modify</a>]</span>{{/ modify_url }}
-	{{# remove_url }}<span class="text-button">[<a href="{{ remove_url }}" data-i18n="">Remove</a>]</span>{{/ remove_url }}
+	{{# can_modify }}
+				<span class="text-button">[<a href="{{ modify_url }}" data-i18n="">Modify</a>]</span>
+	{{/ can_modify }}
+	{{# can_remove }}
+				<span class="text-button">[<a href="{{ remove_url }}" data-i18n="">Remove</a>]</span>
+	{{/ can_remove }}
 			</td>
 		</tr>
 {{/ ban_list }}
 	</tbody>
 </table>
-<hr>
-<div>
-	<a href="{{ new_ban_url }}" data-i18n="">Add New Ban</a>
-</div>
