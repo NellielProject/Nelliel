@@ -1,0 +1,29 @@
+<div>
+	<a href="{{ new_url }}" data-i18n="">New filter</a>
+</div>
+<hr>
+<table>
+	<caption data-i18n="">List of file filters</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Hash type</th>
+			<th scope="col" data-i18n="">File hash</th>
+			<th scope="col" data-i18n="">Notes</th>
+			<th scope="col" data-i18n="">Board ID</th>
+			<th scope="col" data-i18n="">Remove</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# filter_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ hash_type }}</td>
+			<td>{{ file_hash }}</td>
+			<td>{{ notes }}</td>
+			<td>{{ board_id }}</td>
+			<td>
+				<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove Filter</a>
+			</td>
+		</tr>
+{{/ filter_list }}
+	</tbody>
+</table>

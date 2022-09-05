@@ -40,7 +40,7 @@ class TableFileFilters extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
-            filter_id       ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
+            filter_id   ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             hash_type   VARCHAR(50) NOT NULL,
             file_hash   VARCHAR(128) NOT NULL,
             notes       TEXT DEFAULT NULL,

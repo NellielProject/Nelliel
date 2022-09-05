@@ -9,6 +9,7 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\Filter;
+use Nelliel\Output\OutputPanelFileFilters;
 
 class AdminFileFilters extends Admin
 {
@@ -30,19 +31,25 @@ class AdminFileFilters extends Admin
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelFileFilters($this->domain, false);
+        $output_panel = new OutputPanelFileFilters($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function creator(): void
-    {}
+    {
+        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $output_panel = new OutputPanelFileFilters($this->domain, false);
+        $output_panel->new(['editing' => false], false);
+        $this->outputMain(false);
+    }
 
     public function add(): void
     {
-        if (is_null($_POST['board_id']) || $_POST['board_id'] === '') {
-            $board_id = Domain::GLOBAL;
-        } else {
-            $board_id = $_POST['board_id'];
+        $board_id = $_POST['board_id'] ?? Domain::GLOBAL;
+
+        if (!Domain::validID($board_id)) {
+            $this->outputMain(true); // TODO: Handle properly
+            return;
         }
 
         $domain = Domain::getDomainFromID($board_id, $this->database);
