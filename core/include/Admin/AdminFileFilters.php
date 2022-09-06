@@ -26,6 +26,18 @@ class AdminFileFilters extends Admin
     public function dispatch(array $inputs): void
     {
         parent::dispatch($inputs);
+
+        foreach ($inputs['actions'] as $action) {
+            switch ($action) {
+                case 'disable':
+                    $this->disable();
+                    break;
+
+                case 'enable':
+                    $this->enable();
+                    break;
+            }
+        }
     }
 
     public function panel(): void
@@ -56,14 +68,15 @@ class AdminFileFilters extends Admin
         $this->verifyPermissions($domain, 'perm_file_filters_manage');
         $type = $_POST['hash_type'];
         $notes = $_POST['notes'];
+        $enabled = 1;
         $output_filter = new Filter();
         $hashes = $output_filter->newlinesToArray($_POST['file_hashes']);
 
         foreach ($hashes as $hash) {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . $this->data_table .
-                '" ("hash_type", "file_hash", "notes", "board_id") VALUES (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$type, $hash, $notes, $domain->id()]);
+                '" ("hash_type", "file_hash", "notes", "board_id", "enabled") VALUES (?, ?, ?, ?, ?)');
+            $this->database->executePrepared($prepared, [$type, $hash, $notes, $domain->id(), $enabled]);
         }
 
         $this->outputMain(true);
@@ -86,10 +99,12 @@ class AdminFileFilters extends Admin
         $file_hash = $_POST['file_hash'] ?? '';
         $notes = $_POST['notes'] ?? '';
         $board_id = $_POST['board_id'] ?? '';
+        $enabled = $_POST['enabled'] ?? 0;
 
         $prepared = $this->database->prepare(
-            'UPDATE "' . $this->data_table . '" SET "hash_type" = ?, "file_hash" = ?, "notes" = ?, "board_id" = ? WHERE "filter_id" = ?');
-        $this->database->executePrepared($prepared, [$hash_type, $file_hash, $notes, $board_id, $filter_id]);
+            'UPDATE "' . $this->data_table .
+            '" SET "hash_type" = ?, "file_hash" = ?, "notes" = ?, "board_id" = ?, "enabled" = ? WHERE "filter_id" = ?');
+        $this->database->executePrepared($prepared, [$hash_type, $file_hash, $notes, $board_id, $enabled, $filter_id]);
         $this->outputMain(true);
     }
 
@@ -100,6 +115,26 @@ class AdminFileFilters extends Admin
         $this->verifyPermissions($entry_domain, 'perm_file_filters_manage');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$id]);
+        $this->outputMain(true);
+    }
+
+    public function enable()
+    {
+        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $filter_id = $_GET[$this->id_field] ?? 0;
+        $prepared = $this->database->prepare(
+            'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "filter_id" = ?');
+        $this->database->executePrepared($prepared, [$filter_id]);
+        $this->outputMain(true);
+    }
+
+    public function disable()
+    {
+        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $filter_id = $_GET[$this->id_field] ?? 0;
+        $prepared = $this->database->prepare(
+            'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "filter_id" = ?');
+        $this->database->executePrepared($prepared, [$filter_id]);
         $this->outputMain(true);
     }
 

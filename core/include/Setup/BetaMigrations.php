@@ -345,6 +345,15 @@ class BetaMigrations
 
                 echo ' - ' . __('Updated users table.') . '<br>';
 
+            case 'v0.9.28':
+                echo '<br>' . __('Updating from v0.9.28 to v0.9.29...') . '<br>';
+
+                // Update file filters
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_FILE_FILTERS_TABLE . '" ADD COLUMN enabled SMALLINT NOT NULL DEFAULT 0');
+
+                echo ' - ' . __('Updated file filters table.') . '<br>';
+
                 $migration_count ++;
         }
 
@@ -417,8 +426,7 @@ class BetaMigrations
         $site_config_select = nel_database('core')->prepare(
             'SELECT "setting_value" FROM "' . NEL_SITE_CONFIG_TABLE . '" WHERE "setting_name" = :source_name');
         $site_config_update = nel_database('core')->prepare(
-            'UPDATE "' . NEL_SITE_CONFIG_TABLE .
-            '" SET "setting_value" = :new_value WHERE "setting_name" = :target_name');
+            'UPDATE "' . NEL_SITE_CONFIG_TABLE . '" SET "setting_value" = :new_value WHERE "setting_name" = :target_name');
         $name_count = count($source_names);
 
         for ($i = 0; $i < $name_count; $i ++) {

@@ -60,23 +60,21 @@ class OutputPanelFileFilters extends Output
                     ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'edit',
                         'filter-id' => $filter_data['filter_id']]);
 
-            /*
-             * if ($filter_data['enabled'] == 1) {
-             * $filter_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-             * http_build_query(
-             * ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'disable',
-             * 'filter-id' => $filter_data['filter_id']]);
-             * $filter_data['enable_disable_text'] = _gettext('Disable');
-             * }
-             *
-             * if ($filter_data['enabled'] == 0) {
-             * $filter_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-             * http_build_query(
-             * ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'enable',
-             * 'filter-id' => $filter_data['filter_id']]);
-             * $filter_data['enable_disable_text'] = _gettext('Enable');
-             * }
-             */
+            if ($filter['enabled'] == 1) {
+                $filter_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    http_build_query(
+                        ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'disable',
+                            'filter-id' => $filter_data['filter_id']]);
+                $filter_data['enable_disable_text'] = _gettext('Disable');
+            }
+
+            if ($filter['enabled'] == 0) {
+                $filter_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
+                    http_build_query(
+                        ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'enable',
+                            'filter-id' => $filter_data['filter_id']]);
+                $filter_data['enable_disable_text'] = _gettext('Enable');
+            }
 
             $filter_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
                 http_build_query(
@@ -126,6 +124,7 @@ class OutputPanelFileFilters extends Output
             $this->render_data['file_hash'] = $filter_data['file_hash'];
             $this->render_data['notes'] = $filter_data['notes'];
             $this->render_data['board_id'] = $filter_data['board_id'];
+            $this->render_data['enabled'] = $filter_data['enabled'];
         } else {
             $this->setBodyTemplate('panels/file_filters_new');
             $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
