@@ -70,10 +70,28 @@ class AdminFileFilters extends Admin
     }
 
     public function editor(): void
-    {}
+    {
+        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $filter_id = $_GET[$this->id_field] ?? 0;
+        $output_panel = new OutputPanelFileFilters($this->domain, false);
+        $output_panel->edit(['editing' => true, 'filter_id' => $filter_id], false);
+        $this->outputMain(false);
+    }
 
     public function update(): void
-    {}
+    {
+        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $filter_id = $_GET[$this->id_field] ?? 0;
+        $hash_type = $_POST['hash_type'] ?? '';
+        $file_hash = $_POST['file_hash'] ?? '';
+        $notes = $_POST['notes'] ?? '';
+        $board_id = $_POST['board_id'] ?? '';
+
+        $prepared = $this->database->prepare(
+            'UPDATE "' . $this->data_table . '" SET "hash_type" = ?, "file_hash" = ?, "notes" = ?, "board_id" = ? WHERE "filter_id" = ?');
+        $this->database->executePrepared($prepared, [$hash_type, $file_hash, $notes, $board_id, $filter_id]);
+        $this->outputMain(true);
+    }
 
     public function remove(): void
     {
