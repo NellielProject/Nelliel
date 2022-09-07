@@ -6,5 +6,7 @@
 	</div>
 	<div>{{ error_message }}</div>
 	<div>{{ error_data }}</div>
-	<a href="{{ return_url }}" data-i18n="">Return</a>
+{{# show_return_link }}
+	{{> pieces/return_link }}
+{{/ show_return_link }}
 </div>

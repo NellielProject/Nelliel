@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
@@ -15,12 +14,15 @@ class Redirect
     private static $delay = 3;
 
     function __construct()
-    {
-    }
+    {}
 
-    public function doRedirect(bool $do_redirect): void
+    public function doRedirect(bool $do_redirect = null): bool
     {
-        self::$do_redirect = $do_redirect;
+        if (!is_null($do_redirect)) {
+            self::$do_redirect = $do_redirect;
+        }
+
+        return self::$do_redirect;
     }
 
     public function URL(): string
@@ -40,10 +42,8 @@ class Redirect
 
     public function go(): void
     {
-        if (self::$do_redirect)
-        {
-            if (self::$url === '')
-            {
+        if (self::$do_redirect) {
+            if (self::$url === '') {
                 $site_domain = new DomainSite(nel_database('core'));
                 self::$url = $site_domain->reference('home_page');
             }
