@@ -4,9 +4,11 @@
 		<span class="label" data-i18n="">Error ID:</span>
 		<span>{{ error_id }}</span>
 	</div>
-	<div>{{ error_message }}</div>
-	<div>{{ error_data }}</div>
+	<p>{{ error_message }}</p>
+	<p>{{ error_data }}</p>
 {{# show_return_link }}
-	{{> pieces/return_link }}
+	<p>
+		{{> pieces/return_link }}
+	</p>
 {{/ show_return_link }}
 </div>

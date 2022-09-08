@@ -7,8 +7,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class ReturnLink
 {
-    private static $url = '';
-    private static $text = '';
+    private $url = '';
+    private $text = '';
 
     function __construct(string $url = null, string $text = null)
     {
@@ -18,24 +18,24 @@ class ReturnLink
 
     public function ready(): bool
     {
-        return self::$url !== '' && self::$text !== '';
+        return $this->url !== '' && $this->text !== '';
     }
 
     public function URL(string $new_url = null): string
     {
         if (!is_null($new_url)) {
-            self::$url = $new_url;
+            $this->url = $new_url;
         }
 
-        return self::$url;
+        return $this->url;
     }
 
     public function text(string $new_text = null): string
     {
         if (!is_null($new_text)) {
-            self::$text = $new_text;
+            $this->text = $new_text;
         }
 
-        return self::$text;
+        return $this->text;
     }
 }

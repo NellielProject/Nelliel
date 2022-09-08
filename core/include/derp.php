@@ -61,7 +61,7 @@ function nel_derp(int $error_id, string $error_message, array $context = array()
     }
 
     $output_derp = new OutputDerp($domain, false);
-    $parameters = ['context' => array(), 'diagnostic' => $diagnostic];
+    $parameters = ['context' => $context, 'diagnostic' => $diagnostic];
     echo $output_derp->render($parameters, false);
 
     nel_clean_exit();

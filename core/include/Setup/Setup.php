@@ -124,7 +124,7 @@ class Setup
             echo _gettext('Site owner account already created.'), '<br>';
             echo _gettext(
                 'Install has finished with no apparent problems! When you\'re ready to continue, follow this link to the login page: '), '<br>';
-            echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?module=account&amp;actions=login">' .
+            echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?route=/' . Domain::SITE . '/account/login">' .
                 _gettext('Login page') . '</a>';
             echo '</body></html>';
             die();

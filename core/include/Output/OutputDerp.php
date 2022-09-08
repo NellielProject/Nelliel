@@ -27,14 +27,14 @@ class OutputDerp extends Output
         $this->render_data['header'] = $output_header->general([], true);
         $diagnostic = $parameters['diagnostic'] ?? array();
         $context = $parameters['context'] ?? array();
-        $redirect_link = $context['return_link'] ?? new ReturnLink();
+        $return_link = $context['return_link'] ?? new ReturnLink();
         $this->render_data['error_id'] = $diagnostic['error_id'];
         $this->render_data['error_message'] = $diagnostic['error_message'];
         $this->render_data['error_data'] = '';
 
-        if ($redirect_link->ready()) {
-            $this->render_data['return_link_url'] = $redirect_link->URL();
-            $this->render_data['return_link_text'] = $redirect_link->text();
+        if ($return_link->ready()) {
+            $this->render_data['return_link_url'] = $return_link->URL();
+            $this->render_data['return_link_text'] = $return_link->text();
             $this->render_data['show_return_link'] = true;
         } else {
             // TODO: Update other areas and eliminate this
