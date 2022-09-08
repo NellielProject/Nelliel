@@ -5,7 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\RedirectLink;
+use Nelliel\ReturnLink;
 use Nelliel\Domains\Domain;
 
 class OutputDerp extends Output
@@ -25,13 +25,14 @@ class OutputDerp extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
-        $diagnostic = $parameters['diagnostic'];
+        $diagnostic = $parameters['diagnostic'] ?? array();
+        $context = $parameters['context'] ?? array();
+        $redirect_link = $context['return_link'] ?? new ReturnLink();
         $this->render_data['error_id'] = $diagnostic['error_id'];
         $this->render_data['error_message'] = $diagnostic['error_message'];
         $this->render_data['error_data'] = '';
-        $redirect_link = new RedirectLink();
 
-        if ($redirect_link->display()) {
+        if ($redirect_link->ready()) {
             $this->render_data['return_link_url'] = $redirect_link->URL();
             $this->render_data['return_link_text'] = $redirect_link->text();
             $this->render_data['show_return_link'] = true;

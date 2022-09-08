@@ -5,8 +5,6 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\DomainSite;
-
 class Redirect
 {
     private static $url = '';
@@ -25,30 +23,33 @@ class Redirect
         return self::$do_redirect;
     }
 
-    public function URL(): string
+    public function URL(string $new_url = null): string
     {
+        if (!is_null($new_url)) {
+            self::$url = $new_url;
+        }
+
         return self::$url;
     }
 
-    public function changeURL(string $new_url): void
+    public function delay(int $new_delay = null): int
     {
-        self::$url = $new_url;
-    }
+        if (!is_null($new_delay)) {
+            self::$delay = $new_delay;
+        }
 
-    public function changeDelay(int $new_delay): void
-    {
-        self::$delay = $new_delay;
+        return self::$delay;
     }
 
     public function go(): void
     {
         if (self::$do_redirect) {
             if (self::$url === '') {
-                $site_domain = new DomainSite(nel_database('core'));
-                self::$url = $site_domain->reference('home_page');
+                self::$url = nel_site_domain()->reference('home_page');
             }
 
-            nel_redirect(self::$url, self::$delay);
+            $redirect = '<meta http-equiv="refresh" content="' . self::$delay . ';URL=' . self::$url . '">';
+            echo $redirect;
         }
     }
 }

@@ -122,7 +122,7 @@ class AdminThreads extends Admin
         $this->regenThread($this->domain, $content_id->threadID(), true);
         $redirect = new Redirect();
         $redirect->doRedirect(true);
-        $redirect->changeURL($_POST['return_url']);
+        $redirect->URL($_POST['return_url']);
         $this->outputMain(false);
     }
 

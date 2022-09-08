@@ -44,7 +44,7 @@ class DispatchThreads extends Dispatch
             $parameters['page_title'] = $this->domain->reference('title');
             $output_interstitial = new OutputInterstitial($this->domain, false);
             echo $output_interstitial->render($parameters, false, $messages, [$link]);
-            $redirect->changeURL($url);
+            $redirect->URL($url);
         }
 
         if (isset($_POST['form_submit_delete'])) {
@@ -57,7 +57,7 @@ class DispatchThreads extends Dispatch
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
 
-            $redirect->changeURL($url);
+            $redirect->URL($url);
             $output_post = new \Nelliel\Output\OutputPost($this->domain, true);
             echo $output_post->contentDeleted(['forward_url' => $url], false);
         }

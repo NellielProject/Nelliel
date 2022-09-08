@@ -63,7 +63,7 @@ class DispatchNewPost extends Dispatch
             }
         }
 
-        $redirect->changeURL($url);
+        $redirect->URL($url);
         $output_post = new OutputPost($this->domain, true);
         echo $output_post->postSuccess(['forward_url' => $url], false);
         nel_clean_exit();

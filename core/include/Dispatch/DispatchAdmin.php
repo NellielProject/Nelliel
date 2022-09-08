@@ -52,7 +52,7 @@ class DispatchAdmin extends Dispatch
     public function dispatch(array $inputs)
     {
         $redirect = new Redirect();
-        $redirect->changeDelay(0);
+        $redirect->delay(0);
         $admin_handler = null;
         $board_id = $inputs['board_id'];
 

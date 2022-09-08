@@ -1,26 +1,19 @@
 <?php
+declare(strict_types = 1);
+
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use Nelliel\Redirect;
+use Nelliel\Auth\Authorization;
 
 function nel_clean_exit()
 {
-    $authorization = new \Nelliel\Auth\Authorization(nel_database('core'));
+    $authorization = new Authorization(nel_database('core'));
     $authorization->saveUsers();
     $authorization->saveRoles();
-    $redirect = new \Nelliel\Redirect();
+    $redirect = new Redirect();
     $redirect->go();
-
     die();
-}
-
-function nel_redirect(string $url, int $delay, bool $output = true)
-{
-    $redirect = '<meta http-equiv="refresh" content="' . $delay . ';URL=' . $url . '">';
-
-    if ($output) {
-        echo $redirect;
-    } else {
-        return $redirect;
-    }
 }
 
 function nel_get_microtime(bool $convert_int = true)
