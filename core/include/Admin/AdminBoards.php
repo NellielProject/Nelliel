@@ -20,6 +20,8 @@ class AdminBoards extends Admin
 {
     private $site_domain;
     private $remove_confirmed = false;
+    private $static_reserved_uris = [Domain::SITE, Domain::GLOBAL, NEL_ASSETS_DIR, 'overboard', 'sfw_overboard',
+        'panels', 'admin', 'ops'];
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
@@ -86,9 +88,7 @@ class AdminBoards extends Admin
             nel_derp(245, sprintf(_gettext('Board URI is too long. Maximum length is %d characters.'), $uri_max));
         }
 
-        if ($board_uri_lower === Domain::SITE || $board_uri_lower === Domain::GLOBAL ||
-            $board_uri_lower === NEL_ASSETS_DIR || $board_uri_lower === $site_domain->setting('overboard_uri') ||
-            $board_uri_lower === $site_domain->setting('sfw_overboard_uri')) {
+        if ($this->isReservedURI($board_uri)) {
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
@@ -350,5 +350,15 @@ class AdminBoards extends Admin
         }
 
         return $final_prefix;
+    }
+
+    public function isReservedURI(string $uri): bool
+    {
+        $uri_lower = utf8_strtolower($uri);
+        $static_found = in_array($uri_lower, array_map('utf8_strtolower', $this->static_reserved_uris));
+        $dynamic_reserved_uris = [$this->site_domain->setting('overboard_uri'),
+            $this->site_domain->setting('sfw_overboard_uri')];
+        $dynamic_found = in_array($uri_lower, array_map('utf8_strtolower', $dynamic_reserved_uris));
+        return $static_found || $dynamic_found;
     }
 }

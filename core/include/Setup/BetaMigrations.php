@@ -354,6 +354,16 @@ class BetaMigrations
 
                 echo ' - ' . __('Updated file filters table.') . '<br>';
 
+                // Update site and global domain IDs
+                $prepared = nel_database('core')->prepare(
+                    'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
+                    '" SET "domain_id" = \'site\' WHERE "domain_id" = \'_site_\'');
+                $prepared = nel_database('core')->prepare(
+                    'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
+                    '" SET "domain_id" = \'global\' WHERE "domain_id" = \'_global_\'');
+
+                echo ' - ' . __('Updated site and global domain IDs.') . '<br>';
+
                 $migration_count ++;
         }
 

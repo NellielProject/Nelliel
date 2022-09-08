@@ -14,8 +14,8 @@ use PDO;
 
 abstract class Domain implements NellielCacheInterface
 {
-    const SITE = '_site_';
-    const GLOBAL = '_global_';
+    const SITE = 'site';
+    const GLOBAL = 'global';
     protected $domain_id;
     protected $settings;
     protected $references;
