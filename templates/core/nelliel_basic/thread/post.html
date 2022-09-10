@@ -2,35 +2,37 @@
 	<a id="{{ post_anchor_id }}"></a>
 	<div class="indents">{{ indents_marker }}</div>
 	<div id="{{ post_container_id }}" class="{{ op_reply }} post">
-	{{# headers }}
+{{# headers }}
+	{{# in_modmode }}
 		{{> thread/headers/modmode }}
+	{{/ in_modmode }}
 		<div class="{{ op_reply }} headers-container">
 			{{> thread/headers/post_info }}
 			{{> thread/headers/thread_info }}
 			{{> thread/headers/post_options }}
 			{{> thread/headers/thread_options }}
 		</div>
-	{{/ headers }}
-	{{# post_backlinks_header }}
+{{/ headers }}
+{{# post_backlinks_header }}
 		<div>
 			{{> thread/pieces/backlink }}
 		</div>
-	{{/ post_backlinks_header }}
+{{/ post_backlinks_header }}
 		<div class="{{ op_reply }} content-container">
-	{{# single_file }}
+{{# single_file }}
 		{{> thread/single_content }}
-	{{/ single_file }}
-	{{# multi_file }}
+{{/ single_file }}
+{{# multi_file }}
 		{{> thread/multiple_content }}
-	{{/ multi_file }}
-	{{# post_comments }}
+{{/ multi_file }}
+{{# post_comments }}
 		{{> thread/post_comments }}
-	{{/ post_comments }}
+{{/ post_comments }}
 		</div>
-	{{# post_backlinks_footer }}
+{{# post_backlinks_footer }}
 		<div>
 			{{> thread/pieces/backlink }}
 		</div>
-	{{/ post_backlinks_footer }}
+{{/ post_backlinks_footer }}
 	</div>
 </div>

@@ -79,7 +79,6 @@ class OutputPost extends Output
                 }
 
                 $file_data = array();
-                //$post->getJSON()->addUpload($upload->getJSON());
 
                 if (nel_true_empty($upload->data('embed_url'))) {
                     $file_data = $output_file_info->render($upload, $post, [], true);
@@ -123,6 +122,7 @@ class OutputPost extends Output
         $ui_image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('ui_image_set'));
         $header_data = array();
         $thread_headers = array();
+        $post_headers = array();
         $this->render_data['headers']['response'] = $response;
         $post_content_id = $post->contentID();
         $this->render_data['show_poster_name'] = $this->domain->setting('show_poster_name');
@@ -139,24 +139,25 @@ class OutputPost extends Output
             }
 
             $this->render_data['mod_ip_address'] = $ip;
+            $this->render_data['in_modmode'] = true;
 
             if (!$response) {
-                $lock_button = $thread->data('locked') ? 'ui_mod_unlock' : 'ui_mod_lock';
+                $lock_button = $thread->data('locked') ? 'mod_links_unlock' : 'mod_links_lock';
                 $this->render_data['mod_lock_option'] = $this->render_data[$lock_button];
                 $this->render_data['mod_lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=lock&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
 
-                $sticky_button = $thread->data('sticky') ? 'ui_mod_unsticky' : 'ui_mod_sticky';
+                $sticky_button = $thread->data('sticky') ? 'mod_links_unsticky' : 'mod_links_sticky';
                 $this->render_data['mod_sticky_option'] = $this->render_data[$sticky_button];
                 $this->render_data['mod_sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=sticky&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
 
-                $permasage_button = $thread->data('permasage') ? 'ui_mod_unpermasage' : 'ui_mod_permasage';
+                $permasage_button = $thread->data('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
                 $this->render_data['mod_permasage_option'] = $this->render_data[$permasage_button];
                 $this->render_data['mod_permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=permasage&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
 
-                $cyclic_button = $thread->data('cyclic') ? 'ui_mod_non_cyclic' : 'ui_mod_cyclic';
+                $cyclic_button = $thread->data('cyclic') ? 'mod_links_non_cyclic' : 'mod_links_cyclic';
                 $this->render_data['mod_cyclic_option'] = $this->render_data[$cyclic_button];
                 $this->render_data['mod_cyclic_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                     '&actions=cyclic&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
