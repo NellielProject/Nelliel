@@ -36,7 +36,7 @@ class OutputPanelMain extends Output
         $this->render_data['roles_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles';
         $this->render_data['module_permissions'] = $this->session->user()->checkPermission($this->domain,
             'perm_permissions_manage');
-        $this->render_data['permissions_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=permissions';
+        $this->render_data['permissions_url'] = nel_build_router_url([Domain::SITE, 'permissions']);
         $this->render_data['module_site_config'] = $this->session->user()->checkPermission($this->domain,
             'perm_site_config_modify');
         $this->render_data['site_config_url'] = nel_build_router_url([Domain::SITE, 'config']);
@@ -84,7 +84,7 @@ class OutputPanelMain extends Output
         $this->render_data['capcodes_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=capcodes';
         $this->render_data['module_noticeboard'] = $this->session->user()->checkPermission($this->domain,
             'perm_noticeboard_view');
-        $this->render_data['noticeboard_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=noticeboard';
+        $this->render_data['noticeboard_url'] = nel_build_router_url([Domain::SITE, 'noticeboard']);;
         $this->render_data['module_plugins'] = $this->session->user()->checkPermission($this->domain,
             'perm_plugins_manage');
         $this->render_data['plugins_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=plugins';

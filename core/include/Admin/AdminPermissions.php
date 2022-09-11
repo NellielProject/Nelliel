@@ -44,7 +44,7 @@ class AdminPermissions extends Admin
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table . '" ("permission", "description") VALUES (?, ?)');
         $this->database->executePrepared($prepared, [$permission, $description]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function editor(): void
@@ -53,13 +53,12 @@ class AdminPermissions extends Admin
     public function update(): void
     {}
 
-    public function remove(): void
+    public function delete(string $permission): void
     {
         $this->verifyPermissions($this->domain, 'perm_permissions_manage');
-        $permission = $_GET[$this->id_field] ?? '';
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "permission" = ?');
         $this->database->executePrepared($prepared, [$permission]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

@@ -103,10 +103,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'permissions':
+            /*case 'permissions':
                 $admin_handler = new AdminPermissions($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'reports':
                 $admin_handler = new AdminReports($this->authorization, $this->domain, $this->session);
@@ -163,10 +163,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'pages':
+            /*case 'pages':
                 $admin_handler = new AdminPages($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'boardlist':
                 $output_boardlist = new OutputBoardlist($this->domain, false);
@@ -193,10 +193,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'noticeboard':
+            /*case 'noticeboard':
                 $admin_handler = new AdminNoticeboard($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'plugins':
                 $admin_handler = new AdminPlugins($this->authorization, $this->domain, $this->session);
