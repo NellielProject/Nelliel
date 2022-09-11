@@ -9,7 +9,7 @@ use Nelliel\FileTypes;
 use Nelliel\Domains\Domain;
 use PDO;
 
-class OutputPanelBoardSettings extends Output
+class OutputPanelBoardConfig extends Output
 {
 
     function __construct(Domain $domain, bool $write_mode)
@@ -21,7 +21,7 @@ class OutputPanelBoardSettings extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
-        $this->setBodyTemplate('panels/board_settings');
+        $this->setBodyTemplate('panels/board_config');
         $parameters['is_panel'] = true;
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $defaults = $parameters['defaults'] ?? false;
@@ -33,19 +33,15 @@ class OutputPanelBoardSettings extends Output
 
         if ($defaults) {
             $table_name = NEL_BOARD_DEFAULTS_TABLE;
-            $parameters['panel'] = $parameters['panel'] ?? _gettext('Board Default Settings');
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'board-defaults', 'actions' => 'update']);
+            $parameters['panel'] = $parameters['panel'] ?? _gettext('Board Default Config');
+            $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'board-defaults', 'update']);
             $prepared = $this->database->prepare(
                 'SELECT "setting_name","setting_value" FROM "' . $table_name . '" WHERE "setting_name" = ?');
             $enabled_types = $this->database->executePreparedFetch($prepared, ['enabled_filetypes'], PDO::FETCH_ASSOC);
         } else {
             $table_name = $this->domain->reference('config_table');
-            $parameters['panel'] = $parameters['panel'] ?? _gettext('Board Settings');
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'board-settings', 'actions' => 'update',
-                        'board-id' => $this->domain->id()]);
+            $parameters['panel'] = $parameters['panel'] ?? _gettext('Board Config');
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'config', 'update']);
             $prepared = $this->database->prepare(
                 'SELECT "setting_name","setting_value" FROM "' . $table_name .
                 '" WHERE "setting_name" = ? AND "board_id" = ?');

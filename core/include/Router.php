@@ -94,9 +94,23 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:\d+}/{section:delete}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:site-settings}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:config}',
                     function (RouteCollector $r) {
-                        $dispatch_class = '\Nelliel\Dispatch\DispatchSiteSettings';
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchSiteConfig';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{section:update}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:[^\/]+}/{module:config}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchBoardConfig';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{section:update}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:board-defaults}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchBoardDefaults';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{section:update}', $dispatch_class);
                     });

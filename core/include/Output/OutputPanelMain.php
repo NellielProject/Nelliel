@@ -37,15 +37,15 @@ class OutputPanelMain extends Output
         $this->render_data['module_permissions'] = $this->session->user()->checkPermission($this->domain,
             'perm_permissions_manage');
         $this->render_data['permissions_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=permissions';
-        $this->render_data['module_site_settings'] = $this->session->user()->checkPermission($this->domain,
+        $this->render_data['module_site_config'] = $this->session->user()->checkPermission($this->domain,
             'perm_site_config_modify');
-        $this->render_data['site_settings_url'] = nel_build_router_url([Domain::SITE, 'site-settings']);
+        $this->render_data['site_config_url'] = nel_build_router_url([Domain::SITE, 'config']);
         $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
             'perm_file_filters_manage');
         $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=file-filters';
         $this->render_data['module_board_defaults'] = $this->session->user()->checkPermission($this->domain,
             'perm_board_defaults_modify');
-        $this->render_data['board_defaults_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=board-defaults';
+        $this->render_data['board_defaults_url'] = nel_build_router_url([Domain::SITE, 'board-defaults']);
         $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_view');
         $this->render_data['bans_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans';
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,

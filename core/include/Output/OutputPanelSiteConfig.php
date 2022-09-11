@@ -8,7 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Domains\Domain;
 use PDO;
 
-class OutputPanelSiteSettings extends Output
+class OutputPanelSiteConfig extends Output
 {
 
     function __construct(Domain $domain, bool $write_mode)
@@ -20,15 +20,15 @@ class OutputPanelSiteSettings extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
-        $this->setBodyTemplate('panels/site_settings');
+        $this->setBodyTemplate('panels/site_config');
         $parameters['is_panel'] = true;
-        $parameters['panel'] = $parameters['panel'] ?? _gettext('Site Settings');
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Site Config');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'site-settings', 'update']);
+        $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'config', 'update']);
         $site_settings = $this->database->query(
             'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
             LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"

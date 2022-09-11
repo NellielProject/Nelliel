@@ -8,22 +8,23 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Redirect;
 use Nelliel\Account\Session;
 use Nelliel\Admin\AdminBans;
-use Nelliel\Admin\AdminBlotter;
 use Nelliel\Admin\AdminBoardDefaults;
-use Nelliel\Admin\AdminBoardSettings;
 use Nelliel\Admin\AdminBoards;
+use Nelliel\Admin\AdminCapcodes;
 use Nelliel\Admin\AdminContentOps;
 use Nelliel\Admin\AdminEmbeds;
 use Nelliel\Admin\AdminFileFilters;
+use Nelliel\Admin\AdminFiletypeCategories;
 use Nelliel\Admin\AdminFiletypes;
 use Nelliel\Admin\AdminImageSets;
 use Nelliel\Admin\AdminLogs;
 use Nelliel\Admin\AdminNews;
+use Nelliel\Admin\AdminNoticeboard;
 use Nelliel\Admin\AdminPages;
 use Nelliel\Admin\AdminPermissions;
+use Nelliel\Admin\AdminPlugins;
 use Nelliel\Admin\AdminReports;
 use Nelliel\Admin\AdminRoles;
-use Nelliel\Admin\AdminSiteSettings;
 use Nelliel\Admin\AdminStyles;
 use Nelliel\Admin\AdminTemplates;
 use Nelliel\Admin\AdminThreads;
@@ -34,10 +35,6 @@ use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputBoardlist;
 use Nelliel\Output\OutputPanelBoard;
 use Nelliel\Output\OutputPanelMain;
-use Nelliel\Admin\AdminCapcodes;
-use Nelliel\Admin\AdminFiletypeCategories;
-use Nelliel\Admin\AdminNoticeboard;
-use Nelliel\Admin\AdminPlugins;
 
 class DispatchAdmin extends Dispatch
 {
@@ -66,15 +63,15 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'board-settings':
+            /*case 'board-settings':
                 $admin_handler = new AdminBoardSettings($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
-            case 'board-defaults':
+            /*case 'board-defaults':
                 $admin_handler = new AdminBoardDefaults($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'file-filters':
                 $admin_handler = new AdminFileFilters($this->authorization, $this->domain, $this->session);
