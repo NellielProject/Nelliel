@@ -24,6 +24,9 @@ abstract class Dispatch
 
     public abstract function dispatch(array $inputs);
 
+    /**
+     * @deprecated Removed after full conversion to router
+     */
     protected function invalidSection()
     {
         nel_derp(0, 'Invalid section');

@@ -47,7 +47,7 @@ class AdminBlotter extends Admin
         $regen = new Regen();
         $regen->blotter(nel_site_domain());
         $regen->allBoards(true, true);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function editor(): void
@@ -57,15 +57,17 @@ class AdminBlotter extends Admin
     {}
 
     public function remove(): void
+    {}
+
+    public function delete(string $record_id): void
     {
-        $record_id = $_GET[$this->id_field] ?? 0;
         $this->verifyPermissions($this->domain, 'perm_blotter_manage');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "record_id" = ?');
         $this->database->executePrepared($prepared, [$record_id]);
         $regen = new Regen();
         $regen->blotter(nel_site_domain());
         $regen->allBoards(true, true);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

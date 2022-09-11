@@ -21,6 +21,7 @@ class DispatchAccount extends Dispatch
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
+        $this->domain = nel_site_domain(); // Remove if we support board account functions later on
     }
 
     public function dispatch(array $inputs)

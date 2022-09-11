@@ -30,24 +30,24 @@ class Router
 
         $this->dispatcher = cachedDispatcher(
             function (RouteCollector $r) use ($site_domain) {
-                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:account}',
+                $r->addGroup('/{domain_id:[^\/]+}/{module:account}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchAccount';
                         $r->addRoute(['GET', 'POST'], '/{section:login}', $dispatch_class);
-                        $r->addRoute('GET', '/{section:logout}', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:logout}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{section:register}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'],
                             '/{section:private-messages}[/{action:[^\/]+}[/{message_id:[^\/]+}]]', $dispatch_class);
                         $r->addRoute(['GET'], '', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:language}',
+                $r->addGroup('/{domain_id:[^\/]+}/{module:language}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchLanguage';
                         $r->addRoute(['GET'], '/{section:gettext}[/{action:[^\/]+}]', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:captcha}',
+                $r->addGroup('/{domain_id:[^\/]+}/{module:captcha}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchCAPTCHA';
                         $r->addRoute(['GET'], '/{section:get}', $dispatch_class);
@@ -70,17 +70,6 @@ class Router
 
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {
-                        $dispatch_class = '\Nelliel\Dispatch\DispatchOutput';
-                        $r->addRoute(['GET'], '/{page:\d+}[?{query_string:.+}]', $dispatch_class);
-                        $r->addRoute(['GET'], '/{section:catalog}/[?{query_string:.+}]', $dispatch_class);
-                        // Board subdirectories can be custom so we catch it last and compare in dispatch
-                        $r->addRoute(['GET'], '/{section:[^\/]+}/{thread_id:\d+}/{slug:[^\/\?]+}[?{query_string:.+}]',
-                            $dispatch_class);
-                        $r->addRoute(['GET'], '/[?{query_string:.+}]', $dispatch_class);
-                    });
-
-                $r->addGroup('/{domain_id:[^\/]+}',
-                    function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchNewPost';
                         $r->addRoute(['POST'], '/{section:new-post}[?{query_string:.+}]', $dispatch_class);
                     });
@@ -96,7 +85,26 @@ class Router
                         $dispatch_class = '\Nelliel\Dispatch\DispatchSnacks';
                         $r->addRoute(['POST'], '/{section:user-bans}[/{action:[^\/]+}]', $dispatch_class);
                     });
-            }, ['cacheFile' => NEL_CACHE_FILES_PATH . 'route.php']);
+
+                $r->addGroup('/{domain_id:[^\/]+}/{module:blotter}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchBlotter';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:\d+}/{section:delete}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:[^\/]+}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchOutput';
+                        $r->addRoute(['GET'], '/{page:\d+}[?{query_string:.+}]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:catalog}/[?{query_string:.+}]', $dispatch_class);
+                        // Board subdirectories can be custom so we catch it last and compare in dispatch
+                        $r->addRoute(['GET'], '/{section:[^\/]+}/{thread_id:\d+}/{slug:[^\/\?]+}[?{query_string:.+}]',
+                            $dispatch_class);
+                        $r->addRoute(['GET'], '/[?{query_string:.+}]', $dispatch_class);
+                    });
+            }, ['cacheFile' => NEL_CACHE_FILES_PATH . 'routes.php']);
     }
 
     public function dispatch(): bool

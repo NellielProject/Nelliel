@@ -161,10 +161,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'blotter':
+            /*case 'blotter':
                 $admin_handler = new AdminBlotter($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'pages':
                 $admin_handler = new AdminPages($this->authorization, $this->domain, $this->session);
