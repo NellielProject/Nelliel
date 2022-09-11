@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Dispatch;
+namespace Nelliel\Dispatch\Controls;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
 use Nelliel\Admin\AdminBoardDefaults;
 use Nelliel\Auth\Authorization;
+use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 
 class DispatchBoardDefaults extends Dispatch

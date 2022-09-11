@@ -41,7 +41,6 @@ class AdminPages extends Admin
         $this->verifyPermissions($this->domain, 'perm_pages_manage');
         $output_panel = new OutputPanelPages($this->domain, false);
         $output_panel->new([], false);
-        $this->outputMain(false);
     }
 
     public function add(): void
@@ -62,20 +61,19 @@ class AdminPages extends Admin
                 $page_info['markup_type']]);
         $regen = new Regen();
         $regen->page($this->domain, $_POST['uri']);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function editor(): void
+    public function editor(string $page_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_pages_manage');
         $output_panel = new OutputPanelPages($this->domain, false);
-        $output_panel->edit(['page_id' => $_GET['page-id'] ?? 0], false);
-        $this->outputMain(false);
+        $output_panel->edit(['page_id' => $page_id], false);
     }
 
-    public function update(): void
+    public function update(string $page_id): void
     {
-        $page_id = $_GET[$this->id_field] ?? 0;
+        $this->verifyPermissions($this->domain, 'perm_pages_manage');
         $prepared = $this->domain->database()->prepare(
             'SELECT "domain_id" FROM "' . NEL_PAGES_TABLE . '" WHERE "page_id" = :page_id');
         $prepared->bindValue(':page_id', $page_id);
@@ -99,12 +97,12 @@ class AdminPages extends Admin
             [$page_info['uri'], $page_info['title'], $page_info['text'], $page_info['markup_type'], $page_id]);
         $regen = new Regen();
         $regen->page($domain, $page_info['uri']);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function remove(): void
+    public function remove(string $page_id): void
     {
-        $page_id = $_GET[$this->id_field] ?? 0;
+        $this->verifyPermissions($this->domain, 'perm_pages_manage');
         $prepared = $this->domain->database()->prepare(
             'SELECT "uri", "domain_id" FROM "' . NEL_PAGES_TABLE . '" WHERE "page_id" = :page_id');
         $prepared->bindValue(':page_id', $page_id);
@@ -120,7 +118,7 @@ class AdminPages extends Admin
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "page_id" = ?');
         $this->database->executePrepared($prepared, [$page_id]);
         nel_utilities()->fileHandler()->eraserGun($domain->reference('base_path'), $info['uri'] . '.html');
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

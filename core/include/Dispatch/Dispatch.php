@@ -25,7 +25,7 @@ abstract class Dispatch
     public abstract function dispatch(array $inputs);
 
     /**
-     * @deprecated Removed after full conversion to router
+     * @deprecated Replace with route error handling after full conversion to router
      */
     protected function invalidSection()
     {

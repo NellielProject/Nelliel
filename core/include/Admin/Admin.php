@@ -73,11 +73,11 @@ abstract class Admin
 
     public abstract function add(): void;
 
-    public abstract function editor(): void;
+    //public abstract function editor(): void;
 
-    public abstract function update(): void;
+    //public abstract function update(): void;
 
-    public abstract function remove(): void;
+    //public abstract function remove(): void;
 
     protected abstract function verifyPermissions(Domain $domain, string $perm): void;
 

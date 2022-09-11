@@ -1,16 +1,17 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Dispatch;
+namespace Nelliel\Dispatch\Controls;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
-use Nelliel\Admin\AdminSiteConfig;
+use Nelliel\Admin\AdminBoardConfig;
 use Nelliel\Auth\Authorization;
+use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 
-class DispatchSiteConfig extends Dispatch
+class DispatchBoardConfig extends Dispatch
 {
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
@@ -22,19 +23,19 @@ class DispatchSiteConfig extends Dispatch
 
     public function dispatch(array $inputs)
     {
-        $site_config = new AdminSiteConfig($this->authorization, $this->domain, $this->session);
+        $board_config = new AdminBoardConfig($this->authorization, $this->domain, $this->session);
 
         switch ($inputs['section']) {
             case 'update':
                 if ($inputs['method'] === 'POST') {
-                    $site_config->update();
+                    $board_config->update();
                 }
 
                 break;
 
             default:
                 if ($inputs['method'] === 'GET') {
-                    $site_config->panel();
+                    $board_config->panel();
                 }
         }
     }

@@ -1,40 +1,37 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Dispatch;
+namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\BansAccess;
+use Nelliel\Snacks;
 use Nelliel\Account\Session;
-use Nelliel\Admin\AdminBoardConfig;
 use Nelliel\Auth\Authorization;
+use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 
-class DispatchBoardConfig extends Dispatch
+class DispatchSnacks extends Dispatch
 {
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->session->init(true);
-        $this->session->loggedInOrError();
     }
 
     public function dispatch(array $inputs)
     {
-        $board_config = new AdminBoardConfig($this->authorization, $this->domain, $this->session);
+        $snacks = new Snacks($this->domain, new BansAccess($this->domain->database()));
 
         switch ($inputs['section']) {
-            case 'update':
+            case 'user-bans':
                 if ($inputs['method'] === 'POST') {
-                    $board_config->update();
-                }
-
-                break;
-
-            default:
-                if ($inputs['method'] === 'GET') {
-                    $board_config->panel();
+                    switch ($inputs['action']) {
+                        case 'file-appeal':
+                            $snacks->banAppeal();
+                            break;
+                    }
                 }
         }
     }
