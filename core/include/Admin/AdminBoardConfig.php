@@ -161,13 +161,6 @@ class AdminBoardConfig extends Admin
         }
     }
 
-    private function setLock(string $setting_name)
-    {
-        $prepared = $this->database->prepare(
-            'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "edit_lock" = ? WHERE "setting_name" = ?');
-        $this->database->executePrepared($prepared, [$lock_value, $key]);
-    }
-
     private function updateSetting(Domain $domain, $config_name, $setting, $lock_override)
     {
         // TODO: Bind to string instead of cast

@@ -20,8 +20,7 @@ class AdminBoards extends Admin
 {
     private $site_domain;
     private $remove_confirmed = false;
-    private $static_reserved_uris = [Domain::SITE, Domain::GLOBAL, NEL_ASSETS_DIR, 'overboard', 'sfw_overboard',
-        'panels', 'admin', 'ops'];
+    private $static_reserved_uris = [Domain::SITE, Domain::GLOBAL, NEL_ASSETS_DIR, 'overboard', 'sfw_overboard'];
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
