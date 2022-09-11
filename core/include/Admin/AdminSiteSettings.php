@@ -69,7 +69,7 @@ class AdminSiteSettings extends Admin
         $regen->allBoards(true, false);
         $regen->allSitePages($this->domain);
         $regen->overboard($this->domain);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function remove(): void

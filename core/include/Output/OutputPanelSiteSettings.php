@@ -28,8 +28,7 @@ class OutputPanelSiteSettings extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            'module=admin&section=site-settings&actions=update';
+        $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'site-settings', 'update']);
         $site_settings = $this->database->query(
             'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
             LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"

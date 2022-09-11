@@ -121,10 +121,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'site-settings':
+            /*case 'site-settings':
                 $admin_handler = new AdminSiteSettings($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'styles':
                 $admin_handler = new AdminStyles($this->authorization, $this->domain, $this->session);

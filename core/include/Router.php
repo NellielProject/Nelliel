@@ -94,6 +94,13 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:\d+}/{section:delete}', $dispatch_class);
                     });
 
+                $r->addGroup('/{domain_id:[^\/]+}/{module:site-settings}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\DispatchSiteSettings';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{section:update}', $dispatch_class);
+                    });
+
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchOutput';

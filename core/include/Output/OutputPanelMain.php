@@ -39,7 +39,7 @@ class OutputPanelMain extends Output
         $this->render_data['permissions_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=permissions';
         $this->render_data['module_site_settings'] = $this->session->user()->checkPermission($this->domain,
             'perm_site_config_modify');
-        $this->render_data['site_settings_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-settings';
+        $this->render_data['site_settings_url'] = nel_build_router_url([Domain::SITE, 'site-settings']);
         $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
             'perm_file_filters_manage');
         $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=file-filters';
