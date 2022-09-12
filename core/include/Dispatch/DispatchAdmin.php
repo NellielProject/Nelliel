@@ -173,10 +173,10 @@ class DispatchAdmin extends Dispatch
                 $output_boardlist->render([], false);
                 break;
 
-            case 'embeds':
+            /*case 'embeds':
                 $admin_handler = new AdminEmbeds($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'content-ops':
                 $admin_handler = new AdminContentOps($this->authorization, $this->domain, $this->session);

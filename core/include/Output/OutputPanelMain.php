@@ -75,7 +75,7 @@ class OutputPanelMain extends Output
         $this->render_data['pages_url'] = nel_build_router_url([Domain::SITE, 'pages']);;
         $this->render_data['module_embeds'] = $this->session->user()->checkPermission($this->domain,
             'perm_embeds_manage');
-        $this->render_data['embeds_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=embeds';
+        $this->render_data['embeds_url'] = nel_build_router_url([Domain::SITE, 'embeds']);
         $this->render_data['module_content_ops'] = $this->session->user()->checkPermission($this->domain,
             'perm_content_ops_manage');
         $this->render_data['content_ops_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=content-ops';
