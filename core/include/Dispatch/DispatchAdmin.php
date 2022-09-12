@@ -73,10 +73,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'file-filters':
+            /*case 'file-filters':
                 $admin_handler = new AdminFileFilters($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'filetypes':
                 $admin_handler = new AdminFiletypes($this->authorization, $this->domain, $this->session);
