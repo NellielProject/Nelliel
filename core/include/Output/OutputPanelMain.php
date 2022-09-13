@@ -56,7 +56,7 @@ class OutputPanelMain extends Output
         $this->render_data['templates_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=templates';
         $this->render_data['module_filetypes'] = $this->session->user()->checkPermission($this->domain,
             'perm_filetypes_manage');
-        $this->render_data['filetypes_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=filetypes';
+        $this->render_data['filetypes_url'] = nel_build_router_url([$this->domain->id(), 'filetypes']);
         $this->render_data['module_styles'] = $this->session->user()->checkPermission($this->domain,
             'perm_styles_manage');
         $this->render_data['styles_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=styles';

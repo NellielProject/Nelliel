@@ -50,7 +50,6 @@ class AdminFiletypes extends Admin
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
         $output_panel = new OutputPanelFiletypes($this->domain, false);
         $output_panel->newFiletype(['editing' => false], false);
-        $this->outputMain(false);
     }
 
     public function add(): void
@@ -69,22 +68,19 @@ class AdminFiletypes extends Admin
             '" ("format", "extensions", "category", "mimetypes", "magic_regex", "label", "enabled") VALUES (?, ?, ?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
             [$format, $extensions, $category, $mimetypes, $magic_regex, $label, $enabled]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function editor(): void
+    public function editor(string $format): void
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $format = $_GET['filetype-id'] ?? '';
         $output_panel = new OutputPanelFiletypes($this->domain, false);
         $output_panel->editFiletype(['editing' => true, 'format' => $format], false);
-        $this->outputMain(false);
     }
 
-    public function update(): void
+    public function update(string $format): void
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $format = $_GET['filetype-id'] ?? '';
         $extensions = $_POST['extensions'] ?? '';
         $category = $_POST['category'] ?? null;
         $mimetypes = $_POST['mimetypes'] ?? '';
@@ -97,16 +93,15 @@ class AdminFiletypes extends Admin
             '" SET "extensions" = ?, "category" = ?, "mimetypes" = ?, "magic_regex" = ?, "label" = ?, "enabled" = ? WHERE "format" = ?');
         $this->database->executePrepared($prepared,
             [$extensions, $category, $mimetypes, $magic_regex, $label, $enabled, $format]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function remove(): void
+    public function delete(string $format): void
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $format = $_GET[$this->id_field] ?? '';
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "format" = ?');
         $this->database->executePrepared($prepared, [$format]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -125,21 +120,19 @@ class AdminFiletypes extends Admin
         }
     }
 
-    public function enable()
+    public function enable(string $format)
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $format = $_GET[$this->id_field] ?? '';
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "format" = ?');
         $this->database->executePrepared($prepared, [$format]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function disable()
+    public function disable(string $format)
     {
         $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
-        $format = $_GET[$this->id_field] ?? '';
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "format" = ?');
         $this->database->executePrepared($prepared, [$format]);
-        $this->outputMain(true);
+        $this->panel();
     }
 }

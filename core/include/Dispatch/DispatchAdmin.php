@@ -78,10 +78,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'filetypes':
+            /*case 'filetypes':
                 $admin_handler = new AdminFiletypes($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'image-sets':
                 $admin_handler = new AdminImageSets($this->authorization, $this->domain, $this->session);
@@ -188,10 +188,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'filetype-categories':
+            /*case 'filetype-categories':
                 $admin_handler = new AdminFiletypeCategories($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'noticeboard':
                 $admin_handler = new AdminNoticeboard($this->authorization, $this->domain, $this->session);
