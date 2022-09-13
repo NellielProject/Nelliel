@@ -58,6 +58,7 @@ class DispatchAdmin extends Dispatch
         }
 
         switch ($inputs['section']) {
+            // TODO: Remove this once we figure out mod links
             case 'bans':
                 $admin_handler = new AdminBans($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);

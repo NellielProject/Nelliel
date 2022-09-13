@@ -32,8 +32,7 @@ class OutputPanelBoard extends Output
             'perm_board_config_modify');
         $this->render_data['board_config_url'] = nel_build_router_url([$board_id, 'config']);
         $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_view');
-        $this->render_data['bans_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&board-id=' .
-            $board_id;
+        $this->render_data['bans_url'] = nel_build_router_url([$this->domain->id(), 'bans']);
         // $this->render_data['module_threads'] = true;
         // $this->render_data['threads_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=threads&board-id=' . $this->domain->id();
         $this->render_data['module_modmode'] = $this->session->user()->checkPermission($this->domain, 'perm_mod_mode');

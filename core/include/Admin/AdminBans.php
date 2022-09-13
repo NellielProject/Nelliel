@@ -9,6 +9,8 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelBans;
+use Nelliel\Regen;
 
 class AdminBans extends Admin
 {
@@ -32,7 +34,7 @@ class AdminBans extends Admin
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_bans_view');
-        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
+        $output_panel = new OutputPanelBans($this->domain, false);
         $output_panel->main([], false);
     }
 
@@ -40,9 +42,9 @@ class AdminBans extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_bans_add');
         $ban_ip = $_GET['ban-ip'] ?? '';
-        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
+        $output_panel = new OutputPanelBans($this->domain, false);
         $output_panel->new(['ban_ip' => $ban_ip], false);
-        $this->outputMain(false);
+        $this->outputMain(false); // TODO: Remove when mod links are figured out
     }
 
     public function add(): void
@@ -61,41 +63,39 @@ class AdminBans extends Admin
                 $content_post = $content_id->getInstanceFromID($this->domain);
                 $content_post->changeData('mod_comment', $mod_post_comment);
                 $content_post->writeToDatabase();
-                $regen = new \Nelliel\Regen();
+                $regen = new Regen();
                 $regen->threads($this->domain, true, [$content_id->postID()]);
                 $regen->index($this->domain);
                 $regen->overboard($this->domain);
             }
         }
 
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function editor(): void
+    public function editor(string $ban_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_bans_modify');
-        $output_panel = new \Nelliel\Output\OutputPanelBans($this->domain, false);
-        $output_panel->modify([], false);
-        $this->outputMain(false);
+        $output_panel = new OutputPanelBans($this->domain, false);
+        $output_panel->modify(['ban_id' => $ban_id], false);
     }
 
-    public function update(): void
+    public function update(string $ban_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_bans_modify');
-        $this->ban_hammer->loadFromID($_POST['ban_id']);
+        $this->ban_hammer->loadFromID($ban_id);
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
         $this->ban_hammer->updateAppealFromPOST();
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function remove(): void
+    public function delete(string $ban_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_bans_delete');
-        $ban_id = $_GET['ban_id'] ?? '';
         $this->ban_hammer->loadFromID($ban_id);
         $this->ban_hammer->remove();
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

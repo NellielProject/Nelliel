@@ -181,6 +181,15 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
+                $r->addGroup('/{domain_id:[^\/]+}/{module:bans}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchBans';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:modify}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
+                    });
+
                 // For now this is ALWAYS last
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {
