@@ -94,10 +94,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'manage-boards':
+            /*case 'manage-boards':
                 $admin_handler = new AdminBoards($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'news':
                 $admin_handler = new AdminNews($this->authorization, $this->domain, $this->session);

@@ -29,8 +29,7 @@ class OutputPanelManageBoards extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'add']);
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'manage-boards', 'new']);
         $board_ids = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
         $bgclass = 'row1';
 
@@ -45,25 +44,19 @@ class OutputPanelManageBoards extends Output
             $board_data['db_prefix'] = $domain->reference('db_prefix');
 
             if (!$domain->reference('locked')) {
-                $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $domain->id(),
-                            'actions' => 'lock']);
+                $board_data['lock_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'manage-boards', $domain->id(), 'lock']);
                 $board_data['status'] = __('Active');
                 $board_data['lock_text'] = __('Lock Board');
             } else {
-                $board_data['lock_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $domain->id(),
-                            'actions' => 'unlock']);
+                $board_data['lock_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'manage-boards', $domain->id(), 'unlock']);
                 $board_data['status'] = _gettext('Locked');
                 $board_data['lock_text'] = _gettext('Unlock Board');
             }
 
-            $board_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'manage-boards', 'board-id' => $domain->id(),
-                        'actions' => 'remove']);
+            $board_data['remove_url'] = nel_build_router_url(
+                [$this->domain->id(), 'manage-boards', $domain->id(), 'delete']);
             $this->render_data['board_list'][] = $board_data;
         }
 
@@ -90,20 +83,16 @@ class OutputPanelManageBoards extends Output
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Manage Boards');
         $parameters['section'] = $parameters['section'] ?? _gettext('Remove');
         $parameters['is_manage'] = true;
-        $board_id = $_GET['board-id'] ?? '';
+        $board_id = $parameters['board_id'];
         $board = new DomainBoard($board_id, $this->database);
         $messages[] = sprintf(_gettext('You are about to delete the board: %s'), $board->reference('board_uri'));
         $messages[] = _gettext(
             'This will wipe out all posts, settings, files, everything. There is no undo or recovery.');
         $messages[] = _gettext('Are you sure?');
         $link['text'] = _gettext('NOPE. Do not delete the board.');
-        $link['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'manage-boards']);
+        $link['url'] = nel_build_router_url([$this->domain->id(), 'manage-boards']);
         $link2['text'] = _gettext('Confirmed. Delete the board.');
-        $link2['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(
-                ['module' => 'admin', 'section' => 'manage-boards', 'actions' => 'remove-confirmed',
-                    'board-id' => $board_id]);
+        $link2['url'] = nel_build_router_url([$this->domain->id(), 'manage-boards', $board_id, 'remove-confirmed']);
         $parameters['extra_url_break'] = true;
         $parameters['page_title'] = $this->domain->reference('title');
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);

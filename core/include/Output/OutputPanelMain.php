@@ -29,7 +29,7 @@ class OutputPanelMain extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['module_manage_boards'] = $this->session->user()->checkPermission($this->domain,
             'perm_manage_boards');
-        $this->render_data['manage_boards_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=manage-boards';
+        $this->render_data['manage_boards_url'] = nel_build_router_url([$this->domain->id(), 'manage-boards']);
         $this->render_data['module_users'] = $this->session->user()->checkPermission($this->domain, 'perm_users_view');
         $this->render_data['users_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users';
         $this->render_data['module_roles'] = $this->session->user()->checkPermission($this->domain, 'perm_roles_view');

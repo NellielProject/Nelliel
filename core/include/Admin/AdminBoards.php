@@ -186,7 +186,7 @@ class AdminBoards extends Admin
         $regen = new Regen();
         $domain->regenCache();
         $regen->allBoardPages($domain);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function editor(): void
@@ -195,18 +195,17 @@ class AdminBoards extends Admin
     public function update(): void
     {}
 
-    public function remove(): void
+    public function delete(string $board_id, $confirmed = false): void
     {
         $this->verifyPermissions($this->domain, 'perm_boards_delete');
-        $board_id = $_GET['board-id'];
         $domain = new DomainBoard($board_id, $this->database);
 
         if (!$domain->exists()) {
             nel_derp(180, _gettext('Board does not appear to exist.'));
         }
 
-        if (!$this->remove_confirmed) {
-            $this->createInterstitial('remove_warning');
+        if (!$confirmed) {
+            $this->createInterstitial('remove_warning', $board_id);
             return;
         }
 
@@ -240,7 +239,7 @@ class AdminBoards extends Admin
         // Foreign key constraints allow this to handle any removals from site tables
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -271,32 +270,30 @@ class AdminBoards extends Admin
         }
     }
 
-    public function unlock()
+    public function unlock(string $board_id)
     {
         $this->verifyPermissions($this->domain, 'perm_boards_modify');
-        $board_id = $_GET['board-id'] ?? '';
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function lock()
+    public function lock(string $board_id)
     {
         $this->verifyPermissions($this->domain, 'perm_boards_modify');
-        $board_id = $_GET['board-id'] ?? '';
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    private function createInterstitial(string $which)
+    private function createInterstitial(string $which, string $board_id)
     {
         $output_panel = new OutputPanelManageBoards($this->domain, false);
 
         switch ($which) {
             case 'remove_warning':
                 $this->verifyPermissions($this->domain, 'perm_boards_delete');
-                $output_panel->removeWarning([], false);
+                $output_panel->removeWarning(['board_id' => $board_id], false);
                 break;
         }
 
