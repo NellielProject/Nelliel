@@ -201,6 +201,21 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:remove-confirmed}', $dispatch_class);
                     });
 
+                $r->addGroup('/{domain_id:[^\/]+}/{module:logs}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchLogs';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{page:[^\/]+}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:[^\/]+}/{module:news}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchNews';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
+                    });
+
                 // For now this is ALWAYS last
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {

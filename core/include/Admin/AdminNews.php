@@ -5,9 +5,11 @@ namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelNews;
 
 class AdminNews extends Admin
 {
@@ -29,7 +31,7 @@ class AdminNews extends Admin
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_news_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelNews($this->domain, false);
+        $output_panel = new OutputPanelNews($this->domain, false);
         $output_panel->render([], false);
     }
 
@@ -55,9 +57,9 @@ class AdminNews extends Admin
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
             [$news_info['username'], $news_info['name'], $news_info['headline'], $news_info['time'], $news_info['text']]);
-        $regen = new \Nelliel\Regen();
+        $regen = new Regen();
         $regen->news($this->domain);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function editor(): void
@@ -66,15 +68,14 @@ class AdminNews extends Admin
     public function update(): void
     {}
 
-    public function remove(): void
+    public function delete(string $article_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_news_manage');
-        $article_id = $_GET[$this->id_field] ?? 0;
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "article_id" = ?');
         $this->database->executePrepared($prepared, [$article_id]);
-        $regen = new \Nelliel\Regen();
+        $regen = new Regen();
         $regen->news($this->domain);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

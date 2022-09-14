@@ -64,7 +64,7 @@ class OutputPanelMain extends Output
             'perm_image_sets_manage');
         $this->render_data['image_sets_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=image-sets';
         $this->render_data['module_news'] = $this->session->user()->checkPermission($this->domain, 'perm_news_manage');
-        $this->render_data['news_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=news';
+        $this->render_data['news_url'] = nel_build_router_url([$this->domain->id(), 'news']);
         $this->render_data['module_word_filters'] = $this->session->user()->checkPermission($this->domain,
             'perm_word_filters_manage');
         $this->render_data['word_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=word-filters';
