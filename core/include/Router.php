@@ -240,6 +240,26 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
+                $r->addGroup('/{domain_id:[^\/]+}/{module:plugins}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchPlugins';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:install|uninstall}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:[^\/]+}/{module:site-main-panel|board-main-panel}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchMainPanel';
+                        $r->addRoute(['GET'], '[/]', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:[^\/]+}/{module:boardlist}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchBoardlist';
+                        $r->addRoute(['GET'], '[/]', $dispatch_class);
+                    });
+
                 // For now this is ALWAYS last
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {

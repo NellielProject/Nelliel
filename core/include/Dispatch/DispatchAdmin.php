@@ -144,15 +144,15 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'site-main-panel':
+            /*case 'site-main-panel':
                 $output_main_panel = new OutputPanelMain($this->domain, false);
                 $output_main_panel->render([], false);
-                break;
+                break;*/
 
-            case 'board-main-panel':
+            /*case 'board-main-panel':
                 $output_board_panel = new OutputPanelBoard($this->domain, false);
                 $output_board_panel->render(['board_id' => $board_id], false);
-                break;
+                break;*/
 
             case 'word-filters':
                 $admin_handler = new AdminWordFilters($this->authorization, $this->domain, $this->session);
@@ -169,10 +169,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'boardlist':
+            /*case 'boardlist':
                 $output_boardlist = new OutputBoardlist($this->domain, false);
                 $output_boardlist->render([], false);
-                break;
+                break;*/
 
             /*case 'embeds':
                 $admin_handler = new AdminEmbeds($this->authorization, $this->domain, $this->session);
@@ -199,10 +199,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'plugins':
+            /*case 'plugins':
                 $admin_handler = new AdminPlugins($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             default:
                 $this->invalidSection();

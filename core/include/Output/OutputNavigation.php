@@ -45,13 +45,12 @@ class OutputNavigation extends Output
         $render_data['board_area'] = $this->domain->id() !== Domain::SITE;
         $render_data['login_url'] = nel_build_router_url([Domain::SITE, 'account', 'login']);
         $render_data['logout_url'] = nel_build_router_url([Domain::SITE, 'account', 'logout']);
-        $render_data['site_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=site-main-panel';
-        $render_data['board_panel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            'module=admin&section=board-main-panel&board-id=' . $this->domain->id();
+        $render_data['site_panel_url'] = nel_build_router_url([Domain::SITE, 'site-main-panel']);
+        $render_data['board_panel_url'] = nel_build_router_url([$this->domain->id(), 'board-main-panel']);
         $render_data['home_url'] = $this->site_domain->reference('home_page');
         $render_data['news_url'] = NEL_BASE_WEB_PATH . 'news.html';
         $render_data['account_url'] = nel_build_router_url([Domain::SITE, 'account']);
-        $render_data['boardlist_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=boardlist';
+        $render_data['boardlist_url'] = nel_build_router_url([Domain::SITE, 'boardlist']);
         $render_data['overboard_active'] = $this->site_domain->setting('overboard_active');
         $render_data['overboard_url'] = NEL_BASE_WEB_PATH . $this->site_domain->setting('overboard_uri') . '/';
         $render_data['sfw_overboard_active'] = $this->site_domain->setting('sfw_overboard_active');
