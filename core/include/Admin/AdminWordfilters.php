@@ -50,7 +50,6 @@ class AdminWordFilters extends Admin
         $this->verifyPermissions($this->domain, 'perm_word_filters_manage');
         $output_panel = new \Nelliel\Output\OutputPanelWordfilters($this->domain, false);
         $output_panel->new(['editing' => false], false);
-        $this->outputMain(false);
     }
 
     public function add(): void
@@ -72,22 +71,19 @@ class AdminWordFilters extends Admin
             'INSERT INTO "' . $this->data_table .
             '" ("board_id", "text_match", "replacement", "is_regex", "enabled") VALUES (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$domain->id(), $text_match, $replacement, $is_regex, $enabled]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function editor(): void
+    public function editor(string $filter_id): void
     {
-        $filter_id = $_GET['wordfilter-id'] ?? 0;
         $entry_domain = $this->getEntryDomain($filter_id);
         $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
         $output_panel = new \Nelliel\Output\OutputPanelWordfilters($this->domain, false);
         $output_panel->edit(['editing' => true, 'filter_id' => $filter_id], false);
-        $this->outputMain(false);
     }
 
-    public function update(): void
+    public function update(string $filter_id): void
     {
-        $filter_id = $_GET['wordfilter-id'] ?? 0;
         $entry_domain = $this->getEntryDomain($filter_id);
         $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
         $text_match = $_POST['text_match'] ?? '';
@@ -99,39 +95,36 @@ class AdminWordFilters extends Admin
             '" SET "board_id" = ?, "text_match" = ?, "replacement" = ? , "is_regex" = ?, "enabled" = ? WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared,
             [$entry_domain->id(), $text_match, $replacement, $is_regex, $enabled, $filter_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function remove(): void
+    public function delete(string $filter_id): void
     {
-        $filter_id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($filter_id);
         $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function enable()
+    public function enable(string $filter_id)
     {
-        $filter_id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($filter_id);
         $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function disable()
+    public function disable(string $filter_id)
     {
-        $filter_id = $_GET[$this->id_field] ?? 0;
         $entry_domain = $this->getEntryDomain($filter_id);
         $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

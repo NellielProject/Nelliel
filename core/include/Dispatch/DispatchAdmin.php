@@ -154,10 +154,10 @@ class DispatchAdmin extends Dispatch
                 $output_board_panel->render(['board_id' => $board_id], false);
                 break;*/
 
-            case 'word-filters':
+            /*case 'word-filters':
                 $admin_handler = new AdminWordFilters($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'blotter':
                 $admin_handler = new AdminBlotter($this->authorization, $this->domain, $this->session);
@@ -179,15 +179,15 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'content-ops':
+            /*case 'content-ops':
                 $admin_handler = new AdminContentOps($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
-            case 'capcodes':
+            /*case 'capcodes':
                 $admin_handler = new AdminCapcodes($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'filetype-categories':
                 $admin_handler = new AdminFiletypeCategories($this->authorization, $this->domain, $this->session);

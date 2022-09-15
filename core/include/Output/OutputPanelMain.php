@@ -65,9 +65,9 @@ class OutputPanelMain extends Output
         $this->render_data['image_sets_url'] = nel_build_router_url([$this->domain->id(), 'image-sets']);
         $this->render_data['module_news'] = $this->session->user()->checkPermission($this->domain, 'perm_news_manage');
         $this->render_data['news_url'] = nel_build_router_url([$this->domain->id(), 'news']);
-        $this->render_data['module_word_filters'] = $this->session->user()->checkPermission($this->domain,
+        $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
             'perm_word_filters_manage');
-        $this->render_data['word_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=word-filters';
+        $this->render_data['wordfilters_url'] = nel_build_router_url([$this->domain->id(), 'wordfilters']);
         $this->render_data['module_blotter'] = $this->session->user()->checkPermission($this->domain,
             'perm_blotter_manage');
         $this->render_data['blotter_url'] = nel_build_router_url([$this->domain->id(), 'blotter']);
@@ -79,10 +79,10 @@ class OutputPanelMain extends Output
         $this->render_data['embeds_url'] = nel_build_router_url([$this->domain->id(), 'embeds']);
         $this->render_data['module_content_ops'] = $this->session->user()->checkPermission($this->domain,
             'perm_content_ops_manage');
-        $this->render_data['content_ops_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=content-ops';
+        $this->render_data['content_ops_url'] = nel_build_router_url([$this->domain->id(), 'content-ops']);
         $this->render_data['module_capcodes'] = $this->session->user()->checkPermission($this->domain,
             'perm_capcodes_manage');
-        $this->render_data['capcodes_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=capcodes';
+        $this->render_data['capcodes_url'] = nel_build_router_url([$this->domain->id(), 'capcodes']);
         $this->render_data['module_noticeboard'] = $this->session->user()->checkPermission($this->domain,
             'perm_noticeboard_view');
         $this->render_data['noticeboard_url'] = nel_build_router_url([$this->domain->id(), 'noticeboard']);
