@@ -39,8 +39,7 @@ class OutputPanelBoard extends Output
         $this->render_data['modmode_url'] = nel_build_router_url([$this->domain->id()], true, 'modmode');
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
             'perm_reports_view');
-        $this->render_data['reports_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports&board-id=' .
-            $board_id;
+        $this->render_data['reports_url'] = nel_build_router_url([$this->domain->id(), 'reports']);
         $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
             'perm_file_filters_manage');
         $this->render_data['file_filters_url'] = nel_build_router_url([$this->domain->id(), 'file-filters']);

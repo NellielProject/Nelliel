@@ -50,7 +50,7 @@ class OutputPanelMain extends Output
         $this->render_data['bans_url'] = nel_build_router_url([$this->domain->id(), 'bans']);
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
             'perm_reports_view');
-        $this->render_data['reports_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports';
+        $this->render_data['reports_url'] = nel_build_router_url([$this->domain->id(), 'reports']);
         $this->render_data['module_templates'] = $this->session->user()->checkPermission($this->domain,
             'perm_templates_manage');
         $this->render_data['templates_url'] = nel_build_router_url([$this->domain->id(), 'templates']);
