@@ -44,40 +44,34 @@ class OutputPanelStyles extends Output
             $style_data['enabled'] = $style->enabled();
 
             if ($style_data['enabled'] == 1) {
-                $style_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'styles', 'actions' => 'disable', 'style-id' => $style->id()]);
+                $style_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'styles', $style->id(), 'disable']);
                 $style_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($style_data['enabled'] == 0) {
-                $style_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'styles', 'actions' => 'enable', 'style-id' => $style->id()]);
+                $style_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'styles', $style->id(), 'enable']);
                 $style_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $style_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'styles', 'actions' => 'remove', 'style-id' => $style->id()]);
+            $style_data['uninstall_url'] = nel_build_router_url(
+                [$this->domain->id(), 'styles', $style->id(), 'uninstall']);
             $this->render_data['installed_list'][] = $style_data;
         }
 
-        $style_inis = $this->domain->frontEndData()->getAllStyles(false);
+        $style_inis = $this->domain->frontEndData()->getStyleInis();
         $bgclass = 'row1';
 
         foreach ($style_inis as $style) {
             $style_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $style_data['id'] = $style->id();
-            $style_data['style_type'] = strtoupper($style->info('style_type'));
-            $style_data['name'] = $style->info('name');
-            $style_data['directory'] = $style->info('directory');
-            $style_data['is_installed'] = in_array($style->id(), $installed_ids);
-            $style_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'styles', 'actions' => 'add',
-                        'style-id' => $style->id(), 'style-type' => $style->info('style_type')]);
+            $style_data['id'] = $style['info']['id'];
+            $style_data['style_type'] = strtoupper($style['info']['style_type']) ?? '';
+            $style_data['name'] = $style['info']['name'];
+            $style_data['is_installed'] = in_array($style['info']['id'], $installed_ids);
+            $style_data['install_url'] = nel_build_router_url(
+                [$this->domain->id(), 'styles', $style['info']['id'], 'install']);
             $this->render_data['available_list'][] = $style_data;
         }
 

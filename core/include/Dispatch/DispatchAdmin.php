@@ -84,10 +84,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'image-sets':
+            /*case 'image-sets':
                 $admin_handler = new AdminImageSets($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'logs':
                 $admin_handler = new AdminLogs($this->authorization, $this->domain, $this->session);
@@ -124,15 +124,15 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'styles':
+            /*case 'styles':
                 $admin_handler = new AdminStyles($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
-            case 'templates':
+            /*case 'templates':
                 $admin_handler = new AdminTemplates($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             case 'threads':
                 $admin_handler = new AdminThreads($this->authorization, $this->domain, $this->session);

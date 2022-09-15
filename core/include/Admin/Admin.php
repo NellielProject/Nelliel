@@ -69,9 +69,9 @@ abstract class Admin
 
     public abstract function panel(): void;
 
-    public abstract function creator(): void;
+    //public abstract function creator(): void;
 
-    public abstract function add(): void;
+    //public abstract function add(): void;
 
     //public abstract function editor(): void;
 

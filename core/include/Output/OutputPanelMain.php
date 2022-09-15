@@ -53,16 +53,16 @@ class OutputPanelMain extends Output
         $this->render_data['reports_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports';
         $this->render_data['module_templates'] = $this->session->user()->checkPermission($this->domain,
             'perm_templates_manage');
-        $this->render_data['templates_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=templates';
+        $this->render_data['templates_url'] = nel_build_router_url([$this->domain->id(), 'templates']);
         $this->render_data['module_filetypes'] = $this->session->user()->checkPermission($this->domain,
             'perm_filetypes_manage');
         $this->render_data['filetypes_url'] = nel_build_router_url([$this->domain->id(), 'filetypes']);
         $this->render_data['module_styles'] = $this->session->user()->checkPermission($this->domain,
             'perm_styles_manage');
-        $this->render_data['styles_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=styles';
+        $this->render_data['styles_url'] = nel_build_router_url([$this->domain->id(), 'styles']);
         $this->render_data['module_image_sets'] = $this->session->user()->checkPermission($this->domain,
             'perm_image_sets_manage');
-        $this->render_data['image_sets_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=image-sets';
+        $this->render_data['image_sets_url'] = nel_build_router_url([$this->domain->id(), 'image-sets']);
         $this->render_data['module_news'] = $this->session->user()->checkPermission($this->domain, 'perm_news_manage');
         $this->render_data['news_url'] = nel_build_router_url([$this->domain->id(), 'news']);
         $this->render_data['module_word_filters'] = $this->session->user()->checkPermission($this->domain,
