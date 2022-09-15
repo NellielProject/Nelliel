@@ -85,8 +85,7 @@ class AuthUser extends AuthHandler
             if ($result) {
                 $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_USER_ROLES_TABLE .
-                    '" SET "username" = :username, "role_id" = :role_id, "domain_id" = :domain_id WHERE "entry" = :entry');
-                $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
+                    '" SET "username" = :username, "role_id" = :role_id, "domain_id" = :domain_id WHERE "username" = :username2 AND "domain_id" = :domain_id2');
             } else {
                 $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_USER_ROLES_TABLE .
@@ -97,14 +96,20 @@ class AuthUser extends AuthHandler
             $prepared->bindValue(':username', $this->id(), PDO::PARAM_STR);
             $prepared->bindValue(':role_id', $user_role['role_id'], PDO::PARAM_STR);
             $prepared->bindValue(':domain_id', $domain_id, PDO::PARAM_STR);
+            $prepared->bindValue(':username2', $this->id(), PDO::PARAM_STR);
+            $prepared->bindValue(':domain_id2', $domain_id, PDO::PARAM_STR);
             $this->database->executePrepared($prepared);
         }
 
         return true;
     }
 
-    public function setupNew(): void
-    {}
+    public function exists(): bool
+    {
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_USERS_TABLE . '" WHERE "username" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
+        return empty($result);
+    }
 
     public function remove(): void
     {

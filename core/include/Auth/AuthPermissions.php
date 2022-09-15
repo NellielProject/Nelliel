@@ -16,8 +16,7 @@ class AuthPermissions extends AuthHandler
         $this->database = $database;
         $this->auth_id = utf8_strtolower($role_id);
 
-        if ($db_load)
-        {
+        if ($db_load) {
             $this->loadFromDatabase();
         }
     }
@@ -27,13 +26,11 @@ class AuthPermissions extends AuthHandler
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ?');
         $result = $this->database->executePreparedFetchAll($prepared, [$this->id()], PDO::FETCH_ASSOC, true);
 
-        if (empty($result))
-        {
+        if (empty($result)) {
             return false;
         }
 
-        foreach ($result as $perm)
-        {
+        foreach ($result as $perm) {
             $this->changeData($perm['permission'], boolval($perm['perm_setting']));
         }
 
@@ -42,29 +39,24 @@ class AuthPermissions extends AuthHandler
 
     public function writeToDatabase(): bool
     {
-        if (empty($this->auth_data))
-        {
+        if (empty($this->auth_data)) {
             return false;
         }
 
-        foreach ($this->auth_data as $perm => $setting)
-        {
+        foreach ($this->auth_data as $perm => $setting) {
             $prepared = $this->database->prepare(
-                    'SELECT "entry" FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "permission" = ?');
+                'SELECT "entry" FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "permission" = ?');
             $result = $this->database->executePreparedFetch($prepared, [$this->id(), $perm], PDO::FETCH_COLUMN);
 
-            if ($result)
-            {
+            if ($result) {
                 $prepared = $this->database->prepare(
-                        'UPDATE "' . NEL_ROLE_PERMISSIONS_TABLE .
-                        '" SET "role_id" = :role_id, "permission" = :permission, "perm_setting" = :perm_setting WHERE "entry" = :entry');
+                    'UPDATE "' . NEL_ROLE_PERMISSIONS_TABLE .
+                    '" SET "role_id" = :role_id, "permission" = :permission, "perm_setting" = :perm_setting WHERE "entry" = :entry');
                 $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
-            }
-            else
-            {
+            } else {
                 $prepared = $this->database->prepare(
-                        'INSERT INTO "' . NEL_ROLE_PERMISSIONS_TABLE .
-                        '" ("role_id", "permission", "perm_setting") VALUES
+                    'INSERT INTO "' . NEL_ROLE_PERMISSIONS_TABLE .
+                    '" ("role_id", "permission", "perm_setting") VALUES
                     (:role_id, :permission, :perm_setting)');
             }
 
@@ -77,13 +69,13 @@ class AuthPermissions extends AuthHandler
         return true;
     }
 
-    public function setupNew(): void
+    public function exists(): bool
     {
+        return true;
     }
 
     public function remove(): void
-    {
-    }
+    {}
 
     public function checkPermission(string $permission_id): bool
     {

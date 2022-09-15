@@ -24,7 +24,7 @@ abstract class AuthHandler
 
     public abstract function writeToDatabase(): bool;
 
-    public abstract function setupNew(): void;
+    public abstract function exists(): bool;
 
     public abstract function remove(): void;
 

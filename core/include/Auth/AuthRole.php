@@ -3,10 +3,10 @@ declare(strict_types = 1);
 
 namespace Nelliel\Auth;
 
-use PDO;
-use Nelliel\NellielPDO;
-
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use Nelliel\NellielPDO;
+use PDO;
 
 class AuthRole extends AuthHandler
 {
@@ -19,24 +19,21 @@ class AuthRole extends AuthHandler
         $this->auth_id = utf8_strtolower($role_id);
         $this->permissions = new AuthPermissions($this->database, $this->id());
 
-        if ($db_load)
-        {
+        if ($db_load) {
             $this->loadFromDatabase();
         }
     }
 
     public function loadFromDatabase(): bool
     {
-        if($this->empty)
-        {
+        if ($this->empty) {
             return false;
         }
 
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
-        if (empty($result))
-        {
+        if (empty($result)) {
             return false;
         }
 
@@ -47,25 +44,21 @@ class AuthRole extends AuthHandler
 
     public function writeToDatabase(): bool
     {
-        if (empty($this->auth_data))
-        {
+        if (empty($this->auth_data)) {
             return false;
         }
 
         $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
 
-        if ($result)
-        {
+        if ($result) {
             $prepared = $this->database->prepare(
-                    'UPDATE "' . NEL_ROLES_TABLE .
-                    '" SET "role_level" = :role_level, "role_title" = :role_title, "capcode" = :capcode WHERE "role_id" = :role_id');
-        }
-        else
-        {
+                'UPDATE "' . NEL_ROLES_TABLE .
+                '" SET "role_level" = :role_level, "role_title" = :role_title, "capcode" = :capcode WHERE "role_id" = :role_id');
+        } else {
             $prepared = $this->database->prepare(
-                    'INSERT INTO "' . NEL_ROLES_TABLE .
-                    '" ("role_id", "role_level", "role_title", "capcode") VALUES
+                'INSERT INTO "' . NEL_ROLES_TABLE .
+                '" ("role_id", "role_level", "role_title", "capcode") VALUES
                     (:role_id, :role_level, :role_title, :capcode)');
         }
 
@@ -78,10 +71,11 @@ class AuthRole extends AuthHandler
         return true;
     }
 
-    public function setupNew(): void
+    public function exists(): bool
     {
-        $this->permissions = new AuthPermissions($this->database, $this->id());
-        $this->permissions->setupNew();
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_ROLES_TABLE . '" WHERE "role_id" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
+        return !empty($result);
     }
 
     public function remove(): void
