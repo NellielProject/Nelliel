@@ -114,10 +114,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'roles':
+            /*case 'roles':
                 $admin_handler = new AdminRoles($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'site-settings':
                 $admin_handler = new AdminSiteSettings($this->authorization, $this->domain, $this->session);
@@ -139,10 +139,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;
 
-            case 'users':
+            /*case 'users':
                 $admin_handler = new AdminUsers($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'site-main-panel':
                 $output_main_panel = new OutputPanelMain($this->domain, false);

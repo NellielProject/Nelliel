@@ -31,9 +31,9 @@ class OutputPanelMain extends Output
             'perm_manage_boards');
         $this->render_data['manage_boards_url'] = nel_build_router_url([$this->domain->id(), 'manage-boards']);
         $this->render_data['module_users'] = $this->session->user()->checkPermission($this->domain, 'perm_users_view');
-        $this->render_data['users_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users';
+        $this->render_data['users_url'] = nel_build_router_url([$this->domain->id(), 'users']);
         $this->render_data['module_roles'] = $this->session->user()->checkPermission($this->domain, 'perm_roles_view');
-        $this->render_data['roles_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles';
+        $this->render_data['roles_url'] = nel_build_router_url([$this->domain->id(), 'roles']);
         $this->render_data['module_permissions'] = $this->session->user()->checkPermission($this->domain,
             'perm_permissions_manage');
         $this->render_data['permissions_url'] = nel_build_router_url([$this->domain->id(), 'permissions']);

@@ -5,9 +5,9 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\Auth\Authorization;
 
 class OutputPanelRoles extends Output
 {
@@ -43,16 +43,15 @@ class OutputPanelRoles extends Output
             $role_data['role_level'] = $role['role_level'];
             $role_data['role_title'] = $role['role_title'];
             $role_data['capcode'] = $role['capcode'];
-            $this->render_data['can_modify'] = $authorization->roleLevelCheck($user_role, $role['role_id']) &&
-                $this->session->user()->checkPermission($this->domain, 'perm_roles_manage');
-            $role_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=edit&role-id=' .
-                $role['role_id'];
-            $role_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=admin&section=roles&actions=remove&role-id=' . $role['role_id'];
+            $role_data['can_modify'] = $this->session->user()->isSiteOwner() ||
+                ($authorization->roleLevelCheck($user_role, $role['role_id']) &&
+                $this->session->user()->checkPermission($this->domain, 'perm_roles_manage'));
+            $role_data['edit_url'] = nel_build_router_url([$this->domain->id(), 'roles', $role['role_id'], 'modify']);
+            $role_data['remove_url'] = nel_build_router_url([$this->domain->id(), 'roles', $role['role_id'], 'delete']);
             $this->render_data['roles_list'][] = $role_data;
         }
 
-        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=new';
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'roles', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -74,7 +73,7 @@ class OutputPanelRoles extends Output
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Roles');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $role_id = $parameters['role_id'] ?? '';
-        $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
+        $authorization = new Authorization($this->domain->database());
         $role = $authorization->getRole($role_id);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -82,10 +81,10 @@ class OutputPanelRoles extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
         if ($role->empty()) {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=roles&actions=add';
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'roles', 'new']);
         } else {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                'module=admin&section=roles&actions=update&role-id=' . $role->id();
+            $this->render_data['form_action'] = nel_build_router_url(
+                [$this->domain->id(), 'roles', $role->id(), 'modify']);
             $this->render_data['role_id'] = $role->getData('role_id');
             $this->render_data['role_level'] = $role->getData('role_level');
             $this->render_data['role_title'] = $role->getData('role_title');
