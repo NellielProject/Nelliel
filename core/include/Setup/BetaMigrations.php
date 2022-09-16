@@ -355,14 +355,28 @@ class BetaMigrations
                 echo ' - ' . __('Updated file filters table.') . '<br>';
 
                 // Update site and global domain IDs
-                $prepared = nel_database('core')->prepare(
+                $prepared = nel_database('core')->exec(
                     'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
                     '" SET "domain_id" = \'site\' WHERE "domain_id" = \'_site_\'');
-                $prepared = nel_database('core')->prepare(
+                $prepared = nel_database('core')->exec(
                     'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
                     '" SET "domain_id" = \'global\' WHERE "domain_id" = \'_global_\'');
 
                 echo ' - ' . __('Updated site and global domain IDs.') . '<br>';
+
+                // Update roles table
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'site_admin\' WHERE "role_id" = \'SITE_ADMIN\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'board_owner\' WHERE "role_id" = \'BOARD_OWNER\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'moderator\' WHERE "role_id" = \'MODERATOR\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'janitor\' WHERE "role_id" = \'JANITOR\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'basic_user\' WHERE "role_id" = \'BASIC_USER\'');
+
+                echo ' - ' . __('Updated roles table.') . '<br>';
 
                 $migration_count ++;
         }

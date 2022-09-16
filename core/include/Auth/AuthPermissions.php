@@ -45,14 +45,15 @@ class AuthPermissions extends AuthHandler
 
         foreach ($this->auth_data as $perm => $setting) {
             $prepared = $this->database->prepare(
-                'SELECT "entry" FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "permission" = ?');
+                'SELECT 1 FROM "' . NEL_ROLE_PERMISSIONS_TABLE . '" WHERE "role_id" = ? AND "permission" = ?');
             $result = $this->database->executePreparedFetch($prepared, [$this->id(), $perm], PDO::FETCH_COLUMN);
 
             if ($result) {
                 $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_ROLE_PERMISSIONS_TABLE .
-                    '" SET "role_id" = :role_id, "permission" = :permission, "perm_setting" = :perm_setting WHERE "entry" = :entry');
-                $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
+                    '" SET "role_id" = :role_id, "permission" = :permission, "perm_setting" = :perm_setting WHERE "role_id" = :role_id2 AND "permission" = :permission2');
+                $prepared->bindValue(':role_id2', $this->id(), PDO::PARAM_STR);
+                $prepared->bindValue(':permission2', $perm, PDO::PARAM_STR);
             } else {
                 $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_ROLE_PERMISSIONS_TABLE .
@@ -60,7 +61,7 @@ class AuthPermissions extends AuthHandler
                     (:role_id, :permission, :perm_setting)');
             }
 
-            $prepared->bindValue(':role_id', $this->authDataOrDefault('role_id', $this->id()), PDO::PARAM_STR);
+            $prepared->bindValue(':role_id', $this->id(), PDO::PARAM_STR);
             $prepared->bindValue(':permission', $perm, PDO::PARAM_STR);
             $prepared->bindValue(':perm_setting', intval($setting), PDO::PARAM_INT);
             $this->database->executePrepared($prepared);
@@ -85,6 +86,11 @@ class AuthPermissions extends AuthHandler
     public function setPermission(string $key, bool $value): void
     {
         $this->changeData($key, $value);
+    }
+
+    public function changeID(string $new_id): void
+    {
+        $this->auth_id = $new_id;
     }
 }
 

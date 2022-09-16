@@ -15,20 +15,14 @@ use Nelliel\Output\OutputPanelUsers;
 
 class AdminUsers extends Admin
 {
-    private $username;
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->username = $_GET['username'] ?? null;
         $this->data_table = NEL_USERS_TABLE;
         $this->id_field = 'username';
         $this->id_column = 'username';
         $this->panel_name = _gettext('Users');
-
-        if (!is_null($this->username) && !$this->authorization->userExists($this->username)) {
-            nel_derp(230, _gettext('The specified user does not exist.'));
-        }
     }
 
     public function dispatch(array $inputs): void
@@ -47,50 +41,35 @@ class AdminUsers extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
         $output_panel = new OutputPanelUsers($this->domain, false);
-        $output_panel->new(['username' => $this->username], false);
-        $this->outputMain(false);
+        $output_panel->new([], false);
     }
 
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
-        $this->username = utf8_strtolower($_POST['username']);
-        $this->update();
-        $this->outputMain(true);
+        $username = utf8_strtolower($_POST['username']);
+        $this->update($username);
     }
 
-    public function editor(): void
+    public function editor(string $username): void
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
         $output_panel = new OutputPanelUsers($this->domain, false);
-        $output_panel->edit(['username' => $this->username], false);
-        $this->outputMain(false);
+        $output_panel->edit(['username' => $username], false);
     }
 
-    public function update(): void
+    public function update(string $username): void
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
-        $update_user = $this->authorization->getUser($this->username);
+        $update_user = $this->authorization->getUser($username);
 
-        if ($update_user->empty()) {
-            $update_user = $this->authorization->newUser($this->username);
-        }
-
-        foreach ($_POST as $key => $value) // TODO: Improve this
-        {
+        foreach ($_POST as $key => $value) {
             if (is_array($value)) {
                 $value = nel_form_input_default($value);
             }
 
             if (strpos($key, 'domain_role') !== false) {
-                if (strpos($key, Domain::SITE)) {
-                    $domain = new DomainSite($this->database);
-                } else if (strpos($key, Domain::GLOBAL)) {
-                    $domain = new DomainGlobal($this->database);
-                } else {
-                    $domain = new DomainBoard(utf8_substr($key, 12), $this->database);
-                }
-
+                $domain = Domain::getDomainFromID(utf8_substr($key, 12), $this->database);
                 $update_user->modifyRole($domain->id(), $value);
                 continue;
             }
@@ -103,23 +82,18 @@ class AdminUsers extends Admin
                 continue;
             }
 
-            if ($key === 'username') {
-                continue;
-            }
-
             $update_user->changeData($key, $value);
         }
 
         $this->authorization->saveUsers();
-        $update_user->loadFromDatabase();
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function remove(): void
+    public function delete(string $username): void
     {
         $this->verifyPermissions($this->domain, 'perm_users_manage');
-        $this->authorization->removeUser($this->username);
-        $this->outputMain(true);
+        $this->authorization->removeUser($username);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

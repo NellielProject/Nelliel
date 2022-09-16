@@ -61,7 +61,8 @@ class AuthUser extends AuthHandler
         if ($result) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_USERS_TABLE .
-                '" SET "display_name" = :display_name, "password" = :password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "username" = :username');
+                '" SET "username" = :username, "display_name" = :display_name, "password" = :password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "username" = :last_username');
+            $prepared->bindValue(':last_username', $this->id(), PDO::PARAM_STR);
         } else {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_USERS_TABLE .
@@ -75,17 +76,24 @@ class AuthUser extends AuthHandler
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
         $prepared->bindValue(':owner', $this->authDataOrDefault('owner', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_login', $this->authDataOrDefault('last_login', 0), PDO::PARAM_INT);
-        $this->database->executePrepared($prepared);
+
+        if ($this->database->executePrepared($prepared)) {
+            $this->changed = false;
+        }
+
+        if ($this->getData('username') !== $this->id()) {
+            $this->auth_id = $this->getData('username');
+        }
 
         foreach ($this->user_roles as $domain_id => $user_role) {
             $prepared = $this->database->prepare(
-                'SELECT "entry" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
+                'SELECT 1 FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
             $result = $this->database->executePreparedFetch($prepared, [$this->id(), $domain_id], PDO::FETCH_COLUMN);
 
             if ($result) {
                 $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_USER_ROLES_TABLE .
-                    '" SET "username" = :username, "role_id" = :role_id, "domain_id" = :domain_id WHERE "username" = :username2 AND "domain_id" = :domain_id2');
+                    '" SET "role_id" = :role_id WHERE "username" = :username AND "domain_id" = :domain_id');
             } else {
                 $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_USER_ROLES_TABLE .
@@ -96,8 +104,6 @@ class AuthUser extends AuthHandler
             $prepared->bindValue(':username', $this->id(), PDO::PARAM_STR);
             $prepared->bindValue(':role_id', $user_role['role_id'], PDO::PARAM_STR);
             $prepared->bindValue(':domain_id', $domain_id, PDO::PARAM_STR);
-            $prepared->bindValue(':username2', $this->id(), PDO::PARAM_STR);
-            $prepared->bindValue(':domain_id2', $domain_id, PDO::PARAM_STR);
             $this->database->executePrepared($prepared);
         }
 
