@@ -38,13 +38,17 @@ class AdminBans extends Admin
         $output_panel->main([], false);
     }
 
-    public function creator(): void
+    public function creator(ContentID $content_id = null): void
     {
         $this->verifyPermissions($this->domain, 'perm_bans_add');
-        $ban_ip = $_GET['ban-ip'] ?? '';
+        $parameters = array();
+
+        if (!is_null($content_id)) {
+            $parameters = ['content_id' => $content_id];
+        }
+
         $output_panel = new OutputPanelBans($this->domain, false);
-        $output_panel->new(['ban_ip' => $ban_ip], false);
-        $this->outputMain(false); // TODO: Remove when mod links are figured out
+        $output_panel->new($parameters, false);
     }
 
     public function add(): void
@@ -53,13 +57,11 @@ class AdminBans extends Admin
         $this->ban_hammer->collectFromPOST();
         $this->ban_hammer->apply();
 
-        if (isset($_GET['content-id']))
-        {
+        if (isset($_GET['content-id'])) {
             $content_id = new ContentID($_GET['content-id']);
             $mod_post_comment = $_POST['mod_post_comment'] ?? null;
 
-            if ($content_id->isPost() && !is_null($mod_post_comment))
-            {
+            if ($content_id->isPost() && !is_null($mod_post_comment)) {
                 $content_post = $content_id->getInstanceFromID($this->domain);
                 $content_post->changeData('mod_comment', $mod_post_comment);
                 $content_post->writeToDatabase();
@@ -100,13 +102,11 @@ class AdminBans extends Admin
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if ($this->session_user->checkPermission($domain, $perm))
-        {
+        if ($this->session_user->checkPermission($domain, $perm)) {
             return;
         }
 
-        switch ($perm)
-        {
+        switch ($perm) {
             case 'perm_bans_view':
                 nel_derp(310, sprintf(_gettext('You do not have access to the %s control panel.'), $this->panel_name));
                 break;

@@ -79,7 +79,7 @@ class Register
         if ($creating_owner) {
             $new_user->changeData('owner', 1);
         } else {
-            $new_user->modifyRole(Domain::SITE, 'basic_user');
+            $new_user->modifyRole(Domain::SITE, 'BASIC_USER');
             $new_user->changeData('owner', 0);
         }
 

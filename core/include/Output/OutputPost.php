@@ -10,8 +10,8 @@ use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
-use Nelliel\Markdown\ImageboardMarkdown;
 use Nelliel\FrontEnd\Capcode;
+use Nelliel\Markdown\ImageboardMarkdown;
 
 class OutputPost extends Output
 {
@@ -143,40 +143,42 @@ class OutputPost extends Output
 
             if (!$response) {
                 $lock_button = $thread->data('locked') ? 'mod_links_unlock' : 'mod_links_lock';
+                $lock_action = $thread->data('locked') ? 'unlock' : 'lock';
                 $this->render_data['mod_lock_option'] = $this->render_data[$lock_button];
-                $this->render_data['mod_lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=lock&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
+                $this->render_data['mod_lock_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $lock_action]);
 
                 $sticky_button = $thread->data('sticky') ? 'mod_links_unsticky' : 'mod_links_sticky';
+                $sticky_action = $thread->data('sticky') ? 'unsticky' : 'sticky';
                 $this->render_data['mod_sticky_option'] = $this->render_data[$sticky_button];
-                $this->render_data['mod_sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=sticky&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
+                $this->render_data['mod_sticky_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $sticky_action]);
 
-                $permasage_button = $thread->data('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
-                $this->render_data['mod_permasage_option'] = $this->render_data[$permasage_button];
-                $this->render_data['mod_permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=permasage&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
+                $sage_button = $thread->data('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
+                $sage_action = $thread->data('permasage') ? 'unsage' : 'sage';
+                $this->render_data['mod_sage_option'] = $this->render_data[$sage_button];
+                $this->render_data['mod_sage_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $sage_action]);
 
                 $cyclic_button = $thread->data('cyclic') ? 'mod_links_non_cyclic' : 'mod_links_cyclic';
+                $cyclic_action = $thread->data('cyclic') ? 'non-cyclic' : 'cyclic';
                 $this->render_data['mod_cyclic_option'] = $this->render_data[$cyclic_button];
-                $this->render_data['mod_cyclic_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=cyclic&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
+                $this->render_data['mod_cyclic_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $cyclic_action]);
             }
 
-            $this->render_data['mod_ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .
-                '&actions=new&ban-ip=' . $ip . '&modmode=true&goback=false';
-            $this->render_data['mod_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=delete&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
-            $this->render_data['mod_delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
-            $this->render_data['mod_global_delete_by_ip_url'] = '?module=admin&section=threads&board-id=' .
-                $this->domain->id() . '&actions=global-delete-by-ip&content-id=' . $post_content_id->getIDString() .
-                '&modmode=true&goback=true';
-            $this->render_data['mod_ban_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&ban-ip=' . $ip .
-                '&modmode=true&goback=false';
-            $this->render_data['mod_edit_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=edit&content-id=' . $post_content_id->getIDString();
+            $this->render_data['mod_ban_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'ban']);
+            $this->render_data['mod_delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'delete']);
+            $this->render_data['mod_delete_by_ip_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'delete-by-ip']);
+            $this->render_data['mod_global_delete_by_ip_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'global-delete-by-ip']);
+            $this->render_data['mod_ban_delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'ban-delete']);
+            $this->render_data['mod_edit_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'edit']);
         }
 
         $this->render_data['headers']['thread_url'] = $thread->getURL(!$this->write_mode);

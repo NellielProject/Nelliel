@@ -58,11 +58,10 @@ class DispatchAdmin extends Dispatch
         }
 
         switch ($inputs['section']) {
-            // TODO: Remove this once we figure out mod links
-            case 'bans':
+            /*case 'bans':
                 $admin_handler = new AdminBans($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'board-settings':
                 $admin_handler = new AdminBoardSettings($this->authorization, $this->domain, $this->session);
@@ -134,10 +133,10 @@ class DispatchAdmin extends Dispatch
                 $admin_handler->dispatch($inputs);
                 break;*/
 
-            case 'threads':
+            /*case 'threads':
                 $admin_handler = new AdminThreads($this->authorization, $this->domain, $this->session);
                 $admin_handler->dispatch($inputs);
-                break;
+                break;*/
 
             /*case 'users':
                 $admin_handler = new AdminUsers($this->authorization, $this->domain, $this->session);

@@ -79,6 +79,19 @@ class OutputPanelBans extends Output
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('New Ban');
+        $content_id = $parameters['content_id'] ?? null;
+
+        if (!is_null($content_id)) {
+            $content = $content_id->getInstanceFromID($this->domain);
+            $poster_ip = $content->data('ip_address');
+
+            if (empty($poster_ip)) {
+                $poster_ip = $content->data('hashed_ip_address');
+            }
+
+            $this->render_data['ban_ip'] = $poster_ip;
+        }
+
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -88,7 +101,6 @@ class OutputPanelBans extends Output
             $this->render_data['ban_board'] = $this->domain->id();
         }
 
-        $this->render_data['ban_ip'] = $parameters['ban_ip'];
         $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'bans', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);

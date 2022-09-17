@@ -30,7 +30,7 @@ class OutputPanelBoard extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['module_board_config'] = $this->session->user()->checkPermission($this->domain,
             'perm_board_config_modify');
-        $this->render_data['board_config_url'] = nel_build_router_url([$board_id, 'config']);
+        $this->render_data['board_config_url'] = nel_build_router_url([$this->domain->id(), 'config']);
         $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_view');
         $this->render_data['bans_url'] = nel_build_router_url([$this->domain->id(), 'bans']);
         // $this->render_data['module_threads'] = true;

@@ -315,6 +315,14 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                     });
 
+                $r->addGroup('/{domain_id:[^\/]+}/{module:moderation}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchModeration';
+                        $r->addRoute(['GET', 'POST'],
+                            '/{section:modmode}/{content_id:[^\/]+}[/{action:ban|ban-delete|delete|delete-by-ip|global-delete-by-ip|lock|unlock|sticky|unsticky|sage|unsage|cyclic|non-cyclic|edit}]',
+                            $dispatch_class);
+                    });
+
                 // For now this is ALWAYS last
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {
