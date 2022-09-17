@@ -8,9 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainBoard;
-use Nelliel\Domains\DomainGlobal;
-use Nelliel\Domains\DomainSite;
 use Nelliel\Output\OutputPanelUsers;
 
 class AdminUsers extends Admin
@@ -20,14 +17,8 @@ class AdminUsers extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_USERS_TABLE;
-        $this->id_field = 'username';
         $this->id_column = 'username';
         $this->panel_name = _gettext('Users');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void

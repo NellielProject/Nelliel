@@ -18,26 +18,8 @@ class AdminFileFilters extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_FILE_FILTERS_TABLE;
-        $this->id_field = 'filter-id';
         $this->id_column = 'filter_id';
         $this->panel_name = _gettext('File Filters');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'disable':
-                    $this->disable();
-                    break;
-
-                case 'enable':
-                    $this->enable();
-                    break;
-            }
-        }
     }
 
     public function panel(): void
@@ -57,12 +39,6 @@ class AdminFileFilters extends Admin
     public function add(): void
     {
         $board_id = $_POST['board_id'] ?? Domain::GLOBAL;
-
-        if (!Domain::validID($board_id)) {
-            $this->outputMain(true); // TODO: Handle properly
-            return;
-        }
-
         $domain = Domain::getDomainFromID($board_id, $this->database);
         $this->verifyPermissions($domain, 'perm_file_filters_manage');
         $type = $_POST['hash_type'];

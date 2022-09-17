@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelPermissions;
 
 class AdminPermissions extends Admin
 {
@@ -16,20 +17,14 @@ class AdminPermissions extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_PERMISSIONS_TABLE;
-        $this->id_field = 'permission';
         $this->id_column = 'permission';
         $this->panel_name = _gettext('Permissions');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_permissions_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelPermissions($this->domain, false);
+        $output_panel = new OutputPanelPermissions($this->domain, false);
         $output_panel->render([], false);
     }
 

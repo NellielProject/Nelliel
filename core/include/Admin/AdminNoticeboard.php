@@ -17,14 +17,8 @@ class AdminNoticeboard extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_NOTICEBOARD_TABLE;
-        $this->id_field = 'notice-id';
         $this->id_column = 'notice_id';
         $this->panel_name = _gettext('Noticeboard');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void

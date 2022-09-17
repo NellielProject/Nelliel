@@ -21,14 +21,8 @@ class AdminBoardDefaults extends Admin
         parent::__construct($authorization, $domain, $session);
         $this->domain = $domain;
         $this->data_table = NEL_BOARD_DEFAULTS_TABLE;
-        $this->id_field = '';
         $this->id_column = '';
         $this->panel_name = _gettext('Default Board Configuration');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void

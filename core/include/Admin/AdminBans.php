@@ -5,12 +5,13 @@ namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\BanHammer;
+use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPanelBans;
-use Nelliel\Regen;
 
 class AdminBans extends Admin
 {
@@ -19,16 +20,10 @@ class AdminBans extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->ban_hammer = new \Nelliel\BanHammer($this->database);
+        $this->ban_hammer = new BanHammer($this->database);
         $this->data_table = NEL_BANS_TABLE;
-        $this->id_field = 'ban-id';
         $this->id_column = 'ban_id';
         $this->panel_name = _gettext('Bans');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void

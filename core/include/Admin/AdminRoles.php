@@ -17,14 +17,8 @@ class AdminRoles extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_ROLES_TABLE;
-        $this->id_field = 'role-id';
         $this->id_column = 'role_id';
         $this->panel_name = _gettext('Roles');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void

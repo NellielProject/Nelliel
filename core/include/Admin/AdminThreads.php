@@ -27,57 +27,6 @@ class AdminThreads extends Admin
         $this->site_domain = new DomainSite($this->database);
     }
 
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        // TODO: Refine this whenever we get threads panel updated
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'sticky':
-                    $this->sticky();
-                    break;
-
-                case 'lock':
-                    $this->lock();
-                    break;
-
-                case 'delete':
-                    $this->remove();
-                    break;
-
-                case 'delete-by-ip':
-                    $this->removeByIP();
-                    break;
-
-                case 'global-delete-by-ip':
-                    $this->globalRemoveByIP();
-                    break;
-
-                case 'ban':
-                    $admin_bans = new AdminBans($this->authorization, $this->domain, $this->session, $inputs);
-                    $admin_bans->creator();
-                    break;
-
-                case 'permasage':
-                    $this->permasage();
-                    break;
-
-                case 'cyclic':
-                    $this->cyclic();
-                    break;
-
-                case 'expand':
-                    ; // TODO: Figure this out better
-                    break;
-
-                case 'bandelete':
-                    $this->banDelete();
-                    break;
-            }
-        }
-    }
-
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_threads_access');
@@ -199,7 +148,6 @@ class AdminThreads extends Admin
         $ban_ip = $_GET['ban-ip'] ?? '';
         $output_panel = new OutputPanelBans($this->domain, false);
         $output_panel->new(['ban_ip' => $ban_ip], false);
-        $this->outputMain(false);
     }
 
     public function deleteByIP(ContentID $first_content_id): void

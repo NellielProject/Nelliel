@@ -9,6 +9,7 @@ use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelBlotter;
 
 class AdminBlotter extends Admin
 {
@@ -17,19 +18,13 @@ class AdminBlotter extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_BLOTTER_TABLE;
-        $this->id_field = 'record-id';
         $this->panel_name = _gettext('Blotter');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_blotter_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelBlotter($this->domain, false);
+        $output_panel = new OutputPanelBlotter($this->domain, false);
         $output_panel->render([], false);
     }
 

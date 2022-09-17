@@ -18,14 +18,8 @@ class AdminNews extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_NEWS_TABLE;
-        $this->id_field = 'article-id';
         $this->id_column = 'article_id';
         $this->panel_name = _gettext('News');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void

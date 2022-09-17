@@ -8,47 +8,30 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelWordfilters;
 
-class AdminWordFilters extends Admin
+class AdminWordfilters extends Admin
 {
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_WORD_FILTERS_TABLE;
-        $this->id_field = 'wordfilter-id';
         $this->id_column = 'filter_id';
         $this->panel_name = _gettext('Word Filters');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'disable':
-                    $this->disable();
-                    break;
-
-                case 'enable':
-                    $this->enable();
-                    break;
-            }
-        }
     }
 
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_word_filters_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelWordfilters($this->domain, false);
+        $output_panel = new OutputPanelWordfilters($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
         $this->verifyPermissions($this->domain, 'perm_word_filters_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelWordfilters($this->domain, false);
+        $output_panel = new OutputPanelWordfilters($this->domain, false);
         $output_panel->new(['editing' => false], false);
     }
 
@@ -78,7 +61,7 @@ class AdminWordFilters extends Admin
     {
         $entry_domain = $this->getEntryDomain($filter_id);
         $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelWordfilters($this->domain, false);
+        $output_panel = new OutputPanelWordfilters($this->domain, false);
         $output_panel->edit(['editing' => true, 'filter_id' => $filter_id], false);
     }
 

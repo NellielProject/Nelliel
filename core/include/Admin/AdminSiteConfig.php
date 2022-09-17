@@ -18,14 +18,8 @@ class AdminSiteConfig extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_SITE_CONFIG_TABLE;
-        $this->id_field = '';
         $this->id_column = '';
         $this->panel_name = _gettext('Site Config');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void

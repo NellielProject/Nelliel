@@ -27,31 +27,8 @@ class AdminBoards extends Admin
         parent::__construct($authorization, $domain, $session);
         $this->site_domain = new DomainSite($this->database);
         $this->data_table = NEL_BOARD_DATA_TABLE;
-        $this->id_field = 'board-id';
         $this->id_column = 'board_id';
         $this->panel_name = _gettext('Manage Boards');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'lock':
-                    $this->lock();
-                    break;
-
-                case 'unlock':
-                    $this->unlock();
-                    break;
-
-                case 'remove-confirmed':
-                    $this->remove_confirmed = true;
-                    $this->remove();
-                    break;
-            }
-        }
     }
 
     public function panel(): void
@@ -296,8 +273,6 @@ class AdminBoards extends Admin
                 $output_panel->removeWarning(['board_id' => $board_id], false);
                 break;
         }
-
-        $this->outputMain(false);
     }
 
     private function generateBoardID(string $board_uri): string

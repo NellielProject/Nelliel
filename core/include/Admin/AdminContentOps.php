@@ -17,25 +17,7 @@ class AdminContentOps extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_CONTENT_OPS_TABLE;
-        $this->id_field = 'content-op-id';
         $this->panel_name = _gettext('Content Ops');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'disable':
-                    $this->disable();
-                    break;
-
-                case 'enable':
-                    $this->enable();
-                    break;
-            }
-        }
     }
 
     public function panel(): void

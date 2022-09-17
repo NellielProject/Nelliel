@@ -19,14 +19,8 @@ class AdminPages extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_PAGES_TABLE;
-        $this->id_field = 'page-id';
         $this->id_column = 'page_id';
         $this->panel_name = _gettext('Pages');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void

@@ -17,14 +17,8 @@ class AdminReports extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_REPORTS_TABLE;
-        $this->id_field = 'report-id';
         $this->id_column = 'report_id';
         $this->panel_name = _gettext('Reports');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void
