@@ -4,7 +4,12 @@
 	<div id="{{ post_container_id }}" class="{{ op_reply }} post">
 {{# headers }}
 	{{# in_modmode }}
-		{{> thread/headers/modmode }}
+		<div class="modmode-header">
+			{{> thread/pieces/post_modmode }}
+		{{^ response }}
+			{{> thread/pieces/thread_modmode }}
+		{{/ response }}
+		</div>
 	{{/ in_modmode }}
 		<div class="{{ op_reply }} headers-container">
 			{{> thread/headers/post_info }}

@@ -26,7 +26,6 @@ class OutputFile extends Output
         $multiple = $post->data('file_count') > 1;
         $template = ($multiple) ? 'thread/multiple_content' : 'thread/single_content';
         $this->render_data['is_file'] = true;
-        $full_filename = $file->data('filename') . '.' . $file->data('extension');
         $this->render_data['file_container_id'] = 'file-container-' . $file->contentID()->getIDString();
         $this->render_data['file_content_id'] = $file->contentID()->getIDString();
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
@@ -49,7 +48,7 @@ class OutputFile extends Output
             }
         }
 
-        $this->render_data['file_url'] = $file->srcWebPath() . rawurlencode($full_filename);
+        $this->render_data['file_url'] = $file->getURL(false);
         $this->render_data['show_download_link'] = $this->domain->setting('show_download_link');
 
         if ($this->domain->setting('download_original_name') && !nel_true_empty($file->data('original_filename'))) {

@@ -420,6 +420,13 @@ class Post
         return $old_data;
     }
 
+    public function getURL(bool $dynamic): string
+    {
+        $parent = $this->getParent();
+        $thread_url = $parent->getURL($dynamic);
+        return $thread_url . '#t' . $parent->contentID()->threadID() . 'p' . $this->content_id->postID();
+    }
+
     public function contentID()
     {
         return $this->content_id;

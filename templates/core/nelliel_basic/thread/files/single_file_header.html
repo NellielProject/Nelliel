@@ -18,7 +18,7 @@
 {{/ file_metadata }}
 		</span>
 {{# in_modmode }}
-	| {{# mod_can_delete }}<span class="text-button">{{{ ui_mod_delimiter_left }}}<a href="{{ mod_delete_url }}">{{{ ui_mod_delete }}}</a>{{{ ui_mod_delimiter_right }}}</span>{{/ mod_can_delete }}
+		| {{> thread/pieces/file_modmode }}
 {{/ in_modmode }}
 	</span><br>
 	<span class="single content-ops">

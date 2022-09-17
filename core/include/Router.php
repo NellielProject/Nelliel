@@ -76,6 +76,7 @@ class Router
                 $r->addGroup('/{domain_id:[^\/]+}/{module:threads}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchThreads';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{content_id:[^\/]+}', $dispatch_class);
                     });
 

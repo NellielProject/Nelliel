@@ -53,43 +53,17 @@ class OutputPanelReports extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $current_domain = $domains[$report_info['board_id']];
             $content_id = new ContentID($report_info['content_id']);
-            $content_url = '';
+            $content = $content_id->getInstanceFromID($current_domain);
 
-            if ($content_id->isThread()) {
-                $content_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
-                            'content-id' => $content_id->getIDString(), 'board-id' => $report_info['board_id'],
-                            'modmode' => 'true']);
-                $report_data['is_upload'] = false;
-            } else if ($content_id->isPost()) {
-                $content_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
-                            'content-id' => $content_id->getIDString(), 'board-id' => $report_info['board_id'],
-                            'modmode' => 'true']);
-                $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
-                $report_data['is_upload'] = false;
-            } else if ($content_id->isContent()) {
-                $report_data['is_upload'] = false;
-                $prepared = $this->database->prepare(
-                    'SELECT "filename" FROM "' . $current_domain->reference('uploads_table') .
-                    '" WHERE "parent_thread" = ? AND post_ref = ? AND "upload_order" = ?');
-                $filename = $this->database->executePreparedFetch($prepared,
-                    [$content_id->threadID(), $content_id->postID(), $content_id->orderID()], PDO::FETCH_COLUMN);
-                $report_data['file_url'] = $current_domain->reference('src_web_path') . $filename;
-
-                $content_url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'output', 'section' => 'thread', 'actions' => 'view',
-                            'content-id' => $content_id->getIDString(), 'board-id' => $report_info['board_id'],
-                            'modmode' => 'true']);
-                $content_url .= '#t' . $content_id->threadID() . 'p' . $content_id->postID();
+            if ($content_id->isContent()) {
+                $report_data['content_url'] = $content->getParent()->getURL(true);
+                $report_data['file_url'] = $content->getURL(true);
+            } else {
+                $report_data['content_url'] = $content->getURL(true);
             }
 
             $report_data['report_id'] = $report_info['report_id'];
             $report_data['board_id'] = $report_info['board_id'];
-            $report_data['content_url'] = $content_url;
             $report_data['content_id'] = $report_info['content_id'];
             $report_data['reason'] = $report_info['reason'];
             $report_data['reporter_ip'] = nel_convert_ip_from_storage($report_info['reporter_ip']);

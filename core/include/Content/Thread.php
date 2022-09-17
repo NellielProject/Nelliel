@@ -218,8 +218,8 @@ class Thread
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
-            'max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') &&
+            $this->data('post_count') > $this->domain->setting('max_bumps')) {
             return;
         }
 
@@ -421,9 +421,15 @@ class Thread
     public function getURL(bool $dynamic): string
     {
         if ($dynamic) {
-            return nel_build_router_url(
-                [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
-                    $this->pageBasename()]);
+            if (nel_session()->inModmode($this->domain)) {
+                return nel_build_router_url(
+                    [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
+                        $this->pageBasename()]);
+            } else {
+                return nel_build_router_url(
+                    [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
+                        $this->pageBasename()], false, 'modmode');
+            }
         }
 
         $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';

@@ -202,9 +202,8 @@ class Cites
             } else {
                 $target_thread = $this->getThreadID($target_domain, $cite_data['target_post']);
                 $content_id = new ContentID(ContentID::createIDString($target_thread, $cite_data['target_post']));
-                $thread = new Thread($content_id, $target_domain);
-                $p_anchor = '#t' . $target_thread . 'p' . $cite_data['target_post'];
-                $url = $thread->getURL($dynamic) . $p_anchor;
+                $post = $content_id->getInstanceFromID($target_domain);
+                $url = $post->getURL($dynamic);
             }
         }
 

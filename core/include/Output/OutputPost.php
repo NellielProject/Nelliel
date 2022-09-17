@@ -297,9 +297,7 @@ class OutputPost extends Output
 
         $post_headers['post_time'] = date($this->domain->setting('post_date_format'), intval($post->data('post_time')));
         $post_headers['post_number'] = $post->contentID()->postID();
-        $post_headers['post_number_url'] = $thread->getURL(
-            $this->session->inModmode($this->domain) && !$this->write_mode) . '#t' . $post_content_id->threadID() . 'p' .
-            $post_content_id->postID();
+        $post_headers['post_number_url'] = $post->getURL($this->session->inModmode($this->domain) && !$this->write_mode);
         $post_headers['post_number_url_cite'] = $post_headers['post_number_url'] . 'cite';
         $this->render_data['headers']['post_headers'] = $post_headers;
         return $header_data;
@@ -338,8 +336,7 @@ class OutputPost extends Output
 
             if ($line_count > $this->domain->setting('max_index_comment_lines')) {
                 $comment_data['long_comment'] = true;
-                $comment_data['long_comment_url'] = $thread->getURL($this->session->inModmode($this->domain)) . '#t' .
-                    $post->contentID()->threadID() . 'p' . $post->contentID()->postID();
+                $comment_data['long_comment_url'] = $post->getURL($this->session->inModmode($this->domain));
                 $comment_data['comment_lines'] = array();
                 $i = 0;
                 $reduced_lines = array();

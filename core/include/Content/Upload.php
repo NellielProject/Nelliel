@@ -216,6 +216,12 @@ class Upload
         return $this->getParent()->verifyModifyPerms();
     }
 
+    public function getURL(bool $dynamic): string
+    {
+        $full_filename = $this->data('filename') . '.' . $this->data('extension');
+        return $this->srcWebPath() . rawurlencode($full_filename);
+    }
+
     public function getParent(): Post
     {
         if (is_null($this->parent)) {

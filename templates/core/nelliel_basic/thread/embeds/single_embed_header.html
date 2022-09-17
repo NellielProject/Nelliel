@@ -8,7 +8,7 @@
 	<span class="{{ op_reply }} single embed-options">
 		<span class="hide-embed hidden text-button" data-jsonly="">[<a class="toggle-embed" href="#" data-command="hide-embed" data-content-id="{{ embed_content_id }}" data-alt-visual="Show Embed" data-i18n-attributes="data-alt-visual" data-i18n="">Hide Embed</a>]</span>
 {{# in_modmode }}
-		| {{# mod_can_delete }}<span class="text-button">{{{ ui_mod_delimiter_left }}}<a href="{{ mod_delete_url }}">{{{ ui_mod_delete }}}</a>{{{ ui_mod_delimiter_right }}}</span>{{/ mod_can_delete }}
+		| {{> thread/pieces/embed_modmode }}
 {{/ in_modmode }}
 	</span>
 </div>
