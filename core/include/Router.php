@@ -23,7 +23,6 @@ class Router
         $this->uri = rawurldecode($uri);
     }
 
-    //
     public function addRoutes(): void
     {
         $site_domain = Domain::SITE;
@@ -62,7 +61,7 @@ class Router
 
                 $r->addGroup('/{domain_id:[^\/]+}/{module:regen}',
                     function (RouteCollector $r) {
-                        $dispatch_class = '\Nelliel\Dispatch\DispatchRegen';
+                        $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchRegen';
                         $r->addRoute(['GET'], '/{section:pages}', $dispatch_class);
                         $r->addRoute(['GET'], '/{section:cache}', $dispatch_class);
                         $r->addRoute(['GET'], '/{section:overboard}', $dispatch_class);
@@ -74,10 +73,10 @@ class Router
                         $r->addRoute(['POST'], '/{section:new-post}[?{query_string:.+}]', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}',
+                $r->addGroup('/{domain_id:[^\/]+}/{module:threads}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchThreads';
-                        $r->addRoute(['POST'], '/{section:threads}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{content_id:[^\/]+}', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:[^\/]+}/{module:snacks}',

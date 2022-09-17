@@ -32,8 +32,8 @@ class OutputFile extends Output
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->session->inModmode($this->domain)) {
-            $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=delete&content-id=' . $file->contentID()->getIDString() . '&modmode=true&goback=true';
+            $this->render_data['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'delete']);
         }
 
         $this->render_data['display_filesize'] = '(' . round(((int) $file->data('filesize') / 1024), 2) . ' KB)';

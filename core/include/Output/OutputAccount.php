@@ -39,8 +39,7 @@ class OutputAccount extends Output
             $info['subject'] = $notice['subject'];
             $info['time'] = date('Y/m/d', intval($notice['time']));
             $info['message'] = $notice['message'];
-            $info['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'noticeboard']) . '#' . $notice['notice_id'];
+            $info['url'] = nel_build_router_url([$this->domain->id(), 'noticeboard', $notice['notice_id']]);
             $this->render_data['notices'][] = $info;
         }
 
