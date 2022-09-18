@@ -63,7 +63,7 @@ class DispatchNewPost extends Dispatch
         $messages[] = _gettext('Post success!');
         $link['url'] = $url;
         $link['text'] = _gettext('Click here to continue.');
-        $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
+        $output_interstitial = new OutputInterstitial($this->domain, false);
         echo $output_interstitial->basic([], false, $messages, [$link]);
     }
 }
