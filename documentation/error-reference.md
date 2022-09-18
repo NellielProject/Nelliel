@@ -76,7 +76,7 @@ Error 107: Install not done. (initializations.php)
 Error 108: Install already done. (Setup/Setup.php)  
 Error 109: PHP version too old. (Setup/Setup.php)   
 Error 110: Version mismatch. (initializations.php)    
-Error 111: Invalid module. (Dispatch/Dispatchmodules.php)     
+Error 111: No valid request. (Dispatch/Start.php)     
 Error 114: Wrong install key. (Setup/Setup.php)   
 
 Error 130: Report item limit. (Reports.php)  

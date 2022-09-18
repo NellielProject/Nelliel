@@ -84,7 +84,7 @@ class LanguageExtractor
         $headers = '';
         $headers .= '# SOME DESCRIPTIVE TITLE.' . "\n";
         $headers .= '# Copyright (C) ' . NELLIEL_COPYRIGHT . "\n";
-        $headers .= '# This file is distributed under the same license as the ' . NELLIEL_PACKAGE . ' package.' . "\n";
+        $headers .= '# This file is distributed under the same license as ' . NELLIEL_PACKAGE . '.' . "\n";
         $headers .= '# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.' . "\n";
         $headers .= '#' . "\n";
         $headers .= '#, fuzzy' . "\n";

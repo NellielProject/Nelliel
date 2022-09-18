@@ -5,6 +5,7 @@ namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\DNSBL;
 use Nelliel\Report;
 use Nelliel\ThreadHandler;
 use Nelliel\Account\Session;
@@ -24,6 +25,9 @@ class DispatchThreads extends Dispatch
 
     public function dispatch(array $inputs)
     {
+        $dnsbl = new DNSBL(nel_database('core'));
+        $dnsbl->checkIP(nel_request_ip_address());
+
         if (isset($inputs['parameters']['modmode'])) {
             $this->session->init(true);
             $this->session->toggleModMode();
@@ -44,7 +48,7 @@ class DispatchThreads extends Dispatch
             $link['text'] = __('Click here to continue.');
             $parameters['page_title'] = $this->domain->reference('title');
             $output_interstitial = new OutputInterstitial($this->domain, false);
-            echo $output_interstitial->render($parameters, false, $messages, [$link]);
+            echo $output_interstitial->basic($parameters, false, $messages, [$link]);
         }
 
         if (isset($_POST['form_submit_delete'])) {

@@ -56,6 +56,7 @@ class OutputNavigation extends Output
         $render_data['sfw_overboard_active'] = $this->site_domain->setting('sfw_overboard_active');
         $render_data['sfw_overboard_url'] = NEL_BASE_WEB_PATH . $this->site_domain->setting('sfw_overboard_uri') . '/';
         $render_data['about_nelliel_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'about_nelliel';
+        $render_data['blank_page_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'blank';
         return $render_data;
     }
 }

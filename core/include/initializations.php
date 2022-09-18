@@ -1,5 +1,11 @@
 <?php
+declare(strict_types = 1);
+
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use Nelliel\Language\Language;
+use Nelliel\Setup\Setup;
+use Nelliel\Setup\Upgrade;
 
 $base_config = array();
 $db_config = array();
@@ -37,14 +43,14 @@ unset($crypt_config);
 require_once NEL_INCLUDE_PATH . 'crypt.php';
 nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
-$language = new \Nelliel\Language\Language();
+$language = new Language();
 $language->loadLanguage(NEL_DEFAULT_LOCALE, 'nelliel', LC_MESSAGES);
 unset($language);
 Mustache_Autoloader::register();
 
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
 $file_handler = nel_utilities()->fileHandler();
-$setup = new \Nelliel\Setup\Setup(nel_database('core'), nel_utilities()->sqlCompatibility(), $file_handler);
+$setup = new Setup(nel_database('core'), nel_utilities()->sqlCompatibility(), $file_handler);
 
 if (isset($_GET['install'])) {
     $setup->install();
@@ -56,7 +62,7 @@ if (!$setup->checkInstallDone()) {
 
 unset($setup);
 
-$upgrade = new \Nelliel\Setup\Upgrade($file_handler);
+$upgrade = new Upgrade($file_handler);
 
 if (isset($_GET['upgrade'])) {
     $upgrade->doUpgrades();
@@ -85,5 +91,6 @@ unset($file_handler);
 define('NEL_SETUP_GOOD', true);
 
 require_once NEL_WAT_FILES_PATH . 'special.php';
+nel_special();
 
 nel_plugins()->loadPlugins();

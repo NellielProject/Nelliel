@@ -5,42 +5,26 @@ namespace Nelliel\Dispatch;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\DNSBL;
 use Nelliel\Router;
 use Nelliel\Output\OutputAboutNelliel;
 
-class Preparation
+class Start
 {
 
     function __construct()
     {}
 
-    public function prepare()
+    public function startDispatch(): void
     {
         if (nel_visitor_id() === '') {
             nel_visitor_id(true);
         }
 
-        if (empty($_GET) && empty($_POST)) {
-            return;
-        }
-
-        if (isset($_GET['special'])) {
-            nel_special();
-        }
-
         if (isset($_GET['about_nelliel'])) {
             $about_nelliel = new OutputAboutNelliel(nel_site_domain(), false);
             $about_nelliel->render([], false);
-            nel_clean_exit();
+            return;
         }
-
-        if (isset($_GET['blank']) || isset($_GET['tpilb'])) {
-            nel_tpilb();
-        }
-
-        $dnsbl = new DNSBL(nel_database('core'));
-        $dnsbl->checkIP(nel_request_ip_address());
 
         if (isset($_GET['route'])) {
             $router = new Router($_GET['route'] ?? '');
@@ -50,5 +34,7 @@ class Preparation
                 return;
             }
         }
+
+        nel_derp(111, __('No valid request was given for processing.'));
     }
 }
