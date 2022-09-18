@@ -17,25 +17,7 @@ class AdminImageSets extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_IMAGE_SETS_TABLE;
-        $this->id_field = 'image-set-id';
         $this->panel_name = _gettext('Image Sets');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'disable':
-                    $this->disable();
-                    break;
-
-                case 'enable':
-                    $this->enable();
-                    break;
-            }
-        }
     }
 
     public function panel(): void
@@ -48,12 +30,11 @@ class AdminImageSets extends Admin
     public function creator(): void
     {}
 
-    public function add(): void
+    public function install(string $set_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $set_id = $_GET[$this->id_field] ?? '';
         $this->domain->frontEndData()->getImageSet($set_id)->install();
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function editor(): void
@@ -62,12 +43,11 @@ class AdminImageSets extends Admin
     public function update(): void
     {}
 
-    public function remove(): void
+    public function uninstall(string $set_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $set_id = $_GET[$this->id_field] ?? '';
         $this->domain->frontEndData()->getImageSet($set_id)->uninstall();
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -86,19 +66,17 @@ class AdminImageSets extends Admin
         }
     }
 
-    public function enable()
+    public function enable(string $set_id)
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $set_id = $_GET[$this->id_field] ?? '';
         $this->domain->frontEndData()->getImageSet($set_id)->enable();
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function disable()
+    public function disable(string $set_id)
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $set_id = $_GET[$this->id_field] ?? '';
         $this->domain->frontEndData()->getImageSet($set_id)->disable();
-        $this->outputMain(true);
+        $this->panel();
     }
 }

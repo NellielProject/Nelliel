@@ -9,6 +9,7 @@ use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelBlotter;
 
 class AdminBlotter extends Admin
 {
@@ -17,19 +18,13 @@ class AdminBlotter extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_BLOTTER_TABLE;
-        $this->id_field = 'record-id';
         $this->panel_name = _gettext('Blotter');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_blotter_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelBlotter($this->domain, false);
+        $output_panel = new OutputPanelBlotter($this->domain, false);
         $output_panel->render([], false);
     }
 
@@ -47,7 +42,7 @@ class AdminBlotter extends Admin
         $regen = new Regen();
         $regen->blotter(nel_site_domain());
         $regen->allBoards(true, true);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function editor(): void
@@ -57,15 +52,17 @@ class AdminBlotter extends Admin
     {}
 
     public function remove(): void
+    {}
+
+    public function delete(string $record_id): void
     {
-        $record_id = $_GET[$this->id_field] ?? 0;
         $this->verifyPermissions($this->domain, 'perm_blotter_manage');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "record_id" = ?');
         $this->database->executePrepared($prepared, [$record_id]);
         $regen = new Regen();
         $regen->blotter(nel_site_domain());
         $regen->allBoards(true, true);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

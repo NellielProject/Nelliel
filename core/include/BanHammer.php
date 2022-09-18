@@ -194,10 +194,10 @@ class BanHammer
                 $prepared->bindValue(1, $this->ban_data['board_id'], PDO::PARAM_STR);
                 $prepared->bindValue(2, $this->ban_data['ip_type'], PDO::PARAM_INT);
                 $prepared->bindValue(3, $this->ban_data['creator'], PDO::PARAM_STR);
-                $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
+                $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'] ?? '', $unhashed_check),
                     PDO::PARAM_LOB);
                 $prepared->bindValue(5, $this->ban_data['hashed_ip_address'], PDO::PARAM_STR);
-                $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
+                $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'] ?? '', $unhashed_check),
                     PDO::PARAM_LOB);
                 $prepared->bindValue(7, $this->ban_data['reason'], PDO::PARAM_STR);
                 $prepared->bindValue(8, $this->ban_data['start_time'], PDO::PARAM_INT);
@@ -216,10 +216,10 @@ class BanHammer
             $prepared->bindValue(1, $this->ban_data['board_id'], PDO::PARAM_STR);
             $prepared->bindValue(2, $this->ban_data['ip_type'], PDO::PARAM_INT);
             $prepared->bindValue(3, $this->ban_data['creator'], PDO::PARAM_STR);
-            $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
+            $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'] ?? '', $unhashed_check),
                 PDO::PARAM_LOB);
             $prepared->bindValue(5, $this->ban_data['hashed_ip_address'], PDO::PARAM_STR);
-            $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
+            $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'] ?? '', $unhashed_check),
                 PDO::PARAM_LOB);
             $prepared->bindValue(7, $this->ban_data['reason'], PDO::PARAM_STR);
             $prepared->bindValue(8, $this->ban_data['start_time'], PDO::PARAM_INT);

@@ -178,7 +178,7 @@ Error 390: perm_templates_manage (Admin/AdminTemplates.php)
 Error 395: perm_users_view (Admin/AdminUsers.php)  
 Error 396: perm_users_manage (Admin/AdminUsers.php)  
 
-Error 400: perm_word_filters_manage (Admin/AdminWordFilters.php)  
+Error 400: perm_wordfilters_manage (Admin/AdminWordfilters.php)  
 
 Error 405: perm_embeds_manage (Admin/AdminEmbeds.php)  
 

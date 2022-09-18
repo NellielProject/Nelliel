@@ -1,12 +1,13 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Dispatch;
+namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 use Nelliel\Language\Language;
 use Nelliel\Output\OutputPanelMain;
@@ -19,6 +20,7 @@ class DispatchLanguage extends Dispatch
         parent::__construct($authorization, $domain, $session);
         $this->session->init(true);
         $this->session->loggedInOrError();
+        $this->domain = nel_site_domain(); // Remove if we support board language functions later on
     }
 
     public function dispatch(array $inputs)

@@ -9,7 +9,7 @@ class Redirect
 {
     private static $url = '';
     private static $do_redirect = false;
-    private static $delay = 3;
+    private static $delay = 0;
 
     function __construct()
     {}
@@ -48,7 +48,7 @@ class Redirect
                 self::$url = nel_site_domain()->reference('home_page');
             }
 
-            $redirect = '<meta http-equiv="refresh" content="' . self::$delay . ';URL=' . self::$url . '">';
+            $redirect = '<meta http-equiv="refresh" content="' . self::$delay . ';URL=' . self::$url . '"  f>';
             echo $redirect;
         }
     }

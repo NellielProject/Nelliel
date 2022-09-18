@@ -17,14 +17,8 @@ class AdminNoticeboard extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_NOTICEBOARD_TABLE;
-        $this->id_field = 'notice-id';
         $this->id_column = 'notice_id';
         $this->panel_name = _gettext('Noticeboard');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void
@@ -55,7 +49,7 @@ class AdminNoticeboard extends Admin
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
             [$notice_info['username'], $notice_info['time'], $notice_info['subject'], $notice_info['message']]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function editor(): void
@@ -64,13 +58,12 @@ class AdminNoticeboard extends Admin
     public function update(): void
     {}
 
-    public function remove(): void
+    public function delete(string $notice_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_noticeboard_delete');
-        $notice_id = $_GET[$this->id_field] ?? 0;
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "notice_id" = ?');
         $this->database->executePrepared($prepared, [$notice_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

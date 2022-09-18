@@ -1,13 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Dispatch;
+namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPanelBoard;
 use Nelliel\Output\OutputPanelMain;

@@ -1,12 +1,12 @@
-<div class="text-center">
-	<p>
+<div class="interstitial text-center">
 {{# messages }}
-	{{ message }}<br>
-	{{# extra_message_break }}<br>{{/ extra_message_break }}
-{{/ messages }}
+	<p>
+		{{ message }}
 	</p>
+{{/ messages }}
 {{# links }}
-	<a href="{{ url }}">{{ text }}</a><br>
-	{{# extra_url_break }}<br>{{/ extra_url_break }}
+	<p>
+		<a href="{{ url }}">{{ text }}</a>
+	</p>
 {{/ links }}
 </div>

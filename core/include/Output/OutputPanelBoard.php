@@ -23,38 +23,30 @@ class OutputPanelBoard extends Output
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
-        $board_id = $parameters['board_id'] ?? '';
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['module_board_settings'] = $this->session->user()->checkPermission($this->domain,
+        $this->render_data['module_board_config'] = $this->session->user()->checkPermission($this->domain,
             'perm_board_config_modify');
-        $this->render_data['board_settings_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            'module=admin&section=board-settings&board-id=' . $board_id;
+        $this->render_data['board_config_url'] = nel_build_router_url([$this->domain->id(), 'config']);
         $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_view');
-        $this->render_data['bans_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=bans&board-id=' .
-            $board_id;
+        $this->render_data['bans_url'] = nel_build_router_url([$this->domain->id(), 'bans']);
         // $this->render_data['module_threads'] = true;
-        // $this->render_data['threads_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=threads&board-id=' . $this->domain->id();
+        // $this->render_data['threads_url'] = nel_build_router_url([$this->domain->id(), 'threads']);
         $this->render_data['module_modmode'] = $this->session->user()->checkPermission($this->domain, 'perm_mod_mode');
         $this->render_data['modmode_url'] = nel_build_router_url([$this->domain->id()], true, 'modmode');
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
             'perm_reports_view');
-        $this->render_data['reports_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=reports&board-id=' .
-            $board_id;
+        $this->render_data['reports_url'] = nel_build_router_url([$this->domain->id(), 'reports']);
         $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
             'perm_file_filters_manage');
-        $this->render_data['file_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            'module=admin&section=file-filters&board-id=' . $board_id;
-        $this->render_data['module_word_filters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_word_filters_manage');
-        $this->render_data['word_filters_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            'module=admin&section=word-filters&board-id=' . $board_id;
-        $this->render_data['module_pages'] = $this->session->user()->checkPermission($this->domain,
-            'perm_pages_manage');
-        $this->render_data['pages_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-        'module=admin&section=pages&board-id=' . $board_id;
+        $this->render_data['file_filters_url'] = nel_build_router_url([$this->domain->id(), 'file-filters']);
+        $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
+            'perm_wordfilters_manage');
+        $this->render_data['wordfilters_url'] = nel_build_router_url([$this->domain->id(), 'wordfilters']);
+        $this->render_data['module_pages'] = $this->session->user()->checkPermission($this->domain, 'perm_pages_manage');
+        $this->render_data['pages_url'] = nel_build_router_url([$this->domain->id(), 'pages']);
         $this->render_data['regen_board_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_pages');
         $this->render_data['regen_pages_url'] = nel_build_router_url([$this->domain->id(), 'regen', 'pages']);

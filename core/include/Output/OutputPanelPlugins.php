@@ -42,24 +42,19 @@ class OutputPanelPlugins extends Output
             $plugin_data['enabled'] = $plugin->enabled();
 
             if ($plugin_data['enabled'] == 1) {
-                $plugin_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'plugins', 'actions' => 'disable',
-                            'plugin-id' => $plugin->id()]);
+                $plugin_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'plugins', $plugin->id(), 'disable']);
                 $plugin_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($plugin_data['enabled'] == 0) {
-                $plugin_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'plugins', 'actions' => 'enable',
-                            'plugin-id' => $plugin->id()]);
+                $plugin_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'plugins', $plugin->id(), 'enable']);
                 $plugin_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $plugin_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'plugins', 'actions' => 'remove', 'plugin-id' => $plugin->id()]);
+            $plugin_data['uninstall_url'] = nel_build_router_url(
+                [$this->domain->id(), 'plugins', $plugin->id(), 'uninstall']);
             $this->render_data['installed_list'][] = $plugin_data;
         }
 
@@ -72,9 +67,8 @@ class OutputPanelPlugins extends Output
             $plugin_data['id'] = $plugin->id();
             $plugin_data['name'] = $plugin->info('name');
             $plugin_data['is_installed'] = in_array($plugin->id(), $installed_ids);
-            $plugin_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'plugins', 'actions' => 'add', 'plugin-id' => $plugin->id()]);
+            $plugin_data['install_url'] = nel_build_router_url(
+                [$this->domain->id(), 'plugins', $plugin->id(), 'install']);
             $this->render_data['available_list'][] = $plugin_data;
         }
 

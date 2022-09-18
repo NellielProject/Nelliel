@@ -5,80 +5,60 @@ namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\Domain;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelRoles;
 
 class AdminRoles extends Admin
 {
-    private $role_id;
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->role_id = $_GET['role-id'] ?? '';
         $this->data_table = NEL_ROLES_TABLE;
-        $this->id_field = 'role-id';
         $this->id_column = 'role_id';
         $this->panel_name = _gettext('Roles');
-
-        if (!$this->authorization->roleExists($this->role_id))
-        {
-            nel_derp(231, _gettext('The specified role does not exist.'));
-        }
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_roles_view');
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
+        $output_panel = new OutputPanelRoles($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
         $this->verifyPermissions($this->domain, 'perm_roles_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
-        $output_panel->new(['role_id' => $this->role_id], false);
-        $this->outputMain(false);
+        $output_panel = new OutputPanelRoles($this->domain, false);
+        $output_panel->new([], false);
     }
 
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_roles_manage');
-        $this->role_id = utf8_strtolower($_POST['role_id'] ?? '');
-        $this->update();
-        $this->outputMain(true);
+        $this->update($_POST['role_id'] ?? '');
     }
 
-    public function editor(): void
+    public function editor(string $role_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_roles_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelRoles($this->domain, false);
-        $output_panel->edit(['role_id' => $this->role_id], false);
-        $this->outputMain(false);
+        $output_panel = new OutputPanelRoles($this->domain, false);
+        $output_panel->edit(['role_id' => $role_id], false);
     }
 
-    public function update(): void
+    public function update(string $role_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_roles_manage');
-        $role = $this->authorization->newRole($this->role_id);
-        $role->setupNew();
+        $role = $this->authorization->getRole($role_id);
 
-        foreach ($_POST as $key => $value)
-        {
-            if (is_array($value))
-            {
+        foreach ($_POST as $key => $value) {
+            if (is_array($value)) {
                 $value = nel_form_input_default($value);
             }
 
-            if (utf8_substr($key, 0, 5) === 'perm_')
-            {
+            if (utf8_substr($key, 0, 5) === 'perm_') {
                 $value = ($value == 1) ? true : false;
                 $role->permissions->changeData($key, $value);
                 continue;
@@ -88,25 +68,23 @@ class AdminRoles extends Admin
         }
 
         $this->authorization->saveRoles();
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function remove(): void
+    public function delete(string $role_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_roles_manage');
-        $this->authorization->removeRole($this->role_id);
-        $this->outputMain(true);
+        $this->authorization->removeRole($role_id);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {
-        if ($this->session_user->checkPermission($domain, $perm))
-        {
+        if ($this->session_user->checkPermission($domain, $perm)) {
             return;
         }
 
-        switch ($perm)
-        {
+        switch ($perm) {
             case 'perm_roles_view':
                 nel_derp(375, _gettext('You are not allowed to view roles.'));
                 break;

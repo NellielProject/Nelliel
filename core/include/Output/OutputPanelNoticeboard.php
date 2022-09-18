@@ -31,10 +31,8 @@ class OutputPanelNoticeboard extends Output
         $notices = $this->database->executeFetchAll('SELECT * FROM "' . NEL_NOTICEBOARD_TABLE . '" ORDER BY "time" ASC',
             PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'noticeboard', 'actions' => 'add']);
-        $this->render_data['can_post'] = $this->session->user()->checkPermission($this->domain,
-            'perm_noticeboard_post');
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'noticeboard', 'new']);
+        $this->render_data['can_post'] = $this->session->user()->checkPermission($this->domain, 'perm_noticeboard_post');
         $this->render_data['can_delete'] = $this->session->user()->checkPermission($this->domain,
             'perm_noticeboard_delete');
 
@@ -46,10 +44,8 @@ class OutputPanelNoticeboard extends Output
             $notice_info['message'] = $notice['message'];
             $notice_info['subject'] = $notice['subject'];
             $notice_info['time'] = date('Y/m/d (D) H:i:s', intval($notice['time']));
-            $notice_info['delete_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'noticeboard', 'actions' => 'remove',
-                        'notice-id' => $notice['notice_id']]);
+            $notice_info['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'noticeboard', $notice['notice_id'], 'delete']);
             $this->render_data['notices'][] = $notice_info;
         }
 

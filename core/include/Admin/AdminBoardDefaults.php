@@ -11,30 +11,24 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
+use Nelliel\Output\OutputPanelBoardConfig;
 
 class AdminBoardDefaults extends Admin
 {
-    private $board_id;
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
         $this->domain = $domain;
         $this->data_table = NEL_BOARD_DEFAULTS_TABLE;
-        $this->id_field = '';
         $this->id_column = '';
         $this->panel_name = _gettext('Default Board Configuration');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_board_defaults_modify');
-        $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain, false); // TODO: Maybe separate output too
+        $output_panel = new OutputPanelBoardConfig($this->domain, false); // TODO: Maybe separate output too
         $output_panel->render(['defaults' => true], false);
     }
 
@@ -160,7 +154,7 @@ class AdminBoardDefaults extends Admin
             $regen->allBoards(true, true);
         }
 
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function remove(): void
@@ -193,7 +187,7 @@ class AdminBoardDefaults extends Admin
     {
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "setting_value" = ? WHERE "setting_name" = ?');
-        $this->database->executePrepared($prepared, [$setting, $config_name]);
+        $this->database->executePrepared($prepared, [(string) $setting, $config_name]);
     }
 
     private function updateBoardSetting(Domain $domain, string $config_name, $setting, bool $lock_override): void
@@ -202,12 +196,12 @@ class AdminBoardDefaults extends Admin
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_BOARD_CONFIGS_TABLE .
                 '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ?');
-            $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
+            $this->database->executePrepared($prepared, [(string) $setting, $config_name, $domain->id()]);
         } else {
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_BOARD_CONFIGS_TABLE .
                 '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ? AND "edit_lock" = 0');
-            $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
+            $this->database->executePrepared($prepared, [(string) $setting, $config_name, $domain->id()]);
         }
     }
 

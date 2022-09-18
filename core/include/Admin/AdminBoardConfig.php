@@ -9,10 +9,10 @@ use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainBoard;
+use Nelliel\Output\OutputPanelBoardConfig;
 use PDO;
 
-class AdminBoardSettings extends Admin
+class AdminBoardConfig extends Admin
 {
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
@@ -20,20 +20,14 @@ class AdminBoardSettings extends Admin
         parent::__construct($authorization, $domain, $session);
         $this->domain = $domain;
         $this->data_table = $this->domain->reference('config_table');
-        $this->id_field = '';
         $this->id_column = '';
-        $this->panel_name = _gettext('Board Settings');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
+        $this->panel_name = _gettext('Board Config');
     }
 
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_board_config_modify');
-        $output_panel = new \Nelliel\Output\OutputPanelBoardSettings($this->domain, false);
+        $output_panel = new OutputPanelBoardConfig($this->domain, false);
         $output_panel->render(['defaults' => false], false);
     }
 
@@ -48,7 +42,7 @@ class AdminBoardSettings extends Admin
 
     public function update(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_board_defaults_modify');
+        $this->verifyPermissions($this->domain, 'perm_board_config_modify');
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
         $prepared = $this->database->prepare(
             'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
@@ -139,7 +133,7 @@ class AdminBoardSettings extends Admin
             $regen->allBoardPages($this->domain);
         }
 
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function remove(): void
@@ -153,7 +147,7 @@ class AdminBoardSettings extends Admin
 
         switch ($perm) {
             case 'perm_board_config_modify':
-                nel_derp(310, _gettext('You are not allowed to modify the board settings.'));
+                nel_derp(310, _gettext('You are not allowed to modify the board configuration.'));
                 break;
 
             default:
@@ -161,25 +155,19 @@ class AdminBoardSettings extends Admin
         }
     }
 
-    private function setLock(string $setting_name)
-    {
-        $prepared = $this->database->prepare(
-            'UPDATE "' . NEL_BOARD_DEFAULTS_TABLE . '" SET "edit_lock" = ? WHERE "setting_name" = ?');
-        $this->database->executePrepared($prepared, [$lock_value, $key]);
-    }
-
     private function updateSetting(Domain $domain, $config_name, $setting, $lock_override)
     {
+        // TODO: Bind to string instead of cast
         if ($lock_override) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . $domain->reference('config_table') .
                 '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ?');
-            $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
+            $this->database->executePrepared($prepared, [(string) $setting, $config_name, $domain->id()]);
         } else {
             $prepared = $this->database->prepare(
                 'UPDATE "' . $domain->reference('config_table') .
                 '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ? AND "edit_lock" = 0');
-            $this->database->executePrepared($prepared, [$setting, $config_name, $domain->id()]);
+            $this->database->executePrepared($prepared, [(string) $setting, $config_name, $domain->id()]);
         }
     }
 }

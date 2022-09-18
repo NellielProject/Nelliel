@@ -205,7 +205,7 @@ function nel_build_router_url(array $uris, bool $end_slash = false, string $quer
     $url = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'route=';
 
     foreach ($uris as $uri) {
-        $url .= '/' . rawurlencode($uri);
+        $url .= '/' . rawurlencode((string) $uri);
     }
 
     if ($end_slash) {

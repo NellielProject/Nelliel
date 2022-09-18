@@ -3,12 +3,12 @@ declare(strict_types = 1);
 
 namespace Nelliel\Admin;
 
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
-
-defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 abstract class Admin
 {
@@ -21,7 +21,6 @@ abstract class Admin
     protected $inputs;
     protected $data_table;
     protected $panel_name = '';
-    protected $id_field = 'id';
     protected $id_column = 'entry';
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
@@ -34,50 +33,7 @@ abstract class Admin
         $this->session_user = $session->user();
     }
 
-    public function dispatch(array $inputs): void
-    {
-        foreach ($inputs['actions'] as $action)
-        {
-            switch ($action)
-            {
-                case 'panel':
-                    $this->panel();
-                    break;
-
-                case 'new':
-                    $this->creator();
-                    break;
-
-                case 'add':
-                    $this->add();
-                    break;
-
-                case 'edit':
-                    $this->editor();
-                    break;
-
-                case 'update':
-                    $this->update();
-                    break;
-
-                case 'remove':
-                    $this->remove();
-                    break;
-            }
-        }
-    }
-
     public abstract function panel(): void;
-
-    public abstract function creator(): void;
-
-    public abstract function add(): void;
-
-    public abstract function editor(): void;
-
-    public abstract function update(): void;
-
-    public abstract function remove(): void;
 
     protected abstract function verifyPermissions(Domain $domain, string $perm): void;
 
@@ -88,20 +44,10 @@ abstract class Admin
         return Domain::getDomainFromID($domain_id, $this->database);
     }
 
-    public function outputMain(bool $value = null)
-    {
-        if (!is_null($value))
-        {
-            $this->output_main = $value;
-        }
-
-        return $this->output_main;
-    }
-
     protected function getEntryByID($id): array
     {
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->data_table . '" WHERE "' . $this->id_column . '" = ?');
+            'SELECT * FROM "' . $this->data_table . '" WHERE "' . $this->id_column . '" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$id], PDO::FETCH_ASSOC);
         return ($result !== false) ? $result : array();
     }

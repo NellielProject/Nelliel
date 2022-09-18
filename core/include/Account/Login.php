@@ -68,7 +68,7 @@ class Login
         $valid_user = false;
         $valid_password = false;
 
-        if (!$user->empty()) {
+        if ($user->exists()) {
             $valid_password = nel_password_verify($form_password, $user->getData('password'));
 
             if (empty($session_username)) {

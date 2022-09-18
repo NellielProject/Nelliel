@@ -376,7 +376,8 @@ nelliel.ui.showLinkedPost = function(element, event) {
 	request.onload = function() {
 		if (request.status === 200) {
 			var quoted_post = request.response.getElementById("post-container-" + post_id);
-			quoted_post.className = quoted_post.className.replace(/\op-post\b/g, "reply-post");
+			quoted_post.removeAttribute('id');
+			quoted_post.className = quoted_post.className.replace(/\op post\b/g, "reply post");
 			popup_div.appendChild(quoted_post);
 			element.parentNode.insertBefore(popup_div, element);
 			var popup_rect = quoted_post.getBoundingClientRect();

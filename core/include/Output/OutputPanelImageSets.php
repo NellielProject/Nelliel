@@ -43,25 +43,19 @@ class OutputPanelImageSets extends Output
             $set_data['enabled'] = $image_set->enabled();
 
             if ($set_data['enabled'] == 1) {
-                $set_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'image-sets', 'actions' => 'disable',
-                            'image-set-id' => $image_set->id()]);
+                $set_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'image-sets', $image_set->id(), 'disable']);
                 $set_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($set_data['enabled'] == 0) {
-                $set_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'image-sets', 'actions' => 'enable',
-                            'image-set-id' => $image_set->id()]);
+                $set_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'image-sets', $image_set->id(), 'enable']);
                 $set_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $set_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'image-sets', 'actions' => 'remove',
-                        'image-set-id' => $image_set->id()]);
+            $set_data['uninstall_url'] = nel_build_router_url(
+                [$this->domain->id(), 'image-sets', $image_set->id(), 'uninstall']);
             $this->render_data['installed_list'][] = $set_data;
         }
 
@@ -74,12 +68,9 @@ class OutputPanelImageSets extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $set_data['id'] = $image_set['info']['id'];
             $set_data['name'] = $image_set['info']['name'];
-            $set_data['directory'] = $image_set['info']['directory'];
             $set_data['is_installed'] = in_array($image_set['info']['id'], $installed_ids);
-            $set_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'image-sets', 'actions' => 'add',
-                        'image-set-id' => $image_set['info']['id']]);
+            $set_data['install_url'] = nel_build_router_url(
+                [$this->domain->id(), 'image-sets', $image_set['info']['id'], 'install']);
             $this->render_data['available_list'][] = $set_data;
         }
 

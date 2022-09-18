@@ -5,9 +5,9 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\Content\ContentID;
 
 class OutputPanelThreads extends Output
 {
@@ -19,13 +19,11 @@ class OutputPanelThreads extends Output
 
     public function render(array $parameters, bool $data_only)
     {
-        if (!isset($parameters['section']))
-        {
+        if (!isset($parameters['section'])) {
             return;
         }
 
-        switch ($parameters['section'])
-        {
+        switch ($parameters['section']) {
             case 'panel':
                 $output = $this->renderPanel($parameters, $data_only);
                 break;
@@ -51,61 +49,53 @@ class OutputPanelThreads extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         /*$thread_data = $this->database->executeFetchAll(
-                'SELECT * FROM "' . $this->domain->reference('threads_table') .
-                '" WHERE "old" = 0 ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC',
-                PDO::FETCH_ASSOC);*/
+         'SELECT * FROM "' . $this->domain->reference('threads_table') .
+         '" WHERE "old" = 0 ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC',
+         PDO::FETCH_ASSOC);*/
         $bgclass = 'row1';
         $threads = $this->domain->activeThreads(true);
 
-        foreach ($threads as $thread)
-        {
+        foreach ($threads as $thread) {
             $thread_info = array();
             $thread_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $content_id = $thread->contentID();
-            $op_content_id = new ContentID('cid_' . $content_id->threadID() . '_' . $thread->firstPost->contentID()->postID() . '_0');
+            $op_content_id = new ContentID(
+                'cid_' . $content_id->threadID() . '_' . $thread->firstPost->contentID()->postID() . '_0');
             $op_post = $op_content_id->getInstanceFromID($this->domain);
             $thread_info['thread_id'] = $content_id->threadID();
 
-            if ($thread->data('sticky'))
-            {
+            if ($thread->data('sticky')) {
                 $thread_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=unsticky&content-id=' . $content_id->getIDString();
+                    '&actions=unsticky&content-id=' . $content_id->getIDString();
                 $thread_info['sticky_text'] = _gettext('Unsticky Thread');
-            }
-            else
-            {
+            } else {
                 $thread_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                        '&actions=sticky&content-id=' . $content_id->getIDString();
+                    '&actions=sticky&content-id=' . $content_id->getIDString();
                 $thread_info['sticky_text'] = _gettext('Sticky Thread');
             }
 
-            if ($thread->data('locked'))
-            {
+            if ($thread->data('locked')) {
                 $thread_info['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=unlock&content-id=' . $content_id->getIDString();
+                    '&actions=unlock&content-id=' . $content_id->getIDString();
                 $thread_info['lock_text'] = _gettext('Unlock Thread');
-            }
-            else
-            {
+            } else {
                 $thread_info['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=lock&content-id=' . $content_id->getIDString();
+                    '&actions=lock&content-id=' . $content_id->getIDString();
                 $thread_info['lock_text'] = _gettext('Lock Thread');
             }
 
             $thread_info['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-            '&actions=delete&content-id=' . $content_id->getIDString();
+                '&actions=delete&content-id=' . $content_id->getIDString();
             $thread_info['delete_text'] = _gettext('Delete Thread');
             $thread_info['last_update'] = date($this->domain->setting('post_date_format'), $thread->data('last_update'));
             $thread_info['subject'] = $op_post->data('subject');
-            $thread_info['thread_url'] = $thread->getURL($this->session->user()->checkPermission($this->domain, 'perm_mod_mode'));
+            $thread_info['thread_url'] = $thread->getURL(
+                $this->session->user()->checkPermission($this->domain, 'perm_mod_mode'));
 
-            if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip'))
-            {
+            if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
                 $thread_info['op_ip'] = $op_post->data('ip_address');
-            }
-            else
-            {
+            } else {
                 $thread_info['op_ip'] = $op_post->data('hashed_ip_address');
             }
 
@@ -134,29 +124,28 @@ class OutputPanelThreads extends Output
         $manage_headers = ['header' => _gettext('Board Management'), 'sub_header' => _gettext('Expanded Thread')];
         $this->render_data['header'] = $output_header->general(['manage_headers' => $manage_headers], true);
         $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');
+            'SELECT * FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? ORDER BY "post_time" DESC');
         $post_data = $this->database->executePreparedFetchAll($prepared, [$thread_id], PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
-        foreach ($post_data as $post)
-        {
+        foreach ($post_data as $post) {
             $post_info = array();
             $post_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $base_content_id = 'cid_' . $post['parent_thread'] . '_' . $post['post_number'] . '_0';
             $post_info['post_number'] = $post['post_number'];
             $post_info['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=delete&content-id=' . $base_content_id;
+                '&actions=delete&content-id=' . $base_content_id;
             $post_info['delete_text'] = _gettext('Delete Post');
             $post_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=sticky&content-id=' . $base_content_id;
+                '&actions=sticky&content-id=' . $base_content_id;
             $post_info['sticky_text'] = _gettext('Sticky Post');
             $post_info['parent_thread'] = $post['parent_thread'];
             $post_info['post_time'] = date($this->domain->setting('post_date_format'), intval($post['post_time']));
             $post_info['subject'] = $post['subject'];
             $post_info['thread_url'] = $this->domain->reference('page_directory') . '/' . $post['parent_thread'] . '/' .
-                    $post['post_number'] . '.html';
+                $post['post_number'] . '.html';
             $post_info['name'] = $post['name'];
             $post_info['poster_ip'] = nel_convert_ip_from_storage($post['ip_address']);
             $post_info['email'] = $post['email'];
@@ -188,11 +177,8 @@ class OutputPanelThreads extends Output
         $this->render_data['verb_value'] = $post->data('subject');
         $this->render_data['wordswordswords_value'] = $post->data('comment');
         $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'];
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                        ['module' => 'admin', 'section' => 'threads', 'actions' => 'update',
-                            'board-id' => $post->domain()->id(), 'content-id' => $post->contentID()->getIDString(),
-                            'modmode' => 'true']);
+        $this->render_data['form_action'] = nel_build_router_url(
+            [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

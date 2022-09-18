@@ -84,4 +84,6 @@ unset($file_handler);
 
 define('NEL_SETUP_GOOD', true);
 
+require_once NEL_WAT_FILES_PATH . 'special.php';
+
 nel_plugins()->loadPlugins();

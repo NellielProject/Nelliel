@@ -1,14 +1,18 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Dispatch;
+namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Report;
+use Nelliel\ThreadHandler;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputInterstitial;
+use Nelliel\Output\OutputPost;
 
 class DispatchThreads extends Dispatch
 {
@@ -25,11 +29,8 @@ class DispatchThreads extends Dispatch
             $this->session->toggleModMode();
         }
 
-        $redirect = new \Nelliel\Redirect();
-        $redirect->doRedirect(true);
-
         if (isset($_POST['form_submit_report'])) {
-            $report = new \Nelliel\Report($this->domain);
+            $report = new Report($this->domain);
             $report->submit();
 
             if ($this->session->inModmode($this->domain)) {
@@ -38,17 +39,16 @@ class DispatchThreads extends Dispatch
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
 
-            $messages[] = _gettext('The selected items have been reported.');
+            $messages[] = __('The selected items have been reported.');
             $link['url'] = $url;
-            $link['text'] = _gettext('Click here if you are not automatically redirected');
+            $link['text'] = __('Click here to continue.');
             $parameters['page_title'] = $this->domain->reference('title');
             $output_interstitial = new OutputInterstitial($this->domain, false);
             echo $output_interstitial->render($parameters, false, $messages, [$link]);
-            $redirect->URL($url);
         }
 
         if (isset($_POST['form_submit_delete'])) {
-            $thread_handler = new \Nelliel\ThreadHandler($this->domain);
+            $thread_handler = new ThreadHandler($this->domain);
             $thread_handler->processContentDeletes();
 
             if ($this->session->inModmode($this->domain)) {
@@ -57,8 +57,7 @@ class DispatchThreads extends Dispatch
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
 
-            $redirect->URL($url);
-            $output_post = new \Nelliel\Output\OutputPost($this->domain, true);
+            $output_post = new OutputPost($this->domain, true);
             echo $output_post->contentDeleted(['forward_url' => $url], false);
         }
     }

@@ -5,6 +5,7 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBoardDefaults;
 use Nelliel\Tables\TablePermissions;
 use Nelliel\Tables\TableRolePermissions;
@@ -12,7 +13,6 @@ use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TableBanAppeals;
 
 class BetaMigrations
 {
@@ -281,7 +281,8 @@ class BetaMigrations
                     'max_reply_embed_display_width', 'max_reply_embed_display_height', 'max_reply_multi_display_width',
                     'max_reply_multi_display_height', 'enable_reply_name_field', 'require_reply_name',
                     'enable_reply_email_field', 'require_reply_email', 'enable_reply_subject_field',
-                    'require_reply_subject', 'enable_reply_comment_field', 'require_reply_comment'];
+                    'require_reply_subject', 'enable_reply_comment_field', 'require_reply_comment', 'show_poster_name',
+                    'show_tripcodes', 'show_capcode', 'show_post_subject', 'show_user_comments', 'show_mod_comments'];
                 $this->newBoardSettings($new_board_settings);
 
                 $old_board_setting_names = ['max_preview_display_width', 'max_preview_display_height',
@@ -353,6 +354,46 @@ class BetaMigrations
                     'ALTER TABLE "' . NEL_FILE_FILTERS_TABLE . '" ADD COLUMN enabled SMALLINT NOT NULL DEFAULT 0');
 
                 echo ' - ' . __('Updated file filters table.') . '<br>';
+
+                // Update site and global domain IDs
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
+                    '" SET "domain_id" = \'site\' WHERE "domain_id" = \'_site_\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
+                    '" SET "domain_id" = \'global\' WHERE "domain_id" = \'_global_\'');
+
+                echo ' - ' . __('Updated site and global domain IDs.') . '<br>';
+
+                // Update roles table
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'site_admin\' WHERE "role_id" = \'SITE_ADMIN\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'board_owner\' WHERE "role_id" = \'BOARD_OWNER\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'moderator\' WHERE "role_id" = \'MODERATOR\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'janitor\' WHERE "role_id" = \'JANITOR\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'basic_user\' WHERE "role_id" = \'BASIC_USER\'');
+
+                echo ' - ' . __('Updated roles table.') . '<br>';
+
+                // Update permissions and role permissions tables
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
+                    '" SET "permission" = \'perm_wordfilters_manage\' WHERE "permission" = \'perm_word_filters_manage\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE .
+                    '" SET "permission" = \'perm_wordfilters_manage\' WHERE "permission" = \'perm_word_filters_manage\'');
+
+                echo ' - ' . __('Updated permissions and role permissions tables.') . '<br>';
+
+                // Update wordfilters table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . 'nelliel_word_filters' . '" RENAME TO ' . NEL_WORDFILTERS_TABLE);
+
+                echo ' - ' . __('Updated wordfilters table.') . '<br>';
 
                 $migration_count ++;
         }

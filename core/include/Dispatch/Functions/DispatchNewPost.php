@@ -1,14 +1,14 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Dispatch;
+namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\FGSFDS;
-use Nelliel\Redirect;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 use Nelliel\NewPost\NewPost;
 use Nelliel\Output\OutputPost;
@@ -38,9 +38,6 @@ class DispatchNewPost extends Dispatch
 
         $new_post = new NewPost($this->domain, $this->session);
         $new_post->processPost();
-
-        $redirect = new Redirect();
-        $redirect->doRedirect(true);
         $fgsfds = new FGSFDS();
 
         if ($fgsfds->commandIsSet('noko') || $this->domain->setting('always_noko')) {
@@ -63,7 +60,6 @@ class DispatchNewPost extends Dispatch
             }
         }
 
-        $redirect->URL($url);
         $output_post = new OutputPost($this->domain, true);
         echo $output_post->postSuccess(['forward_url' => $url], false);
         nel_clean_exit();

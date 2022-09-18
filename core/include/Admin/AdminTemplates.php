@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelTemplates;
 
 class AdminTemplates extends Admin
 {
@@ -16,45 +17,26 @@ class AdminTemplates extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_TEMPLATES_TABLE;
-        $this->id_field = 'template-id';
         $this->id_column = 'template_id';
         $this->panel_name = _gettext('Templates');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'disable':
-                    $this->disable();
-                    break;
-
-                case 'enable':
-                    $this->enable();
-                    break;
-            }
-        }
     }
 
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_templates_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelTemplates($this->domain, false);
+        $output_panel = new OutputPanelTemplates($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function creator(): void
     {}
 
-    public function add(): void
+    public function install(string $template_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_templates_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getTemplate($id)->install();
-        $this->domain->templatePath($this->domain->frontEndData()->getTemplate($id)->getPath());
-        $this->outputMain(true);
+        $this->domain->frontEndData()->getTemplate($template_id)->install();
+        $this->domain->templatePath($this->domain->frontEndData()->getTemplate($template_id)->getPath());
+        $this->panel();
     }
 
     public function editor(): void
@@ -63,13 +45,12 @@ class AdminTemplates extends Admin
     public function update(): void
     {}
 
-    public function remove(): void
+    public function uninstall(string $template_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_templates_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getTemplate($id)->uninstall();
-        $this->domain->templatePath($this->domain->frontEndData()->getTemplate($id)->getPath());
-        $this->outputMain(true);
+        $this->domain->frontEndData()->getTemplate($template_id)->uninstall();
+        $this->domain->templatePath($this->domain->frontEndData()->getTemplate($template_id)->getPath());
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -88,19 +69,17 @@ class AdminTemplates extends Admin
         }
     }
 
-    public function enable()
+    public function enable(string $template_id)
     {
         $this->verifyPermissions($this->domain, 'perm_templates_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getTemplate($id)->enable();
-        $this->outputMain(true);
+        $this->domain->frontEndData()->getTemplate($template_id)->enable();
+        $this->panel();
     }
 
-    public function disable()
+    public function disable(string $template_id)
     {
         $this->verifyPermissions($this->domain, 'perm_templates_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        $this->domain->frontEndData()->getTemplate($id)->disable();
-        $this->outputMain(true);
+        $this->domain->frontEndData()->getTemplate($template_id)->disable();
+        $this->panel();
     }
 }

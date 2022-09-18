@@ -44,43 +44,35 @@ class OutputPanelTemplates extends Output
             $template_data['enabled'] = $template->enabled();
 
             if ($template_data['enabled'] == 1) {
-                $template_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'templates', 'actions' => 'disable',
-                            'template-id' => $template->id()]);
+                $template_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'templates', $template->id(), 'disable']);
                 $template_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($template_data['enabled'] == 0) {
-                $template_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'templates', 'actions' => 'enable',
-                            'template-id' => $template->id()]);
+                $template_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'templates', $template->id(), 'enable']);
                 $template_data['enable_disable_text'] = _gettext('Enable');
             }
-            $template_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'templates', 'actions' => 'remove',
-                        'template-id' => $template->id()]);
+            $template_data['uninstall_url'] = nel_build_router_url(
+                [$this->domain->id(), 'templates', $template->id(), 'uninstall']);
             $this->render_data['installed_list'][] = $template_data;
         }
 
-        $template_inis = $this->domain->frontEndData()->getAllTemplates(false);
+        $template_inis = $this->domain->frontEndData()->getTemplateInis();
         $bgclass = 'row1';
 
         foreach ($template_inis as $template) {
             $template_data = array();
             $template_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $template_data['id'] = $template->id();
-            $template_data['name'] = $template->info('name');
-            $template_data['directory'] = $template->info('directory');
-            $template_data['output'] = $template->info('output_type');
-            $template_data['is_installed'] = in_array($template->id(), $installed_ids);
-            $template_data['install_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'templates', 'actions' => 'add',
-                        'template-id' => $template->id()]);
+
+            $template_data['id'] = $template['info']['id'];
+            $template_data['name'] = $template['info']['name'];
+            $template_data['output'] = $template['info']['output_type'];
+            $template_data['is_installed'] = in_array($template['info']['id'], $installed_ids);
+            $template_data['install_url'] = nel_build_router_url(
+                [$this->domain->id(), 'templates', $template['info']['id'], 'install']);
             $this->render_data['available_list'][] = $template_data;
         }
 

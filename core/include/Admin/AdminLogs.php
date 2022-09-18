@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelLogs;
 
 class AdminLogs extends Admin
 {
@@ -16,22 +17,15 @@ class AdminLogs extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_LOGS_TABLE;
-        $this->id_field = 'log-id';
         $this->id_column = 'log_id';
         $this->panel_name = _gettext('Logs');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
     }
 
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_logs_view');
-        $output_panel = new \Nelliel\Output\OutputPanelLogs($this->domain, false);
-        $log_type = $_GET['log-type'] ?? '';
-        $output_panel->render(['log_type' => $log_type], false);
+        $output_panel = new OutputPanelLogs($this->domain, false);
+        $output_panel->render([], false);
     }
 
     public function creator(): void

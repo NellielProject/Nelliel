@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use PDO;
+use Nelliel\AntiSpam\CAPTCHA;
 
 class Report
 {
@@ -22,7 +23,7 @@ class Report
 
     public function submit(): void
     {
-        $captcha = new \Nelliel\AntiSpam\CAPTCHA($this->domain);
+        $captcha = new CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_report_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';

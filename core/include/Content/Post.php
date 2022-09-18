@@ -92,8 +92,9 @@ class Post
         $pdo_types = $this->main_table->getPDOTypes($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
+        $row_check_data = ['post_number' => $this->content_id->postID()];
 
-        if ($this->main_table->rowExists($filtered_data)) {
+        if ($this->main_table->rowExists($row_check_data)) {
             $where_columns = ['post_number'];
             $where_keys = ['where_post_number'];
             $where_values = [$this->content_id->postID()];
@@ -417,6 +418,13 @@ class Post
         $old_data = $this->data($key);
         $this->content_data[$key] = $new_data;
         return $old_data;
+    }
+
+    public function getURL(bool $dynamic): string
+    {
+        $parent = $this->getParent();
+        $thread_url = $parent->getURL($dynamic);
+        return $thread_url . '#t' . $parent->contentID()->threadID() . 'p' . $this->content_id->postID();
     }
 
     public function contentID()

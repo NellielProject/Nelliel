@@ -23,9 +23,4 @@ abstract class Dispatch
     }
 
     public abstract function dispatch(array $inputs);
-
-    protected function invalidSection()
-    {
-        nel_derp(0, 'Invalid section');
-    }
 }
