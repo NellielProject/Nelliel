@@ -25,6 +25,10 @@ class Preparation
             return;
         }
 
+        if (isset($_GET['special'])) {
+            nel_special();
+        }
+
         if (isset($_GET['about_nelliel'])) {
             $about_nelliel = new OutputAboutNelliel(nel_site_domain(), false);
             $about_nelliel->render([], false);
@@ -32,7 +36,6 @@ class Preparation
         }
 
         if (isset($_GET['blank']) || isset($_GET['tpilb'])) {
-            require_once NEL_INCLUDE_PATH . 'wat/blank.php';
             nel_tpilb();
         }
 

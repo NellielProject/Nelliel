@@ -66,7 +66,7 @@ class OutputPanelMain extends Output
         $this->render_data['module_news'] = $this->session->user()->checkPermission($this->domain, 'perm_news_manage');
         $this->render_data['news_url'] = nel_build_router_url([$this->domain->id(), 'news']);
         $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_word_filters_manage');
+            'perm_wordfilters_manage');
         $this->render_data['wordfilters_url'] = nel_build_router_url([$this->domain->id(), 'wordfilters']);
         $this->render_data['module_blotter'] = $this->session->user()->checkPermission($this->domain,
             'perm_blotter_manage');

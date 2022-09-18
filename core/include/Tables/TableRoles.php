@@ -58,6 +58,6 @@ class TableRoles extends Table
         $this->insertDefaultRow(['board_owner', 75, 'Board Owner', 'Board Owner']);
         $this->insertDefaultRow(['moderator', 50, 'Moderator', 'Moderator']);
         $this->insertDefaultRow(['janitor', 25, 'Janitor', 'Janitor']);
-        $this->insertDefaultRow(['BASIC_USER', 0, 'Basic', '']);
+        $this->insertDefaultRow(['basic_user', 0, 'Basic', '']);
     }
 }

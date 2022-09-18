@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -29,22 +28,17 @@ class OutputInterstitial extends Output
         $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
 
-        if ($is_manage)
-        {
+        if ($is_manage) {
             $this->render_data['header'] = $output_header->manage($parameters, true);
-        }
-        else
-        {
+        } else {
             $this->render_data['header'] = $output_header->general($parameters, true);
         }
 
-        foreach ($messages as $message)
-        {
+        foreach ($messages as $message) {
             $this->render_data['messages'][] = ['message' => $message];
         }
 
-        foreach ($links as $link)
-        {
+        foreach ($links as $link) {
             $this->render_data['links'][] = $link;
         }
 

@@ -18,7 +18,7 @@ class Authorization
         $this->database = $database;
     }
 
-    public function newUser(string $username, bool $db_load = true): AuthUser
+    private function newUser(string $username, bool $db_load = true): AuthUser
     {
         $username_lower = utf8_strtolower($username);
         $new_user = new AuthUser($this->database, $username_lower, $db_load);
@@ -66,7 +66,7 @@ class Authorization
         return new AuthRole($this->database, '', false);
     }
 
-    public function newRole(string $role_id, bool $db_load = true): AuthRole
+    private function newRole(string $role_id, bool $db_load = true): AuthRole
     {
         $role_lower = utf8_strtolower($role_id);
         $new_role = new AuthRole($this->database, $role_lower, $db_load);

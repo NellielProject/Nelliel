@@ -39,6 +39,7 @@ nelliel.setup.doImportantStuff = function() {
 	}
 
 	nelliel.core.unhideJSonly(document);
+	dawn();
 }
 
 nelliel.setup.localStorageInitCheck = function() {
@@ -362,4 +363,18 @@ function reloadCAPTCHA(event_target, command) {
 	};
 
 	request.send();
+}
+
+function dawn() {
+	var date = new Date();
+
+	if (date.getHours() == "05" && date.getMinutes() == "59") {
+		var p = document.createElement("p");
+		p.innerHTML = '<img src="imgboard.php?special=dawn" width="960" height="720" alt="The Dawn Is Your Enemy">';
+		var i = document.querySelector(".interstitial");
+
+		if (i != null) {
+			i.insertBefore(p, i.firstChild);
+		}
+	}
 }

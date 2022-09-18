@@ -72,14 +72,14 @@ class Register
             nel_derp(213, _gettext('Passwords do not match.'));
         }
 
-        $new_user = $this->authorization->newUser($register_username);
+        $new_user = $this->authorization->getUser($register_username);
         $new_user->changeData('display_name', $register_username);
         $new_user->updatePassword($register_password);
 
         if ($creating_owner) {
             $new_user->changeData('owner', 1);
         } else {
-            $new_user->modifyRole(Domain::SITE, 'BASIC_USER');
+            $new_user->modifyRole(Domain::SITE, 'basic_user');
             $new_user->changeData('owner', 0);
         }
 

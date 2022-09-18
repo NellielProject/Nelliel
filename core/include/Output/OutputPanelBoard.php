@@ -43,7 +43,7 @@ class OutputPanelBoard extends Output
             'perm_file_filters_manage');
         $this->render_data['file_filters_url'] = nel_build_router_url([$this->domain->id(), 'file-filters']);
         $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_word_filters_manage');
+            'perm_wordfilters_manage');
         $this->render_data['wordfilters_url'] = nel_build_router_url([$this->domain->id(), 'wordfilters']);
         $this->render_data['module_pages'] = $this->session->user()->checkPermission($this->domain, 'perm_pages_manage');
         $this->render_data['pages_url'] = nel_build_router_url([$this->domain->id(), 'pages']);

@@ -16,7 +16,7 @@ class TableWordFilters extends Table
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = NEL_WORD_FILTERS_TABLE;
+        $this->table_name = NEL_WORDFILTERS_TABLE;
         $this->column_types = [
             'filter_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
@@ -50,7 +50,7 @@ class TableWordFilters extends Table
             enabled     SMALLINT NOT NULL DEFAULT 0,
             moar        TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (filter_id),
-            CONSTRAINT fk_word_filters__domain_registry
+            CONSTRAINT fk_wordfilters__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

@@ -40,11 +40,11 @@ class Wordfilters
     {
         if (!is_null($board_id)) {
             $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_WORD_FILTERS_TABLE .
+                'SELECT * FROM "' . NEL_WORDFILTERS_TABLE .
                 '" WHERE ("board_id" = ? OR "board_id" IS NULL) AND "enabled" = 1');
             $result = $this->database->executePreparedFetchAll($prepared, [$board_id, Domain::GLOBAL], PDO::FETCH_ASSOC);
         } else {
-            $query = 'SELECT * FROM "' . NEL_WORD_FILTERS_TABLE . '" WHERE "enabled" = 1';
+            $query = 'SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" WHERE "enabled" = 1';
             $result = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
         }
 

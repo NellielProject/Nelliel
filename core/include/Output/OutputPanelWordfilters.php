@@ -20,7 +20,7 @@ class OutputPanelWordfilters extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
-        $this->setBodyTemplate('panels/word_filters_main');
+        $this->setBodyTemplate('panels/wordfilters_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Wordfilters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -29,7 +29,7 @@ class OutputPanelWordfilters extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $wordfilters = $this->database->executeFetchAll(
-            'SELECT * FROM "' . NEL_WORD_FILTERS_TABLE . '" ORDER BY "filter_id" DESC', PDO::FETCH_ASSOC);
+            'SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" ORDER BY "filter_id" DESC', PDO::FETCH_ASSOC);
         $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'wordfilters', 'new']);
         $bgclass = 'row1';
 
@@ -79,7 +79,7 @@ class OutputPanelWordfilters extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
-        $this->setBodyTemplate('panels/word_filters_edit');
+        $this->setBodyTemplate('panels/wordfilters_edit');
         $parameters['is_panel'] = true;
         $editing = $parameters['editing'] ?? false;
         $this->render_data['submit_add'] = $parameters['submit_add'] ?? false;
@@ -96,7 +96,7 @@ class OutputPanelWordfilters extends Output
         if ($editing) {
             $filter_id = $parameters['filter_id'] ?? 0;
             $form_action = nel_build_router_url([$this->domain->id(), 'wordfilters', $filter_id, 'modify']);
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_WORD_FILTERS_TABLE . '" WHERE "filter_id" = ?');
+            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" WHERE "filter_id" = ?');
             $wordfilter_data = $this->database->executePreparedFetch($prepared, [$filter_id], PDO::FETCH_ASSOC);
 
             if ($wordfilter_data !== false) {

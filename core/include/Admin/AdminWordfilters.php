@@ -16,28 +16,28 @@ class AdminWordfilters extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->data_table = NEL_WORD_FILTERS_TABLE;
+        $this->data_table = NEL_WORDFILTERS_TABLE;
         $this->id_column = 'filter_id';
-        $this->panel_name = _gettext('Word Filters');
+        $this->panel_name = _gettext('Wordfilters');
     }
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_word_filters_manage');
+        $this->verifyPermissions($this->domain, 'perm_wordfilters_manage');
         $output_panel = new OutputPanelWordfilters($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_word_filters_manage');
+        $this->verifyPermissions($this->domain, 'perm_wordfilters_manage');
         $output_panel = new OutputPanelWordfilters($this->domain, false);
         $output_panel->new(['editing' => false], false);
     }
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_word_filters_manage');
+        $this->verifyPermissions($this->domain, 'perm_wordfilters_manage');
 
         if (is_null($_POST['board_id']) || $_POST['board_id'] === '') {
             $board_id = Domain::GLOBAL;
@@ -60,7 +60,7 @@ class AdminWordfilters extends Admin
     public function editor(string $filter_id): void
     {
         $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
+        $this->verifyPermissions($entry_domain, 'perm_wordfilters_manage');
         $output_panel = new OutputPanelWordfilters($this->domain, false);
         $output_panel->edit(['editing' => true, 'filter_id' => $filter_id], false);
     }
@@ -68,7 +68,7 @@ class AdminWordfilters extends Admin
     public function update(string $filter_id): void
     {
         $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
+        $this->verifyPermissions($entry_domain, 'perm_wordfilters_manage');
         $text_match = $_POST['text_match'] ?? '';
         $replacement = $_POST['replacement'] ?? '';
         $is_regex = $_POST['is_regex'] ?? 0;
@@ -84,7 +84,7 @@ class AdminWordfilters extends Admin
     public function delete(string $filter_id): void
     {
         $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
+        $this->verifyPermissions($entry_domain, 'perm_wordfilters_manage');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
         $this->panel();
@@ -93,7 +93,7 @@ class AdminWordfilters extends Admin
     public function enable(string $filter_id)
     {
         $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
+        $this->verifyPermissions($entry_domain, 'perm_wordfilters_manage');
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
@@ -103,7 +103,7 @@ class AdminWordfilters extends Admin
     public function disable(string $filter_id)
     {
         $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_word_filters_manage');
+        $this->verifyPermissions($entry_domain, 'perm_wordfilters_manage');
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
@@ -117,8 +117,8 @@ class AdminWordfilters extends Admin
         }
 
         switch ($perm) {
-            case 'perm_word_filters_manage':
-                nel_derp(400, _gettext('You are not allowed to manage word filters.'));
+            case 'perm_wordfilters_manage':
+                nel_derp(400, _gettext('You are not allowed to manage wordfilters.'));
                 break;
 
             default:

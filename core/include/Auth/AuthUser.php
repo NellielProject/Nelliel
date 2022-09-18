@@ -114,7 +114,7 @@ class AuthUser extends AuthHandler
     {
         $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_USERS_TABLE . '" WHERE "username" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
-        return empty($result);
+        return !empty($result);
     }
 
     public function remove(): void
