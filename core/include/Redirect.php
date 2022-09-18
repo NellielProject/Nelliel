@@ -48,7 +48,7 @@ class Redirect
                 self::$url = nel_site_domain()->reference('home_page');
             }
 
-            $redirect = '<meta http-equiv="refresh" content="' . self::$delay . ';URL=' . self::$url . '">';
+            $redirect = '<meta http-equiv="refresh" content="' . self::$delay . ';URL=' . self::$url . '"  f>';
             echo $redirect;
         }
     }

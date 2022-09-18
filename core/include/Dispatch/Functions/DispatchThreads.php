@@ -41,7 +41,7 @@ class DispatchThreads extends Dispatch
 
             $messages[] = __('The selected items have been reported.');
             $link['url'] = $url;
-            $link['text'] = __('Click here if you are not automatically redirected');
+            $link['text'] = __('Click here to continue.');
             $parameters['page_title'] = $this->domain->reference('title');
             $output_interstitial = new OutputInterstitial($this->domain, false);
             echo $output_interstitial->render($parameters, false, $messages, [$link]);

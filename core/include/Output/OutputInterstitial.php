@@ -20,8 +20,6 @@ class OutputInterstitial extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('basic_interstitial');
-        $this->render_data['extra_message_break'] = $parameters['extra_message_break'] ?? false;
-        $this->render_data['extra_url_break'] = $parameters['extra_url_break'] ?? false;
         $is_manage = $parameters['is_manage'] ?? false;
         $page_title = $parameters['page_title'] ?? $this->domain->reference('title');
         $output_head = new OutputHead($this->domain, $this->write_mode);

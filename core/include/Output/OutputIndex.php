@@ -5,7 +5,6 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\API\JSON\PostJSON;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
