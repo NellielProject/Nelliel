@@ -81,7 +81,7 @@ class OutputPanelManageBoards extends Output
     public function removeWarning(array $parameters, bool $data_only)
     {
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Manage Boards');
-        $parameters['section'] = $parameters['section'] ?? _gettext('Remove');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Delete');
         $parameters['is_manage'] = true;
         $board_id = $parameters['board_id'];
         $board = new DomainBoard($board_id, $this->database);
@@ -96,6 +96,6 @@ class OutputPanelManageBoards extends Output
         $parameters['extra_url_break'] = true;
         $parameters['page_title'] = $this->domain->reference('title');
         $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
-        echo $output_interstitial->render($parameters, $data_only, $messages, [$link, $link2]);
+        echo $output_interstitial->basic($parameters, $data_only, $messages, [$link, $link2]);
     }
 }

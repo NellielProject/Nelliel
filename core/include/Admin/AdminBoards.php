@@ -172,18 +172,13 @@ class AdminBoards extends Admin
     public function update(): void
     {}
 
-    public function delete(string $board_id, $confirmed = false): void
+    public function delete(string $board_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_boards_delete');
         $domain = new DomainBoard($board_id, $this->database);
 
         if (!$domain->exists()) {
             nel_derp(180, _gettext('Board does not appear to exist.'));
-        }
-
-        if (!$confirmed) {
-            $this->createInterstitial('remove_warning', $board_id);
-            return;
         }
 
         if ($this->database->tableExists($domain->reference('uploads_table'))) {
@@ -261,18 +256,6 @@ class AdminBoards extends Admin
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $this->panel();
-    }
-
-    private function createInterstitial(string $which, string $board_id)
-    {
-        $output_panel = new OutputPanelManageBoards($this->domain, false);
-
-        switch ($which) {
-            case 'remove_warning':
-                $this->verifyPermissions($this->domain, 'perm_boards_delete');
-                $output_panel->removeWarning(['board_id' => $board_id], false);
-                break;
-        }
     }
 
     private function generateBoardID(string $board_uri): string

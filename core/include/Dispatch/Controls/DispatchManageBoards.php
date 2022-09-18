@@ -10,6 +10,7 @@ use Nelliel\Admin\AdminBoards;
 use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputInterstitial;
 
 class DispatchManageBoards extends Dispatch
 {
@@ -34,7 +35,24 @@ class DispatchManageBoards extends Dispatch
                 break;
 
             case 'delete':
-                $boards->delete($inputs['id']);
+                if ($inputs['method'] === 'GET') {
+                    $messages[] = sprintf(_gettext('You are about to delete the board: %s'), $inputs['id']);
+                    $messages[] = _gettext(
+                        'This will wipe out all posts, settings, files, everything. All the things get shoved into /dev/null. There is no undo or recovery.');
+                    $messages[] = _gettext('Are you absolutely sure?');
+                    $no_info['text'] = _gettext('NOPE. Get me out of here!');
+                    $no_info['url'] = nel_build_router_url([$this->domain->id(), 'manage-boards']);
+                    $yes_info['text'] = _gettext('Delete the board');
+                    $yes_info['url'] = nel_build_router_url(
+                        [$this->domain->id(), 'manage-boards', $inputs['id'], 'delete']);
+                    $output_interstitial = new OutputInterstitial($this->domain, false);
+                    echo $output_interstitial->confirm([], false, $messages, $yes_info, $no_info);
+                }
+
+                if ($inputs['method'] === 'POST') {
+                    $boards->delete($inputs['id']);
+                }
+
                 break;
 
             case 'lock':

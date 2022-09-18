@@ -5,16 +5,16 @@ namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\BansAccess;
+use Nelliel\DNSBL;
 use Nelliel\FGSFDS;
+use Nelliel\Snacks;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 use Nelliel\NewPost\NewPost;
-use Nelliel\Output\OutputPost;
-use Nelliel\Snacks;
-use Nelliel\BansAccess;
-use Nelliel\DNSBL;
+use Nelliel\Output\OutputInterstitial;
 
 class DispatchNewPost extends Dispatch
 {
@@ -60,8 +60,10 @@ class DispatchNewPost extends Dispatch
             }
         }
 
-        $output_post = new OutputPost($this->domain, true);
-        echo $output_post->postSuccess(['forward_url' => $url], false);
-        nel_clean_exit();
+        $messages[] = _gettext('Post success!');
+        $link['url'] = $url;
+        $link['text'] = _gettext('Click here to continue.');
+        $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
+        echo $output_interstitial->basic([], false, $messages, [$link]);
     }
 }

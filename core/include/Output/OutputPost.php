@@ -354,26 +354,6 @@ class OutputPost extends Output
         return $comment_data;
     }
 
-    public function postSuccess(array $parameters, bool $data_only)
-    {
-        $messages[] = _gettext('Post success!');
-        $link['url'] = $parameters['forward_url'] ?? '';
-        $link['text'] = _gettext('Click here to continue.');
-        $parameters['page_title'] = $this->domain->reference('title');
-        $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
-        return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
-    }
-
-    public function contentDeleted(array $parameters, bool $data_only)
-    {
-        $messages[] = _gettext('The selected items have been deleted!');
-        $link['url'] = $parameters['forward_url'] ?? '';
-        $link['text'] = _gettext('Click here to continue.');
-        $parameters['page_title'] = $this->domain->reference('title');
-        $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
-        return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
-    }
-
     public function generateBacklinks(Post $post): array
     {
         $cites = new Cites($this->database);

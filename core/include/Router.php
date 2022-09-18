@@ -198,7 +198,6 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:modify}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:lock|unlock}', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:remove-confirmed}', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:[^\/]+}/{module:logs}',

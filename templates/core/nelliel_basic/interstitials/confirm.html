@@ -1,0 +1,12 @@
+<div class="interstitial text-center">
+{{# messages }}
+	<p>
+		{{ message }}
+	</p>
+{{/ messages }}
+	<form accept-charset="utf-8" name="new_post_form" action="{{ yes_url }}" method="post" enctype="multipart/form-data">
+		<a href="{{ no_url }}">{{ no_text }}</a>
+		<br><br>
+		<input type="submit" value="{{ yes_text }}">
+	</form>
+</div>

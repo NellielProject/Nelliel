@@ -13,7 +13,6 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputInterstitial;
-use Nelliel\Output\OutputPost;
 
 class DispatchThreads extends Dispatch
 {
@@ -46,9 +45,8 @@ class DispatchThreads extends Dispatch
             $messages[] = __('The selected items have been reported.');
             $link['url'] = $url;
             $link['text'] = __('Click here to continue.');
-            $parameters['page_title'] = $this->domain->reference('title');
             $output_interstitial = new OutputInterstitial($this->domain, false);
-            echo $output_interstitial->basic($parameters, false, $messages, [$link]);
+            echo $output_interstitial->basic([], false, $messages, [$link]);
         }
 
         if (isset($_POST['form_submit_delete'])) {
@@ -61,8 +59,11 @@ class DispatchThreads extends Dispatch
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
 
-            $output_post = new OutputPost($this->domain, true);
-            echo $output_post->contentDeleted(['forward_url' => $url], false);
+            $messages[] = _gettext('The selected items have been deleted.');
+            $link['url'] = $url;
+            $link['text'] = _gettext('Click here to continue.');
+            $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
+            echo $output_interstitial->basic([], false, $messages, [$link]);
         }
     }
 }

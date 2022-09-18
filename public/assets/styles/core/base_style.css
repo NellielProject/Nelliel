@@ -671,3 +671,17 @@ td {
 .text-spoiler:hover {
 	color: var(--unspoiler-color, white);
 }
+
+.link-button {
+	background-color: transparent;
+	border: 0;
+	color: var(--link-color);
+	font-family: var(--base-font-family, sans-serif);
+	font-size: var(--base-font-size, 100%);
+	cursor: pointer;
+	text-decoration: underline;
+}
+
+.link-button:hover {
+	color: var(--link-hover-color);
+}
