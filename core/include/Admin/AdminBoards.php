@@ -11,6 +11,7 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
+use Nelliel\Output\OutputInterstitial;
 use Nelliel\Output\OutputPanelManageBoards;
 use Nelliel\Setup\Setup;
 use Nelliel\Utility\FileHandler;
@@ -242,7 +243,7 @@ class AdminBoards extends Admin
         }
     }
 
-    public function unlock(string $board_id)
+    public function unlock(string $board_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_boards_modify');
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 0 WHERE "board_id" = ?');
@@ -250,12 +251,26 @@ class AdminBoards extends Admin
         $this->panel();
     }
 
-    public function lock(string $board_id)
+    public function lock(string $board_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_boards_modify');
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
         $this->panel();
+    }
+
+    public function confirmDelete(string $board_id): void
+    {
+        $messages[] = sprintf(__('You are about to delete the board: %s'), $board_id);
+        $messages[] = __(
+            'Doing this will wipe out all posts, files, archives and settings for this board. All the things get shoved into /dev/null. There is no undo or recovery.');
+        $messages[] = __('Are you absolutely sure?');
+        $no_info['text'] = __('NOPE. Get me out of here!');
+        $no_info['url'] = nel_build_router_url([$this->domain->id(), 'manage-boards']);
+        $yes_info['text'] = __('Delete the board');
+        $yes_info['url'] = nel_build_router_url([$this->domain->id(), 'manage-boards', $board_id, 'delete']);
+        $output_interstitial = new OutputInterstitial($this->domain, false);
+        echo $output_interstitial->confirm([], false, $messages, $yes_info, $no_info);
     }
 
     private function generateBoardID(string $board_uri): string
