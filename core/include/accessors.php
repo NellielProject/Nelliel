@@ -1,17 +1,20 @@
 <?php
+declare(strict_types = 1);
+
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\DatabaseConnector;
+use Monolog\Logger;
+use Nelliel\Database\DatabaseConnector;
+use Nelliel\Database\NellielPDO;
 use Nelliel\API\Plugin\PluginAPI;
 use Nelliel\Account\Session;
 use Nelliel\Domains\DomainGlobal;
 use Nelliel\Domains\DomainSite;
-use Nelliel\Utility\Utilities;
-use Monolog\Logger;
-use Nelliel\Logging\NellielLogProcessor;
 use Nelliel\Logging\NellielDatabaseHandler;
+use Nelliel\Logging\NellielLogProcessor;
+use Nelliel\Utility\Utilities;
 
-function nel_database(string $database_key)
+function nel_database(string $database_key): NellielPDO
 {
     static $databases = array();
 
@@ -23,7 +26,7 @@ function nel_database(string $database_key)
     return $databases[$database_key];
 }
 
-function nel_plugins()
+function nel_plugins(): PluginAPI
 {
     static $plugins;
 
@@ -56,7 +59,7 @@ function nel_global_domain(): DomainGlobal
     return $global_domain;
 }
 
-function nel_request_ip_address(bool $hashed = false)
+function nel_request_ip_address(bool $hashed = false): string
 {
     static $ip_address;
     static $hashed_ip_address;
@@ -76,7 +79,7 @@ function nel_request_ip_address(bool $hashed = false)
     }
 }
 
-function nel_utilities()
+function nel_utilities(): Utilities
 {
     static $utilities;
 
@@ -87,7 +90,7 @@ function nel_utilities()
     return $utilities;
 }
 
-function nel_session()
+function nel_session(): Session
 {
     static $session;
 

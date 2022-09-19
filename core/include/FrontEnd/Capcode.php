@@ -5,7 +5,7 @@ namespace Nelliel\FrontEnd;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\NellielPDO;
+use Nelliel\Database\NellielPDO;
 use PDO;
 
 class Capcode

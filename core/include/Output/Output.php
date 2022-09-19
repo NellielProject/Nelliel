@@ -6,6 +6,7 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Timer;
+use Nelliel\Account\Session;
 use Nelliel\Domains\Domain;
 use Nelliel\Render\RenderCoreDOM;
 use Nelliel\Render\RenderCoreMustache;
@@ -39,7 +40,7 @@ abstract class Output
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new Filter();
         $this->template_substitutes = new TemplateSubstitutes();
-        $this->session = new \Nelliel\Account\Session();
+        $this->session = new Session();
     }
 
     protected function renderSetup()

@@ -21,7 +21,7 @@ class DispatchUsers extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $users = new AdminUsers($this->authorization, $this->domain, $this->session);
 

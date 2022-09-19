@@ -22,7 +22,7 @@ class DispatchThreads extends Dispatch
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $dnsbl = new DNSBL(nel_database('core'));
         $dnsbl->checkIP(nel_request_ip_address());

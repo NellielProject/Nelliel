@@ -21,7 +21,7 @@ class DispatchPermissions extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $permissions = new AdminPermissions($this->authorization, $this->domain, $this->session);
 

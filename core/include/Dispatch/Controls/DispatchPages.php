@@ -21,7 +21,7 @@ class DispatchPages extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $pages = new AdminPages($this->authorization, $this->domain, $this->session);
 

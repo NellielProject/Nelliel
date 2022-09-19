@@ -21,7 +21,7 @@ class DispatchBlotter extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $blotter = new AdminBlotter($this->authorization, $this->domain, $this->session);
 

@@ -5,7 +5,7 @@ namespace Nelliel\API\Plugin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\NellielPDO;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Utility\FileHandler;
 use PDO;
 

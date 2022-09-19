@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Monolog\Logger;
 use Monolog\Handler\AbstractProcessingHandler;
-use Nelliel\NellielPDO;
+use Nelliel\Database\NellielPDO;
 use PDO;
 
 class NellielDatabaseHandler extends AbstractProcessingHandler

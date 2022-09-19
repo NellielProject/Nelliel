@@ -5,7 +5,13 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\NellielPDO;
+use Nelliel\Database\NellielPDO;
+use Nelliel\Regen;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
+use Nelliel\Domains\DomainSite;
+use Nelliel\FrontEnd\FrontEndData;
+use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBans;
 use Nelliel\Tables\TableBlotter;
 use Nelliel\Tables\TableBoardConfigs;
@@ -19,6 +25,7 @@ use Nelliel\Tables\TableContentOps;
 use Nelliel\Tables\TableDomainRegistry;
 use Nelliel\Tables\TableEmbeds;
 use Nelliel\Tables\TableFileFilters;
+use Nelliel\Tables\TableFiletypeCategories;
 use Nelliel\Tables\TableFiletypes;
 use Nelliel\Tables\TableIPNotes;
 use Nelliel\Tables\TableImageSets;
@@ -35,6 +42,7 @@ use Nelliel\Tables\TableRateLimit;
 use Nelliel\Tables\TableReports;
 use Nelliel\Tables\TableRolePermissions;
 use Nelliel\Tables\TableRoles;
+use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Tables\TableSiteConfig;
 use Nelliel\Tables\TableStyles;
@@ -45,17 +53,10 @@ use Nelliel\Tables\TableUploads;
 use Nelliel\Tables\TableUserRoles;
 use Nelliel\Tables\TableUsers;
 use Nelliel\Tables\TableVersions;
-use Nelliel\Tables\TableWordfilters;
+use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
-use Nelliel\Tables\TableSettingOptions;
-use Nelliel\Tables\TableFiletypeCategories;
-use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
-use Nelliel\Regen;
-use Nelliel\FrontEnd\FrontEndData;
-use Nelliel\Tables\TableBanAppeals;
 
 class Setup
 {
@@ -358,7 +359,7 @@ class Setup
 
     public function createBoardTables(string $board_id, string $db_prefix)
     {
-        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database('core'));
+        $domain = new DomainBoard($board_id, nel_database('core'));
 
         $archives_table = new TableThreadArchives($this->database, $this->sql_compatibility);
         $archives_table->tableName($domain->reference('archives_table'));
@@ -380,7 +381,7 @@ class Setup
 
     public function createBoardDirectories(string $board_id)
     {
-        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database('core'));
+        $domain = new DomainBoard($board_id, nel_database('core'));
         $this->file_handler->createDirectory($domain->reference('src_path'));
         $this->file_handler->createDirectory($domain->reference('preview_path'));
         $this->file_handler->createDirectory($domain->reference('page_path'));
@@ -392,7 +393,7 @@ class Setup
 
     public function installCoreTemplates($overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
+        $front_end_data = new FrontEndData($this->database);
         $template_inis = $front_end_data->getTemplateInis();
 
         foreach ($template_inis as $ini) {

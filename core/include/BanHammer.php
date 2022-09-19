@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use IPTools\Range;
 use Nelliel\Account\Session;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Exception;
 use PDO;

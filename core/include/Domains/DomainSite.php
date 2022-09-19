@@ -6,7 +6,7 @@ namespace Nelliel\Domains;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\NellielCacheInterface;
-use Nelliel\NellielPDO;
+use Nelliel\Database\NellielPDO;
 use PDO;
 
 class DomainSite extends Domain implements NellielCacheInterface

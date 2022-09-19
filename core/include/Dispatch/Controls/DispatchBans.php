@@ -21,7 +21,7 @@ class DispatchBans extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $bans = new AdminBans($this->authorization, $this->domain, $this->session);
 

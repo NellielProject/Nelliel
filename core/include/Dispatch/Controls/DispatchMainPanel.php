@@ -22,7 +22,7 @@ class DispatchMainPanel extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         switch ($inputs['module']) {
             case 'site-main-panel':

@@ -21,7 +21,7 @@ class DispatchTemplates extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $templates = new AdminTemplates($this->authorization, $this->domain, $this->session);
 

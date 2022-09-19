@@ -21,7 +21,7 @@ class DispatchOutput extends Dispatch
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         if ($this->domain->id() === Domain::SITE) {
             return;

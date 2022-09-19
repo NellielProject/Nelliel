@@ -21,7 +21,7 @@ class DispatchManageBoards extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $boards = new AdminBoards($this->authorization, $this->domain, $this->session);
 

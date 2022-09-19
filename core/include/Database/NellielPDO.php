@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel;
+namespace Nelliel\Database;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 

@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 // Everything in this file should a hard-coded constant

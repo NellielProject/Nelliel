@@ -22,7 +22,7 @@ class DispatchModeration extends Dispatch
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $this->session->init(true);
         $this->session->loggedInOrError();

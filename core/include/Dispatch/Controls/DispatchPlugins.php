@@ -21,7 +21,7 @@ class DispatchPlugins extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $plugins = new AdminPlugins($this->authorization, $this->domain, $this->session);
 

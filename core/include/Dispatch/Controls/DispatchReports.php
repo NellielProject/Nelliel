@@ -21,7 +21,7 @@ class DispatchReports extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $reports = new AdminReports($this->authorization, $this->domain, $this->session);
 

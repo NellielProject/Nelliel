@@ -21,7 +21,7 @@ class DispatchContentOps extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $content_ops = new AdminContentOps($this->authorization, $this->domain, $this->session);
 

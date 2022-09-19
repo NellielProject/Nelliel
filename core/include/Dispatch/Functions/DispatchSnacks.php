@@ -20,7 +20,7 @@ class DispatchSnacks extends Dispatch
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $snacks = new Snacks($this->domain, new BansAccess($this->domain->database()));
 

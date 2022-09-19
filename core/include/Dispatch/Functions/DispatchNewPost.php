@@ -24,7 +24,7 @@ class DispatchNewPost extends Dispatch
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $snacks = new Snacks($this->domain, new BansAccess(nel_database('core')));
         $snacks->applyBan();

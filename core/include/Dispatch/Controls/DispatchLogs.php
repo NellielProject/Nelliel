@@ -21,7 +21,7 @@ class DispatchLogs extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $logs = new AdminLogs($this->authorization, $this->domain, $this->session);
 

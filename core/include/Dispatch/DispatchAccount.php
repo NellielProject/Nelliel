@@ -23,7 +23,7 @@ class DispatchAccount extends Dispatch
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         switch ($inputs['section']) {
             case 'login':

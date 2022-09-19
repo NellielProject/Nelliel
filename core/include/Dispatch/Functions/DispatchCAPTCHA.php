@@ -19,7 +19,7 @@ class DispatchCAPTCHA extends Dispatch
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $captcha = new CAPTCHA($this->domain);
 

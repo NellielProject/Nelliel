@@ -22,5 +22,5 @@ abstract class Dispatch
         $this->session = $session;
     }
 
-    public abstract function dispatch(array $inputs);
+    public abstract function dispatch(array $inputs): void;
 }

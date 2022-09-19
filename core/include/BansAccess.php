@@ -5,6 +5,7 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use PDO;
 

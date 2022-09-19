@@ -22,7 +22,7 @@ class DispatchLanguage extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         switch ($inputs['section']) {
             case 'gettext':

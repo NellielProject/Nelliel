@@ -21,7 +21,7 @@ class DispatchBoardConfig extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $board_config = new AdminBoardConfig($this->authorization, $this->domain, $this->session);
 

@@ -20,8 +20,7 @@ class RenderCoreMustache extends RenderCore
         $this->output_filter = new Filter();
         $this->file_handler = nel_utilities()->fileHandler();
         $this->escaper = new \phpDOMExtend\DOMEscaper();
-        $this->template_loaders['file'] = new \Nelliel\Render\FileSystemLoader($this->domain->templatePath(),
-                ['extension' => '.html']);
+        $this->template_loaders['file'] = new FileSystemLoader($this->domain->templatePath(), ['extension' => '.html']);
         $this->newMustache();
     }
 
@@ -30,8 +29,7 @@ class RenderCoreMustache extends RenderCore
         $options = array();
         $options['pragmas'] = [\Mustache_Engine::PRAGMA_FILTERS];
 
-        if (NEL_USE_MUSTACHE_CACHE)
-        {
+        if (NEL_USE_MUSTACHE_CACHE) {
             $options['cache'] = NEL_CACHE_FILES_PATH . 'mustache';
         }
 
@@ -40,25 +38,19 @@ class RenderCoreMustache extends RenderCore
         $this->mustache_engine->setPartialsLoader($this->template_loaders['file']);
         $this->mustache_engine->setLoader($this->template_loaders['file']);
         $this->mustache_engine->addHelper('esc',
-                ['html' => function ($value)
-                {
-                    return $this->escapeString($value, 'html');
-                }, 'attr' => function ($value)
-                {
-                    return $this->escapeString($value, 'attr');
-                }, 'url' => function ($value)
-                {
-                    return $this->escapeString($value, 'url');
-                }, 'js' => function ($value)
-                {
-                    return $this->escapeString($value, 'js');
-                }, 'css' => function ($value)
-                {
-                    return $this->escapeString($value, 'css');
-                }]);
+            ['html' => function ($value) {
+                return $this->escapeString($value, 'html');
+            }, 'attr' => function ($value) {
+                return $this->escapeString($value, 'attr');
+            }, 'url' => function ($value) {
+                return $this->escapeString($value, 'url');
+            }, 'js' => function ($value) {
+                return $this->escapeString($value, 'js');
+            }, 'css' => function ($value) {
+                return $this->escapeString($value, 'css');
+            }]);
 
-        $this->mustache_engine->addHelper('gettext', function ($msgid)
-        {
+        $this->mustache_engine->addHelper('gettext', function ($msgid) {
             return _gettext($msgid);
         });
     }

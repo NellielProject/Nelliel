@@ -6,6 +6,7 @@ namespace Nelliel\Dispatch\Functions;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
+use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
@@ -23,9 +24,9 @@ class DispatchRegen extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
-        $regen = new \Nelliel\Regen();
+        $regen = new Regen();
         $user = $this->session->user();
         $forward = 'site';
 

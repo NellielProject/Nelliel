@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel;
+namespace Nelliel\Dispatch;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 

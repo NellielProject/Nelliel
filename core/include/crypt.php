@@ -1,9 +1,11 @@
 <?php
+declare(strict_types = 1);
+
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-//
-// Most of these functions are basically wrappers to extend or simplify PHP password and crypt functions
-//
+use Nelliel\Domains\DomainSite;
+
+// TODO: Remove when minimum moves to PHP 7.4
 if (!function_exists('hash_equals')) {
 
     function hash_equals(string $known_string, string $user_string)
@@ -23,7 +25,7 @@ if (!function_exists('hash_equals')) {
     }
 }
 
-function nel_set_password_algorithm(string $algorithm)
+function nel_set_password_algorithm(string $algorithm): void
 {
     if (defined('NEL_PASSWORD_ALGORITHM')) {
         return;
@@ -72,14 +74,14 @@ function nel_password_hash(string $password, int $algorithm, array $options = ar
     }
 }
 
-function nel_password_verify(string $password, string $hash)
+function nel_password_verify(string $password, string $hash): bool
 {
     return password_verify($password, $hash);
 }
 
-function nel_password_needs_rehash(string $password, int $algorithm, array $options = array())
+function nel_password_needs_rehash(string $password, int $algorithm, array $options = array()): bool
 {
-    $site_domain = new \Nelliel\Domains\DomainSite(nel_database('core'));
+    $site_domain = new DomainSite(nel_database('core'));
 
     if (!$site_domain->setting('do_password_rehash')) {
         return false;
@@ -94,7 +96,7 @@ function nel_ip_hash(string $ip_address)
     return utf8_substr($hashed_ip, 0, 32);
 }
 
-function nel_post_password_hash(string $password)
+function nel_post_password_hash(string $password): string
 {
     $hashed_password = hash_hmac('sha256', $password, NEL_POST_PASSWORD_PEPPER);
     return $hashed_password;

@@ -21,7 +21,7 @@ class DispatchNoticeboard extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $blotter = new AdminNoticeboard($this->authorization, $this->domain, $this->session);
 

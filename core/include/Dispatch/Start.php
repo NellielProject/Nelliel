@@ -5,7 +5,6 @@ namespace Nelliel\Dispatch;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Router;
 use Nelliel\Output\OutputAboutNelliel;
 
 class Start

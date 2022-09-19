@@ -21,7 +21,7 @@ class DispatchFileFilters extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $file_filters = new AdminFileFilters($this->authorization, $this->domain, $this->session);
 

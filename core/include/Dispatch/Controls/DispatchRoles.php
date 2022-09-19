@@ -21,7 +21,7 @@ class DispatchRoles extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $roles = new AdminRoles($this->authorization, $this->domain, $this->session);
 

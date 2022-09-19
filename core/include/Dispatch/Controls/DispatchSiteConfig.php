@@ -21,7 +21,7 @@ class DispatchSiteConfig extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $site_config = new AdminSiteConfig($this->authorization, $this->domain, $this->session);
 

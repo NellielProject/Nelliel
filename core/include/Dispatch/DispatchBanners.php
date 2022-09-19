@@ -18,7 +18,7 @@ class DispatchBanners extends Dispatch
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $banners = new Banners($this->domain);
 

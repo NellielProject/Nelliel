@@ -21,7 +21,7 @@ class DispatchFiletypes extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $filetypes = new AdminFiletypes($this->authorization, $this->domain, $this->session);
 

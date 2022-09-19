@@ -21,7 +21,7 @@ class DispatchNews extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $news = new AdminNews($this->authorization, $this->domain, $this->session);
 

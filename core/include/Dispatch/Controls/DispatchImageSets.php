@@ -21,7 +21,7 @@ class DispatchImageSets extends Dispatch
         $this->session->loggedInOrError();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $image_sets = new AdminImageSets($this->authorization, $this->domain, $this->session);
 

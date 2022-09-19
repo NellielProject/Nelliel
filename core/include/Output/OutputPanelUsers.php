@@ -5,6 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -75,7 +76,7 @@ class OutputPanelUsers extends Output
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $username = $parameters['username'] ?? '';
-        $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
+        $authorization = new Authorization($this->domain->database());
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
