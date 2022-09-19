@@ -32,15 +32,6 @@ class AdminBoardDefaults extends Admin
         $output_panel->render(['defaults' => true], false);
     }
 
-    public function creator(): void
-    {}
-
-    public function add(): void
-    {}
-
-    public function editor(): void
-    {}
-
     public function update(): void
     {
         $this->verifyPermissions($this->domain, 'perm_board_defaults_modify');
@@ -156,9 +147,6 @@ class AdminBoardDefaults extends Admin
 
         $this->panel();
     }
-
-    public function remove(): void
-    {}
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {

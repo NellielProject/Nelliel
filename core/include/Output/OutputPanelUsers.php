@@ -48,7 +48,7 @@ class OutputPanelUsers extends Output
 
             $user_data['edit_url'] = nel_build_router_url(
                 [$this->domain->id(), 'users', $user_info['username'], 'modify']);
-            $user_data['remove_url'] = nel_build_router_url(
+            $user_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'users', $user_info['username'], 'delete']);
             $this->render_data['users_list'][] = $user_data;
         }

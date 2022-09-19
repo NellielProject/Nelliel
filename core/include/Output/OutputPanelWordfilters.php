@@ -56,7 +56,7 @@ class OutputPanelWordfilters extends Output
                 $wordfilter_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $wordfilter_data['remove_url'] = nel_build_router_url(
+            $wordfilter_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'wordfilters', $wordfilter['filter_id'], 'delete']);
             $this->render_data['wordfilter_list'][] = $wordfilter_data;
         }

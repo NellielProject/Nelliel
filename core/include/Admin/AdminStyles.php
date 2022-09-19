@@ -28,9 +28,6 @@ class AdminStyles extends Admin
         $output_panel->render([], false);
     }
 
-    public function creator(): void
-    {}
-
     public function install(string $style_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_styles_manage');
@@ -38,16 +35,24 @@ class AdminStyles extends Admin
         $this->panel();
     }
 
-    public function editor(): void
-    {}
-
-    public function update(): void
-    {}
-
     public function uninstall(string $style_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_styles_manage');
         $this->domain->frontEndData()->getStyle($style_id)->uninstall();
+        $this->panel();
+    }
+
+    public function enable(string $style_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $this->domain->frontEndData()->getStyle($style_id)->enable();
+        $this->panel();
+    }
+
+    public function disable(string $style_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $this->domain->frontEndData()->getStyle($style_id)->disable();
         $this->panel();
     }
 
@@ -65,19 +70,5 @@ class AdminStyles extends Admin
             default:
                 $this->defaultPermissionError();
         }
-    }
-
-    public function enable(string $style_id)
-    {
-        $this->verifyPermissions($this->domain, 'perm_styles_manage');
-        $this->domain->frontEndData()->getStyle($style_id)->enable();
-        $this->panel();
-    }
-
-    public function disable(string $style_id)
-    {
-        $this->verifyPermissions($this->domain, 'perm_styles_manage');
-        $this->domain->frontEndData()->getStyle($style_id)->disable();
-        $this->panel();
     }
 }

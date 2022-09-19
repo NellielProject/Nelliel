@@ -74,7 +74,7 @@ class AdminThreads extends Admin
     public function delete(ContentID $content_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_delete_posts');
-        $content_id->getInstanceFromID($this->domain)->remove();
+        $content_id->getInstanceFromID($this->domain)->delete();
         $this->regenThread($this->domain, $content_id->threadID(), true);
     }
 
@@ -143,7 +143,7 @@ class AdminThreads extends Admin
         $this->verifyPermissions($this->domain, 'perm_delete_posts');
         $content_id = new ContentID($_GET['content-id']);
         $content_instance = $content_id->getInstanceFromID($this->domain);
-        $content_instance->remove();
+        $content_instance->delete();
         $this->regenThread($this->domain, $content_id->threadID(), true);
         $ban_ip = $_GET['ban-ip'] ?? '';
         $output_panel = new OutputPanelBans($this->domain, false);
@@ -163,7 +163,7 @@ class AdminThreads extends Admin
 
         foreach ($post_ids as $id) {
             $content_id = new ContentID(ContentID::createIDString($id['parent_thread'], $id['post_number']));
-            $content_id->getInstanceFromID($this->domain)->remove();
+            $content_id->getInstanceFromID($this->domain)->delete();
             $thread_ids[$content_id->threadID()] = true;
         }
 
@@ -191,7 +191,7 @@ class AdminThreads extends Admin
 
             foreach ($post_ids as $id) {
                 $content_id = new ContentID(ContentID::createIDString($id['parent_thread'], $id['post_number']));
-                $content_id->getInstanceFromID($board_domain)->remove();
+                $content_id->getInstanceFromID($board_domain)->delete();
                 $thread_ids[$content_id->threadID()] = true;
             }
 

@@ -104,7 +104,7 @@ class Upload
         return true;
     }
 
-    public function remove(bool $perm_override = false, bool $parent_delete = false): bool
+    public function delete(bool $perm_override = false, bool $parent_delete = false): bool
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -116,8 +116,8 @@ class Upload
             }
         }
 
-        $this->removeFromDisk($parent_delete);
-        $this->removeFromDatabase($parent_delete);
+        $this->deleteFromDisk($parent_delete);
+        $this->deleteFromDatabase($parent_delete);
 
         if (!$parent_delete) {
             $post = $this->getParent();
@@ -128,7 +128,7 @@ class Upload
         return true;
     }
 
-    protected function removeFromDatabase(bool $parent_delete): bool
+    protected function deleteFromDatabase(bool $parent_delete): bool
     {
         if (empty($this->content_id->orderID()) || $parent_delete) {
             return false;
@@ -149,7 +149,7 @@ class Upload
         return true;
     }
 
-    protected function removeFromDisk(bool $parent_delete): bool
+    protected function deleteFromDisk(bool $parent_delete): bool
     {
         if (!$this->isLoaded()) {
             $this->loadFromDatabase();

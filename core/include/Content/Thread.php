@@ -110,7 +110,7 @@ class Thread
         return true;
     }
 
-    public function remove(bool $perm_override = false, bool $parent_delete = false): bool
+    public function delete(bool $perm_override = false, bool $parent_delete = false): bool
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -137,16 +137,16 @@ class Thread
         $posts = $this->getPosts();
 
         foreach ($posts as $post) {
-            $post->remove(true, true);
+            $post->delete(true, true);
         }
 
-        $this->removeFromDatabase($parent_delete);
-        $this->removeFromDisk($parent_delete);
+        $this->deleteFromDatabase($parent_delete);
+        $this->deleteFromDisk($parent_delete);
         $this->archive_prune->updateThreads();
         return true;
     }
 
-    protected function removeFromDatabase(bool $parent_delete): bool
+    protected function deleteFromDatabase(bool $parent_delete): bool
     {
         if (empty($this->content_id->threadID())) {
             return false;
@@ -158,7 +158,7 @@ class Thread
         return true;
     }
 
-    protected function removeFromDisk(bool $parent_delete): bool
+    protected function deleteFromDisk(bool $parent_delete): bool
     {
         $file_handler = nel_utilities()->fileHandler();
         $removed = false;
@@ -310,7 +310,7 @@ class Thread
                 $post_content_id = new ContentID(
                     ContentID::createIDString($this->content_id->threadID(), $old_post['post_number'], 0));
                 $post = $post_content_id->getInstanceFromID($this->domain);
-                $post->remove(true, true);
+                $post->delete(true, true);
             }
         }
     }
@@ -493,7 +493,7 @@ class Thread
         $file_handler->moveDirectory($this->domain->reference('page_path') . $this->content_id->threadID() . '/',
             $this->domain->reference('archive_page_path') . $this->content_id->threadID() . '/');
 
-        $this->removeFromDatabase();
+        $this->deleteFromDatabase();
         return true;
     }
 

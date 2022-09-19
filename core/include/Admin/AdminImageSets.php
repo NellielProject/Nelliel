@@ -27,9 +27,6 @@ class AdminImageSets extends Admin
         $output_panel->render([], false);
     }
 
-    public function creator(): void
-    {}
-
     public function install(string $set_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
@@ -37,16 +34,24 @@ class AdminImageSets extends Admin
         $this->panel();
     }
 
-    public function editor(): void
-    {}
-
-    public function update(): void
-    {}
-
     public function uninstall(string $set_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
         $this->domain->frontEndData()->getImageSet($set_id)->uninstall();
+        $this->panel();
+    }
+
+    public function enable(string $set_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $this->domain->frontEndData()->getImageSet($set_id)->enable();
+        $this->panel();
+    }
+
+    public function disable(string $set_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $this->domain->frontEndData()->getImageSet($set_id)->disable();
         $this->panel();
     }
 
@@ -64,19 +69,5 @@ class AdminImageSets extends Admin
             default:
                 $this->defaultPermissionError();
         }
-    }
-
-    public function enable(string $set_id)
-    {
-        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $this->domain->frontEndData()->getImageSet($set_id)->enable();
-        $this->panel();
-    }
-
-    public function disable(string $set_id)
-    {
-        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
-        $this->domain->frontEndData()->getImageSet($set_id)->disable();
-        $this->panel();
     }
 }

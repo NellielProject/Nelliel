@@ -112,7 +112,7 @@ class Post
         return true;
     }
 
-    public function remove(bool $perm_override = false, bool $parent_delete = false): bool
+    public function delete(bool $perm_override = false, bool $parent_delete = false): bool
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -142,17 +142,17 @@ class Post
 
         // Threads can have just OP deleted but right now we don't use that.
         if ($this->data('op') && !$parent_delete) {
-            return $this->getParent()->remove($perm_override);
+            return $this->getParent()->delete($perm_override);
         }
 
         $uploads = $this->getUploads();
 
         foreach ($uploads as $upload) {
-            $upload->remove(true, true);
+            $upload->delete(true, true);
         }
 
-        $this->removeFromDatabase($parent_delete);
-        $this->removeFromDisk($parent_delete);
+        $this->deleteFromDatabase($parent_delete);
+        $this->deleteFromDisk($parent_delete);
 
         if (!$parent_delete) {
             $parent_thread = $this->getParent();
@@ -165,7 +165,7 @@ class Post
         return true;
     }
 
-    protected function removeFromDatabase(bool $parent_delete): bool
+    protected function deleteFromDatabase(bool $parent_delete): bool
     {
         if (empty($this->content_id->postID()) || $parent_delete) {
             return false;
@@ -180,7 +180,7 @@ class Post
         return true;
     }
 
-    protected function removeFromDisk(bool $parent_delete): bool
+    protected function deleteFromDisk(bool $parent_delete): bool
     {
         $file_handler = nel_utilities()->fileHandler();
         $parent = $this->getParent();

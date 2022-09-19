@@ -57,10 +57,10 @@ class OutputPanelBans extends Output
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
             $ban_data['can_modify'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_modify');
-            $ban_data['can_remove'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_delete');
+            $ban_data['can_delete'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_delete');
             $this->render_data['modify_url'] = nel_build_router_url(
                 [$this->domain->id(), 'bans', $ban_hammer->getData('ban_id'), 'modify']);
-            $this->render_data['remove_url'] = nel_build_router_url(
+            $this->render_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'bans', $ban_hammer->getData('ban_id'), 'delete']);
             $this->render_data['ban_list'][] = $ban_data;
         }

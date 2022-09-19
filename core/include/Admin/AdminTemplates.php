@@ -28,9 +28,6 @@ class AdminTemplates extends Admin
         $output_panel->render([], false);
     }
 
-    public function creator(): void
-    {}
-
     public function install(string $template_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_templates_manage');
@@ -39,17 +36,25 @@ class AdminTemplates extends Admin
         $this->panel();
     }
 
-    public function editor(): void
-    {}
-
-    public function update(): void
-    {}
-
     public function uninstall(string $template_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_templates_manage');
         $this->domain->frontEndData()->getTemplate($template_id)->uninstall();
         $this->domain->templatePath($this->domain->frontEndData()->getTemplate($template_id)->getPath());
+        $this->panel();
+    }
+
+    public function enable(string $template_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $this->domain->frontEndData()->getTemplate($template_id)->enable();
+        $this->panel();
+    }
+
+    public function disable(string $template_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $this->domain->frontEndData()->getTemplate($template_id)->disable();
         $this->panel();
     }
 
@@ -67,19 +72,5 @@ class AdminTemplates extends Admin
             default:
                 $this->defaultPermissionError();
         }
-    }
-
-    public function enable(string $template_id)
-    {
-        $this->verifyPermissions($this->domain, 'perm_templates_manage');
-        $this->domain->frontEndData()->getTemplate($template_id)->enable();
-        $this->panel();
-    }
-
-    public function disable(string $template_id)
-    {
-        $this->verifyPermissions($this->domain, 'perm_templates_manage');
-        $this->domain->frontEndData()->getTemplate($template_id)->disable();
-        $this->panel();
     }
 }

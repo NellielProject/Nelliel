@@ -47,7 +47,7 @@ class OutputPanelRoles extends Output
                 ($authorization->roleLevelCheck($user_role, $role['role_id']) &&
                 $this->session->user()->checkPermission($this->domain, 'perm_roles_manage'));
             $role_data['edit_url'] = nel_build_router_url([$this->domain->id(), 'roles', $role['role_id'], 'modify']);
-            $role_data['remove_url'] = nel_build_router_url([$this->domain->id(), 'roles', $role['role_id'], 'delete']);
+            $role_data['delete_url'] = nel_build_router_url([$this->domain->id(), 'roles', $role['role_id'], 'delete']);
             $this->render_data['roles_list'][] = $role_data;
         }
 

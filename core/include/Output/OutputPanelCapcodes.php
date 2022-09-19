@@ -55,7 +55,7 @@ class OutputPanelCapcodes extends Output
                 $capcode_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $capcode_data['remove_url'] = nel_build_router_url(
+            $capcode_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'capcodes', $capcode_data['capcode_id'], 'delete']);
             $this->render_data['capcodes_list'][] = $capcode_data;
         }

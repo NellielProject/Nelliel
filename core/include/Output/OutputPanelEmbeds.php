@@ -54,7 +54,7 @@ class OutputPanelEmbeds extends Output
                 $embed_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $embed_data['remove_url'] = nel_build_router_url([$this->domain->id(), 'embeds', $embed_data['embed_id'], 'delete']);
+            $embed_data['delete_url'] = nel_build_router_url([$this->domain->id(), 'embeds', $embed_data['embed_id'], 'delete']);
             $this->render_data['embeds_list'][] = $embed_data;
         }
 

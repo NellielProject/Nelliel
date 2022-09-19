@@ -59,7 +59,7 @@ class OutputPanelFiletypes extends Output
                 $category_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $category_data['remove_url'] = nel_build_router_url(
+            $category_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'filetype-categories', $category['category'], 'delete']);
             $this->render_data['category_list'][] = $category_data;
         }
@@ -108,7 +108,7 @@ class OutputPanelFiletypes extends Output
                 $filetype_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $filetype_data['remove_url'] = nel_build_router_url(
+            $filetype_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'filetypes', $filetype['format'], 'delete']);
             $this->render_data['filetype_list'][] = $filetype_data;
         }

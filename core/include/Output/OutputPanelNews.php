@@ -40,7 +40,7 @@ class OutputPanelNews extends Output
             $entry_info['name'] = $news_entry['name'];
             $entry_info['headline'] = $news_entry['headline'];
             $entry_info['time'] = date('Y/m/d (D) H:i:s', intval($news_entry['time']));
-            $entry_info['remove_url'] = nel_build_router_url(
+            $entry_info['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'news', $news_entry['article_id'], 'delete']);
             $this->render_data['news_entry'][] = $entry_info;
         }

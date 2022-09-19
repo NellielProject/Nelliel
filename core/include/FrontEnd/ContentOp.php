@@ -55,7 +55,7 @@ class ContentOp
         $this->load();
     }
 
-    public function remove(): void
+    public function delete(): void
     {
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "op_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);

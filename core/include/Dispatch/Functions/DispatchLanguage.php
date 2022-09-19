@@ -20,7 +20,6 @@ class DispatchLanguage extends Dispatch
         parent::__construct($authorization, $domain, $session);
         $this->session->init(true);
         $this->session->loggedInOrError();
-        $this->domain = nel_site_domain(); // Remove if we support board language functions later on
     }
 
     public function dispatch(array $inputs)

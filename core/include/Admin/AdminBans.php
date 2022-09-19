@@ -91,7 +91,7 @@ class AdminBans extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_bans_delete');
         $this->ban_hammer->loadFromID($ban_id);
-        $this->ban_hammer->remove();
+        $this->ban_hammer->delete();
         $this->panel();
     }
 

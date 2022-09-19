@@ -40,7 +40,7 @@ class OutputPanelPages extends Output
             $page_data['uri'] = $page['uri'];
             $page_data['title'] = $page['title'];
             $page_data['edit_url'] = nel_build_router_url([$this->domain->id(), 'pages', $page['page_id'], 'modify']);
-            $page_data['remove_url'] = nel_build_router_url([$this->domain->id(), 'pages', $page['page_id'], 'delete']);
+            $page_data['delete_url'] = nel_build_router_url([$this->domain->id(), 'pages', $page['page_id'], 'delete']);
             $this->render_data['pages_list'][] = $page_data;
         }
 

@@ -29,7 +29,7 @@ class Router
 
         $this->dispatcher = cachedDispatcher(
             function (RouteCollector $r) use ($site_domain) {
-                $r->addGroup('/{domain_id:[^\/]+}/{module:account}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:account}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\DispatchAccount';
                         $r->addRoute(['GET', 'POST'], '/{section:login}', $dispatch_class);
@@ -40,13 +40,13 @@ class Router
                         $r->addRoute(['GET'], '', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:language}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:language}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchLanguage';
                         $r->addRoute(['GET'], '/{section:gettext}[/{action:[^\/]+}]', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:captcha}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:captcha}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchCAPTCHA';
                         $r->addRoute(['GET'], '/{section:get}', $dispatch_class);
@@ -86,7 +86,7 @@ class Router
                         $r->addRoute(['POST'], '/{section:user-bans}[/{action:[^\/]+}]', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:blotter}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:blotter}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchBlotter';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -132,7 +132,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:noticeboard}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:noticeboard}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchNoticeboard';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -141,7 +141,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:embeds}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:embeds}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchEmbeds';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -161,7 +161,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:filetypes}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:filetypes}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchFiletypes';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -171,7 +171,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:filetype-categories}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:filetype-categories}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchFiletypeCategories';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -190,7 +190,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:manage-boards}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:manage-boards}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchManageBoards';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -207,7 +207,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{page:[^\/]+}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:news}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:news}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchNews';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -215,7 +215,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:image-sets}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:image-sets}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchImageSets';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -223,7 +223,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:styles}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:styles}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchStyles';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -231,7 +231,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:templates}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:templates}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchTemplates';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -239,7 +239,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:plugins}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:plugins}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchPlugins';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -253,13 +253,13 @@ class Router
                         $r->addRoute(['GET'], '[/]', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:boardlist}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:boardlist}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchBoardlist';
                         $r->addRoute(['GET'], '[/]', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:content-ops}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:content-ops}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchContentOps';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -269,7 +269,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:capcodes}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:capcodes}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchCapcodes';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -296,7 +296,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:dismiss}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:roles}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:roles}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchRoles';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
@@ -305,7 +305,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:users}',
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:users}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchUsers';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);

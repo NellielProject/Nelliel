@@ -39,7 +39,7 @@ class OutputPanelPermissions extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $permission_data['permission'] = $permission['permission'];
             $permission_data['description'] = _gettext($permission['description']);
-            $permission_data['remove_url'] = nel_build_router_url(
+            $permission_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'permissions', $permission['permission'], 'delete']);
             $this->render_data['permission_list'][] = $permission_data;
         }

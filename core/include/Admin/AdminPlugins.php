@@ -28,9 +28,6 @@ class AdminPlugins extends Admin
         $output_panel->render([], false);
     }
 
-    public function creator(): void
-    {}
-
     public function install(string $plugin_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_plugins_manage');
@@ -38,16 +35,24 @@ class AdminPlugins extends Admin
         $this->panel();
     }
 
-    public function editor(): void
-    {}
-
-    public function update(): void
-    {}
-
     public function uninstall(string $plugin_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_plugins_manage');
         nel_plugins()->getPlugin($plugin_id)->uninstall();
+        $this->panel();
+    }
+
+    public function enable(string $plugin_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
+        nel_plugins()->getPlugin($plugin_id)->enable();
+        $this->panel();
+    }
+
+    public function disable(string $plugin_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
+        nel_plugins()->getPlugin($plugin_id)->disable();
         $this->panel();
     }
 
@@ -65,19 +70,5 @@ class AdminPlugins extends Admin
             default:
                 $this->defaultPermissionError();
         }
-    }
-
-    public function enable(string $plugin_id)
-    {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
-        nel_plugins()->getPlugin($plugin_id)->enable();
-        $this->panel();
-    }
-
-    public function disable(string $plugin_id)
-    {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
-        nel_plugins()->getPlugin($plugin_id)->disable();
-        $this->panel();
     }
 }

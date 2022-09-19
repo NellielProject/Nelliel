@@ -31,15 +31,6 @@ class AdminBoardConfig extends Admin
         $output_panel->render(['defaults' => false], false);
     }
 
-    public function creator(): void
-    {}
-
-    public function add(): void
-    {}
-
-    public function editor(): void
-    {}
-
     public function update(): void
     {
         $this->verifyPermissions($this->domain, 'perm_board_config_modify');
@@ -135,9 +126,6 @@ class AdminBoardConfig extends Admin
 
         $this->panel();
     }
-
-    public function remove(): void
-    {}
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {

@@ -39,13 +39,13 @@ class BanHammer
         $existing_ban = (!is_null($ban_id)) ? $this->loadFromID($ban_id) : false;
 
         if ($existing_ban) {
-            $remove_ban = $_POST['remove_ban'] ?? 0;
+            $delete_ban = $_POST['delete_ban'] ?? 0;
 
-            if (is_array($remove_ban)) {
-                $remove_ban = nel_form_input_default($remove_ban);
+            if (is_array($delete_ban)) {
+                $delete_ban = nel_form_input_default($delete_ban);
 
-                if ($remove_ban > 0) {
-                    $this->remove();
+                if ($delete_ban > 0) {
+                    $this->delete();
                     return;
                 }
             }
@@ -231,7 +231,7 @@ class BanHammer
         }
     }
 
-    public function remove()
+    public function delete()
     {
         if (!isset($this->ban_data['ban_id'])) {
             return false;

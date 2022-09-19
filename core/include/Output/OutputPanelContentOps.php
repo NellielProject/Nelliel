@@ -58,7 +58,7 @@ class OutputPanelContentOps extends Output
                 $content_op_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $content_op_data['remove_url'] = nel_build_router_url(
+            $content_op_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'content-ops', $content_op_data['op_id'], 'delete']);
             $this->render_data['content_ops_list'][] = $content_op_data;
         }

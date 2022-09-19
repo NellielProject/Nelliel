@@ -29,15 +29,6 @@ class AdminSiteConfig extends Admin
         $output_panel->render([], false);
     }
 
-    public function creator(): void
-    {}
-
-    public function add(): void
-    {}
-
-    public function editor(): void
-    {}
-
     public function update(): void
     {
         $this->verifyPermissions($this->domain, 'perm_site_config_modify');
@@ -61,9 +52,6 @@ class AdminSiteConfig extends Admin
         $regen->overboard($this->domain);
         $this->panel();
     }
-
-    public function remove(): void
-    {}
 
     protected function verifyPermissions(Domain $domain, string $perm): void
     {

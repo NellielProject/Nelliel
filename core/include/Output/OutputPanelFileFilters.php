@@ -66,7 +66,7 @@ class OutputPanelFileFilters extends Output
                 $filter_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $filter_data['remove_url'] = nel_build_router_url(
+            $filter_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'file-filters', $filter_data['filter_id'], 'delete']);
 
             $this->render_data['filter_list'][] = $filter_data;

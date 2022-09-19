@@ -62,7 +62,7 @@ class ThreadHandler
                 return;
             }
 
-            $instance->remove();
+            $instance->delete();
 
             if (!in_array($content_id->threadID(), $updates)) {
                 array_push($updates, $content_id->threadID());
