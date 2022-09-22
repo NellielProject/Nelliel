@@ -21,11 +21,11 @@ class AdminLogs extends Admin
         $this->panel_name = _gettext('Logs');
     }
 
-    public function panel(): void
+    public function panel(int $page): void
     {
         $this->verifyPermissions($this->domain, 'perm_logs_view');
         $output_panel = new OutputPanelLogs($this->domain, false);
-        $output_panel->render([], false);
+        $output_panel->render(['page' => $page], false);
     }
 
     public function creator(): void

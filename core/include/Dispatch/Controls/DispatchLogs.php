@@ -27,7 +27,7 @@ class DispatchLogs extends Dispatch
 
         switch ($inputs['section']) {
             default:
-                $logs->panel($inputs['page'] ?? 1);
+                $logs->panel((int) $inputs['page'] ?? 1);
         }
     }
 }

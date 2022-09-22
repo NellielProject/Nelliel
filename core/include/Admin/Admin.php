@@ -33,7 +33,7 @@ abstract class Admin
         $this->session_user = $session->user();
     }
 
-    public abstract function panel(): void;
+    //public abstract function panel(): void;
 
     protected abstract function verifyPermissions(Domain $domain, string $perm): void;
 

@@ -24,12 +24,13 @@ class OutputPanelLogs extends Output
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Logs');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
-        $page = $parameters['page'] ?? 1;
+        $page = (int) $parameters['page'] ?? 1;
         $entries = $parameters['entries'] ?? 20;
-        $row_offset = ($page > 1) ? $page * $entries : 0;
+        $row_offset = ($page > 1) ? ($page - 1) * $entries : 0;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $log_count = $this->database->executeFetch('SELECT COUNT(*) FROM "' . NEL_LOGS_TABLE . '"', PDO::FETCH_COLUMN);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $query = 'SELECT * FROM "' . NEL_LOGS_TABLE . '" ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
         $prepared = $this->database->prepare($query);
@@ -52,15 +53,17 @@ class OutputPanelLogs extends Output
             $this->render_data['log_entry_list'][] = $log_data;
         }
 
-        $page_url = nel_build_router_url([$this->domain->id(), 'logs', $page]);
-        $previous_url = ($page > 1) ? nel_build_router_url([$this->domain->id(), 'logs', $page]) : null;
-        $next_url = nel_build_router_url([$this->domain->id(), 'logs', $page + 1]);
-        $page_count = $parameters['page_count'] ?? 1;
-        $pagination_object = new Pagination();
-        $pagination_object->setPrevious(_gettext('<<'), $previous_url);
-        $pagination_object->setNext(_gettext('>>'), $next_url);
-        $pagination_object->setPage((string) $page, $page_url);
-        $this->render_data['pagination'] = $pagination_object->generateNumerical(1, $page_count, $page);
+        $page_count = (int) ceil($log_count / $entries);
+        $page_url = nel_build_router_url([$this->domain->id(), 'logs'], true) . '%d';
+        $previous_url = ($page > 1) ? nel_build_router_url([$this->domain->id(), 'logs'], true) . '%d' : null;
+        $next_url = nel_build_router_url([$this->domain->id(), 'logs'], true) . '%d';
+        $pagination = new Pagination();
+        $pagination->setPrevious(__('Previous'), $previous_url);
+        $pagination->setNext(__('Next'), $next_url);
+        $pagination->setPage('%d', $page_url);
+        $pagination->setFirst('%d', $page_url);
+        $pagination->setLast('%d', $page_url);
+        $this->render_data['pagination'] = $pagination->generateNumerical(1, $page_count, $page);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
