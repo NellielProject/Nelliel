@@ -25,7 +25,7 @@ class DispatchLogs extends Dispatch
     {
         $logs = new AdminLogs($this->authorization, $this->domain, $this->session);
         $page = (int) ($inputs['page'] ?? 1);
-        $log_set = $inputs['log_set'] ?? 'both';
+        $log_set = $inputs['log_set'] ?? 'combined';
 
         switch ($inputs['section']) {
             default:

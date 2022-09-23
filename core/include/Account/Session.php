@@ -109,7 +109,7 @@ class Session
         $this->init(true);
 
         if (!empty(self::$user) && self::$user->id() !== '') {
-            nel_logger('system')->info('Sucessfully logged out.', ['event' => 'LOGOUT', 'username' => self::$user->id()]);
+            nel_logger('system')->info('Logged out.', ['event' => 'logout', 'username' => self::$user->id()]);
         }
 
         $this->terminate();

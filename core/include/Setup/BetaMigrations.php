@@ -201,7 +201,8 @@ class BetaMigrations
 
                 // Update logs table
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE .
+                    '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
                 echo ' - ' . __('Logs table updated.') . '<br>';
 
                 // Update reports table
@@ -397,8 +398,8 @@ class BetaMigrations
                 echo ' - ' . __('Updated wordfilters table.') . '<br>';
 
                 // Update log tables
-                nel_database('core')->exec(
-                    'ALTER TABLE "' . 'nelliel_logs' . '" RENAME TO ' . NEL_SYSTEM_LOGS_TABLE);
+                nel_database('core')->exec('ALTER TABLE "' . 'nelliel_logs' . '" RENAME TO ' . NEL_SYSTEM_LOGS_TABLE);
+                nel_database('core')->exec('ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" DROP COLUMN "channel"');
                 $public_logs_table = new TableLogs($this->database, $this->sql_compatibility);
                 $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
                 $public_logs_table->createTable();

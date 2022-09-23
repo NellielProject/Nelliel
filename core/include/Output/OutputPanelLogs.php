@@ -29,7 +29,9 @@ class OutputPanelLogs extends Output
         $log_set = $parameters['log_set'] ?? 'combined';
         $log_count = 0;
         $query = '';
+        $panel = '';
 
+        // TODO: Cache and possibly update this elsewhere instead of calling every time
         if ($log_set === 'public' || $log_set === 'combined') {
             $log_count += $this->database->executeFetch('SELECT COUNT(*) FROM "' . NEL_PUBLIC_LOGS_TABLE . '"',
                 PDO::FETCH_COLUMN);
@@ -42,18 +44,18 @@ class OutputPanelLogs extends Output
 
         if ($log_set === 'system') {
             $panel = __('System Logs');
-            $query = 'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE . '" ORDER BY "time" DESC LIMIT ? OFFSET ?';
+            $query = 'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE . '" ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
         }
 
         if ($log_set === 'public') {
             $panel = __('Public Logs');
-            $query = 'SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE . '" ORDER BY "time" DESC LIMIT ? OFFSET ?';
+            $query = 'SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE . '" ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
         }
 
         if ($log_set === 'combined') {
             $panel = __('Combined Logs');
             $query = 'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE . '" UNION ALL SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE .
-                '"ORDER BY "time" DESC LIMIT ? OFFSET ?';
+                '"ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
         }
 
         $prepared = $this->database->prepare($query);
@@ -71,10 +73,9 @@ class OutputPanelLogs extends Output
             $log_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $log_data['log_id'] = $log['log_id'];
-            $log_data['level'] = intval($log['level']);
             $log_data['event'] = $log['event'];
             $log_data['domain_id'] = $log['domain_id'];
-            $log_data['username'] = $log['username'];
+            $log_data['user'] = $log['username'];
             $log_data['ip_address'] = nel_convert_ip_from_storage($log['ip_address']);
             $log_data['hashed_ip_address'] = $log['hashed_ip_address'];
             $log_data['time'] = $log['time'];
@@ -101,14 +102,5 @@ class OutputPanelLogs extends Output
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
-    }
-
-    private function logSet(string $set): array
-    {
-        switch ($set) {
-            case 'public':
-
-            case 'system':
-        }
     }
 }
