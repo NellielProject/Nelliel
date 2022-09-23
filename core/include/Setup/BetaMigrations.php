@@ -400,6 +400,8 @@ class BetaMigrations
                 // Update log tables
                 nel_database('core')->exec('ALTER TABLE "' . 'nelliel_logs' . '" RENAME TO ' . NEL_SYSTEM_LOGS_TABLE);
                 nel_database('core')->exec('ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" DROP COLUMN "channel"');
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" ADD COLUMN message_values TEXT NOT NULL DEFAULT \'\'');
                 $public_logs_table = new TableLogs($this->database, $this->sql_compatibility);
                 $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
                 $public_logs_table->createTable();

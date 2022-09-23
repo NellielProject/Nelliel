@@ -28,7 +28,6 @@ class OutputPanelLogs extends Output
         $row_offset = ($page > 1) ? ($page - 1) * $entries : 0;
         $log_set = $parameters['log_set'] ?? 'combined';
         $log_count = 0;
-        $query = '';
         $panel = '';
 
         // TODO: Cache and possibly update this elsewhere instead of calling every time
@@ -44,22 +43,36 @@ class OutputPanelLogs extends Output
 
         if ($log_set === 'system') {
             $panel = __('System Logs');
-            $query = 'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE . '" ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
+            $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE .
+                '" ORDER BY "time" DESC, "log_id" DESC LIMIT :limit OFFSET :offset');
         }
 
         if ($log_set === 'public') {
             $panel = __('Public Logs');
-            $query = 'SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE . '" ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
+
+            if ($this->domain->id() !== Domain::GLOBAL) {
+                $prepared = $this->database->prepare(
+                    'SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE .
+                    '" WHERE "domain_id" = :domain_id ORDER BY "time" DESC, "log_id" DESC LIMIT :limit OFFSET :offset');
+                $prepared->bindValue(':domain_id', $this->domain->id(), PDO::PARAM_STR);
+            } else {
+                $prepared = $this->database->prepare(
+                    'SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE .
+                    '" ORDER BY "time" DESC, "log_id" DESC LIMIT :limit OFFSET :offset');
+            }
         }
 
         if ($log_set === 'combined') {
             $panel = __('Combined Logs');
-            $query = 'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE . '" UNION ALL SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE .
-                '"ORDER BY "time" DESC, "log_id" DESC LIMIT ? OFFSET ?';
+            $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE . '" UNION ALL SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE .
+                '"ORDER BY "time" DESC, "log_id" DESC LIMIT :limit OFFSET :offset');
         }
 
-        $prepared = $this->database->prepare($query);
-        $logs = $this->database->executePreparedFetchAll($prepared, [$entries, $row_offset], PDO::FETCH_ASSOC);
+        $prepared->bindValue(':limit', $entries, PDO::PARAM_INT);
+        $prepared->bindValue(':offset', $row_offset, PDO::PARAM_INT);
+        $logs = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $parameters['panel'] = $parameters['panel'] ?? $panel;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -79,7 +92,7 @@ class OutputPanelLogs extends Output
             $log_data['ip_address'] = nel_convert_ip_from_storage($log['ip_address']);
             $log_data['hashed_ip_address'] = $log['hashed_ip_address'];
             $log_data['time'] = $log['time'];
-            $log_data['message'] = $log['message'];
+            $log_data['message'] = $this->formatMessage($log['message'], $log['message_values']);
             $this->render_data['log_entry_list'][] = $log_data;
         }
 
@@ -102,5 +115,33 @@ class OutputPanelLogs extends Output
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
+    }
+
+    private function formatMessage(string $message, string $message_values): string
+    {
+        $decoded_values = json_decode($message_values, true);
+
+        if (!is_array($decoded_values)) {
+            return $message;
+        }
+
+        $final_values = array();
+
+        foreach ($decoded_values as $type => $value) {
+            if (is_numeric($type)) {
+                $final_values[] = $value;
+                continue;
+            }
+
+            if ($type === 'ip') {
+                if (!$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
+                    $final_values[] = nel_ip_hash($value);
+                } else {
+                    $final_values[] = $value;
+                }
+            }
+        }
+
+        return vsprintf($message, $final_values);
     }
 }

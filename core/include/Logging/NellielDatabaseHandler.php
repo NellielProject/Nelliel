@@ -25,20 +25,21 @@ class NellielDatabaseHandler extends AbstractProcessingHandler
         if ($record['channel'] === 'system') {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_SYSTEM_LOGS_TABLE .
-                '" ("level", "event", "message", "time", "domain_id", "username", "ip_address", "hashed_ip_address", "visitor_id", "moar")
-								VALUES (:level, :event, :message, :time, :domain_id, :username, :ip_address, :hashed_ip_address, :visitor_id, :moar)');
+                '" ("level", "event", "message", "message_values", "time", "domain_id", "username", "ip_address", "hashed_ip_address", "visitor_id", "moar")
+								VALUES (:level, :event, :message, :message_values, :time, :domain_id, :username, :ip_address, :hashed_ip_address, :visitor_id, :moar)');
         }
 
         if ($record['channel'] === 'public') {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_PUBLIC_LOGS_TABLE .
-                '" ("level", "event", "message", "time", "domain_id", "username", "ip_address", "hashed_ip_address", "visitor_id", "moar")
-								VALUES (:level, :event, :message, :time, :domain_id, :username, :ip_address, :hashed_ip_address, :visitor_id, :moar)');
+                '" ("level", "event", "message", "message_values", "time", "domain_id", "username", "ip_address", "hashed_ip_address", "visitor_id", "moar")
+								VALUES (:level, :event, :message, :message_values, :time, :domain_id, :username, :ip_address, :hashed_ip_address, :visitor_id, :moar)');
         }
 
         $prepared->bindValue(':level', $record['level'], PDO::PARAM_INT);
         $prepared->bindValue(':event', $record['extra']['event'], PDO::PARAM_STR);
         $prepared->bindValue(':message', $record['message'], PDO::PARAM_STR);
+        $prepared->bindValue(':message_values', $record['extra']['message_values'], PDO::PARAM_STR);
         $prepared->bindValue(':time', $record['datetime']->format('U'), PDO::PARAM_INT);
         $prepared->bindValue(':domain_id', $record['extra']['domain_id'], PDO::PARAM_STR);
         $prepared->bindValue(':username', $record['extra']['username'], PDO::PARAM_STR);
