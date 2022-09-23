@@ -16,7 +16,7 @@ class TableLogs extends Table
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = NEL_LOGS_TABLE;
+        $this->table_name = NEL_SYSTEM_LOGS_TABLE;
         $this->column_types = [
             'log_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'level' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],

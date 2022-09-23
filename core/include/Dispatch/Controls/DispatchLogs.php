@@ -24,10 +24,12 @@ class DispatchLogs extends Dispatch
     public function dispatch(array $inputs): void
     {
         $logs = new AdminLogs($this->authorization, $this->domain, $this->session);
+        $page = (int) ($inputs['page'] ?? 1);
+        $log_set = $inputs['log_set'] ?? 'both';
 
         switch ($inputs['section']) {
             default:
-                $logs->panel((int) $inputs['page'] ?? 1);
+                $logs->panel($log_set, $page);
         }
     }
 }

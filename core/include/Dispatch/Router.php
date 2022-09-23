@@ -204,7 +204,7 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchLogs';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'], '/{page:[^\/]+}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{log_set:system|public|combined}[/{page:[^\/]+}]', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:' . $site_domain . '}/{module:news}',

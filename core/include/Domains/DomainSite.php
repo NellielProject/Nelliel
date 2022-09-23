@@ -44,7 +44,7 @@ class DomainSite extends Domain implements NellielCacheInterface
         $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_directory'] . '/';
         $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_directory']) .
             '/';
-        $new_reference['log_table'] = NEL_LOGS_TABLE;
+        $new_reference['log_table'] = NEL_SYSTEM_LOGS_TABLE;
         $new_reference['title'] = (!nel_true_empty($this->setting('name'))) ? $this->setting('name') : _gettext(
             'Nelliel Imageboard');
         $new_reference['home_page'] = NEL_BASE_WEB_PATH;

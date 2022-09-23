@@ -326,8 +326,12 @@ class Setup
         $cites_table->createTable();
         $wordfilters_table = new TableWordfilters($this->database, $this->sql_compatibility);
         $wordfilters_table->createTable();
-        $logs_table = new TableLogs($this->database, $this->sql_compatibility);
-        $logs_table->createTable();
+        $system_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $system_logs_table->tableName(NEL_SYSTEM_LOGS_TABLE);
+        $system_logs_table->createTable();
+        $public_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
+        $public_logs_table->createTable();
         $bans_table = new TableBans($this->database, $this->sql_compatibility);
         $bans_table->createTable();
         $ban_appeals_table = new TableBanAppeals($this->database, $this->sql_compatibility);

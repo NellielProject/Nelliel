@@ -93,7 +93,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['uploads_table'] = $new_reference['db_prefix'] . '_uploads';
         $new_reference['archives_table'] = $new_reference['db_prefix'] . '_archives';
         $new_reference['config_table'] = NEL_BOARD_CONFIGS_TABLE;
-        $new_reference['log_table'] = NEL_LOGS_TABLE;
+        $new_reference['log_table'] = NEL_SYSTEM_LOGS_TABLE;
         $this->references = $new_reference;
     }
 

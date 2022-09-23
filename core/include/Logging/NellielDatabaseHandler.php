@@ -23,7 +23,7 @@ class NellielDatabaseHandler extends AbstractProcessingHandler
     protected function write(array $record): void
     {
         $prepared = $this->database->prepare(
-            'INSERT INTO "' . NEL_LOGS_TABLE .
+            'INSERT INTO "' . NEL_SYSTEM_LOGS_TABLE .
             '" ("level", "channel", "event", "message", "time", "domain_id", "username", "ip_address", "hashed_ip_address", "visitor_id", "moar")
 								VALUES (:level, :channel, :event, :message, :time, :domain_id, :username, :ip_address, :hashed_ip_address, :visitor_id, :moar)');
         $prepared->bindValue(':level', $record['level'], PDO::PARAM_INT);

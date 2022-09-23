@@ -13,6 +13,7 @@ use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Tables\TableLogs;
 
 class BetaMigrations
 {
@@ -200,7 +201,7 @@ class BetaMigrations
 
                 // Update logs table
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_LOGS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
                 echo ' - ' . __('Logs table updated.') . '<br>';
 
                 // Update reports table
@@ -394,6 +395,15 @@ class BetaMigrations
                     'ALTER TABLE "' . 'nelliel_word_filters' . '" RENAME TO ' . NEL_WORDFILTERS_TABLE);
 
                 echo ' - ' . __('Updated wordfilters table.') . '<br>';
+
+                // Update log tables
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . 'nelliel_logs' . '" RENAME TO ' . NEL_SYSTEM_LOGS_TABLE);
+                $public_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+                $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
+                $public_logs_table->createTable();
+
+                echo ' - ' . __('Updated log tables.') . '<br>';
 
                 $migration_count ++;
         }
