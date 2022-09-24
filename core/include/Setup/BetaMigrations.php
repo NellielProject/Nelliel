@@ -408,6 +408,11 @@ class BetaMigrations
 
                 echo ' - ' . __('Updated log tables.') . '<br>';
 
+                $new_board_settings = ['allow_no_markdown'];
+                $this->newBoardSettings($new_board_settings);
+
+                echo ' - ' . __('Board settings updated.') . '<br>';
+
                 $migration_count ++;
         }
 

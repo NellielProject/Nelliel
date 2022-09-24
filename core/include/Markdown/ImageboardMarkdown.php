@@ -62,7 +62,7 @@ class ImageboardMarkdown extends Parser
 
         for ($i = 0; $i < $block_count; $i ++) {
             if (trim($blocks[$i]) === '') {
-                $blocks[$i] = '&' . $blocks[$i] . "\n";
+                $blocks[$i] = '@' . $blocks[$i] . "\n";
             }
         }
 
@@ -77,6 +77,7 @@ class ImageboardMarkdown extends Parser
     {
         // consume until newline
         $content = [];
+
         for ($i = $current, $count = count($lines); $i < $count; $i ++) {
             $line = $lines[$i];
 
@@ -130,5 +131,10 @@ class ImageboardMarkdown extends Parser
         }
 
         return $markers;
+    }
+
+    protected function renderText($text)
+    {
+        return htmlspecialchars($text[1], ENT_QUOTES, 'UTF-8', false);
     }
 }

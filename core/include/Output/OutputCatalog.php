@@ -30,22 +30,19 @@ class OutputCatalog extends Output
         $threads = $this->domain->activeThreads(true);
         $thread_count = 1;
 
-        foreach ($threads as $thread)
-        {
-            if (is_null($thread) || !$thread->exists())
-            {
+        foreach ($threads as $thread) {
+            if (is_null($thread) || !$thread->exists()) {
                 continue;
             }
 
             $thread_data = array();
             $prepared = $this->database->prepare(
-                    'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-                    '" WHERE "parent_thread" = ? AND "op" = 1');
+                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "parent_thread" = ? AND "op" = 1');
             $op_id = $this->database->executePreparedFetch($prepared, [$thread->contentID()->threadID()],
-                    PDO::FETCH_COLUMN);
+                PDO::FETCH_COLUMN);
 
-            if (empty($op_id))
-            {
+            if (empty($op_id)) {
                 continue;
             }
 
@@ -53,25 +50,19 @@ class OutputCatalog extends Output
             $post = $post_content_id->getInstanceFromID($this->domain);
             $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
 
-            if ($this->session->inModmode($this->domain) && !$this->writeMode())
-            {
+            if ($this->session->inModmode($this->domain) && !$this->writeMode()) {
                 $thread_data['open_url'] .= '&modmode=true';
             }
 
             $thread_data['first_post_subject'] = $post->data('subject');
 
-            if (!nel_true_empty($post->data('comment')))
-            {
+            if (!nel_true_empty($post->data('comment'))) {
                 $output_post = new OutputPost($this->domain, false);
 
-                if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data']))
-                {
+                if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data'])) {
                     $thread_data['comment_markdown'] = $post->getCache()['comment_data'];
-                }
-                else
-                {
-                    $thread_data['comment_markdown'] = $output_post->parseComment($post->data('comment'),
-                            $post_content_id);
+                } else {
+                    $thread_data['comment_markdown'] = $output_post->parseComment($post->data('comment'), $post);
                 }
             }
 
@@ -89,8 +80,7 @@ class OutputCatalog extends Output
             $thread_data['status_cyclic'] = $ui_image_set->getWebPath('ui', 'status_cyclic', true);
             $uploads = $post->getUploads();
 
-            if (count($uploads) > 0)
-            {
+            if (count($uploads) > 0) {
                 $output_file_info = new OutputFile($this->domain, $this->write_mode);
                 $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
                 $thread_data['single_file'] = true;
@@ -98,20 +88,15 @@ class OutputCatalog extends Output
                 $thread_data['single_multiple'] = 'single';
                 $upload = $uploads[0];
 
-                if (nel_true_empty($upload->data('embed_url')))
-                {
+                if (nel_true_empty($upload->data('embed_url'))) {
                     $file_data = $output_file_info->render($upload, $post, ['catalog' => true], true);
-                }
-                else
-                {
+                } else {
                     $file_data = $output_embed_info->render($upload, $post, ['catalog' => true], true);
                 }
 
                 $thread_data['preview'] = $file_data;
                 $thread_data['has_preview'] = true;
-            }
-            else
-            {
+            } else {
                 $thread_data['has_preview'] = false;
                 $thread_data['open_text'] = _gettext('Open thread');
             }
@@ -124,13 +109,10 @@ class OutputCatalog extends Output
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
-        if ($this->write_mode)
-        {
+        if ($this->write_mode) {
             $file = $this->domain->reference('base_path') . 'catalog.html';
             $this->file_handler->writeFile($file, $output);
-        }
-        else
-        {
+        } else {
             echo $output;
         }
 

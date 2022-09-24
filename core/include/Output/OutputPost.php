@@ -313,11 +313,6 @@ class OutputPost extends Output
         $comment_data['nofollow_external_links'] = $this->site_domain->setting('nofollow_external_links');
         $comment = $post->data('comment');
 
-        if ($post->getMoar()->get('raw_html')) {
-            $comment_data['comment_markdown'] = $comment;
-            return $comment_data;
-        }
-
         if (nel_true_empty($comment)) {
             $comment_data['comment_markdown'] = $this->domain->setting('no_comment_text');
             return $comment_data;
@@ -327,7 +322,7 @@ class OutputPost extends Output
         if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data'])) {
             $comment_markdown = $post->getCache()['comment_data'];
         } else {
-            $comment_markdown = $this->parseComment($comment, $post->contentID());
+            $comment_markdown = $this->parseComment($comment, $post);
         }
 
         if ($gen_data['index_rendering']) {
@@ -387,10 +382,14 @@ class OutputPost extends Output
         return $backlinks;
     }
 
-    public function parseComment(?string $comment_text, ContentID $post_content_id): string
+    public function parseComment(?string $comment_text, Post $post): string
     {
         if (nel_true_empty($comment_text)) {
             return '';
+        }
+
+        if ($post->getMoar()->get('raw_html') === true) {
+            return $comment_text;
         }
 
         $comment = $comment_text;
@@ -407,7 +406,11 @@ class OutputPost extends Output
             $comment = $this->output_filter->filterZalgo($comment);
         }
 
-        $imageboard_markdown = new ImageboardMarkdown($this->domain, $post_content_id);
+        if ($post->getMoar()->get('no_markdown') === true) {
+            return htmlspecialchars($comment, ENT_QUOTES, 'UTF-8', false);
+        }
+
+        $imageboard_markdown = new ImageboardMarkdown($this->domain, $post->contentID());
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode) {
             $parsed_markdown = $imageboard_markdown->parseDynamic($comment);

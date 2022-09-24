@@ -19,7 +19,7 @@ trait Spoiler
         $in_spoiler = false;
 
         foreach ($lines as $line) {
-            if ($line !== '&' . "\n") {
+            if ($line !== '@' . "\n") {
                 $line .= "\n";
             }
 
