@@ -665,11 +665,17 @@ td {
 
 .text-spoiler {
 	color: var(--spoiler-color, black);
-	background-color: var(--spoiler-color, black);
+	background: var(--spoiler-color, black);
+	cursor: none;
 }
 
 .text-spoiler:hover {
 	color: var(--unspoiler-color, white);
+}
+
+.text-spoiler:not(:hover) * {
+	color: var(--spoiler-color, black);
+	background: var(--spoiler-color, black);
 }
 
 .link-button {
