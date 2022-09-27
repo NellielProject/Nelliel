@@ -190,7 +190,7 @@ class Cites
         return $return;
     }
 
-    public function createPostLinkURL(array $cite_data, Domain $source_domain, bool $dynamic): string
+    public function generateCiteURL(array $cite_data, bool $dynamic): string
     {
         $url = '';
 

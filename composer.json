@@ -10,7 +10,6 @@
 		"ext-pdo" : "*",
 		"ext-session" : "*",
 		"s1lentium/iptools" : "~1.1.1",
-		"cebe/markdown" : "~1.2.1",
 		"psr/log" : "~1.1.4",
 		"mustache/mustache" : "~2.14",
 		"nikic/fast-route" : "~1.3",

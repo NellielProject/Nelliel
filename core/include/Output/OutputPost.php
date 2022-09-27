@@ -6,12 +6,10 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Cites;
-use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use Nelliel\FrontEnd\Capcode;
-use Nelliel\Markdown\ImageboardMarkdown;
 
 class OutputPost extends Output
 {
@@ -369,7 +367,7 @@ class OutputPost extends Output
             $cite_url = '';
 
             if ($cite_data['exists']) {
-                $cite_url = $cites->createPostLinkURL($cite_data, $this->domain,
+                $cite_url = $cites->generateCiteURL($cite_data,
                     $this->session->inModmode($this->domain) && !$this->write_mode);
 
                 if (!empty($cite_url)) {
@@ -410,14 +408,9 @@ class OutputPost extends Output
             return htmlspecialchars($comment, ENT_QUOTES, 'UTF-8', false);
         }
 
-        $imageboard_markdown = new ImageboardMarkdown($this->domain, $post->contentID());
-
-        if ($this->session->inModmode($this->domain) && !$this->write_mode) {
-            $parsed_markdown = $imageboard_markdown->parseDynamic($comment);
-        } else {
-            $parsed_markdown = $imageboard_markdown->parse($comment);
-        }
-
+        $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
+        $engine = new Markup();
+        $parsed_markdown = $engine->parsePostComments($comment, $post, $dynamic_urls);
         return $parsed_markdown;
     }
 }
