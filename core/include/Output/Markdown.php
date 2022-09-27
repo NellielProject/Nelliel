@@ -8,17 +8,44 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Cites;
 use Nelliel\Content\Post;
 
-class Markup
+class Markdown
 {
 
     function __construct()
     {}
 
+    private function getRegexData(string $type): array
+    {
+        $regex_data = array();
+
+        // TODO: retrieve from settings
+        switch ($type) {
+            case 'simple':
+                $regex_data[] = ['id' => 'spoiler', 'match' => '/\|\|(.*?)\|\|/us',
+                    'replace' => '<span class="text-spoiler">$1</span>'];
+                break;
+
+            case 'lines':
+                $regex_data['greentext'] = ['match' => '/^(&gt;(?!&gt;\d+|&gt;&gt;\/[^\/]+\/).*)$/u',
+                    'replace' => '<span class="greentext">$1</span>'];
+                $regex_data['pinktext'] = ['match' => '/^(&lt;.*)$/u', 'replace' => '<span class="pinktext">$1</span>'];
+                $regex_data['orangetext'] = ['match' => '/^(\^.*)$/u',
+                    'replace' => '<span class="orangetext">$1</span>'];
+                break;
+
+            case 'callbacks':
+
+                break;
+        }
+
+        return $regex_data;
+    }
+
     public function parse(string $text): string
     {
-        $modified_text = $this->parseSimple($text);
-        $modified_text = $this->parseLines($modified_text);
-        $modified_text = $this->parseCallbacks($modified_text);
+        $modified_text = $this->parseSimple($text, $this->getRegexData('simple'));
+        $modified_text = $this->parseLines($modified_text, $this->getRegexData('lines'));
+        $modified_text = $this->parseCallbacks($modified_text, $this->getRegexData('callbacks'));
         return $modified_text;
     }
 
@@ -30,16 +57,18 @@ class Markup
         return $modified_text;
     }
 
-    public function parseSimple(string $text): string
+    public function parseSimple(string $text, array $regex_data): string
     {
-        $match = '/\|\|(.*?)\|\|/us';
-        $replace = '<span class="text-spoiler">$1</span>';
+        $modified_text = $text;
 
-        $modified_text = preg_replace($match, $replace, $text);
+        foreach ($regex_data as $data) {
+            $modified_text = preg_replace($data['match'], $data['replace'], $modified_text);
+        }
+
         return $modified_text;
     }
 
-    public function parseLines(string $text): string
+    public function parseLines(string $text, array $regex_data): string
     {
         $lines = explode("\n", $text);
 
@@ -48,21 +77,27 @@ class Markup
         }
 
         $modified_lines = array();
-        $match = '/^(>(?!>\d+|>>\/[^\/]+\/).*)$/u';
-        $replace = '<span class="quote">$1</span>';
 
         foreach ($lines as $line) {
-            // foreach pattern
-            $modified_lines[] = preg_replace($match, $replace, $line);
-            // end foreach pattern
+            foreach ($regex_data as $data) {
+                $line = preg_replace($data['match'], $data['replace'], $line);
+            }
+
+            $modified_lines[] = $line;
         }
 
         return implode("\n", $modified_lines);
     }
 
-    public function parseCallbacks(string $text): string
+    public function parseCallbacks(string $text, array $regex_data): string
     {
-        return $text;
+        $modified_text = $text;
+
+        foreach ($regex_data as $data) {
+            $modified_text = preg_replace_callback($data['match'], $data['replace'], $modified_text);
+        }
+
+        return $modified_text;
     }
 
     public function parseCites(string $text, Post $post, bool $dynamic_urls): string

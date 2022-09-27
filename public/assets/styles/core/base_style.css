@@ -200,6 +200,42 @@ td {
 	margin-bottom: 3px;
 }
 
+/* Markdown */
+.greentext {
+	background: var(--greentext-background);
+	color: var(--greentext-color);
+}
+
+.pinktext {
+	background: var(--pinktext-background);
+	color: var(--pinktext-color);
+}
+
+.orangetext {
+	background: var(--orangetext-background);
+	color: var(--orangetext-color);
+}
+
+.external-link {
+	text-decoration: var(--external-link);
+}
+
+.text-spoiler {
+	color: var(--spoiler-color, black);
+	background: var(--spoiler-color, black);
+	cursor: none;
+}
+
+.text-spoiler:hover {
+	color: var(--unspoiler-color, white);
+	cursor: auto;
+}
+
+.text-spoiler:not(:hover) * {
+	color: var(--spoiler-color, black);
+	background: var(--spoiler-color, black);
+}
+
 /* New post form */
 .new-post-form {
 	margin: auto;
@@ -398,11 +434,6 @@ td {
 	letter-spacing: 0.1em;
 	text-shadow: 1px 0px 1px #222222, 0px 1px 1px #222222, -1px 0px 1px #222222, 0px -1px 1px #222222;
 	border-radius: 3px;
-}
-
-.quote {
-	background: var(--quote-background);
-	color: var(--quote-color);
 }
 
 .post-number-link {
@@ -657,25 +688,6 @@ td {
 
 .text-button a {
 	text-decoration: none;
-}
-
-.external-link {
-	text-decoration: var(--external-link);
-}
-
-.text-spoiler {
-	color: var(--spoiler-color, black);
-	background: var(--spoiler-color, black);
-	cursor: none;
-}
-
-.text-spoiler:hover {
-	color: var(--unspoiler-color, white);
-}
-
-.text-spoiler:not(:hover) * {
-	color: var(--spoiler-color, black);
-	background: var(--spoiler-color, black);
 }
 
 .link-button {

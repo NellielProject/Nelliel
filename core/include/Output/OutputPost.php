@@ -409,8 +409,9 @@ class OutputPost extends Output
         }
 
         $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
-        $engine = new Markup();
-        $parsed_markdown = $engine->parsePostComments($comment, $post, $dynamic_urls);
+        $engine = new Markdown();
+        $escaped_comment = htmlspecialchars($comment, ENT_NOQUOTES, 'UTF-8');
+        $parsed_markdown = $engine->parsePostComments($escaped_comment, $post, $dynamic_urls);
         return $parsed_markdown;
     }
 }
