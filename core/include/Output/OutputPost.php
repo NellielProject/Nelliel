@@ -312,19 +312,19 @@ class OutputPost extends Output
         $comment = $post->data('comment');
 
         if (nel_true_empty($comment)) {
-            $comment_data['comment_markdown'] = $this->domain->setting('no_comment_text');
+            $comment_data['comment_markup'] = $this->domain->setting('no_comment_text');
             return $comment_data;
         }
 
         // TODO: Do cache check/fetch better
         if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data'])) {
-            $comment_markdown = $post->getCache()['comment_data'];
+            $comment_markup = $post->getCache()['comment_data'];
         } else {
-            $comment_markdown = $this->parseComment($comment, $post);
+            $comment_markup = $this->parseComment($comment, $post);
         }
 
         if ($gen_data['index_rendering']) {
-            $comment_lines = $this->output_filter->newlinesToArray($comment_markdown);
+            $comment_lines = $this->output_filter->newlinesToArray($comment_markup);
             $line_count = count($comment_lines);
 
             if ($line_count > $this->domain->setting('max_index_comment_lines')) {
@@ -339,11 +339,11 @@ class OutputPost extends Output
                     $reduced_lines[] = $comment_lines[$i];
                 }
 
-                $comment_markdown = implode("\n", $reduced_lines);
+                $comment_markup = implode("\n", $reduced_lines);
             }
         }
 
-        $comment_data['comment_markdown'] = $comment_markdown;
+        $comment_data['comment_markup'] = $comment_markup;
         return $comment_data;
     }
 
@@ -404,14 +404,14 @@ class OutputPost extends Output
             $comment = $this->output_filter->filterZalgo($comment);
         }
 
-        if ($post->getMoar()->get('no_markdown') === true) {
+        if ($post->getMoar()->get('no_markup') === true) {
             return htmlspecialchars($comment, ENT_QUOTES, 'UTF-8', false);
         }
 
         $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
-        $engine = new Markdown();
+        $engine = new Markup();
         $escaped_comment = htmlspecialchars($comment, ENT_NOQUOTES, 'UTF-8');
-        $parsed_markdown = $engine->parsePostComments($escaped_comment, $post, $dynamic_urls);
-        return $parsed_markdown;
+        $parsed_markup = $engine->parsePostComments($escaped_comment, $post, $dynamic_urls);
+        return $parsed_markup;
     }
 }

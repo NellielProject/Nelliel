@@ -408,7 +408,7 @@ class BetaMigrations
 
                 echo ' - ' . __('Updated log tables.') . '<br>';
 
-                $new_board_settings = ['allow_no_markdown'];
+                $new_board_settings = ['allow_no_markup'];
                 $this->newBoardSettings($new_board_settings);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';

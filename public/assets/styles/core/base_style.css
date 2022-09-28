@@ -200,18 +200,18 @@ td {
 	margin-bottom: 3px;
 }
 
-/* Markdown */
-.greentext {
+/* Markup */
+.markup-greentext {
 	background: var(--greentext-background);
 	color: var(--greentext-color);
 }
 
-.pinktext {
+.markup-pinktext {
 	background: var(--pinktext-background);
 	color: var(--pinktext-color);
 }
 
-.orangetext {
+.markup-orangetext {
 	background: var(--orangetext-background);
 	color: var(--orangetext-color);
 }
@@ -220,20 +220,55 @@ td {
 	text-decoration: var(--external-link);
 }
 
-.text-spoiler {
+.markup-spoiler {
 	color: var(--spoiler-color, black);
 	background: var(--spoiler-color, black);
 	cursor: none;
 }
 
-.text-spoiler:hover {
+.markup-spoiler:hover {
 	color: var(--unspoiler-color, white);
 	cursor: auto;
 }
 
-.text-spoiler:not(:hover) * {
+.markup-spoiler:not(:hover) * {
 	color: var(--spoiler-color, black);
 	background: var(--spoiler-color, black);
+}
+
+.markup-italic {
+	font-style: italic;
+}
+
+.markup-bold {
+	font-weight: bold;
+}
+
+.markup-underline {
+	text-decoration-line: underline;
+}
+
+.markup-strikethrough {
+	text-decoration-line: line-through;
+}
+
+.ascii-art {
+	font-size: 16px;
+	line-height: 18px;
+	font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", "MS PGothic AA", IPAMonaPGothic, "IPA モナー Pゴシック", submona, sans-serif;
+	display: inline-block;
+}
+
+.post-cite {
+	text-decoration-line: underline;
+}
+
+.board-cite {
+	text-decoration-line: underline;
+}
+
+.invalid-cite {
+	text-decoration-line: line-through;
 }
 
 /* New post form */

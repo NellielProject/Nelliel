@@ -111,10 +111,10 @@ class PostData
             $post->getMoar()->modify('raw_html', true);
         }
 
-        $disable_markdown = $this->checkEntry($_POST['no_markdown'] ?? false, 'boolean');
+        $disable_markup = $this->checkEntry($_POST['no_markup'] ?? false, 'boolean');
 
-        if ($disable_markdown) {
-            $post->getMoar()->modify('no_markdown', true);
+        if ($disable_markup) {
+            $post->getMoar()->modify('no_markup', true);
         }
 
         if ($staff_post) {

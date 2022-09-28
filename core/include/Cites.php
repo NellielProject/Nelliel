@@ -7,7 +7,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
-use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
@@ -163,7 +162,7 @@ class Cites
 
     public function isCite(string $text): bool
     {
-        return preg_match('/^>>([\d]+)|>>>\/(.+?)\/([\d]*)$/u', $text) === 1;
+        return preg_match('/^(>>|&gt;&gt;)([\d]+)|(>>>|&gt;&gt;&gt;)\/(.+?)\/([\d]*)$/u', $text) === 1;
     }
 
     public function citeType(string $text): array
@@ -172,12 +171,10 @@ class Cites
         $matches = array();
         $return['type'] = 'not-cite';
 
-        if (preg_match('/^>>([\d]+)/u', $text, $matches) === 1) {
+        if (preg_match('/^(?:>>|&gt;&gt;)([\d]+)/u', $text, $matches) === 1) {
             $return['matches'] = $matches;
             $return['type'] = 'post-cite';
-        }
-
-        if (preg_match('/^>>>\/(.+?)\/([\d]*)/u', $text, $matches) === 1) {
+        } else if (preg_match('/^(?:>>>|&gt;&gt;&gt;)\/(.+?)\/([\d]*)/u', $text, $matches) === 1) {
             $return['matches'] = $matches;
 
             if ($matches[2] !== '') {
@@ -221,9 +218,9 @@ class Cites
     public function getCitesFromText(string $text, bool $combine = true): array
     {
         $matches = array();
-        preg_match_all('/(>>[\d]+)/', $text, $matches, PREG_PATTERN_ORDER);
+        preg_match_all('/((>>|&gt;&gt;)[\d]+)/', $text, $matches, PREG_PATTERN_ORDER);
         $cites['board'] = $matches[1];
-        preg_match_all('/(>>>\/.+?\/[\d]+)/', $text, $matches, PREG_PATTERN_ORDER);
+        preg_match_all('/((>>>|&gt;&gt;&gt;)\/.+?\/[\d]+)/', $text, $matches, PREG_PATTERN_ORDER);
         $cites['crossboard'] = $matches[1];
 
         if ($combine) {
