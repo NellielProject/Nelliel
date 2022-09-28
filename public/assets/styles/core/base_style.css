@@ -253,6 +253,12 @@ td {
 }
 
 .ascii-art {
+	line-height: 1.0rem;
+	font-family: Menlo, Monaco, "Courier New", monospace;
+	display: inline-block;
+}
+
+.shift-jis-art {
 	font-size: 16px;
 	line-height: 18px;
 	font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", "MS PGothic AA", IPAMonaPGothic, "IPA モナー Pゴシック", submona, sans-serif;

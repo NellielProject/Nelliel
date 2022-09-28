@@ -21,17 +21,22 @@ class Markup
         $markup_data = array();
 
         // TODO: retrieve from settings
+        // Note: All markup regex should be designed to work with both escaped and unescaped HTML
         switch ($type) {
             case 'simple':
-                $markup_data[] = ['id' => 'ascii-art', 'match' => '/\[aa\](.*?)\[\/aa\]/us',
-                    'replace' => '<pre class="ascii-art">$1</pre>'];
                 $markup_data[] = ['id' => 'spoiler', 'match' => '/\|\|(.+?)\|\|/us',
                     'replace' => '<span class="markup-spoiler">$1</span>'];
                 $markup_data[] = ['id' => 'italic',
-                    'match' => "/(?:(?<!'|\*))(?:'|\*){2}(.+?)(?:(?<!'|\*))(?:'|\*){2}(?:(?!'|\*))/us",
+                    'match' => '/(?:(?<!\*))\*{2}(.+?)(?:(?<!\*))\*{2}(?:(?!\*))/us',
+                    'replace' => '<span class="markup-italic">$1</span>'];
+                $markup_data[] = ['id' => 'vichan-italic',
+                    'match' => "/(?:(?<!'|&#039;|&apos;))(?:'|&#039;|&apos;){2}(.+?)(?:(?<!'|&#039;|&apos;))(?:'|&#039;|&apos;){2}(?:(?!'|&#039;|&apos;))/us",
                     'replace' => '<span class="markup-italic">$1</span>'];
                 $markup_data[] = ['id' => 'bold',
-                    'match' => "/(?:(?<!'|\*))(?:'|\*){3}(.+?)(?:(?<!'|\*))(?:'|\*){3}(?:(?!'|\*))/us",
+                    'match' => '/(?:(?<!\*))\*{3}(.+?)(?:(?<!\*))\*{3}(?:(?!\*))/us',
+                    'replace' => '<span class="markup-bold">$1</span>'];
+                $markup_data[] = ['id' => 'vichan-bold',
+                    'match' => "/(?:(?<!'|&#039;|&apos;))(?:'|&#039;|&apos;){3}(.+?)(?:(?<!'|&#039;|&apos;))(?:'|&#039;|&apos;){3}(?:(?!'|&#039;|&apos;))/us",
                     'replace' => '<span class="markup-bold">$1</span>'];
                 $markup_data[] = ['id' => 'underline', 'match' => '/__(.+?)__/us',
                     'replace' => '<span class="markup-underline">$1</span>'];
@@ -60,6 +65,8 @@ class Markup
             case 'blocks':
                 $markup_data[] = ['id' => 'ascii-art', 'match' => '/\[aa\]|\[\/aa\]/',
                     'replace' => '<pre class="ascii-art">$1</pre>'];
+                $markup_data[] = ['id' => 'shift-jis-art', 'match' => '/\[sjis]|\[\/sjis\]/',
+                    'replace' => '<pre class="shift-jis-art">$1</pre>'];
                 break;
         }
 

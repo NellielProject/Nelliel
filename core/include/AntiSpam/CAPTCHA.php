@@ -97,7 +97,7 @@ class CAPTCHA
     public function render(string $captcha_text)
     {
         $character_count = utf8_strlen($captcha_text);
-        $font_file = NEL_FONTS_FILES_PATH . 'core/' . 'Halogen.ttf';
+        $font_file = NEL_INCLUDE_PATH . 'AntiSpam/Halogen.ttf';
         $image_width = $this->site_domain->setting('captcha_width');
         $image_height = $this->site_domain->setting('captcha_height');
         $font_size = $image_height * 0.5;
