@@ -66,10 +66,18 @@ class Markup
         return $markup_data;
     }
 
+    public function parsePostComments(string $text, Post $post, bool $dynamic_urls): string
+    {
+        $this->post = $post;
+        $this->dynamic_urls = $dynamic_urls;
+        $modified_text = $text;
+        $modified_text = $this->parseBlocks($modified_text);
+        return $modified_text;
+    }
+
     public function parseInline(string $text): string
     {
         $modified_text = $text;
-        $modified_text = $this->parseLines($modified_text);
         $modified_text = $this->parseSimple($modified_text);
         $modified_text = $this->parseLoops($modified_text);
         $modified_text = $this->parseCallbacks($modified_text);
@@ -78,13 +86,79 @@ class Markup
         return $modified_text;
     }
 
-    public function parsePostComments(string $text, Post $post, bool $dynamic_urls): string
+    public function parseBlocks(string $text, array $markup_data = null): string
     {
-        $this->post = $post;
-        $this->dynamic_urls = $dynamic_urls;
+        $top_loop = false; // Make sure we don't duplicate everything
+
+        if (is_null($markup_data)) {
+            $top_loop = true;
+            $markup_data = $this->getMarkupData('blocks');
+        }
+
         $modified_text = $text;
-        $modified_text = $this->parseBlocks($modified_text);
+        $modified_blocks = array();
+
+        foreach ($markup_data as $data) {
+            $blocks = preg_split($data['match'], $modified_text);
+
+            // If error or only one block, there's no block markup left to parse
+            if (!is_array($blocks) || count($blocks) === 1) {
+                continue;
+            }
+
+            $block_count = count($blocks);
+
+            for ($i = 1; $i <= $block_count; $i ++) {
+                $block = $blocks[$i - 1];
+
+                // Even numbered blocks will be regex matches
+                if ($i % 2 === 0) {
+                    $modified = preg_replace('/^(.*)$/us', $data['replace'], $block);
+                } else {
+                    $modified = $this->parseBlocks($block, $markup_data);
+                }
+
+                $modified_blocks[] = $modified;
+            }
+
+            if ($top_loop) {
+                break;
+            }
+        }
+
+        if (!empty($modified_blocks)) {
+            $modified_text = implode('', $modified_blocks);
+        } else {
+            $modified_text = $this->parseLines($modified_text);
+            $modified_text = $this->parseInline($modified_text);
+        }
+
         return $modified_text;
+    }
+
+    public function parseLines(string $text, array $markup_data = null): string
+    {
+        if (is_null($markup_data)) {
+            $markup_data = $this->getMarkupData('lines');
+        }
+
+        $lines = explode("\n", $text);
+
+        if (!is_array($lines)) {
+            return $text;
+        }
+
+        $modified_lines = array();
+
+        foreach ($lines as $line) {
+            foreach ($markup_data as $data) {
+                $line = preg_replace($data['match'], $data['replace'], $line);
+            }
+
+            $modified_lines[] = $line;
+        }
+
+        return implode("\n", $modified_lines);
     }
 
     public function parseSimple(string $text, array $markup_data = null): string
@@ -120,31 +194,6 @@ class Markup
         return $modified_text;
     }
 
-    public function parseLines(string $text, array $markup_data = null): string
-    {
-        if (is_null($markup_data)) {
-            $markup_data = $this->getMarkupData('lines');
-        }
-
-        $lines = explode("\n", $text);
-
-        if (!is_array($lines)) {
-            return $text;
-        }
-
-        $modified_lines = array();
-
-        foreach ($lines as $line) {
-            foreach ($markup_data as $data) {
-                $line = preg_replace($data['match'], $data['replace'], $line);
-            }
-
-            $modified_lines[] = $line;
-        }
-
-        return implode("\n", $modified_lines);
-    }
-
     public function parseCallbacks(string $text, array $markup_data = null): string
     {
         if (is_null($markup_data)) {
@@ -155,39 +204,6 @@ class Markup
 
         foreach ($markup_data as $data) {
             $modified_text = preg_replace_callback($data['match'], $data['replace'], $modified_text);
-        }
-
-        return $modified_text;
-    }
-
-    public function parseBlocks(string $text, array $markup_data = null): string
-    {
-        if (is_null($markup_data)) {
-            $markup_data = $this->getMarkupData('blocks');
-        }
-
-        $modified_text = $text;
-
-        foreach ($markup_data as $data) {
-            $blocks = preg_split($data['match'], $modified_text);
-            $modified_blocks = array();
-            $block_count = count($blocks);
-            $modified_block = '';
-
-            for ($i = 1; $i <= $block_count; $i ++) {
-                $block = $blocks[$i - 1];
-
-                if ($i % 2 === 0) {
-                    $modified_block = preg_replace('/^(.*)$/us', $data['replace'], $block);
-                } else {
-                    $modified_block = $this->parseLines($block);
-                    $modified_block = $this->parseInline($block);
-                }
-
-                $modified_blocks[] = $modified_block;
-            }
-
-            return implode('', $modified_blocks);
         }
 
         return $modified_text;
