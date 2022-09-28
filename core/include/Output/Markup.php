@@ -86,12 +86,9 @@ class Markup
         return $modified_text;
     }
 
-    public function parseBlocks(string $text, array $markup_data = null): string
+    public function parseBlocks(string $text, array $markup_data = null, $recursive_call = false): string
     {
-        $top_loop = false; // Make sure we don't duplicate everything
-
         if (is_null($markup_data)) {
-            $top_loop = true;
             $markup_data = $this->getMarkupData('blocks');
         }
 
@@ -115,13 +112,14 @@ class Markup
                 if ($i % 2 === 0) {
                     $modified = preg_replace('/^(.*)$/us', $data['replace'], $block);
                 } else {
-                    $modified = $this->parseBlocks($block, $markup_data);
+                    $modified = $this->parseBlocks($block, $markup_data, true);
                 }
 
                 $modified_blocks[] = $modified;
             }
 
-            if ($top_loop) {
+            // Make sure we don't duplicate everything if this is the top level loop
+            if (!$recursive_call) {
                 break;
             }
         }
