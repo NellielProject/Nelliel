@@ -3,10 +3,13 @@ declare(strict_types = 1);
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-function nel_special(): void
+function nel_special(string $wut_do = null)
 {
-    if (empty($_GET)) {
+    if (empty($_GET) && is_null($wut_do)) {
         return;
+    }
+
+    switch ($wut_do) {
     }
 
     if (isset($_GET['blank']) || isset($_GET['tpilb'])) {

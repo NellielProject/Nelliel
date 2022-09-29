@@ -63,7 +63,7 @@ class Markup
                 break;
 
             case 'blocks':
-                $markup_data[] = ['id' => 'ascii-art', 'match' => '/\[aa\]|\[\/aa\]/',
+                $markup_data[] = ['id' => 'ascii-art', 'match' => '/\[ascii\]|\[\/ascii\]/',
                     'replace' => '<pre class="ascii-art">$1</pre>'];
                 $markup_data[] = ['id' => 'shift-jis-art', 'match' => '/\[sjis]|\[\/sjis\]/',
                     'replace' => '<pre class="shift-jis-art">$1</pre>'];
