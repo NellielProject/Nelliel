@@ -41,6 +41,9 @@ class Post
         $this->main_table->tableName($domain->reference('posts_table'));
         $this->json = new PostJSON($this);
         $this->sql_helpers = nel_utilities()->sqlHelpers();
+        $content_id = new ContentID();
+        $content_id->changeThreadID($this->content_id->threadID());
+        $this->parent = new Thread($content_id, $this->domain);
 
         if ($load) {
             $this->loadFromDatabase(true);
@@ -223,12 +226,18 @@ class Post
 
         $update_sekrit = $_POST['update_sekrit'] ?? '';
 
-        if (!$flag) {
-            if (!isset($this->content_data['password']) ||
-                !hash_equals($this->content_data['password'], nel_post_password_hash($update_sekrit)) ||
-                !$this->domain->setting('user_delete_own')) {
-                nel_derp(60, _gettext('Password is wrong or you are not allowed to delete that.'));
+        if (!$flag && $this->domain->setting('user_delete_own')) {
+            if (!nel_true_empty($this->data('password'))) {
+                $flag = hash_equals($this->content_data['password'], nel_post_password_hash($update_sekrit));
             }
+
+            if (!$flag && $this->domain->setting('allow_op_thread_moderation')) {
+                $flag = hash_equals($this->parent->firstPost()->data('password'), nel_post_password_hash($update_sekrit));
+            }
+        }
+
+        if (!$flag) {
+            nel_derp(60, _gettext('Password is wrong or you are not allowed to delete that.'));
         }
 
         return true;
@@ -236,12 +245,6 @@ class Post
 
     public function getParent(): Thread
     {
-        if (is_null($this->parent)) {
-            $content_id = new ContentID();
-            $content_id->changeThreadID($this->content_id->threadID());
-            $this->parent = new Thread($content_id, $this->domain);
-        }
-
         return $this->parent;
     }
 
