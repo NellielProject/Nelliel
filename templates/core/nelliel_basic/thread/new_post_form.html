@@ -5,26 +5,26 @@
 			{{# display_name_field }}
 		<label class="new-post-form-row">
 			<span class="new-post-form-label" data-i18n="">Name</span>
-			<input type="text" class="new-post-form-input" name="new_post[post_info][not_anonymous]" size="30" minlength="{{ not_anonymous_minlength }}" maxlength="{{ not_anonymous_maxlength }}" placeholder="{{ name_field_placeholder }}" {{require_name }}>
+			<input type="text" class="new-post-form-input" name="new_post[post_info][not_anonymous]" size="30" minlength="{{ not_anonymous_minlength }}" maxlength="{{ not_anonymous_maxlength }}" placeholder="{{ name_field_placeholder }}" value="{{ not_anonymous }}" {{require_name }}>
 		</label>
 			{{/ display_name_field }}
 			{{# display_email_field }}
 		<label class="new-post-form-row">
 			<span class="new-post-form-label" data-i18n="">E-mail</span>
-			<input class="new-post-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength=" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}" placeholder="{{ email_field_placeholder }}" {{ require_email }}>
+			<input class="new-post-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength=" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}" placeholder="{{ email_field_placeholder }}" value="{{ spam_target }}" {{ require_email }}>
 		</label>
 			{{/ display_email_field }}
 		{{/ forced_anonymous }}
 		{{# display_subject_field }}
 		<label class="new-post-form-row">
 			<span class="new-post-form-label" data-i18n="">Subject</span>
-			<input class="new-post-form-input" type="text" name="new_post[post_info][verb]" size="30" minlength="{{ verb_minlength }}"  maxlength="{{ verb_maxlength }}" placeholder="{{ subject_field_placeholder }}" {{ require_subject }}>
+			<input class="new-post-form-input" type="text" name="new_post[post_info][verb]" size="30" minlength="{{ verb_minlength }}"  maxlength="{{ verb_maxlength }}" placeholder="{{ subject_field_placeholder }}" value="{{ verb }}" {{ require_subject }}>
 		</label>
 		{{/ display_subject_field }}
 		{{# display_comment_field }}
 		<label class="new-post-form-row">
 			<span class="new-post-form-label" data-i18n="">Comment</span>
-			<textarea id="wordswordswords" class="new-post-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6" placeholder="{{ comment_field_placeholder }}" {{ require_comment }}></textarea>
+			<textarea id="wordswordswords" class="new-post-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6" placeholder="{{ comment_field_placeholder }}" {{ require_comment }}>{{ wordswordswords }}</textarea>
 		</label>
 		{{/ display_comment_field }}
 		{{# allow_files }}
