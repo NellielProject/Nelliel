@@ -120,6 +120,7 @@ class Regen
 
     public function allSitePages(Domain $domain): void
     {
+        set_time_limit(nel_site_domain()->setting('max_page_regen_time'));
         $this->blotter($domain);
         $this->news($domain);
         $this->homePage($domain);
@@ -135,19 +136,11 @@ class Regen
 
     public function allBoardPages(Domain $domain): void
     {
+        set_time_limit(nel_site_domain()->setting('max_page_regen_time'));
         $result = $domain->database()->query(
             'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $domain->database()->query('UPDATE "' . $domain->reference('posts_table') . '" SET regen_cache = 1');
-        $this->threads($domain, true, $ids);
-        $this->index($domain);
-    }
-
-    public function postCache(Domain $domain): void
-    {
-        $result = $domain->database()->query(
-            'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
-        $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $this->threads($domain, true, $ids);
         $this->index($domain);
     }
