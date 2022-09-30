@@ -142,32 +142,32 @@ abstract class Output
         $this->render_data['mod_links_delete_by_ip'] = $this->getUISetting('mod_links_delete_by_ip');
         $this->render_data['mod_links_global_delete_by_ip'] = $this->getUISetting('mod_links_global_delete_by_ip');
         $this->render_data['mod_links_ban_and_delete'] = $this->getUISetting('mod_links_ban_and_delete');
-        $this->render_data['mod_links_edit_post'] = $this->getUISetting('mod_links_edit_post');
+        $this->render_data['mod_links_edit'] = $this->getUISetting('mod_links_edit');
         $this->render_data['mod_links_move'] = $this->getUISetting('mod_links_move');
 
         if ($this->session->inModmode($this->domain)) {
             $this->render_data['mod_can_lock'] = $this->session->user()->checkPermission($this->domain,
-                'perm_post_status');
+                'perm_modify_content_status');
             $this->render_data['mod_can_sticky'] = $this->session->user()->checkPermission($this->domain,
-                'perm_post_status');
+                'perm_modify_content_status');
             $this->render_data['mod_can_permasage'] = $this->session->user()->checkPermission($this->domain,
-                'perm_post_status');
+                'perm_modify_content_status');
             $this->render_data['mod_can_cyclic'] = $this->session->user()->checkPermission($this->domain,
-                'perm_post_type');
+                'perm_post_content_status');
             $this->render_data['mod_can_ban'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_bans');
             $this->render_data['mod_can_delete'] = $this->session->user()->checkPermission($this->domain,
-                'perm_delete_posts');
+                'perm_delete_content');
             $this->render_data['mod_can_by_ip'] = $this->session->user()->checkPermission($this->domain,
                 'perm_delete_by_ip');
             $this->render_data['mod_can_global_by_ip'] = $this->session->user()->checkPermission(nel_global_domain(),
                 'perm_delete_by_ip');
             $this->render_data['mod_can_ban_delete'] = $this->session->user()->checkPermission($this->domain,
-                'perm_manage_bans') && $this->session->user()->checkPermission($this->domain, 'perm_delete_posts');
+                'perm_manage_bans') && $this->session->user()->checkPermission($this->domain, 'perm_delete_content');
             $this->render_data['mod_can_edit'] = $this->session->user()->checkPermission($this->domain,
                 'perm_edit_posts');
             $this->render_data['mod_can_move'] = $this->session->user()->checkPermission($this->domain,
-                'perm_move_threads');
+                'perm_move_content');
         }
     }
 

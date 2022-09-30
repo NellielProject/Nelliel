@@ -5,12 +5,16 @@
 {{# headers }}
 	{{# in_modmode }}
 		<div class="modmode-header">
-			{{> thread/pieces/post_modmode }}
 		{{^ response }}
 			{{> thread/pieces/thread_modmode }}
 		{{/ response }}
 		</div>
 	{{/ in_modmode }}
+		<div class="modmode-header">
+	{{# in_modmode }}
+			{{> thread/pieces/post_modmode }}
+	{{/ in_modmode }}
+		</div>
 		<div class="{{ op_reply }} headers-container">
 			{{> thread/headers/post_info }}
 			{{> thread/headers/thread_info }}

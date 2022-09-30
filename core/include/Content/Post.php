@@ -209,7 +209,7 @@ class Post
 
         $flag = false;
 
-        if ($session->isActive() && $user->checkPermission($this->domain, 'perm_delete_posts')) {
+        if ($session->isActive() && $user->checkPermission($this->domain, 'perm_delete_content')) {
             if (!nel_true_empty($this->data('username'))) {
                 $mod_post_user = $this->authorization->getUser($this->data('username') ?? '');
 

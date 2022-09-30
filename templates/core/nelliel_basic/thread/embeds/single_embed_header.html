@@ -1,3 +1,8 @@
+<div class="modmode-header">
+{{# in_modmode }}
+	{{> thread/pieces/embed_modmode }}
+{{/ in_modmode }}
+</div>
 <div class="{{ op_reply }} single embed-header">
 	<span class="{{ op_reply }} single embed-info">
 {{^ hide_file_select }}
@@ -7,8 +12,5 @@
 	</span>
 	<span class="{{ op_reply }} single embed-options">
 		<span class="hide-embed hidden text-button" data-jsonly="">[<a class="toggle-embed" href="#" data-command="hide-embed" data-content-id="{{ embed_content_id }}" data-alt-visual="Show Embed" data-i18n-attributes="data-alt-visual" data-i18n="">Hide Embed</a>]</span>
-{{# in_modmode }}
-		| {{> thread/pieces/embed_modmode }}
-{{/ in_modmode }}
 	</span>
 </div>

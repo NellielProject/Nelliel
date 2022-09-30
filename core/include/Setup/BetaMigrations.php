@@ -133,7 +133,7 @@ class BetaMigrations
                 $mod_links_new_names = ['mod_links_ban', 'mod_links_delete', 'mod_links_delete_by_ip',
                     'mod_links_global_delete_by_ip', 'mod_links_ban_and_delete', 'mod_links_lock', 'mod_links_unlock',
                     'mod_links_sticky', 'mod_links_unsticky', 'mod_links_permasage', 'mod_links_unpermasage',
-                    'mod_links_cyclic', 'mod_links_non_cyclic', 'mod_links_edit_post'];
+                    'mod_links_cyclic', 'mod_links_non_cyclic', 'mod_links_edit'];
                 $this->renameBoardSettings($mod_links_old_names, $mod_links_new_names);
 
                 $new_board_settings = ['mod_links_delimiter_left', 'mod_links_delimiter_right', 'enable_index',
@@ -388,6 +388,30 @@ class BetaMigrations
                 $prepared = nel_database('core')->exec(
                     'UPDATE "' . NEL_ROLES_TABLE .
                     '" SET "permission" = \'perm_wordfilters_manage\' WHERE "permission" = \'perm_word_filters_manage\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
+                    '" SET "permission" = \'perm_move_content\' WHERE "permission" = \'perm_move_threads\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE .
+                    '" SET "permission" = \'perm_move_content\' WHERE "permission" = \'perm_move_threads\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
+                    '" SET "permission" = \'perm_modify_content_status\' WHERE "permission" = \'perm_post_status\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE .
+                    '" SET "permission" = \'perm_modify_content_status\' WHERE "permission" = \'perm_post_status\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
+                    '" SET "permission" = \'perm_edit_posts\' WHERE "permission" = \'perm_post_edit\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE .
+                    '" SET "permission" = \'perm_edit_posts\' WHERE "permission" = \'perm_post_edit\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
+                    '" SET "permission" = \'perm_delete_content\' WHERE "permission" = \'perm_delete_posts\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE .
+                    '" SET "permission" = \'perm_delete_content\' WHERE "permission" = \'perm_delete_posts\'');
 
                 echo ' - ' . __('Updated permissions and role permissions tables.') . '<br>';
 
@@ -408,8 +432,14 @@ class BetaMigrations
 
                 echo ' - ' . __('Updated log tables.') . '<br>';
 
-                $new_board_settings = ['allow_no_markup'];
+                // Update board settings
+                $new_board_settings = ['allow_no_markup', 'allow_op_thread_moderation', 'mod_links_move',
+                    'allow_moving_replies', 'allow_moving_uploads'];
                 $this->newBoardSettings($new_board_settings);
+
+                $old_board_setting_names = ['mod_links_edit_post'];
+                $new_board_setting_names = ['mod_links_edit'];
+                $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
 

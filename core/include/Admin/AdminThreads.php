@@ -10,15 +10,15 @@ use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
+use Nelliel\Content\Post;
+use Nelliel\Content\Thread;
+use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Output\OutputPanelBans;
 use Nelliel\Output\OutputPanelThreads;
 use PDO;
-use Nelliel\Content\Thread;
-use Nelliel\Content\Post;
-use Nelliel\Content\Upload;
 
 class AdminThreads extends Admin
 {
@@ -76,14 +76,14 @@ class AdminThreads extends Admin
 
     public function delete(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_delete_posts');
+        $this->verifyPermissions($this->domain, 'perm_delete_content');
         $content_id->getInstanceFromID($this->domain)->delete();
         $this->regenThread($this->domain, $content_id->threadID(), true);
     }
 
     public function sticky(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_post_type');
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
 
         if ($content_id->isPost()) {
             $thread = $content_id->getInstanceFromID($this->domain)->convertToThread();
@@ -99,7 +99,7 @@ class AdminThreads extends Admin
 
     public function lock(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_post_status');
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
 
         if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->toggleLock();
@@ -109,7 +109,7 @@ class AdminThreads extends Admin
 
     public function sage(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_post_status');
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
 
         if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->togglePermasage();
@@ -119,7 +119,7 @@ class AdminThreads extends Admin
 
     public function cyclic(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_post_type');
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
 
         if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->toggleCyclic();
@@ -143,7 +143,7 @@ class AdminThreads extends Admin
 
     public function banDelete(ContentID $content_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_delete_posts');
+        $this->verifyPermissions($this->domain, 'perm_delete_content');
         $content_id = new ContentID($_GET['content-id']);
         $content_instance = $content_id->getInstanceFromID($this->domain);
         $content_instance->delete();
@@ -206,6 +206,10 @@ class AdminThreads extends Admin
 
     public function move(ContentID $content_id): void
     {
+        $this->verifyPermissions($this->domain, 'perm_move_content');
+        $destination_domain = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
+        $this->verifyPermissions($destination_domain, 'perm_move_content');
+
         if ($content_id->isThread()) {
             $destination = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
             $thread = new Thread($content_id, $this->domain);
@@ -213,16 +217,19 @@ class AdminThreads extends Admin
         }
 
         if ($content_id->isPost()) {
+            if (!$this->domain->setting('allow_moving_replies')) {
+                nel_derp(262, _gettext('Individual replies cannot be moved on this board.'));
+            }
+
             $post = new Post($content_id, $this->domain);
-            $domain = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
             $destination_thread_id = (int) $_POST['destination_thread_id'] ?? 0;
 
             if ($destination_thread_id !== 0) {
                 $new_content_id = new ContentID(ContentID::createIDString($destination_thread_id, 0, 0));
-                $new_thread = new Thread($new_content_id, $domain);
+                $new_thread = new Thread($new_content_id, $destination_domain);
 
                 if (!$new_thread->exists()) {
-                    nel_derp(0, _gettext('Thread does not exist.'));
+                    nel_derp(260, _gettext('Thread does not exist.'));
                 }
 
                 $post->move($new_thread, false);
@@ -230,27 +237,26 @@ class AdminThreads extends Admin
                 $new_thread = $post->convertToThread();
             }
 
-            $new_thread->move($domain);
+            $new_thread->move($destination_domain);
         }
 
         if ($content_id->isContent()) {
-            $upload = new Upload($content_id, $this->domain);
-            $domain = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
-            $destination_post_id = (int) $_POST['destination_post_id'] ?? 0;
-
-            if ($destination_post_id === 0) {
-                nel_derp(0, __('Invalid post ID.'));
+            if (!$this->domain->setting('allow_moving_uploads')) {
+                nel_derp(263, _gettext('Uploads cannot be moved on this board.'));
             }
 
+            $upload = new Upload($content_id, $this->domain);
+            $destination_post_id = (int) $_POST['destination_post_id'] ?? 0;
             $prepared = $this->database->prepare(
-                'SELECT "parent_thread" FROM "' . $domain->reference('posts_table') . '" WHERE "post_number" = ?');
+                'SELECT "parent_thread" FROM "' . $destination_domain->reference('posts_table') .
+                '" WHERE "post_number" = ?');
             $prepared->bindValue(1, $destination_post_id, PDO::PARAM_INT);
             $thread_id = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
             $new_content_id = new ContentID(ContentID::createIDString($thread_id, $destination_post_id, 0));
-            $new_post = new Post($new_content_id, $domain);
+            $new_post = new Post($new_content_id, $destination_domain);
 
             if (!$new_post->exists()) {
-                nel_derp(0, _gettext('Post does not exist.'));
+                nel_derp(261, _gettext('Post does not exist.'));
             }
 
             $upload->move($new_post, false);
@@ -272,20 +278,24 @@ class AdminThreads extends Admin
                 nel_derp(410, _gettext('You cannot access the threads control panel.'));
                 break;
 
-            case 'perm_post_status':
+            case 'perm_modify_content_status':
                 nel_derp(411, _gettext('You are not allowed to change the status of threads or posts.'));
                 break;
 
-            case 'perm_post_type':
-                nel_derp(412, _gettext('You are not allowed to change the type of threads or posts.'));
-                break;
-
             case 'perm_edit_posts':
-                nel_derp(413, _gettext('You are not allowed to edit posts.'));
+                nel_derp(412, _gettext('You are not allowed to edit posts.'));
                 break;
 
             case 'perm_delete_by_ip':
-                nel_derp(414, _gettext('You are not allowed to delete content by IP.'));
+                nel_derp(413, _gettext('You are not allowed to delete content by IP.'));
+                break;
+
+            case 'perm_move_content':
+                nel_derp(414, _gettext('You are not allowed to move content on one or both of the selected boards.'));
+                break;
+
+            case 'perm_delete_content':
+                nel_derp(415, _gettext('You are not allowed to delete content.'));
                 break;
 
             default:

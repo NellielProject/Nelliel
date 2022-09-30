@@ -89,6 +89,6 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'mod_links_unpermasage', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_cyclic', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_non_cyclic', '', 1]);
-        $this->insertDefaultRow(['board', 'mod_links_edit_post', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_edit', '', 1]);
     }
 }

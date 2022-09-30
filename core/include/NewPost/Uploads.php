@@ -596,7 +596,7 @@ class Uploads
 
         if ($display_width > $this->domain->setting('max_image_width') ||
             $display_height > $this->domain->setting('max_image_height')) {
-            nel_derp(0,
+            nel_derp(38,
                 sprintf(_gettext('Image dimensions are too large. Maximum is %d x %d pixels.'),
                     $this->domain->setting('max_image_width'), $this->domain->setting('max_image_height')));
         }

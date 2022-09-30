@@ -36,7 +36,7 @@ Error 34: Max uploads for thread. (NewPost/Uploads.php)
 Error 35: Duplicate embed. (NewPost/Uploads.php)  
 Error 36: Max total filesize. (NewPost/Uploads.php)  
 Error 37: Threads per hour limit. (NewPost/NewPost.php)  
-
+Error 38: Dimensions are too large. (NewPost/Uploads.php)  
 Error 39: Tripcode required. (NewPost/PostData.php)  
 Error 40: No POST data. (NewPost/PostData.php)  
 Error 41: Name required. (NewPost/PostData.php)  
@@ -132,6 +132,11 @@ Error 248: Invalid directory characters. (Admin/AdminBoards.php)
 
 Error 250: Maximum static pages. (Admin/AdminPages.php)  
 
+Error 260: Thread not exist. (Admin/AdminThreads.php)  
+Error 261: Post not exist. (Admin/AdminThreads.php)  
+Error 262: Can't move replies. (Admin/AdminThreads.php)  
+Error 263: Can't move uploads. (Admin/AdminThreads.php)  
+
 Error 300: Default permission error. (Admin/Admin.php)  
 
 Error 310: perm_bans_view (Admin/AdminBans.php)  
@@ -183,10 +188,11 @@ Error 400: perm_wordfilters_manage (Admin/AdminWordfilters.php)
 Error 405: perm_embeds_manage (Admin/AdminEmbeds.php)  
 
 Error 410: perm_threads_access (Admin/AdminThreads.php)  
-Error 411: perm_post_status (Admin/AdminThreads.php)  
-Error 412: perm_post_type (Admin/AdminThreads.php)  
-Error 413: perm_edit_posts (Admin/AdminThreads.php)  
-Error 414: perm_delete_by_ip (Admin/AdminThreads.php)  
+Error 411: perm_modify_content_status (Admin/AdminThreads.php)  
+Error 412: perm_edit_posts (Admin/AdminThreads.php)  
+Error 413: perm_delete_by_ip (Admin/AdminThreads.php)  
+Error 414: perm_move_content (Admin/AdminThreads.php)  
+Error 415: perm_delete_content (Admin/AdminThreads.php)  
 
 Error 420: perm_content_ops_manage (Admin/AdminContentOps.php)  
 

@@ -1,3 +1,8 @@
+<div class="modmode-header">
+{{# in_modmode }}
+	{{> thread/pieces/file_modmode }}
+{{/ in_modmode }}
+</div>
 <div>
 	<span class="{{ op_reply }} single file-info">
 {{^ hide_file_select }}
@@ -17,9 +22,6 @@
 			<span class="file-hash">{{ metadata }}</span>
 {{/ file_metadata }}
 		</span>
-{{# in_modmode }}
-		| {{> thread/pieces/file_modmode }}
-{{/ in_modmode }}
 	</span><br>
 	<span class="single content-ops">
 		{{> thread/pieces/content_ops }}
