@@ -446,5 +446,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_cyclic', 'Cyclic', 'Cyclic', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_non_cyclic', 'Non-cyclic', 'Non-cyclic', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_edit_post', 'Edit', 'Edit', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_move', 'Move', 'Move', '{"type":"text"}']);
     }
 }

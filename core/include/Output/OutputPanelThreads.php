@@ -48,10 +48,12 @@ class OutputPanelThreads extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        /*$thread_data = $this->database->executeFetchAll(
-         'SELECT * FROM "' . $this->domain->reference('threads_table') .
-         '" WHERE "old" = 0 ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC',
-         PDO::FETCH_ASSOC);*/
+        /*
+         * $thread_data = $this->database->executeFetchAll(
+         * 'SELECT * FROM "' . $this->domain->reference('threads_table') .
+         * '" WHERE "old" = 0 ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC',
+         * PDO::FETCH_ASSOC);
+         */
         $bgclass = 'row1';
         $threads = $this->domain->activeThreads(true);
 
@@ -176,9 +178,35 @@ class OutputPanelThreads extends Output
         $this->render_data['spam_target_value'] = $post->data('email');
         $this->render_data['verb_value'] = $post->data('subject');
         $this->render_data['wordswordswords_value'] = $post->data('comment');
-        $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'];
+        $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
         $this->render_data['form_action'] = nel_build_router_url(
             [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
+        $this->render_data['footer'] = $output_footer->render([], true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
+        echo $output;
+        return $output;
+    }
+
+    public function move(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $this->setBodyTemplate('panels/threads_move');
+        $parameters['is_panel'] = true;
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Move');
+        $content_id = $parameters['content_id'] ?? new ContentID();
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['current_board'] = $this->domain->id();
+        $this->render_data['boards_select'] = $output_menu->boards('destination_board', $this->domain->id(), true);
+        $this->render_data['move_thread'] = $content_id->isThread();
+        $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
+        $this->render_data['form_action'] = nel_build_router_url(
+            [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'move']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

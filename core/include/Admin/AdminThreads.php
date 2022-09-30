@@ -16,6 +16,7 @@ use Nelliel\Domains\DomainSite;
 use Nelliel\Output\OutputPanelBans;
 use Nelliel\Output\OutputPanelThreads;
 use PDO;
+use Nelliel\Content\Thread;
 
 class AdminThreads extends Admin
 {
@@ -199,6 +200,19 @@ class AdminThreads extends Admin
                 $this->regenThread($board_domain, $thread_id, $value);
             }
         }
+    }
+
+    public function move(ContentID $content_id): void
+    {
+        if ($content_id->isThread()) {
+            $destination = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
+            $thread = new Thread($content_id, $this->domain);
+            $thread->move($destination);
+        }
+
+        $redirect = new Redirect();
+        $redirect->doRedirect(true);
+        $redirect->URL($_POST['return_url']);
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

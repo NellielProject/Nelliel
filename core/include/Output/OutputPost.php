@@ -163,6 +163,12 @@ class OutputPost extends Output
                 $this->render_data['mod_cyclic_option'] = $this->render_data[$cyclic_button];
                 $this->render_data['mod_cyclic_url'] = nel_build_router_url(
                     [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $cyclic_action]);
+
+                $this->render_data['mod_move_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
+            } else {
+                $this->render_data['mod_move_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'move']);
             }
 
             $this->render_data['mod_ban_url'] = nel_build_router_url(

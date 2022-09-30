@@ -13,6 +13,8 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
+use Nelliel\Content\Thread;
+use Nelliel\Output\OutputPanelThreads;
 
 class DispatchModeration extends Dispatch
 {
@@ -100,6 +102,21 @@ class DispatchModeration extends Dispatch
                             $admin_threads->update($content_id);
                             $redirect->doRedirect(true);
                         }
+
+                        break;
+
+                    case 'move':
+                        if ($inputs['method'] === 'GET') {
+                            $output_panel_threads = new OutputPanelThreads($this->domain, false);
+                            $output_panel_threads->move(['content_id' => $content_id], false);
+                        }
+
+                        if ($inputs['method'] === 'POST') {
+                            $admin_threads->move($content_id);
+                            $redirect->doRedirect(true);
+                        }
+                        // TODO: Make sure redirect works
+                        // Also check/update permissions if needed
 
                         break;
                 }

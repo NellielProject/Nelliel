@@ -15,6 +15,7 @@ use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPost;
 use Nelliel\Tables\TablePosts;
 use PDO;
+use Nelliel\Domains\DomainBoard;
 
 class Post
 {
@@ -41,9 +42,6 @@ class Post
         $this->main_table->tableName($domain->reference('posts_table'));
         $this->json = new PostJSON($this);
         $this->sql_helpers = nel_utilities()->sqlHelpers();
-        $content_id = new ContentID();
-        $content_id->changeThreadID($this->content_id->threadID());
-        $this->parent = new Thread($content_id, $this->domain);
 
         if ($load) {
             $this->loadFromDatabase(true);
@@ -89,6 +87,7 @@ class Post
             return false;
         }
 
+        $database = is_null($temp_database) ? $this->database : $temp_database;
         $filtered_data = $this->main_table->filterColumns($this->content_data);
         $filtered_data['ip_address'] = nel_prepare_ip_for_storage($this->data('ip_address'));
         $filtered_data['moar'] = $this->getMoar()->getJSON();
@@ -105,11 +104,11 @@ class Post
                 $where_columns, $where_keys);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
-            $this->database->executePrepared($prepared);
+            $database->executePrepared($prepared);
         } else {
             $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
-            $this->database->executePrepared($prepared);
+            $database->executePrepared($prepared);
         }
 
         return true;
@@ -211,17 +210,11 @@ class Post
 
         $flag = false;
 
-        if ($session->isActive()) {
-            if ($user->checkPermission($this->domain, 'perm_delete_posts')) {
-                if (!$user->isSiteOwner() && !empty($this->content_data['username']) &&
-                    $this->authorization->userExists($this->content_data['username'])) {
-                    $mod_post_user = $this->authorization->getUser($this->content_data['username']);
-                    $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
-                        $mod_post_user->getDomainRole($this->domain)->id());
-                } else {
-                    $flag = true;
-                }
-            }
+        if ($session->isActive() && $user->checkPermission($this->domain, 'perm_delete_posts')) {
+            $mod_post_user = $this->authorization->getUser($this->data('username'));
+
+            $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
+                $mod_post_user->getDomainRole($this->domain)->id());
         }
 
         $update_sekrit = $_POST['update_sekrit'] ?? '';
@@ -232,7 +225,8 @@ class Post
             }
 
             if (!$flag && $this->domain->setting('allow_op_thread_moderation')) {
-                $flag = hash_equals($this->parent->firstPost()->data('password'), nel_post_password_hash($update_sekrit));
+                $flag = hash_equals($this->getParent()->firstPost()->data('password'),
+                    nel_post_password_hash($update_sekrit));
             }
         }
 
@@ -245,28 +239,41 @@ class Post
 
     public function getParent(): Thread
     {
+        if (is_null($this->parent)) {
+            $content_id = new ContentID();
+            $content_id->changeThreadID($this->content_id->threadID());
+            $this->parent = new Thread($content_id, $this->domain);
+        }
+
         return $this->parent;
     }
 
-    public function reserveDatabaseRow($temp_database = null)
+    // TODO: See if we can move this step to Thread or eliminate it entirely
+    public function reserveDatabaseRow(): bool
     {
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare(
+        $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->domain->reference('posts_table') .
             '" ("post_time", "post_time_milli", "hashed_ip_address", "visitor_id") VALUES (?, ?, ?, ?)');
-        $database->executePrepared($prepared,
+        $success = $this->database->executePrepared($prepared,
             [$this->data('post_time'), $this->data('post_time_milli'), $this->data('hashed_ip_address'),
                 $this->data('visitor_id')]);
-        $prepared = $database->prepare(
+
+        if (!$success) {
+            return false;
+        }
+
+        $prepared = $this->database->prepare(
             'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
             '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ? AND "visitor_id" = ?');
-        $result = $database->executePreparedFetch($prepared,
+        $result = $this->database->executePreparedFetch($prepared,
             [$this->data('post_time'), $this->data('post_time_milli'), $this->data('hashed_ip_address'),
                 $this->data('visitor_id')], PDO::FETCH_COLUMN, true);
         $this->content_id->changeThreadID(
             ($this->content_id->threadID() === 0) ? $result : $this->content_id->threadID());
+        $this->changeData('post_number', $result);
         $this->changeData('parent_thread', $this->content_id->threadID());
         $this->content_id->changePostID($result);
+        return true;
     }
 
     public function updateCounts()
@@ -413,6 +420,15 @@ class Post
         return $this->content_data[$key] ?? null;
     }
 
+    public function transferData(array $new_data = null): array
+    {
+        if (!is_null($new_data)) {
+            $this->content_data = $new_data;
+        }
+
+        return $this->content_data;
+    }
+
     public function changeData(string $key, $new_data, bool $cast_null = true)
     {
         $column_types = $this->main_table->columnTypes();
@@ -466,5 +482,30 @@ class Post
     public function getJSON(): PostJSON
     {
         return $this->json;
+    }
+
+    public function move(Thread $new_thread, bool $parent_move): Post
+    {
+        $new_post = new Post(new ContentID(), $new_thread->domain());
+        $new_post->transferData($this->transferData());
+        $new_post->storeMoar($this->content_moar);
+        $new_post->reserveDatabaseRow();
+
+        // If this is OP and we're moving the whole thread, finish preparation before continuing
+        if($parent_move && $this->data('op')) {
+            $new_thread->contentID()->changeThreadID($new_post->contentID()->postID());
+            $new_thread->changedata('thread_id', $new_thread->contentID()->threadID());
+            $new_thread->writeToDatabase();
+            $new_thread->createDirectories();
+        }
+
+        $new_post->writeToDatabase();
+
+        foreach ($this->getUploads() as $upload) {
+            $upload->move($new_post, true);
+        }
+
+        $this->delete(true, $parent_move);
+        return $new_post;
     }
 }

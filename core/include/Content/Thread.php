@@ -12,8 +12,10 @@ use Nelliel\Overboard;
 use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
 use Nelliel\Tables\TableThreads;
 use PDO;
+use Nelliel\Regen;
 
 class Thread
 {
@@ -80,12 +82,13 @@ class Thread
         return true;
     }
 
-    public function writeToDatabase(): bool
+    public function writeToDatabase($temp_database = null): bool
     {
         if (!$this->isLoaded() || empty($this->content_id->threadID())) {
             return false;
         }
 
+        $database = is_null($temp_database) ? $this->database : $temp_database;
         $filtered_data = $this->main_table->filterColumns($this->content_data);
         $filtered_data['moar'] = $this->getMoar()->getJSON();
         $pdo_types = $this->main_table->getPDOTypes($filtered_data);
@@ -100,11 +103,11 @@ class Thread
                 $where_columns, $where_keys);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
-            $this->database->executePrepared($prepared);
+            $database->executePrepared($prepared);
         } else {
             $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
-            $this->database->executePrepared($prepared);
+            $database->executePrepared($prepared);
         }
 
         return true;
@@ -218,8 +221,8 @@ class Thread
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') &&
-            $this->data('post_count') > $this->domain->setting('max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
+            'max_bumps')) {
             return;
         }
 
@@ -521,6 +524,15 @@ class Thread
         return $this->content_data[$key] ?? null;
     }
 
+    public function transferData(array $new_data = null): array
+    {
+        if (!is_null($new_data)) {
+            $this->content_data = $new_data;
+        }
+
+        return $this->content_data;
+    }
+
     public function changeData(string $key, $new_data, bool $cast_null = true)
     {
         $column_types = $this->main_table->columnTypes();
@@ -601,5 +613,31 @@ class Thread
         }
 
         return $this->writeToDatabase();
+    }
+
+    public function move(DomainBoard $domain): Thread
+    {
+        $original_posts = $this->getPosts();
+        $first_post = true;
+        $new_thread = null;
+
+        foreach ($original_posts as $post) {
+            if ($first_post) {
+                $new_thread = new Thread(new ContentID(), $domain);
+                $new_thread->transferData($this->transferData());
+                $first_post = false;
+            }
+
+            // If this is OP, will also finish thread setup
+            $post->move($new_thread, true);
+        }
+
+        // TODO: Optionally make this a shadow post instead
+        $this->delete(true, true);
+        $regen = new Regen();
+        $regen->threads($domain, true, [$new_thread->contentID()->threadID()]);
+        $regen->index($domain);
+        $regen->index($this->domain);
+        return $new_thread;
     }
 }

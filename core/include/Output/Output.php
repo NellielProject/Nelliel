@@ -143,6 +143,7 @@ abstract class Output
         $this->render_data['mod_links_global_delete_by_ip'] = $this->getUISetting('mod_links_global_delete_by_ip');
         $this->render_data['mod_links_ban_and_delete'] = $this->getUISetting('mod_links_ban_and_delete');
         $this->render_data['mod_links_edit_post'] = $this->getUISetting('mod_links_edit_post');
+        $this->render_data['mod_links_move'] = $this->getUISetting('mod_links_move');
 
         if ($this->session->inModmode($this->domain)) {
             $this->render_data['mod_can_lock'] = $this->session->user()->checkPermission($this->domain,
@@ -165,6 +166,8 @@ abstract class Output
                 'perm_manage_bans') && $this->session->user()->checkPermission($this->domain, 'perm_delete_posts');
             $this->render_data['mod_can_edit'] = $this->session->user()->checkPermission($this->domain,
                 'perm_edit_posts');
+            $this->render_data['mod_can_move'] = $this->session->user()->checkPermission($this->domain,
+                'perm_move_threads');
         }
     }
 
