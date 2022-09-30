@@ -15,7 +15,6 @@ use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPost;
 use Nelliel\Tables\TablePosts;
 use PDO;
-use Nelliel\Domains\DomainBoard;
 
 class Post
 {
@@ -211,10 +210,14 @@ class Post
         $flag = false;
 
         if ($session->isActive() && $user->checkPermission($this->domain, 'perm_delete_posts')) {
-            $mod_post_user = $this->authorization->getUser($this->data('username'));
+            if (!nel_true_empty($this->data('username'))) {
+                $mod_post_user = $this->authorization->getUser($this->data('username') ?? '');
 
-            $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
-                $mod_post_user->getDomainRole($this->domain)->id());
+                $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
+                    $mod_post_user->getDomainRole($this->domain)->id());
+            } else {
+                $flag = true;
+            }
         }
 
         $update_sekrit = $_POST['update_sekrit'] ?? '';
@@ -302,20 +305,29 @@ class Post
             [$total_uploads, $file_count, $embed_count, $this->content_id->postID()]);
     }
 
-    public function convertToThread(): Thread
+    public function convertToThread(bool $preserve_time = false): Thread
     {
         $original_src_path = $this->srcFilePath();
         $original_preview_path = $this->previewFilePath();
-        $time = nel_get_microtime();
         $new_content_id = new ContentID();
         $new_content_id->changeThreadID($this->content_id->postID());
         $new_content_id->changePostID($this->content_id->postID());
         $new_thread = new Thread($new_content_id, $this->domain);
         $new_thread->changeData('thread_id', $this->content_id->postID());
-        $new_thread->changeData('bump_time', $time['time']);
-        $new_thread->changeData('bump_time_milli', $time['milli']);
-        $new_thread->changeData('last_update', $time['time']);
-        $new_thread->changeData('last_update_milli', $time['milli']);
+
+        if ($preserve_time) {
+            $new_thread->changeData('bump_time', $this->data('post_time'));
+            $new_thread->changeData('bump_time_milli', $this->data('post_time_milli'));
+            $new_thread->changeData('last_update', $this->data('post_time'));
+            $new_thread->changeData('last_update_milli', $this->data('post_time_milli'));
+        } else {
+            $time = nel_get_microtime();
+            $new_thread->changeData('bump_time', $time['time']);
+            $new_thread->changeData('bump_time_milli', $time['milli']);
+            $new_thread->changeData('last_update', $time['time']);
+            $new_thread->changeData('last_update_milli', $time['milli']);
+        }
+
         $new_thread->writeToDatabase();
         $new_thread->loadFromDatabase();
         $new_thread->createDirectories();
@@ -327,14 +339,13 @@ class Post
         }
 
         $this->loadFromDatabase();
-        $this->content_id->changeThreadID($new_thread->contentID()->threadID());
-        $this->changeData('parent_thread', $this->content_id->threadID());
-        $this->changeData('op', 1);
+        $new_thread->addPost($this);
+        $this->parent = $new_thread;
+        $this->writeToDatabase();
         $this->createDirectories();
         $file_handler = nel_utilities()->fileHandler();
         $file_handler->moveDirectory($original_src_path, $this->srcFilePath());
         $file_handler->moveDirectory($original_preview_path, $this->previewFilePath());
-        $this->writeToDatabase();
         $new_thread->updateCounts();
         $this->getParent()->updateBumpTime();
         $this->getParent()->updateCounts();
@@ -461,6 +472,24 @@ class Post
         return !empty($this->content_data);
     }
 
+    public function getLastUploadOrder(): int
+    {
+        $last_order = 0;
+        $prepared = $this->database->prepare(
+            'SELECT "upload_order" FROM "' . $this->domain->reference('uploads_table') .
+            '" WHERE "post_ref" = ? ORDER BY "upload_order" ASC');
+        $upload_orders = $this->database->executePreparedFetchAll($prepared, [$this->contentID()->postID()],
+            PDO::FETCH_COLUMN);
+
+        foreach ($upload_orders as $upload_order) {
+            if ($upload_order > $last_order) {
+                $last_order = (int) $upload_order;
+            }
+        }
+
+        return $last_order;
+    }
+
     public function getUploads(): array
     {
         $uploads = array();
@@ -486,26 +515,36 @@ class Post
 
     public function move(Thread $new_thread, bool $parent_move): Post
     {
-        $new_post = new Post(new ContentID(), $new_thread->domain());
-        $new_post->transferData($this->transferData());
-        $new_post->storeMoar($this->content_moar);
-        $new_post->reserveDatabaseRow();
+        $new_board = $new_thread->domain()->id() !== $this->domain()->id();
+
+        if ($new_board) {
+            $new_post = new Post(new ContentID(), $new_thread->domain());
+            $new_post->transferData($this->transferData());
+            $new_post->storeMoar($this->content_moar);
+            $new_post->reserveDatabaseRow();
+        } else {
+            $new_post = $this;
+        }
 
         // If this is OP and we're moving the whole thread, finish preparation before continuing
-        if($parent_move && $this->data('op')) {
+        if ($parent_move && $this->data('op')) {
             $new_thread->contentID()->changeThreadID($new_post->contentID()->postID());
             $new_thread->changedata('thread_id', $new_thread->contentID()->threadID());
             $new_thread->writeToDatabase();
             $new_thread->createDirectories();
         }
 
+        $new_thread->addPost($new_post);
         $new_post->writeToDatabase();
 
         foreach ($this->getUploads() as $upload) {
             $upload->move($new_post, true);
         }
 
-        $this->delete(true, $parent_move);
+        if ($new_board) {
+            $this->delete(true, $parent_move);
+        }
+
         return $new_post;
     }
 }

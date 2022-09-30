@@ -164,11 +164,8 @@ class OutputPost extends Output
                 $this->render_data['mod_cyclic_url'] = nel_build_router_url(
                     [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $cyclic_action]);
 
-                $this->render_data['mod_move_url'] = nel_build_router_url(
+                $this->render_data['mod_move_thread_url'] = nel_build_router_url(
                     [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
-            } else {
-                $this->render_data['mod_move_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'move']);
             }
 
             $this->render_data['mod_ban_url'] = nel_build_router_url(
@@ -183,6 +180,8 @@ class OutputPost extends Output
                 [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'ban-delete']);
             $this->render_data['mod_edit_url'] = nel_build_router_url(
                 [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'edit']);
+            $this->render_data['mod_move_post_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'move']);
         }
 
         $this->render_data['headers']['thread_url'] = $thread->getURL(!$this->write_mode);

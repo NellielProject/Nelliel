@@ -28,6 +28,7 @@ class OutputEmbed extends Output
         $this->render_data['original_url'] = $embed->data('embed_url');
         $this->render_data['display_url'] = $embed->data('embed_url');
         $this->render_data['embed_url'] = $embed->parseEmbedURL($embed->data('embed_url'), false);
+        $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if (utf8_strlen($this->render_data['display_url']) > $this->domain->setting('embed_url_display_length')) {
             $this->render_data['display_url'] = utf8_substr($this->render_data['display_url'], 0,
@@ -35,9 +36,10 @@ class OutputEmbed extends Output
         }
 
         if ($this->session->inModmode($this->domain)) {
-            $this->render_data['in_modmode'] = true;
-            $this->render_data['delete_url'] = nel_build_router_url(
+            $this->render_data['mod_delete_upload_url'] = nel_build_router_url(
                 [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'delete']);
+            $this->render_data['mod_move_upload_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'move']);
         }
 
         if ($catalog) {

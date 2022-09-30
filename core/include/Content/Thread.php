@@ -599,6 +599,8 @@ class Thread
             $this->changeData('last_update_milli', $post->data('post_time_milli'));
             $this->changeData('post_count', 1);
             $this->changeData('slug', $this->generateSlug($post));
+            $post->changeData('reply_to', 0);
+            $post->changeData('op', true);
         } else {
             $this->changeData('last_update', $post->data('post_time'));
             $this->changeData('last_update_milli', $post->data('post_time_milli'));
@@ -610,13 +612,23 @@ class Thread
                 $this->changeData('bump_time', $post->data('post_time'));
                 $this->changeData('bump_time_milli', $post->data('post_time_milli'));
             }
+
+            $post->changeData('reply_to', $this->content_id->threadID());
+            $post->changeData('op', false);
         }
 
+        $post->contentID()->changeThreadID($this->content_id->threadID());
+        $post->changeData('parent_thread', $this->content_id->threadID());
+        $post->writeToDatabase();
         return $this->writeToDatabase();
     }
 
     public function move(DomainBoard $domain): Thread
     {
+        if ($domain->id() === $this->domain->id()) {
+            return $this;
+        }
+
         $original_posts = $this->getPosts();
         $first_post = true;
         $new_thread = null;

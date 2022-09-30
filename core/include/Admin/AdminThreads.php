@@ -17,6 +17,8 @@ use Nelliel\Output\OutputPanelBans;
 use Nelliel\Output\OutputPanelThreads;
 use PDO;
 use Nelliel\Content\Thread;
+use Nelliel\Content\Post;
+use Nelliel\Content\Upload;
 
 class AdminThreads extends Admin
 {
@@ -208,6 +210,50 @@ class AdminThreads extends Admin
             $destination = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
             $thread = new Thread($content_id, $this->domain);
             $thread->move($destination);
+        }
+
+        if ($content_id->isPost()) {
+            $post = new Post($content_id, $this->domain);
+            $domain = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
+            $destination_thread_id = (int) $_POST['destination_thread_id'] ?? 0;
+
+            if ($destination_thread_id !== 0) {
+                $new_content_id = new ContentID(ContentID::createIDString($destination_thread_id, 0, 0));
+                $new_thread = new Thread($new_content_id, $domain);
+
+                if (!$new_thread->exists()) {
+                    nel_derp(0, _gettext('Thread does not exist.'));
+                }
+
+                $post->move($new_thread, false);
+            } else {
+                $new_thread = $post->convertToThread();
+            }
+
+            $new_thread->move($domain);
+        }
+
+        if ($content_id->isContent()) {
+            $upload = new Upload($content_id, $this->domain);
+            $domain = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
+            $destination_post_id = (int) $_POST['destination_post_id'] ?? 0;
+
+            if ($destination_post_id === 0) {
+                nel_derp(0, __('Invalid post ID.'));
+            }
+
+            $prepared = $this->database->prepare(
+                'SELECT "parent_thread" FROM "' . $domain->reference('posts_table') . '" WHERE "post_number" = ?');
+            $prepared->bindValue(1, $destination_post_id, PDO::PARAM_INT);
+            $thread_id = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+            $new_content_id = new ContentID(ContentID::createIDString($thread_id, $destination_post_id, 0));
+            $new_post = new Post($new_content_id, $domain);
+
+            if (!$new_post->exists()) {
+                nel_derp(0, _gettext('Post does not exist.'));
+            }
+
+            $upload->move($new_post, false);
         }
 
         $redirect = new Redirect();

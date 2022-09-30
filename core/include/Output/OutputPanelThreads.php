@@ -204,6 +204,8 @@ class OutputPanelThreads extends Output
         $this->render_data['current_board'] = $this->domain->id();
         $this->render_data['boards_select'] = $output_menu->boards('destination_board', $this->domain->id(), true);
         $this->render_data['move_thread'] = $content_id->isThread();
+        $this->render_data['move_post'] = $content_id->isPost();
+        $this->render_data['move_upload'] = $content_id->isContent();
         $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
         $this->render_data['form_action'] = nel_build_router_url(
             [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'move']);
