@@ -318,7 +318,7 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchModeration';
                         $r->addRoute(['GET', 'POST'],
-                            '/{section:modmode}/{content_id:[^\/]+}[/{action:ban|ban-delete|delete|delete-by-ip|global-delete-by-ip|lock|unlock|sticky|unsticky|sage|unsage|cyclic|non-cyclic|edit|move}]',
+                            '/{section:modmode}/{content_id:[^\/]+}[/{action:ban|ban-delete|delete|delete-by-ip|global-delete-by-ip|lock|unlock|sticky|unsticky|sage|unsage|cyclic|non-cyclic|edit|move|spoiler|unspoiler}]',
                             $dispatch_class);
                     });
 

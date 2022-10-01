@@ -267,6 +267,17 @@ class AdminThreads extends Admin
         $redirect->URL($_POST['return_url']);
     }
 
+    public function spoiler(ContentID $content_id): void
+    {
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
+
+        if ($content_id->isContent()) {
+            $upload = $content_id->getInstanceFromID($this->domain);
+            $upload->toggleSpoiler();
+            $this->regenThread($this->domain, $content_id->threadID(), true);
+        }
+    }
+
     protected function verifyPermissions(Domain $domain, string $perm): void
     {
         if ($this->session_user->checkPermission($domain, $perm)) {

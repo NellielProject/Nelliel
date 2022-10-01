@@ -115,8 +115,15 @@ class DispatchModeration extends Dispatch
                             $admin_threads->move($content_id);
                             $redirect->doRedirect(true);
                         }
-                        // TODO: Make sure redirect works
-                        // Also check/update permissions if needed
+
+                        break;
+
+                    case 'spoiler':
+                    case 'unspoiler':
+                        if ($inputs['method'] === 'GET') {
+                            $admin_threads->spoiler($content_id);
+                            $redirect->doRedirect(true);
+                        }
 
                         break;
                 }

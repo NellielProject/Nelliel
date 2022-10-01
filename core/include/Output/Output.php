@@ -144,6 +144,8 @@ abstract class Output
         $this->render_data['mod_links_ban_and_delete'] = $this->getUISetting('mod_links_ban_and_delete');
         $this->render_data['mod_links_edit'] = $this->getUISetting('mod_links_edit');
         $this->render_data['mod_links_move'] = $this->getUISetting('mod_links_move');
+        $this->render_data['mod_links_spoiler'] = $this->getUISetting('mod_links_spoiler');
+        $this->render_data['mod_links_unspoiler'] = $this->getUISetting('mod_links_unspoiler');
 
         if ($this->session->inModmode($this->domain)) {
             $this->render_data['mod_can_lock'] = $this->session->user()->checkPermission($this->domain,
@@ -168,6 +170,8 @@ abstract class Output
                 'perm_edit_posts');
             $this->render_data['mod_can_move'] = $this->session->user()->checkPermission($this->domain,
                 'perm_move_content');
+            $this->render_data['mod_can_spoiler'] = $this->session->user()->checkPermission($this->domain,
+                'perm_modify_content_status');
         }
     }
 

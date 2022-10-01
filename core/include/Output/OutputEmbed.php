@@ -40,6 +40,12 @@ class OutputEmbed extends Output
                 [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'delete']);
             $this->render_data['mod_move_upload_url'] = nel_build_router_url(
                 [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'move']);
+
+            $spoiler_option = $embed->data('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
+            $spoiler_action = $embed->data('spoiler') ? 'unspoiler' : 'spoiler';
+            $this->render_data['mod_spoiler_option'] = $this->render_data[$spoiler_option];
+            $this->render_data['mod_spoiler_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $embed->contentID()->getIDString(), $spoiler_action]);
         }
 
         if ($catalog) {

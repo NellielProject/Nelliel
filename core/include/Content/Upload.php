@@ -215,6 +215,12 @@ class Upload
         return false;
     }
 
+    public function toggleSpoiler(): void
+    {
+        $this->changeData('spoiler', !$this->data('spoiler'));
+        $this->writeToDatabase();
+    }
+
     public function verifyModifyPerms(): bool
     {
         return $this->getParent()->verifyModifyPerms();
@@ -385,13 +391,13 @@ class Upload
                 if (!$this->fileDeduplicated()) {
                     $file_handler->moveFile(
                         $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
-                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' .
-                        $new_upload->data('extension'));
+                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' . $new_upload->data(
+                            'extension'));
                 } else {
                     $file_handler->copyFile(
                         $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
-                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' .
-                        $new_upload->data('extension'));
+                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' . $new_upload->data(
+                            'extension'));
                 }
             }
 
