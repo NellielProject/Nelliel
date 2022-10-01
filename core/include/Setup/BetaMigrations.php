@@ -434,7 +434,7 @@ class BetaMigrations
 
                 // Update board settings
                 $new_board_settings = ['allow_no_markup', 'allow_op_thread_moderation', 'mod_links_move',
-                    'allow_moving_replies', 'allow_moving_uploads'];
+                    'allow_moving_replies', 'allow_moving_uploads', 'mod_links_spoiler', 'mod_links_unspoiler'];
                 $this->newBoardSettings($new_board_settings);
 
                 $old_board_setting_names = ['mod_links_edit_post'];
