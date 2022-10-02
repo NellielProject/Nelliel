@@ -91,6 +91,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_content_disclaimer', '', 'Site-wide disclaimer added to the bottom of posts.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_footer_text', '', 'Additional text to put in the footer site-wide.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_board_pages', '10', 'Maximum static pages that can be created for a specific board.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'allow_user_registration', '0', 'Allow users to register an account.', '{"type":"checkbox"}']);
 
         // Banners
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_banners', '0', 'Display site banners if available.', '{"type":"checkbox"}']);

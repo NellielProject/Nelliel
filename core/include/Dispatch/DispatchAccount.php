@@ -46,6 +46,10 @@ class DispatchAccount extends Dispatch
                 break;
 
             case 'register':
+                if (!$this->domain->setting('allow_user_registration') && !isset($_POST['create_owner'])) {
+                    nel_derp(215, _gettext('User registration is disabled.'));
+                }
+
                 if ($inputs['method'] === 'POST') {
                     $register = new Register($this->authorization, $this->domain);
                     $register->new();
