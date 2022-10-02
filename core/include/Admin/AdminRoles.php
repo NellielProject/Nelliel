@@ -23,34 +23,34 @@ class AdminRoles extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_roles_view');
+        $this->verifyPermissions($this->domain, 'perm_view_roles');
         $output_panel = new OutputPanelRoles($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_roles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_roles');
         $output_panel = new OutputPanelRoles($this->domain, false);
         $output_panel->new([], false);
     }
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_roles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_roles');
         $this->update($_POST['role_id'] ?? '');
     }
 
     public function editor(string $role_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_roles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_roles');
         $output_panel = new OutputPanelRoles($this->domain, false);
         $output_panel->edit(['role_id' => $role_id], false);
     }
 
     public function update(string $role_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_roles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_roles');
         $role = $this->authorization->getRole($role_id);
 
         foreach ($_POST as $key => $value) {
@@ -73,7 +73,7 @@ class AdminRoles extends Admin
 
     public function delete(string $role_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_roles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_roles');
         $this->authorization->removeRole($role_id);
         $this->panel();
     }
@@ -85,11 +85,11 @@ class AdminRoles extends Admin
         }
 
         switch ($perm) {
-            case 'perm_roles_view':
+            case 'perm_view_roles':
                 nel_derp(375, _gettext('You are not allowed to view roles.'));
                 break;
 
-            case 'perm_roles_manage':
+            case 'perm_manage_roles':
                 nel_derp(376, _gettext('You are not allowed to manage roles.'));
                 break;
 

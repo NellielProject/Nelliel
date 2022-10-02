@@ -26,14 +26,14 @@ class AdminBoardConfig extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_board_config_modify');
+        $this->verifyPermissions($this->domain, 'perm_modify_board_config');
         $output_panel = new OutputPanelBoardConfig($this->domain, false);
         $output_panel->render(['defaults' => false], false);
     }
 
     public function update(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_board_config_modify');
+        $this->verifyPermissions($this->domain, 'perm_modify_board_config');
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
         $prepared = $this->database->prepare(
             'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
@@ -134,7 +134,7 @@ class AdminBoardConfig extends Admin
         }
 
         switch ($perm) {
-            case 'perm_board_config_modify':
+            case 'perm_modify_board_config':
                 nel_derp(310, _gettext('You are not allowed to modify the board configuration.'));
                 break;
 

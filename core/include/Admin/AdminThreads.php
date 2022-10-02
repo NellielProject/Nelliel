@@ -240,7 +240,7 @@ class AdminThreads extends Admin
             $new_thread->move($destination_domain);
         }
 
-        if ($content_id->isContent()) {
+        if ($content_id->isUpload()) {
             if (!$this->domain->setting('allow_moving_uploads')) {
                 nel_derp(263, _gettext('Uploads cannot be moved on this board.'));
             }
@@ -271,7 +271,7 @@ class AdminThreads extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_modify_content_status');
 
-        if ($content_id->isContent()) {
+        if ($content_id->isUpload()) {
             $upload = $content_id->getInstanceFromID($this->domain);
             $upload->toggleSpoiler();
             $this->regenThread($this->domain, $content_id->threadID(), true);

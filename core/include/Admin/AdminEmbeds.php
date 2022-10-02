@@ -22,21 +22,21 @@ class AdminEmbeds extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_embeds');
         $output_panel = new OutputPanelEmbeds($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_embeds');
         $output_panel = new OutputPanelEmbeds($this->domain, false);
         $output_panel->new(['editing' => false], false);
     }
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_embeds');
         $label = $_POST['label'] ?? '';
         $regex = $_POST['regex'] ?? '';
         $url = $_POST['url'] ?? '';
@@ -51,14 +51,14 @@ class AdminEmbeds extends Admin
 
     public function editor(string $embed_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_embeds');
         $output_panel = new OutputPanelEmbeds($this->domain, false);
         $output_panel->edit(['editing' => true, 'embed_id' => $embed_id], false);
     }
 
     public function update(string $embed_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_embeds');
         $label = $_POST['label'] ?? '';
         $regex = $_POST['regex'] ?? '';
         $url = $_POST['url'] ?? '';
@@ -74,7 +74,7 @@ class AdminEmbeds extends Admin
 
     public function delete(string $embed_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_embeds');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "embed_id" = ?');
         $this->database->executePrepared($prepared, [$embed_id]);
         $this->panel();
@@ -87,7 +87,7 @@ class AdminEmbeds extends Admin
         }
 
         switch ($perm) {
-            case 'perm_embeds_manage':
+            case 'perm_manage_embeds':
                 nel_derp(405, _gettext('You are not allowed to manage embeds.'));
                 break;
 
@@ -98,7 +98,7 @@ class AdminEmbeds extends Admin
 
     public function enable(string $embed_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_embeds');
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "embed_id" = ?');
         $this->database->executePrepared($prepared, [$embed_id]);
@@ -107,7 +107,7 @@ class AdminEmbeds extends Admin
 
     public function disable(string $embed_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_embeds_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_embeds');
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "embed_id" = ?');
         $this->database->executePrepared($prepared, [$embed_id]);

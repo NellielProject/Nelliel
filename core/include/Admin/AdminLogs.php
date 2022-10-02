@@ -23,7 +23,7 @@ class AdminLogs extends Admin
 
     public function panel(string $log_set, int $page): void
     {
-        $this->verifyPermissions($this->domain, 'perm_logs_view');
+        $this->verifyPermissions($this->domain, 'perm_view_public_logs');
         $output_panel = new OutputPanelLogs($this->domain, false);
         $output_panel->render(['page' => $page, 'log_set' => $log_set], false);
     }
@@ -50,11 +50,11 @@ class AdminLogs extends Admin
         }
 
         switch ($perm) {
-            case 'perm_logs_view':
+            case 'perm_view_public_logs':
                 nel_derp(355, _gettext('You are not allowed to view the logs.'));
                 break;
 
-            case 'perm_logs_manage':
+            case 'perm_view_system_logs':
                 nel_derp(356, _gettext('You are not allowed to manage the logs.'));
                 break;
 

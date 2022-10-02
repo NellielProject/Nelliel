@@ -23,35 +23,35 @@ class AdminUsers extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_users_view');
+        $this->verifyPermissions($this->domain, 'perm_view_users');
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_users_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_users');
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->new([], false);
     }
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_users_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_users');
         $username = utf8_strtolower($_POST['username']);
         $this->update($username);
     }
 
     public function editor(string $username): void
     {
-        $this->verifyPermissions($this->domain, 'perm_users_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_users');
         $output_panel = new OutputPanelUsers($this->domain, false);
         $output_panel->edit(['username' => $username], false);
     }
 
     public function update(string $username): void
     {
-        $this->verifyPermissions($this->domain, 'perm_users_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_users');
         $update_user = $this->authorization->getUser($username);
 
         foreach ($_POST as $key => $value) {
@@ -82,7 +82,7 @@ class AdminUsers extends Admin
 
     public function delete(string $username): void
     {
-        $this->verifyPermissions($this->domain, 'perm_users_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_users');
         $this->authorization->removeUser($username);
         $this->panel();
     }
@@ -94,11 +94,11 @@ class AdminUsers extends Admin
         }
 
         switch ($perm) {
-            case 'perm_users_view':
+            case 'perm_view_users':
                 nel_derp(395, _gettext('You are not allowed to view users.'));
                 break;
 
-            case 'perm_users_manage':
+            case 'perm_manage_users':
                 nel_derp(396, _gettext('You are not allowed to manage users.'));
                 break;
 

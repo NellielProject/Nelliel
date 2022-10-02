@@ -48,15 +48,15 @@ class ContentID
 
     public function isThread(): bool
     {
-        return !$this->isPost() && !$this->isContent() && $this->thread_id > 0;
+        return !$this->isPost() && !$this->isUpload() && $this->thread_id > 0;
     }
 
     public function isPost(): bool
     {
-        return !$this->isContent() && $this->post_id > 0;
+        return !$this->isUpload() && $this->post_id > 0;
     }
 
-    public function isContent(): bool
+    public function isUpload(): bool
     {
         return $this->order_id > 0;
     }
@@ -107,7 +107,7 @@ class ContentID
             return new Post($this, $domain, $load);
         }
 
-        if ($this->isContent()) {
+        if ($this->isUpload()) {
             return new Upload($this, $domain, $load);
         }
 

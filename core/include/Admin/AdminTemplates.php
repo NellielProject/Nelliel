@@ -23,14 +23,14 @@ class AdminTemplates extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_templates');
         $output_panel = new OutputPanelTemplates($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function install(string $template_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_templates');
         $this->domain->frontEndData()->getTemplate($template_id)->install();
         $this->domain->templatePath($this->domain->frontEndData()->getTemplate($template_id)->getPath());
         $this->panel();
@@ -38,7 +38,7 @@ class AdminTemplates extends Admin
 
     public function uninstall(string $template_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_templates');
         $this->domain->frontEndData()->getTemplate($template_id)->uninstall();
         $this->domain->templatePath($this->domain->frontEndData()->getTemplate($template_id)->getPath());
         $this->panel();
@@ -46,14 +46,14 @@ class AdminTemplates extends Admin
 
     public function enable(string $template_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_templates');
         $this->domain->frontEndData()->getTemplate($template_id)->enable();
         $this->panel();
     }
 
     public function disable(string $template_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_templates_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_templates');
         $this->domain->frontEndData()->getTemplate($template_id)->disable();
         $this->panel();
     }
@@ -65,7 +65,7 @@ class AdminTemplates extends Admin
         }
 
         switch ($perm) {
-            case 'perm_templates_manage':
+            case 'perm_manage_templates':
                 nel_derp(390, _gettext('You are not allowed to manage templates.'));
                 break;
 

@@ -49,7 +49,7 @@ class ThreadHandler
                     $threads[] = $content_id;
                 } else if ($content_id->isPost()) {
                     $posts[] = $content_id;
-                } else if ($content_id->isContent()) {
+                } else if ($content_id->isUpload()) {
                     $uploads[] = $content_id;
                 }
             }

@@ -27,14 +27,14 @@ class AdminBoardDefaults extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_board_defaults_modify');
+        $this->verifyPermissions($this->domain, 'perm_modify_board_defaults');
         $output_panel = new OutputPanelBoardConfig($this->domain, false); // TODO: Maybe separate output too
         $output_panel->render(['defaults' => true], false);
     }
 
     public function update(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_board_defaults_modify');
+        $this->verifyPermissions($this->domain, 'perm_modify_board_defaults');
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
         $board_domains = $this->getBoardDomains();
 
@@ -155,7 +155,7 @@ class AdminBoardDefaults extends Admin
         }
 
         switch ($perm) {
-            case 'perm_board_defaults_modify':
+            case 'perm_modify_board_defaults':
                 nel_derp(320, _gettext('You are not allowed to modify the default board configuration.'));
                 break;
 

@@ -23,7 +23,7 @@ class AdminReports extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_reports_view');
+        $this->verifyPermissions($this->domain, 'perm_view_reports');
         $output_panel = new OutputPanelReports($this->domain, false);
         $output_panel->render([], false);
     }
@@ -47,7 +47,7 @@ class AdminReports extends Admin
     public function dismiss(string $report_id): void
     {
         $entry_domain = $this->getEntryDomain($report_id);
-        $this->verifyPermissions($entry_domain, 'perm_reports_dismiss');
+        $this->verifyPermissions($entry_domain, 'perm_dismiss_reports');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "report_id" = ?');
         $this->database->executePrepared($prepared, [$report_id]);
         $this->panel();
@@ -62,11 +62,11 @@ class AdminReports extends Admin
 
         switch ($perm)
         {
-            case 'perm_reports_view':
+            case 'perm_view_reports':
                 nel_derp(370, _gettext('You are not allowed to view reports.'));
                 break;
 
-            case 'perm_reports_dismiss':
+            case 'perm_dismiss_reports':
                 nel_derp(371, _gettext('You are not allowed to dismiss reports.'));
                 break;
 

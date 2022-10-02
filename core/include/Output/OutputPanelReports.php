@@ -55,7 +55,7 @@ class OutputPanelReports extends Output
             $content_id = new ContentID($report_info['content_id']);
             $content = $content_id->getInstanceFromID($current_domain);
 
-            if ($content_id->isContent()) {
+            if ($content_id->isUpload()) {
                 $report_data['content_url'] = $content->getParent()->getURL(true);
                 $report_data['file_url'] = $content->getURL(true);
             } else {

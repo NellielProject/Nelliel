@@ -25,21 +25,21 @@ class AdminPages extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_pages_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_pages');
         $output_panel = new OutputPanelPages($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_pages_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_pages');
         $output_panel = new OutputPanelPages($this->domain, false);
         $output_panel->new([], false);
     }
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_pages_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_pages');
         $this->checkLimit($this->domain);
         $page_info = array();
         $page_info['domain_id'] = $this->domain->id();
@@ -60,14 +60,14 @@ class AdminPages extends Admin
 
     public function editor(string $page_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_pages_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_pages');
         $output_panel = new OutputPanelPages($this->domain, false);
         $output_panel->edit(['page_id' => $page_id], false);
     }
 
     public function update(string $page_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_pages_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_pages');
         $prepared = $this->domain->database()->prepare(
             'SELECT "domain_id" FROM "' . NEL_PAGES_TABLE . '" WHERE "page_id" = :page_id');
         $prepared->bindValue(':page_id', $page_id);
@@ -78,7 +78,7 @@ class AdminPages extends Admin
         }
 
         $domain = Domain::getDomainFromID($domain_id, $this->database);
-        $this->verifyPermissions($domain, 'perm_pages_manage');
+        $this->verifyPermissions($domain, 'perm_manage_pages');
         $page_info = array();
         $page_info['uri'] = $_POST['uri'] ?? '';
         $page_info['title'] = $_POST['title'] ?? '';
@@ -96,7 +96,7 @@ class AdminPages extends Admin
 
     public function remove(string $page_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_pages_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_pages');
         $prepared = $this->domain->database()->prepare(
             'SELECT "uri", "domain_id" FROM "' . NEL_PAGES_TABLE . '" WHERE "page_id" = :page_id');
         $prepared->bindValue(':page_id', $page_id);
@@ -108,7 +108,7 @@ class AdminPages extends Admin
 
         $domain_id = $info['domain_id'];
         $domain = Domain::getDomainFromID($domain_id, $this->database);
-        $this->verifyPermissions($domain, 'perm_pages_manage');
+        $this->verifyPermissions($domain, 'perm_manage_pages');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "page_id" = ?');
         $this->database->executePrepared($prepared, [$page_id]);
         nel_utilities()->fileHandler()->eraserGun($domain->reference('base_path'), $info['uri'] . '.html');
@@ -122,7 +122,7 @@ class AdminPages extends Admin
         }
 
         switch ($perm) {
-            case 'perm_pages_manage':
+            case 'perm_manage_pages':
                 nel_derp(360, _gettext('You are not allowed to manage static pages.'));
                 break;
 

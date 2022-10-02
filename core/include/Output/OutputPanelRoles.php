@@ -45,7 +45,7 @@ class OutputPanelRoles extends Output
             $role_data['capcode'] = $role['capcode'];
             $role_data['can_modify'] = $this->session->user()->isSiteOwner() ||
                 ($authorization->roleLevelCheck($user_role, $role['role_id']) &&
-                $this->session->user()->checkPermission($this->domain, 'perm_roles_manage'));
+                $this->session->user()->checkPermission($this->domain, 'perm_manage_roles'));
             $role_data['edit_url'] = nel_build_router_url([$this->domain->id(), 'roles', $role['role_id'], 'modify']);
             $role_data['delete_url'] = nel_build_router_url([$this->domain->id(), 'roles', $role['role_id'], 'delete']);
             $this->render_data['roles_list'][] = $role_data;

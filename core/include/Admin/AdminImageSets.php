@@ -22,35 +22,35 @@ class AdminImageSets extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
         $output_panel = new OutputPanelImageSets($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function install(string $set_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
         $this->domain->frontEndData()->getImageSet($set_id)->install();
         $this->panel();
     }
 
     public function uninstall(string $set_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
         $this->domain->frontEndData()->getImageSet($set_id)->uninstall();
         $this->panel();
     }
 
     public function enable(string $set_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
         $this->domain->frontEndData()->getImageSet($set_id)->enable();
         $this->panel();
     }
 
     public function disable(string $set_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_image_sets_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
         $this->domain->frontEndData()->getImageSet($set_id)->disable();
         $this->panel();
     }
@@ -62,7 +62,7 @@ class AdminImageSets extends Admin
         }
 
         switch ($perm) {
-            case 'perm_image_sets_manage':
+            case 'perm_manage_image_sets':
                 nel_derp(350, _gettext('You are not allowed to manage image sets.'));
                 break;
 

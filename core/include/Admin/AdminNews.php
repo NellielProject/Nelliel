@@ -24,7 +24,7 @@ class AdminNews extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_news_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_news');
         $output_panel = new OutputPanelNews($this->domain, false);
         $output_panel->render([], false);
     }
@@ -34,7 +34,7 @@ class AdminNews extends Admin
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_news_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_news');
         $news_info = array();
         $news_info['username'] = $this->session_user->id();
         $news_info['name'] = $_POST['name'] ?? '';
@@ -64,7 +64,7 @@ class AdminNews extends Admin
 
     public function delete(string $article_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_news_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_news');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "article_id" = ?');
         $this->database->executePrepared($prepared, [$article_id]);
         $regen = new Regen();
@@ -79,7 +79,7 @@ class AdminNews extends Admin
         }
 
         switch ($perm) {
-            case 'perm_news_manage':
+            case 'perm_manage_news':
                 nel_derp(360, _gettext('You are not allowed to manage news entries.'));
                 break;
 

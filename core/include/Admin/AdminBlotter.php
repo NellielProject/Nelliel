@@ -23,7 +23,7 @@ class AdminBlotter extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_blotter_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_blotter');
         $output_panel = new OutputPanelBlotter($this->domain, false);
         $output_panel->render([], false);
     }
@@ -33,7 +33,7 @@ class AdminBlotter extends Admin
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_blotter_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_blotter');
         $text = $_POST['blotter_text'] ?? '';
         $time = time();
         $query = 'INSERT INTO "' . $this->data_table . '" ("time", "text") VALUES (?, ?)';
@@ -56,7 +56,7 @@ class AdminBlotter extends Admin
 
     public function delete(string $record_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_blotter_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_blotter');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "record_id" = ?');
         $this->database->executePrepared($prepared, [$record_id]);
         $regen = new Regen();
@@ -72,7 +72,7 @@ class AdminBlotter extends Admin
         }
 
         switch ($perm) {
-            case 'perm_blotter_manage':
+            case 'perm_manage_blotter':
                 nel_derp(315, _gettext('You do not have permission to manage blotter entries.'));
 
             default:

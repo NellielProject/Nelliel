@@ -24,14 +24,14 @@ class AdminSiteConfig extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_site_config_modify');
+        $this->verifyPermissions($this->domain, 'perm_modify_site_config');
         $output_panel = new OutputPanelSiteConfig($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function update(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_site_config_modify');
+        $this->verifyPermissions($this->domain, 'perm_modify_site_config');
 
         foreach ($_POST as $key => $value) {
             if (is_array($value)) {
@@ -60,7 +60,7 @@ class AdminSiteConfig extends Admin
         }
 
         switch ($perm) {
-            case 'perm_site_config_modify':
+            case 'perm_modify_site_config':
                 nel_derp(380, _gettext('You are not allowed to modify the site configuration.'));
                 break;
 

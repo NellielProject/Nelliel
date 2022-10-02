@@ -382,36 +382,33 @@ class BetaMigrations
                 echo ' - ' . __('Updated roles table.') . '<br>';
 
                 // Update permissions and role permissions tables
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
-                    '" SET "permission" = \'perm_wordfilters_manage\' WHERE "permission" = \'perm_word_filters_manage\'');
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE .
-                    '" SET "permission" = \'perm_wordfilters_manage\' WHERE "permission" = \'perm_word_filters_manage\'');
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
-                    '" SET "permission" = \'perm_move_content\' WHERE "permission" = \'perm_move_threads\'');
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE .
-                    '" SET "permission" = \'perm_move_content\' WHERE "permission" = \'perm_move_threads\'');
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
-                    '" SET "permission" = \'perm_modify_content_status\' WHERE "permission" = \'perm_post_status\'');
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE .
-                    '" SET "permission" = \'perm_modify_content_status\' WHERE "permission" = \'perm_post_status\'');
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
-                    '" SET "permission" = \'perm_edit_posts\' WHERE "permission" = \'perm_post_edit\'');
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE .
-                    '" SET "permission" = \'perm_edit_posts\' WHERE "permission" = \'perm_post_edit\'');
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_PERMISSIONS_TABLE .
-                    '" SET "permission" = \'perm_delete_content\' WHERE "permission" = \'perm_delete_posts\'');
-                $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE .
-                    '" SET "permission" = \'perm_delete_content\' WHERE "permission" = \'perm_delete_posts\'');
+                $permissions = ['perm_word_filters_manage' => 'perm_manage_wordfilters',
+                    'perm_move_threads' => 'perm_move_content', 'perm_post_status' => 'perm_modify_content_status',
+                    'perm_post_edit' => 'perm_edit_posts', 'perm_delete_posts' => 'perm_delete_content',
+                    'perm_logs_manage' => 'perm_view_system_logs', 'perm_logs_view' => 'perm_view_public_logs',
+                    'perm_news_manage' => 'perm_manage_news', 'perm_plugins_manage' => 'perm_manage_plugins',
+                    'perm_permissions_manage' => 'perm_manage_permissions',
+                    'perm_blotter_manage' => 'perm_manage_blotter',
+                    'perm_private_messages_use' => 'perm_use_private_messages',
+                    'perm_reports_view' => 'perm_view_reports', 'perm_reports_dismiss' => 'perm_dismiss_reports',
+                    'perm_pages_manage' => 'perm_manage_pages', 'perm_image_sets_manage' => 'perm_manage_imsage_sets',
+                    'perm_embeds_manage' => 'perm_manage_embeds', 'perm_content_ops_manage' => 'perm_manage_content_ops',
+                    'perm_styles_manage' => 'perm_manage_styles', 'perm_templates_manage' => 'perm_manage_templates',
+                    'perm_filetypes_manage' => 'perm_manage_filetypes',
+                    'perm_file_filters_manage' => 'perm_manage_file_filters', 'perm_users_view', 'perm_view_users',
+                    'perm_users_manage' => 'perm_manage_users', 'perm_roles_view' => 'perm_view_roles',
+                    'perm_roles_manage' => 'perm_manage_roles', 'perm_site_config_modify' => 'perm_modify_site_config',
+                    'perm_board_config_modify' => 'perm_modify_board_config',
+                    'perm_board_config_override' => 'perm_override_config_lock',
+                    'perm_board_defaults_modify' => 'perm_modify_board_defaults'];
+                $permission_update = nel_database('core')->prepare(
+                    'UPDATE "' . NEL_PERMISSIONS_TABLE . '" SET "permission" = :new WHERE "permission" = :old');
+
+                foreach ($permissions as $old => $new) {
+                    $permission_update->bindValue(':new', $new);
+                    $permission_update->bindValue(':old', $old);
+                    nel_database('core')->executePrepared($permission_update);
+                }
 
                 echo ' - ' . __('Updated permissions and role permissions tables.') . '<br>';
 

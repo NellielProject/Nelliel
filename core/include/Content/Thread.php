@@ -82,13 +82,12 @@ class Thread
         return true;
     }
 
-    public function writeToDatabase($temp_database = null): bool
+    public function writeToDatabase(): bool
     {
         if (!$this->isLoaded() || empty($this->content_id->threadID())) {
             return false;
         }
 
-        $database = is_null($temp_database) ? $this->database : $temp_database;
         $filtered_data = $this->main_table->filterColumns($this->content_data);
         $filtered_data['moar'] = $this->getMoar()->getJSON();
         $pdo_types = $this->main_table->getPDOTypes($filtered_data);
@@ -103,11 +102,11 @@ class Thread
                 $where_columns, $where_keys);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
-            $database->executePrepared($prepared);
+            $this->database->executePrepared($prepared);
         } else {
             $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
-            $database->executePrepared($prepared);
+            $this->database->executePrepared($prepared);
         }
 
         return true;

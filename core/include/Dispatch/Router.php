@@ -46,7 +46,7 @@ class Router
                         $r->addRoute(['GET'], '/{section:gettext}[/{action:[^\/]+}]', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:captcha}',
+                $r->addGroup('/{domain_id:[^\/]+}/{module:captcha}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchCAPTCHA';
                         $r->addRoute(['GET'], '/{section:get}', $dispatch_class);

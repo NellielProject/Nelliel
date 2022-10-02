@@ -22,21 +22,21 @@ class AdminFiletypes extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_filetypes');
         $output_panel = new OutputPanelFiletypes($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_filetypes');
         $output_panel = new OutputPanelFiletypes($this->domain, false);
         $output_panel->newFiletype(['editing' => false], false);
     }
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_filetypes');
         $format = $_POST['format'] ?? '';
         $extensions = $_POST['extensions'] ?? '';
         $category = $_POST['category'] ?? null;
@@ -55,14 +55,14 @@ class AdminFiletypes extends Admin
 
     public function editor(string $format): void
     {
-        $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_filetypes');
         $output_panel = new OutputPanelFiletypes($this->domain, false);
         $output_panel->editFiletype(['editing' => true, 'format' => $format], false);
     }
 
     public function update(string $format): void
     {
-        $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_filetypes');
         $extensions = $_POST['extensions'] ?? '';
         $category = $_POST['category'] ?? null;
         $mimetypes = $_POST['mimetypes'] ?? '';
@@ -80,7 +80,7 @@ class AdminFiletypes extends Admin
 
     public function delete(string $format): void
     {
-        $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_filetypes');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "format" = ?');
         $this->database->executePrepared($prepared, [$format]);
         $this->panel();
@@ -93,7 +93,7 @@ class AdminFiletypes extends Admin
         }
 
         switch ($perm) {
-            case 'perm_filetypes_manage':
+            case 'perm_manage_filetypes':
                 nel_derp(345, _gettext('You are not allowed to manage filetypes.'));
                 break;
 
@@ -104,7 +104,7 @@ class AdminFiletypes extends Admin
 
     public function enable(string $format)
     {
-        $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_filetypes');
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "format" = ?');
         $this->database->executePrepared($prepared, [$format]);
         $this->panel();
@@ -112,7 +112,7 @@ class AdminFiletypes extends Admin
 
     public function disable(string $format)
     {
-        $this->verifyPermissions($this->domain, 'perm_filetypes_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_filetypes');
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "format" = ?');
         $this->database->executePrepared($prepared, [$format]);
         $this->panel();

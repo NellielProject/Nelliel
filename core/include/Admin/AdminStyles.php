@@ -23,35 +23,35 @@ class AdminStyles extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_styles');
         $output_panel = new OutputPanelStyles($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function install(string $style_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_styles');
         $this->domain->frontEndData()->getStyle($style_id)->install();
         $this->panel();
     }
 
     public function uninstall(string $style_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_styles');
         $this->domain->frontEndData()->getStyle($style_id)->uninstall();
         $this->panel();
     }
 
     public function enable(string $style_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_styles');
         $this->domain->frontEndData()->getStyle($style_id)->enable();
         $this->panel();
     }
 
     public function disable(string $style_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_styles_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_styles');
         $this->domain->frontEndData()->getStyle($style_id)->disable();
         $this->panel();
     }
@@ -63,7 +63,7 @@ class AdminStyles extends Admin
         }
 
         switch ($perm) {
-            case 'perm_styles_manage':
+            case 'perm_manage_styles':
                 nel_derp(385, _gettext('You are not allowed to manage styles.'));
                 break;
 

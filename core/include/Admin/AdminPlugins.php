@@ -23,35 +23,35 @@ class AdminPlugins extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
         $output_panel = new OutputPanelPlugins($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function install(string $plugin_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
         nel_plugins()->getPlugin($plugin_id)->install();
         $this->panel();
     }
 
     public function uninstall(string $plugin_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
         nel_plugins()->getPlugin($plugin_id)->uninstall();
         $this->panel();
     }
 
     public function enable(string $plugin_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
         nel_plugins()->getPlugin($plugin_id)->enable();
         $this->panel();
     }
 
     public function disable(string $plugin_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
         nel_plugins()->getPlugin($plugin_id)->disable();
         $this->panel();
     }
@@ -63,7 +63,7 @@ class AdminPlugins extends Admin
         }
 
         switch ($perm) {
-            case 'perm_plugins_manage':
+            case 'perm_manage_plugins':
                 nel_derp(385, _gettext('You are not allowed to manage styles.'));
                 break;
 

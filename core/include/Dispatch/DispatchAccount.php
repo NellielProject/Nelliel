@@ -61,7 +61,7 @@ class DispatchAccount extends Dispatch
             case 'private-messages':
                 $this->session->init(true);
 
-                if (!$this->session->user()->checkPermission($this->domain, 'perm_private_messages_use')) {
+                if (!$this->session->user()->checkPermission($this->domain, 'perm_use_private_messages')) {
                     nel_derp(511, _gettext('You cannot use the private message system.'));
                 }
 

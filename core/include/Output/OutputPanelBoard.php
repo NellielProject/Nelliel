@@ -28,7 +28,7 @@ class OutputPanelBoard extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['module_board_config'] = $this->session->user()->checkPermission($this->domain,
-            'perm_board_config_modify');
+            'perm_modify_board_config');
         $this->render_data['board_config_url'] = nel_build_router_url([$this->domain->id(), 'config']);
         $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_view');
         $this->render_data['bans_url'] = nel_build_router_url([$this->domain->id(), 'bans']);
@@ -37,15 +37,15 @@ class OutputPanelBoard extends Output
         $this->render_data['module_modmode'] = $this->session->user()->checkPermission($this->domain, 'perm_mod_mode');
         $this->render_data['modmode_url'] = nel_build_router_url([$this->domain->id()], true, 'modmode');
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
-            'perm_reports_view');
+            'perm_view_reports');
         $this->render_data['reports_url'] = nel_build_router_url([$this->domain->id(), 'reports']);
         $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_file_filters_manage');
+            'perm_manage_file_filters');
         $this->render_data['file_filters_url'] = nel_build_router_url([$this->domain->id(), 'file-filters']);
         $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_wordfilters_manage');
+            'perm_manage_wordfilters');
         $this->render_data['wordfilters_url'] = nel_build_router_url([$this->domain->id(), 'wordfilters']);
-        $this->render_data['module_pages'] = $this->session->user()->checkPermission($this->domain, 'perm_pages_manage');
+        $this->render_data['module_pages'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_pages');
         $this->render_data['pages_url'] = nel_build_router_url([$this->domain->id(), 'pages']);
         $this->render_data['regen_board_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_pages');

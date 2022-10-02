@@ -24,14 +24,14 @@ class AdminFileFilters extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_file_filters');
         $output_panel = new OutputPanelFileFilters($this->domain, false);
         $output_panel->render([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_file_filters');
         $output_panel = new OutputPanelFileFilters($this->domain, false);
         $output_panel->new(['editing' => false], false);
     }
@@ -40,7 +40,7 @@ class AdminFileFilters extends Admin
     {
         $board_id = $_POST['board_id'] ?? Domain::GLOBAL;
         $domain = Domain::getDomainFromID($board_id, $this->database);
-        $this->verifyPermissions($domain, 'perm_file_filters_manage');
+        $this->verifyPermissions($domain, 'perm_manage_file_filters');
         $type = $_POST['hash_type'];
         $notes = $_POST['notes'];
         $enabled = 1;
@@ -59,14 +59,14 @@ class AdminFileFilters extends Admin
 
     public function editor(string $filter_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_file_filters');
         $output_panel = new OutputPanelFileFilters($this->domain, false);
         $output_panel->edit(['editing' => true, 'filter_id' => $filter_id], false);
     }
 
     public function update(string $filter_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_file_filters');
         $hash_type = $_POST['hash_type'] ?? '';
         $file_hash = $_POST['file_hash'] ?? '';
         $notes = $_POST['notes'] ?? '';
@@ -83,7 +83,7 @@ class AdminFileFilters extends Admin
     public function delete(string $filter_id): void
     {
         $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_file_filters_manage');
+        $this->verifyPermissions($entry_domain, 'perm_manage_file_filters');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
         $this->panel();
@@ -91,7 +91,7 @@ class AdminFileFilters extends Admin
 
     public function enable(string $filter_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_file_filters');
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
@@ -100,7 +100,7 @@ class AdminFileFilters extends Admin
 
     public function disable(string $filter_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_file_filters_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_file_filters');
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "filter_id" = ?');
         $this->database->executePrepared($prepared, [$filter_id]);
@@ -114,7 +114,7 @@ class AdminFileFilters extends Admin
         }
 
         switch ($perm) {
-            case 'perm_file_filters_manage':
+            case 'perm_manage_file_filters':
                 nel_derp(340, _gettext('You are not allowed to manage file filters.'));
                 break;
 

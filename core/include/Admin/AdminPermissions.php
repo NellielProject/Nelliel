@@ -23,7 +23,7 @@ class AdminPermissions extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_permissions_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_permissions');
         $output_panel = new OutputPanelPermissions($this->domain, false);
         $output_panel->render([], false);
     }
@@ -33,7 +33,7 @@ class AdminPermissions extends Admin
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_permissions_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_permissions');
         $permission = $_POST['permission'];
         $description = $_POST['description'];
         $prepared = $this->database->prepare(
@@ -50,7 +50,7 @@ class AdminPermissions extends Admin
 
     public function delete(string $permission): void
     {
-        $this->verifyPermissions($this->domain, 'perm_permissions_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_permissions');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "permission" = ?');
         $this->database->executePrepared($prepared, [$permission]);
         $this->panel();
@@ -63,7 +63,7 @@ class AdminPermissions extends Admin
         }
 
         switch ($perm) {
-            case 'perm_permissions_manage':
+            case 'perm_manage_permissions':
                 nel_derp(365, _gettext('You are not allowed to manage permissions.'));
                 break;
 

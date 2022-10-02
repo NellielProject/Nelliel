@@ -22,21 +22,21 @@ class AdminContentOps extends Admin
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_content_ops');
         $output_panel = new OutputPanelContentOps($this->domain, false);
         $output_panel->main([], false);
     }
 
     public function creator(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_content_ops');
         $output_panel = new OutputPanelContentOps($this->domain, false);
         $output_panel->new(['editing' => false], false);
     }
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_content_ops');
         $label = $_POST['label'] ?? 0;
         $url = $_POST['url'] ?? '';
         $images_only = $_POST['images_only'] ?? 0;
@@ -51,14 +51,14 @@ class AdminContentOps extends Admin
 
     public function editor(string $op_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_content_ops');
         $output_panel = new OutputPanelContentOps($this->domain, false);
         $output_panel->edit(['editing' => true, 'op_id' => $op_id], false);
     }
 
     public function update(string $op_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_content_ops');
         $label = $_POST['label'] ?? '';
         $url = $_POST['url'] ?? '';
         $images_only = $_POST['images_only'] ?? 0;
@@ -74,7 +74,7 @@ class AdminContentOps extends Admin
 
     public function delete(string $op_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_content_ops');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "op_id" = ?');
         $this->database->executePrepared($prepared, [$op_id]);
         $this->panel();
@@ -87,7 +87,7 @@ class AdminContentOps extends Admin
         }
 
         switch ($perm) {
-            case 'perm_content_ops_manage':
+            case 'perm_manage_content_ops':
                 nel_derp(420, _gettext('You are not allowed to manage content ops.'));
                 break;
 
@@ -98,7 +98,7 @@ class AdminContentOps extends Admin
 
     public function enable(string $op_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_content_ops');
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "op_id" = ?');
         $this->database->executePrepared($prepared, [$op_id]);
         $this->panel();
@@ -106,7 +106,7 @@ class AdminContentOps extends Admin
 
     public function disable(string $op_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_content_ops_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_content_ops');
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "op_id" = ?');
         $this->database->executePrepared($prepared, [$op_id]);
         $this->panel();
