@@ -1,12 +1,13 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-class FileSystemLoader extends \Mustache_Loader_FilesystemLoader
+use Mustache_Loader_FilesystemLoader;
+
+class FileSystemLoader extends Mustache_Loader_FilesystemLoader
 {
     protected $templates = array();
     protected $substitutes = array();
@@ -20,8 +21,7 @@ class FileSystemLoader extends \Mustache_Loader_FilesystemLoader
     {
         $final_name = $this->substitutes[$name] ?? $name;
 
-        if (!isset($this->templates[$final_name]))
-        {
+        if (!isset($this->templates[$final_name])) {
             $this->templates[$final_name] = $this->loadFile($final_name);
         }
 
@@ -30,8 +30,7 @@ class FileSystemLoader extends \Mustache_Loader_FilesystemLoader
 
     public function updateSubstituteTemplates(array $substitutes, bool $clear = false)
     {
-        if ($clear)
-        {
+        if ($clear) {
             $this->substitutes = array();
         }
 

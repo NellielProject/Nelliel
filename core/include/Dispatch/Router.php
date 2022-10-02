@@ -247,7 +247,7 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
-                $r->addGroup('/{domain_id:[^\/]+}/{module:site-main-panel|board-main-panel}',
+                $r->addGroup('/{domain_id:[^\/]+}/{module:main-panel}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchMainPanel';
                         $r->addRoute(['GET'], '[/]', $dispatch_class);

@@ -31,13 +31,15 @@ class OutputPanelReports extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        if ($this->domain->id() !== Domain::SITE) {
+        if ($this->domain->id() === Domain::SITE) {
+            $report_list = array();
+        } else if ($this->domain->id() === Domain::GLOBAL) {
+            $report_list = $this->database->executeFetchAll(
+                'SELECT * FROM "' . NEL_REPORTS_TABLE . '" ORDER BY "report_id" DESC', PDO::FETCH_ASSOC);
+        } else {
             $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_REPORTS_TABLE . '" WHERE "board_id" = ? ORDER BY "report_id" DESC');
             $report_list = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
-        } else {
-            $report_list = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_REPORTS_TABLE . '" ORDER BY "report_id" DESC', PDO::FETCH_ASSOC);
         }
 
         $bgclass = 'row1';

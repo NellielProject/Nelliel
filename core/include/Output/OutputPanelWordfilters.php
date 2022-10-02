@@ -28,8 +28,18 @@ class OutputPanelWordfilters extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $wordfilters = $this->database->executeFetchAll(
-            'SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" ORDER BY "filter_id" DESC', PDO::FETCH_ASSOC);
+
+        if ($this->domain->id() === Domain::SITE) {
+            $wordfilters = array();
+        } else if ($this->domain->id() === Domain::GLOBAL) {
+            $wordfilters = $this->database->executeFetchAll(
+                'SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" ORDER BY "filter_id" DESC', PDO::FETCH_ASSOC);
+        } else {
+            $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '" WHERE "board_id" = ?  ORDER BY "filter_id" DESC');
+            $wordfilters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
+        }
+
         $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'wordfilters', 'new']);
         $bgclass = 'row1';
 

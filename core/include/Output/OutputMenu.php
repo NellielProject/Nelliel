@@ -84,7 +84,7 @@ class OutputMenu extends Output
         $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
 
         foreach ($styles as $style) {
-            if ($this->domain->id() !== Domain::SITE && !in_array($style->id(), $enabled_styles)) {
+            if ($this->domain->id() !== Domain::SITE && $this->domain->id() !== Domain::GLOBAL && !in_array($style->id(), $enabled_styles)) {
                 continue;
             }
 

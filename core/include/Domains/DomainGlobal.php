@@ -18,6 +18,7 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
+        $this->templatePath($this->front_end_data->getTemplate(nel_site_domain()->setting('template_id'))->getPath());
     }
 
     protected function loadSettings(): void
@@ -42,7 +43,13 @@ class DomainGlobal extends Domain implements NellielCacheInterface
 
     public function regenCache()
     {
-        ;
+        $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
+        $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
+
+        foreach ($board_ids as $board_id) {
+            $board = new DomainBoard($board_id, $this->database);
+            $board->regenCache();
+        }
     }
 
     public function deleteCache()

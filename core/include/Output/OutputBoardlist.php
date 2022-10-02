@@ -69,7 +69,7 @@ class OutputBoardlist extends Output
                 continue;
             }
 
-            $board_data['board_url'] = nel_build_router_url([$board['board_id'], 'board-main-panel']);
+            $board_data['board_url'] = nel_build_router_url([$board['board_id'], 'main-panel']);
             $board_data['board_id'] = '/' . $board['board_id'] . '/';
             $global_level_lower = $authorization->roleLevelCheck(
                 $user_roles_list[$board['board_id']]['role_title'] ?? '', $global_role_id);

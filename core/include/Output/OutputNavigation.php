@@ -42,11 +42,12 @@ class OutputNavigation extends Output
     {
         $this->renderSetup();
         $render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
-        $render_data['board_area'] = $this->domain->id() !== Domain::SITE;
+        $render_data['board_area'] = $this->domain->id() !== Domain::SITE && $this->domain->id() !== Domain::GLOBAL;
         $render_data['login_url'] = nel_build_router_url([Domain::SITE, 'account', 'login']);
         $render_data['logout_url'] = nel_build_router_url([Domain::SITE, 'account', 'logout']);
-        $render_data['site_panel_url'] = nel_build_router_url([Domain::SITE, 'site-main-panel']);
-        $render_data['board_panel_url'] = nel_build_router_url([$this->domain->id(), 'board-main-panel']);
+        $render_data['site_panel_url'] = nel_build_router_url([Domain::SITE, 'main-panel']);
+        $render_data['global_panel_url'] = nel_build_router_url([Domain::GLOBAL, 'main-panel']);
+        $render_data['board_panel_url'] = nel_build_router_url([$this->domain->id(), 'main-panel']);
         $render_data['home_url'] = $this->site_domain->reference('home_page');
         $render_data['news_url'] = NEL_BASE_WEB_PATH . 'news.html';
         $render_data['account_url'] = nel_build_router_url([Domain::SITE, 'account']);

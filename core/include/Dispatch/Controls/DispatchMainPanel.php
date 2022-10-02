@@ -9,7 +9,6 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
-use Nelliel\Output\OutputPanelBoard;
 use Nelliel\Output\OutputPanelMain;
 
 class DispatchMainPanel extends Dispatch
@@ -24,15 +23,20 @@ class DispatchMainPanel extends Dispatch
 
     public function dispatch(array $inputs): void
     {
-        switch ($inputs['module']) {
-            case 'site-main-panel':
-                $site_main_panel = new OutputPanelMain($this->domain, false);
-                $site_main_panel->render([], false);
+        $main_panel = new OutputPanelMain($this->domain, false);
+
+        switch ($inputs['domain_id']) {
+            case Domain::SITE:
+
+                $main_panel->site([], false);
                 break;
 
-            case 'board-main-panel':
-                $board_main_panel = new OutputPanelBoard($this->domain, false);
-                $board_main_panel->render([], false);
+            case Domain::GLOBAL:
+                $main_panel->global([], false);
+                break;
+
+            default:
+                $main_panel->board([], false);
                 break;
         }
     }

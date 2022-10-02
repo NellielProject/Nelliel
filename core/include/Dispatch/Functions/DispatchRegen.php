@@ -11,7 +11,6 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
-use Nelliel\Output\OutputPanelBoard;
 use Nelliel\Output\OutputPanelMain;
 
 class DispatchRegen extends Dispatch
@@ -34,19 +33,24 @@ class DispatchRegen extends Dispatch
             case 'pages':
                 if ($this->domain->id() === Domain::SITE) {
                     if (!$user->checkPermission($this->domain, 'perm_regen_pages')) {
-                        nel_derp(503, _gettext('You are not allowed to regenerate site pages.'));
+                        nel_derp(500, __('You are not allowed to regenerate site pages.'));
                     }
 
                     $regen->allSitePages($this->domain);
                     $forward = 'site';
+                } else if ($this->domain->id() === Domain::GLOBAL) {
+                    if (!$user->checkPermission($this->domain, 'perm_regen_pages')) {
+                        nel_derp(502, __('You are not allowed to globally regenerate board pages.'));
+                    }
+
+                    $regen->allBoards(true, false);
+                    $forward = 'global';
                 } else {
                     if (!$user->checkPermission($this->domain, 'perm_regen_pages')) {
-                        nel_derp(500, _gettext('You are not allowed to regenerate board pages.'));
+                        nel_derp(504, __('You are not allowed to regenerate pages on this board.'));
                     }
 
                     $regen->allBoardPages($this->domain);
-                    $archive = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
-                    $archive->updateThreads();
                     $forward = 'board';
                 }
 
@@ -55,14 +59,21 @@ class DispatchRegen extends Dispatch
             case 'cache':
                 if ($this->domain->id() === Domain::SITE) {
                     if (!$user->checkPermission($this->domain, 'perm_regen_cache')) {
-                        nel_derp(502, _gettext('You are not allowed to regenerate site caches.'));
+                        nel_derp(501, __('You are not allowed to regenerate site caches.'));
                     }
 
                     $this->domain->regenCache();
                     $forward = 'site';
+                } else if ($this->domain->id() === Domain::GLOBAL) {
+                    if (!$user->checkPermission($this->domain, 'perm_regen_cache')) {
+                        nel_derp(503, __('You are not allowed to globally regenerate board caches.'));
+                    }
+
+                    $this->domain->regenCache();
+                    $forward = 'global';
                 } else {
                     if (!$user->checkPermission($this->domain, 'perm_regen_cache')) {
-                        nel_derp(501, _gettext('You are not allowed to regenerate board caches.'));
+                        nel_derp(505, __('You are not allowed to regenerate caches on this board.'));
                     }
 
                     $this->domain->regenCache();
@@ -73,7 +84,7 @@ class DispatchRegen extends Dispatch
 
             case 'overboard':
                 if (!$user->checkPermission($this->domain, 'perm_regen_overboard')) {
-                    nel_derp(504, _gettext('You are not allowed to regenerate overboard pages.'));
+                    nel_derp(506, __('You are not allowed to regenerate overboard pages.'));
                 }
 
                 $regen->overboard($this->domain);
@@ -84,10 +95,13 @@ class DispatchRegen extends Dispatch
 
         if ($forward === 'site') {
             $output_main_panel = new OutputPanelMain($this->domain, false);
-            $output_main_panel->render(['user' => $user], false);
+            $output_main_panel->site(['user' => $user], false);
+        } else if ($forward === 'global') {
+            $output_board_panel = new OutputPanelMain($this->domain, false);
+            $output_board_panel->global(['user' => $user, 'board_id' => $this->domain->id()], false);
         } else if ($forward === 'board') {
-            $output_board_panel = new OutputPanelBoard($this->domain, false);
-            $output_board_panel->render(['user' => $user, 'board_id' => $this->domain->id()], false);
+            $output_board_panel = new OutputPanelMain($this->domain, false);
+            $output_board_panel->board(['user' => $user, 'board_id' => $this->domain->id()], false);
         }
     }
 }

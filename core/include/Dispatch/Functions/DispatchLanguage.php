@@ -35,6 +35,6 @@ class DispatchLanguage extends Dispatch
         }
 
         $output_main_panel = new OutputPanelMain($this->domain, false);
-        $output_main_panel->render([], false);
+        $output_main_panel->site([], false);
     }
 }

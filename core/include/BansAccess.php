@@ -98,24 +98,22 @@ class BansAccess
         return array();
     }
 
-    public function getBans(string $domain_id)
+    public function getBans(string $domain_id): array
     {
-        if ($domain_id !== Domain::SITE) {
-            $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "board_id" = ?');
-            $ban_ids = $this->database->executePreparedFetchAll($prepared, [$domain_id], PDO::FETCH_COLUMN);
-        } else {
+        if ($domain_id === Domain::SITE) {
+            $ban_ids = array();
+        } else if ($domain_id === Domain::GLOBAL) {
             $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '"');
             $ban_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
+        } else {
+            $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "board_id" = ?');
+            $ban_ids = $this->database->executePreparedFetchAll($prepared, [$domain_id], PDO::FETCH_COLUMN);
         }
 
-        if (is_array($ban_ids)) {
-            return $this->bansToHammers($ban_ids);
-        }
-
-        return array();
+        return $this->bansToHammers($ban_ids);
     }
 
-    private function bansToHammers(array $ban_ids)
+    private function bansToHammers(array $ban_ids): array
     {
         $ban_hammers = array();
 
