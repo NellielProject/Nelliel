@@ -181,7 +181,7 @@ class AuthUser extends AuthHandler
             return true;
         }
 
-        if (!$escalate) {
+        if ($domain->id() === Domain::SITE || !$escalate) {
             return false;
         }
 
@@ -192,12 +192,7 @@ class AuthUser extends AuthHandler
         }
 
         $site_role = $this->getDomainRole(nel_site_domain());
-
-        if ($site_role->checkPermission($permission)) {
-            return true;
-        }
-
-        return false;
+        return $site_role->checkPermission($permission);
     }
 
     private function setupAuthRole(string $role_id): AuthRole
