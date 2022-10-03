@@ -110,6 +110,7 @@ class Regen
 
             if ($cache) {
                 $board_domain->regenCache();
+                $board_domain->reload();
             }
 
             if ($pages) {

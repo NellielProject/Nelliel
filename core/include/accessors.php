@@ -37,22 +37,22 @@ function nel_plugins(): PluginAPI
     return $plugins;
 }
 
-function nel_site_domain(): DomainSite
+function nel_site_domain(bool $renew = false): DomainSite
 {
     static $site_domain;
 
-    if (!isset($site_domain)) {
+    if (!isset($site_domain) || $renew) {
         $site_domain = new DomainSite(nel_database('core'));
     }
 
     return $site_domain;
 }
 
-function nel_global_domain(): DomainGlobal
+function nel_global_domain(bool $renew = false): DomainGlobal
 {
     static $global_domain;
 
-    if (!isset($global_domain)) {
+    if (!isset($global_domain) || $renew) {
         $global_domain = new DomainGlobal(nel_database('core'));
     }
 

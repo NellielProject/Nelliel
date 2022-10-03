@@ -9,6 +9,7 @@ use Nelliel\Regen;
 use Nelliel\Domains\Domain;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Domains\DomainSite;
 
 class Upgrade
 {
@@ -107,6 +108,7 @@ class Upgrade
         echo __('Regenerating caches and pages.') . '<br>';
         $regen = new Regen();
         nel_site_domain()->regenCache();
+        nel_site_domain(true);
         $regen->allSitePages(nel_site_domain());
         $regen->allBoards(true, true);
         $regen->overboard(nel_site_domain());

@@ -423,7 +423,7 @@ class BetaMigrations
                 nel_database('core')->exec('ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" DROP COLUMN "channel"');
                 nel_database('core')->exec(
                     'ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" ADD COLUMN message_values TEXT NOT NULL DEFAULT \'\'');
-                $public_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+                $public_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
                 $public_logs_table->createTable();
 
@@ -439,6 +439,12 @@ class BetaMigrations
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
+
+                // Update site settings
+                $new_site_settings = ['max_page_regen_time'];
+                $this->newSiteSettings($new_site_settings);
+
+                echo ' - ' . __('Site settings updated.') . '<br>';
 
                 $migration_count ++;
         }

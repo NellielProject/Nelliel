@@ -6,3 +6,5 @@ Guide for upgrading Nelliel.
 3. Navigate to `imgboard.php?upgrade` in a browser and log in as site owner.
 4. Once login is completed the upgrade script will run to perform migrations and any other functions required.
 5. After the script finishes the upgrade is done and normal functions will automatically resume.
+
+NOTE: Users may need to manually refresh some pages to reload CSS and Javascript files.
