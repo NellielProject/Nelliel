@@ -207,13 +207,14 @@ class AdminThreads extends Admin
     public function move(ContentID $content_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_move_content');
-        $destination_domain = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
+        $destination_domain = Domain::getDomainFromID($_POST['destination_board'] ?? 0, $this->domain->database());
         $this->verifyPermissions($destination_domain, 'perm_move_content');
+        $keep_shadow = boolval($_POST['keep_shadow'] ?? false);
 
         if ($content_id->isThread()) {
-            $destination = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
+            $destination = Domain::getDomainFromID($_POST['destination_board'] ?? 0, $this->domain->database());
             $thread = new Thread($content_id, $this->domain);
-            $thread->move($destination);
+            $thread->move($destination, $keep_shadow);
         }
 
         if ($content_id->isPost()) {

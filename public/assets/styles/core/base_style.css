@@ -744,3 +744,7 @@ td {
 .link-button:hover {
 	color: var(--link-hover-color);
 }
+
+.shadow-thread-header {
+	font-weight: bold;
+}

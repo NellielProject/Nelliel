@@ -111,6 +111,15 @@ class OutputPost extends Output
             }
         }
 
+        if ($thread->data('shadow')) {
+            $markup = new Markup();
+            $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
+            $cite_text = '>>>/' . $thread->getMoar()->get('shadow_board_id') . '/' .
+                $thread->getMoar()->get('shadow_thread_id');
+            $this->render_data['shadow_cite_markup'] = $markup->parseCites($cite_text, $post, $dynamic_urls);
+            $this->render_data['is_shadow'] = true;
+        }
+
         $output = $this->output('thread/post', $data_only, true, $this->render_data);
         return $output;
     }

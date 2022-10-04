@@ -448,6 +448,45 @@ class BetaMigrations
                 $this->newSiteSettings($new_site_settings);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
+
+                // Update board settings
+                $new_board_settings = ['allow_shadow_message'];
+                $this->newBoardSettings($new_board_settings);
+
+                echo ' - ' . __('Board settings updated.') . '<br>';
+
+                // Update thread tables
+                $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
+                }
+
+                echo ' - ' . __('Thread tables updated.') . '<br>';
+
+                // Update post tables
+                $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_posts' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
+                }
+
+                echo ' - ' . __('Post tables updated.') . '<br>';
+
+                // Update upload tables
+                $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_uploads' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
+                }
+
+                echo ' - ' . __('Upload tables updated.') . '<br>';
         }
 
         return $migration_count;

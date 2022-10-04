@@ -270,13 +270,13 @@ class Uploads
 
         if ($this->domain->setting('check_board_file_duplicates')) {
             $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
+                '" WHERE ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ') AND "shadow" = 0';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
             $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
         } else if ($post->data('op') && $this->domain->setting('check_op_file_duplicates')) {
             $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "parent_thread" = "post_ref" AND ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
+                '" WHERE "parent_thread" = "post_ref" AND ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ') AND "shadow" = 0';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
             $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);

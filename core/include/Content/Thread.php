@@ -220,8 +220,8 @@ class Thread
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
-            'max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') &&
+            $this->data('post_count') > $this->domain->setting('max_bumps')) {
             return;
         }
 
@@ -622,7 +622,7 @@ class Thread
         return $this->writeToDatabase();
     }
 
-    public function move(DomainBoard $domain): Thread
+    public function move(DomainBoard $domain, bool $keep_shadow): Thread
     {
         if ($domain->id() === $this->domain->id()) {
             return $this;
@@ -636,15 +636,26 @@ class Thread
             if ($first_post) {
                 $new_thread = new Thread(new ContentID(), $domain);
                 $new_thread->transferData($this->transferData());
-                $first_post = false;
-            }
 
-            // If this is OP, will also finish thread setup
-            $post->move($new_thread, true);
+                if ($keep_shadow) {
+                    $post->move($new_thread, true);
+                    $this->changeData('shadow', true);
+                    $this->getMoar()->modify('shadow_board_id', $domain->id());
+                    $this->getMoar()->modify('shadow_thread_id', $new_thread->contentID()->threadID());
+                    $this->changeData('locked', true);
+                    $this->writeToDatabase();
+                }
+
+                $first_post = false;
+            } else {
+                $post->move($new_thread, false);
+            }
         }
 
-        // TODO: Optionally make this a shadow post instead
-        $this->delete(true, true);
+        if (!$keep_shadow) {
+            $this->delete(true, true);
+        }
+
         $regen = new Regen();
         $regen->threads($domain, true, [$new_thread->contentID()->threadID()]);
         $regen->index($domain);

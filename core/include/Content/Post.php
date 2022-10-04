@@ -512,36 +512,41 @@ class Post
         return $this->json;
     }
 
-    public function move(Thread $new_thread, bool $parent_move): Post
+    public function move(Thread $new_thread, bool $is_shadow): Post
     {
         $new_board = $new_thread->domain()->id() !== $this->domain()->id();
+
+        if ($is_shadow) {
+            $this->changeData('shadow', true);
+            $this->writeToDatabase();
+        }
 
         if ($new_board) {
             $new_post = new Post(new ContentID(), $new_thread->domain());
             $new_post->transferData($this->transferData());
             $new_post->storeMoar($this->content_moar);
             $new_post->reserveDatabaseRow();
+
+            // If this is OP and we're moving the whole thread, finish preparation before continuing
+            if ($this->data('op')) {
+                $new_thread->contentID()->changeThreadID($new_post->contentID()->postID());
+                $new_thread->changedata('thread_id', $new_thread->contentID()->threadID());
+                $new_thread->writeToDatabase();
+                $new_thread->createDirectories();
+            }
         } else {
             $new_post = $this;
-        }
-
-        // If this is OP and we're moving the whole thread, finish preparation before continuing
-        if ($parent_move && $this->data('op')) {
-            $new_thread->contentID()->changeThreadID($new_post->contentID()->postID());
-            $new_thread->changedata('thread_id', $new_thread->contentID()->threadID());
-            $new_thread->writeToDatabase();
-            $new_thread->createDirectories();
         }
 
         $new_thread->addPost($new_post);
         $new_post->writeToDatabase();
 
         foreach ($this->getUploads() as $upload) {
-            $upload->move($new_post, true);
+            $upload->move($new_post, $is_shadow);
         }
 
-        if ($new_board) {
-            $this->delete(true, $parent_move);
+        if ($new_board && !$is_shadow) {
+            $this->delete(true, false);
         }
 
         return $new_post;

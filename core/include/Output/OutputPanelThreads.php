@@ -207,6 +207,7 @@ class OutputPanelThreads extends Output
         $this->render_data['move_post'] = $content_id->isPost();
         $this->render_data['move_upload'] = $content_id->isUpload();
         $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
+        $this->render_data['allow_shadow_message'] = $this->domain->setting('allow_shadow_message');
         $this->render_data['form_action'] = nel_build_router_url(
             [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'move']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
