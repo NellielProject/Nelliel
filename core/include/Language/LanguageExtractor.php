@@ -55,7 +55,7 @@ class LanguageExtractor
                 if (isset($data['msgid'])) {
 
                     $message = $this->gettext->poEncode($data['msgid']);
-                    $output_string .= 'msgid "' . $this->wrapLine($message, 79, '') . '"' . "\n";
+                    $output_string .= 'msgid "' . $this->wrapLine($message, 80) . '"' . "\n";
                 }
 
                 if (isset($data['msgid_plural'])) {
@@ -96,7 +96,6 @@ class LanguageExtractor
         $headers .= '"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"' . "\n";
         $headers .= '"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"' . "\n";
         $headers .= '"Language-Team: LANGUAGE <LL@li.org>\n"' . "\n";
-        $headers .= '"Language: \n"' . "\n";
         $headers .= '"MIME-Version: 1.0\n"' . "\n";
         $headers .= '"Content-Type: text/plain; charset=UTF-8\n"' . "\n";
         $headers .= '"Content-Transfer-Encoding: 8bit\n"' . "\n";
@@ -265,7 +264,7 @@ class LanguageExtractor
                     $start = $node[Mustache_Tokenizer::INDEX];
                     $end = $node[Mustache_Tokenizer::END];
                     $msgid = utf8_substr($template, $start, $end - $start);
-                    $entry['msgid'] = $file_id;
+                    $entry['msgid'] = $msgid;
                     $entry['file'] = $file_id;
                     $entry['prefix'] = ''; // TODO: Change this handler when we add more support
                     $entry['line_number'] = $node['line'];
@@ -334,13 +333,13 @@ class LanguageExtractor
         $database = $this->domain->database();
         $filetype_labels = $database->executeFetchAll('SELECT "label" FROM "' . NEL_FILETYPES_TABLE . '"',
             PDO::FETCH_COLUMN);
+        $comment_line = '(Database) Table: %s | Column: %s';
 
         foreach ($filetype_labels as $label) {
             if ($label !== '' && !is_null($label)) {
                 $msgid = $label;
                 $entries[$default_category][$msgid]['msgid'] = $label;
-                $entries[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_FILETYPES_TABLE .
-                    ' | Column: label'] = '#:';
+                $entries[$default_category][$msgid]['comments'][sprintf($comment_line, NEL_FILETYPES_TABLE, 'label')] = '#:';
             }
         }
 
@@ -351,8 +350,8 @@ class LanguageExtractor
             if ($description !== '' && !is_null($description)) {
                 $msgid = $description;
                 $entries[$default_category][$msgid]['msgid'] = $description;
-                $entries[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_PERMISSIONS_TABLE .
-                    ' | Column: description'] = '#:';
+                $entries[$default_category][$msgid]['comments'][sprintf($comment_line, NEL_PERMISSIONS_TABLE,
+                    'description')] = '#:';
             }
         }
 
@@ -363,20 +362,24 @@ class LanguageExtractor
             if ($label !== '' && !is_null($label)) {
                 $msgid = $label;
                 $entries[$default_category][$msgid]['msgid'] = $label;
-                $entries[$default_category][$msgid]['comments']['(Database) Table: ' . NEL_SETTINGS_TABLE .
-                    ' | Column: setting_description'] = '#:';
+                $entries[$default_category][$msgid]['comments'][sprintf($comment_line, NEL_SETTINGS_TABLE,
+                    'setting_description')] = '#:';
             }
         }
 
         return $entries;
     }
 
-    private function wrapLine(string $line, int $width, string $break)
+    private function wrapLine(string $line, int $width)
     {
-        if (utf8_strlen($line) <= $width) {
+        $width_reduction = 3; // 2 for quotation marks, one for trailing space
+        $msgid_length = 6; // Length of 'msgid '
+
+        if (utf8_strlen($line) <= $width - $msgid_length - $width_reduction) {
             return $line;
         }
 
+        $modified_width = $width - $width_reduction;
         $words = explode(' ', $line);
 
         if ($words === false) {
@@ -388,18 +391,22 @@ class LanguageExtractor
         $index = 0;
 
         foreach ($words as $word) {
-            if (utf8_strlen($lines[$index] . ' ' . $word) > $width && utf8_strlen($word) <= $width) {
+            if (empty($lines[$index])) {
+                $test_line = $word;
+            } else {
+                $test_line = $lines[$index] . ' ' . $word;
+            }
+
+            if (utf8_strlen($test_line) < $modified_width) {
+                $lines[$index] = $test_line;
+            } else {
                 $index ++;
                 $lines[$index] = $word;
-            } else {
-                if (!empty($lines[$index])) {
-                    $lines[$index] .= ' ';
-                }
-
-                $lines[$index] .= $word;
             }
         }
 
-        return implode(' "' . "\n" . '"', $lines);
+        $msgid_empty_line = '"' . "\n" . '"';
+        $final_string = implode(' "' . "\n" . '"', $lines);
+        return $msgid_empty_line . $final_string;
     }
 }
