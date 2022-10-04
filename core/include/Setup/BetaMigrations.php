@@ -36,21 +36,20 @@ class BetaMigrations
                 echo '<br>' . __('Updating from v0.9.25 to v0.9.26...') . '<br>';
 
                 // Update setting options table
+                nel_database('core')->exec('ALTER TABLE "nelliel_menu_data" RENAME TO nelliel_setting_options');
                 nel_database('core')->exec(
-                    'ALTER TABLE "nelliel_menu_data" RENAME TO ' . NEL_SETTING_OPTIONS_TABLE . '');
-                nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_SETTING_OPTIONS_TABLE . '" ADD COLUMN raw_output SMALLINT NOT NULL DEFAULT 0');
+                    'ALTER TABLE "nelliel_setting_options" ADD COLUMN raw_output SMALLINT NOT NULL DEFAULT 0');
 
                 echo ' - ' . __('Setting options table updated.') . '<br>';
 
                 // Update filetypes table
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_FILETYPES_TABLE . '" ADD COLUMN mimetypes TEXT NOT NULL DEFAULT \'\'');
-                nel_database('core')->exec('UPDATE "' . NEL_FILETYPES_TABLE . '" SET "mimetypes" = "mime"');
-                nel_database('core')->exec('ALTER TABLE "' . NEL_FILETYPES_TABLE . '" DROP COLUMN "mime"');
+                    'ALTER TABLE "nelliel_filetypes" ADD COLUMN mimetypes TEXT NOT NULL DEFAULT \'\'');
+                nel_database('core')->exec('UPDATE "nelliel_filetypes" SET "mimetypes" = "mime"');
+                nel_database('core')->exec('ALTER TABLE "nelliel_filetypes" DROP COLUMN "mime"');
 
                 $old_data = nel_database('core')->executeFetchAll(
-                    'SELECT "format", "mimetypes" FROM "' . NEL_FILETYPES_TABLE . '"', PDO::FETCH_ASSOC);
+                    'SELECT "format", "mimetypes" FROM "nelliel_filetypes"', PDO::FETCH_ASSOC);
 
                 $multiples = ['bmp' => '["image/bmp", "image/x-bmp"]', 'tgs' => '["image/targa", "image/x-tga"]',
                     'pict' => '["image/pict", "image/x-pict"]', 'aiff' => '["audio/aiff", "audio/x-aiff"]',
@@ -70,32 +69,29 @@ class BetaMigrations
                     }
 
                     $prepared = nel_database('core')->prepare(
-                        'UPDATE "' . NEL_FILETYPES_TABLE . '" SET "mimetypes" = :mimetypes WHERE "format" = :format');
+                        'UPDATE "nelliel_filetypes" SET "mimetypes" = :mimetypes WHERE "format" = :format');
                     $prepared->bindValue(':mimetypes', $new_value, PDO::PARAM_STR);
                     $prepared->bindValue(':format', $data['format'], PDO::PARAM_STR);
                     nel_database('core')->executePrepared($prepared, null);
                 }
 
                 nel_database('core')->exec(
-                    'UPDATE "' . NEL_FILETYPES_TABLE .
-                    '" SET "extensions" = \'["3gp", "3gpp"]\' WHERE "format" = \'3gp\'');
+                    'UPDATE "nelliel_filetypes" SET "extensions" = \'["3gp", "3gpp"]\' WHERE "format" = \'3gp\'');
 
                 echo ' - ' . __('Filetypes table updated.') . '<br>';
 
                 // Update users table
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
                     nel_database('core')->exec(
-                        'ALTER TABLE "' . NEL_USERS_TABLE .
-                        '" CHANGE COLUMN user_password password VARCHAR(255) NOT NULL');
+                        'ALTER TABLE "nelliel_users" CHANGE COLUMN user_password password VARCHAR(255) NOT NULL');
                 } else {
-                    nel_database('core')->exec(
-                        'ALTER TABLE "' . NEL_USERS_TABLE . '" RENAME COLUMN user_password TO password');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_users" RENAME COLUMN user_password TO password');
                 }
 
-                $usernames = nel_database('core')->executeFetchAll('SELECT "username" FROM "' . NEL_USERS_TABLE . '"',
+                $usernames = nel_database('core')->executeFetchAll('SELECT "username" FROM "nelliel_users"',
                     PDO::FETCH_COLUMN);
                 $prepared = nel_database('core')->prepare(
-                    'UPDATE "' . NEL_USERS_TABLE . '" SET "username" = :username_lower WHERE "username" = :username');
+                    'UPDATE "nelliel_users" SET "username" = :username_lower WHERE "username" = :username');
 
                 foreach ($usernames as $username) {
                     $username_lower = utf8_strtolower($username);
@@ -108,8 +104,8 @@ class BetaMigrations
 
                 // Update archive table
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
-                    $prefixes = nel_database('core')->executeFetchAll(
-                        'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+                    $prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                        PDO::FETCH_COLUMN);
 
                     foreach ($prefixes as $prefix) {
                         nel_database('core')->exec(
@@ -146,8 +142,7 @@ class BetaMigrations
 
                 foreach ($new_site_textareas as $setting_name) {
                     $prepared = nel_database('core')->prepare(
-                        'UPDATE "' . NEL_SETTINGS_TABLE .
-                        '" SET "input_attributes" = :textarea WHERE "setting_name" = :setting_name AND "setting_category" = \'site\'');
+                        'UPDATE "nelliel_settings" SET "input_attributes" = :textarea WHERE "setting_name" = :setting_name AND "setting_category" = \'site\'');
                     $prepared->bindValue(':textarea', '{"type":"textarea"}', PDO::PARAM_STR);
                     $prepared->bindValue(':setting_name', $setting_name);
                     nel_database('core')->executePrepared($prepared, null);
@@ -155,8 +150,7 @@ class BetaMigrations
 
                 foreach ($new_board_textareas as $setting_name) {
                     $prepared = nel_database('core')->prepare(
-                        'UPDATE "' . NEL_SETTINGS_TABLE .
-                        '" SET "input_attributes" = :textarea WHERE "setting_name" = :setting_name AND "setting_category" = \'board\'');
+                        'UPDATE "nelliel_settings" SET "input_attributes" = :textarea WHERE "setting_name" = :setting_name AND "setting_category" = \'board\'');
                     $prepared->bindValue(':textarea', '{"type":"textarea"}', PDO::PARAM_STR);
                     $prepared->bindValue(':setting_name', $setting_name);
                     nel_database('core')->executePrepared($prepared, null);
@@ -165,8 +159,8 @@ class BetaMigrations
                 echo ' - ' . __('Settings and board config tables updated.') . '<br>';
 
                 // Update thread tables
-                $db_prefixes = nel_database('core')->executeFetchAll(
-                    'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+                $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
 
                 foreach ($db_prefixes as $prefix) {
                     nel_database('core')->exec(
@@ -183,8 +177,8 @@ class BetaMigrations
                 echo '<br>' . __('Updating from v0.9.26 to v0.9.27...') . '<br>';
 
                 // Update post tables
-                $db_prefixes = nel_database('core')->executeFetchAll(
-                    'SELECT "db_prefix" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
+                $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
 
                 foreach ($db_prefixes as $prefix) {
                     nel_database('core')->exec(
@@ -196,18 +190,17 @@ class BetaMigrations
 
                 // Update bans table
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_BANS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "nelliel_bans" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
                 echo ' - ' . __('Bans table updated.') . '<br>';
 
                 // Update logs table
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE .
-                    '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "nelliel_logs" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
                 echo ' - ' . __('Logs table updated.') . '<br>';
 
                 // Update reports table
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_REPORTS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "nelliel_reports" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
                 echo ' - ' . __('Reports table updated.') . '<br>';
 
                 $new_board_settings = ['post_backlinks_header', 'post_backlinks_footer', 'post_backlinks_label',
@@ -221,9 +214,9 @@ class BetaMigrations
 
                 // Update plugins table
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_PLUGINS_TABLE . '" ADD COLUMN initializer VARCHAR(255) NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "nelliel_plugins" ADD COLUMN initializer VARCHAR(255) NOT NULL DEFAULT \'\'');
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_PLUGINS_TABLE . '" ADD COLUMN parsed_ini TEXT NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "nelliel_plugins" ADD COLUMN parsed_ini TEXT NOT NULL DEFAULT \'\'');
 
                 echo ' - ' . __('Plugins table updated.') . '<br>';
 
@@ -328,56 +321,56 @@ class BetaMigrations
 
                 // Update bans
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
-                    nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal');
-                    nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal_response');
-                    nel_database('core')->exec('ALTER TABLE "' . NEL_BANS_TABLE . '" DROP COLUMN appeal_status');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_bans" DROP COLUMN appeal');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_bans" DROP COLUMN appeal_response');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_bans" DROP COLUMN appeal_status');
                 }
 
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_BANS_TABLE . '" ADD COLUMN appeal_allowed SMALLINT NOT NULL DEFAULT 0');
+                    'ALTER TABLE "nelliel_bans" ADD COLUMN appeal_allowed SMALLINT NOT NULL DEFAULT 0');
 
                 echo ' - ' . __('Updated bans table.') . '<br>';
 
                 // Update users
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_USERS_TABLE . '" ADD COLUMN display_name VARCHAR(255) NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "nelliel_users" ADD COLUMN display_name VARCHAR(255) NOT NULL DEFAULT \'\'');
 
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
-                    nel_database('core')->exec('ALTER TABLE "' . NEL_USERS_TABLE . '" DROP COLUMN locked');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_users" DROP COLUMN locked');
                 }
 
                 echo ' - ' . __('Updated users table.') . '<br>';
+
+                $migration_count ++;
 
             case 'v0.9.28':
                 echo '<br>' . __('Updating from v0.9.28 to v0.9.29...') . '<br>';
 
                 // Update file filters
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_FILE_FILTERS_TABLE . '" ADD COLUMN enabled SMALLINT NOT NULL DEFAULT 0');
+                    'ALTER TABLE "nelliel_file_filters" ADD COLUMN enabled SMALLINT NOT NULL DEFAULT 0');
 
                 echo ' - ' . __('Updated file filters table.') . '<br>';
 
                 // Update site and global domain IDs
                 $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
-                    '" SET "domain_id" = \'site\' WHERE "domain_id" = \'_site_\'');
+                    'UPDATE "nelliel_domain_registry" SET "domain_id" = \'site\' WHERE "domain_id" = \'_site_\'');
                 $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
-                    '" SET "domain_id" = \'global\' WHERE "domain_id" = \'_global_\'');
+                    'UPDATE "nelliel_domain_registry" SET "domain_id" = \'global\' WHERE "domain_id" = \'_global_\'');
 
                 echo ' - ' . __('Updated site and global domain IDs.') . '<br>';
 
                 // Update roles table
                 $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'site_admin\' WHERE "role_id" = \'SITE_ADMIN\'');
+                    'UPDATE "nelliel_roles" SET "role_id" = \'site_admin\' WHERE "role_id" = \'SITE_ADMIN\'');
                 $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'board_owner\' WHERE "role_id" = \'BOARD_OWNER\'');
+                    'UPDATE "nelliel_roles" SET "role_id" = \'board_owner\' WHERE "role_id" = \'BOARD_OWNER\'');
                 $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'moderator\' WHERE "role_id" = \'MODERATOR\'');
+                    'UPDATE "nelliel_roles" SET "role_id" = \'moderator\' WHERE "role_id" = \'MODERATOR\'');
                 $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'janitor\' WHERE "role_id" = \'JANITOR\'');
+                    'UPDATE "nelliel_roles" SET "role_id" = \'janitor\' WHERE "role_id" = \'JANITOR\'');
                 $prepared = nel_database('core')->exec(
-                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'basic_user\' WHERE "role_id" = \'BASIC_USER\'');
+                    'UPDATE "nelliel_roles" SET "role_id" = \'basic_user\' WHERE "role_id" = \'BASIC_USER\'');
 
                 echo ' - ' . __('Updated roles table.') . '<br>';
 
@@ -402,7 +395,7 @@ class BetaMigrations
                     'perm_board_config_override' => 'perm_override_config_lock',
                     'perm_board_defaults_modify' => 'perm_modify_board_defaults'];
                 $permission_update = nel_database('core')->prepare(
-                    'UPDATE "' . NEL_PERMISSIONS_TABLE . '" SET "permission" = :new WHERE "permission" = :old');
+                    'UPDATE "nelliel_permissions" SET "permission" = :new WHERE "permission" = :old');
 
                 foreach ($permissions as $old => $new) {
                     $permission_update->bindValue(':new', $new);
@@ -413,18 +406,17 @@ class BetaMigrations
                 echo ' - ' . __('Updated permissions and role permissions tables.') . '<br>';
 
                 // Update wordfilters table
-                nel_database('core')->exec(
-                    'ALTER TABLE "' . 'nelliel_word_filters' . '" RENAME TO ' . NEL_WORDFILTERS_TABLE);
+                nel_database('core')->exec('ALTER TABLE "nelliel_word_filters" RENAME TO nelliel_wordfilters');
 
                 echo ' - ' . __('Updated wordfilters table.') . '<br>';
 
                 // Update log tables
-                nel_database('core')->exec('ALTER TABLE "' . 'nelliel_logs' . '" RENAME TO ' . NEL_SYSTEM_LOGS_TABLE);
-                nel_database('core')->exec('ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" DROP COLUMN "channel"');
+                nel_database('core')->exec('ALTER TABLE "nelliel_logs" RENAME TO nelliel_system_logs');
+                nel_database('core')->exec('ALTER TABLE "nelliel_system_logs" DROP COLUMN "channel"');
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" ADD COLUMN message_values TEXT NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "nelliel_system_logs" ADD COLUMN message_values TEXT NOT NULL DEFAULT \'\'');
                 $public_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
+                $public_logs_table->tableName('nelliel_public_logs');
                 $public_logs_table->createTable();
 
                 echo ' - ' . __('Updated log tables.') . '<br>';
@@ -447,6 +439,9 @@ class BetaMigrations
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
                 $migration_count ++;
+
+            case 'v0.9.29':
+                echo '<br>' . __('Updating from v0.9.29 to ???...') . '<br>';
         }
 
         return $migration_count;
