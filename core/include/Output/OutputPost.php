@@ -116,8 +116,11 @@ class OutputPost extends Output
             $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
             $cite_text = '>>>/' . $thread->getMoar()->get('shadow_board_id') . '/' .
                 $thread->getMoar()->get('shadow_thread_id');
-            $this->render_data['shadow_cite_markup'] = $markup->parseCites($cite_text, $post, $dynamic_urls);
+            $shadow_cite = $markup->parseCites($cite_text, $post, $dynamic_urls);
             $this->render_data['is_shadow'] = true;
+            $message_override = $this->domain->setting('shadow_message_override');
+            $shadow_message = nel_true_empty($message_override) ? __('This thread was moved to another board: %s') : $message_override;
+            $this->render_data['shadow_message'] = sprintf(htmlspecialchars($shadow_message), $shadow_cite);
         }
 
         $output = $this->output('thread/post', $data_only, true, $this->render_data);

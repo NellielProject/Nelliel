@@ -182,6 +182,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_moving_replies', '1', 'Let individual replies from threads be moved.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_moving_uploads', '1', 'Let files and embeds be moved between posts.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_shadow_message', '1', 'Give the option of leaving a shadow message when moving a thread to another board.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'shadow_message_override', '', 'Optional message that overrides the default shadow thread message. %s is the cite link to the thread\'s new location. (sprintf)', '{"type":"select"}']);
 
         // Banners
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_banners', '0', 'Display board banners if available.', '{"type":"checkbox"}']);

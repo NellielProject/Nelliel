@@ -450,7 +450,7 @@ class BetaMigrations
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
                 // Update board settings
-                $new_board_settings = ['allow_shadow_message'];
+                $new_board_settings = ['allow_shadow_message', 'shadow_message_override'];
                 $this->newBoardSettings($new_board_settings);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
