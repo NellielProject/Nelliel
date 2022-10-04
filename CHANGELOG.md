@@ -1,4 +1,62 @@
 # Nelliel Changelog
+## v0.9.29 (2022/10/3)
+### Added
+ - Enable/disable for file filters
+ - Standard confirmation interstitial
+ - Separate system and public logs
+ - Option to disable markup when making a new post
+ - Simpler custom markup engine
+ - Pink and orange text markup
+ - Nested spoilers markup
+ - Italic, bold and underline markup
+ - Markup for both standard ASCII art and Japanese SHIFT-JIS art
+ - Option to automatically suggest reply subject based on OP subject
+ - Ability to move threads, individual posts or uploads
+ - Spoiler toggle in moderator links
+ - Global panel
+ - Setting to disable user registration
+ - Setting to allow OP to moderate their own thread
+ - Setting for maximum page regen time
+
+### Changed
+ - Youtube regex given more restricted character set
+ - File filters panel
+ - Redirect and return link handling
+ - Improved error page
+ - Updated reserved URIs
+ - Site and global domain IDs from `_site_` and `_global_` to `site` and `global`
+ - Made session timeout default 1 month (vastly less annoying)
+ - Converted remaining admin functions to routing system
+ - Cleanup of `Admin` classes
+ - Updated documentation
+ - Much tweaking and general cleanup
+ - Updated language file
+ - Renamed some permissions
+ - Default role names now lowercase
+
+### Fixed
+ - Noticeboard cleanup
+ - Duplicate setting default inserts
+ - `NellielPDO` exists methods mishandling nulls
+ - Inconsistent control panel headers
+ - File filters panel
+ - Moderator links
+ - Auth classes
+ - Post popup and highlighting
+ - Reports not working
+ - Pagination in logs panel
+ - Logging system debug
+ - HTML escaping
+ - Null errors when autmatically unhiding content that no longer exists
+ - Extracted EXIF having the temp filename
+ - Permission checking not handling escalations correctly
+ - Gettext extractor output
+
+### Removed
+ - Old dispatch system
+ - Automatic redirect on interstitial pages
+ - Markdown library. it was overkill and too much hassle to get imageboard style correct
+
 ## v0.9.28 (2022/8/30)
 ### Added
  - New filetype icons
