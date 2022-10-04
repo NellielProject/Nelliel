@@ -442,6 +442,12 @@ class BetaMigrations
 
             case 'v0.9.29':
                 echo '<br>' . __('Updating from v0.9.29 to ???...') . '<br>';
+
+                // Update site settings
+                $new_site_settings = ['pm_snippet_length'];
+                $this->newSiteSettings($new_site_settings);
+
+                echo ' - ' . __('Site settings updated.') . '<br>';
         }
 
         return $migration_count;

@@ -10,6 +10,7 @@ define('NEL_TEMP_FILES_PATH', NEL_CORE_PATH . 'temp/'); // Temporary files
 define('NEL_VENDOR_PATH', NEL_BASE_PATH . 'vendor/'); // Composer vendor path
 
 define('NEL_OVER_9000', 9001);
+define('NEL_HELLIPSIS', '…');
 define('NEL_ASSETS_DIR', 'assets');
 define('NEL_STYLES_DIR', 'styles');
 define('NEL_IMAGE_SETS_DIR', 'image_sets');

@@ -26,10 +26,10 @@ class OutputPrivateMessages extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "recipient" = ?');
-        $prepared->bindValue(1, $this->session->user()
-            ->id(), PDO::PARAM_STR);
+        $prepared->bindValue(1, $this->session->user()->id(), PDO::PARAM_STR);
         $list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $bgclass = 'row1';
+        $snippet_length = $this->site_domain->setting('pm_snippet_length');
 
         foreach ($list as $message) {
             $message_info = array();
@@ -38,7 +38,14 @@ class OutputPrivateMessages extends Output
             $message_info['message_read'] = ($message['message_read'] == 1) ? 'X' : null;
             $message_info['time'] = date('Y/m/d l H:i', intval($message['time_sent']));
             $message_info['sender'] = $message['sender'];
-            $message_info['message'] = $message['message'];
+
+            if (utf8_strlen($message['message']) > $snippet_length) {
+                $message_info['message'] = substr($message['message'], 0, $snippet_length) . NEL_HELLIPSIS;
+            } else {
+                $message_info['message'] = $message['message'];
+            }
+
+            $message_info['message'] = htmlspecialchars($message_info['message']);
             $message_info['view_url'] = nel_build_router_url(
                 [Domain::SITE, 'account', 'private-messages', 'view', $message['message_id']]);
             $message_info['mark_read_url'] = nel_build_router_url(
@@ -69,7 +76,8 @@ class OutputPrivateMessages extends Output
         $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'account', 'private-messages', 'send']);
 
         if (!is_null($reply_id)) {
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "message_id" = ?');
+            $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "message_id" = ?');
             $prepared->bindValue(1, $reply_id, PDO::PARAM_INT);
             $message = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
@@ -94,7 +102,8 @@ class OutputPrivateMessages extends Output
         $this->setupTimer();
         $this->setBodyTemplate('private_messages/view_message');
         $message_id = $parameters['message_id'] ?? null;
-        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "message_id" = ?');
+        $prepared = $this->database->prepare(
+            'SELECT * FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "message_id" = ?');
         $prepared->bindValue(1, $message_id, PDO::PARAM_INT);
         $message = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 

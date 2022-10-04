@@ -17,10 +17,10 @@ class PrivateMessage
     private $session;
     private $sql_compatibility;
     private $table;
-    private $message_id = 0;
+    private $message_id;
     private $data = array();
 
-    function __construct(NellielPDO $database, Session $session, int $message_id = 0)
+    function __construct(NellielPDO $database, Session $session, int $message_id = null)
     {
         $this->database = $database;
         $this->session = $session;
@@ -28,7 +28,7 @@ class PrivateMessage
         $this->table = new TablePrivateMessages($this->database, $this->sql_compatibility);
         $this->changeData('message_id', $message_id);
 
-        if ($message_id > 0) {
+        if (!is_null($message_id)) {
             $this->message_id = $message_id;
             $this->load();
         }
@@ -54,8 +54,8 @@ class PrivateMessage
     public function collectFromPOST(): void
     {
         $this->changeData('sender', $this->session->user()->id());
-        $this->changeData('recipient', $_POST['recipient'] ?? '');
-        $this->changeData('message', $_POST['message'] ?? '');
+        $this->changeData('recipient', utf8_strtolower($_POST['recipient'] ?? ''));
+        $this->changeData('message', utf8_strtolower($_POST['message'] ?? ''));
     }
 
     public function data(string $key)
