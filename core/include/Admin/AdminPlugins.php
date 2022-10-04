@@ -17,58 +17,43 @@ class AdminPlugins extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_PLUGINS_TABLE;
-        $this->id_field = 'plugin-id';
         $this->id_column = 'plugin_id';
         $this->panel_name = _gettext('Plugins');
     }
 
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'disable':
-                    $this->disable();
-                    break;
-
-                case 'enable':
-                    $this->enable();
-                    break;
-            }
-        }
-    }
-
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
         $output_panel = new OutputPanelPlugins($this->domain, false);
         $output_panel->render([], false);
     }
 
-    public function creator(): void
-    {}
-
-    public function add(): void
+    public function install(string $plugin_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        nel_plugins()->getPlugin($id)->install();
-        $this->outputMain(true);
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
+        nel_plugins()->getPlugin($plugin_id)->install();
+        $this->panel();
     }
 
-    public function editor(): void
-    {}
-
-    public function update(): void
-    {}
-
-    public function remove(): void
+    public function uninstall(string $plugin_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        nel_plugins()->getPlugin($id)->uninstall();
-        $this->outputMain(true);
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
+        nel_plugins()->getPlugin($plugin_id)->uninstall();
+        $this->panel();
+    }
+
+    public function enable(string $plugin_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
+        nel_plugins()->getPlugin($plugin_id)->enable();
+        $this->panel();
+    }
+
+    public function disable(string $plugin_id)
+    {
+        $this->verifyPermissions($this->domain, 'perm_manage_plugins');
+        nel_plugins()->getPlugin($plugin_id)->disable();
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -78,28 +63,12 @@ class AdminPlugins extends Admin
         }
 
         switch ($perm) {
-            case 'perm_plugins_manage':
+            case 'perm_manage_plugins':
                 nel_derp(385, _gettext('You are not allowed to manage styles.'));
                 break;
 
             default:
                 $this->defaultPermissionError();
         }
-    }
-
-    public function enable()
-    {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        nel_plugins()->getPlugin($id)->enable();
-        $this->outputMain(true);
-    }
-
-    public function disable()
-    {
-        $this->verifyPermissions($this->domain, 'perm_plugins_manage');
-        $id = $_GET[$this->id_field] ?? '';
-        nel_plugins()->getPlugin($id)->disable();
-        $this->outputMain(true);
     }
 }

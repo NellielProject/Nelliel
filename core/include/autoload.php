@@ -1,4 +1,6 @@
 <?php
+declare(strict_types = 1);
+
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 function nel_autoload_core($class, $prefix, $base_directory): void

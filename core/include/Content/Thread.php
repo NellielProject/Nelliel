@@ -12,8 +12,10 @@ use Nelliel\Overboard;
 use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
 use Nelliel\Tables\TableThreads;
 use PDO;
+use Nelliel\Regen;
 
 class Thread
 {
@@ -110,7 +112,7 @@ class Thread
         return true;
     }
 
-    public function remove(bool $perm_override = false, bool $parent_delete = false): bool
+    public function delete(bool $perm_override = false, bool $parent_delete = false): bool
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -137,16 +139,16 @@ class Thread
         $posts = $this->getPosts();
 
         foreach ($posts as $post) {
-            $post->remove(true, true);
+            $post->delete(true, true);
         }
 
-        $this->removeFromDatabase($parent_delete);
-        $this->removeFromDisk($parent_delete);
+        $this->deleteFromDatabase($parent_delete);
+        $this->deleteFromDisk($parent_delete);
         $this->archive_prune->updateThreads();
         return true;
     }
 
-    protected function removeFromDatabase(bool $parent_delete): bool
+    protected function deleteFromDatabase(bool $parent_delete): bool
     {
         if (empty($this->content_id->threadID())) {
             return false;
@@ -158,7 +160,7 @@ class Thread
         return true;
     }
 
-    protected function removeFromDisk(bool $parent_delete): bool
+    protected function deleteFromDisk(bool $parent_delete): bool
     {
         $file_handler = nel_utilities()->fileHandler();
         $removed = false;
@@ -310,7 +312,7 @@ class Thread
                 $post_content_id = new ContentID(
                     ContentID::createIDString($this->content_id->threadID(), $old_post['post_number'], 0));
                 $post = $post_content_id->getInstanceFromID($this->domain);
-                $post->remove(true, true);
+                $post->delete(true, true);
             }
         }
     }
@@ -421,9 +423,15 @@ class Thread
     public function getURL(bool $dynamic): string
     {
         if ($dynamic) {
-            return nel_build_router_url(
-                [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
-                    $this->pageBasename()]);
+            if (nel_session()->inModmode($this->domain)) {
+                return nel_build_router_url(
+                    [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
+                        $this->pageBasename()]);
+            } else {
+                return nel_build_router_url(
+                    [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
+                        $this->pageBasename()], false, 'modmode');
+            }
         }
 
         $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
@@ -487,7 +495,7 @@ class Thread
         $file_handler->moveDirectory($this->domain->reference('page_path') . $this->content_id->threadID() . '/',
             $this->domain->reference('archive_page_path') . $this->content_id->threadID() . '/');
 
-        $this->removeFromDatabase();
+        $this->deleteFromDatabase();
         return true;
     }
 
@@ -513,6 +521,15 @@ class Thread
     public function data(string $key)
     {
         return $this->content_data[$key] ?? null;
+    }
+
+    public function transferData(array $new_data = null): array
+    {
+        if (!is_null($new_data)) {
+            $this->content_data = $new_data;
+        }
+
+        return $this->content_data;
     }
 
     public function changeData(string $key, $new_data, bool $cast_null = true)
@@ -581,6 +598,8 @@ class Thread
             $this->changeData('last_update_milli', $post->data('post_time_milli'));
             $this->changeData('post_count', 1);
             $this->changeData('slug', $this->generateSlug($post));
+            $post->changeData('reply_to', 0);
+            $post->changeData('op', true);
         } else {
             $this->changeData('last_update', $post->data('post_time'));
             $this->changeData('last_update_milli', $post->data('post_time_milli'));
@@ -592,8 +611,44 @@ class Thread
                 $this->changeData('bump_time', $post->data('post_time'));
                 $this->changeData('bump_time_milli', $post->data('post_time_milli'));
             }
+
+            $post->changeData('reply_to', $this->content_id->threadID());
+            $post->changeData('op', false);
         }
 
+        $post->contentID()->changeThreadID($this->content_id->threadID());
+        $post->changeData('parent_thread', $this->content_id->threadID());
+        $post->writeToDatabase();
         return $this->writeToDatabase();
+    }
+
+    public function move(DomainBoard $domain): Thread
+    {
+        if ($domain->id() === $this->domain->id()) {
+            return $this;
+        }
+
+        $original_posts = $this->getPosts();
+        $first_post = true;
+        $new_thread = null;
+
+        foreach ($original_posts as $post) {
+            if ($first_post) {
+                $new_thread = new Thread(new ContentID(), $domain);
+                $new_thread->transferData($this->transferData());
+                $first_post = false;
+            }
+
+            // If this is OP, will also finish thread setup
+            $post->move($new_thread, true);
+        }
+
+        // TODO: Optionally make this a shadow post instead
+        $this->delete(true, true);
+        $regen = new Regen();
+        $regen->threads($domain, true, [$new_thread->contentID()->threadID()]);
+        $regen->index($domain);
+        $regen->index($this->domain);
+        return $new_thread;
     }
 }

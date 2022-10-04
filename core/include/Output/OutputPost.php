@@ -6,11 +6,9 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Cites;
-use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
-use Nelliel\Markdown\ImageboardMarkdown;
 use Nelliel\FrontEnd\Capcode;
 
 class OutputPost extends Output
@@ -79,7 +77,6 @@ class OutputPost extends Output
                 }
 
                 $file_data = array();
-                //$post->getJSON()->addUpload($upload->getJSON());
 
                 if (nel_true_empty($upload->data('embed_url'))) {
                     $file_data = $output_file_info->render($upload, $post, [], true);
@@ -123,6 +120,7 @@ class OutputPost extends Output
         $ui_image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('ui_image_set'));
         $header_data = array();
         $thread_headers = array();
+        $post_headers = array();
         $this->render_data['headers']['response'] = $response;
         $post_content_id = $post->contentID();
         $this->render_data['show_poster_name'] = $this->domain->setting('show_poster_name');
@@ -139,43 +137,51 @@ class OutputPost extends Output
             }
 
             $this->render_data['mod_ip_address'] = $ip;
+            $this->render_data['in_modmode'] = true;
 
             if (!$response) {
-                $lock_button = $thread->data('locked') ? 'ui_mod_unlock' : 'ui_mod_lock';
+                $lock_button = $thread->data('locked') ? 'mod_links_unlock' : 'mod_links_lock';
+                $lock_action = $thread->data('locked') ? 'unlock' : 'lock';
                 $this->render_data['mod_lock_option'] = $this->render_data[$lock_button];
-                $this->render_data['mod_lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=lock&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
+                $this->render_data['mod_lock_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $lock_action]);
 
-                $sticky_button = $thread->data('sticky') ? 'ui_mod_unsticky' : 'ui_mod_sticky';
+                $sticky_button = $thread->data('sticky') ? 'mod_links_unsticky' : 'mod_links_sticky';
+                $sticky_action = $thread->data('sticky') ? 'unsticky' : 'sticky';
                 $this->render_data['mod_sticky_option'] = $this->render_data[$sticky_button];
-                $this->render_data['mod_sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=sticky&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
+                $this->render_data['mod_sticky_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $sticky_action]);
 
-                $permasage_button = $thread->data('permasage') ? 'ui_mod_unpermasage' : 'ui_mod_permasage';
-                $this->render_data['mod_permasage_option'] = $this->render_data[$permasage_button];
-                $this->render_data['mod_permasage_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=permasage&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
+                $sage_button = $thread->data('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
+                $sage_action = $thread->data('permasage') ? 'unsage' : 'sage';
+                $this->render_data['mod_sage_option'] = $this->render_data[$sage_button];
+                $this->render_data['mod_sage_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $sage_action]);
 
-                $cyclic_button = $thread->data('cyclic') ? 'ui_mod_non_cyclic' : 'ui_mod_cyclic';
+                $cyclic_button = $thread->data('cyclic') ? 'mod_links_non_cyclic' : 'mod_links_cyclic';
+                $cyclic_action = $thread->data('cyclic') ? 'non-cyclic' : 'cyclic';
                 $this->render_data['mod_cyclic_option'] = $this->render_data[$cyclic_button];
-                $this->render_data['mod_cyclic_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                    '&actions=cyclic&content-id=' . $thread->contentID()->getIDString() . '&modmode=true&goback=true';
+                $this->render_data['mod_cyclic_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $cyclic_action]);
+
+                $this->render_data['mod_move_thread_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
             }
 
-            $this->render_data['mod_ban_url'] = '?module=admin&section=bans&board-id=' . $this->domain->id() .
-                '&actions=new&ban-ip=' . $ip . '&modmode=true&goback=false';
-            $this->render_data['mod_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=delete&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
-            $this->render_data['mod_delete_by_ip_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=delete-by-ip&content-id=' . $post_content_id->getIDString() . '&modmode=true&goback=true';
-            $this->render_data['mod_global_delete_by_ip_url'] = '?module=admin&section=threads&board-id=' .
-                $this->domain->id() . '&actions=global-delete-by-ip&content-id=' . $post_content_id->getIDString() .
-                '&modmode=true&goback=true';
-            $this->render_data['mod_ban_delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=bandelete&content-id=' . $post_content_id->getIDString() . '&ban-ip=' . $ip .
-                '&modmode=true&goback=false';
-            $this->render_data['mod_edit_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=edit&content-id=' . $post_content_id->getIDString();
+            $this->render_data['mod_ban_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'ban']);
+            $this->render_data['mod_delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'delete']);
+            $this->render_data['mod_delete_by_ip_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'delete-by-ip']);
+            $this->render_data['mod_global_delete_by_ip_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'global-delete-by-ip']);
+            $this->render_data['mod_ban_delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'ban-delete']);
+            $this->render_data['mod_edit_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'edit']);
+            $this->render_data['mod_move_post_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'move']);
         }
 
         $this->render_data['headers']['thread_url'] = $thread->getURL(!$this->write_mode);
@@ -294,9 +300,7 @@ class OutputPost extends Output
 
         $post_headers['post_time'] = date($this->domain->setting('post_date_format'), intval($post->data('post_time')));
         $post_headers['post_number'] = $post->contentID()->postID();
-        $post_headers['post_number_url'] = $thread->getURL(
-            $this->session->inModmode($this->domain) && !$this->write_mode) . '#t' . $post_content_id->threadID() . 'p' .
-            $post_content_id->postID();
+        $post_headers['post_number_url'] = $post->getURL($this->session->inModmode($this->domain) && !$this->write_mode);
         $post_headers['post_number_url_cite'] = $post_headers['post_number_url'] . 'cite';
         $this->render_data['headers']['post_headers'] = $post_headers;
         return $header_data;
@@ -312,31 +316,25 @@ class OutputPost extends Output
         $comment_data['nofollow_external_links'] = $this->site_domain->setting('nofollow_external_links');
         $comment = $post->data('comment');
 
-        if ($post->getMoar()->get('raw_html')) {
-            $comment_data['comment_markdown'] = $comment;
-            return $comment_data;
-        }
-
         if (nel_true_empty($comment)) {
-            $comment_data['comment_markdown'] = $this->domain->setting('no_comment_text');
+            $comment_data['comment_markup'] = $this->domain->setting('no_comment_text');
             return $comment_data;
         }
 
         // TODO: Do cache check/fetch better
         if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data'])) {
-            $comment_markdown = $post->getCache()['comment_data'];
+            $comment_markup = $post->getCache()['comment_data'];
         } else {
-            $comment_markdown = $this->parseComment($comment, $post->contentID());
+            $comment_markup = $this->parseComment($comment, $post);
         }
 
         if ($gen_data['index_rendering']) {
-            $comment_lines = $this->output_filter->newlinesToArray($comment_markdown);
+            $comment_lines = $this->output_filter->newlinesToArray($comment_markup);
             $line_count = count($comment_lines);
 
             if ($line_count > $this->domain->setting('max_index_comment_lines')) {
                 $comment_data['long_comment'] = true;
-                $comment_data['long_comment_url'] = $thread->getURL($this->session->inModmode($this->domain)) . '#t' .
-                    $post->contentID()->threadID() . 'p' . $post->contentID()->postID();
+                $comment_data['long_comment_url'] = $post->getURL($this->session->inModmode($this->domain));
                 $comment_data['comment_lines'] = array();
                 $i = 0;
                 $reduced_lines = array();
@@ -346,32 +344,12 @@ class OutputPost extends Output
                     $reduced_lines[] = $comment_lines[$i];
                 }
 
-                $comment_markdown = implode("\n", $reduced_lines);
+                $comment_markup = implode("\n", $reduced_lines);
             }
         }
 
-        $comment_data['comment_markdown'] = $comment_markdown;
+        $comment_data['comment_markup'] = $comment_markup;
         return $comment_data;
-    }
-
-    public function postSuccess(array $parameters, bool $data_only)
-    {
-        $messages[] = _gettext('Post success!');
-        $link['url'] = $parameters['forward_url'] ?? '';
-        $link['text'] = _gettext('Click here if you are not automatically redirected');
-        $parameters['page_title'] = $this->domain->reference('title');
-        $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
-        return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
-    }
-
-    public function contentDeleted(array $parameters, bool $data_only)
-    {
-        $messages[] = _gettext('The selected items have been deleted!');
-        $link['url'] = $parameters['forward_url'] ?? '';
-        $link['text'] = _gettext('Click here if you are not automatically redirected');
-        $parameters['page_title'] = $this->domain->reference('title');
-        $output_interstitial = new OutputInterstitial($this->domain, $this->write_mode);
-        return $output_interstitial->render($parameters, $data_only, $messages, [$link]);
     }
 
     public function generateBacklinks(Post $post): array
@@ -394,7 +372,7 @@ class OutputPost extends Output
             $cite_url = '';
 
             if ($cite_data['exists']) {
-                $cite_url = $cites->createPostLinkURL($cite_data, $this->domain,
+                $cite_url = $cites->generateCiteURL($cite_data,
                     $this->session->inModmode($this->domain) && !$this->write_mode);
 
                 if (!empty($cite_url)) {
@@ -407,10 +385,14 @@ class OutputPost extends Output
         return $backlinks;
     }
 
-    public function parseComment(?string $comment_text, ContentID $post_content_id): string
+    public function parseComment(?string $comment_text, Post $post): string
     {
         if (nel_true_empty($comment_text)) {
             return '';
+        }
+
+        if ($post->getMoar()->get('raw_html') === true) {
+            return $comment_text;
         }
 
         $comment = $comment_text;
@@ -427,14 +409,14 @@ class OutputPost extends Output
             $comment = $this->output_filter->filterZalgo($comment);
         }
 
-        $imageboard_markdown = new ImageboardMarkdown($this->domain, $post_content_id);
-
-        if ($this->session->inModmode($this->domain) && !$this->write_mode) {
-            $parsed_markdown = $imageboard_markdown->parseDynamic($comment);
-        } else {
-            $parsed_markdown = $imageboard_markdown->parse($comment);
+        if ($post->getMoar()->get('no_markup') === true) {
+            return htmlspecialchars($comment, ENT_QUOTES, 'UTF-8', false);
         }
 
-        return $parsed_markdown;
+        $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
+        $engine = new Markup();
+        $escaped_comment = htmlspecialchars($comment, ENT_NOQUOTES, 'UTF-8');
+        $parsed_markup = $engine->parsePostComments($escaped_comment, $post, $dynamic_urls);
+        return $parsed_markup;
     }
 }

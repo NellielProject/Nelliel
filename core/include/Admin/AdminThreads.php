@@ -10,6 +10,9 @@ use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\ContentID;
+use Nelliel\Content\Post;
+use Nelliel\Content\Thread;
+use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
@@ -25,57 +28,6 @@ class AdminThreads extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->site_domain = new DomainSite($this->database);
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        // TODO: Refine this whenever we get threads panel updated
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'sticky':
-                    $this->sticky();
-                    break;
-
-                case 'lock':
-                    $this->lock();
-                    break;
-
-                case 'delete':
-                    $this->remove();
-                    break;
-
-                case 'delete-by-ip':
-                    $this->removeByIP();
-                    break;
-
-                case 'global-delete-by-ip':
-                    $this->globalRemoveByIP();
-                    break;
-
-                case 'ban':
-                    $admin_bans = new AdminBans($this->authorization, $this->domain, $this->session, $inputs);
-                    $admin_bans->creator();
-                    break;
-
-                case 'permasage':
-                    $this->permasage();
-                    break;
-
-                case 'cyclic':
-                    $this->cyclic();
-                    break;
-
-                case 'expand':
-                    ; // TODO: Figure this out better
-                    break;
-
-                case 'bandelete':
-                    $this->banDelete();
-                    break;
-            }
-        }
     }
 
     public function panel(): void
@@ -98,20 +50,17 @@ class AdminThreads extends Admin
     public function add(): void
     {}
 
-    public function editor(): void
+    public function editor(ContentID $content_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_edit_posts');
-        $content_id = new ContentID($_GET['content-id']);
         $post = $content_id->getInstanceFromID($this->domain);
         $output_panel_threads = new OutputPanelThreads($this->domain, true);
         $output_panel_threads->editPost(['post' => $post], false);
-        $this->outputMain(false);
     }
 
-    public function update(): void
+    public function update(ContentID $content_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_edit_posts');
-        $content_id = new ContentID($_GET['content-id']);
         $post = $content_id->getInstanceFromID($this->domain);
         $post->changeData('name', $_POST['not_anonymous'] ?? null);
         $post->changeData('email', $_POST['spam_target'] ?? null);
@@ -122,75 +71,60 @@ class AdminThreads extends Admin
         $this->regenThread($this->domain, $content_id->threadID(), true);
         $redirect = new Redirect();
         $redirect->doRedirect(true);
-        $redirect->changeURL($_POST['return_url']);
-        $this->outputMain(false);
+        $redirect->URL($_POST['return_url']);
     }
 
-    public function remove(): void
+    public function delete(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_delete_posts');
-        $content_id = new ContentID($_GET['content-id']);
-        $content_id->getInstanceFromID($this->domain)->remove();
+        $this->verifyPermissions($this->domain, 'perm_delete_content');
+        $content_id->getInstanceFromID($this->domain)->delete();
         $this->regenThread($this->domain, $content_id->threadID(), true);
     }
 
-    public function sticky()
+    public function sticky(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_post_type');
-        $content_id = new ContentID($_GET['content-id']);
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
 
         if ($content_id->isPost()) {
             $thread = $content_id->getInstanceFromID($this->domain)->convertToThread();
             $thread->toggleSticky();
-            $this->regenThread($this->domain, $thread->contentID()
-                ->threadID(), true);
+            $this->regenThread($this->domain, $thread->contentID()->threadID(), true);
         }
 
         if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->toggleSticky();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
-
-        $this->outputMain(false);
     }
 
-    public function lock()
+    public function lock(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_post_status');
-        $content_id = new ContentID($_GET['content-id']);
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
 
         if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->toggleLock();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
-
-        $this->outputMain(false);
     }
 
-    public function permasage()
+    public function sage(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_post_status');
-        $content_id = new ContentID($_GET['content-id']);
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
 
         if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->togglePermasage();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
-
-        $this->outputMain(false);
     }
 
-    public function cyclic()
+    public function cyclic(ContentID $content_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_post_type');
-        $content_id = new ContentID($_GET['content-id']);
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
 
         if ($content_id->isThread()) {
             $content_id->getInstanceFromID($this->domain)->toggleCyclic();
             $this->regenThread($this->domain, $content_id->threadID(), true);
         }
-
-        $this->outputMain(false);
     }
 
     private function regenThread(DomainBoard $domain, $thread_id, bool $regen_index = false)
@@ -207,23 +141,21 @@ class AdminThreads extends Admin
         }
     }
 
-    public function banDelete()
+    public function banDelete(ContentID $content_id)
     {
-        $this->verifyPermissions($this->domain, 'perm_delete_posts');
+        $this->verifyPermissions($this->domain, 'perm_delete_content');
         $content_id = new ContentID($_GET['content-id']);
         $content_instance = $content_id->getInstanceFromID($this->domain);
-        $content_instance->remove();
+        $content_instance->delete();
         $this->regenThread($this->domain, $content_id->threadID(), true);
         $ban_ip = $_GET['ban-ip'] ?? '';
         $output_panel = new OutputPanelBans($this->domain, false);
         $output_panel->new(['ban_ip' => $ban_ip], false);
-        $this->outputMain(false);
     }
 
-    public function removeByIP()
+    public function deleteByIP(ContentID $first_content_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_delete_by_ip');
-        $first_content_id = new ContentID($_GET['content-id']);
         $post_instance = $first_content_id->getInstanceFromID($this->domain);
         $prepared = $this->database->prepare(
             'SELECT "post_number", "parent_thread" FROM "' . $this->domain->reference('posts_table') .
@@ -234,7 +166,7 @@ class AdminThreads extends Admin
 
         foreach ($post_ids as $id) {
             $content_id = new ContentID(ContentID::createIDString($id['parent_thread'], $id['post_number']));
-            $content_id->getInstanceFromID($this->domain)->remove();
+            $content_id->getInstanceFromID($this->domain)->delete();
             $thread_ids[$content_id->threadID()] = true;
         }
 
@@ -243,10 +175,9 @@ class AdminThreads extends Admin
         }
     }
 
-    public function globalRemoveByIP()
+    public function globalDeleteByIP(ContentID $first_content_id): void
     {
         $this->verifyPermissions(nel_global_domain(), 'perm_delete_by_ip');
-        $first_content_id = new ContentID($_GET['content-id']);
         $post_instance = $first_content_id->getInstanceFromID($this->domain);
         $hashed_ip = $post_instance->data('hashed_ip_address');
         $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
@@ -263,13 +194,87 @@ class AdminThreads extends Admin
 
             foreach ($post_ids as $id) {
                 $content_id = new ContentID(ContentID::createIDString($id['parent_thread'], $id['post_number']));
-                $content_id->getInstanceFromID($board_domain)->remove();
+                $content_id->getInstanceFromID($board_domain)->delete();
                 $thread_ids[$content_id->threadID()] = true;
             }
 
             foreach ($thread_ids as $thread_id => $value) {
                 $this->regenThread($board_domain, $thread_id, $value);
             }
+        }
+    }
+
+    public function move(ContentID $content_id): void
+    {
+        $this->verifyPermissions($this->domain, 'perm_move_content');
+        $destination_domain = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
+        $this->verifyPermissions($destination_domain, 'perm_move_content');
+
+        if ($content_id->isThread()) {
+            $destination = Domain::getDomainFromID($_POST['destination_board'], $this->domain->database());
+            $thread = new Thread($content_id, $this->domain);
+            $thread->move($destination);
+        }
+
+        if ($content_id->isPost()) {
+            if (!$this->domain->setting('allow_moving_replies')) {
+                nel_derp(262, _gettext('Individual replies cannot be moved on this board.'));
+            }
+
+            $post = new Post($content_id, $this->domain);
+            $destination_thread_id = (int) $_POST['destination_thread_id'] ?? 0;
+
+            if ($destination_thread_id !== 0) {
+                $new_content_id = new ContentID(ContentID::createIDString($destination_thread_id, 0, 0));
+                $new_thread = new Thread($new_content_id, $destination_domain);
+
+                if (!$new_thread->exists()) {
+                    nel_derp(260, _gettext('Thread does not exist.'));
+                }
+
+                $post->move($new_thread, false);
+            } else {
+                $new_thread = $post->convertToThread();
+            }
+
+            $new_thread->move($destination_domain);
+        }
+
+        if ($content_id->isUpload()) {
+            if (!$this->domain->setting('allow_moving_uploads')) {
+                nel_derp(263, _gettext('Uploads cannot be moved on this board.'));
+            }
+
+            $upload = new Upload($content_id, $this->domain);
+            $destination_post_id = (int) $_POST['destination_post_id'] ?? 0;
+            $prepared = $this->database->prepare(
+                'SELECT "parent_thread" FROM "' . $destination_domain->reference('posts_table') .
+                '" WHERE "post_number" = ?');
+            $prepared->bindValue(1, $destination_post_id, PDO::PARAM_INT);
+            $thread_id = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+            $new_content_id = new ContentID(ContentID::createIDString($thread_id, $destination_post_id, 0));
+            $new_post = new Post($new_content_id, $destination_domain);
+
+            if (!$new_post->exists()) {
+                nel_derp(261, _gettext('Post does not exist.'));
+            }
+
+            $upload->move($new_post, false);
+        }
+
+        $redirect = new Redirect();
+        $redirect->doRedirect(true);
+        $redirect->URL($_POST['return_url']);
+    }
+
+    public function spoiler(ContentID $content_id): void
+    {
+        $this->verifyPermissions($this->domain, 'perm_modify_content_status');
+
+        if ($content_id->isUpload()) {
+            $upload = $content_id->getInstanceFromID($this->domain);
+            $upload->toggleSpoiler();
+            $this->regenThread($this->domain, $content_id->threadID(), true);
         }
     }
 
@@ -284,20 +289,24 @@ class AdminThreads extends Admin
                 nel_derp(410, _gettext('You cannot access the threads control panel.'));
                 break;
 
-            case 'perm_post_status':
+            case 'perm_modify_content_status':
                 nel_derp(411, _gettext('You are not allowed to change the status of threads or posts.'));
                 break;
 
-            case 'perm_post_type':
-                nel_derp(412, _gettext('You are not allowed to change the type of threads or posts.'));
-                break;
-
             case 'perm_edit_posts':
-                nel_derp(413, _gettext('You are not allowed to edit posts.'));
+                nel_derp(412, _gettext('You are not allowed to edit posts.'));
                 break;
 
             case 'perm_delete_by_ip':
-                nel_derp(414, _gettext('You are not allowed to delete content by IP.'));
+                nel_derp(413, _gettext('You are not allowed to delete content by IP.'));
+                break;
+
+            case 'perm_move_content':
+                nel_derp(414, _gettext('You are not allowed to move content on one or both of the selected boards.'));
+                break;
+
+            case 'perm_delete_content':
+                nel_derp(415, _gettext('You are not allowed to delete content.'));
                 break;
 
             default:

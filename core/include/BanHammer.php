@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use IPTools\Range;
 use Nelliel\Account\Session;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Exception;
 use PDO;
@@ -39,13 +40,13 @@ class BanHammer
         $existing_ban = (!is_null($ban_id)) ? $this->loadFromID($ban_id) : false;
 
         if ($existing_ban) {
-            $remove_ban = $_POST['remove_ban'] ?? 0;
+            $delete_ban = $_POST['delete_ban'] ?? 0;
 
-            if (is_array($remove_ban)) {
-                $remove_ban = nel_form_input_default($remove_ban);
+            if (is_array($delete_ban)) {
+                $delete_ban = nel_form_input_default($delete_ban);
 
-                if ($remove_ban > 0) {
-                    $this->remove();
+                if ($delete_ban > 0) {
+                    $this->delete();
                     return;
                 }
             }
@@ -194,10 +195,10 @@ class BanHammer
                 $prepared->bindValue(1, $this->ban_data['board_id'], PDO::PARAM_STR);
                 $prepared->bindValue(2, $this->ban_data['ip_type'], PDO::PARAM_INT);
                 $prepared->bindValue(3, $this->ban_data['creator'], PDO::PARAM_STR);
-                $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
+                $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'] ?? '', $unhashed_check),
                     PDO::PARAM_LOB);
                 $prepared->bindValue(5, $this->ban_data['hashed_ip_address'], PDO::PARAM_STR);
-                $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
+                $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'] ?? '', $unhashed_check),
                     PDO::PARAM_LOB);
                 $prepared->bindValue(7, $this->ban_data['reason'], PDO::PARAM_STR);
                 $prepared->bindValue(8, $this->ban_data['start_time'], PDO::PARAM_INT);
@@ -216,10 +217,10 @@ class BanHammer
             $prepared->bindValue(1, $this->ban_data['board_id'], PDO::PARAM_STR);
             $prepared->bindValue(2, $this->ban_data['ip_type'], PDO::PARAM_INT);
             $prepared->bindValue(3, $this->ban_data['creator'], PDO::PARAM_STR);
-            $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'], $unhashed_check),
+            $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address_start'] ?? '', $unhashed_check),
                 PDO::PARAM_LOB);
             $prepared->bindValue(5, $this->ban_data['hashed_ip_address'], PDO::PARAM_STR);
-            $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'], $unhashed_check),
+            $prepared->bindValue(6, nel_prepare_ip_for_storage($this->ban_data['ip_address_end'] ?? '', $unhashed_check),
                 PDO::PARAM_LOB);
             $prepared->bindValue(7, $this->ban_data['reason'], PDO::PARAM_STR);
             $prepared->bindValue(8, $this->ban_data['start_time'], PDO::PARAM_INT);
@@ -231,7 +232,7 @@ class BanHammer
         }
     }
 
-    public function remove()
+    public function delete()
     {
         if (!isset($this->ban_data['ban_id'])) {
             return false;

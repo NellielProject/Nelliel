@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelReports;
 
 class AdminReports extends Admin
 {
@@ -16,20 +17,14 @@ class AdminReports extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_REPORTS_TABLE;
-        $this->id_field = 'report-id';
         $this->id_column = 'report_id';
         $this->panel_name = _gettext('Reports');
     }
 
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-    }
-
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_reports_view');
-        $output_panel = new \Nelliel\Output\OutputPanelReports($this->domain, false);
+        $this->verifyPermissions($this->domain, 'perm_view_reports');
+        $output_panel = new OutputPanelReports($this->domain, false);
         $output_panel->render([], false);
     }
 
@@ -49,14 +44,13 @@ class AdminReports extends Admin
     {
     }
 
-    public function remove(): void
+    public function dismiss(string $report_id): void
     {
-        $id = $_GET[$this->id_field] ?? 0;
-        $entry_domain = $this->getEntryDomain($id);
-        $this->verifyPermissions($entry_domain, 'perm_reports_dismiss');
+        $entry_domain = $this->getEntryDomain($report_id);
+        $this->verifyPermissions($entry_domain, 'perm_dismiss_reports');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "report_id" = ?');
-        $this->database->executePrepared($prepared, [$id]);
-        $this->outputMain(true);
+        $this->database->executePrepared($prepared, [$report_id]);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -68,11 +62,11 @@ class AdminReports extends Admin
 
         switch ($perm)
         {
-            case 'perm_reports_view':
+            case 'perm_view_reports':
                 nel_derp(370, _gettext('You are not allowed to view reports.'));
                 break;
 
-            case 'perm_reports_dismiss':
+            case 'perm_dismiss_reports':
                 nel_derp(371, _gettext('You are not allowed to dismiss reports.'));
                 break;
 

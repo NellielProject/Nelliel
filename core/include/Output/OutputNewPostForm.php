@@ -60,6 +60,8 @@ class OutputNewPostForm extends Output
         $this->render_data['fgsfds_field_placeholder'] = $this->domain->setting('fgsfds_field_placeholder');
         $this->render_data['password_field_placeholder'] = $this->domain->setting('password_field_placeholder');
 
+        $this->render_data['flags']['no_markup'] = $this->domain->setting('allow_no_markup');
+
         if ($this->render_data['in_modmode']) {
             $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post'], false,
                 'modmode');

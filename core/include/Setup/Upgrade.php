@@ -5,8 +5,11 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Regen;
+use Nelliel\Domains\Domain;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Domains\DomainSite;
 
 class Upgrade
 {
@@ -96,13 +99,20 @@ class Upgrade
             echo __('No migrations were needed.') . '<br>';
         }
 
-        nel_site_domain()->deleteCache();
-        nel_global_domain()->deleteCache();
         $generate_files = new GenerateFiles($this->file_handler);
         $versions_data = array();
         $versions_data['original'] = $this->originalVersion();
         $versions_data['installed'] = NELLIEL_VERSION;
         $generate_files->versions($versions_data, true);
+
+        echo __('Regenerating caches and pages.') . '<br>';
+        $regen = new Regen();
+        nel_site_domain()->regenCache();
+        nel_site_domain(true);
+        $regen->allSitePages(nel_site_domain());
+        $regen->allBoards(true, true);
+        $regen->overboard(nel_site_domain());
+
         echo __('Upgrades completed!');
     }
 

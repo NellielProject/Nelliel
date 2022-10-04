@@ -8,6 +8,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Auth\AuthUser;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\AntiSpam\CAPTCHA;
+use Nelliel\ReturnLink;
 
 class Login
 {
@@ -24,7 +26,7 @@ class Login
 
     public function validate(): AuthUser
     {
-        $captcha = new \Nelliel\AntiSpam\CAPTCHA($this->domain);
+        $captcha = new CAPTCHA($this->domain);
 
         if ($this->domain->setting('use_login_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
@@ -36,6 +38,10 @@ class Login
             $captcha->verifyReCAPTCHA();
         }
 
+        $return_url = nel_build_router_url([Domain::SITE, 'account', 'login']);
+        $return_link = new ReturnLink($return_url, __('Return to login page'));
+        $error_context = ['return_link' => $return_link];
+
         $attempt_time = time();
         $hashed_ip_address = nel_request_ip_address(true);
         $form_username = strval($_POST['username'] ?? '');
@@ -45,24 +51,24 @@ class Login
 
         if ($rate_limit->lastTime($hashed_ip_address, 'login') > $attempt_time - 3) {
             $rate_limit->updateAttempts($hashed_ip_address, 'login');
-            nel_derp(203, _gettext('Detecting rapid login attempts. Wait a few seconds.'));
+            nel_derp(203, _gettext('Detecting rapid login attempts. Wait a few seconds.'), $error_context);
         }
 
         if (empty($form_username)) {
             $rate_limit->updateAttempts($hashed_ip_address, 'login');
-            nel_derp(200, _gettext('No user ID provided.'));
+            nel_derp(200, _gettext('No user ID provided.'), $error_context);
         }
 
         if (empty($form_password)) {
             $rate_limit->updateAttempts($hashed_ip_address, 'login');
-            nel_derp(201, _gettext('No password provided.'));
+            nel_derp(201, _gettext('No password provided.'), $error_context);
         }
 
         $user = $this->authorization->getUser($form_username);
         $valid_user = false;
         $valid_password = false;
 
-        if (!$user->empty()) {
+        if ($user->exists()) {
             $valid_password = nel_password_verify($form_password, $user->getData('password'));
 
             if (empty($session_username)) {
@@ -74,12 +80,12 @@ class Login
 
         if (!$valid_user || !$valid_password) {
             $rate_limit->updateAttempts($hashed_ip_address, 'login');
-            nel_derp(202, _gettext('Username or password is incorrect.'));
+            nel_derp(202, _gettext('Username or password is incorrect.'), $error_context);
         }
 
         $rate_limit->clearAttempts($hashed_ip_address, 'login', true);
         $user->changeData('last_login', $attempt_time);
-        nel_logger('system')->info('Sucessfully logged in.', ['event' => 'LOGIN', 'username' => $user->id()]);
+        nel_logger('system')->info('Logged in.', ['event' => 'login', 'username' => $user->id()]);
         return $user;
     }
 }

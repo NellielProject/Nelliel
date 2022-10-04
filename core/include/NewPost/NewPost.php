@@ -171,7 +171,7 @@ class NewPost
         $automatic_gets = json_decode($this->domain->setting('automatic_gets'), true);
 
         if (is_array($automatic_gets) && in_array($post->contentID()->postID(), $automatic_gets)) {
-            $get_thread = $post->convertToThread();
+            $get_thread = $post->convertToThread(true);
             $get_thread->toggleSticky();
         }
 

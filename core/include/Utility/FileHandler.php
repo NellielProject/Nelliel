@@ -88,6 +88,23 @@ class FileHandler
         return $success;
     }
 
+    public function copyFile(string $file, string $destination, bool $create_directories = false,
+        $dir_chmod = NEL_DIRECTORY_PERM): bool
+        {
+            clearstatcache();
+            $success = file_exists($file);
+
+            if ($success && !file_exists($destination) && $create_directories) {
+                $success = $this->createDirectory(dirname($destination), $dir_chmod, true);
+            }
+
+            if ($success) {
+                $success = copy($file, $destination);
+            }
+
+            return $success;
+    }
+
     public function moveFile(string $file, string $destination, bool $create_directories = false,
         $dir_chmod = NEL_DIRECTORY_PERM): bool
     {

@@ -64,7 +64,6 @@ class Uploads
 
         for ($i = 0; $i < $file_count; $i ++) {
             $file_original_name = $this->files['upload_files']['name'][$i];
-            $file_provided_type = $this->files['upload_files']['type'][$i];
             $tmp_name = $this->files['upload_files']['tmp_name'][$i];
             $file_upload_error = $this->files['upload_files']['error'][$i];
             $filesize = $this->files['upload_files']['size'][$i];
@@ -98,10 +97,16 @@ class Uploads
             $upload->changeData('location', $tmp_name . '.' . $upload->data('extension'));
             nel_utilities()->fileHandler()->moveFile($tmp_name, $upload->data('location'));
             // Store this temporarily in case we need it for later processing
+            $temp_exif = @exif_read_data($upload->data('location'));
             $upload->changeData('temp_exif', @exif_read_data($upload->data('location'), '', true));
 
-            if ($this->domain->setting('store_exif_data') && is_array($upload->data('temp_exif'))) {
-                $exif_data = json_encode($upload->data('temp_exif'));
+            if ($this->domain->setting('store_exif_data') && is_array($temp_exif)) {
+                // EXIF read picks up the temporary filename so we correct it here
+                if (isset($temp_exif['FILE'])) {
+                    $temp_exif['FILE']['FileName'] = $upload->data('original_filename');
+                }
+
+                $exif_data = json_encode($temp_exif);
 
                 if (is_string($exif_data)) {
                     $upload->changeData('exif', $exif_data);
@@ -596,7 +601,7 @@ class Uploads
 
         if ($display_width > $this->domain->setting('max_image_width') ||
             $display_height > $this->domain->setting('max_image_height')) {
-            nel_derp(0,
+            nel_derp(38,
                 sprintf(_gettext('Image dimensions are too large. Maximum is %d x %d pixels.'),
                     $this->domain->setting('max_image_width'), $this->domain->setting('max_image_height')));
         }

@@ -31,8 +31,7 @@ class OutputPanelNews extends Output
         $news_entries = $this->database->executeFetchAll('SELECT * FROM "' . NEL_NEWS_TABLE . '" ORDER BY "time" ASC',
             PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'news', 'actions' => 'add']);
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'news', 'new']);
 
         foreach ($news_entries as $news_entry) {
             $entry_info = array();
@@ -41,10 +40,8 @@ class OutputPanelNews extends Output
             $entry_info['name'] = $news_entry['name'];
             $entry_info['headline'] = $news_entry['headline'];
             $entry_info['time'] = date('Y/m/d (D) H:i:s', intval($news_entry['time']));
-            $entry_info['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'news', 'actions' => 'remove',
-                        'article-id' => $news_entry['article_id']]);
+            $entry_info['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'news', $news_entry['article_id'], 'delete']);
             $this->render_data['news_entry'][] = $entry_info;
         }
 

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -30,22 +29,18 @@ class OutputPanelPermissions extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $permissions = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "permission" ASC', PDO::FETCH_ASSOC);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'permissions', 'actions' => 'add']);
+            'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "permission" ASC', PDO::FETCH_ASSOC);
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'permissions', 'new']);
         $bgclass = 'row1';
 
-        foreach ($permissions as $permission)
-        {
+        foreach ($permissions as $permission) {
             $permission_data = array();
             $permission_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $permission_data['permission'] = $permission['permission'];
             $permission_data['description'] = _gettext($permission['description']);
-            $permission_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                            ['module' => 'admin', 'section' => 'permissions', 'actions' => 'remove',
-                                'permission' => $permission['permission']]);
+            $permission_data['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'permissions', $permission['permission'], 'delete']);
             $this->render_data['permission_list'][] = $permission_data;
         }
 

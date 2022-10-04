@@ -16,13 +16,13 @@ class TableLogs extends Table
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = NEL_LOGS_TABLE;
+        $this->table_name = NEL_SYSTEM_LOGS_TABLE;
         $this->column_types = [
             'log_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'level' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'channel' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'event' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'message' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'message_values' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
@@ -33,9 +33,9 @@ class TableLogs extends Table
         $this->column_checks = [
             'log_id' => ['row_check' => false, 'auto_inc' => true],
             'level' => ['row_check' => false, 'auto_inc' => false],
-            'channel' => ['row_check' => false, 'auto_inc' => false],
             'event' => ['row_check' => false, 'auto_inc' => false],
             'message' => ['row_check' => false, 'auto_inc' => false],
+            'message_values' => ['row_check' => false, 'auto_inc' => false],
             'time' => ['row_check' => false, 'auto_inc' => false],
             'domain_id' => ['row_check' => false, 'auto_inc' => false],
             'username' => ['row_check' => false, 'auto_inc' => false],
@@ -54,9 +54,9 @@ class TableLogs extends Table
         CREATE TABLE ' . $this->table_name . ' (
             log_id              ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             level               SMALLINT NOT NULL,
-            channel             VARCHAR(50) NOT NULL,
             event               VARCHAR(50) NOT NULL,
             message             TEXT NOT NULL,
+            message_values      TEXT NOT NULL,
             time                BIGINT NOT NULL,
             domain_id           VARCHAR(50) NOT NULL,
             username            VARCHAR(50) DEFAULT NULL,

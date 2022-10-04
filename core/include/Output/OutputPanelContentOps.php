@@ -28,10 +28,9 @@ class OutputPanelContentOps extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-        http_build_query(['module' => 'admin', 'section' => 'content-ops', 'actions' => 'new']);
-        $content_ops = $this->database->executeFetchAll(
-            'SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '"', PDO::FETCH_ASSOC);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'content-ops', 'new']);
+        $content_ops = $this->database->executeFetchAll('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '"',
+            PDO::FETCH_ASSOC);
         $bgclass = 'row1';
 
         foreach ($content_ops as $content_op) {
@@ -44,31 +43,23 @@ class OutputPanelContentOps extends Output
             $content_op_data['images_only'] = $content_op['images_only'];
             $content_op_data['enabled'] = $content_op['enabled'];
             $content_op_data['notes'] = $content_op['notes'];
-            $content_op_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'edit',
-                        'content-op-id' => $content_op_data['op_id']]);
+            $content_op_data['edit_url'] = nel_build_router_url(
+                [$this->domain->id(), 'content-ops', $content_op_data['op_id'], 'modify']);
 
             if ($content_op_data['enabled'] == 1) {
-                $content_op_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'disable',
-                            'content-op-id' => $content_op_data['op_id']]);
+                $content_op_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'content-ops', $content_op_data['op_id'], 'disable']);
                 $content_op_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($content_op_data['enabled'] == 0) {
-                $content_op_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'enable',
-                            'content-op-id' => $content_op_data['op_id']]);
+                $content_op_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'content-ops', $content_op_data['op_id'], 'enable']);
                 $content_op_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $content_op_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'remove',
-                        'content-op-id' => $content_op_data['op_id']]);
+            $content_op_data['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'content-ops', $content_op_data['op_id'], 'delete']);
             $this->render_data['content_ops_list'][] = $content_op_data;
         }
 
@@ -90,6 +81,7 @@ class OutputPanelContentOps extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/content_ops_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Content Ops');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -100,9 +92,7 @@ class OutputPanelContentOps extends Output
 
         if ($editing) {
             $op_id = $parameters['op_id'] ?? '';
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'content-ops', 'actions' => 'update', 'content-op-id' => $op_id]);
+            $form_action = nel_build_router_url([$this->domain->id(), 'content-ops', $op_id, 'modify']);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "op_id" = ?');
             $content_op_data = $this->database->executePreparedFetch($prepared, [$op_id], PDO::FETCH_ASSOC);
 
@@ -115,8 +105,7 @@ class OutputPanelContentOps extends Output
                 $this->render_data['notes'] = $content_op_data['notes'];
             }
         } else {
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'content-ops', 'actions' => 'add']);
+            $form_action = nel_build_router_url([$this->domain->id(), 'content-ops', 'new']);
         }
 
         $this->render_data['form_action'] = $form_action;

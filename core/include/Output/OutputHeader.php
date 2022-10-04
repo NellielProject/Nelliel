@@ -99,6 +99,8 @@ class OutputHeader extends Output
 
         if ($this->domain->id() === Domain::SITE) {
             $this->render_data['area'] = $parameters['area'] ?? _gettext('Site Management');
+        } else if ($this->domain->id() === Domain::GLOBAL) {
+            $this->render_data['area'] = $parameters['area'] ?? _gettext('Global Board Management');
         } else {
             $this->render_data['board_id'] = $this->domain->id();
             $this->render_data['area'] = $parameters['area'] ?? _gettext('Board Management');

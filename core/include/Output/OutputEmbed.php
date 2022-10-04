@@ -28,6 +28,7 @@ class OutputEmbed extends Output
         $this->render_data['original_url'] = $embed->data('embed_url');
         $this->render_data['display_url'] = $embed->data('embed_url');
         $this->render_data['embed_url'] = $embed->parseEmbedURL($embed->data('embed_url'), false);
+        $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if (utf8_strlen($this->render_data['display_url']) > $this->domain->setting('embed_url_display_length')) {
             $this->render_data['display_url'] = utf8_substr($this->render_data['display_url'], 0,
@@ -35,9 +36,16 @@ class OutputEmbed extends Output
         }
 
         if ($this->session->inModmode($this->domain)) {
-            $this->render_data['in_modmode'] = true;
-            $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=delete&content-id=' . $embed->ContentID()->getIDString() . '&modmode=true&goback=true';
+            $this->render_data['mod_delete_upload_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'delete']);
+            $this->render_data['mod_move_upload_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'move']);
+
+            $spoiler_option = $embed->data('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
+            $spoiler_action = $embed->data('spoiler') ? 'unspoiler' : 'spoiler';
+            $this->render_data['mod_spoiler_option'] = $this->render_data[$spoiler_option];
+            $this->render_data['mod_spoiler_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $embed->contentID()->getIDString(), $spoiler_action]);
         }
 
         if ($catalog) {

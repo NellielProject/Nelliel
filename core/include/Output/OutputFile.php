@@ -26,14 +26,21 @@ class OutputFile extends Output
         $multiple = $post->data('file_count') > 1;
         $template = ($multiple) ? 'thread/multiple_content' : 'thread/single_content';
         $this->render_data['is_file'] = true;
-        $full_filename = $file->data('filename') . '.' . $file->data('extension');
         $this->render_data['file_container_id'] = 'file-container-' . $file->contentID()->getIDString();
         $this->render_data['file_content_id'] = $file->contentID()->getIDString();
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->session->inModmode($this->domain)) {
-            $this->render_data['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
-                '&actions=delete&content-id=' . $file->contentID()->getIDString() . '&modmode=true&goback=true';
+            $this->render_data['mod_delete_upload_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'delete']);
+            $this->render_data['mod_move_upload_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'move']);
+
+            $spoiler_option = $file->data('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
+            $spoiler_action = $file->data('spoiler') ? 'unspoiler' : 'spoiler';
+            $this->render_data['mod_spoiler_option'] = $this->render_data[$spoiler_option];
+            $this->render_data['mod_spoiler_url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $file->contentID()->getIDString(), $spoiler_action]);
         }
 
         $this->render_data['display_filesize'] = '(' . round(((int) $file->data('filesize') / 1024), 2) . ' KB)';
@@ -49,7 +56,7 @@ class OutputFile extends Output
             }
         }
 
-        $this->render_data['file_url'] = $file->srcWebPath() . rawurlencode($full_filename);
+        $this->render_data['file_url'] = $file->getURL(false);
         $this->render_data['show_download_link'] = $this->domain->setting('show_download_link');
 
         if ($this->domain->setting('download_original_name') && !nel_true_empty($file->data('original_filename'))) {

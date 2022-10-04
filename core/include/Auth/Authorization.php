@@ -5,7 +5,7 @@ namespace Nelliel\Auth;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\NellielPDO;
+use Nelliel\Database\NellielPDO;
 
 class Authorization
 {
@@ -18,93 +18,65 @@ class Authorization
         $this->database = $database;
     }
 
-    public function newUser(string $username, bool $db_load = true, bool $temp = false): AuthUser
+    private function newUser(string $username, bool $db_load = true): AuthUser
     {
         $username_lower = utf8_strtolower($username);
         $new_user = new AuthUser($this->database, $username_lower, $db_load);
-        $new_user->setupNew();
-
-        if (!$temp) {
-            self::$users[$username_lower] = $new_user;
-        }
-
         return $new_user;
     }
 
     public function emptyUser(): AuthUser
     {
-        return new AuthUser($this->database, '');
+        return new AuthUser($this->database, '', false);
     }
 
     public function userExists(string $username): bool
     {
         $username_lower = utf8_strtolower($username);
-        return $this->userLoaded($username_lower) || $this->newUser($username_lower, false, true)->loadFromDatabase();
-    }
-
-    public function userLoaded(string $username): bool
-    {
-        $username_lower = utf8_strtolower($username);
-        return isset(self::$users[$username_lower]);
+        return $this->getUser($username_lower)->exists();
     }
 
     public function getUser(string $username): AuthUser
     {
         $username_lower = utf8_strtolower($username);
 
-        if ($this->userExists($username_lower)) {
-            if (!$this->userLoaded($username_lower)) {
-                $this->newUser($username_lower);
-            }
-
+        if (isset(self::$users[$username_lower])) {
             return self::$users[$username_lower];
-        } else {
-            return $this->emptyUser();
         }
+
+        $new_user = $this->newUser($username_lower);
+
+        if (!$new_user->empty()) {
+            self::$users[$username_lower] = $new_user;
+        }
+
+        return $new_user;
     }
 
-    public function removeUser(string $username): bool
+    public function removeUser(string $username): void
     {
         $username_lower = utf8_strtolower($username);
-
-        if (!$this->userExists($username_lower)) {
-            return false;
-        }
-
         $user = $this->getUser($username_lower);
         $user->remove();
         unset(self::$users[$username_lower]);
-        return true;
-    }
-
-    public function isSiteOwner(string $username): bool
-    {
-        $username_lower = utf8_strtolower($username);
-        return self::$users[$username_lower]->isSiteOwner();
     }
 
     public function emptyRole(): AuthRole
     {
-        return new AuthRole($this->database, '');
+        return new AuthRole($this->database, '', false);
     }
 
-    public function newRole(string $role_id): AuthRole
+    private function newRole(string $role_id, bool $db_load = true): AuthRole
     {
         $role_lower = utf8_strtolower($role_id);
-        self::$roles[$role_lower] = new AuthRole($this->database, $role_lower);
-        self::$roles[$role_lower]->setupNew();
-        return self::$roles[$role_lower];
+        $new_role = new AuthRole($this->database, $role_lower, $db_load);
+        return $new_role;
     }
 
     public function roleExists(string $role_id): bool
     {
         $role_lower = utf8_strtolower($role_id);
-
-        if ($this->getRole($role_lower) !== false) {
-            return true;
-        }
-
-        return false;
+        return $this->getRole($role_lower)->exists();
     }
 
     public function getRole(string $role_id): AuthRole
@@ -115,26 +87,21 @@ class Authorization
             return self::$roles[$role_lower];
         }
 
-        self::$roles[$role_lower] = new AuthRole($this->database, $role_lower);
+        $new_role = $this->newRole($role_lower);
 
-        if (self::$roles[$role_lower]->loadFromDatabase()) {
-            return self::$roles[$role_lower];
+        if (!$new_role->empty()) {
+            self::$roles[$role_lower] = $new_role;
         }
 
-        return $this->emptyRole();
+        return $new_role;
     }
 
-    public function removeRole(string $role_id): bool
+    public function removeRole(string $role_id): void
     {
         $role_lower = utf8_strtolower($role_id);
-
-        if (!isset(self::$roles[$role_lower])) {
-            return false;
-        }
-
-        self::$roles[$role_lower]->remove();
+        $role = $this->getRole($role_lower);
+        $role->remove();
         unset(self::$roles[$role_lower]);
-        return true;
     }
 
     public function roleLevelCheck(string $role1, string $role2, bool $false_if_equal = false): bool
@@ -142,12 +109,8 @@ class Authorization
         $role1_lower = utf8_strtolower($role1);
         $role2_lower = utf8_strtolower($role2);
 
-        if (!$this->roleExists($role1_lower)) {
+        if (!$this->roleExists($role1_lower) || !$this->roleExists($role2_lower)) {
             return false;
-        }
-
-        if (!$this->roleExists($role2_lower)) {
-            return true;
         }
 
         $level1 = self::$roles[$role1_lower]->getData('role_level');

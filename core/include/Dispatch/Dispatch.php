@@ -22,10 +22,5 @@ abstract class Dispatch
         $this->session = $session;
     }
 
-    public abstract function dispatch(array $inputs);
-
-    protected function invalidSection()
-    {
-        nel_derp(0, 'Invalid section');
-    }
+    public abstract function dispatch(array $inputs): void;
 }

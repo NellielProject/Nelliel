@@ -30,9 +30,7 @@ class OutputPanelPages extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = ?');
         $pages = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
-        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(
-                ['module' => 'admin', 'section' => 'pages', 'actions' => 'new', 'board-id' => $this->domain->id()]);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'pages', 'new']);
         $bgclass = 'row1';
 
         foreach ($pages as $page) {
@@ -41,12 +39,8 @@ class OutputPanelPages extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $page_data['uri'] = $page['uri'];
             $page_data['title'] = $page['title'];
-            $page_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'edit', 'page-id' => $page['page_id']]);
-            $page_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'remove', 'page-id' => $page['page_id']]);
+            $page_data['edit_url'] = nel_build_router_url([$this->domain->id(), 'pages', $page['page_id'], 'modify']);
+            $page_data['delete_url'] = nel_build_router_url([$this->domain->id(), 'pages', $page['page_id'], 'delete']);
             $this->render_data['pages_list'][] = $page_data;
         }
 
@@ -68,6 +62,7 @@ class OutputPanelPages extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/pages_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Static Pages');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -78,10 +73,7 @@ class OutputPanelPages extends Output
 
         if ($editing) {
             $page_id = $parameters['page_id'] ?? 0;
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'update', 'page-id' => $page_id,
-                        'board-id' => $this->domain->id()]);
+            $form_action = nel_build_router_url([$this->domain->id(), 'pages', $page_id, 'modify']);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PAGES_TABLE . '" WHERE "page_id" = ?');
             $page_data = $this->database->executePreparedFetch($prepared, [$page_id], PDO::FETCH_ASSOC);
 
@@ -93,9 +85,7 @@ class OutputPanelPages extends Output
             }
         } else {
             $this->render_data['new_page'] = true;
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'pages', 'actions' => 'add', 'board-id' => $this->domain->id()]);
+            $form_action = nel_build_router_url([$this->domain->id(), 'pages', 'new']);
         }
 
         $this->render_data['form_action'] = $form_action;

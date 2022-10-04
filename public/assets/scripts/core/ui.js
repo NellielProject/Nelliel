@@ -10,6 +10,10 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
 	}
 
 	var post_container = document.getElementById("post-container-" + content_id.id_string);
+
+	if (post_container == null) {
+		return;
+	}
 	var thread_header_options = post_container.querySelector(".thread-header-options");
 
 	if (element == null) {
@@ -61,6 +65,10 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
 	}
 
 	var post_container = document.getElementById("post-container-" + content_id.id_string);
+
+	if (post_container == null) {
+		return;
+	}
 	var post_header_options = post_container.querySelector(".post-header-options");
 
 	if (element == null) {
@@ -98,6 +106,11 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
 	}
 
 	var file_container = document.getElementById("file-container-" + content_id.id_string);
+
+	if (file_container == null) {
+		return;
+	}
+
 	var file_preview = file_container.querySelector(".file-preview");
 
 	if (element == null) {
@@ -376,7 +389,8 @@ nelliel.ui.showLinkedPost = function(element, event) {
 	request.onload = function() {
 		if (request.status === 200) {
 			var quoted_post = request.response.getElementById("post-container-" + post_id);
-			quoted_post.className = quoted_post.className.replace(/\op-post\b/g, "reply-post");
+			quoted_post.removeAttribute('id');
+			quoted_post.className = quoted_post.className.replace(/\op post\b/g, "reply post");
 			popup_div.appendChild(quoted_post);
 			element.parentNode.insertBefore(popup_div, element);
 			var popup_rect = quoted_post.getBoundingClientRect();

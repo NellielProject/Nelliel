@@ -5,7 +5,13 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\NellielPDO;
+use Nelliel\Database\NellielPDO;
+use Nelliel\Regen;
+use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
+use Nelliel\Domains\DomainSite;
+use Nelliel\FrontEnd\FrontEndData;
+use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBans;
 use Nelliel\Tables\TableBlotter;
 use Nelliel\Tables\TableBoardConfigs;
@@ -19,6 +25,7 @@ use Nelliel\Tables\TableContentOps;
 use Nelliel\Tables\TableDomainRegistry;
 use Nelliel\Tables\TableEmbeds;
 use Nelliel\Tables\TableFileFilters;
+use Nelliel\Tables\TableFiletypeCategories;
 use Nelliel\Tables\TableFiletypes;
 use Nelliel\Tables\TableIPNotes;
 use Nelliel\Tables\TableImageSets;
@@ -35,6 +42,7 @@ use Nelliel\Tables\TableRateLimit;
 use Nelliel\Tables\TableReports;
 use Nelliel\Tables\TableRolePermissions;
 use Nelliel\Tables\TableRoles;
+use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Tables\TableSiteConfig;
 use Nelliel\Tables\TableStyles;
@@ -49,13 +57,6 @@ use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
-use Nelliel\Tables\TableSettingOptions;
-use Nelliel\Tables\TableFiletypeCategories;
-use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
-use Nelliel\Regen;
-use Nelliel\FrontEnd\FrontEndData;
-use Nelliel\Tables\TableBanAppeals;
 
 class Setup
 {
@@ -124,7 +125,7 @@ class Setup
             echo _gettext('Site owner account already created.'), '<br>';
             echo _gettext(
                 'Install has finished with no apparent problems! When you\'re ready to continue, follow this link to the login page: '), '<br>';
-            echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?module=account&amp;actions=login">' .
+            echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?route=/' . Domain::SITE . '/account/login">' .
                 _gettext('Login page') . '</a>';
             echo '</body></html>';
             die();
@@ -323,10 +324,14 @@ class Setup
         $reports_table->createTable();
         $cites_table = new TableCites($this->database, $this->sql_compatibility);
         $cites_table->createTable();
-        $word_filters_table = new TableWordFilters($this->database, $this->sql_compatibility);
-        $word_filters_table->createTable();
-        $logs_table = new TableLogs($this->database, $this->sql_compatibility);
-        $logs_table->createTable();
+        $wordfilters_table = new TableWordfilters($this->database, $this->sql_compatibility);
+        $wordfilters_table->createTable();
+        $system_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $system_logs_table->tableName(NEL_SYSTEM_LOGS_TABLE);
+        $system_logs_table->createTable();
+        $public_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
+        $public_logs_table->createTable();
         $bans_table = new TableBans($this->database, $this->sql_compatibility);
         $bans_table->createTable();
         $ban_appeals_table = new TableBanAppeals($this->database, $this->sql_compatibility);
@@ -358,7 +363,7 @@ class Setup
 
     public function createBoardTables(string $board_id, string $db_prefix)
     {
-        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database('core'));
+        $domain = new DomainBoard($board_id, nel_database('core'));
 
         $archives_table = new TableThreadArchives($this->database, $this->sql_compatibility);
         $archives_table->tableName($domain->reference('archives_table'));
@@ -380,7 +385,7 @@ class Setup
 
     public function createBoardDirectories(string $board_id)
     {
-        $domain = new \Nelliel\Domains\DomainBoard($board_id, nel_database('core'));
+        $domain = new DomainBoard($board_id, nel_database('core'));
         $this->file_handler->createDirectory($domain->reference('src_path'));
         $this->file_handler->createDirectory($domain->reference('preview_path'));
         $this->file_handler->createDirectory($domain->reference('page_path'));
@@ -392,7 +397,7 @@ class Setup
 
     public function installCoreTemplates($overwrite = false): void
     {
-        $front_end_data = new \Nelliel\FrontEnd\FrontEndData($this->database);
+        $front_end_data = new FrontEndData($this->database);
         $template_inis = $front_end_data->getTemplateInis();
 
         foreach ($template_inis as $ini) {

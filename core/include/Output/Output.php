@@ -6,6 +6,7 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Timer;
+use Nelliel\Account\Session;
 use Nelliel\Domains\Domain;
 use Nelliel\Render\RenderCoreDOM;
 use Nelliel\Render\RenderCoreMustache;
@@ -39,7 +40,7 @@ abstract class Output
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new Filter();
         $this->template_substitutes = new TemplateSubstitutes();
-        $this->session = new \Nelliel\Account\Session();
+        $this->session = new Session();
     }
 
     protected function renderSetup()
@@ -126,44 +127,51 @@ abstract class Output
             return;
         }
 
-        $this->render_data['ui_mod_delimiter_left'] = $this->getUISetting('ui_mod_delimiter_left');
-        $this->render_data['ui_mod_delimiter_right'] = $this->getUISetting('ui_mod_delimiter_right');
-        $this->render_data['ui_mod_lock'] = $this->getUISetting('ui_mod_lock');
-        $this->render_data['ui_mod_unlock'] = $this->getUISetting('ui_mod_unlock');
-        $this->render_data['ui_mod_sticky'] = $this->getUISetting('ui_mod_sticky');
-        $this->render_data['ui_mod_unsticky'] = $this->getUISetting('ui_mod_unsticky');
-        $this->render_data['ui_mod_permasage'] = $this->getUISetting('ui_mod_permasage');
-        $this->render_data['ui_mod_unpermasage'] = $this->getUISetting('ui_mod_unpermasage');
-        $this->render_data['ui_mod_cyclic'] = $this->getUISetting('ui_mod_cyclic');
-        $this->render_data['ui_mod_non_cyclic'] = $this->getUISetting('ui_mod_non_cyclic');
-        $this->render_data['ui_mod_ban'] = $this->getUISetting('ui_mod_ban');
-        $this->render_data['ui_mod_delete'] = $this->getUISetting('ui_mod_delete');
-        $this->render_data['ui_mod_delete_by_ip'] = $this->getUISetting('ui_mod_delete_by_ip');
-        $this->render_data['ui_mod_global_delete_by_ip'] = $this->getUISetting('ui_mod_global_delete_by_ip');
-        $this->render_data['ui_mod_ban_and_delete'] = $this->getUISetting('ui_mod_ban_and_delete');
-        $this->render_data['ui_mod_edit_post'] = $this->getUISetting('ui_mod_edit_post');
+        $this->render_data['mod_links_delimiter_left'] = $this->getUISetting('mod_links_delimiter_left');
+        $this->render_data['mod_links_delimiter_right'] = $this->getUISetting('mod_links_delimiter_right');
+        $this->render_data['mod_links_lock'] = $this->getUISetting('mod_links_lock');
+        $this->render_data['mod_links_unlock'] = $this->getUISetting('mod_links_unlock');
+        $this->render_data['mod_links_sticky'] = $this->getUISetting('mod_links_sticky');
+        $this->render_data['mod_links_unsticky'] = $this->getUISetting('mod_links_unsticky');
+        $this->render_data['mod_links_permasage'] = $this->getUISetting('mod_links_permasage');
+        $this->render_data['mod_links_unpermasage'] = $this->getUISetting('mod_links_unpermasage');
+        $this->render_data['mod_links_cyclic'] = $this->getUISetting('mod_links_cyclic');
+        $this->render_data['mod_links_non_cyclic'] = $this->getUISetting('mod_links_non_cyclic');
+        $this->render_data['mod_links_ban'] = $this->getUISetting('mod_links_ban');
+        $this->render_data['mod_links_delete'] = $this->getUISetting('mod_links_delete');
+        $this->render_data['mod_links_delete_by_ip'] = $this->getUISetting('mod_links_delete_by_ip');
+        $this->render_data['mod_links_global_delete_by_ip'] = $this->getUISetting('mod_links_global_delete_by_ip');
+        $this->render_data['mod_links_ban_and_delete'] = $this->getUISetting('mod_links_ban_and_delete');
+        $this->render_data['mod_links_edit'] = $this->getUISetting('mod_links_edit');
+        $this->render_data['mod_links_move'] = $this->getUISetting('mod_links_move');
+        $this->render_data['mod_links_spoiler'] = $this->getUISetting('mod_links_spoiler');
+        $this->render_data['mod_links_unspoiler'] = $this->getUISetting('mod_links_unspoiler');
 
         if ($this->session->inModmode($this->domain)) {
             $this->render_data['mod_can_lock'] = $this->session->user()->checkPermission($this->domain,
-                'perm_post_status');
+                'perm_modify_content_status');
             $this->render_data['mod_can_sticky'] = $this->session->user()->checkPermission($this->domain,
-                'perm_post_status');
+                'perm_modify_content_status');
             $this->render_data['mod_can_permasage'] = $this->session->user()->checkPermission($this->domain,
-                'perm_post_status');
+                'perm_modify_content_status');
             $this->render_data['mod_can_cyclic'] = $this->session->user()->checkPermission($this->domain,
-                'perm_post_type');
+                'perm_post_content_status');
             $this->render_data['mod_can_ban'] = $this->session->user()->checkPermission($this->domain,
                 'perm_manage_bans');
             $this->render_data['mod_can_delete'] = $this->session->user()->checkPermission($this->domain,
-                'perm_delete_posts');
+                'perm_delete_content');
             $this->render_data['mod_can_by_ip'] = $this->session->user()->checkPermission($this->domain,
                 'perm_delete_by_ip');
             $this->render_data['mod_can_global_by_ip'] = $this->session->user()->checkPermission(nel_global_domain(),
                 'perm_delete_by_ip');
             $this->render_data['mod_can_ban_delete'] = $this->session->user()->checkPermission($this->domain,
-                'perm_manage_bans') && $this->session->user()->checkPermission($this->domain, 'perm_delete_posts');
+                'perm_manage_bans') && $this->session->user()->checkPermission($this->domain, 'perm_delete_content');
             $this->render_data['mod_can_edit'] = $this->session->user()->checkPermission($this->domain,
                 'perm_edit_posts');
+            $this->render_data['mod_can_move'] = $this->session->user()->checkPermission($this->domain,
+                'perm_move_content');
+            $this->render_data['mod_can_spoiler'] = $this->session->user()->checkPermission($this->domain,
+                'perm_modify_content_status');
         }
     }
 

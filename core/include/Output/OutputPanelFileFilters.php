@@ -20,7 +20,7 @@ class OutputPanelFileFilters extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
-        $this->setBodyTemplate('panels/file_filters');
+        $this->setBodyTemplate('panels/file_filters_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('File Filters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -30,17 +30,18 @@ class OutputPanelFileFilters extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
         if ($this->domain->id() === Domain::SITE) {
-            $filters = $this->database->executeFetchAll('SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '"',
-                PDO::FETCH_ASSOC);
+            $filters = array();
+        } else if ($this->domain->id() === Domain::GLOBAL) {
+            $filters = $this->database->executeFetchAll(
+                'SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '" ORDER BY "filter_id" DESC', PDO::FETCH_ASSOC);
         } else {
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '" WHERE "board_id" = ?');
+            $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '" WHERE "board_id" = ? ORDER BY "filter_id" DESC');
             $filters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
         }
 
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(
-                ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'add',
-                    'board-id' => $this->domain->id()]);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'file-filters', 'new']);
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'file-filters', 'new']);
         $bgclass = 'row1';
 
         foreach ($filters as $filter) {
@@ -52,13 +53,75 @@ class OutputPanelFileFilters extends Output
             $filter_data['file_hash'] = $filter['file_hash'];
             $filter_data['notes'] = $filter['notes'];
             $filter_data['board_id'] = $filter['board_id'];
-            $filter_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'file-filters', 'actions' => 'remove',
-                        'board-id' => $this->domain->id(), 'filter-id' => $filter['filter_id']]);
+
+            $filter_data['edit_url'] = nel_build_router_url(
+                [$this->domain->id(), 'file-filters', $filter_data['filter_id'], 'modify']);
+
+            if ($filter['enabled'] == 1) {
+                $filter_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'file-filters', $filter_data['filter_id'], 'disable']);
+                $filter_data['enable_disable_text'] = _gettext('Disable');
+            }
+
+            if ($filter['enabled'] == 0) {
+                $filter_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'file-filters', $filter_data['filter_id'], 'enable']);
+                $filter_data['enable_disable_text'] = _gettext('Enable');
+            }
+
+            $filter_data['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'file-filters', $filter_data['filter_id'], 'delete']);
+
             $this->render_data['filter_list'][] = $filter_data;
         }
 
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
+        $this->render_data['footer'] = $output_footer->render([], true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
+        echo $output;
+        return $output;
+    }
+
+    public function new(array $parameters, bool $data_only)
+    {
+        $parameters['section'] = $parameters['section'] ?? _gettext('New');
+        $parameters['editing'] = false;
+        return $this->edit($parameters, $data_only);
+    }
+
+    public function edit(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $editing = $parameters['editing'] ?? true;
+        $parameters['is_panel'] = true;
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('File Filters');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
+        $this->render_data['board_id'] = '';
+
+        if ($editing) {
+            $this->setBodyTemplate('panels/file_filters_edit');
+            $filter_id = $parameters['filter_id'] ?? 0;
+            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '" WHERE "filter_id" = ?');
+            $filter_data = $this->database->executePreparedFetch($prepared, [$filter_id], PDO::FETCH_ASSOC);
+            $this->render_data['form_action'] = nel_build_router_url(
+                [$this->domain->id(), 'file-filters', $filter_data['filter_id'], 'modify']);
+
+            $this->render_data['hash_type'] = $filter_data['hash_type'];
+            $this->render_data['file_hash'] = $filter_data['file_hash'];
+            $this->render_data['notes'] = $filter_data['notes'];
+            $this->render_data['board_id'] = $filter_data['board_id'];
+            $this->render_data['enabled'] = $filter_data['enabled'];
+        } else {
+            $this->setBodyTemplate('panels/file_filters_new');
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'file-filters', 'new']);
+        }
+
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['boards_select'] = $output_menu->boards('board_id', $this->render_data['board_id'], true);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

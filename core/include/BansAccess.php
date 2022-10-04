@@ -1,11 +1,12 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Database\NellielPDO;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class BansAccess
@@ -27,12 +28,9 @@ class BansAccess
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_BANS_TABLE . '" WHERE "ban_id" = ?');
         $ban_info = $this->database->executePreparedFetch($prepared, [$ban_id], PDO::FETCH_ASSOC);
 
-        if ($ban_info !== false)
-        {
+        if ($ban_info !== false) {
             $ban_info['times'] = $this->secondsToTimeArray($ban_info['length']);
-        }
-        else
-        {
+        } else {
             $ban_info = array();
         }
 
@@ -41,24 +39,20 @@ class BansAccess
 
     public function getBansByIP(string $ban_ip, string $board_id = null)
     {
-        if (!is_null($board_id))
-        {
+        if (!is_null($board_id)) {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE .
-                    '" WHERE "ip_address_start" = ? AND "ip_type" = 1, AND "board_id" = ?');
+                'SELECT "ban_id" FROM "' . NEL_BANS_TABLE .
+                '" WHERE "ip_address_start" = ? AND "ip_type" = 1, AND "board_id" = ?');
             $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
-        }
-        else
-        {
+        } else {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_address_start" = ? AND "ip_type" = 1');
+                'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_address_start" = ? AND "ip_type" = 1');
         }
 
         $prepared->bindValue(1, nel_prepare_ip_for_storage($ban_ip), PDO::PARAM_LOB);
         $ban_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
 
-        if (is_array($ban_ids))
-        {
+        if (is_array($ban_ids)) {
             return $this->bansToHammers($ban_ids);
         }
 
@@ -67,23 +61,19 @@ class BansAccess
 
     public function getBansByHashedIP(string $hashed_ip, string $board_id = null)
     {
-        if (!is_null($board_id))
-        {
+        if (!is_null($board_id)) {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ? AND "board_id" = ?');
+                'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ? AND "board_id" = ?');
             $prepared->bindValue(2, $board_id, PDO::PARAM_STR);
-        }
-        else
-        {
+        } else {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ?');
+                'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "hashed_ip_address" = ?');
         }
 
         $prepared->bindValue(1, $hashed_ip, PDO::PARAM_STR);
         $ban_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
 
-        if (is_array($ban_ids))
-        {
+        if (is_array($ban_ids)) {
             return $this->bansToHammers($ban_ids);
         }
 
@@ -92,53 +82,42 @@ class BansAccess
 
     public function getBansByType(int $type, string $board_id = null)
     {
-        if (!is_null($board_id))
-        {
+        if (!is_null($board_id)) {
             $prepared = $this->database->prepare(
-                    'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_type" = ? AND "board_id" = ?');
+                'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_type" = ? AND "board_id" = ?');
             $ban_ids = $this->database->executePreparedFetchAll($prepared, [$type, $board_id], PDO::FETCH_COLUMN);
-        }
-        else
-        {
+        } else {
             $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_type" = ?');
             $ban_ids = $this->database->executePreparedFetchAll($prepared, [$type], PDO::FETCH_COLUMN);
         }
 
-        if (is_array($ban_ids))
-        {
+        if (is_array($ban_ids)) {
             return $this->bansToHammers($ban_ids);
         }
 
         return array();
     }
 
-    public function getBans(string $board_id = null)
+    public function getBans(string $domain_id): array
     {
-        if (!is_null($board_id))
-        {
-            $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "board_id" = ?');
-            $ban_ids = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_COLUMN);
-        }
-        else
-        {
+        if ($domain_id === Domain::SITE) {
+            $ban_ids = array();
+        } else if ($domain_id === Domain::GLOBAL) {
             $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '"');
             $ban_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
+        } else {
+            $prepared = $this->database->prepare('SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "board_id" = ?');
+            $ban_ids = $this->database->executePreparedFetchAll($prepared, [$domain_id], PDO::FETCH_COLUMN);
         }
 
-        if (is_array($ban_ids))
-        {
-            return $this->bansToHammers($ban_ids);
-        }
-
-        return array();
+        return $this->bansToHammers($ban_ids);
     }
 
-    private function bansToHammers(array $ban_ids)
+    private function bansToHammers(array $ban_ids): array
     {
         $ban_hammers = array();
 
-        foreach ($ban_ids as $ban_id)
-        {
+        foreach ($ban_ids as $ban_id) {
             $ban_hammer = new BanHammer($this->database);
             $ban_hammer->loadFromID($ban_id);
             $ban_hammers[] = $ban_hammer;

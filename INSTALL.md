@@ -16,7 +16,8 @@ Basic installation guide. Please note that installing and running a modern image
  - Enter a value for `install_key`. This will be used for the install process.
  - Set `sqltype` to whichever type of database you are using. The current options are MYSQL, MARIADB, POSTGRESQL and SQLITE  
  - There is a configuration section for each type of database. You only need to configure for the type of database you are using.
-8. Navigate to `imgboard.php?install` in a browser and give it a moment to run the install routines. If anything goes wrong it should give a relevant error message.
-9. At the end of the install process, you will receive one of two messages:  
+8. Navigate to `imgboard.php?install` in a browser. It will request the install key to be entered.
+9. Once the install key has been verified the install routines will run. If anything goes wrong it should give a relevant error message.
+10. At the end of the install you will receive one of two messages:  
  - It will ask you to create a site owner account. This account will have all permissions and cannot be deleted.
- - A message confirming a site owner account already exists and a link to the login page. You can also go to `imgboard.php?route=/_site_/account/login` if the link does not work for some reason.
+ - A message confirming a site owner account already exists and a link to the login page. You can also go to `imgboard.php?route=/site/account/login` if the link does not work for some reason.

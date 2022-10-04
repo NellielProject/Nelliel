@@ -51,7 +51,7 @@ class ArchiveAndPrune
             if ($thread['preserve'] != 1 && $early404 && $page > $early404_page &&
                 $thread['post_count'] - 1 < $early404_replies) {
                 $thread = $content_id->getInstanceFromID($this->domain);
-                $thread->remove(true);
+                $thread->delete(true);
                 continue;
             }
 
@@ -80,7 +80,7 @@ class ArchiveAndPrune
             {
                 if ($prune && $archive_prune) {
                     $thread = $content_id->getInstanceFromID($this->domain);
-                    $thread->remove(true);
+                    $thread->delete(true);
                     continue;
                 }
             }

@@ -23,6 +23,7 @@ class OutputHead extends Output
         $this->render_data['main_js_file'] = NEL_SCRIPTS_WEB_PATH . 'core/nel.js';
         $this->render_data['js_ui_url'] = NEL_SCRIPTS_WEB_PATH . 'core/ui.js';
         $this->render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
+        $this->render_data['support_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/support.css';
         $info = array();
         $info['domain_id'] = $this->domain->id();
         $info['src_directory'] = $this->domain->reference('source_directory');

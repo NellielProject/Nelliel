@@ -32,10 +32,9 @@ class OutputPanelFiletypes extends Output
             'SELECT * FROM "' . NEL_FILETYPE_CATEGORIES_TABLE . '" ORDER BY "category" ASC', PDO::FETCH_ASSOC);
         $filetypes = $this->database->executeFetchAll(
             'SELECT * FROM "' . NEL_FILETYPES_TABLE . '" ORDER BY "category" ASC, "format" ASC', PDO::FETCH_ASSOC);
-        $this->render_data['new_category_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'filetype-categories', 'actions' => 'new']);
-        $this->render_data['new_filetype_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'new']);
+        $this->render_data['new_category_url'] = nel_build_router_url(
+            [$this->domain->id(), 'filetype-categories', 'new']);
+        $this->render_data['new_filetype_url'] = nel_build_router_url([$this->domain->id(), 'filetypes', 'new']);
         $bgclass = 'row1';
 
         foreach ($categories as $category) {
@@ -45,31 +44,23 @@ class OutputPanelFiletypes extends Output
             $category_data['category'] = $category['category'];
             $category_data['label'] = $category['label'];
             $category_data['enabled'] = $category['enabled'];
-            $category_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'filetype-categories', 'actions' => 'edit',
-                        'category-id' => $category['category']]);
+            $category_data['edit_url'] = nel_build_router_url(
+                [$this->domain->id(), 'filetype-categories', $category['category'], 'modify']);
 
             if ($category['enabled'] == 1) {
-                $category_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'filetype-categories', 'actions' => 'disable',
-                            'category-id' => $category['category']]);
+                $category_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'filetype-categories', $category['category'], 'disable']);
                 $category_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($category['enabled'] == 0) {
-                $category_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'filetype-categories', 'actions' => 'enable',
-                            'category-id' => $category['category']]);
+                $category_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'filetype-categories', $category['category'], 'enable']);
                 $category_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $category_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'filetype-categories', 'actions' => 'remove',
-                        'category-id' => $category['category']]);
+            $category_data['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'filetype-categories', $category['category'], 'delete']);
             $this->render_data['category_list'][] = $category_data;
         }
 
@@ -102,31 +93,23 @@ class OutputPanelFiletypes extends Output
             $filetype_data['mimetypes'] = utf8_substr($mimetypes, 0, -2);
             $filetype_data['magic_regex'] = $filetype['magic_regex'];
             $filetype_data['label'] = $filetype['label'];
-            $filetype_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'filetypes', 'actions' => 'edit',
-                        'filetype-id' => $filetype['format']]);
+            $filetype_data['edit_url'] = nel_build_router_url(
+                [$this->domain->id(), 'filetypes', $filetype['format'], 'modify']);
 
             if ($filetype['enabled'] == 1) {
-                $filetype_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'filetypes', 'actions' => 'disable',
-                            'filetype-id' => $filetype['format']]);
+                $filetype_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'filetypes', $filetype['format'], 'disable']);
                 $filetype_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($filetype['enabled'] == 0) {
-                $filetype_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'filetypes', 'actions' => 'enable',
-                            'filetype-id' => $filetype['format']]);
+                $filetype_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'filetypes', $filetype['format'], 'enable']);
                 $filetype_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $filetype_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'filetypes', 'actions' => 'remove',
-                        'filetype-id' => $filetype['format']]);
+            $filetype_data['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'filetypes', $filetype['format'], 'delete']);
             $this->render_data['filetype_list'][] = $filetype_data;
         }
 
@@ -155,6 +138,7 @@ class OutputPanelFiletypes extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/filetypes_filetype_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -165,9 +149,7 @@ class OutputPanelFiletypes extends Output
 
         if ($editing) {
             $format = $parameters['format'] ?? '';
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'filetypes', 'actions' => 'update', 'filetype-id' => $format]);
+            $form_action = nel_build_router_url([$this->domain->id(), 'filetypes', $format, 'modify']);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_FILETYPES_TABLE . '" WHERE "format" = ?');
             $filetype_data = $this->database->executePreparedFetch($prepared, [$format], PDO::FETCH_ASSOC);
 
@@ -182,8 +164,7 @@ class OutputPanelFiletypes extends Output
             }
         } else {
             $this->render_data['new_filetype'] = true;
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'filetypes', 'actions' => 'add']);
+            $form_action = nel_build_router_url([$this->domain->id(), 'filetypes', 'new']);
         }
 
         $this->render_data['form_action'] = $form_action;
@@ -208,10 +189,7 @@ class OutputPanelFiletypes extends Output
 
         if ($editing) {
             $category = $parameters['category'] ?? '';
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'filetype-categories', 'actions' => 'update',
-                        'category-id' => $category]);
+            $form_action = nel_build_router_url([$this->domain->id(), 'filetype-categories', $category, 'modify']);
             $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_FILETYPE_CATEGORIES_TABLE . '" WHERE "category" = ?');
             $category_data = $this->database->executePreparedFetch($prepared, [$category], PDO::FETCH_ASSOC);
@@ -223,8 +201,7 @@ class OutputPanelFiletypes extends Output
             }
         } else {
             $this->render_data['new_category'] = true;
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'filetype-categories', 'actions' => 'add']);
+            $form_action = nel_build_router_url([$this->domain->id(), 'filetype-categories', 'new']);
         }
 
         $this->render_data['form_action'] = $form_action;

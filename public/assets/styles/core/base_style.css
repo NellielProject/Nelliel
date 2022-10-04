@@ -200,6 +200,83 @@ td {
 	margin-bottom: 3px;
 }
 
+/* Markup */
+.markup-greentext {
+	background: var(--greentext-background);
+	color: var(--greentext-color);
+}
+
+.markup-pinktext {
+	background: var(--pinktext-background);
+	color: var(--pinktext-color);
+}
+
+.markup-orangetext {
+	background: var(--orangetext-background);
+	color: var(--orangetext-color);
+}
+
+.external-link {
+	text-decoration: var(--external-link);
+}
+
+.markup-spoiler {
+	color: var(--spoiler-color, black);
+	background: var(--spoiler-color, black);
+	cursor: none;
+}
+
+.markup-spoiler:hover {
+	color: var(--unspoiler-color, white);
+	cursor: auto;
+}
+
+.markup-spoiler:not(:hover) * {
+	color: var(--spoiler-color, black);
+	background: var(--spoiler-color, black);
+}
+
+.markup-italic {
+	font-style: italic;
+}
+
+.markup-bold {
+	font-weight: bold;
+}
+
+.markup-underline {
+	text-decoration-line: underline;
+}
+
+.markup-strikethrough {
+	text-decoration-line: line-through;
+}
+
+.ascii-art {
+	line-height: 1.0rem;
+	font-family: Menlo, Monaco, "Courier New", monospace;
+	display: inline-block;
+}
+
+.shift-jis-art {
+	font-size: 16px;
+	line-height: 18px;
+	font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", "MS PGothic AA", IPAMonaPGothic, "IPA モナー Pゴシック", submona, sans-serif;
+	display: inline-block;
+}
+
+.post-cite {
+	text-decoration-line: underline;
+}
+
+.board-cite {
+	text-decoration-line: underline;
+}
+
+.invalid-cite {
+	text-decoration-line: line-through;
+}
+
 /* New post form */
 .new-post-form {
 	margin: auto;
@@ -398,11 +475,6 @@ td {
 	letter-spacing: 0.1em;
 	text-shadow: 1px 0px 1px #222222, 0px 1px 1px #222222, -1px 0px 1px #222222, 0px -1px 1px #222222;
 	border-radius: 3px;
-}
-
-.quote {
-	background: var(--quote-background);
-	color: var(--quote-color);
 }
 
 .post-number-link {
@@ -659,15 +731,16 @@ td {
 	text-decoration: none;
 }
 
-.external-link {
-	text-decoration: var(--external-link);
+.link-button {
+	background-color: transparent;
+	border: 0;
+	color: var(--link-color);
+	font-family: var(--base-font-family, sans-serif);
+	font-size: var(--base-font-size, 100%);
+	cursor: pointer;
+	text-decoration: underline;
 }
 
-.text-spoiler {
-	color: var(--spoiler-color, black);
-	background-color: var(--spoiler-color, black);
-}
-
-.text-spoiler:hover {
-	color: var(--unspoiler-color, white);
+.link-button:hover {
+	color: var(--link-hover-color);
 }

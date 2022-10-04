@@ -28,10 +28,8 @@ class OutputPanelCapcodes extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $capcodes = $this->database->executeFetchAll('SELECT * FROM "' . NEL_CAPCODES_TABLE . '"',
-            PDO::FETCH_ASSOC);
-        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(['module' => 'admin', 'section' => 'capcodes', 'actions' => 'new']);
+        $capcodes = $this->database->executeFetchAll('SELECT * FROM "' . NEL_CAPCODES_TABLE . '"', PDO::FETCH_ASSOC);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'capcodes', 'new']);
         $bgclass = 'row1';
 
         foreach ($capcodes as $capcode) {
@@ -42,31 +40,23 @@ class OutputPanelCapcodes extends Output
             $capcode_data['capcode'] = $capcode['capcode'];
             $capcode_data['output'] = $capcode['output'];
             $capcode_data['enabled'] = $capcode['enabled'];
-            $capcode_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'capcodes', 'actions' => 'edit',
-                        'capcode-id' => $capcode_data['capcode_id']]);
+            $capcode_data['edit_url'] = nel_build_router_url(
+                [$this->domain->id(), 'capcodes', $capcode_data['capcode_id'], 'modify']);
 
             if ($capcode_data['enabled'] == 1) {
-                $capcode_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'capcodes', 'actions' => 'disable',
-                            'capcode-id' => $capcode_data['capcode_id']]);
+                $capcode_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'capcodes', $capcode_data['capcode_id'], 'disable']);
                 $capcode_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($capcode_data['enabled'] == 0) {
-                $capcode_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'capcodes', 'actions' => 'enable',
-                            'capcode-id' => $capcode_data['capcode_id']]);
+                $capcode_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'capcodes', $capcode_data['capcode_id'], 'enable']);
                 $capcode_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $capcode_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'capcodes', 'actions' => 'remove',
-                        'capcode-id' => $capcode_data['capcode_id']]);
+            $capcode_data['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'capcodes', $capcode_data['capcode_id'], 'delete']);
             $this->render_data['capcodes_list'][] = $capcode_data;
         }
 
@@ -88,6 +78,7 @@ class OutputPanelCapcodes extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/capcodes_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Capcodes');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -98,9 +89,7 @@ class OutputPanelCapcodes extends Output
 
         if ($editing) {
             $capcode_id = $parameters['capcode_id'] ?? 0;
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'capcodes', 'actions' => 'update', 'capcode-id' => $capcode_id]);
+            $form_action = nel_build_router_url([$this->domain->id(), 'capcodes', $capcode_id, 'modify']);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode_id" = ?');
             $capcode_data = $this->database->executePreparedFetch($prepared, [$capcode_id], PDO::FETCH_ASSOC);
 
@@ -111,8 +100,7 @@ class OutputPanelCapcodes extends Output
                 $this->render_data['enabled'] = $capcode_data['enabled'] == 1 ? 'checked' : '';
             }
         } else {
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(['module' => 'admin', 'section' => 'capcodes', 'actions' => 'add']);
+            $form_action = nel_build_router_url([$this->domain->id(), 'capcodes', 'new']);
         }
 
         $this->render_data['form_action'] = $form_action;

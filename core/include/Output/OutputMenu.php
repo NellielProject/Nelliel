@@ -6,6 +6,7 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use PDO;
 
 class OutputMenu extends Output
 {
@@ -83,7 +84,7 @@ class OutputMenu extends Output
         $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
 
         foreach ($styles as $style) {
-            if ($this->domain->id() !== Domain::SITE && !in_array($style->id(), $enabled_styles)) {
+            if ($this->domain->id() !== Domain::SITE && $this->domain->id() !== Domain::GLOBAL && !in_array($style->id(), $enabled_styles)) {
                 continue;
             }
 
@@ -123,5 +124,31 @@ class OutputMenu extends Output
         $option_noko_sage['option_value'] = 'noko sage';
         $options[] = $option_noko_sage;
         return $options;
+    }
+
+    public function boards(string $name, string $selected, bool $data_only): array
+    {
+        $board_data = $this->database->executeFetchAll(
+            'SELECT "board_id", "board_uri" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+        $boards = array();
+        $boards['select_name'] = $name;
+        $option_none = array();
+        $option_none['option_label'] = '';
+        $option_none['option_value'] = '';
+        $boards['options'][] = $option_none;
+
+        foreach ($board_data as $board) {
+            $board_option = array();
+
+            if ($selected === $board['board_id']) {
+                $board_option['option_selected'] = 'selected';
+            }
+
+            $board_option['option_label'] = $board['board_uri'];
+            $board_option['option_value'] = $board['board_id'];
+            $boards['options'][] = $board_option;
+        }
+
+        return $boards;
     }
 }

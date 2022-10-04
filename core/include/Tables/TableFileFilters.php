@@ -23,6 +23,7 @@ class TableFileFilters extends Table
             'file_hash' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'filter_id' => ['row_check' => false, 'auto_inc' => true],
@@ -30,6 +31,7 @@ class TableFileFilters extends Table
             'file_hash' => ['row_check' => true, 'auto_inc' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false],
             'board_id' => ['row_check' => true, 'auto_inc' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
         $this->schema_version = 1;
     }
@@ -40,11 +42,12 @@ class TableFileFilters extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
-            filter_id       ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
+            filter_id   ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             hash_type   VARCHAR(50) NOT NULL,
             file_hash   VARCHAR(128) NOT NULL,
             notes       TEXT DEFAULT NULL,
             board_id    VARCHAR(50) NOT NULL,
+            enabled     SMALLINT NOT NULL DEFAULT 0,
             moar        TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (filter_id),
             CONSTRAINT fk_file_filters__domain_registry

@@ -40,14 +40,23 @@
 	--mod-comment-color: #FF0000;
 	--omitted-background: inherit;
 	--omitted-color: #070707;
-	--quote-background: inherit;
-	--quote-color: #789922;
+
+	/* Markup */
+	--greentext-background: inherit;
+	--greentext-color: #789922;
+	--pinktext-background: inherit;
+	--pinktext-color: #FF5A57;
+	--orangetext-background: inherit;
+	--orangetext-color: #F28800;
+	--external-link: underline;
+	--spoiler-color: #000000;
+	--unspoiler-color: #EEEEEE;
+
 	--news-article-background: #F0E0D6;
 	--news-article-header-background: #EEAA88;
 	--news-headline-color: inherit;
 	--news-paragraph-color: inherit;
 	--thread-status-icon-color: invert(10%) sepia(72%) saturate(7484%) hue-rotate(359deg) brightness(102%) contrast(109%);
-	--external-link: underline;
 }
 
 .posting-rules-list {

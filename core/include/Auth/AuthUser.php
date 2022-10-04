@@ -5,7 +5,7 @@ namespace Nelliel\Auth;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\NellielPDO;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -61,7 +61,8 @@ class AuthUser extends AuthHandler
         if ($result) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_USERS_TABLE .
-                '" SET "display_name" = :display_name, "password" = :password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "username" = :username');
+                '" SET "username" = :username, "display_name" = :display_name, "password" = :password, "active" = :active, "owner" = :owner, "last_login" = :last_login WHERE "username" = :last_username');
+            $prepared->bindValue(':last_username', $this->id(), PDO::PARAM_STR);
         } else {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_USERS_TABLE .
@@ -75,18 +76,24 @@ class AuthUser extends AuthHandler
         $prepared->bindValue(':active', $this->authDataOrDefault('active', 0), PDO::PARAM_INT);
         $prepared->bindValue(':owner', $this->authDataOrDefault('owner', 0), PDO::PARAM_INT);
         $prepared->bindValue(':last_login', $this->authDataOrDefault('last_login', 0), PDO::PARAM_INT);
-        $this->database->executePrepared($prepared);
+
+        if ($this->database->executePrepared($prepared)) {
+            $this->changed = false;
+        }
+
+        if ($this->getData('username') !== $this->id()) {
+            $this->auth_id = $this->getData('username');
+        }
 
         foreach ($this->user_roles as $domain_id => $user_role) {
             $prepared = $this->database->prepare(
-                'SELECT "entry" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
+                'SELECT 1 FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
             $result = $this->database->executePreparedFetch($prepared, [$this->id(), $domain_id], PDO::FETCH_COLUMN);
 
             if ($result) {
                 $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_USER_ROLES_TABLE .
-                    '" SET "username" = :username, "role_id" = :role_id, "domain_id" = :domain_id WHERE "entry" = :entry');
-                $prepared->bindValue(':entry', $result, PDO::PARAM_INT);
+                    '" SET "role_id" = :role_id WHERE "username" = :username AND "domain_id" = :domain_id');
             } else {
                 $prepared = $this->database->prepare(
                     'INSERT INTO "' . NEL_USER_ROLES_TABLE .
@@ -103,8 +110,12 @@ class AuthUser extends AuthHandler
         return true;
     }
 
-    public function setupNew(): void
-    {}
+    public function exists(): bool
+    {
+        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_USERS_TABLE . '" WHERE "username" = ?');
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_COLUMN);
+        return !empty($result);
+    }
 
     public function remove(): void
     {
@@ -170,7 +181,7 @@ class AuthUser extends AuthHandler
             return true;
         }
 
-        if (!$escalate) {
+        if ($domain->id() === Domain::SITE || !$escalate) {
             return false;
         }
 
@@ -181,12 +192,7 @@ class AuthUser extends AuthHandler
         }
 
         $site_role = $this->getDomainRole(nel_site_domain());
-
-        if ($site_role->checkPermission($permission)) {
-            return true;
-        }
-
-        return false;
+        return $site_role->checkPermission($permission);
     }
 
     private function setupAuthRole(string $role_id): AuthRole

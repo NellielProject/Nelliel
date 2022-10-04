@@ -12,15 +12,13 @@ use Nelliel\Domains\Domain;
 
 class DispatchBanners extends Dispatch
 {
-    private $site_domain;
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->site_domain = nel_site_domain();
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         $banners = new Banners($this->domain);
 

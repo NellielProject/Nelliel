@@ -91,6 +91,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_content_disclaimer', '', 'Site-wide disclaimer added to the bottom of posts.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_footer_text', '', 'Additional text to put in the footer site-wide.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_board_pages', '10', 'Maximum static pages that can be created for a specific board.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'allow_user_registration', '0', 'Allow users to register an account.', '{"type":"checkbox"}']);
 
         // Banners
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_banners', '0', 'Display site banners if available.', '{"type":"checkbox"}']);
@@ -115,6 +116,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_referrer_policy', 'strict-origin-when-cross-origin', 'Referrer policy for the site.', '{"type":"select"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'external_link_referrer_policy', 'strict-origin-when-cross-origin', 'Referrer policy for external links. Overrides site policy if different.', '{"type":"select"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'nofollow_external_links', '1', 'Add rel="nofollow" to external links.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_page_regen_time', '0', 'How long the script can take to regenerate board or site pages. 0 sets unlimited time.', '{"type":"number"}']);
 
         // Uploads
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', 'GD', 'Preferred graphics handler', '{"type":"select"}']);
@@ -124,29 +126,29 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphicsmagick_animated_args', '%s -auto-orient -coalesce -thumbnail %dx%d %s', 'Arguments given to GraphicsMagick for creating animated previews.', '{"type":"text"}']);
 
         // Hashing and Security
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'post_password_algorithm', 'sha256', 'Post password hash algorithm', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'secure_tripcode_algorithm', 'sha256', 'Secure tripcode hash algorithm', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'do_password_rehash', '0', 'Rehash account passwords', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'login_delay', '3', 'Delay between login attempts', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'session_length', '10800', 'Session timeout (seconds)', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'store_unhashed_ip', '1', 'Store unhashed IP addresses; (hashed IP will always be stored)', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_dnsbl', '0', 'Use DNSBL to check incoming posts', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'post_password_algorithm', 'sha256', 'Post password hash algorithm.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'secure_tripcode_algorithm', 'sha256', 'Secure tripcode hash algorithm.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'do_password_rehash', '0', 'Rehash account passwords.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'login_delay', '3', 'Delay between login attempts.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'session_length', '2592000', 'Session timeout (seconds), 0 to disable. Default is 1 month.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'store_unhashed_ip', '1', 'Store unhashed IP addresses; (hashed IP will always be stored).', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_dnsbl', '0', 'Use DNSBL to check incoming posts.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'dnsbl_exceptions', '[]', 'IPs that are exempt from DNSBL checks. Enter as JSON array of strings.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'visitor_id_lifespan', '31536000', 'How long a visitor ID will be valid (seconds).', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'visitor_id_lifespan', '31536000', 'How long a visitor ID will be valid (seconds). Default is 1 year.', '{"type":"number"}']);
 
         // CAPTCHA
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_width', '250', 'Width of CAPTCHA image', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_height', '80', 'Height of CAPTCHA image', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_character_count', '5', 'Number of characters in CAPTCHA', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_timeout', '1800', 'CAPTCHA timeout (seconds)', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_rate_limit', '12', 'CAPTCHA requests per IP in one minute (0 to disable check)', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_site_key', '', 'reCAPTCHA site key', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_sekrit_key', '', 'reCAPTCHA secret key', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_type', 'CHECKBOX', 'reCAPTCHA type', '{"type":"select"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_captcha', '0', 'Use CAPTCHA for login', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_recaptcha', '0', 'Use reCAPTCHA for login', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_captcha', '0', 'Use CAPTCHA for registration', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_recaptcha', '0', 'Use reCAPTCHA for registration', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_width', '250', 'Width of CAPTCHA image.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_height', '80', 'Height of CAPTCHA image.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_character_count', '5', 'Number of characters in CAPTCHA.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_timeout', '1800', 'CAPTCHA timeout (seconds).', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_rate_limit', '12', 'CAPTCHA requests per IP in one minute (0 to disable check).', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_site_key', '', 'reCAPTCHA site key.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_sekrit_key', '', 'reCAPTCHA secret key.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_type', 'CHECKBOX', 'reCAPTCHA type.', '{"type":"select"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_captcha', '0', 'Use CAPTCHA for login.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_recaptcha', '0', 'Use reCAPTCHA for login.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_captcha', '0', 'Use CAPTCHA for registration.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_recaptcha', '0', 'Use reCAPTCHA for registration.', '{"type":"checkbox"}']);
 
         // Overboard
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'overboard_active', '0', 'Enable overboard', '{"type":"checkbox"}']);
@@ -170,11 +172,14 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'locale', 'en_US', 'Locale for the board (use ISO language + country code).', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'exclude_from_overboards', '0', 'Exclude threads on this board from the overboards.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'user_delete_own', '1', 'Let users delete own posts and content.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_op_thread_moderation', '0', 'Let OP delete posts and uploads within their thread.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'delete_post_renzoku', '0', 'Cooldown after posting before user can delete their post.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'safety_level', 'SFW', 'General safety level of content on this board.', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_content_disclaimer', '', 'Disclaimer added to the bottom of posts on this board.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_footer_text', '', 'Additional text to put in the footer for this board.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'enabled_styles', '["style-nelliel","style-nelliel-2","style-nelliel-classic","style-burichan","style-futaba","style-nigra"]', 'Styles which users can choose from.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_moving_replies', '1', 'Let individual replies from threads be moved.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_moving_uploads', '1', 'Let files and embeds be moved between posts.', '{"type":"checkbox"}']);
 
         // Banners
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_banners', '0', 'Display board banners if available.', '{"type":"checkbox"}']);
@@ -187,7 +192,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_ban_appeals', '1', 'Allow ban appeals.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'min_time_before_ban_appeal', '21600', 'Minimum time before a ban can be appealed (seconds).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_ban_appeals', '2', 'Maximum number of appeals per ban.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_ban_appeals', '1', 'Allow ban appeals.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_ip_range_ban_appeals', '0', 'Allow appeals for IP range bans.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_ban_mod_name', '0', 'Display the username of who set the ban.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'ban_page_date_format', 'F jS, Y H:i e', 'Format for times on the ban page (PHP date() function).', '{"type":"text"}']);
@@ -232,6 +236,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'list_file_formats', '0', 'List the enabled formats.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'list_file_extensions', '1', 'List the enabled extensions. If formats is selected as well the two will be combined.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_tripcode', '0', 'Require either a tripcode or secure tripcode when posting.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_no_markup', '1', 'Allow user to disable markup in their post. HTML escaping and other filters will still be applied.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'new_post_auto_subject', '0', 'New post form has subject field automatically filled by OP subject.', '{"type":"checkbox"}']);
 
         // Uploads
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_op_files', '1', 'Allow users to upload files when making a new thread.', '{"type":"checkbox"}']);
@@ -255,9 +261,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_board_embed_duplicates', '0', 'Check for duplicate embed URLs in all posts on the board.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_op_embed_duplicates', '1', 'Check for duplicate embed URLs in other thread OPs when creating new thread.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'check_thread_embed_duplicates', '1', 'Check for duplicate embed URLs in current thread when replying.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'only_active_file_duplicates', '1', 'Only check for duplicate files in active threads (excludes the old thread buffer).', '{"type":"checkbox"}']);        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '', '1', 'Limit the number of uploads in a thread.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'only_active_embed_duplicates', '1', 'Only check for duplicate embeds in active threads (excludes the old thread buffer).', '{"type":"checkbox"}']);        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '', '1', 'Limit the number of uploads in a thread.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '1', 'Limit the number of uploads in a thread.', '{"type":"checkbox"}']);        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '', '1', 'Limit the number of uploads in a thread.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'only_active_file_duplicates', '1', 'Only check for duplicate files in active threads (excludes the old thread buffer).', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'only_active_embed_duplicates', '1', 'Only check for duplicate embeds in active threads (excludes the old thread buffer).', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '1', 'Limit the number of uploads in a thread.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_thread_uploads', '1000', 'Maximum number of uploads in a thread.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize', '5242880', 'Maximum size of each file uploaded. (bytes)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize_all_files', '5242880', 'Maximum total size of all files uploaded in one post. (bytes)', '{"type":"number"}']);
@@ -346,7 +352,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'prefix_board_title', '1', 'Prefix the board title (URI and name) to the page title of threads.', '{"type":"checkbox"}']);
 
         // Post Rendering
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'date_format', 'Y/m/d (D) H:i:s', 'Format for post time (PHP date() function).', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'post_date_format', 'Y/m/d (D) H:i:s', 'Format for post time (PHP date() function).', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'indent_marker', '>>', 'Indent marker next to replies.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'tripcode_marker', '!', 'Tripcode marker.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'no_comment_text', '(no comment)', 'Text when there is no comment.', '{"type":"text"}']);
@@ -442,6 +448,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unpermasage', 'Unpermasage', 'Unpermasage', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_cyclic', 'Cyclic', 'Cyclic', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_non_cyclic', 'Non-cyclic', 'Non-cyclic', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_edit_post', 'Edit', 'Edit', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_edit', 'Edit', 'Edit', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_move', 'Move', 'Move', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_spoiler', 'Spoiler', 'Spoiler', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unspoiler', 'Unspoiler', 'Unspoiler', '{"type":"text"}']);
     }
 }

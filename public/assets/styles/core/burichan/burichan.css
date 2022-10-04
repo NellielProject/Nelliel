@@ -40,8 +40,18 @@
 	--mod-comment-color: #FF0000;
 	--omitted-background: inherit;
 	--omitted-color: #070707;
-	--quote-background: #C4C2EE;
-	--quote-color: #FFFFFF;
+
+	/* Markup */
+	--greentext-background: #C4C2EE;
+	--greentext-color: #FFFFFF;
+	--pinktext-background: #C4C2EE;
+	--pinktext-color: #FF4969;
+	--orangetext-background: #C4C2EE;
+	--orangetext-color: #D77900;
+	--external-link: underline;
+	--spoiler-color: #000000;
+	--unspoiler-color: #EEEEEE;
+
 	--news-article-background: #D6DAF0;
 	--news-article-header-background: #9988EE;
 	--news-headline-color: inherit;

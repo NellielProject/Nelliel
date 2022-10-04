@@ -87,24 +87,22 @@ class Upload
         $values = array_values($filtered_data);
 
         if ($this->main_table->rowExists($filtered_data)) {
-            $where_columns = ['post_ref', 'upload_order'];
-            $where_keys = ['where_post_ref', 'where_upload_order'];
-            $where_values = [$this->content_id->postID(), $this->content_id->orderID()];
+            $where_columns = ['upload_id'];
+            $where_keys = ['where_upload_id'];
+            $where_values = [$this->data('upload_id')];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
                 $where_columns, $where_keys);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
-            $this->database->executePrepared($prepared);
         } else {
             $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
-            $this->database->executePrepared($prepared);
         }
 
-        return true;
+        return $this->database->executePrepared($prepared);
     }
 
-    public function remove(bool $perm_override = false, bool $parent_delete = false): bool
+    public function delete(bool $perm_override = false, bool $parent_delete = false, bool $absolute = false): bool
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -116,8 +114,8 @@ class Upload
             }
         }
 
-        $this->removeFromDisk($parent_delete);
-        $this->removeFromDatabase($parent_delete);
+        $this->deleteFromDisk($parent_delete);
+        $this->deleteFromDatabase($parent_delete, $absolute);
 
         if (!$parent_delete) {
             $post = $this->getParent();
@@ -128,13 +126,13 @@ class Upload
         return true;
     }
 
-    protected function removeFromDatabase(bool $parent_delete): bool
+    protected function deleteFromDatabase(bool $parent_delete, bool $absolute = false): bool
     {
         if (empty($this->content_id->orderID()) || $parent_delete) {
             return false;
         }
 
-        if ($this->domain->setting('keep_deleted_upload_entry')) {
+        if (!$absolute && $this->domain->setting('keep_deleted_upload_entry')) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . $this->domain->reference('uploads_table') .
                 '" SET "deleted" = 1 WHERE "post_ref" = ? AND "upload_order" = ?');
@@ -149,7 +147,7 @@ class Upload
         return true;
     }
 
-    protected function removeFromDisk(bool $parent_delete): bool
+    protected function deleteFromDisk(bool $parent_delete): bool
     {
         if (!$this->isLoaded()) {
             $this->loadFromDatabase();
@@ -162,29 +160,48 @@ class Upload
         $file_handler = nel_utilities()->fileHandler();
         $removed = false;
 
+        if (!$this->fileDeduplicated()) {
+            $removed = $file_handler->eraserGun($this->srcFilePath(),
+                $this->content_data['filename'] . '.' . $this->content_data['extension']);
+        }
+
+        if (!nel_true_empty($this->content_data['static_preview_name']) && !$this->staticPreviewDeduplicated()) {
+            $removed = $file_handler->eraserGun($this->previewFilePath(), $this->content_data['static_preview_name']);
+        }
+
+        if (!nel_true_empty($this->content_data['animated_preview_name']) && $this->animatedPreviewDeduplicated()) {
+            $removed = $file_handler->eraserGun($this->previewFilePath(), $this->content_data['animated_preview_name']);
+        }
+
+        return $removed;
+    }
+
+    private function fileDeduplicated()
+    {
         $prepared = $this->database->prepare(
             'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
             '" WHERE "filename" = ? AND "extension" = ?');
         $filename_count = $this->database->executePreparedFetch($prepared,
             [$this->content_data['filename'], $this->content_data['extension']], PDO::FETCH_COLUMN);
+        return $filename_count > 1;
+    }
 
-        if ($filename_count <= 1) {
-            $removed = $file_handler->eraserGun($this->srcFilePath(),
-                $this->content_data['filename'] . '.' . $this->content_data['extension']);
-        }
-
+    private function staticPreviewDeduplicated()
+    {
         if (!nel_true_empty($this->content_data['static_preview_name'])) {
             $prepared = $this->database->prepare(
                 'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "static_preview_name" = ?');
             $static_preview_count = $this->database->executePreparedFetch($prepared,
                 [$this->content_data['static_preview_name']], PDO::FETCH_COLUMN);
-
-            if ($static_preview_count <= 1) {
-                $removed = $file_handler->eraserGun($this->previewFilePath(), $this->content_data['static_preview_name']);
-            }
+            return $static_preview_count > 1;
         }
 
+        return false;
+    }
+
+    private function animatedPreviewDeduplicated()
+    {
         if (!nel_true_empty($this->content_data['animated_preview_name'])) {
             $prepared = $this->database->prepare(
                 'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') .
@@ -192,28 +209,27 @@ class Upload
             $static_preview_count = $this->database->executePreparedFetch($prepared,
                 [$this->content_data['animated_preview_name']], PDO::FETCH_COLUMN);
 
-            if ($static_preview_count <= 1) {
-                $removed = $file_handler->eraserGun($this->previewFilePath(),
-                    $this->content_data['animated_preview_name']);
-            }
+            return $static_preview_count <= 1;
         }
 
-        $parent = $this->getParent();
+        return false;
+    }
 
-        if ($parent->srcFilePath() !== $this->srcFilePath()) {
-            $removed = $file_handler->eraserGun($this->srcFilePath());
-        }
-
-        if ($parent->previewFilePath() !== $this->previewFilePath()) {
-            $removed = $file_handler->eraserGun($this->previewFilePath());
-        }
-
-        return $removed;
+    public function toggleSpoiler(): void
+    {
+        $this->changeData('spoiler', !$this->data('spoiler'));
+        $this->writeToDatabase();
     }
 
     public function verifyModifyPerms(): bool
     {
         return $this->getParent()->verifyModifyPerms();
+    }
+
+    public function getURL(bool $dynamic): string
+    {
+        $full_filename = $this->data('filename') . '.' . $this->data('extension');
+        return $this->srcWebPath() . rawurlencode($full_filename);
     }
 
     public function getParent(): Post
@@ -279,6 +295,15 @@ class Upload
         return $this->content_data[$key] ?? null;
     }
 
+    public function transferData(array $new_data = null): array
+    {
+        if (!is_null($new_data)) {
+            $this->content_data = $new_data;
+        }
+
+        return $this->content_data;
+    }
+
     public function changeData(string $key, $new_data, bool $cast_null = true)
     {
         $column_types = $this->main_table->columnTypes();
@@ -331,5 +356,76 @@ class Upload
         }
 
         return '';
+    }
+
+    public function move(Post $new_post, bool $parent_move): Upload
+    {
+        $new_board = $new_post->domain()->id() !== $this->domain()->id();
+        $parent = $this->getParent();
+
+        if ($new_board) {
+            $new_content_id = $new_post->contentID();
+            $new_content_id->changeOrderID($this->content_id->orderID());
+            $new_upload = new Upload($new_content_id, $new_post->domain());
+            $new_upload->transferData($this->transferData());
+            $new_upload->storeMoar($this->content_moar);
+            $new_upload->changeData('parent_thread', $new_post->contentID()->threadID());
+            $new_upload->changeData('post_ref', $new_post->contentID()->postID());
+            $new_upload->changeData('upload_id', null);
+        } else {
+            $new_upload = $this;
+            $new_upload->contentID()->changePostID($new_post->contentID()->postID());
+            $new_upload->changeData('parent_thread', $new_post->getParent()->contentID()->threadID());
+            $new_upload->changeData('post_ref', $new_post->contentID()->postID());
+        }
+
+        $next_order = $new_post->getLastUploadOrder() + 1;
+        $new_upload->contentID()->changeOrderID($next_order);
+        $new_upload->changeData('upload_order', $next_order);
+        $new_upload->writeToDatabase();
+
+        if ($new_board) {
+            $file_handler = nel_utilities()->fileHandler();
+
+            if (nel_true_empty($this->data('embed_url'))) {
+                if (!$this->fileDeduplicated()) {
+                    $file_handler->moveFile(
+                        $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
+                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' . $new_upload->data(
+                            'extension'));
+                } else {
+                    $file_handler->copyFile(
+                        $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
+                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' . $new_upload->data(
+                            'extension'));
+                }
+            }
+
+            if (!nel_true_empty($this->data('static_preview_name'))) {
+                if (!$this->staticPreviewDeduplicated()) {
+                    $file_handler->moveFile($this->previewFilePath() . $this->data('static_preview_name'),
+                        $new_upload->previewFilePath() . $this->data('static_preview_name'));
+                } else {
+                    $file_handler->copyFile($this->previewFilePath() . $this->data('static_preview_name'),
+                        $new_upload->previewFilePath() . $this->data('static_preview_name'));
+                }
+            }
+
+            if (!nel_true_empty($this->data('animated_preview_name'))) {
+                if (!$this->animatedPreviewDeduplicated()) {
+                    $file_handler->moveFile($this->previewFilePath() . $this->data('animated_preview_name'),
+                        $new_upload->previewFilePath() . $this->data('animated_preview_name'));
+                } else {
+                    $file_handler->copyFile($this->previewFilePath() . $this->data('animated_preview_name'),
+                        $new_upload->previewFilePath() . $this->data('animated_preview_name'));
+                }
+            }
+
+            $this->delete(true, $parent_move, true);
+        }
+
+        $parent->updateCounts();
+        $new_post->updateCounts();
+        return $new_upload;
     }
 }

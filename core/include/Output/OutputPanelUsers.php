@@ -5,6 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -39,17 +40,21 @@ class OutputPanelUsers extends Output
             $user_data['display_name'] = $user_info['display_name'];
             $user_data['active'] = $user_info['active'];
 
-            if ($user_info['owner'] == 0 || $this->session->user()->isSiteOwner()) {
-                $user_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=users&actions=edit&username=' . $user_info['username'];
-                $user_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    'module=admin&section=users&actions=remove&username=' . $user_info['username'];
+            if ($user_info['owner'] > 0) {
+                $this->render_data['can_modify'] = $this->session->user()->isSiteOwner();
+            } else {
+                $this->render_data['can_modify'] = $this->session->user()->checkPermission($this->domain,
+                    'perm_users_manage');
             }
 
+            $user_data['edit_url'] = nel_build_router_url(
+                [$this->domain->id(), 'users', $user_info['username'], 'modify']);
+            $user_data['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'users', $user_info['username'], 'delete']);
             $this->render_data['users_list'][] = $user_data;
         }
 
-        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=new';
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'users', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -67,22 +72,23 @@ class OutputPanelUsers extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/users_edit');
+        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $username = $parameters['username'] ?? '';
-        $authorization = new \Nelliel\Auth\Authorization($this->domain->database());
+        $authorization = new Authorization($this->domain->database());
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
         if (empty($username)) {
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'module=admin&section=users&actions=add';
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'users', 'new']);
         } else {
             $edit_user = $authorization->getUser($username);
             $this->render_data['username'] = $edit_user->getData('username');
-            $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            'module=admin&section=users&actions=update&username=' . $username;
+            $this->render_data['form_action'] = nel_build_router_url(
+                [$this->domain->id(), 'users', $username, 'modify']);
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 

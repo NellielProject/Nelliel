@@ -31,6 +31,7 @@ class OutputLoginPage extends Output
         $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
         $this->render_data['use_login_recaptcha'] = $this->domain->setting('use_login_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
+        $this->render_data['user_registration_enabled'] = $this->site_domain->setting('allow_user_registration');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

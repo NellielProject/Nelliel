@@ -11,6 +11,7 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
+use Nelliel\Output\OutputInterstitial;
 use Nelliel\Output\OutputPanelManageBoards;
 use Nelliel\Setup\Setup;
 use Nelliel\Utility\FileHandler;
@@ -20,37 +21,15 @@ class AdminBoards extends Admin
 {
     private $site_domain;
     private $remove_confirmed = false;
+    private $static_reserved_uris = [Domain::SITE, Domain::GLOBAL, NEL_ASSETS_DIR, 'overboard', 'sfw_overboard'];
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
         $this->site_domain = new DomainSite($this->database);
         $this->data_table = NEL_BOARD_DATA_TABLE;
-        $this->id_field = 'board-id';
         $this->id_column = 'board_id';
         $this->panel_name = _gettext('Manage Boards');
-    }
-
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-
-        foreach ($inputs['actions'] as $action) {
-            switch ($action) {
-                case 'lock':
-                    $this->lock();
-                    break;
-
-                case 'unlock':
-                    $this->unlock();
-                    break;
-
-                case 'remove-confirmed':
-                    $this->remove_confirmed = true;
-                    $this->remove();
-                    break;
-            }
-        }
     }
 
     public function panel(): void
@@ -86,9 +65,7 @@ class AdminBoards extends Admin
             nel_derp(245, sprintf(_gettext('Board URI is too long. Maximum length is %d characters.'), $uri_max));
         }
 
-        if ($board_uri_lower === Domain::SITE || $board_uri_lower === Domain::GLOBAL ||
-            $board_uri_lower === NEL_ASSETS_DIR || $board_uri_lower === $site_domain->setting('overboard_uri') ||
-            $board_uri_lower === $site_domain->setting('sfw_overboard_uri')) {
+        if ($this->isReservedURI($board_uri)) {
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
@@ -187,7 +164,7 @@ class AdminBoards extends Admin
         $regen = new Regen();
         $domain->regenCache();
         $regen->allBoardPages($domain);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function editor(): void
@@ -196,19 +173,13 @@ class AdminBoards extends Admin
     public function update(): void
     {}
 
-    public function remove(): void
+    public function delete(string $board_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_boards_delete');
-        $board_id = $_GET['board-id'];
         $domain = new DomainBoard($board_id, $this->database);
 
         if (!$domain->exists()) {
             nel_derp(180, _gettext('Board does not appear to exist.'));
-        }
-
-        if (!$this->remove_confirmed) {
-            $this->createInterstitial('remove_warning');
-            return;
         }
 
         if ($this->database->tableExists($domain->reference('uploads_table'))) {
@@ -241,7 +212,7 @@ class AdminBoards extends Admin
         // Foreign key constraints allow this to handle any removals from site tables
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -272,36 +243,34 @@ class AdminBoards extends Admin
         }
     }
 
-    public function unlock()
+    public function unlock(string $board_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_boards_modify');
-        $board_id = $_GET['board-id'] ?? '';
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 0 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    public function lock()
+    public function lock(string $board_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_boards_modify');
-        $board_id = $_GET['board-id'] ?? '';
         $prepared = $this->database->prepare('UPDATE "' . $this->data_table . '" SET "locked" = 1 WHERE "board_id" = ?');
         $this->database->executePrepared($prepared, [$board_id]);
-        $this->outputMain(true);
+        $this->panel();
     }
 
-    private function createInterstitial(string $which)
+    public function confirmDelete(string $board_id): void
     {
-        $output_panel = new OutputPanelManageBoards($this->domain, false);
-
-        switch ($which) {
-            case 'remove_warning':
-                $this->verifyPermissions($this->domain, 'perm_boards_delete');
-                $output_panel->removeWarning([], false);
-                break;
-        }
-
-        $this->outputMain(false);
+        $messages[] = sprintf(__('You are about to delete the board: %s'), $board_id);
+        $messages[] = __(
+            'Doing this will wipe out all posts, files, archives and settings for this board. All the things get shoved into /dev/null. There is no undo or recovery.');
+        $messages[] = __('Are you absolutely sure?');
+        $no_info['text'] = __('NOPE. Get me out of here!');
+        $no_info['url'] = nel_build_router_url([$this->domain->id(), 'manage-boards']);
+        $yes_info['text'] = __('Delete the board');
+        $yes_info['url'] = nel_build_router_url([$this->domain->id(), 'manage-boards', $board_id, 'delete']);
+        $output_interstitial = new OutputInterstitial($this->domain, false);
+        echo $output_interstitial->confirm([], false, $messages, $yes_info, $no_info);
     }
 
     private function generateBoardID(string $board_uri): string
@@ -350,5 +319,15 @@ class AdminBoards extends Admin
         }
 
         return $final_prefix;
+    }
+
+    public function isReservedURI(string $uri): bool
+    {
+        $uri_lower = utf8_strtolower($uri);
+        $static_found = in_array($uri_lower, array_map('utf8_strtolower', $this->static_reserved_uris));
+        $dynamic_reserved_uris = [$this->site_domain->setting('overboard_uri'),
+            $this->site_domain->setting('sfw_overboard_uri')];
+        $dynamic_found = in_array($uri_lower, array_map('utf8_strtolower', $dynamic_reserved_uris));
+        return $static_found || $dynamic_found;
     }
 }

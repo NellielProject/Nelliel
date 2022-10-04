@@ -3,11 +3,13 @@ declare(strict_types = 1);
 
 namespace Nelliel;
 
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
 use Nelliel\Account\Session;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Output\OutputPrivateMessages;
 use Nelliel\Tables\TablePrivateMessages;
 use PDO;
-defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class PrivateMessage
 {

@@ -1,6 +1,5 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Output;
 
@@ -8,30 +7,19 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class Pagination
 {
-    private $previous_text;
-    private $previous_url_format;
-    private $next_text;
-    private $next_url_format;
-    private $page_text;
-    private $page_url_format;
-    private $first_text;
-    private $first_url_format;
-    private $last_text;
-    private $last_url_format;
+    private $previous_text = '<<';
+    private $previous_url_format = '';
+    private $next_text = '>>';
+    private $next_url_format = '';
+    private $page_text = '%d';
+    private $page_url_format = '';
+    private $first_text = '%d';
+    private $first_url_format = '';
+    private $last_text = '%d';
+    private $last_url_format = '';
 
     function __construct()
-    {
-        $this->previous_text = '<<';
-        $this->previous_url_format = '';
-        $this->next_text = '>>';
-        $this->next_url_format = '';
-        $this->page_text = '%d';
-        $this->page_url_format = '';
-        $this->first_text = '%d';
-        $this->first_url_format = '';
-        $this->last_text = '%d';
-        $this->last_url_format = '';
-    }
+    {}
 
     public function setPrevious(string $text = null, string $url_format = null)
     {
@@ -69,10 +57,9 @@ class Pagination
         $previous = ($current - 1 >= $start) ? $current - 1 : $current;
         $pagination[] = $this->numericalEntry($start, $end, $current, $link_current, $this->previous_text, $previous);
 
-        for ($i = $start; $i <= $end; $i ++)
-        {
+        for ($i = $start; $i <= $end; $i ++) {
             $pagination[] = $this->numericalEntry($start, $end, $current, $link_current, sprintf($this->page_text, $i),
-                    $i);
+                $i);
         }
 
         $next = ($current + 1 <= $end) ? $current + 1 : $current;
@@ -85,23 +72,15 @@ class Pagination
         $entry = array();
         $entry['text'] = $text;
 
-        if ($i === $current && !$link_current)
-        {
+        if ($i === $current && !$link_current) {
             $entry['url'] = '';
             $entry['linked'] = false;
-        }
-        else
-        {
-            if ($i === $start)
-            {
+        } else {
+            if ($i === $start) {
                 $entry['url'] = sprintf($this->first_url_format, $i);
-            }
-            else if ($i === $end)
-            {
+            } else if ($i === $end) {
                 $entry['url'] = sprintf($this->last_url_format, $i);
-            }
-            else
-            {
+            } else {
                 $entry['url'] = sprintf($this->page_url_format, $i);
             }
 

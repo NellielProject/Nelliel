@@ -80,7 +80,7 @@ class Post
         return true;
     }
 
-    public function writeToDatabase($temp_database = null): bool
+    public function writeToDatabase(): bool
     {
         if (!$this->isLoaded() || empty($this->content_id->postID())) {
             return false;
@@ -92,8 +92,9 @@ class Post
         $pdo_types = $this->main_table->getPDOTypes($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
+        $row_check_data = ['post_number' => $this->content_id->postID()];
 
-        if ($this->main_table->rowExists($filtered_data)) {
+        if ($this->main_table->rowExists($row_check_data)) {
             $where_columns = ['post_number'];
             $where_keys = ['where_post_number'];
             $where_values = [$this->content_id->postID()];
@@ -111,7 +112,7 @@ class Post
         return true;
     }
 
-    public function remove(bool $perm_override = false, bool $parent_delete = false): bool
+    public function delete(bool $perm_override = false, bool $parent_delete = false): bool
     {
         if (!$perm_override) {
             if (!$this->verifyModifyPerms()) {
@@ -141,17 +142,17 @@ class Post
 
         // Threads can have just OP deleted but right now we don't use that.
         if ($this->data('op') && !$parent_delete) {
-            return $this->getParent()->remove($perm_override);
+            return $this->getParent()->delete($perm_override);
         }
 
         $uploads = $this->getUploads();
 
         foreach ($uploads as $upload) {
-            $upload->remove(true, true);
+            $upload->delete(true, true);
         }
 
-        $this->removeFromDatabase($parent_delete);
-        $this->removeFromDisk($parent_delete);
+        $this->deleteFromDatabase($parent_delete);
+        $this->deleteFromDisk($parent_delete);
 
         if (!$parent_delete) {
             $parent_thread = $this->getParent();
@@ -164,7 +165,7 @@ class Post
         return true;
     }
 
-    protected function removeFromDatabase(bool $parent_delete): bool
+    protected function deleteFromDatabase(bool $parent_delete): bool
     {
         if (empty($this->content_id->postID()) || $parent_delete) {
             return false;
@@ -179,7 +180,7 @@ class Post
         return true;
     }
 
-    protected function removeFromDisk(bool $parent_delete): bool
+    protected function deleteFromDisk(bool $parent_delete): bool
     {
         $file_handler = nel_utilities()->fileHandler();
         $parent = $this->getParent();
@@ -207,27 +208,32 @@ class Post
 
         $flag = false;
 
-        if ($session->isActive()) {
-            if ($user->checkPermission($this->domain, 'perm_delete_posts')) {
-                if (!$user->isSiteOwner() && !empty($this->content_data['username']) &&
-                    $this->authorization->userExists($this->content_data['username'])) {
-                    $mod_post_user = $this->authorization->getUser($this->content_data['username']);
-                    $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
-                        $mod_post_user->getDomainRole($this->domain)->id());
-                } else {
-                    $flag = true;
-                }
+        if ($session->isActive() && $user->checkPermission($this->domain, 'perm_delete_content')) {
+            if (!nel_true_empty($this->data('username'))) {
+                $mod_post_user = $this->authorization->getUser($this->data('username') ?? '');
+
+                $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
+                    $mod_post_user->getDomainRole($this->domain)->id());
+            } else {
+                $flag = true;
             }
         }
 
         $update_sekrit = $_POST['update_sekrit'] ?? '';
 
-        if (!$flag) {
-            if (!isset($this->content_data['password']) ||
-                !hash_equals($this->content_data['password'], nel_post_password_hash($update_sekrit)) ||
-                !$this->domain->setting('user_delete_own')) {
-                nel_derp(60, _gettext('Password is wrong or you are not allowed to delete that.'));
+        if (!$flag && $this->domain->setting('user_delete_own')) {
+            if (!nel_true_empty($this->data('password'))) {
+                $flag = hash_equals($this->content_data['password'], nel_post_password_hash($update_sekrit));
             }
+
+            if (!$flag && $this->domain->setting('allow_op_thread_moderation')) {
+                $flag = hash_equals($this->getParent()->firstPost()->data('password'),
+                    nel_post_password_hash($update_sekrit));
+            }
+        }
+
+        if (!$flag) {
+            nel_derp(60, _gettext('Password is wrong or you are not allowed to delete that.'));
         }
 
         return true;
@@ -244,25 +250,32 @@ class Post
         return $this->parent;
     }
 
-    public function reserveDatabaseRow($temp_database = null)
+    // TODO: See if we can move this step to Thread or eliminate it entirely
+    public function reserveDatabaseRow(): bool
     {
-        $database = (!is_null($temp_database)) ? $temp_database : $this->database;
-        $prepared = $database->prepare(
+        $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->domain->reference('posts_table') .
             '" ("post_time", "post_time_milli", "hashed_ip_address", "visitor_id") VALUES (?, ?, ?, ?)');
-        $database->executePrepared($prepared,
+        $success = $this->database->executePrepared($prepared,
             [$this->data('post_time'), $this->data('post_time_milli'), $this->data('hashed_ip_address'),
                 $this->data('visitor_id')]);
-        $prepared = $database->prepare(
+
+        if (!$success) {
+            return false;
+        }
+
+        $prepared = $this->database->prepare(
             'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
             '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ? AND "visitor_id" = ?');
-        $result = $database->executePreparedFetch($prepared,
+        $result = $this->database->executePreparedFetch($prepared,
             [$this->data('post_time'), $this->data('post_time_milli'), $this->data('hashed_ip_address'),
                 $this->data('visitor_id')], PDO::FETCH_COLUMN, true);
         $this->content_id->changeThreadID(
             ($this->content_id->threadID() === 0) ? $result : $this->content_id->threadID());
+        $this->changeData('post_number', $result);
         $this->changeData('parent_thread', $this->content_id->threadID());
         $this->content_id->changePostID($result);
+        return true;
     }
 
     public function updateCounts()
@@ -291,20 +304,29 @@ class Post
             [$total_uploads, $file_count, $embed_count, $this->content_id->postID()]);
     }
 
-    public function convertToThread(): Thread
+    public function convertToThread(bool $preserve_time = false): Thread
     {
         $original_src_path = $this->srcFilePath();
         $original_preview_path = $this->previewFilePath();
-        $time = nel_get_microtime();
         $new_content_id = new ContentID();
         $new_content_id->changeThreadID($this->content_id->postID());
         $new_content_id->changePostID($this->content_id->postID());
         $new_thread = new Thread($new_content_id, $this->domain);
         $new_thread->changeData('thread_id', $this->content_id->postID());
-        $new_thread->changeData('bump_time', $time['time']);
-        $new_thread->changeData('bump_time_milli', $time['milli']);
-        $new_thread->changeData('last_update', $time['time']);
-        $new_thread->changeData('last_update_milli', $time['milli']);
+
+        if ($preserve_time) {
+            $new_thread->changeData('bump_time', $this->data('post_time'));
+            $new_thread->changeData('bump_time_milli', $this->data('post_time_milli'));
+            $new_thread->changeData('last_update', $this->data('post_time'));
+            $new_thread->changeData('last_update_milli', $this->data('post_time_milli'));
+        } else {
+            $time = nel_get_microtime();
+            $new_thread->changeData('bump_time', $time['time']);
+            $new_thread->changeData('bump_time_milli', $time['milli']);
+            $new_thread->changeData('last_update', $time['time']);
+            $new_thread->changeData('last_update_milli', $time['milli']);
+        }
+
         $new_thread->writeToDatabase();
         $new_thread->loadFromDatabase();
         $new_thread->createDirectories();
@@ -316,14 +338,13 @@ class Post
         }
 
         $this->loadFromDatabase();
-        $this->content_id->changeThreadID($new_thread->contentID()->threadID());
-        $this->changeData('parent_thread', $this->content_id->threadID());
-        $this->changeData('op', 1);
+        $new_thread->addPost($this);
+        $this->parent = $new_thread;
+        $this->writeToDatabase();
         $this->createDirectories();
         $file_handler = nel_utilities()->fileHandler();
         $file_handler->moveDirectory($original_src_path, $this->srcFilePath());
         $file_handler->moveDirectory($original_preview_path, $this->previewFilePath());
-        $this->writeToDatabase();
         $new_thread->updateCounts();
         $this->getParent()->updateBumpTime();
         $this->getParent()->updateCounts();
@@ -356,7 +377,7 @@ class Post
     {
         $cache_array = array();
         $output_post = new OutputPost($this->domain, false);
-        $cache_array['comment_data'] = $output_post->parseComment($this->data('comment'), $this->content_id);
+        $cache_array['comment_data'] = $output_post->parseComment($this->data('comment'), $this);
         $cache_array['backlink_data'] = $output_post->generateBacklinks($this);
         $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
         $prepared = $this->database->prepare(
@@ -409,6 +430,15 @@ class Post
         return $this->content_data[$key] ?? null;
     }
 
+    public function transferData(array $new_data = null): array
+    {
+        if (!is_null($new_data)) {
+            $this->content_data = $new_data;
+        }
+
+        return $this->content_data;
+    }
+
     public function changeData(string $key, $new_data, bool $cast_null = true)
     {
         $column_types = $this->main_table->columnTypes();
@@ -417,6 +447,13 @@ class Post
         $old_data = $this->data($key);
         $this->content_data[$key] = $new_data;
         return $old_data;
+    }
+
+    public function getURL(bool $dynamic): string
+    {
+        $parent = $this->getParent();
+        $thread_url = $parent->getURL($dynamic);
+        return $thread_url . '#t' . $parent->contentID()->threadID() . 'p' . $this->content_id->postID();
     }
 
     public function contentID()
@@ -432,6 +469,24 @@ class Post
     protected function isLoaded()
     {
         return !empty($this->content_data);
+    }
+
+    public function getLastUploadOrder(): int
+    {
+        $last_order = 0;
+        $prepared = $this->database->prepare(
+            'SELECT "upload_order" FROM "' . $this->domain->reference('uploads_table') .
+            '" WHERE "post_ref" = ? ORDER BY "upload_order" ASC');
+        $upload_orders = $this->database->executePreparedFetchAll($prepared, [$this->contentID()->postID()],
+            PDO::FETCH_COLUMN);
+
+        foreach ($upload_orders as $upload_order) {
+            if ($upload_order > $last_order) {
+                $last_order = (int) $upload_order;
+            }
+        }
+
+        return $last_order;
     }
 
     public function getUploads(): array
@@ -455,5 +510,40 @@ class Post
     public function getJSON(): PostJSON
     {
         return $this->json;
+    }
+
+    public function move(Thread $new_thread, bool $parent_move): Post
+    {
+        $new_board = $new_thread->domain()->id() !== $this->domain()->id();
+
+        if ($new_board) {
+            $new_post = new Post(new ContentID(), $new_thread->domain());
+            $new_post->transferData($this->transferData());
+            $new_post->storeMoar($this->content_moar);
+            $new_post->reserveDatabaseRow();
+        } else {
+            $new_post = $this;
+        }
+
+        // If this is OP and we're moving the whole thread, finish preparation before continuing
+        if ($parent_move && $this->data('op')) {
+            $new_thread->contentID()->changeThreadID($new_post->contentID()->postID());
+            $new_thread->changedata('thread_id', $new_thread->contentID()->threadID());
+            $new_thread->writeToDatabase();
+            $new_thread->createDirectories();
+        }
+
+        $new_thread->addPost($new_post);
+        $new_post->writeToDatabase();
+
+        foreach ($this->getUploads() as $upload) {
+            $upload->move($new_post, true);
+        }
+
+        if ($new_board) {
+            $this->delete(true, $parent_move);
+        }
+
+        return $new_post;
     }
 }

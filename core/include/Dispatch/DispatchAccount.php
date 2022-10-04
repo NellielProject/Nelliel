@@ -14,7 +14,6 @@ use Nelliel\Output\OutputAccount;
 use Nelliel\Output\OutputLoginPage;
 use Nelliel\Output\OutputPrivateMessages;
 use Nelliel\Output\OutputRegisterPage;
-use Nelliel\Output\OutputNotices;
 
 class DispatchAccount extends Dispatch
 {
@@ -24,7 +23,7 @@ class DispatchAccount extends Dispatch
         parent::__construct($authorization, $domain, $session);
     }
 
-    public function dispatch(array $inputs)
+    public function dispatch(array $inputs): void
     {
         switch ($inputs['section']) {
             case 'login':
@@ -47,6 +46,10 @@ class DispatchAccount extends Dispatch
                 break;
 
             case 'register':
+                if (!$this->domain->setting('allow_user_registration') && !isset($_POST['create_owner'])) {
+                    nel_derp(215, _gettext('User registration is disabled.'));
+                }
+
                 if ($inputs['method'] === 'POST') {
                     $register = new Register($this->authorization, $this->domain);
                     $register->new();
@@ -62,7 +65,7 @@ class DispatchAccount extends Dispatch
             case 'private-messages':
                 $this->session->init(true);
 
-                if (!$this->session->user()->checkPermission($this->domain, 'perm_private_messages_use')) {
+                if (!$this->session->user()->checkPermission($this->domain, 'perm_use_private_messages')) {
                     nel_derp(511, _gettext('You cannot use the private message system.'));
                 }
 
@@ -106,11 +109,6 @@ class DispatchAccount extends Dispatch
 
                 $output_private_messages = new OutputPrivateMessages($this->domain, false);
                 $output_private_messages->messageList([], false);
-                break;
-
-            case 'noticeboard':
-                $output_noticeboard = new OutputNotices($this->domain, false);
-                echo $output_noticeboard->render([], false);
                 break;
 
             default:

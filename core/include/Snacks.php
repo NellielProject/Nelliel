@@ -125,17 +125,17 @@ class Snacks
     }
 
     /**
-     * Check if a ban has expired and optionally remove it.
+     * Check if a ban has expired and optionally delete it.
      */
-    public function checkExpired(BanHammer $ban_hammer, bool $remove): bool
+    public function checkExpired(BanHammer $ban_hammer, bool $delete): bool
     {
         if ($ban_hammer->expired()) {
             if ($this->domain->setting('must_see_ban') && !$ban_hammer->getData('seen')) {
                 return false;
             }
 
-            if ($remove) {
-                $ban_hammer->remove();
+            if ($delete) {
+                $ban_hammer->delete();
             }
 
             return true;

@@ -21,7 +21,7 @@
 		<tr>
 			<th scope="col" data-i18n="">Permission</th>
 			<th scope="col" data-i18n="">Description</th>
-			<th scope="col" data-i18n="">Remove</th>
+			<th scope="col" data-i18n="">Delete</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -30,7 +30,7 @@
 			<td>{{ permission }}</td>
 			<td>{{ description }}</td>
 			<td>
-				<a class="display-cell" href="{{ remove_url }}" data-i18n="">Remove Permission</a>
+				<span class="text-button">[<a href="{{ delete_url }}" data-i18n="">Delete</a>]</span>
 			</td>
 		</tr>
 {{/ permission_list }}

@@ -6,7 +6,7 @@ namespace Nelliel\Domains;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\NellielCacheInterface;
-use Nelliel\NellielPDO;
+use Nelliel\Database\NellielPDO;
 use Nelliel\FrontEnd\FrontEndData;
 use Nelliel\Language\Language;
 use Nelliel\Language\Translator;
@@ -14,8 +14,8 @@ use PDO;
 
 abstract class Domain implements NellielCacheInterface
 {
-    const SITE = '_site_';
-    const GLOBAL = '_global_';
+    const SITE = 'site';
+    const GLOBAL = 'global';
     protected $domain_id;
     protected $settings;
     protected $references;

@@ -48,10 +48,10 @@ class TableUploads extends Table
             'cache' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'upload_id' => ['row_check' => false, 'auto_inc' => true],
+            'upload_id' => ['row_check' => true, 'auto_inc' => true],
             'parent_thread' => ['row_check' => false, 'auto_inc' => false],
-            'post_ref' => ['row_check' => true, 'auto_inc' => false],
-            'upload_order' => ['row_check' => true, 'auto_inc' => false],
+            'post_ref' => ['row_check' => false, 'auto_inc' => false],
+            'upload_order' => ['row_check' => false, 'auto_inc' => false],
             'category' => ['row_check' => false, 'auto_inc' => false],
             'format' => ['row_check' => false, 'auto_inc' => false],
             'mime' => ['row_check' => false, 'auto_inc' => false],

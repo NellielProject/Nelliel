@@ -5,9 +5,11 @@ namespace Nelliel\Admin;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelNews;
 
 class AdminNews extends Admin
 {
@@ -16,20 +18,14 @@ class AdminNews extends Admin
     {
         parent::__construct($authorization, $domain, $session);
         $this->data_table = NEL_NEWS_TABLE;
-        $this->id_field = 'article-id';
         $this->id_column = 'article_id';
         $this->panel_name = _gettext('News');
     }
 
-    public function dispatch(array $inputs): void
-    {
-        parent::dispatch($inputs);
-    }
-
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_news_manage');
-        $output_panel = new \Nelliel\Output\OutputPanelNews($this->domain, false);
+        $this->verifyPermissions($this->domain, 'perm_manage_news');
+        $output_panel = new OutputPanelNews($this->domain, false);
         $output_panel->render([], false);
     }
 
@@ -38,7 +34,7 @@ class AdminNews extends Admin
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_news_manage');
+        $this->verifyPermissions($this->domain, 'perm_manage_news');
         $news_info = array();
         $news_info['username'] = $this->session_user->id();
         $news_info['name'] = $_POST['name'] ?? '';
@@ -55,9 +51,9 @@ class AdminNews extends Admin
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared,
             [$news_info['username'], $news_info['name'], $news_info['headline'], $news_info['time'], $news_info['text']]);
-        $regen = new \Nelliel\Regen();
+        $regen = new Regen();
         $regen->news($this->domain);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     public function editor(): void
@@ -66,15 +62,14 @@ class AdminNews extends Admin
     public function update(): void
     {}
 
-    public function remove(): void
+    public function delete(string $article_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_news_manage');
-        $article_id = $_GET[$this->id_field] ?? 0;
+        $this->verifyPermissions($this->domain, 'perm_manage_news');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "article_id" = ?');
         $this->database->executePrepared($prepared, [$article_id]);
-        $regen = new \Nelliel\Regen();
+        $regen = new Regen();
         $regen->news($this->domain);
-        $this->outputMain(true);
+        $this->panel();
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -84,7 +79,7 @@ class AdminNews extends Admin
         }
 
         switch ($perm) {
-            case 'perm_news_manage':
+            case 'perm_manage_news':
                 nel_derp(360, _gettext('You are not allowed to manage news entries.'));
                 break;
 

@@ -143,6 +143,10 @@ class OutputThread extends Output
 
             if ($post->data('op')) {
                 $this->render_data['op_post'] = $post_render;
+
+                if ($this->domain->setting('new_post_auto_subject')) {
+                    $this->render_data['new_post_form']['verb'] = $post->data('subject');
+                }
             } else {
                 $this->render_data['thread_posts'][] = $post_render;
 
@@ -212,7 +216,7 @@ class OutputThread extends Output
                 $this->domain->reference('page_path') . $thread_id . '/' . $thread->pageBasename() . NEL_PAGE_EXT,
                 $output, true);
 
-            if(NEL_ENABLE_JSON_API) {
+            if (NEL_ENABLE_JSON_API) {
                 $json_filename = $thread->contentID()->threadID() . NEL_JSON_EXT;
                 $this->file_handler->writeFile($thread->pageFilePath() . $json_filename, $thread->getJSON()->getJSON());
             }

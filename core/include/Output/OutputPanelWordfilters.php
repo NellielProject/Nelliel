@@ -20,7 +20,7 @@ class OutputPanelWordfilters extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
-        $this->setBodyTemplate('panels/word_filters_main');
+        $this->setBodyTemplate('panels/wordfilters_main');
         $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Wordfilters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -28,16 +28,19 @@ class OutputPanelWordfilters extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $wordfilters = $this->database->executeFetchAll(
-            'SELECT * FROM "' . NEL_WORD_FILTERS_TABLE . '" ORDER BY "filter_id" DESC', PDO::FETCH_ASSOC);
-        $this->render_data['form_action'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(
-                ['module' => 'admin', 'section' => 'word-filters', 'actions' => 'add',
-                    'board-id' => $this->domain->id()]);
-        $this->render_data['new_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-            http_build_query(
-                ['module' => 'admin', 'section' => 'word-filters', 'actions' => 'new',
-                    'board-id' => $this->domain->id()]);
+
+        if ($this->domain->id() === Domain::SITE) {
+            $wordfilters = array();
+        } else if ($this->domain->id() === Domain::GLOBAL) {
+            $wordfilters = $this->database->executeFetchAll(
+                'SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" ORDER BY "filter_id" DESC', PDO::FETCH_ASSOC);
+        } else {
+            $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '" WHERE "board_id" = ?  ORDER BY "filter_id" DESC');
+            $wordfilters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
+        }
+
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'wordfilters', 'new']);
         $bgclass = 'row1';
 
         foreach ($wordfilters as $wordfilter) {
@@ -48,35 +51,23 @@ class OutputPanelWordfilters extends Output
             $wordfilter_data['board_id'] = $wordfilter['board_id'];
             $wordfilter_data['text_match'] = $wordfilter['text_match'];
             $wordfilter_data['replacement'] = $wordfilter['replacement'];
-            $wordfilter_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'word-filters', 'actions' => 'remove',
-                        'board-id' => $this->domain->id(), 'wordfilter-id' => $wordfilter['filter_id']]);
-            $wordfilter_data['edit_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'word-filters', 'actions' => 'edit',
-                        'board-id' => $this->domain->id(), 'wordfilter-id' => $wordfilter['filter_id']]);
+            $wordfilter_data['edit_url'] = nel_build_router_url(
+                [$this->domain->id(), 'wordfilters', $wordfilter['filter_id'], 'modify']);
 
             if ($wordfilter['enabled'] == 1) {
-                $wordfilter_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'word-filters', 'actions' => 'disable',
-                            'board-id' => $this->domain->id(), 'wordfilter-id' => $wordfilter['filter_id']]);
+                $wordfilter_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'wordfilters', $wordfilter['filter_id'], 'disable']);
                 $wordfilter_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($wordfilter['enabled'] == 0) {
-                $wordfilter_data['enable_disable_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                    http_build_query(
-                        ['module' => 'admin', 'section' => 'word-filters', 'actions' => 'enable',
-                            'board-id' => $this->domain->id(), 'wordfilter-id' => $wordfilter['filter_id']]);
+                $wordfilter_data['enable_disable_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'wordfilters', $wordfilter['filter_id'], 'enable']);
                 $wordfilter_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $wordfilter_data['remove_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'word-filters', 'actions' => 'remove',
-                        'board-id' => $this->domain->id(), 'wordfilter-id' => $wordfilter['filter_id']]);
+            $wordfilter_data['delete_url'] = nel_build_router_url(
+                [$this->domain->id(), 'wordfilters', $wordfilter['filter_id'], 'delete']);
             $this->render_data['wordfilter_list'][] = $wordfilter_data;
         }
 
@@ -98,7 +89,8 @@ class OutputPanelWordfilters extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
-        $this->setBodyTemplate('panels/word_filters_edit');
+        $this->setBodyTemplate('panels/wordfilters_edit');
+        $parameters['is_panel'] = true;
         $editing = $parameters['editing'] ?? false;
         $this->render_data['submit_add'] = $parameters['submit_add'] ?? false;
         $this->render_data['submit_edit'] = $editing;
@@ -113,11 +105,8 @@ class OutputPanelWordfilters extends Output
 
         if ($editing) {
             $filter_id = $parameters['filter_id'] ?? 0;
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'word-filters', 'actions' => 'update',
-                        'wordfilter-id' => $filter_id, 'board-id' => $this->domain->id()]);
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_WORD_FILTERS_TABLE . '" WHERE "filter_id" = ?');
+            $form_action = nel_build_router_url([$this->domain->id(), 'wordfilters', $filter_id, 'modify']);
+            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" WHERE "filter_id" = ?');
             $wordfilter_data = $this->database->executePreparedFetch($prepared, [$filter_id], PDO::FETCH_ASSOC);
 
             if ($wordfilter_data !== false) {
@@ -129,10 +118,7 @@ class OutputPanelWordfilters extends Output
                 $this->render_data['enabled_checked'] = $wordfilter_data['enabled'] == 1 ? 'checked' : '';
             }
         } else {
-            $form_action = NEL_MAIN_SCRIPT_QUERY_WEB_PATH .
-                http_build_query(
-                    ['module' => 'admin', 'section' => 'word-filters', 'actions' => 'add',
-                        'board-id' => $this->domain->id()]);
+            $form_action = nel_build_router_url([$this->domain->id(), 'wordfilters', 'new']);
         }
 
         $this->render_data['form_action'] = $form_action;

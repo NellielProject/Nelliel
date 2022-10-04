@@ -5,6 +5,7 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBoardDefaults;
 use Nelliel\Tables\TablePermissions;
 use Nelliel\Tables\TableRolePermissions;
@@ -12,7 +13,7 @@ use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TableBanAppeals;
+use Nelliel\Tables\TableLogs;
 
 class BetaMigrations
 {
@@ -132,7 +133,7 @@ class BetaMigrations
                 $mod_links_new_names = ['mod_links_ban', 'mod_links_delete', 'mod_links_delete_by_ip',
                     'mod_links_global_delete_by_ip', 'mod_links_ban_and_delete', 'mod_links_lock', 'mod_links_unlock',
                     'mod_links_sticky', 'mod_links_unsticky', 'mod_links_permasage', 'mod_links_unpermasage',
-                    'mod_links_cyclic', 'mod_links_non_cyclic', 'mod_links_edit_post'];
+                    'mod_links_cyclic', 'mod_links_non_cyclic', 'mod_links_edit'];
                 $this->renameBoardSettings($mod_links_old_names, $mod_links_new_names);
 
                 $new_board_settings = ['mod_links_delimiter_left', 'mod_links_delimiter_right', 'enable_index',
@@ -200,7 +201,8 @@ class BetaMigrations
 
                 // Update logs table
                 nel_database('core')->exec(
-                    'ALTER TABLE "' . NEL_LOGS_TABLE . '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
+                    'ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE .
+                    '" ADD COLUMN visitor_id VARCHAR(128) NOT NULL DEFAULT \'\'');
                 echo ' - ' . __('Logs table updated.') . '<br>';
 
                 // Update reports table
@@ -281,7 +283,8 @@ class BetaMigrations
                     'max_reply_embed_display_width', 'max_reply_embed_display_height', 'max_reply_multi_display_width',
                     'max_reply_multi_display_height', 'enable_reply_name_field', 'require_reply_name',
                     'enable_reply_email_field', 'require_reply_email', 'enable_reply_subject_field',
-                    'require_reply_subject', 'enable_reply_comment_field', 'require_reply_comment'];
+                    'require_reply_subject', 'enable_reply_comment_field', 'require_reply_comment', 'show_poster_name',
+                    'show_tripcodes', 'show_capcode', 'show_post_subject', 'show_user_comments', 'show_mod_comments'];
                 $this->newBoardSettings($new_board_settings);
 
                 $old_board_setting_names = ['max_preview_display_width', 'max_preview_display_height',
@@ -344,6 +347,104 @@ class BetaMigrations
                 }
 
                 echo ' - ' . __('Updated users table.') . '<br>';
+
+            case 'v0.9.28':
+                echo '<br>' . __('Updating from v0.9.28 to v0.9.29...') . '<br>';
+
+                // Update file filters
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_FILE_FILTERS_TABLE . '" ADD COLUMN enabled SMALLINT NOT NULL DEFAULT 0');
+
+                echo ' - ' . __('Updated file filters table.') . '<br>';
+
+                // Update site and global domain IDs
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
+                    '" SET "domain_id" = \'site\' WHERE "domain_id" = \'_site_\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_DOMAIN_REGISTRY_TABLE .
+                    '" SET "domain_id" = \'global\' WHERE "domain_id" = \'_global_\'');
+
+                echo ' - ' . __('Updated site and global domain IDs.') . '<br>';
+
+                // Update roles table
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'site_admin\' WHERE "role_id" = \'SITE_ADMIN\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'board_owner\' WHERE "role_id" = \'BOARD_OWNER\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'moderator\' WHERE "role_id" = \'MODERATOR\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'janitor\' WHERE "role_id" = \'JANITOR\'');
+                $prepared = nel_database('core')->exec(
+                    'UPDATE "' . NEL_ROLES_TABLE . '" SET "role_id" = \'basic_user\' WHERE "role_id" = \'BASIC_USER\'');
+
+                echo ' - ' . __('Updated roles table.') . '<br>';
+
+                // Update permissions and role permissions tables
+                $permissions = ['perm_word_filters_manage' => 'perm_manage_wordfilters',
+                    'perm_move_threads' => 'perm_move_content', 'perm_post_status' => 'perm_modify_content_status',
+                    'perm_post_edit' => 'perm_edit_posts', 'perm_delete_posts' => 'perm_delete_content',
+                    'perm_logs_manage' => 'perm_view_system_logs', 'perm_logs_view' => 'perm_view_public_logs',
+                    'perm_news_manage' => 'perm_manage_news', 'perm_plugins_manage' => 'perm_manage_plugins',
+                    'perm_permissions_manage' => 'perm_manage_permissions',
+                    'perm_blotter_manage' => 'perm_manage_blotter',
+                    'perm_private_messages_use' => 'perm_use_private_messages',
+                    'perm_reports_view' => 'perm_view_reports', 'perm_reports_dismiss' => 'perm_dismiss_reports',
+                    'perm_pages_manage' => 'perm_manage_pages', 'perm_image_sets_manage' => 'perm_manage_imsage_sets',
+                    'perm_embeds_manage' => 'perm_manage_embeds', 'perm_content_ops_manage' => 'perm_manage_content_ops',
+                    'perm_styles_manage' => 'perm_manage_styles', 'perm_templates_manage' => 'perm_manage_templates',
+                    'perm_filetypes_manage' => 'perm_manage_filetypes',
+                    'perm_file_filters_manage' => 'perm_manage_file_filters', 'perm_users_view', 'perm_view_users',
+                    'perm_users_manage' => 'perm_manage_users', 'perm_roles_view' => 'perm_view_roles',
+                    'perm_roles_manage' => 'perm_manage_roles', 'perm_site_config_modify' => 'perm_modify_site_config',
+                    'perm_board_config_modify' => 'perm_modify_board_config',
+                    'perm_board_config_override' => 'perm_override_config_lock',
+                    'perm_board_defaults_modify' => 'perm_modify_board_defaults'];
+                $permission_update = nel_database('core')->prepare(
+                    'UPDATE "' . NEL_PERMISSIONS_TABLE . '" SET "permission" = :new WHERE "permission" = :old');
+
+                foreach ($permissions as $old => $new) {
+                    $permission_update->bindValue(':new', $new);
+                    $permission_update->bindValue(':old', $old);
+                    nel_database('core')->executePrepared($permission_update);
+                }
+
+                echo ' - ' . __('Updated permissions and role permissions tables.') . '<br>';
+
+                // Update wordfilters table
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . 'nelliel_word_filters' . '" RENAME TO ' . NEL_WORDFILTERS_TABLE);
+
+                echo ' - ' . __('Updated wordfilters table.') . '<br>';
+
+                // Update log tables
+                nel_database('core')->exec('ALTER TABLE "' . 'nelliel_logs' . '" RENAME TO ' . NEL_SYSTEM_LOGS_TABLE);
+                nel_database('core')->exec('ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" DROP COLUMN "channel"');
+                nel_database('core')->exec(
+                    'ALTER TABLE "' . NEL_SYSTEM_LOGS_TABLE . '" ADD COLUMN message_values TEXT NOT NULL DEFAULT \'\'');
+                $public_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
+                $public_logs_table->createTable();
+
+                echo ' - ' . __('Updated log tables.') . '<br>';
+
+                // Update board settings
+                $new_board_settings = ['allow_no_markup', 'allow_op_thread_moderation', 'mod_links_move',
+                    'allow_moving_replies', 'allow_moving_uploads', 'mod_links_spoiler', 'mod_links_unspoiler'];
+                $this->newBoardSettings($new_board_settings);
+
+                $old_board_setting_names = ['mod_links_edit_post'];
+                $new_board_setting_names = ['mod_links_edit'];
+                $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
+
+                echo ' - ' . __('Board settings updated.') . '<br>';
+
+                // Update site settings
+                $new_site_settings = ['max_page_regen_time'];
+                $this->newSiteSettings($new_site_settings);
+
+                echo ' - ' . __('Site settings updated.') . '<br>';
 
                 $migration_count ++;
         }
@@ -417,8 +518,7 @@ class BetaMigrations
         $site_config_select = nel_database('core')->prepare(
             'SELECT "setting_value" FROM "' . NEL_SITE_CONFIG_TABLE . '" WHERE "setting_name" = :source_name');
         $site_config_update = nel_database('core')->prepare(
-            'UPDATE "' . NEL_SITE_CONFIG_TABLE .
-            '" SET "setting_value" = :new_value WHERE "setting_name" = :target_name');
+            'UPDATE "' . NEL_SITE_CONFIG_TABLE . '" SET "setting_value" = :new_value WHERE "setting_name" = :target_name');
         $name_count = count($source_names);
 
         for ($i = 0; $i < $name_count; $i ++) {

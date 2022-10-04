@@ -111,6 +111,12 @@ class PostData
             $post->getMoar()->modify('raw_html', true);
         }
 
+        $disable_markup = $this->checkEntry($_POST['no_markup'] ?? false, 'boolean');
+
+        if ($disable_markup) {
+            $post->getMoar()->modify('no_markup', true);
+        }
+
         if ($staff_post) {
             $this->session->ignore(true);
             $user = $this->session->user();
