@@ -50,6 +50,7 @@ Error 48: Name too long. (NewPost/PostData.php)
 Error 49: Email too long. (NewPost/PostData.php)  
 Error 50: Subject too long. (NewPost/PostData.php)  
 Error 51: Comment too long. (NewPost/PostData.php)  
+Error 52: Not valid upload. (NewPost/Uploads.php)  
 
 Error 60: Password does not match post. (Content/Post.php)  
 Error 61: Board locked, can't remove file. (Content/Upload.php)  

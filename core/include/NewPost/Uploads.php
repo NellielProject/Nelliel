@@ -15,6 +15,7 @@ use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 use PDO;
+use SplFileInfo;
 
 class Uploads
 {
@@ -93,9 +94,16 @@ class Uploads
             $this->deduplicate($upload);
             $this->setFilenameAndExtension($upload, $post);
             $this->checkFiletype($upload, $upload->data('extension'), $tmp_name);
+
             // We re-add the extension to help with processing
             $upload->changeData('location', $tmp_name . '.' . $upload->data('extension'));
-            nel_utilities()->fileHandler()->moveFile($tmp_name, $upload->data('location'));
+
+            // Not sure what would cause this to fail but best to stop if it does
+            if (!move_uploaded_file($tmp_name, $upload->data('location'))) {
+                nel_utilities()->fileHandler()->eraserGun($tmp_name);
+                nel_derp(52, sprintf(__('The file %s is not a valid upload.'), $upload->data('original_filename')));
+            }
+
             // Store this temporarily in case we need it for later processing
             $temp_exif = @exif_read_data($upload->data('location'));
             $upload->changeData('temp_exif', @exif_read_data($upload->data('location'), '', true));
@@ -134,7 +142,7 @@ class Uploads
             return;
         }
 
-        $file_info = new \SplFileInfo($upload->data('original_filename'));
+        $file_info = new SplFileInfo($upload->data('original_filename'));
         $extension = $file_info->getExtension();
         $filename = $file_info->getBasename('.' . $extension);
 
@@ -276,7 +284,8 @@ class Uploads
             $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
         } else if ($post->data('op') && $this->domain->setting('check_op_file_duplicates')) {
             $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
-                '" WHERE "parent_thread" = "post_ref" AND ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ') AND "shadow" = 0';
+                '" WHERE "parent_thread" = "post_ref" AND ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 .
+                ') AND "shadow" = 0';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
             $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);

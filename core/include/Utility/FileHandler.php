@@ -11,7 +11,6 @@ use RecursiveIteratorIterator;
 
 class FileHandler
 {
-    private $write_file_path = NEL_TEMP_FILES_PATH . 'writeFile/';
 
     function __construct()
     {}
@@ -19,9 +18,9 @@ class FileHandler
     public function writeFile(string $file, $output, bool $create_directories = false, string $chmod = NEL_FILES_PERM,
         string $dir_chmod = NEL_DIRECTORY_PERM): bool
     {
-        $this->createDirectory($this->write_file_path);
+        $this->createDirectory(NEL_TEMP_FILES_BASE_PATH);
         $success = false;
-        $temp_file = tempnam($this->write_file_path, 'nel_');
+        $temp_file = tempnam(NEL_TEMP_FILES_BASE_PATH, 'nel_');
         $success = file_put_contents($temp_file, $output) !== false;
 
         if ($success) {

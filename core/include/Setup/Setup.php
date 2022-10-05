@@ -357,7 +357,7 @@ class Setup
         $this->file_handler->createDirectory(NEL_GENERAL_FILES_PATH);
         $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH);
         $this->file_handler->createDirectory(NEL_BANNERS_FILES_PATH);
-        $this->file_handler->createDirectory(NEL_TEMP_FILES_PATH);
+        $this->file_handler->createDirectory(NEL_TEMP_FILES_BASE_PATH);
         echo _gettext('Core directories created.'), '<br>';
     }
 

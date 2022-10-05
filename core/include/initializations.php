@@ -18,8 +18,9 @@ if (file_exists(NEL_CONFIG_FILES_PATH . 'additional_databases.php')) {
 }
 
 define('NEL_DEFAULT_TIME_ZONE', $base_config['default_time_zone'] ?? 'UTC');
-define('NEL_INSTALL_KEY', $base_config['install_key'] ?? '');
 date_default_timezone_set(NEL_DEFAULT_TIME_ZONE);
+
+define('NEL_INSTALL_KEY', $base_config['install_key'] ?? '');
 define('NEL_DIRECTORY_PERM', $base_config['directory_perm'] ?? '0775');
 define('NEL_FILES_PERM', $base_config['file_perm'] ?? '0664');
 define('NEL_USE_FILE_CACHE', $base_config['use_file_cache'] ?? true);
@@ -35,6 +36,11 @@ define('NEL_PASSWORD_BCRYPT_COST', $crypt_config['password_bcrypt_cost'] ?? 12);
 define('NEL_PASSWORD_ARGON2_MEMORY_COST', $crypt_config['password_argon2_memory_cost'] ?? 1024);
 define('NEL_PASSWORD_ARGON2_TIME_COST', $crypt_config['password_argon2_time_cost'] ?? 2);
 define('NEL_PASSWORD_ARGON2_THREADS', $crypt_config['password_argon2_threads'] ?? 2);
+
+$base_temp_directory = empty($base_config['base_temp_directory'] ?? '') ? sys_get_temp_dir() : $base_config['base_temp_directory'];
+define('NEL_TEMP_FILES_BASE_DIRECTORY', $base_temp_directory);
+define('NEL_TEMP_FILES_BASE_PATH', nel_utilities()->fileHandler()->pathJoin(NEL_TEMP_FILES_BASE_DIRECTORY, DIRECTORY_SEPARATOR));
+unset($base_temp_directory);
 
 unset($base_config);
 unset($db_config);

@@ -138,6 +138,9 @@ $db_config['core']['sqlite']['encoding'] = 'UTF-8';
 $base_config['directory_perm'] = '0755';
 $base_config['file_perm'] = '0644';
 
+// Base directory for temporary files. When empty, the system default is used.
+$base_config['base_temp_directory'] = '';
+
 // Enable/disable plugins.
 $base_config['enable_plugins'] = true;
 
