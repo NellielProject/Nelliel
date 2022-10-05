@@ -111,7 +111,7 @@ class OutputPost extends Output
             }
         }
 
-        if ($thread->data('shadow')) {
+        if ($thread->data('shadow') && $post->data('op')) {
             $markup = new Markup();
             $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
             $cite_text = '>>>/' . $thread->getMoar()->get('shadow_board_id') . '/' .
