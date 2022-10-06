@@ -58,6 +58,7 @@ use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
 use Nelliel\Tables\TableMarkup;
+use Nelliel\Tables\TableR9KPosts;
 
 class Setup
 {
@@ -349,6 +350,8 @@ class Setup
         $cache_table->createTable();
         $user_roles_table = new TableUserRoles($this->database, $this->sql_compatibility);
         $user_roles_table->createTable();
+        $r9k_posts_table = new TableR9KPosts($this->database, $this->sql_compatibility);
+        $r9k_posts_table->createTable();
 
         echo _gettext('Core database tables created.'), '<br>';
     }

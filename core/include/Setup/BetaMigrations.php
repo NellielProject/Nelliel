@@ -15,6 +15,7 @@ use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Tables\TableR9KPosts;
 
 class BetaMigrations
 {
@@ -503,6 +504,12 @@ class BetaMigrations
                 $role_permissions_table->insertDefaults();
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
+                // Create R9K posts table
+                $r9k_posts_table = new TableR9KPosts($this->database, $this->sql_compatibility);
+                $r9k_posts_table->createTable();
+
+                echo ' - ' . __('R9K posts table added.') . '<br>';
 
                 $migration_count ++;
         }
