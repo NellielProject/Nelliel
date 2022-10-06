@@ -106,10 +106,14 @@ class OutputPanelMain extends Output
         $this->render_data['module_noticeboard'] = $this->session->user()->checkPermission($this->domain,
             'perm_noticeboard_view');
         $this->render_data['noticeboard_url'] = nel_build_router_url([$this->domain->id(), 'noticeboard']);
-        ;
+
         $this->render_data['module_plugins'] = $this->session->user()->checkPermission($this->domain,
             'perm_manage_plugins');
         $this->render_data['plugins_url'] = nel_build_router_url([$this->domain->id(), 'plugins']);
+
+        $this->render_data['module_markup'] = $this->session->user()->checkPermission($this->domain,
+            'perm_manage_markup');
+        $this->render_data['markup_url'] = nel_build_router_url([$this->domain->id(), 'markup']);
 
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_overboard');

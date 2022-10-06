@@ -7,13 +7,14 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBoardDefaults;
+use Nelliel\Tables\TableLogs;
+use Nelliel\Tables\TableMarkup;
 use Nelliel\Tables\TablePermissions;
 use Nelliel\Tables\TableRolePermissions;
 use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TableLogs;
 
 class BetaMigrations
 {
@@ -220,7 +221,7 @@ class BetaMigrations
 
                 echo ' - ' . __('Plugins table updated.') . '<br>';
 
-                // Update permissions table
+                // Update permissions and role permissions table
                 $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $permissions_table->insertDefaults();
                 $role_permissions_table = new TableRolePermissions(nel_database('core'),
@@ -487,6 +488,23 @@ class BetaMigrations
                 }
 
                 echo ' - ' . __('Upload tables updated.') . '<br>';
+
+                // Create markup table
+                $markup_table = new TableMarkup(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $markup_table->createTable();
+
+                echo ' - ' . __('Markup table added.') . '<br>';
+
+                // Update permissions and role permissions table
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaults();
+                $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $role_permissions_table->insertDefaults();
+
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
+                $migration_count ++;
         }
 
         return $migration_count;

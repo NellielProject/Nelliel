@@ -57,6 +57,7 @@ use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
+use Nelliel\Tables\TableMarkup;
 
 class Setup
 {
@@ -283,6 +284,8 @@ class Setup
         $content_ops_table->createTable();
         $capcodes_table = new TableCapcodes($this->database, $this->sql_compatibility);
         $capcodes_table->createTable();
+        $markup_table = new TableMarkup($this->database, $this->sql_compatibility);
+        $markup_table->createTable();
 
         // NOTE: The following tables rely on the filetype categories table
         // Filetype categories must be created first!

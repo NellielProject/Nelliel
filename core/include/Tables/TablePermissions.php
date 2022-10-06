@@ -70,6 +70,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_ip_notes_delete', 'Delete IP notes.']);
         $this->insertDefaultRow(['perm_view_public_logs', 'View full logs.']);
         $this->insertDefaultRow(['perm_view_system_logs', 'View system logs.']);
+        $this->insertDefaultRow(['perm_manage_markup', 'Manage markup entries.']);
         $this->insertDefaultRow(['perm_manage_news', 'Manage news entries.']);
         $this->insertDefaultRow(['perm_noticeboard_view', 'View the staff noticeboard.']);
         $this->insertDefaultRow(['perm_noticeboard_post', 'Post on the staff noticeboard.']);
