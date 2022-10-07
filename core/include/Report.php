@@ -48,7 +48,7 @@ class Report
                     if (nel_site_domain()->setting('store_unhashed_ip')) {
                         $report_data['reporter_ip'] = nel_request_ip_address();
                     } else {
-                        $report_data['reporter_ip'] = '';
+                        $report_data['reporter_ip'] = null;
                     }
 
                     $report_data['hashed_reporter_ip'] = nel_request_ip_address(true);
