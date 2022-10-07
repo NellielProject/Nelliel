@@ -15,7 +15,8 @@ use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TableR9KPosts;
+use Nelliel\Tables\TableR9KContent;
+use Nelliel\Tables\TableR9KMutes;
 
 class BetaMigrations
 {
@@ -452,7 +453,9 @@ class BetaMigrations
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
                 // Update board settings
-                $new_board_settings = ['allow_shadow_message', 'shadow_message_override'];
+                $new_board_settings = ['allow_shadow_message', 'shadow_message_override', 'r9k_enable_board',
+                    'r9k_global_unoriginal_check', 'r9k_strip_repeating', 'r9k_include_unicode_letters', 'r9k_unoriginal_mute',
+                    'r9k_global_mute_check', 'r9k_mute_time_range', 'r9k_mute_base_number'];
                 $this->newBoardSettings($new_board_settings);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
@@ -505,11 +508,13 @@ class BetaMigrations
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
-                // Create R9K posts table
-                $r9k_posts_table = new TableR9KPosts($this->database, $this->sql_compatibility);
-                $r9k_posts_table->createTable();
+                // Create R9K content and mutes tables
+                $r9k_content_table = new TableR9KContent($this->database, $this->sql_compatibility);
+                $r9k_content_table->createTable();
+                $r9k_mutes_table = new TableR9KMutes($this->database, $this->sql_compatibility);
+                $r9k_mutes_table->createTable();
 
-                echo ' - ' . __('R9K posts table added.') . '<br>';
+                echo ' - ' . __('R9K content and mutes tables added.') . '<br>';
 
                 $migration_count ++;
         }

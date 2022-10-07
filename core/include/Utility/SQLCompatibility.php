@@ -37,6 +37,10 @@ class SQLCompatibility
                 $int_column = 'BIGSERIAL';
             }
         } else if ($this->sqltype === 'SQLITE') {
+            if ($int_column === 'SMALLINT' || $int_column === 'BIGINT') {
+                $int_column = 'INTEGER';
+            }
+
             if ($primary_declaration) {
                 $auto = 'AUTOINCREMENT';
             } else {

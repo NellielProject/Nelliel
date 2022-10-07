@@ -138,6 +138,35 @@
 		</tbody>
 		<tbody>
 			<tr>
+				<th colspan="3" data-i18n="">R9K</th>
+			</tr>
+	{{# r9k_enable_board }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_enable_board }}
+	{{# r9k_global_unoriginal_check }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_global_unoriginal_check }}
+	{{# r9k_strip_repeating }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_strip_repeating }}
+	{{# r9k_include_unicode_letters }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_include_unicode_letters }}
+	{{# r9k_unoriginal_mute }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_unoriginal_mute }}
+	{{# r9k_global_mute_check }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_global_mute_check }}
+	{{# r9k_mute_time_range }}
+			{{> panels/pieces/settings/number }}
+	{{/ r9k_mute_time_range }}
+	{{# r9k_mute_base_number }}
+			{{> panels/pieces/settings/number }}
+	{{/ r9k_mute_base_number }}
+		</tbody>
+		<tbody>
+			<tr>
 				<th colspan="5" data-i18n="">New Post Form</th>
 			</tr>
 	{{# enable_op_name_field }}

@@ -5,8 +5,8 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Database\NellielPDO;
 use Nelliel\Regen;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
@@ -30,6 +30,7 @@ use Nelliel\Tables\TableFiletypes;
 use Nelliel\Tables\TableIPNotes;
 use Nelliel\Tables\TableImageSets;
 use Nelliel\Tables\TableLogs;
+use Nelliel\Tables\TableMarkup;
 use Nelliel\Tables\TableNews;
 use Nelliel\Tables\TableNoticeboard;
 use Nelliel\Tables\TableOverboard;
@@ -38,6 +39,8 @@ use Nelliel\Tables\TablePermissions;
 use Nelliel\Tables\TablePlugins;
 use Nelliel\Tables\TablePosts;
 use Nelliel\Tables\TablePrivateMessages;
+use Nelliel\Tables\TableR9KContent;
+use Nelliel\Tables\TableR9KMutes;
 use Nelliel\Tables\TableRateLimit;
 use Nelliel\Tables\TableReports;
 use Nelliel\Tables\TableRolePermissions;
@@ -57,8 +60,6 @@ use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
-use Nelliel\Tables\TableMarkup;
-use Nelliel\Tables\TableR9KPosts;
 
 class Setup
 {
@@ -350,8 +351,10 @@ class Setup
         $cache_table->createTable();
         $user_roles_table = new TableUserRoles($this->database, $this->sql_compatibility);
         $user_roles_table->createTable();
-        $r9k_posts_table = new TableR9KPosts($this->database, $this->sql_compatibility);
-        $r9k_posts_table->createTable();
+        $r9k_content_table = new TableR9KContent($this->database, $this->sql_compatibility);
+        $r9k_content_table->createTable();
+        $r9k_mutes_table = new TableR9KMutes($this->database, $this->sql_compatibility);
+        $r9k_mutes_table->createTable();
 
         echo _gettext('Core database tables created.'), '<br>';
     }

@@ -199,6 +199,16 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_ban_mod_name', '0', 'Display the username of who set the ban.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'ban_page_date_format', 'F jS, Y H:i e', 'Format for times on the ban page (PHP date() function).', '{"type":"text"}']);
 
+        // R9K
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'r9k_enable_board', '0', 'Use R9K on this board.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'r9k_global_unoriginal_check', '0', 'Globally check for unoriginal content. Only covers content posted to boards in R9K mode.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'r9k_strip_repeating', '1', 'Remove repeating characters.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'r9k_include_unicode_letters', '0', 'Include Unicode letters when generating the hash. If disabled, only letters a-z are kept.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'r9k_unoriginal_mute', '1', 'Temporarily mute user when unoriginal content is detected.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'r9k_global_mute_check', '0', 'Count mutes from all boards.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'r9k_mute_time_range', '1209600', 'Time range to check for existing mutes (seconds).', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'r9k_mute_base_number', '2', 'Base number (n) when calculating mute time (n^x). The number of existing mutes is used for the exponent.', '{"type":"number"}']);
+
         // New Post Form
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_op_name_field', '1', 'Enable the name field for new threads.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'require_op_name', '0', 'Require something in the name field for new threads.', '{"type":"checkbox"}']);

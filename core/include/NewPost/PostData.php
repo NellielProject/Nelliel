@@ -11,6 +11,7 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;
+use Nelliel\ROBOT9000;
 
 class PostData
 {
@@ -163,6 +164,10 @@ class PostData
             nel_derp(44, _gettext('A comment is required to post.'));
         }
 
+        if ($this->domain->setting('r9k_enable_board')) {
+            $this->checkR9K($post->data('comment'), $post->data('hashed_ip_address'));
+        }
+
         if ($this->domain->setting('enable_fgsfds_field')) {
             $post->changeData('fgsfds', $this->checkEntry($_POST['new_post']['post_info']['fgsfds'] ?? '', 'string'));
         }
@@ -224,7 +229,7 @@ class PostData
         return $post_item;
     }
 
-    public function staffPost(): bool
+    private function staffPost(): bool
     {
         $valid = (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false;
 
@@ -241,7 +246,7 @@ class PostData
         return true;
     }
 
-    public function tripcode(string $key): string
+    private function tripcode(string $key): string
     {
         $tripcode = '';
         $trip_key = $this->tripcodeCharsetConvert($key, 'SHIFT_JIS', 'UTF-8');
@@ -252,7 +257,7 @@ class PostData
         return $tripcode;
     }
 
-    public function secureTripcode(string $key): string
+    private function secureTripcode(string $key): string
     {
         $secure_tripcode = '';
         $trip_code = hash_hmac(nel_site_domain()->setting('secure_tripcode_algorithm'), $key, NEL_TRIPCODE_PEPPER);
@@ -261,7 +266,7 @@ class PostData
         return $secure_tripcode;
     }
 
-    public function capcode(string $key): string
+    private function capcode(string $key): string
     {
         $role = $this->session->user()->getDomainRole($this->domain);
 
@@ -273,7 +278,7 @@ class PostData
         return $key;
     }
 
-    public function tripcodeCharsetConvert($text, $to, $from)
+    private function tripcodeCharsetConvert($text, $to, $from)
     {
         if (function_exists('iconv')) {
             return iconv($from, $to . '//IGNORE', $text);
@@ -284,7 +289,7 @@ class PostData
         }
     }
 
-    public function fieldLengthCheck(string $field_name, ?string $text)
+    private function fieldLengthCheck(string $field_name, ?string $text)
     {
         if (is_null($text)) {
             return $text;
@@ -335,5 +340,41 @@ class PostData
         }
 
         nel_derp($error_number, $error_message);
+    }
+
+    private function checkR9K(string $comment, string $poster_hash): void
+    {
+        $r9k = new ROBOT9000();
+        $comment_hash = $r9k->hashContent($this->domain, $comment);
+        $unoriginal = $r9k->checkForHash($this->domain, $comment_hash);
+
+        if ($this->domain->setting('r9k_unoriginal_mute')) {
+            $mute_count = $r9k->muteCount($this->domain, $poster_hash);
+
+            if ($mute_count > 0) {
+                $last_mute_time = $r9k->getLastMuteTime($this->domain, $poster_hash);
+                $mute_time = $r9k->calculateMuteTime($this->domain, $mute_count);
+                $current_time = time();
+
+                if ($current_time - $mute_time < $last_mute_time) {
+                    nel_derp(53,
+                        sprintf(__('You are currently muted. Mute expires in %d seconds.'),
+                            $last_mute_time + $mute_time - $current_time));
+                }
+            }
+        }
+
+        if (!$unoriginal) {
+            $r9k->addHash($this->domain, $comment_hash, time());
+            return;
+        }
+
+        if (!$this->domain->setting('r9k_unoriginal_mute')) {
+            nel_derp(54, __('Unoriginal content detected!'));
+        } else {
+            $r9k->addMute($this->domain, $poster_hash);
+            $mute_time = $r9k->calculateMuteTime($this->domain, $mute_count + 1);
+            nel_derp(55, sprintf(__('Unoriginal content detected! You have been muted for %d seconds.'), $mute_time));
+        }
     }
 }
