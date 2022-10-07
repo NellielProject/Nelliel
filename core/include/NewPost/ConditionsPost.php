@@ -109,10 +109,6 @@ class ConditionsPost implements Conditions
                 case 'is_saged':
                     $met = $condition === boolval($this->post->data('sage'));
                     break;
-
-                case 'content_hash':
-                    $met = $condition === $this->post->data('content_hash');
-                    break;
             }
 
             // If any condition is not met (including unhandled ones) we stop early

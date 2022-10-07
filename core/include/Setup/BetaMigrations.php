@@ -454,8 +454,8 @@ class BetaMigrations
 
                 // Update board settings
                 $new_board_settings = ['allow_shadow_message', 'shadow_message_override', 'r9k_enable_board',
-                    'r9k_global_unoriginal_check', 'r9k_strip_repeating', 'r9k_include_unicode_letters', 'r9k_unoriginal_mute',
-                    'r9k_global_mute_check', 'r9k_mute_time_range', 'r9k_mute_base_number'];
+                    'r9k_global_unoriginal_check', 'r9k_strip_repeating', 'r9k_include_unicode_letters',
+                    'r9k_unoriginal_mute', 'r9k_global_mute_check', 'r9k_mute_time_range', 'r9k_mute_base_number'];
                 $this->newBoardSettings($new_board_settings);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
@@ -478,6 +478,7 @@ class BetaMigrations
                 foreach ($db_prefixes as $prefix) {
                     nel_database('core')->exec(
                         'ALTER TABLE "' . $prefix . '_posts' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
+                    nel_database('core')->exec('ALTER TABLE "' . $prefix . '_posts' . '" DROP COLUMN "content_hash"');
                 }
 
                 echo ' - ' . __('Post tables updated.') . '<br>';

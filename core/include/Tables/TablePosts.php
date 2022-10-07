@@ -42,7 +42,6 @@ class TablePosts extends Table
             'shadow' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'mod_comment' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'content_hash' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'regen_cache' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'cache' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
@@ -71,7 +70,6 @@ class TablePosts extends Table
             'shadow' => ['row_check' => false, 'auto_inc' => false],
             'username' => ['row_check' => false, 'auto_inc' => false],
             'mod_comment' => ['row_check' => false, 'auto_inc' => false],
-            'content_hash' => ['row_check' => false, 'auto_inc' => false],
             'regen_cache' => ['row_check' => false, 'auto_inc' => false],
             'cache' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
@@ -108,7 +106,6 @@ class TablePosts extends Table
             shadow              SMALLINT NOT NULL DEFAULT 0,
             username            VARCHAR(50) DEFAULT NULL,
             mod_comment         TEXT DEFAULT NULL,
-            content_hash        VARCHAR(128) DEFAULT NULL,
             regen_cache         SMALLINT NOT NULL DEFAULT 0,
             cache               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
