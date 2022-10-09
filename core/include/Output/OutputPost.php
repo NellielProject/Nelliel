@@ -334,8 +334,8 @@ class OutputPost extends Output
         }
 
         // TODO: Do cache check/fetch better
-        if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data'])) {
-            $comment_markup = $post->getCache()['comment_data'];
+        if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_markup'])) {
+            $comment_markup = $post->getCache()['comment_markup'];
         } else {
             $comment_markup = $this->parseComment($comment, $post);
         }

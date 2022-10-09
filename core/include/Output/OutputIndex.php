@@ -5,10 +5,13 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\API\JSON\_4Chan\IndexJSON;
+use Nelliel\API\JSON\_4Chan\ThreadlistJSON;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
+use Nelliel\API\JSON\_4Chan\CatalogJSON;
 
 class OutputIndex extends Output
 {
@@ -47,7 +50,8 @@ class OutputIndex extends Output
             $this->render_data['catalog_url'] = 'catalog.html';
         }
 
-        $this->render_data['show_catalog_link'] = $this->domain->setting('enable_catalog') && $this->domain->setting('show_catalog_link');
+        $this->render_data['show_catalog_link'] = $this->domain->setting('enable_catalog') &&
+            $this->domain->setting('show_catalog_link');
         $threads = $this->domain->activeThreads(true);
         $thread_count = count($threads);
         $threads_done = 0;
@@ -97,7 +101,7 @@ class OutputIndex extends Output
 
         if (empty($threads)) {
             $index_format = $this->site_domain->setting('first_index_filename_format');
-            $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $data_only);
+            $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $page, $data_only);
 
             if (!$this->write_mode) {
                 return $output;
@@ -118,8 +122,8 @@ class OutputIndex extends Output
             $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('posts_table') .
                 '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-            $treeline = $this->database->executePreparedFetchAll($prepared, [$thread->contentID()
-                ->threadID()], PDO::FETCH_ASSOC);
+            $treeline = $this->database->executePreparedFetchAll($prepared, [$thread->contentID()->threadID()],
+                PDO::FETCH_ASSOC);
 
             if (empty($treeline)) {
                 $threads_done ++;
@@ -166,7 +170,7 @@ class OutputIndex extends Output
 
             if ($threads_on_page >= $this->domain->setting('threads_per_page')) {
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count);
-                $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $data_only);
+                $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $page, $data_only);
 
                 if (!$this->write_mode) {
                     return $output;
@@ -180,8 +184,19 @@ class OutputIndex extends Output
             }
         }
 
+        if (NEL_ENABLE_JSON_API) {
+            $threadlist_json = new ThreadlistJSON($this->domain);
+            $json_filename = 'threads' . NEL_JSON_EXT;
+            $this->file_handler->writeFile($this->domain->reference('base_path') . $json_filename,
+                $threadlist_json->getJSON());
+            $catalog_json = new CatalogJSON($this->domain, $page);
+            $json_filename = 'catalog' . NEL_JSON_EXT;
+            $this->file_handler->writeFile($this->domain->reference('base_path') . $json_filename,
+                $catalog_json->getJSON());
+        }
+
         $this->render_data['pagination'] = $this->indexNavigation($page, $page_count);
-        $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $data_only);
+        $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $page, $data_only);
         return $output;
     }
 
@@ -196,7 +211,7 @@ class OutputIndex extends Output
         return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 
-    private function doOutput(array $gen_data, string $index_basename, bool $data_only)
+    private function doOutput(array $gen_data, string $index_basename, int $page, bool $data_only)
     {
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
@@ -205,6 +220,13 @@ class OutputIndex extends Output
         if ($this->write_mode) {
             $this->file_handler->writeFile($this->domain->reference('base_path') . $index_basename . NEL_PAGE_EXT,
                 $output);
+
+            if (NEL_ENABLE_JSON_API) {
+                $index_json = new IndexJSON($this->domain, $page);
+                $json_filename = $page . NEL_JSON_EXT;
+                $this->file_handler->writeFile($this->domain->reference('base_path') . $json_filename,
+                    $index_json->getJSON());
+            }
         } else {
             echo $output;
         }

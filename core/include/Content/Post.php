@@ -8,7 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Moar;
-use Nelliel\API\JSON\PostJSON;
+use Nelliel\API\JSON\_4Chan\PostJSON;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
@@ -377,7 +377,7 @@ class Post
     {
         $cache_array = array();
         $output_post = new OutputPost($this->domain, false);
-        $cache_array['comment_data'] = $output_post->parseComment($this->data('comment'), $this);
+        $cache_array['comment_markup'] = $output_post->parseComment($this->data('comment'), $this);
         $cache_array['backlink_data'] = $output_post->generateBacklinks($this);
         $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
         $prepared = $this->database->prepare(

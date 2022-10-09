@@ -59,8 +59,8 @@ class OutputCatalog extends Output
             if (!nel_true_empty($post->data('comment'))) {
                 $output_post = new OutputPost($this->domain, false);
 
-                if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_data'])) {
-                    $thread_data['comment_markup'] = $post->getCache()['comment_data'];
+                if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_markup'])) {
+                    $thread_data['comment_markup'] = $post->getCache()['comment_markup'];
                 } else {
                     $thread_data['comment_markup'] = $output_post->parseComment($post->data('comment'), $post);
                 }
