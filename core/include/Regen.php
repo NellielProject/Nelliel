@@ -16,6 +16,7 @@ use Nelliel\Output\OutputOverboard;
 use Nelliel\Output\OutputThread;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\API\JSON\_4Chan\BoardsJSON;
 
 class Regen
 {
@@ -132,6 +133,13 @@ class Regen
 
         foreach ($pages as $page) {
             $this->page($domain, $page['uri']);
+        }
+
+        if (NEL_ENABLE_JSON_API) {
+            $boards_json = new BoardsJSON();
+            $json_filename = 'boards' . NEL_JSON_EXT;
+            nel_utilities()->fileHandler()->writeFile(NEL_PUBLIC_PATH . $json_filename,
+                $boards_json->getJSON());
         }
     }
 
