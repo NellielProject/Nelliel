@@ -43,7 +43,7 @@ class OPJSON extends JSON
         $this->raw_data['images'] = intval($image_posts !== false ? $image_posts : 0);
 
         if ($this->thread->domain()->setting('limit_bump_count') &&
-            ($this->thread->data('post_count') >= $this->thread->domain()->setting('max_posts'))) {
+            $this->thread->data('bump_count') >= $this->thread->domain()->setting('max_bumps')) {
             $this->raw_data['bumplimit'] = 1;
         }
 

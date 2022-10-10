@@ -193,12 +193,19 @@ class Thread
     public function updateCounts()
     {
         $prepared = $this->database->prepare(
-            'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') .
-            '" WHERE "parent_thread" = ?');
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') . '" WHERE "parent_thread" = ?');
         $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
             PDO::FETCH_COLUMN);
 
         $this->changeData('post_count', $post_count);
+
+        $prepared = $this->database->prepare(
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? AND "sage" = 0');
+        $bump_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
+            PDO::FETCH_COLUMN);
+
+        $this->changeData('bump_count', $bump_count);
 
         $prepared = $this->database->prepare(
             'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') . '" WHERE "parent_thread" = ?');
@@ -221,7 +228,7 @@ class Thread
     public function updateBumpTime(): void
     {
         if ($this->domain->setting('limit_bump_count') &&
-            $this->data('post_count') > $this->domain->setting('max_bumps')) {
+            $this->data('bump_count') > $this->domain->setting('max_bumps')) {
             return;
         }
 
@@ -298,10 +305,9 @@ class Thread
             '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
         $descending_post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
             PDO::FETCH_ASSOC);
-        $post_count = count($descending_post_list);
-        $bump_limit = $this->domain->setting('max_posts');
+        $bump_limit = $this->domain->setting('max_bumps');
 
-        if ($post_count > $bump_limit) {
+        if ($this->data('post_count') > $bump_limit) {
             $old_post_list = array_slice($descending_post_list, $bump_limit - 1);
 
             foreach ($old_post_list as $old_post) {
@@ -606,7 +612,7 @@ class Thread
             $this->changeData('post_count', $this->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                ($this->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
+                ($this->data('bump_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
                 !$this->data('permasage'))) {
                 $this->changeData('bump_time', $post->data('post_time'));
                 $this->changeData('bump_time_milli', $post->data('post_time_milli'));

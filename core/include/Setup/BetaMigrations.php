@@ -468,6 +468,8 @@ class BetaMigrations
                 foreach ($db_prefixes as $prefix) {
                     nel_database('core')->exec(
                         'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN bump_count SMALLINT NOT NULL DEFAULT 0');
                 }
 
                 echo ' - ' . __('Thread tables updated.') . '<br>';
