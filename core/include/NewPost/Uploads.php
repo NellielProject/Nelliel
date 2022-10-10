@@ -73,6 +73,10 @@ class Uploads
                 continue;
             }
 
+            if (!$this->domain->setting('enable_uploads')) {
+                nel_derp(56, __('Uploads are not enabled.'));
+            }
+
             $this->checkForErrors($file_upload_error);
 
             if ($filesize > $this->domain->setting('max_filesize')) {

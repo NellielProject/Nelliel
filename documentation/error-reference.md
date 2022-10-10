@@ -54,6 +54,8 @@ Error 52: Not valid upload. (NewPost/Uploads.php)
 Error 53: R9K already muted. (NewPost/PostData.php) 
 Error 54: R9K unoriginal. (NewPost/PostData.php) 
 Error 55: R9K unoriginal and muted. (NewPost/PostData.php) 
+Error 56: Uploads disabled. (NewPost/Uploads.php) 
+Error 57: Upload flood. (NewPost/NewPost.php)  
 
 Error 60: Password does not match post. (Content/Post.php)  
 Error 61: Board locked, can't remove file. (Content/Upload.php)  

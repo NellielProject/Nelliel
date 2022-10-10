@@ -297,6 +297,9 @@
 			<tr>
 				<th colspan="5" data-i18n="">Uploads</th>
 			</tr>
+	{{# enable_uploads }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_uploads }}
 	{{# allow_op_files }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ allow_op_files }}
@@ -449,6 +452,9 @@
 	{{# reply_renzoku }}
 			{{> panels/pieces/settings/number }}
 	{{/ reply_renzoku }}
+	{{# upload_renzoku }}
+			{{> panels/pieces/settings/number }}
+	{{/ upload_renzoku }}
 	{{# threads_per_hour_limit }}
 			{{> panels/pieces/settings/number }}
 	{{/ threads_per_hour_limit }}

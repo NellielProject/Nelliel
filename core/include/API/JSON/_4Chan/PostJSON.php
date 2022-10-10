@@ -18,7 +18,7 @@ class PostJSON extends JSON
 
     protected function generate(): void
     {
-        // 4chan specific (Nelliel does not implement):
+        // 4chan specific (Nelliel does not implement, or does differently):
         // tag
         // since4pass
         // m_img
@@ -48,6 +48,8 @@ class PostJSON extends JSON
         if (!nel_true_empty($this->post->data('capcode'))) {
             $this->raw_data['capcode'] = $this->post->data('capcode');
         }
+
+        // $this->raw_data['id'] = ''; // Not implemented to only 8 chars
 
         if ($this->post->data('op') && !nel_true_empty($this->post->data('subject'))) {
             $this->raw_data['sub'] = $this->post->data('subject');

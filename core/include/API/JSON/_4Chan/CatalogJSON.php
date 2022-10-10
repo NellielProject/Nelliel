@@ -6,6 +6,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\API\JSON\JSON;
 use Nelliel\Domains\DomainBoard;
+use PDO;
 
 class CatalogJSON extends JSON
 {
@@ -23,7 +24,6 @@ class CatalogJSON extends JSON
         // unique_ips (how many unique posters in a thread
         // archived
         // archived_on (timestamp of when archived)
-        // omitted_images (replies with images/uploads count)
         $threads = $this->board->activeThreads(true);
         $threads_per_page = $this->board->setting('threads_per_page');
         $threads_on_page = 0;
@@ -47,31 +47,13 @@ class CatalogJSON extends JSON
 
             foreach ($thread->getPosts() as $post) {
                 if ($post->data('op')) {
-                    if ($thread->data('sticky')) {
-                        $raw_data['sticky'] = 1;
-                    }
-
-                    if ($thread->data('locked')) {
-                        $raw_data['closed'] = 1;
-                    }
-
-                    $raw_data['replies'] = $thread->data('post_count') - 1;
-
-                    // TODO: Update when bump stat is tracked
-                    if ($thread->domain()->setting('limit_bump_count') &&
-                        ($thread->data('post_count') >= $thread->domain()->setting('max_posts'))) {
-                        $raw_data['bumplimit'] = 1;
-                    }
-
-                    if ($thread->domain()->setting('limit_thread_uploads') &&
-                        ($thread->data('total_uploads') >= $thread->domain()->setting('max_thread_uploads'))) {
-                        $raw_data['imagelimit'] = 1;
-                    }
-
-                    $raw_data['semantic_url'] = $thread->generateSlug($post);
+                    $op_json = new OPJSON($thread);
+                    $raw_data = $op_json->getRawData();
                     $raw_data = $raw_data + $post->getJSON()->getRawData();
-                    $omitted_posts = $thread->data('post_count') - $last_reply_count; // Subtract 1 to account for OP
-                    $raw_data['omitted_posts'] = $omitted_posts > 0 ? $omitted_posts : 0;
+
+                    // 4Chan's output actually violates their own spec since all replies are omitted in the catalog
+                    $raw_data['omitted_posts'] = $thread->data('post_count') - 1;
+                    $raw_data['omitted_images'] = 0; // TODO: Implement
                 } else {
                     if ($post_counter > $abbreviate_start) {
                         $raw_data['last_replies'][] = $post->getJSON()->getRawData();

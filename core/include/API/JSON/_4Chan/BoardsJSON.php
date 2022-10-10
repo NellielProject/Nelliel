@@ -34,14 +34,14 @@ class BoardsJSON extends JSON
             $raw_data['image_limit'] = $board->setting('max_thread_uploads');
             $raw_data['cooldowns']['threads'] = $board->setting('thread_renzoku');
             $raw_data['cooldowns']['replies'] = $board->setting('reply_renzoku');
-            $raw_data['cooldowns']['images'] = 0; // TODO: Implement image/upload post cooldown?
+            $raw_data['cooldowns']['images'] = $board->setting('upload_renzoku'); // Close enough
             $raw_data['meta_description'] = $board->setting('description') ?? '';
 
             if ($board->setting('enable_spoilers')) {
                 $raw_data['spoilers'] = 1;
             }
 
-            // $raw_data['custom_spoilers'] = 0; // Not implemented
+            // $raw_data['custom_spoilers'] = 0; // Not implemented, maybe later?
 
             if ($board->setting('max_archive_threads') > 0) {
                 $raw_data['is_archived'] = 1;
@@ -55,8 +55,8 @@ class BoardsJSON extends JSON
             }
 
             // $raw_data['oekaki'] = 0; // TODO: Change when oekaki is implemented
-            $raw_data['sjis_tags'] = 1; // TODO: Check if markup enabled
-            // $raw_data['code'] = 0; // TODO: Change when oekaki is implemented
+            $raw_data['sjis_tags'] = 1; // TODO: Check if markup enabled/disabled
+            // $raw_data['code'] = 0; // TODO: Change if code markup added
             // $raw_data['math_tags'] = 0; // Not implemented
 
             if ($board->setting('allow_op_files') && $board->setting('allow_reply_files') &&
