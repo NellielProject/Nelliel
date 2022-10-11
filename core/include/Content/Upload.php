@@ -6,7 +6,7 @@ namespace Nelliel\Content;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Moar;
-use Nelliel\API\JSON\_4Chan\UploadJSON;
+use Nelliel\API\JSON\Nelliel\UploadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Tables\TableUploads;

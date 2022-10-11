@@ -9,7 +9,7 @@ use Nelliel\ArchiveAndPrune;
 use Nelliel\FGSFDS;
 use Nelliel\Moar;
 use Nelliel\Overboard;
-use Nelliel\API\JSON\_4Chan\ThreadJSON;
+use Nelliel\API\JSON\Nelliel\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
