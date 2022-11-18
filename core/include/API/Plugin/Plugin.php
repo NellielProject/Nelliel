@@ -80,12 +80,17 @@ class Plugin
             if ($file->getFilename() === 'nelliel-plugin.ini') {
                 $parsed_ini = parse_ini_file($file->getPathname(), true);
 
+                if(!isset($parsed_ini['id'])) {
+                    continue;
+                }
+
                 if ($parsed_ini['id'] !== $this->plugin_id) {
                     continue;
                 }
 
                 $directory = basename(dirname($file->getRealPath()));
                 $initializer_file = $parsed_ini['initializer'];
+                break;
             }
         }
 
