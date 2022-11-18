@@ -5,13 +5,12 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\API\JSON\_4Chan\IndexJSON;
-use Nelliel\API\JSON\_4Chan\ThreadlistJSON;
+use Nelliel\API\JSON\IndexJSON;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
-use Nelliel\API\JSON\_4Chan\CatalogJSON;
+use Nelliel\API\JSON\CatalogJSON;
 
 class OutputIndex extends Output
 {
@@ -185,10 +184,6 @@ class OutputIndex extends Output
         }
 
         if (NEL_ENABLE_JSON_API) {
-            $threadlist_json = new ThreadlistJSON($this->domain);
-            $json_filename = 'threads' . NEL_JSON_EXT;
-            $this->file_handler->writeFile($this->domain->reference('base_path') . $json_filename,
-                $threadlist_json->getJSON());
             $catalog_json = new CatalogJSON($this->domain, $page);
             $json_filename = 'catalog' . NEL_JSON_EXT;
             $this->file_handler->writeFile($this->domain->reference('base_path') . $json_filename,

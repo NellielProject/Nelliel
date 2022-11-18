@@ -5,6 +5,7 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\API\JSON\BoardsJSON;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputBlotter;
 use Nelliel\Output\OutputCatalog;
@@ -16,7 +17,6 @@ use Nelliel\Output\OutputOverboard;
 use Nelliel\Output\OutputThread;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\API\JSON\_4Chan\BoardsJSON;
 
 class Regen
 {

@@ -1,0 +1,44 @@
+<?php
+declare(strict_types = 1);
+
+namespace Nelliel\API\JSON;
+
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use Nelliel\Domains\DomainBoard;
+
+class CatalogJSON extends JSON
+{
+    private $board;
+    private $page;
+
+    function __construct(DomainBoard $board, int $page)
+    {
+        $this->board = $board;
+        $this->page = $page;
+    }
+
+    protected function generate(): void
+    {
+        $raw_data = array();
+        $threads = $this->board->activeThreads(true);
+        $thread_list = array();
+
+        foreach ($threads as $thread) {
+            $thread_data = array();
+            $thread_data = $thread->getJSON()->getRawData();
+            unset($thread_data['posts']); // TODO: Maybe don't generate this to begin with for catalog?
+            $thread_data = $thread_data + $thread->firstPost()->getJSON()->getRawData();
+            $thread_list['threads'][] = $thread_data;
+        }
+
+        // This allows for possible pagination in the future
+        // Also 4Chan API compatible
+        $thread_list['page'] = 1;
+        $raw_data[] = $thread_list;
+        $raw_data = nel_plugins()->processHook('nel-in-during-catalog-json', [$this->board], $raw_data);
+        $this->raw_data = $raw_data;
+        $this->json = json_encode($raw_data);
+        $this->needs_update = false;
+    }
+}

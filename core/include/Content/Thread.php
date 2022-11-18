@@ -9,7 +9,7 @@ use Nelliel\ArchiveAndPrune;
 use Nelliel\FGSFDS;
 use Nelliel\Moar;
 use Nelliel\Overboard;
-use Nelliel\API\JSON\Nelliel\ThreadJSON;
+use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
@@ -570,6 +570,34 @@ class Thread
             'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
             '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
         $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
+            PDO::FETCH_COLUMN);
+
+        foreach ($post_list as $id) {
+            $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), intval($id)));
+            $posts[] = $content_id->getInstanceFromID($this->domain);
+        }
+
+        return $posts;
+    }
+
+    public function lastReplies(int $limit): array
+    {
+        $last_replies = array();
+        $offset = $this->data('post_count') - $limit;
+
+        if($this->data('post_count') == 1) {
+            return $last_replies;
+        }
+
+        if($offset < 1) {
+            $offset = 1;
+        }
+
+        $posts = array();
+        $prepared = $this->database->prepare(
+            'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC LIMIT ? OFFSET ?');
+        $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID(), $limit, $offset],
             PDO::FETCH_COLUMN);
 
         foreach ($post_list as $id) {

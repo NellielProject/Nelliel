@@ -1,10 +1,10 @@
 <?php
+declare(strict_types = 1);
 
-namespace Nelliel\API\JSON\_4Chan;
+namespace Nelliel\API\JSON;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\API\JSON\JSON;
 use Nelliel\Domains\DomainBoard;
 
 class IndexJSON extends JSON
@@ -20,6 +20,7 @@ class IndexJSON extends JSON
 
     protected function generate(): void
     {
+        $raw_data = array();
         $threads = $this->board->activeThreads(true);
         $offset = ($this->page - 1) * $this->board->setting('threads_per_page');
         $limit = $offset + $this->board->setting('threads_per_page');
@@ -29,19 +30,26 @@ class IndexJSON extends JSON
 
         foreach ($threads as $thread) {
             if ($thread_count >= $offset && $thread_count < $limit) {
-                $raw_data = array();
-                $raw_data = $thread->getJSON()->getRawData();
+                $thread_data = array();
+                $thread_data = $thread->getJSON()->getRawData();
+                $thread_data['posts'] = array($thread->firstPost()->getJSON()->getRawData());
                 $last_reply_count = $thread->data('sticky') ? $index_sticky_replies : $index_replies;
+
+                foreach ($thread->lastReplies($last_reply_count) as $post) {
+                    $thread_data['posts'][] = $post->getJSON()->getRawData();
+                }
+
                 $omitted_posts = $thread->data('post_count') - $last_reply_count; // Subtract 1 to account for OP
-                $raw_data['posts'][0]['omitted_posts'] = $omitted_posts > 0 ? $omitted_posts : 0;
-                $raw_data['posts'][0]['omitted_images'] = 0; // TODO: Implement
-                $this->raw_data['threads'][] = $raw_data;
+                $thread_data['posts'][0]['omitted_posts'] = $omitted_posts > 0 ? $omitted_posts : 0;
+                $raw_data['threads'][] = $thread_data;
             }
 
             $thread_count ++;
         }
 
-        $this->json = json_encode($this->raw_data);
+        $raw_data = nel_plugins()->processHook('nel-in-during-index-json', [$this->board, $this->page], $raw_data);
+        $this->raw_data = $raw_data;
+        $this->json = json_encode($raw_data);
         $this->needs_update = false;
     }
 }

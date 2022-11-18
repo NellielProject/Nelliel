@@ -5,10 +5,10 @@ namespace Nelliel\Domains;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\FileTypes;
 use Nelliel\NellielCacheInterface;
-use Nelliel\Database\NellielPDO;
 use Nelliel\Content\ContentID;
+use Nelliel\Content\Thread;
+use Nelliel\Database\NellielPDO;
 use PDO;
 
 class DomainBoard extends Domain implements NellielCacheInterface
@@ -156,5 +156,11 @@ class DomainBoard extends Domain implements NellielCacheInterface
         }
 
         return $active_threads;
+    }
+
+    public function getThread(int $thread_id): Thread
+    {
+        $content_id = new ContentID(ContentID::createIDString($thread_id));
+        return $content_id->getInstanceFromID($this);
     }
 }

@@ -8,7 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\Moar;
-use Nelliel\API\JSON\Nelliel\PostJSON;
+use Nelliel\API\JSON\PostJSON;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
