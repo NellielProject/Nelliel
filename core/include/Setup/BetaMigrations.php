@@ -17,6 +17,7 @@ use Nelliel\Utility\FileHandler;
 use PDO;
 use Nelliel\Tables\TableR9KContent;
 use Nelliel\Tables\TableR9KMutes;
+use Nelliel\Tables\TableStatistics;
 
 class BetaMigrations
 {
@@ -316,7 +317,7 @@ class BetaMigrations
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
-                // Update ban appeals
+                // Create ban appeals table
                 $ban_appeals_table = new TableBanAppeals(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $ban_appeals_table->createTable();
 
@@ -519,6 +520,12 @@ class BetaMigrations
                 $r9k_mutes_table->createTable();
 
                 echo ' - ' . __('R9K content and mutes tables added.') . '<br>';
+
+                // Create statistics table
+                $statistics_table = new TableStatistics(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $statistics_table->createTable();
+
+                echo ' - ' . __('Statistics table added.') . '<br>';
 
                 $migration_count ++;
         }

@@ -63,6 +63,7 @@ define('NEL_ROLES_TABLE', 'nelliel_roles');
 define('NEL_SETTINGS_TABLE', 'nelliel_settings');
 define('NEL_SETTING_OPTIONS_TABLE', 'nelliel_setting_options');
 define('NEL_SITE_CONFIG_TABLE', 'nelliel_site_config');
+define('NEL_STATISTICS_TABLE', 'nelliel_statistics');
 define('NEL_STYLES_TABLE', 'nelliel_styles');
 define('NEL_SYSTEM_LOGS_TABLE', 'nelliel_system_logs');
 define('NEL_TEMPLATES_TABLE', 'nelliel_templates');

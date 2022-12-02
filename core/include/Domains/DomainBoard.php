@@ -10,6 +10,7 @@ use Nelliel\Content\ContentID;
 use Nelliel\Content\Thread;
 use Nelliel\Database\NellielPDO;
 use PDO;
+use Nelliel\Statistics;
 
 class DomainBoard extends Domain implements NellielCacheInterface
 {
@@ -114,6 +115,15 @@ class DomainBoard extends Domain implements NellielCacheInterface
         }
 
         return $settings;
+    }
+
+    public function updateStatistics(): void
+    {
+        $thread_count = (int) $this->database->executeFetch('SELECT COUNT(*) FROM "' . $this->reference('threads_table') . '"', PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'thread_count', $thread_count);
+        $total_filesize = (int) $this->database->executeFetch('SELECT SUM("filesize") FROM "' . $this->reference('uploads_table') . '"', PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'total_filesize', $total_filesize);
+        $this->statistics->update($this, 'last_update', time());
     }
 
     public function exists()

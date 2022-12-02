@@ -60,6 +60,7 @@ use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
+use Nelliel\Tables\TableStatistics;
 
 class Setup
 {
@@ -355,6 +356,8 @@ class Setup
         $r9k_content_table->createTable();
         $r9k_mutes_table = new TableR9KMutes($this->database, $this->sql_compatibility);
         $r9k_mutes_table->createTable();
+        $statistics_table = new TableStatistics($this->database, $this->sql_compatibility);
+        $statistics_table->createTable();
 
         echo _gettext('Core database tables created.'), '<br>';
     }

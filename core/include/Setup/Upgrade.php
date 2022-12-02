@@ -6,10 +6,8 @@ namespace Nelliel\Setup;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Regen;
-use Nelliel\Domains\Domain;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Domains\DomainSite;
 
 class Upgrade
 {

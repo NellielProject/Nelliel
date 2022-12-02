@@ -186,6 +186,7 @@ class NewPost
 
         $update_overboard = new Overboard($this->database);
         $update_overboard->addThread($thread);
+        $this->domain->updateStatistics();
 
         // Generate thread page if it doesn't exist, otherwise update
         $regen = new Regen();

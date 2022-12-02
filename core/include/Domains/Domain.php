@@ -6,6 +6,7 @@ namespace Nelliel\Domains;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\NellielCacheInterface;
+use Nelliel\Statistics;
 use Nelliel\Database\NellielPDO;
 use Nelliel\FrontEnd\FrontEndData;
 use Nelliel\Language\Language;
@@ -29,12 +30,15 @@ abstract class Domain implements NellielCacheInterface
     protected $translator;
     protected $locale;
     protected $language;
+    protected $statistics;
 
     protected abstract function loadSettings(): void;
 
     protected abstract function loadReferences(): void;
 
     protected abstract function loadSettingsFromDatabase(): array;
+
+    public abstract function updateStatistics(): void;
 
     protected function utilitySetup()
     {
@@ -43,6 +47,7 @@ abstract class Domain implements NellielCacheInterface
         $this->cache_handler = nel_utilities()->cacheHandler();
         $this->translator = new Translator($this);
         $this->language = new Language();
+        $this->statistics = new Statistics();
     }
 
     public function database(NellielPDO $new_database = null)
