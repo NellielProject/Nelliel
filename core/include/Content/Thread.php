@@ -16,6 +16,7 @@ use Nelliel\Domains\DomainBoard;
 use Nelliel\Tables\TableThreads;
 use PDO;
 use Nelliel\Regen;
+use Nelliel\Statistics;
 
 class Thread
 {
@@ -144,6 +145,7 @@ class Thread
 
         $this->deleteFromDatabase($parent_delete);
         $this->deleteFromDisk($parent_delete);
+        $this->domain->updateStatistics();
         $this->archive_prune->updateThreads();
         return true;
     }

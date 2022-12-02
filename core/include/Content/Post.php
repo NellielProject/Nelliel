@@ -153,6 +153,7 @@ class Post
 
         $this->deleteFromDatabase($parent_delete);
         $this->deleteFromDisk($parent_delete);
+        $this->domain->updateStatistics();
 
         if (!$parent_delete) {
             $parent_thread = $this->getParent();

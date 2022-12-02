@@ -93,6 +93,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_board_pages', '10', 'Maximum static pages that can be created for a specific board.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'allow_user_registration', '0', 'Allow users to register an account.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'pm_snippet_length', '75', 'Maximum length of private message snippets.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'min_time_between_site_stat_updates', '30', 'Minimum time between site statistics updates (seconds).', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'min_time_between_board_stat_updates', '30', 'Minimum time between board statistics updates (seconds).', '{"type":"number"}']);
 
         // Banners
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_banners', '0', 'Display site banners if available.', '{"type":"checkbox"}']);

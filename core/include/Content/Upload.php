@@ -116,6 +116,7 @@ class Upload
 
         $this->deleteFromDisk($parent_delete);
         $this->deleteFromDatabase($parent_delete, $absolute);
+        $this->domain->updateStatistics();
 
         if (!$parent_delete) {
             $post = $this->getParent();
