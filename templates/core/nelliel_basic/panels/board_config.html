@@ -826,6 +826,9 @@
 	{{# show_display_ratio }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_display_ratio }}
+	{{# scale_upload_filesize_units }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ scale_upload_filesize_units }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -843,6 +846,9 @@
 	{{# show_thumbnailed_message }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_thumbnailed_message }}
+	{{# scale_new_post_filesize_units }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ scale_new_post_filesize_units }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -869,6 +875,18 @@
 	{{# generate_catalog }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ generate_catalog }}
+	{{# display_iec_filesize_units }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_iec_filesize_units }}
+	{{# binary_filesize_conversion }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ binary_filesize_conversion }}
+	{{# filesize_precision }}
+			{{> panels/pieces/settings/number }}
+	{{/ filesize_precision }}
+	{{# filesize_unit_prefix }}
+			{{> panels/pieces/settings/select }}
+	{{/ filesize_unit_prefix }}
 		</tbody>
 		<tbody>
 			<tr>

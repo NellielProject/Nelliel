@@ -90,5 +90,6 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'mod_links_cyclic', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_non_cyclic', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_edit', '', 1]);
+        $this->insertDefaultRow(['board', 'filesize_unit_prefix', '{"Bytes (B)": "B", "Kilobytes (KB)": "KB", "Kibibytes (KiB)": "KiB", "Megabytes (MB)": "MB", "Mebibytes (MiB)": "MiB", "Gigabytes (GB)": "GB", "Gibibytes (GiB)": "GiB", "Terabytes (TB)": "TB", "Tebibytes (TiB)": "TiB", "Petabytes (PB)": "PB", "Pebibytes (PiB)": "PiB", "Exabytes (EB)": "EB", "Exbibytes (EiB)": "EiB", "Zettabytes (ZB)": "ZB", "Zebibytes (ZiB)": "ZiB", "Yottabytes (YB)": "YB", "Yobibytes (YiB)": "YiB"}', 0]);
     }
 }

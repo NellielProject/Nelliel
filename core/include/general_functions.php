@@ -5,6 +5,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Redirect;
 use Nelliel\Auth\Authorization;
+use ChrisUllyott\FileSize;
 
 function nel_clean_exit()
 {
@@ -217,4 +218,24 @@ function nel_build_router_url(array $uris, bool $end_slash = false, string $quer
     }
 
     return $url;
+}
+
+function nel_size_format(int $bytes, bool $use_iec, bool $binary, int $precision, ?string $units = null): string
+{
+    $filesize = new FileSize($bytes . ' B', $binary ? 2 : 10);
+    $output = '';
+
+    if (is_null($units)) {
+        $output = $filesize->asAuto($precision);
+    } else {
+        $output = $filesize->as($units, $precision) . ' ' . $units;
+    }
+
+    if ($use_iec) {
+        $output = preg_replace('/([KkMmGgTtPpEeZzYy])B/', '$1iB', $output);
+    } else {
+        $output = preg_replace('/([KkMmGgTtPpEeZzYy])iB/', '$1B', $output);
+    }
+
+    return $output;
 }

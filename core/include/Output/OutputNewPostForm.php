@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\FileTypes;
 use Nelliel\Domains\Domain;
 use PDO;
+use ChrisUllyott\FileSize;
 
 class OutputNewPostForm extends Output
 {
@@ -179,8 +180,14 @@ class OutputNewPostForm extends Output
         }
 
         if ($this->domain->setting('show_form_max_filesize') && $this->render_data['allow_files']) {
+            $units = $this->domain->setting('scale_new_post_filesize_units') ? null : $this->domain->setting(
+                'filesize_unit_prefix');
+            $formatted_max_filesize = nel_size_format((int) $this->domain->setting('max_filesize'),
+                $this->domain->setting('display_iec_filesize_units'),
+                $this->domain->setting('binary_filesize_conversion'), $this->domain->setting('filesize_precision'),
+                $units);
             $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
-                _gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize') / 1024);
+                _gettext('Maximum file size allowed is %s'), $formatted_max_filesize);
         }
 
         if ($this->domain->setting('show_thumbnailed_message') && $this->render_data['allow_files']) {

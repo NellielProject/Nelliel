@@ -5,10 +5,11 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use ChrisUllyott\FileSize;
+use Lamansky\Fraction\Fraction;
 use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
-use Lamansky\Fraction\Fraction;
 
 class OutputFile extends Output
 {
@@ -43,7 +44,11 @@ class OutputFile extends Output
                 [$this->domain->id(), 'moderation', 'modmode', $file->contentID()->getIDString(), $spoiler_action]);
         }
 
-        $this->render_data['display_filesize'] = '(' . round(((int) $file->data('filesize') / 1024), 2) . ' KB)';
+        $units = $this->domain->setting('scale_upload_filesize_units') ? null : $this->domain->setting(
+            'filesize_unit_prefix');
+        $this->render_data['display_filesize'] = nel_size_format((int) $file->data('filesize'),
+            $this->domain->setting('display_iec_filesize_units'), $this->domain->setting('binary_filesize_conversion'),
+            $this->domain->setting('filesize_precision'), $units);
         $has_dimensions = $file->data('display_width') > 0 && $file->data('display_height') > 0;
 
         if ($has_dimensions) {
