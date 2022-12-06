@@ -24,4 +24,4 @@ Contains a representation of a post.
 |`op`             |`boolean`|Always                       |True or false                             |Is the post OP (first in thread).|
 |`sage`           |`boolean`|Always                       |True or false                             |Is the post saged.|
 |`mod_comment`    |`string` |If post has moderator comment|Any string                                |Comment added by staff.|
-|`uploads`        |`array`  |Always                       |Zero or more `[upload](upload.md)` objects|The list of uploads attached to the post.|
+|`uploads`        |`array`  |Always                       |Zero or more [`upload`](upload.md) objects|The list of uploads attached to the post.|

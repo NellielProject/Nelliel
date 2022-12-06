@@ -22,8 +22,8 @@ Contains a representation of a thread.
 |`old`              |`boolean`|Always                       |True or false                         |Thread is marked as old.|
 |`shadow`           |`boolean`|Always                       |True or false                         |Shadow of a moved thread.|
 |`slug`             |`string` |Always                       |Any string                            |SEO-friendly slug.|
-|`op`               |`array`  |Catalog page only            |0-1 `[post](post.md)` objects         |The first post in the thread.|
-|`posts`            |`array`  |Always except on catalog page|Zero or more `[post](post.md)` objects|A list of posts in the thread.|
+|`op`               |`array`  |Catalog page only            |One [`post`](post.md) object          |The first post in the thread.|
+|`posts`            |`array`  |Always except on catalog page|Zero or more [`post`](post.md) objects|A list of posts in the thread.|
 |`omitted_posts`    |`integer`|Index page only              |Any positive integer                  |The number of posts omitted from display.|
 |`slug`             |`string` |Always                       |Any string                            |SEO-friendly slug.|
 

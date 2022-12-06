@@ -5,5 +5,5 @@ Contains a representation of an index page.
 
 |Key                |Type     |Appears|Possible Values                           |Description|                               
 |:------------------|:--------|:------|:-----------------------------------------|:----------|
-|`threads`          |`array`  |Always |Zero or more `[thread](thread.md)` objects|The list of posts in the thread.|
+|`threads`          |`array`  |Always |Zero or more [`thread`](thread.md) objects|The list of posts in the thread.|
 
