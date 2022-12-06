@@ -38,8 +38,8 @@ class BoardJSON extends JSON
         $raw_data['cooldowns']['replies'] = $this->board->setting('reply_renzoku');
         $raw_data['cooldowns']['uploads'] = $this->board->setting('upload_renzoku');
         $raw_data['cooldowns']['delete_post'] = $this->board->setting('delete_post_renzoku');
-        $raw_data['content_disclaimer'] = $this->board->setting('board_content_disclaimer');
-        $raw_data['footer_text'] = $this->board->setting('board_footer_text');
+        $raw_data['content_disclaimer'] = $this->board->setting('board_content_disclaimer') ?? '';
+        $raw_data['footer_text'] = $this->board->setting('board_footer_text') ?? '';
 
         $enabled_styles = json_decode($this->board->setting('enabled_styles'), true);
 

@@ -40,7 +40,7 @@ class IndexJSON extends JSON
                 }
 
                 $omitted_posts = $thread->data('post_count') - $last_reply_count; // Subtract 1 to account for OP
-                $thread_data['posts'][0]['omitted_posts'] = $omitted_posts > 0 ? $omitted_posts : 0;
+                $thread_data['omitted_posts'] = $omitted_posts > 0 ? $omitted_posts : 0;
                 $raw_data['threads'][] = $thread_data;
             }
 

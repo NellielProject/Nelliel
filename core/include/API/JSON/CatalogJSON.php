@@ -23,18 +23,18 @@ class CatalogJSON extends JSON
         $raw_data = array();
         $threads = $this->board->activeThreads(true);
         $thread_list = array();
+        // This allows for possible pagination in the future
+        // Also 4Chan API compatible
+        $thread_list['page'] = 1;
 
         foreach ($threads as $thread) {
             $thread_data = array();
             $thread_data = $thread->getJSON()->getRawData();
-            unset($thread_data['posts']); // TODO: Maybe don't generate this to begin with for catalog?
-            $thread_data = $thread_data + $thread->firstPost()->getJSON()->getRawData();
+            unset($thread_data['posts']);
+            $thread_data['op'] = $thread->firstPost()->getJSON()->getRawData();
             $thread_list['threads'][] = $thread_data;
         }
 
-        // This allows for possible pagination in the future
-        // Also 4Chan API compatible
-        $thread_list['page'] = 1;
         $raw_data[] = $thread_list;
         $raw_data = nel_plugins()->processHook('nel-in-during-catalog-json', [$this->board], $raw_data);
         $this->raw_data = $raw_data;

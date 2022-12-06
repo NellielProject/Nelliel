@@ -98,3 +98,14 @@ Called when the raw data for a board has been generated.
 |:---:|:----------|:-------|:---------|:---------|:----------|
 |1    |`$raw_data`|`array` |Yes       |Yes       |Array of board data that will be JSON encoded.|
 |2    |`$board`   |`object`|No        |No        |The instance of `Nelliel\Domains\DomainBoard` being used.|
+
+### nel-in-during-info-json
+Added: v0.9.30
+
+Called when the raw data for API info is generated.
+ 
+**Arguments**
+
+|Order|Argument   |Type    |Modifiable|Returnable|Description|                               
+|:---:|:----------|:-------|:---------|:---------|:----------|
+|1    |`$raw_data`|`array` |Yes       |Yes       |Array of API info data that will be JSON encoded.|

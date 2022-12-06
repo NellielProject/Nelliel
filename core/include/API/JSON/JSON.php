@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 abstract class JSON
 {
-    protected $api_output = '';
+    protected $compatibility = 'nelliel';
     protected $api_version = 0;
     protected $json = '';
     protected $raw_data = array();

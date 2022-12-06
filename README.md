@@ -6,7 +6,7 @@ A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby
 
 ## Notable Features
  - [Plugin API](documentation/plugins/plugin-api.md)
- - 4Chan-compatible JSON API
+ - [JSON API](documentation/json-api/api.md)
  - Customizable filetype checks with 65 formats included by default
  - Over 300 settings
  - Web-based control panels for most configuration and functions

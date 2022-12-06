@@ -14,14 +14,11 @@ class ThreadJSON extends JSON
     function __construct(Thread $thread)
     {
         $this->thread = $thread;
-        $this->api_output = 'nelliel';
     }
 
     protected function generate(): void
     {
         $raw_data = array();
-        $raw_data['api_output'] = $this->api_output;
-        $raw_data['api_version'] = $this->api_version;
         $raw_data['thread_id'] = $this->thread->data('thread_id');
         $raw_data['bump_time'] = $this->thread->data('bump_time');
         $raw_data['bump_time_milli'] = $this->thread->data('bump_time_milli');
