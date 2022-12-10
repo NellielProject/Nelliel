@@ -139,6 +139,11 @@ td {
 	clear: both;
 }
 
+/* Moderator Mode */
+.modmode-header {
+	font-size: 0.95rem;
+}
+
 /* Tables */
 .row-header {
 	width: 1%;
