@@ -1,4 +1,4 @@
-Error 0: Unknown error.  
+rror 0: Unknown error.  
 Error 1: Database connection error. (database.php)  
 Error 2: Invalid database type. (database.php)  
 Error 3: Posting flood. (NewPost/NewPost.php)  
@@ -208,6 +208,8 @@ Error 425: perm_capcodes_manage (Admin/AdminCapcodes.php)
 Error 430: perm_noticeboard_view (Admin/AdminNoticeboard.php)  
 Error 431: perm_noticeboard_post (Admin/AdminNoticeboard.php)  
 Error 432: perm_noticeboard_delete (Admin/AdminNoticeboard.php)  
+
+Error 435: perm_manage_scripts (Admin/AdminScripts.php)  
 
 Error 500: perm_regen_pages (site) (Dispatch/DispatchRegen.php)  
 Error 501: perm_regen_cache (site) (Dispatch/DispatchRegen.php) 

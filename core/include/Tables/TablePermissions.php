@@ -82,6 +82,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_dismiss_reports', 'Manage reports.']);
         $this->insertDefaultRow(['perm_view_roles', 'View roles.']);
         $this->insertDefaultRow(['perm_manage_roles', 'Manage roles.']);
+        $this->insertDefaultRow(['perm_manage_scripts', 'Manage scripts.']);
         $this->insertDefaultRow(['perm_modify_site_config', 'Manage site configuration.']);
         $this->insertDefaultRow(['perm_manage_styles', 'Manage styles.']);
         $this->insertDefaultRow(['perm_manage_templates', 'Manage templates.']);

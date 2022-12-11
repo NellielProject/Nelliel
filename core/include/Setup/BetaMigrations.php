@@ -18,6 +18,7 @@ use PDO;
 use Nelliel\Tables\TableR9KContent;
 use Nelliel\Tables\TableR9KMutes;
 use Nelliel\Tables\TableStatistics;
+use Nelliel\Tables\TableScripts;
 
 class BetaMigrations
 {
@@ -529,6 +530,12 @@ class BetaMigrations
                 $statistics_table->createTable();
 
                 echo ' - ' . __('Statistics table added.') . '<br>';
+
+                // Create scripts table
+                $scripts_table = new TableScripts(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $scripts_table->createTable();
+
+                echo ' - ' . __('Scripts table added.') . '<br>';
 
                 $migration_count ++;
         }

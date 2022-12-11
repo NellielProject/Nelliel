@@ -6,6 +6,7 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use PDO;
 
 class OutputHead extends Output
 {
@@ -20,8 +21,9 @@ class OutputHead extends Output
         $this->renderSetup();
         $page_title = $parameters['page_title'] ?? $this->domain->reference('title');
         $this->render_data['site_referrer_policy'] = $this->site_domain->setting('site_referrer_policy');
-        $this->render_data['main_js_file'] = NEL_SCRIPTS_WEB_PATH . 'core/nel.js';
-        $this->render_data['js_ui_url'] = NEL_SCRIPTS_WEB_PATH . 'core/ui.js';
+        // $this->render_data['main_js_file'] = NEL_SCRIPTS_WEB_PATH . 'core/nel.js';
+        // $this->render_data['js_ui_url'] = NEL_SCRIPTS_WEB_PATH . 'core/ui.js';
+        $this->scripts();
         $this->render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
         $this->render_data['support_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/support.css';
         $info = array();
@@ -39,5 +41,27 @@ class OutputHead extends Output
         $this->render_data['favicon_url'] = $this->domain->setting('favicon') ?? '';
         $this->render_data['page_title'] = $page_title;
         return $this->output('head', $data_only, true, $this->render_data);
+    }
+
+    private function scripts(): void
+    {
+        $scripts = $this->database->executeFetchAll('SELECT * FROM "' . NEL_SCRIPTS_TABLE . '"', PDO::FETCH_ASSOC);
+        $script_list = array();
+
+        foreach ($scripts as $script) {
+            if ($script['enabled'] != 1) {
+                continue;
+            }
+
+            $location = $script['location'];
+
+            if ($script['full_url'] != 1) {
+                $location = NEL_SCRIPTS_WEB_PATH . $location;
+            }
+
+            $script_list[]['location'] = $location;
+        }
+
+        $this->render_data['scripts'] = $script_list;
     }
 }

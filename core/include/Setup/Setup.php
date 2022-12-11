@@ -45,9 +45,11 @@ use Nelliel\Tables\TableRateLimit;
 use Nelliel\Tables\TableReports;
 use Nelliel\Tables\TableRolePermissions;
 use Nelliel\Tables\TableRoles;
+use Nelliel\Tables\TableScripts;
 use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Tables\TableSiteConfig;
+use Nelliel\Tables\TableStatistics;
 use Nelliel\Tables\TableStyles;
 use Nelliel\Tables\TableTemplates;
 use Nelliel\Tables\TableThreadArchives;
@@ -60,7 +62,6 @@ use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
-use Nelliel\Tables\TableStatistics;
 
 class Setup
 {
@@ -358,6 +359,8 @@ class Setup
         $r9k_mutes_table->createTable();
         $statistics_table = new TableStatistics($this->database, $this->sql_compatibility);
         $statistics_table->createTable();
+        $scripts_table = new TableScripts($this->database, $this->sql_compatibility);
+        $scripts_table->createTable();
 
         echo _gettext('Core database tables created.'), '<br>';
     }
@@ -370,6 +373,10 @@ class Setup
         $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH);
         $this->file_handler->createDirectory(NEL_BANNERS_FILES_PATH);
         $this->file_handler->createDirectory(NEL_TEMP_FILES_BASE_PATH);
+        $this->file_handler->createDirectory(NEL_STYLES_FILES_PATH . 'custom/');
+        $this->file_handler->createDirectory(NEL_SCRIPTS_FILES_PATH . 'custom/');
+        $this->file_handler->createDirectory(NEL_IMAGE_SETS_FILES_PATH . 'custom/');
+        $this->file_handler->createDirectory(NEL_MEDIA_FILES_PATH . 'custom/');
         echo _gettext('Core directories created.'), '<br>';
     }
 

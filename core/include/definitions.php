@@ -60,6 +60,7 @@ define('NEL_RATE_LIMIT_TABLE', 'nelliel_rate_limit');
 define('NEL_REPORTS_TABLE', 'nelliel_reports');
 define('NEL_ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');
 define('NEL_ROLES_TABLE', 'nelliel_roles');
+define('NEL_SCRIPTS_TABLE', 'nelliel_scripts');
 define('NEL_SETTINGS_TABLE', 'nelliel_settings');
 define('NEL_SETTING_OPTIONS_TABLE', 'nelliel_setting_options');
 define('NEL_SITE_CONFIG_TABLE', 'nelliel_site_config');
@@ -86,6 +87,8 @@ define('NEL_BANNERS_FILES_PATH', NEL_ASSETS_FILES_PATH . NEL_BANNERS_DIR . '/');
 define('NEL_WAT_FILES_PATH', NEL_INCLUDE_PATH . 'wat/');
 define('NEL_GENERAL_FILES_PATH', NEL_PUBLIC_PATH . NEL_GENERAL_DIR . '/');
 define('NEL_CAPTCHA_FILES_PATH', NEL_GENERAL_FILES_PATH . NEL_CAPTCHA_DIR . '/');
+define('NEL_SCRIPTS_FILES_PATH', NEL_ASSETS_FILES_PATH . NEL_SCRIPTS_DIR . '/');
+define('NEL_MEDIA_FILES_PATH', NEL_ASSETS_FILES_PATH . NEL_MEDIA_DIR . '/');
 
 define('NEL_ASSETS_WEB_PATH', NEL_BASE_WEB_PATH . NEL_ASSETS_DIR . '/');
 define('NEL_SCRIPTS_WEB_PATH', NEL_ASSETS_WEB_PATH . NEL_SCRIPTS_DIR . '/');

@@ -1,0 +1,33 @@
+<div>
+	<a href="{{ new_url }}">New script</a>
+</div>
+<hr>
+<table >
+	<caption data-i18n="">List of scripts</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Label</th>
+			<th scope="col" data-i18n="">Location</th>
+			<th scope="col" data-i18n="">Full URL</th>
+			<th scope="col" data-i18n="">Enabled</th>
+			<th scope="col" data-i18n="">Notes</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# scripts_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ label }}</td>
+			<td>{{ location }}</td>
+			<td>{{ full_url }}</td>
+			<td>{{ enabled }}</td>
+			<td>{{ notes }}</td>
+			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ delete_url }}" data-i18n="">Delete</a>]</span>
+			</td>
+		</tr>
+{{/ scripts_list }}
+	</tbody>
+</table>
