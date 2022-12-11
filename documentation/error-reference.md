@@ -151,48 +151,48 @@ Error 311: perm_bans_add (Admin/AdminBans.php)
 Error 312: perm_bans_modify (Admin/AdminBans.php)   
 Error 313: perm_bans_delete (Admin/AdminBans.php)   
 
-Error 315: perm_blotter_manage (Admin/AdminBlotter.php)   
+Error 315: perm_manage_blotter (Admin/AdminBlotter.php)   
 
-Error 320: perm_board_defaults_modify (Admin/AdminBoardDefaults.php)  
+Error 320: perm_modify_board_defaults (Admin/AdminBoardDefaults.php)  
 
 Error 325: perm_boards_view (Admin/AdminBoards.php)  
 Error 326: perm_boards_add (Admin/AdminBoards.php)   
 Error 327: perm_boards_modify (Admin/AdminBoards.php)   
 Error 328: perm_boards_delete (Admin/AdminBoards.php)   
 
-Error 330: perm_board_config_modify (Admin/AdminBoardSettings.php)   
+Error 330: perm_modify_board_config (Admin/AdminBoardSettings.php)   
 
-Error 340: perm_file_filters_manage (Admin/AdminFileFilters.php)  
+Error 340: perm_manage_file_filters (Admin/AdminFileFilters.php)  
 
-Error 345: perm_filetypes_manage (Admin/AdminFiletypes.php)  
+Error 345: perm_manage_filetypes (Admin/AdminFiletypes.php)  
 
-Error 350: perm_image_sets_manage (Admin/AdminImageSets.php)  
+Error 350: perm_manage_image_sets (Admin/AdminImageSets.php)  
 
-Error 355: perm_logs_view (Admin/AdminLogs.php)  
-Error 356: perm_logs_manage (Admin/AdminLogs.php)  
+Error 355: perm_view_public_logs (Admin/AdminLogs.php)  
+Error 356: perm_view_system_logs (Admin/AdminLogs.php)  
 
-Error 360: perm_news_manage (Admin/AdminNews.php)  
+Error 360: perm_manage_news (Admin/AdminNews.php)  
 
-Error 365: perm_permissions_manage (Admin/AdminPermissions.php)  
+Error 365: perm_manage_permissions (Admin/AdminPermissions.php)  
 
 Error 370: perm_reports_view (Admin/AdminReports.php)  
 Error 371: perm_reports_dismiss (Admin/AdminReports.php)  
 
-Error 375: perm_roles_view (Admin/AdminRoles.php)  
-Error 376: perm_roles_manage (Admin/AdminRoles.php)  
+Error 375: perm_view_roles (Admin/AdminRoles.php)  
+Error 376: perm_manage_roles (Admin/AdminRoles.php)  
 
-Error 380: perm_site_config_modify (Admin/AdminSiteSettings.php)  
+Error 380: perm_modify_site_config (Admin/AdminSiteSettings.php)  
 
-Error 385: perm_styles_manage (Admin/AdminStyles.php)  
+Error 385: perm_manage_styles (Admin/AdminStyles.php)  
 
-Error 390: perm_templates_manage (Admin/AdminTemplates.php)  
+Error 390: perm_manage_templates (Admin/AdminTemplates.php)  
 
-Error 395: perm_users_view (Admin/AdminUsers.php)  
-Error 396: perm_users_manage (Admin/AdminUsers.php)  
+Error 395: perm_view_users (Admin/AdminUsers.php)  
+Error 396: perm_manage_users (Admin/AdminUsers.php)  
 
-Error 400: perm_wordfilters_manage (Admin/AdminWordfilters.php)  
+Error 400: perm_manage_wordfilters (Admin/AdminWordfilters.php)  
 
-Error 405: perm_embeds_manage (Admin/AdminEmbeds.php)  
+Error 405: perm_manage_embeds (Admin/AdminEmbeds.php)  
 
 Error 410: perm_threads_access (Admin/AdminThreads.php)  
 Error 411: perm_modify_content_status (Admin/AdminThreads.php)  
@@ -201,9 +201,9 @@ Error 413: perm_delete_by_ip (Admin/AdminThreads.php)
 Error 414: perm_move_content (Admin/AdminThreads.php)  
 Error 415: perm_delete_content (Admin/AdminThreads.php)  
 
-Error 420: perm_content_ops_manage (Admin/AdminContentOps.php)  
+Error 420: perm_manage_content_ops (Admin/AdminContentOps.php)  
 
-Error 425: perm_capcodes_manage (Admin/AdminCapcodes.php)  
+Error 425: perm_manage_capcodes (Admin/AdminCapcodes.php)  
 
 Error 430: perm_noticeboard_view (Admin/AdminNoticeboard.php)  
 Error 431: perm_noticeboard_post (Admin/AdminNoticeboard.php)  
@@ -220,4 +220,4 @@ Error 505: perm_regen_cache (board) (Dispatch/DispatchRegen.php)
 Error 506: perm_regen_overboard (Dispatch/DispatchRegen.php)  
 
 Error 510: perm_extract_gettext (Language/Language.php)  
-Error 511: perm_private_messages_use (Dispatch/DispatchAccount.php) 
+Error 511: perm_use_private_messages (Dispatch/DispatchAccount.php) 
