@@ -672,9 +672,9 @@ class Thread
             if ($first_post) {
                 $new_thread = new Thread(new ContentID(), $domain);
                 $new_thread->transferData($this->transferData());
+                $post->move($new_thread, true);
 
                 if ($keep_shadow) {
-                    $post->move($new_thread, true);
                     $this->changeData('shadow', true);
                     $this->getMoar()->modify('shadow_board_id', $domain->id());
                     $this->getMoar()->modify('shadow_thread_id', $new_thread->contentID()->threadID());
