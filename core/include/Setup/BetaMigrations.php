@@ -475,6 +475,8 @@ class BetaMigrations
                         'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
                     nel_database('core')->exec(
                         'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN bump_count SMALLINT NOT NULL DEFAULT 0');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN salt VARCHAR(255) NOT NULL DEFAULT \'\'');
                 }
 
                 echo ' - ' . __('Thread tables updated.') . '<br>';

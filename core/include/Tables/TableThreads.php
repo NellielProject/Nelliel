@@ -36,6 +36,7 @@ class TableThreads extends Table
             'locked' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'shadow' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'slug' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'salt' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'regen_cache' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'cache' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
@@ -58,6 +59,7 @@ class TableThreads extends Table
             'locked' => ['row_check' => false, 'auto_inc' => false],
             'shadow' => ['row_check' => false, 'auto_inc' => false],
             'slug' => ['row_check' => false, 'auto_inc' => false],
+            'salt' => ['row_check' => false, 'auto_inc' => false],
             'regen_cache' => ['row_check' => false, 'auto_inc' => false],
             'cache' => ['row_check' => false, 'auto_inc' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false]];
@@ -87,6 +89,7 @@ class TableThreads extends Table
             locked              SMALLINT NOT NULL DEFAULT 0,
             shadow              SMALLINT NOT NULL DEFAULT 0,
             slug                TEXT DEFAULT NULL,
+            salt                VARCHAR(255) NOT NULL,
             regen_cache         SMALLINT NOT NULL DEFAULT 0,
             cache               TEXT DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
