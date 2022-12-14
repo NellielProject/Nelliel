@@ -67,9 +67,8 @@ class UploadJSON extends JSON
         $raw_data['deleted'] = $this->upload->data('deleted');
         $raw_data['exif'] = $this->upload->data('exif');
 
-        $raw_data = nel_plugins()->processHook('nel-in-during-upload-json', [$this->upload], $raw_data);
+        $raw_data = nel_plugins()->processHook('nel-in-after-upload-json', [$this->upload], $raw_data);
         $this->raw_data = $raw_data;
-        $this->json = json_encode($raw_data);
         $this->needs_update = false;
     }
 }

@@ -42,9 +42,8 @@ class ThreadJSON extends JSON
             $raw_data['posts'][] = $post->getJSON()->getRawData();
         }
 
-        $raw_data = nel_plugins()->processHook('nel-in-during-thread-json', [$this->thread], $raw_data);
+        $raw_data = nel_plugins()->processHook('nel-in-after-thread-json', [$this->thread], $raw_data);
         $this->raw_data = $raw_data;
-        $this->json = json_encode($raw_data);
         $this->needs_update = false;
     }
 }

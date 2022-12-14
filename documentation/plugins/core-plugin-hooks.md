@@ -2,7 +2,7 @@
 Documentation of official hooks in the Nelliel codebase. These hooks have three placement categories:
  - `inb4` is called before a process begins.
  - `in-during` is called while a process is executing.
- - `in-after` is called once a process has completed.
+ - `in-after` is called after a process has completed.
 
 ## Hook List
 
@@ -26,7 +26,7 @@ Called at the end of the plugin loading stage.
 
 None
 
-### nel-in-during-upload-json
+### nel-in-after-upload-json
 Added: v0.9.30
 
 Called when the raw data for an upload has been generated.
@@ -38,10 +38,10 @@ Called when the raw data for an upload has been generated.
 |1    |`$raw_data`|`array` |Yes       |Yes       |Array of upload data that will be JSON encoded.|
 |2    |`$upload`  |`object`|No        |No        |The instance of `Nelliel\Content\Upload` being used.|
 
-### nel-in-during-post-json
+### nel-in-after-post-json
 Added: v0.9.30
 
-Called when the raw data for a post has been generated.
+Called when the raw data for a post has been generated for the JSON API.
  
 **Arguments**
 
@@ -50,10 +50,10 @@ Called when the raw data for a post has been generated.
 |1    |`$raw_data`|`array` |Yes       |Yes       |Array of post data that will be JSON encoded.|
 |2    |`$post`    |`object`|No        |No        |The instance of `Nelliel\Content\Post` being used.|
 
-### nel-in-during-thread-json
+### nel-in-afterduring-thread-json
 Added: v0.9.30
 
-Called when the raw data for a thread has been generated.
+Called when the raw data for a thread has been generated for the JSON API.
  
 **Arguments**
 
@@ -62,10 +62,10 @@ Called when the raw data for a thread has been generated.
 |1    |`$raw_data`|`array` |Yes       |Yes       |Array of thread data that will be JSON encoded.|
 |2    |`$thread`  |`object`|No        |No        |The instance of `Nelliel\Content\Thread` being used.|
 
-### nel-in-during-index-json
+### nel-in-after-index-json
 Added: v0.9.30
 
-Called when the raw data for an index page has been generated.
+Called when the raw data for an index page has been generated for the JSON API.
  
 **Arguments**
 
@@ -75,10 +75,10 @@ Called when the raw data for an index page has been generated.
 |2    |`$board`   |`object` |No        |No        |The instance of `Nelliel\Domains\DomainBoard` being used.|
 |3    |`$page`    |`integer`|No        |No        |The index page being generated.|
 
-### nel-in-during-catalog-json
+### nel-in-after-catalog-json
 Added: v0.9.30
 
-Called when the raw data for the catalog has been generated.
+Called when the raw data for the catalog has been generated for the JSON API.
  
 **Arguments**
 
@@ -87,10 +87,10 @@ Called when the raw data for the catalog has been generated.
 |1    |`$raw_data`|`array` |Yes       |Yes       |Array of catalog data that will be JSON encoded.|
 |2    |`$board`   |`object`|No        |No        |The instance of `Nelliel\Domains\DomainBoard` being used.|
 
-### nel-in-during-board-json
+### nel-in-after-board-json
 Added: v0.9.30
 
-Called when the raw data for a board has been generated.
+Called when the raw data for a board has been generated for the JSON API.
  
 **Arguments**
 
@@ -99,13 +99,46 @@ Called when the raw data for a board has been generated.
 |1    |`$raw_data`|`array` |Yes       |Yes       |Array of board data that will be JSON encoded.|
 |2    |`$board`   |`object`|No        |No        |The instance of `Nelliel\Domains\DomainBoard` being used.|
 
-### nel-in-during-info-json
+### nel-in-after-info-json
 Added: v0.9.30
 
-Called when the raw data for JSON API info is generated.
+Called when the raw data for JSON API info has been generated.
  
 **Arguments**
 
 |Order|Argument   |Type    |Modifiable|Returnable|Description|                               
 |:---:|:----------|:-------|:---------|:---------|:----------|
 |1    |`$raw_data`|`array` |Yes       |Yes       |Array of API info data that will be JSON encoded.|
+
+### nel-in-after-regen-site-pages
+Added: v0.9.30
+
+Called when regenerating site pages.
+ 
+**Arguments**
+
+|Order|Argument      |Type    |Modifiable|Returnable|Description|                               
+|:---:|:-------------|:-------|:---------|:---------|:----------|
+|1    |`$site_domain`|`object`|No        |No        |Instance of `Nelliel\Domains\DomainSite`.|
+
+### nel-in-after-regen-overboard
+Added: v0.9.30
+
+Called when regenerating the overboards.
+ 
+**Arguments**
+
+|Order|Argument      |Type    |Modifiable|Returnable|Description|                               
+|:---:|:-------------|:-------|:---------|:---------|:----------|
+|1    |`$site_domain`|`object`|No        |No        |Instance of `Nelliel\Domains\DomainSite`.|
+
+### nel-in-after-regen-board-pages
+Added: v0.9.30
+
+Called when regenerating board pages.
+ 
+**Arguments**
+
+|Order|Argument       |Type    |Modifiable|Returnable|Description|                               
+|:---:|:--------------|:-------|:---------|:---------|:----------|
+|2    |`$board_domain`|`object`|No        |No        |The instance of `Nelliel\Domains\DomainBoard` being used.|

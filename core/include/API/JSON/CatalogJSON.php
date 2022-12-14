@@ -36,9 +36,8 @@ class CatalogJSON extends JSON
         }
 
         $raw_data[] = $thread_list;
-        $raw_data = nel_plugins()->processHook('nel-in-during-catalog-json', [$this->board], $raw_data);
+        $raw_data = nel_plugins()->processHook('nel-in-after-catalog-json', [$this->board], $raw_data);
         $this->raw_data = $raw_data;
-        $this->json = json_encode($raw_data);
         $this->needs_update = false;
     }
 }

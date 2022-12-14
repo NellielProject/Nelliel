@@ -48,7 +48,7 @@ class AdminSiteConfig extends Admin
         nel_site_domain()->reload();
         $regen = new Regen();
         $regen->allBoards(true, false);
-        $regen->allSitePages($this->domain);
+        $regen->sitePages($this->domain);
         $regen->overboard($this->domain);
         $this->panel();
     }

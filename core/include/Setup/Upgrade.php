@@ -107,7 +107,7 @@ class Upgrade
         $regen = new Regen();
         nel_site_domain()->regenCache();
         nel_site_domain(true);
-        $regen->allSitePages(nel_site_domain());
+        $regen->sitePages(nel_site_domain());
         $regen->allBoards(true, true);
         $regen->overboard(nel_site_domain());
 

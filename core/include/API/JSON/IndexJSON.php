@@ -47,9 +47,8 @@ class IndexJSON extends JSON
             $thread_count ++;
         }
 
-        $raw_data = nel_plugins()->processHook('nel-in-during-index-json', [$this->board, $this->page], $raw_data);
+        $raw_data = nel_plugins()->processHook('nel-in-after-index-json', [$this->board, $this->page], $raw_data);
         $this->raw_data = $raw_data;
-        $this->json = json_encode($raw_data);
         $this->needs_update = false;
     }
 }

@@ -121,7 +121,7 @@ class AdminBoardConfig extends Admin
             $this->domain->reload();
             nel_site_domain()->reload();
             $regen = new Regen();
-            $regen->allBoardPages($this->domain);
+            $regen->boardPages($this->domain);
         }
 
         $this->panel();

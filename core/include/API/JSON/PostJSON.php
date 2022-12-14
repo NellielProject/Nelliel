@@ -71,9 +71,8 @@ class PostJSON extends JSON
             $raw_data['uploads'][] = $upload->getJSON()->getRawData();
         }
 
-        $raw_data = nel_plugins()->processHook('nel-in-during-post-json', [$this->post], $raw_data);
+        $raw_data = nel_plugins()->processHook('nel-in-after-post-json', [$this->post], $raw_data);
         $this->raw_data = $raw_data;
-        $this->json = json_encode($raw_data);
         $this->needs_update = false;
     }
 }

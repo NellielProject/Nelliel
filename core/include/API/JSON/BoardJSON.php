@@ -111,9 +111,8 @@ class BoardJSON extends JSON
         $raw_data['enable_spoilers'] = $this->board->setting('enable_spoilers');
         $raw_data['max_filesize'] = $this->board->setting('max_filesize');
 
-        $raw_data = nel_plugins()->processHook('nel-in-during-board-json', [$this->board], $raw_data);
+        $raw_data = nel_plugins()->processHook('nel-in-after-board-json', [$this->board], $raw_data);
         $this->raw_data = $raw_data;
-        $this->json = json_encode($raw_data);
         $this->needs_update = false;
     }
 }

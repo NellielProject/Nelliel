@@ -7,6 +7,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\API\JSON\BoardsJSON;
 use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainBoard;
+use Nelliel\Domains\DomainSite;
 use Nelliel\Output\OutputBlotter;
 use Nelliel\Output\OutputCatalog;
 use Nelliel\Output\OutputGenericPage;
@@ -87,27 +89,29 @@ class Regen
         }
     }
 
-    public function overboard(Domain $domain): void
+    public function overboard(DomainSite $site_domain): void
     {
-        $output_overboard = new OutputOverboard($domain, true);
+        $output_overboard = new OutputOverboard($site_domain, true);
 
-        if ($domain->setting('overboard_active')) {
+        if ($site_domain->setting('overboard_active')) {
             $output_overboard->render([], false);
         }
 
-        if ($domain->setting('sfw_overboard_active')) {
+        if ($site_domain->setting('sfw_overboard_active')) {
             $output_overboard->render(['sfw' => true], false);
         }
+
+        nel_plugins()->processHook('nel-in-after-regen-overboard', [$site_domain]);
     }
 
     public function allBoards(bool $pages, bool $cache): void
     {
-        $domain = nel_site_domain();
-        $board_ids = $domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
+        $site_domain = nel_site_domain();
+        $board_ids = $site_domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
             PDO::FETCH_COLUMN);
 
         foreach ($board_ids as $id) {
-            $board_domain = Domain::getDomainFromID($id, $domain->database());
+            $board_domain = Domain::getDomainFromID($id, $site_domain->database());
 
             if ($cache) {
                 $board_domain->regenCache();
@@ -115,42 +119,44 @@ class Regen
             }
 
             if ($pages) {
-                $this->allBoardPages($board_domain);
+                $this->boardPages($board_domain);
             }
         }
     }
 
-    public function allSitePages(Domain $domain): void
+    public function sitePages(DomainSite $site_domain): void
     {
-        set_time_limit(nel_site_domain()->setting('max_page_regen_time'));
-        $this->blotter($domain);
-        $this->news($domain);
-        $this->homePage($domain);
-        $prepared = $domain->database()->prepare(
+        set_time_limit($site_domain->setting('max_page_regen_time'));
+        $this->blotter($site_domain);
+        $this->news($site_domain);
+        $this->homePage($site_domain);
+        $prepared = $site_domain->database()->prepare(
             'SELECT "uri" FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = :domain_id');
-        $prepared->bindValue(':domain_id', $domain->id());
-        $pages = $domain->database()->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
+        $prepared->bindValue(':domain_id', $site_domain->id());
+        $pages = $site_domain->database()->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
 
         foreach ($pages as $page) {
-            $this->page($domain, $page['uri']);
+            $this->page($site_domain, $page['uri']);
         }
 
         if (NEL_ENABLE_JSON_API) {
             $boards_json = new BoardsJSON();
             $json_filename = 'boards' . NEL_JSON_EXT;
-            nel_utilities()->fileHandler()->writeFile(NEL_PUBLIC_PATH . $json_filename,
-                $boards_json->getJSON(true));
+            nel_utilities()->fileHandler()->writeFile(NEL_PUBLIC_PATH . $json_filename, $boards_json->getJSON(true));
         }
+
+        nel_plugins()->processHook('nel-in-after-regen-site-pages', [$site_domain]);
     }
 
-    public function allBoardPages(Domain $domain): void
+    public function boardPages(DomainBoard $board_domain): void
     {
         set_time_limit(nel_site_domain()->setting('max_page_regen_time'));
-        $result = $domain->database()->query(
-            'SELECT "thread_id" FROM "' . $domain->reference('threads_table') . '" WHERE "old" = 0');
+        $result = $board_domain->database()->query(
+            'SELECT "thread_id" FROM "' . $board_domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
-        $domain->database()->query('UPDATE "' . $domain->reference('posts_table') . '" SET regen_cache = 1');
-        $this->threads($domain, true, $ids);
-        $this->index($domain);
+        $board_domain->database()->query('UPDATE "' . $board_domain->reference('posts_table') . '" SET regen_cache = 1');
+        $this->threads($board_domain, true, $ids);
+        $this->index($board_domain);
+        nel_plugins()->processHook('nel-in-after-regen-board-pages', [$board_domain]);
     }
 }

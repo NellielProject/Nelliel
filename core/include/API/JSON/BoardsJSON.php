@@ -26,9 +26,8 @@ class BoardsJSON extends JSON
             $raw_data['boards'][] = $board_json->getRawData();
         }
 
-        $raw_data = nel_plugins()->processHook('nel-in-during-boards-json', [], $raw_data);
+        $raw_data = nel_plugins()->processHook('nel-in-after-boards-json', [], $raw_data);
         $this->raw_data = $raw_data;
-        $this->json = json_encode($raw_data);
         $this->needs_update = false;
     }
 }
