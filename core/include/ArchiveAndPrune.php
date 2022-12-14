@@ -49,7 +49,8 @@ class ArchiveAndPrune
             $content_id->changeThreadID($thread['thread_id']);
 
             if ($thread['preserve'] != 1 && $early404 && $page > $early404_page &&
-                $thread['post_count'] - 1 < $early404_replies) {
+                $thread['post_count'] - 1 < $early404_replies &&
+                $thread['post_count'] - 1 < $this->domain->setting('auto_archive_min_replies')) {
                 $thread = $content_id->getInstanceFromID($this->domain);
                 $thread->delete(true);
                 continue;
@@ -97,8 +98,9 @@ class ArchiveAndPrune
 
     private function getFullThreadList()
     {
-        $query = 'SELECT "thread_id", "post_count", "old", "preserve" FROM "' . $this->domain->reference(
-            'threads_table') . '" ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC';
+        $query = 'SELECT "thread_id", "post_count", "old", "preserve" FROM "' .
+            $this->domain->reference('threads_table') .
+            '" ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC';
         $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
         return $thread_list;
     }

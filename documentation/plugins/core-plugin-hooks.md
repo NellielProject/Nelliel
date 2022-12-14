@@ -50,7 +50,7 @@ Called when the raw data for a post has been generated for the JSON API.
 |1    |`$raw_data`|`array` |Yes       |Yes       |Array of post data that will be JSON encoded.|
 |2    |`$post`    |`object`|No        |No        |The instance of `Nelliel\Content\Post` being used.|
 
-### nel-in-afterduring-thread-json
+### nel-in-after-thread-json
 Added: v0.9.30
 
 Called when the raw data for a thread has been generated for the JSON API.
@@ -141,4 +141,4 @@ Called when regenerating board pages.
 
 |Order|Argument       |Type    |Modifiable|Returnable|Description|                               
 |:---:|:--------------|:-------|:---------|:---------|:----------|
-|2    |`$board_domain`|`object`|No        |No        |The instance of `Nelliel\Domains\DomainBoard` being used.|
+|1    |`$board_domain`|`object`|No        |No        |The instance of `Nelliel\Domains\DomainBoard` being used.|

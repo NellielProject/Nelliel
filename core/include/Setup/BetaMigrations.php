@@ -461,7 +461,7 @@ class BetaMigrations
                     'r9k_unoriginal_mute', 'r9k_global_mute_check', 'r9k_mute_time_range', 'r9k_mute_base_number',
                     'upload_renzoku', 'scale_upload_filesize_units', 'scale_new_post_filesize_units',
                     'display_iec_filesize_units', 'binary_filesize_conversion', 'filesize_precision',
-                    'filesize_unit_prefix'];
+                    'filesize_unit_prefix', 'auto_archive_min_replies'];
                 $this->newBoardSettings($new_board_settings);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';

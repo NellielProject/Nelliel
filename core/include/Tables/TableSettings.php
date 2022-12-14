@@ -338,6 +338,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'active_threads', '100', 'Active threads (shown in index) before buffer.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_buffer', '100', 'Maximum old threads kept in buffer before archive/prune.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'old_threads', 'PRUNE', 'How to handle old threads.', '{"type":"select"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'auto_archive_min_replies', '0', 'Minimum number of replies for a thread to be automatically archived.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_archive_threads', '500', 'Maximum threads kept in archive (excluding permanent threads).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'do_archive_pruning', '1', 'Prune oldest threads in archive when limit is reached.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_slug_length', '80', 'Maximum characters in the thread URL slug.', '{"type":"number"}']);
