@@ -4,6 +4,8 @@ Nelliel's JSON API provides a read-only representation of resources such as thre
 This API is **not** directly compatible with 4chan or other imageboard JSON APIs.
 
 ## Endpoints
+Note: All endpoints will have an [`api_info`](info.md) entry.
+
 ### [Boards](boards.md)
 **Location:** http(s)://`:site_url`/boards.json
 

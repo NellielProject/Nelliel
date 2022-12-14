@@ -139,7 +139,7 @@ class Regen
             $boards_json = new BoardsJSON();
             $json_filename = 'boards' . NEL_JSON_EXT;
             nel_utilities()->fileHandler()->writeFile(NEL_PUBLIC_PATH . $json_filename,
-                $boards_json->getJSON());
+                $boards_json->getJSON(true));
         }
     }
 

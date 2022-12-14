@@ -102,7 +102,7 @@ Called when the raw data for a board has been generated.
 ### nel-in-during-info-json
 Added: v0.9.30
 
-Called when the raw data for API info is generated.
+Called when the raw data for JSON API info is generated.
  
 **Arguments**
 

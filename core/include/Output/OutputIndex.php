@@ -187,7 +187,7 @@ class OutputIndex extends Output
             $catalog_json = new CatalogJSON($this->domain, $page);
             $json_filename = 'catalog' . NEL_JSON_EXT;
             $this->file_handler->writeFile($this->domain->reference('base_path') . $json_filename,
-                $catalog_json->getJSON());
+                $catalog_json->getJSON(true));
         }
 
         $this->render_data['pagination'] = $this->indexNavigation($page, $page_count);
@@ -220,7 +220,7 @@ class OutputIndex extends Output
                 $index_json = new IndexJSON($this->domain, $page);
                 $json_filename = $page . NEL_JSON_EXT;
                 $this->file_handler->writeFile($this->domain->reference('base_path') . $json_filename,
-                    $index_json->getJSON());
+                    $index_json->getJSON(true));
             }
         } else {
             echo $output;

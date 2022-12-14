@@ -218,7 +218,7 @@ class OutputThread extends Output
 
             if (NEL_ENABLE_JSON_API) {
                 $json_filename = $thread->contentID()->threadID() . NEL_JSON_EXT;
-                $this->file_handler->writeFile($thread->pageFilePath() . $json_filename, $thread->getJSON()->getJSON());
+                $this->file_handler->writeFile($thread->pageFilePath() . $json_filename, $thread->getJSON()->getJSON(true));
             }
         } else {
             echo $output;
