@@ -211,7 +211,7 @@ class AdminThreads extends Admin
         $this->verifyPermissions($destination_domain, 'perm_move_content');
         $keep_shadow = boolval($_POST['keep_shadow'] ?? false);
 
-        if ($content_id->isThread()) {
+        if ($content_id->isThread() || $content_id->threadID() === $content_id->postID()) {
             $destination = Domain::getDomainFromID($_POST['destination_board'] ?? 0, $this->domain->database());
             $thread = new Thread($content_id, $this->domain);
             $thread->move($destination, $keep_shadow);
@@ -236,9 +236,8 @@ class AdminThreads extends Admin
                 $post->move($new_thread, false);
             } else {
                 $new_thread = $post->convertToThread();
+                $new_thread->move($destination_domain, $keep_shadow);
             }
-
-            $new_thread->move($destination_domain);
         }
 
         if ($content_id->isUpload()) {

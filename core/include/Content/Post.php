@@ -140,7 +140,7 @@ class Post
             }
         }
 
-        // Threads can have just OP deleted but right now we don't use that.
+        // Threads can technically have just OP deleted but right now we don't use that
         if ($this->data('op') && !$parent_delete) {
             return $this->getParent()->delete($perm_override);
         }
