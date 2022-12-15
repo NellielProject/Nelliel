@@ -17,7 +17,6 @@ use Nelliel\Output\OutputIndex;
 use Nelliel\Output\OutputNews;
 use Nelliel\Output\OutputOverboard;
 use Nelliel\Output\OutputThread;
-use Nelliel\Utility\FileHandler;
 use PDO;
 
 class Regen
@@ -51,9 +50,8 @@ class Regen
         }
 
         $output_generic_page = new OutputGenericPage($domain, true);
-        $file_handler = new FileHandler();
         $output = $output_generic_page->render($page['title'], $page['text'], false);
-        $file_handler->writeFile($domain->reference('base_path') . $page['uri'] . '.html', $output);
+        nel_utilities()->fileHandler()->writeFile($domain->reference('base_path') . $page['uri'] . '.html', $output);
     }
 
     public function news(Domain $domain): void
@@ -95,10 +93,22 @@ class Regen
 
         if ($site_domain->setting('overboard_active')) {
             $output_overboard->render([], false);
+        } else {
+            $path = NEL_PUBLIC_PATH . $site_domain->setting('overboard_uri');
+
+            if (file_exists($path)) {
+                nel_utilities()->fileHandler()->eraserGun($path);
+            }
         }
 
         if ($site_domain->setting('sfw_overboard_active')) {
             $output_overboard->render(['sfw' => true], false);
+        } else {
+            $path = NEL_PUBLIC_PATH . $site_domain->setting('sfw_overboard_uri');
+
+            if (file_exists($path)) {
+                nel_utilities()->fileHandler()->eraserGun($path);
+            }
         }
 
         nel_plugins()->processHook('nel-in-after-regen-overboard', [$site_domain]);
