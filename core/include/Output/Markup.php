@@ -49,18 +49,18 @@ class Markup
         $modified_text = $text;
         $modified_text = $this->parseSimple($modified_text);
         $modified_text = $this->parseLoops($modified_text);
-        $modified_text = $this->parseCallbacks($modified_text);
         $modified_text = $this->parseURLs($modified_text);
         $modified_text = $this->parseCites($modified_text);
         return $modified_text;
     }
 
-    public function parseBlocks(string $text, array $markup_data = null, $recursive_call = false): string
+    public function parseBlocks(string $text, array $markup_data = array(), $recursive_call = false): string
     {
-        if (is_null($markup_data)) {
+        if (empty($markup_data)) {
             $markup_data = $this->getMarkupData('block');
         }
 
+        $markup_data = nel_plugins()->processHook('nel-in-before-markup-blocks', [$text], $markup_data);
         $modified_text = $text;
         $modified_blocks = array();
 
@@ -103,13 +103,14 @@ class Markup
         return $modified_text;
     }
 
-    public function parseLines(string $text, array $markup_data = null): string
+    public function parseLines(string $text, array $markup_data = array()): string
     {
-        if (is_null($markup_data)) {
+        if (empty($markup_data)) {
             $markup_data = $this->getMarkupData('line');
         }
 
         $lines = explode("\n", $text);
+        $markup_data = nel_plugins()->processHook('nel-in-before-markup-lines', [$lines], $markup_data);
 
         if (!is_array($lines)) {
             return $text;
@@ -128,12 +129,13 @@ class Markup
         return implode("\n", $modified_lines);
     }
 
-    public function parseSimple(string $text, array $markup_data = null): string
+    public function parseSimple(string $text, array $markup_data = array()): string
     {
-        if (is_null($markup_data)) {
+        if (empty($markup_data)) {
             $markup_data = $this->getMarkupData('simple');
         }
 
+        $markup_data = nel_plugins()->processHook('nel-in-before-markup-simple', [$text], $markup_data);
         $modified_text = $text;
 
         foreach ($markup_data as $data) {
@@ -143,12 +145,13 @@ class Markup
         return $modified_text;
     }
 
-    public function parseLoops(string $text, array $markup_data = null): string
+    public function parseLoops(string $text, array $markup_data = array()): string
     {
-        if (is_null($markup_data)) {
+        if (empty($markup_data)) {
             $markup_data = $this->getMarkupData('loop');
         }
 
+        $markup_data = nel_plugins()->processHook('nel-in-before-markup-loops', [$text], $markup_data);
         $modified_text = $text;
 
         foreach ($markup_data as $data) {
@@ -156,21 +159,6 @@ class Markup
                 $compare = $modified_text;
                 $modified_text = preg_replace($data['match'], $data['replace'], $modified_text);
             } while ($compare !== $modified_text);
-        }
-
-        return $modified_text;
-    }
-
-    public function parseCallbacks(string $text, array $markup_data = null): string
-    {
-        if (is_null($markup_data)) {
-            $markup_data = $this->getMarkupData('callback');
-        }
-
-        $modified_text = $text;
-
-        foreach ($markup_data as $data) {
-            $modified_text = preg_replace_callback($data['match'], $data['replace'], $modified_text);
         }
 
         return $modified_text;

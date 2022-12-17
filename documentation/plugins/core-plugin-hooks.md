@@ -142,3 +142,51 @@ Called when regenerating board pages.
 |Order|Argument       |Type    |Modifiable|Returnable|Description|                               
 |:---:|:--------------|:-------|:---------|:---------|:----------|
 |1    |`$board_domain`|`object`|No        |No        |The instance of `Nelliel\Domains\DomainBoard` being used.|
+
+### nel-in-before-markup-blocks
+Added: v0.9.30
+
+Called before parsing block markup.
+ 
+**Arguments**
+
+|Order|Argument      |Type    |Modifiable|Returnable|Description|                               
+|:---:|:-------------|:-------|:---------|:---------|:----------|
+|1    |`$markup_data`|`array` |Yes       |Yes       |Data for the markups that will be used.|
+|2    |`$text`       |`string`|No        |No        |String of unmodified text.|
+
+### nel-in-before-markup-lines
+Added: v0.9.30
+
+Called before parsing line markup.
+ 
+**Arguments**
+
+|Order|Argument      |Type   |Modifiable|Returnable|Description|                               
+|:---:|:-------------|:------|:---------|:---------|:----------|
+|1    |`$markup_data`|`array`|Yes       |Yes       |Data for the markups that will be used.|
+|2    |`$lines`      |`array`|No        |No        |Array of text split into lines.|
+
+### nel-in-before-markup-simple
+Added: v0.9.30
+
+Called before parsing simple markup.
+ 
+**Arguments**
+
+|Order|Argument      |Type    |Modifiable|Returnable|Description|                               
+|:---:|:-------------|:-------|:---------|:---------|:----------|
+|1    |`$markup_data`|`string`|Yes       |Yes       |Data for the markups that will be used.|
+|2    |`$text`       |`string`|No        |No        |String of unmodified text.|
+
+### nel-in-before-markup-loops
+Added: v0.9.30
+
+Called before parsing loop markup.
+ 
+**Arguments**
+
+|Order|Argument      |Type    |Modifiable|Returnable|Description|                               
+|:---:|:-------------|:-------|:---------|:---------|:----------|
+|1    |`$markup_data`|`string`|Yes       |Yes       |Data for the markups that will be used.|
+|2    |`$text`       |`string`|No        |No        |String of unmodified text.|
