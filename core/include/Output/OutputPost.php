@@ -112,14 +112,23 @@ class OutputPost extends Output
         }
 
         if ($thread->data('shadow') && $post->data('op')) {
-            $markup = new Markup();
+            $markup = new Markup($this->database);
             $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
             $cite_text = '>>>/' . $thread->getMoar()->get('shadow_board_id') . '/' .
                 $thread->getMoar()->get('shadow_thread_id');
             $shadow_cite = $markup->parseCites($cite_text, $post, $dynamic_urls);
             $this->render_data['is_shadow'] = true;
-            $message_override = $this->domain->setting('shadow_message_override');
-            $shadow_message = nel_true_empty($message_override) ? __('This thread was moved to another board: %s') : $message_override;
+            $shadow_type = $thread->getMoar()->get('shadow_type');
+            $shadow_message = '';
+
+            if ($shadow_type === 'moved') {
+                $shadow_message = $this->domain->setting('shadow_message_moved');
+            }
+
+            if ($shadow_type === 'merged') {
+                $shadow_message = $this->domain->setting('shadow_message_merged');
+            }
+
             $this->render_data['shadow_message'] = sprintf(htmlspecialchars($shadow_message), $shadow_cite);
         }
 
@@ -176,8 +185,15 @@ class OutputPost extends Output
                 $this->render_data['mod_cyclic_url'] = nel_build_router_url(
                     [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), $cyclic_action]);
 
-                $this->render_data['mod_move_thread_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
+                if (!$thread->data('shadow')) {
+                    $this->render_data['mod_move_thread_url'] = nel_build_router_url(
+                        [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
+                    $this->render_data['mod_merge_thread_url'] = nel_build_router_url(
+                        [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'merge']);
+                } else {
+                    $this->render_data['mod_can_move'] = false;
+                    $this->render_data['mod_can_merge'] = false;
+                }
             }
 
             $this->render_data['mod_ban_url'] = nel_build_router_url(
@@ -192,8 +208,14 @@ class OutputPost extends Output
                 [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'ban-delete']);
             $this->render_data['mod_edit_url'] = nel_build_router_url(
                 [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'edit']);
-            $this->render_data['mod_move_post_url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'move']);
+
+            if (!$thread->data('shadow')) {
+                $this->render_data['mod_move_post_url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'move']);
+            } else {
+                $this->render_data['mod_can_move'] = false;
+                $this->render_data['mod_can_merge'] = false;
+            }
         }
 
         $this->render_data['headers']['thread_url'] = $thread->getURL(!$this->write_mode);

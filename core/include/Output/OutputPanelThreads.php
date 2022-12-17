@@ -216,4 +216,30 @@ class OutputPanelThreads extends Output
         echo $output;
         return $output;
     }
+
+    public function merge(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $this->setBodyTemplate('panels/threads_merge');
+        $parameters['is_panel'] = true;
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Merge');
+        $content_id = $parameters['content_id'] ?? new ContentID();
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['current_board'] = $this->domain->id();
+        $this->render_data['boards_select'] = $output_menu->boards('target_board', $this->domain->id(), true);
+        $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
+        $this->render_data['allow_shadow_message'] = $this->domain->setting('allow_shadow_message');
+        $this->render_data['form_action'] = nel_build_router_url(
+            [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'merge']);
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
+        $this->render_data['footer'] = $output_footer->render([], true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
+        echo $output;
+        return $output;
+    }
 }

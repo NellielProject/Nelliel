@@ -89,9 +89,12 @@
 	{{# allow_shadow_message }}
 		{{> panels/pieces/settings/checkbox }}
 	{{/ allow_shadow_message }}
-	{{# shadow_message_override }}
+	{{# shadow_message_moved }}
 			{{> panels/pieces/settings/text }}
-	{{/ shadow_message_override }}
+	{{/ shadow_message_moved }}
+	{{# shadow_message_merged }}
+			{{> panels/pieces/settings/text }}
+	{{/ shadow_message_merged }}
 		</tbody>
 		<tbody>
 			<tr>

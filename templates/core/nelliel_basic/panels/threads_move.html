@@ -15,21 +15,21 @@
 {{# move_thread }}
 	{{# allow_shadow_message }}
 	<div class="display_row">
-		<label for="keep_shadow" class="display-cell" data-i18n="">Keep shadow post:</label>
+		<label for="keep_shadow" class="display-cell" data-i18n="">Keep shadow post (only for cross-board moves):</label>
 		<input class="display-cell" type="checkbox" name="keep_shadow" value="1">
 	</div>
 	{{/ allow_shadow_message }}
 {{/ move_thread }}
 {{# move_post }}
 	<div class="display_row">
-		<label for="destination_board_id" class="display-cell" data-i18n="">Destination thread ID (0 creates new thread):</label>
-		<input class="display-cell" type="number" name="destination_thread_id" value=""  min="0">
+		<label for="destination_thread_id" class="display-cell" data-i18n="">Destination thread ID (0 creates new thread):</label>
+		<input class="display-cell" type="number" name="destination_thread_id" value="" min="0">
 	</div>
 {{/ move_post }}
 {{# move_upload }}
 	<div class="display_row">
 		<label for="destination_post_id" class="display-cell" data-i18n="">Destination post ID:</label>
-		<input class="display-cell" type="number" name="destination_post_id" value=""  min="1">
+		<input class="display-cell" type="number" name="destination_post_id" value="" min="1">
 	</div>
 {{/ move_upload }}
 	<div class="display_row">

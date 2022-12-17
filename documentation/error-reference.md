@@ -143,6 +143,7 @@ Error 260: Thread not exist. (Admin/AdminThreads.php)
 Error 261: Post not exist. (Admin/AdminThreads.php)  
 Error 262: Can't move replies. (Admin/AdminThreads.php)  
 Error 263: Can't move uploads. (Admin/AdminThreads.php)  
+Error 264: Invalid target thread. (Admin/AdminThreads.php) 
 
 Error 300: Default permission error. (Admin/Admin.php)  
 

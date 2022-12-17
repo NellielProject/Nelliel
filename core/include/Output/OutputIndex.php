@@ -118,13 +118,9 @@ class OutputIndex extends Output
             $thread_input = array();
             $index_format = ($page === 1) ? $this->site_domain->setting('first_index_filename_format') : $this->site_domain->setting(
                 'index_filename_format');
-            $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
-            $treeline = $this->database->executePreparedFetchAll($prepared, [$thread->contentID()->threadID()],
-                PDO::FETCH_ASSOC);
+            $posts = $thread->getPosts();
 
-            if (empty($treeline)) {
+            if (empty($posts)) {
                 $threads_done ++;
                 continue;
             }
@@ -146,13 +142,10 @@ class OutputIndex extends Output
             $abbreviate_start = $thread->data('post_count') - $index_replies;
             $post_counter = 1;
 
-            foreach ($treeline as $post_data) {
-                $post_content_id = new ContentID(
-                    ContentID::createIDString($thread->contentID()->threadID(), $post_data['post_number']));
-                $post = $post_content_id->getInstanceFromID($this->domain);
+            foreach ($posts as $post) {
                 $parameters = ['gen_data' => $gen_data, 'in_thread_number' => $post_counter];
 
-                if ($post_data['op'] == 1) {
+                if ($post->data('op') == 1) {
                     $thread_input['op_post'] = $output_post->render($post, $parameters, true);
                 } else {
                     if ($post_counter > $abbreviate_start) {

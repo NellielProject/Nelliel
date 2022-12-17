@@ -570,7 +570,7 @@ class Thread
         $posts = array();
         $prepared = $this->database->prepare(
             'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-            '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+            '" WHERE "parent_thread" = ? ORDER BY "post_time" ASC, "post_time_milli" ASC, "post_number" ASC');
         $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
             PDO::FETCH_COLUMN);
 
@@ -587,11 +587,11 @@ class Thread
         $last_replies = array();
         $offset = $this->data('post_count') - $limit;
 
-        if($this->data('post_count') == 1) {
+        if ($this->data('post_count') == 1) {
             return $last_replies;
         }
 
-        if($offset < 1) {
+        if ($offset < 1) {
             $offset = 1;
         }
 
@@ -599,8 +599,8 @@ class Thread
         $prepared = $this->database->prepare(
             'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
             '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC LIMIT ? OFFSET ?');
-        $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID(), $limit, $offset],
-            PDO::FETCH_COLUMN);
+        $post_list = $this->database->executePreparedFetchAll($prepared,
+            [$this->content_id->threadID(), $limit, $offset], PDO::FETCH_COLUMN);
 
         foreach ($post_list as $id) {
             $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), intval($id)));
@@ -661,7 +661,9 @@ class Thread
 
     public function move(DomainBoard $domain, bool $keep_shadow): Thread
     {
-        if ($domain->id() === $this->domain->id()) {
+        $cross_board = $domain->id() !== $this->domain->id();
+
+        if (!$cross_board) {
             return $this;
         }
 
@@ -679,6 +681,7 @@ class Thread
                     $this->changeData('shadow', true);
                     $this->getMoar()->modify('shadow_board_id', $domain->id());
                     $this->getMoar()->modify('shadow_thread_id', $new_thread->contentID()->threadID());
+                    $this->getMoar()->modify('shadow_type', 'moved');
                     $this->changeData('locked', true);
                     $this->writeToDatabase();
                 }
@@ -698,5 +701,40 @@ class Thread
         $regen->index($domain);
         $regen->index($this->domain);
         return $new_thread;
+    }
+
+    public function merge(Thread $incoming_thread, bool $keep_shadow): void
+    {
+        $cross_board = $incoming_thread->domain()->id() === $this->domain->id();
+        $moved_incoming = $incoming_thread->move($this->domain, $keep_shadow);
+        $moved_first = $moved_incoming->firstPost();
+        $moved_first->changeData('op', false);
+        $moved_first->writeToDatabase();
+        $target_thread_id = $this->content_id->threadID();
+
+        foreach ($moved_incoming->getPosts() as $incoming_post) {
+            $incoming_post->changeData('parent_thread', $target_thread_id);
+            $incoming_post->writeToDatabase();
+
+            foreach ($incoming_post->getUploads() as $incoming_upload) {
+                $incoming_upload->changeData('parent_thread', $target_thread_id);
+                $incoming_upload->writeToDatabase();
+            }
+        }
+
+        $this->updateBumpTime();
+        $this->updateUpdateTime();
+        $this->updateCounts();
+
+        if ($cross_board && $keep_shadow) {
+            $incoming_thread->changeData('shadow', true);
+            $incoming_thread->getMoar()->modify('shadow_board_id', $this->domain->id());
+            $incoming_thread->getMoar()->modify('shadow_thread_id', $this->contentID()->threadID());
+            $incoming_thread->getMoar()->modify('shadow_type', 'merged');
+            $incoming_thread->changeData('locked', true);
+            $incoming_thread->writeToDatabase();
+        } else {
+            $incoming_thread->delete(true, true);
+        }
     }
 }

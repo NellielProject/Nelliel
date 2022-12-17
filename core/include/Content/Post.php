@@ -515,14 +515,14 @@ class Post
 
     public function move(Thread $new_thread, bool $is_shadow): Post
     {
-        $new_board = $new_thread->domain()->id() !== $this->domain()->id();
+        $cross_board = $new_thread->domain()->id() !== $this->domain()->id();
 
         if ($is_shadow) {
             $this->changeData('shadow', true);
             $this->writeToDatabase();
         }
 
-        if ($new_board) {
+        if ($cross_board) {
             $new_post = new Post(new ContentID(), $new_thread->domain());
             $new_post->transferData($this->transferData());
             $new_post->storeMoar($this->content_moar);
@@ -546,7 +546,7 @@ class Post
             $upload->move($new_post, $is_shadow);
         }
 
-        if ($new_board && !$is_shadow) {
+        if ($cross_board && !$is_shadow) {
             $this->delete(true, false);
         }
 

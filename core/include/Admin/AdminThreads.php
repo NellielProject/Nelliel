@@ -267,6 +267,30 @@ class AdminThreads extends Admin
         $redirect->URL($_POST['return_url']);
     }
 
+    public function merge(ContentID $incoming_content_id): void
+    {
+        $target_board = $_POST['target_board'] ?? null;
+        $target_thread_id = intval($_POST['target_thread_id'] ?? 0);
+
+        if ($target_thread_id < 1) {
+            nel_derp(264, _gettext('No valid target thread specified.'));
+        }
+
+        $this->verifyPermissions($this->domain, 'perm_merge_threads');
+        $target_domain = Domain::getDomainFromID($target_board, $this->domain->database());
+        $this->verifyPermissions($target_domain, 'perm_merge_threads');
+        $keep_shadow = boolval($_POST['keep_shadow'] ?? false);
+
+        $target_content_id = new ContentID('cid_' . $target_thread_id . '_0_0');
+        $target_thread = new Thread($target_content_id, $target_domain);
+        $incoming_thread = new Thread($incoming_content_id, $this->domain);
+        $target_thread->merge($incoming_thread, $keep_shadow);
+
+        $redirect = new Redirect();
+        $redirect->doRedirect(true);
+        $redirect->URL($_POST['return_url']);
+    }
+
     public function spoiler(ContentID $content_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_modify_content_status');

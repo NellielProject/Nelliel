@@ -1,0 +1,29 @@
+<form id="edit-post-form" class="display-table new-post-form" accept-charset="utf-8" name="edit_post_form" action="{{ form_action }}" method="post" enctype="multipart/form-data" data-jsevents="click|change">
+	<input type="hidden" name="return_url" value="{{ return_url }}">
+	<div class="display-row">
+		<label for="board_id" class="display-cell" data-i18n="">Current board:</label>
+		<span class="display-cell">{{ current_board }}</span>
+	</div>
+	<div class="display-row">
+		<label for="board_id" class="display-cell" data-i18n="">Target board (you must have move permissions on both boards):</label>
+		<span class="display-cell">
+{{# boards_select }}
+			{{> menu/select }}
+{{/ boards_select }}
+		</span>
+	</div>
+{{# allow_shadow_message }}
+	<div class="display_row">
+		<label for="keep_shadow" class="display-cell" data-i18n="">Keep shadow post (only for cross-board merges):</label>
+		<input class="display-cell" type="checkbox" name="keep_shadow" value="1">
+	</div>
+{{/ allow_shadow_message }}
+	<div class="display_row">
+		<label for="target_thread_id" class="display-cell" data-i18n="">Target thread ID:</label>
+		<input class="display-cell" type="number" name="target_thread_id" value="" min="0">
+	</div>
+	<div class="display_row">
+		<span class="display-cell"></span>
+		<input type="submit" value="Merge" data-i18n-attributes="value">
+	</div>
+</form>
