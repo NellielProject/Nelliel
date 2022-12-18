@@ -548,6 +548,9 @@ class Post
 
         if ($cross_board && !$is_shadow) {
             $this->delete(true, false);
+        } else {
+            $cites = new Cites($this->domain()->database());
+            $cites->updateForPost($this);
         }
 
         return $new_post;

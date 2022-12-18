@@ -17,6 +17,7 @@ use Nelliel\Tables\TableThreads;
 use PDO;
 use Nelliel\Regen;
 use Nelliel\Statistics;
+use Nelliel\Cites;
 
 class Thread
 {
@@ -229,8 +230,8 @@ class Thread
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') &&
-            $this->data('bump_count') > $this->domain->setting('max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') && $this->data('bump_count') > $this->domain->setting(
+            'max_bumps')) {
             return;
         }
 
@@ -565,7 +566,7 @@ class Thread
         return !empty($this->content_data);
     }
 
-    public function getPosts(): array
+    public function getPosts(bool $ids_only = false): array
     {
         $posts = array();
         $prepared = $this->database->prepare(
@@ -573,6 +574,10 @@ class Thread
             '" WHERE "parent_thread" = ? ORDER BY "post_time" ASC, "post_time_milli" ASC, "post_number" ASC');
         $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
             PDO::FETCH_COLUMN);
+
+        if ($ids_only) {
+            return $post_list;
+        }
 
         foreach ($post_list as $id) {
             $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), intval($id)));
@@ -667,6 +672,7 @@ class Thread
             return $this;
         }
 
+        $old_post_ids = $this->getPosts(true);
         $original_posts = $this->getPosts();
         $first_post = true;
         $new_thread = null;
@@ -691,6 +697,17 @@ class Thread
                 $post->move($new_thread, false);
             }
         }
+
+        $cites = new Cites($post->domain()->database());
+        $new_post_ids = $new_thread->getPosts(true);
+        $post_id_conversions = array();
+        $post_count = count($old_post_ids);
+
+        for ($i = 0; $i < $post_count; $i ++) {
+            $post_id_conversions[$old_post_ids[$i]] = $new_post_ids[$i];
+        }
+
+        $cites->updateForMovedThread($this->domain(), $new_thread, $post_id_conversions);
 
         if (!$keep_shadow) {
             $this->delete(true, true);

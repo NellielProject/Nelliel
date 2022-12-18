@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
+use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
@@ -237,5 +238,46 @@ class Cites
         }
 
         return $this->domains[$domain];
+    }
+
+    public function updateForMovedThread(DomainBoard $old_domain, Thread $moved_thread, array $post_id_conversions): void
+    {
+        foreach ($moved_thread->getPosts() as $moved_post) {
+            $this->updateForMovedPost($old_domain, $moved_post, $post_id_conversions);
+        }
+    }
+
+    public function updateForMovedPost(DomainBoard $old_domain, Post $moved_post, array $post_id_conversions): void
+    {
+        $cite_change_callback = function ($matches) use ($post_id_conversions, $old_domain, $moved_post) {
+            if (!$this->isCite($matches[0])) {
+                return $matches[0];
+            }
+
+            // Is a cross-board cite
+            if (isset($matches[3])) {
+                // Refrences a post in the thread and should be updated
+                if (isset($post_id_conversions[$matches[5]])) {
+                    return $matches[3] . '/' . $moved_post->domain()->id() . '/' . $post_id_conversions[$matches[5]];
+                }
+
+                return $matches[0];
+            }
+
+            // Regular cite that references a post in the thread
+            if (isset($post_id_conversions[$matches[2]])) {
+                return $matches[1] . $post_id_conversions[$matches[2]];
+            }
+
+            // Regular cite referencing a post outside the thread (still on the original board)
+            $mark = utf8_substr($matches[0], 0, 1) === '>' ? '>' : '&gt;';
+            return $matches[1] . $mark . '/' . $old_domain->id() . '/' . $matches[2];
+        };
+
+        $moved_post->changeData('comment',
+            preg_replace_callback('/(>>|&gt;&gt;)(\d+)|(>>>|&gt;&gt;&gt;)\/(' . $old_domain->id() . ')\/(\d*)/u',
+                $cite_change_callback, $moved_post->data('comment')));
+        $moved_post->writeToDatabase();
+        $this->updateForPost($moved_post);
     }
 }
