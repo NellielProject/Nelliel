@@ -61,8 +61,6 @@ class TableBanAppeals extends Table
 
     public function postCreate(array $other_tables = null)
     {
-        $this->database->query('CREATE INDEX ip_address_start ON ' . $this->table_name . ' (ip_address_start)');
-        $this->database->query('CREATE INDEX hashed_ip_address ON ' . $this->table_name . ' (hashed_ip_address)');
     }
 
     public function insertDefaults()

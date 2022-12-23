@@ -367,11 +367,11 @@ class Upload
             $new_content_id = $new_post->contentID();
             $new_content_id->changeOrderID($this->content_id->orderID());
             $new_upload = new Upload($new_content_id, $new_post->domain());
+            unset($this->content_data['upload_id']);
             $new_upload->transferData($this->transferData());
             $new_upload->storeMoar($this->content_moar);
             $new_upload->changeData('parent_thread', $new_post->contentID()->threadID());
             $new_upload->changeData('post_ref', $new_post->contentID()->postID());
-            $new_upload->changeData('upload_id', null);
         } else {
             $new_upload = $this;
             $new_upload->contentID()->changePostID($new_post->contentID()->postID());
