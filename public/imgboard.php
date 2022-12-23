@@ -28,11 +28,18 @@ define('NEL_BASE_WEB_PATH', $dirname . '/'); // Base path
 unset($dirname);
 
 require_once NEL_INCLUDE_PATH . 'definitions.php'; // Hard-coded constants are defined here
-require_once NEL_INCLUDE_PATH . 'autoload.php'; // Autoloaders
-require_once NEL_INCLUDE_PATH . 'accessors.php'; // Utility functions for accessing various things
 require_once NEL_LIBRARY_PATH . 'portable-utf8/portable-utf8.php'; // UTF-8 support
+require_once NEL_INCLUDE_PATH . 'autoload.php'; // Autoloaders
+require_once NEL_INCLUDE_PATH . 'configuration.php'; // Initialize core configurations
+require_once NEL_INCLUDE_PATH . 'accessors.php'; // Utility functions for accessing various things
+
+// Initialize language handlers
+$language = new Nelliel\Language\Language();
+$language->loadLanguage(NEL_DEFAULT_LOCALE, 'nelliel', LC_MESSAGES);
+unset($language);
+
 require_once NEL_INCLUDE_PATH . 'derp.php'; // Error handler
-require_once NEL_INCLUDE_PATH . 'initializations.php'; // Most config and other initialization happens in here
+require_once NEL_INCLUDE_PATH . 'initializations.php'; // Any remaining initialization and checks happens in here
 
 // IT'S GO TIME!
 ignore_user_abort(true); // From this point on we want to handle any exits cleanly
