@@ -620,7 +620,7 @@ class Thread
         return $this->json;
     }
 
-    public function addPost(Post $post): bool
+    public function addPost(Post $post): void
     {
         if (!$this->isLoaded()) {
             $this->loadFromDatabase();
@@ -658,10 +658,10 @@ class Thread
             $post->changeData('op', false);
         }
 
+        $this->writeToDatabase();
         $post->contentID()->changeThreadID($this->content_id->threadID());
         $post->changeData('parent_thread', $this->content_id->threadID());
         $post->writeToDatabase();
-        return $this->writeToDatabase();
     }
 
     public function move(DomainBoard $domain, bool $keep_shadow): Thread

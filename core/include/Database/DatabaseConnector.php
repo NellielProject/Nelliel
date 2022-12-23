@@ -79,7 +79,7 @@ class DatabaseConnector
             $connection = new NellielPDO($this->config, $dsn, $username, $password, $options);
             return $connection;
         } catch (PDOException $exception) {
-            nel_derp(1, _gettext('Error connecting to database.'));
+            nel_derp(1, _gettext('Error connecting to database. Check config values and verify database setup.'));
         }
     }
 
