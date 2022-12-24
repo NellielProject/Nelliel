@@ -73,7 +73,7 @@ td {
 
 /* Top navigation */
 .boards-navigation {
-	text-align: center;
+	text-align: var(--boards-navigation-align, center);
 	margin: 0.1em;
 }
 
@@ -141,7 +141,7 @@ td {
 
 /* Moderator Mode */
 .modmode-header {
-	font-size: 0.95rem;
+	font-size: 0.90rem;
 }
 
 /* Tables */
@@ -170,8 +170,8 @@ td {
 }
 
 /* Ban page */
-.ban-message {
-	background: var(--news-article-background, inherit);
+.ban-page {
+	background: var(--ban-page-background, inherit);
 	margin: auto;
 	max-width: 60rem;
 	border: 2px solid;
@@ -179,7 +179,7 @@ td {
 
 .ban-paragraph {
 	text-align: left;
-	color: var(--news-paragraph-color, inherit);
+	color: var(--ban-paragraph-color, inherit);
 	margin: 1.0rem 0.5rem;
 }
 
@@ -222,7 +222,7 @@ td {
 }
 
 .external-link {
-	text-decoration: var(--external-link);
+	text-decoration: var(--external-link-text-decoration, underline);
 }
 
 .markup-spoiler {
@@ -271,15 +271,15 @@ td {
 }
 
 .post-cite {
-	text-decoration-line: underline;
+	text-decoration: var(--post-cite-text-decoration, underline);
 }
 
 .board-cite {
-	text-decoration-line: underline;
+	text-decoration: var(--board-cite-text-decoration, underline);
 }
 
 .invalid-cite {
-	text-decoration-line: line-through;
+	text-decoration: var(--invalid-cite-text-decoration, line-through);
 }
 
 /* New post form */
@@ -484,10 +484,6 @@ td {
 
 .post-number-link {
 	text-decoration: none;
-}
-
-.plaintext {
-	white-space: pre-wrap;
 }
 
 .post-comments {
