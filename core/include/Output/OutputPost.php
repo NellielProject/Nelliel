@@ -190,9 +190,6 @@ class OutputPost extends Output
                         [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
                     $this->render_data['mod_merge_thread_url'] = nel_build_router_url(
                         [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'merge']);
-                } else {
-                    $this->render_data['mod_can_move'] = false;
-                    $this->render_data['mod_can_merge'] = false;
                 }
             }
 
@@ -213,8 +210,10 @@ class OutputPost extends Output
                 $this->render_data['mod_move_post_url'] = nel_build_router_url(
                     [$this->domain->id(), 'moderation', 'modmode', $post_content_id->getIDString(), 'move']);
             } else {
-                $this->render_data['mod_can_move'] = false;
-                $this->render_data['mod_can_merge'] = false;
+                $this->render_data['mod_can_move_post'] = false;
+                $this->render_data['mod_can_move_thread'] = false;
+                $this->render_data['mod_can_merge_thread'] = false;
+                $this->render_data['mod_can_cyclic'] = false;
             }
         }
 

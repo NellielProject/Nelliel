@@ -169,9 +169,11 @@ abstract class Output
                 'perm_manage_bans') && $this->session->user()->checkPermission($this->domain, 'perm_delete_content');
             $this->render_data['mod_can_edit'] = $this->session->user()->checkPermission($this->domain,
                 'perm_edit_posts');
-            $this->render_data['mod_can_move'] = $this->session->user()->checkPermission($this->domain,
+            $this->render_data['mod_can_move_post'] = $this->session->user()->checkPermission($this->domain,
                 'perm_move_content');
-            $this->render_data['mod_can_merge'] = $this->session->user()->checkPermission($this->domain,
+            $this->render_data['mod_can_move_thread'] = $this->session->user()->checkPermission($this->domain,
+                'perm_move_content');
+            $this->render_data['mod_can_merge_thread'] = $this->session->user()->checkPermission($this->domain,
                 'perm_merge_threads');
             $this->render_data['mod_can_spoiler'] = $this->session->user()->checkPermission($this->domain,
                 'perm_modify_content_status');
