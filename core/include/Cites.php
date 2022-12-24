@@ -24,47 +24,36 @@ class Cites
 
     public function getCiteData(string $text, Domain $source_domain, ContentID $source_content_id): array
     {
-        $cite_type = $this->citeType($text);
-        $cite_data['type'] = $cite_type['type'];
+        $matches = array();
 
-        if ($cite_type['type'] === 'board-cite') {
-            $target_domain = $this->getDomainFromID($cite_type['matches'][1]);
-            $cite_data['target_board'] = $target_domain->id();
-            $cite_data['exists'] = $this->targetExists($cite_data);
-            return $cite_data;
+        if (preg_match('/^(?:>>|&gt;&gt;)([\d]+)/u', $text, $matches) === 1) {
+            $cite_data['type'] = 'post-cite';
+            $cite_data['target_board'] = $source_domain->id();
+            $cite_data['target_post'] = (int) $matches[1];
+            $cite_data['exists'] = $source_domain->exists() &&
+                $this->getThreadID($source_domain, $cite_data['target_post']) !== 0;
+        } else if (preg_match('/^(?:>>>|&gt;&gt;&gt;)\/(.+?)\/([\d]*)/u', $text, $matches) === 1) {
+            $cite_data['target_board'] = $matches[1];
+            $target_domain = Domain::getDomainFromID($cite_data['target_board'], $this->database);
+
+            if (!empty($matches[2])) {
+                $cite_data['type'] = 'crossboard-post-cite';
+                $cite_data['target_post'] = (int) $matches[2];
+                $cite_data['exists'] = $target_domain->exists() &&
+                    $this->getThreadID($target_domain, $cite_data['target_post']) !== 0;
+            } else {
+                $cite_data['type'] = 'board-cite';
+                $cite_data['target_post'] = 0;
+                $cite_data['exists'] = $target_domain->exists();
+            }
+        } else {
+            $cite_data['type'] = 'not-cite';
+            $cite_data['exists'] = false;
         }
 
         $cite_data['source_board'] = $source_domain->id();
         $cite_data['source_post'] = $source_content_id->postID();
-
-        if ($cite_type['type'] === 'post-cite') {
-            $cite_data['target_board'] = $source_domain->id();
-            $cite_data['target_post'] = (int) $cite_type['matches'][1];
-        } else if ($cite_type['type'] === 'crossboard-post-cite') {
-            $cite_data['target_board'] = $cite_type['matches'][1];
-            $cite_data['target_post'] = (int) $cite_type['matches'][2];
-        } else {
-            return array('exists' => false);
-        }
-
-        $cite_data['future'] = $cite_data['target_post'] > $cite_data['source_post'];
-        $cite_data['exists'] = $this->targetExists($cite_data);
         return $cite_data;
-    }
-
-    public function targetExists(array $cite_data): bool
-    {
-        if (!isset($cite_data['target_board'])) {
-            return false;
-        }
-
-        $target_domain = $this->getDomainFromID($cite_data['target_board']);
-
-        if ($cite_data['type'] === 'board-cite') {
-            return $target_domain->exists();
-        } else {
-            return $target_domain->exists() && $this->getThreadID($target_domain, $cite_data['target_post']) !== 0;
-        }
     }
 
     public function getForPost(Post $post)
@@ -84,7 +73,7 @@ class Cites
         return $cite_list;
     }
 
-    public function updateForPost(Post $post): void
+    public function updateCachesForPost(Post $post): void
     {
         // Update where post targets other posts (backlinks)
         $prepared = $this->database->prepare(
@@ -111,15 +100,15 @@ class Cites
 
     public function removeForPost(Post $post): void
     {
+        $this->updateCachesForPost($post);
         $prepared = $this->database->prepare(
-            'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND ("source_post" = ? OR "target_post" = ?)');
-        $this->database->executePrepared($prepared,
-            [$post->domain()->id(), $post->contentID()->postID(), $post->contentID()->postID()]);
+            'DELETE FROM "' . NEL_CITES_TABLE . '" WHERE "source_board" = ? AND ("source_post" = ?)');
+        $this->database->executePrepared($prepared, [$post->domain()->id(), $post->contentID()->postID()]);
     }
 
     private function setCacheRegenForPost(string $domain, int $post_id): void
     {
-        $source_domain = $this->getDomainFromID($domain);
+        $source_domain = Domain::getDomainFromID($domain, $this->database);
         $prepared = $this->database->prepare(
             'UPDATE "' . $source_domain->reference('posts_table') . '" SET "regen_cache" = 1 WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$post_id]);
@@ -141,15 +130,29 @@ class Cites
                     $cite_data['target_post']], PDO::FETCH_COLUMN));
     }
 
-    public function addCite(array $cite_data): void
+    public function addCitesFromPost(Post $post): void
     {
-        if ($cite_data['type'] === 'board-cite') {
+        if (nel_true_empty($post->data('comment'))) {
             return;
         }
 
-        $cite_exists = $this->citeStored($cite_data);
+        $cite_list = $this->getCitesFromText($post->data('comment'));
+        $content_id = $post->contentID();
 
-        if ($cite_exists !== false) {
+        foreach ($cite_list as $cite) {
+            $cite_data = $this->getCiteData($cite, $post->domain(), $content_id);
+
+            if ($cite_data['exists']) {
+                $this->addCite($cite_data);
+            }
+        }
+
+        $this->updateCachesForPost($post);
+    }
+
+    public function addCite(array $cite_data): void
+    {
+        if ($cite_data['type'] === 'board-cite' || $this->citeStored($cite_data)) {
             return;
         }
 
@@ -164,28 +167,6 @@ class Cites
     public function isCite(string $text): bool
     {
         return preg_match('/^(>>|&gt;&gt;)([\d]+)|(>>>|&gt;&gt;&gt;)\/(.+?)\/([\d]*)$/u', $text) === 1;
-    }
-
-    public function citeType(string $text): array
-    {
-        $return = array();
-        $matches = array();
-        $return['type'] = 'not-cite';
-
-        if (preg_match('/^(?:>>|&gt;&gt;)([\d]+)/u', $text, $matches) === 1) {
-            $return['matches'] = $matches;
-            $return['type'] = 'post-cite';
-        } else if (preg_match('/^(?:>>>|&gt;&gt;&gt;)\/(.+?)\/([\d]*)/u', $text, $matches) === 1) {
-            $return['matches'] = $matches;
-
-            if ($matches[2] !== '') {
-                $return['type'] = 'crossboard-post-cite';
-            } else {
-                $return['type'] = 'board-cite';
-            }
-        }
-
-        return $return;
     }
 
     public function generateCiteURL(array $cite_data, bool $dynamic): string
@@ -231,15 +212,6 @@ class Cites
         return $cites;
     }
 
-    private function getDomainFromID(string $domain): Domain
-    {
-        if (!isset($this->domains[$domain])) {
-            $this->domains[$domain] = new DomainBoard($domain, $this->database);
-        }
-
-        return $this->domains[$domain];
-    }
-
     public function updateForMovedThread(DomainBoard $old_domain, Thread $moved_thread, array $post_id_conversions): void
     {
         foreach ($moved_thread->getPosts() as $moved_post) {
@@ -278,6 +250,6 @@ class Cites
             preg_replace_callback('/(>>|&gt;&gt;)(\d+)|(>>>|&gt;&gt;&gt;)\/(' . $old_domain->id() . ')\/(\d*)/u',
                 $cite_change_callback, $moved_post->data('comment')));
         $moved_post->writeToDatabase();
-        $this->updateForPost($moved_post);
+        $this->updateCachesForPost($moved_post);
     }
 }

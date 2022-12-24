@@ -126,7 +126,8 @@ class NewPost
         $thread = new Thread(new ContentID(ContentID::createIDString($thread_id, 0, 0)), $this->domain);
         $thread->addPost($post);
         $post->writeToDatabase();
-        $this->addCites($post);
+        $cites = new Cites($this->database);
+        $cites->addCitesFromPost($post);
         $post->storeCache();
         $post->createDirectories();
 
@@ -280,26 +281,5 @@ class NewPost
                 }
             }
         }
-    }
-
-    private function addCites(Post $post)
-    {
-        $cites = new Cites($this->database);
-
-        if (nel_true_empty($post->data('comment'))) {
-            return;
-        }
-
-        $cite_list = $cites->getCitesFromText($post->data('comment'));
-
-        foreach ($cite_list as $cite) {
-            $cite_data = $cites->getCiteData($cite, $this->domain, $post->contentID());
-
-            if ($cite_data['exists'] || $cite_data['future']) {
-                $cites->addCite($cite_data);
-            }
-        }
-
-        $cites->updateForPost($post);
     }
 }

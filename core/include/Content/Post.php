@@ -176,7 +176,6 @@ class Post
             'DELETE FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->postID()]);
         $cites = new Cites($this->database);
-        $cites->updateForPost($this);
         $cites->removeForPost($this);
         return true;
     }
@@ -546,11 +545,13 @@ class Post
             $upload->move($new_post, $is_shadow);
         }
 
-        if ($cross_board && !$is_shadow) {
-            $this->delete(true, false);
-        } else {
+        if ($cross_board) {
+            if (!$is_shadow) {
+                $this->delete(true, false);
+            }
+
             $cites = new Cites($this->domain()->database());
-            $cites->updateForPost($this);
+            $cites->addCitesFromPost($new_post);
         }
 
         return $new_post;
