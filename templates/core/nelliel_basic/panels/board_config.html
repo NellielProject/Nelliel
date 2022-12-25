@@ -628,6 +628,36 @@
 	{{# enable_catalog }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ enable_catalog }}
+	{{# catalog_tile_width }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_tile_width }}
+	{{# catalog_tile_height }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_tile_height }}
+	{{# catalog_show_multiple_uploads }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ catalog_show_multiple_uploads }}
+	{{# catalog_first_preview_full_size }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ catalog_first_preview_full_size }}
+	{{# catalog_first_preview_own_row }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ catalog_first_preview_own_row }}
+	{{# catalog_max_preview_display_width }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_preview_display_width }}
+	{{# catalog_max_preview_display_height }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_preview_display_height }}
+	{{# catalog_max_multi_preview_display_width }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_multi_preview_display_width }}
+	{{# catalog_max_multi_preview_display_height }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_multi_preview_display_height }}
+	{{# catalog_max_uploads_row }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_uploads_row }}
 		</tbody>
 		<tbody>
 			<tr>
@@ -772,12 +802,6 @@
 	{{# max_reply_multi_display_height }}
 			{{> panels/pieces/settings/number }}
 	{{/ max_reply_multi_display_height }}
-	{{# max_catalog_display_width }}
-			{{> panels/pieces/settings/number }}
-	{{/ max_catalog_display_width }}
-	{{# max_catalog_display_height }}
-			{{> panels/pieces/settings/number }}
-	{{/ max_catalog_display_height }}
 	{{# image_spoiler_cover }}
 			{{> panels/pieces/settings/text }}
 	{{/ image_spoiler_cover }}

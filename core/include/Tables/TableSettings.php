@@ -363,6 +363,16 @@ class TableSettings extends Table
 
         // Catalog Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_catalog', '1', 'Render the catalog pages.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_tile_width', '300', 'Width of catalog tiles.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_tile_height', '300', 'Height of catalog tiles.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_show_multiple_uploads', '1', 'Render the catalog pages.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_first_preview_full_size', '1', 'First preview in a multiple upload tile will retain the size of a single upload preview.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_first_preview_own_row', '1', 'First preview in a multiple upload tile will remain by itself on the top row.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_max_preview_display_width', '150', 'Maximum display width for a single catalog preview.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_max_preview_display_height', '150', 'Maximum display height for a single catalog preview.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_max_multi_preview_display_width', '80', 'Maximum display width for multiple catalog previews.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_max_multi_preview_display_height', '80', 'Maximum display height for multiple catalog previews.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_max_uploads_row', '3', 'Maximum number of uploads to display in each row for catalog entries.', '{"type":"number"}']);
 
         // Thread Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'subject_in_title', '1', 'Use the thread subject in the page title.', '{"type":"checkbox"}']);
@@ -412,8 +422,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_op_multi_display_height', '200', 'Maximum display height for OP multiple uploads.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_reply_multi_display_width', '200', 'Maximum display width for multiple reply uploads.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_reply_multi_display_height', '200', 'Maximum display height for multiple replyuploads.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_width', '120', 'Maximum display width for uploads in catalog', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_catalog_display_height', '120', 'Maximum display height for uploads in catalog', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_spoiler_cover', 'media/core/covers/spoiler.png', 'Cover image for spoilers.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'spoiler_display_name', 'spoiler.jpg', 'Displayed file name when spoiler cover is used. Leave blank to use normal display name.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'image_deleted_file', 'media/core/placeholders/deleted_file.png', 'Placeholder image for deleted file.', '{"type":"text"}']);

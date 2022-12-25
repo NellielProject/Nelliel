@@ -1,22 +1,18 @@
-<div>
+<div class="catalog-page">
 	<h1 class="catalog-title">{{ catalog_title }}</h1>
 	{{# catalog_entries }}
-	<div class="catalog-entry">
+	<div class="catalog-tile" style="width: 100%; max-width: {{ tile_width }}px; max-height: {{ tile_height }}px;">
 		<div class="catalog-open-link">
 			<a href="{{ open_url }}">
-		{{# preview }}
-			{{# has_preview }}
-				{{# is_file }}
-			{{> thread/files/catalog_preview }}
-				{{/ is_file }}
-				{{# is_embed }}
-
-				{{/ is_embed }}
-			{{/ has_preview }}
-			{{^ has_preview }}
+		{{# upload_rows }}
+			{{# row }}
+			{{> catalog/file_preview }}
+			{{/ row }}
+			<br>
+		{{/ upload_rows }}
+		{{^ upload_rows }}
 			{{ open_text }}
-			{{/ has_preview }}
-		{{/ preview }}
+		{{/ upload_rows }}
 			</a>
 		</div>
 		<div class="catalog-thread-info">

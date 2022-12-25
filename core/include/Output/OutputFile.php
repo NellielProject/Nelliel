@@ -22,9 +22,9 @@ class OutputFile extends Output
     public function render(Upload $file, Post $post, array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $template = 'thread/multiple_content';
         $catalog = $parameters['catalog'] ?? false;
-        $multiple = $post->data('file_count') > 1;
+        $first = $parameters['first'] ?? false;
+        $multiple = $parameters['multiple'] ?? false;
         $template = ($multiple) ? 'thread/multiple_content' : 'thread/single_content';
         $this->render_data['is_file'] = true;
         $this->render_data['file_container_id'] = 'file-container-' . $file->contentID()->getIDString();
@@ -104,8 +104,12 @@ class OutputFile extends Output
         }
 
         if ($catalog) {
-            $max_width = $this->domain->setting('max_catalog_display_width');
-            $max_height = $this->domain->setting('max_catalog_display_height');
+            $first_full_size = $first && $this->domain->setting('catalog_first_preview_full_size');
+            $max_width = ($multiple && !$first_full_size) ? $this->domain->setting(
+                'catalog_max_multi_preview_display_width') : $this->domain->setting('catalog_max_preview_display_width');
+            $max_height = ($multiple && !$first_full_size) ? $this->domain->setting(
+                'catalog_max_multi_preview_display_height') : $this->domain->setting(
+                'catalog_max_preview_display_height');
         } else {
             if ($post->data('op')) {
                 $max_width = ($multiple) ? $this->domain->setting('max_op_multi_display_width') : $this->domain->setting(

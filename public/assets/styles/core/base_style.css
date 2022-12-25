@@ -184,14 +184,12 @@ td {
 }
 
 /* Catalog */
-.catalog-entry {
+.catalog-tile {
 	float: left;
 	background: var(--reply-post-background);
 	border: var(--reply-post-border);
 	margin: 3px;
 	padding: 3px;
-	width: 14rem;
-	height: 14rem;
 	overflow-x: hidden;
 }
 

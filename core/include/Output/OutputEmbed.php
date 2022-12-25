@@ -21,7 +21,8 @@ class OutputEmbed extends Output
     {
         $this->renderSetup();
         $catalog = $parameters['catalog'] ?? false;
-        $multiple = $post->data('embed_count') > 1;
+        $first = $parameters['first'] ?? false;
+        $multiple = $parameters['multiple'] ?? false;
         $this->render_data['is_embed'] = true;
         $this->render_data['embed_container_id'] = 'embed-container-' . $embed->contentID()->getIDString();
         $this->render_data['embed_content_id'] = $embed->contentID()->getIDString();
@@ -49,9 +50,12 @@ class OutputEmbed extends Output
         }
 
         if ($catalog) {
-            $this->render_data['max_preview_width'] = $this->domain->setting('max_catalog_display_width');
-            $this->render_data['max_preview_height'] = $this->domain->setting('max_catalog_display_height');
-            $multiple = false;
+            $first_full_size = $first && $this->domain->setting('catalog_first_preview_full_size');
+            $max_width = ($multiple && !$first_full_size) ? $this->domain->setting(
+                'catalog_max_multi_preview_display_width') : $this->domain->setting('catalog_max_preview_display_width');
+            $max_height = ($multiple && !$first_full_size) ? $this->domain->setting(
+                'catalog_max_multi_preview_display_height') : $this->domain->setting(
+                'catalog_max_preview_display_height');
         } else {
             if ($post->data('op')) {
                 $max_width = ($multiple) ? $this->domain->setting('max_op_multi_display_width') : $this->domain->setting(

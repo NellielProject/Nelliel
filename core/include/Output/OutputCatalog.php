@@ -21,7 +21,7 @@ class OutputCatalog extends Output
     {
         $this->renderSetup();
         $this->setupTimer();
-        $this->setBodyTemplate('catalog');
+        $this->setBodyTemplate('catalog/catalog');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
@@ -79,8 +79,9 @@ class OutputCatalog extends Output
             $thread_data['is_cyclic'] = $thread->data('cyclic');
             $thread_data['status_cyclic'] = $ui_image_set->getWebPath('ui', 'status_cyclic', true);
             $uploads = $post->getUploads();
+            $upload_count = count($uploads);
 
-            if (count($uploads) > 0) {
+            if ($upload_count > 0) {
                 $output_file_info = new OutputFile($this->domain, $this->write_mode);
                 $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
                 $thread_data['single_file'] = true;
@@ -94,16 +95,53 @@ class OutputCatalog extends Output
                     $file_data = $output_embed_info->render($upload, $post, ['catalog' => true], true);
                 }
 
-                $thread_data['preview'] = $file_data;
-                $thread_data['has_preview'] = true;
+                $upload_row = array();
+                $first = true;
+                $multiple = $upload_count > 1 && $this->domain->setting('catalog_show_multiple_uploads');
+
+                foreach ($uploads as $upload) {
+                    if ($upload->data('deleted') && !$this->domain->setting('display_deleted_placeholder')) {
+                        continue;
+                    }
+
+                    $file_data = array();
+
+                    if (nel_true_empty($upload->data('embed_url'))) {
+                        $file_data = $output_file_info->render($upload, $post,
+                            ['catalog' => true, 'first' => $first, 'multiple' => $multiple], true);
+                    } else {
+                        $file_data = $output_embed_info->render($upload, $post,
+                            ['catalog' => true, 'first' => $first, 'multiple' => $multiple], true);
+                    }
+
+                    $upload_row[] = $file_data;
+
+                    if (!$this->domain->setting('catalog_show_multiple_uploads')) {
+                        break;
+                    }
+
+                    if (($first && $this->domain->setting('catalog_first_preview_own_row')) ||
+                        count($upload_row) == $this->domain->setting('catalog_max_uploads_row')) {
+                        $thread_data['upload_rows'][]['row'] = $upload_row;
+                        $upload_row = array();
+                    }
+
+                    $first = false;
+                }
+
+                if (!empty($upload_row)) {
+                    $thread_data['upload_rows'][]['row'] = $upload_row;
+                }
             } else {
-                $thread_data['has_preview'] = false;
                 $thread_data['open_text'] = _gettext('Open thread');
             }
 
             $thread_count ++;
             $this->render_data['catalog_entries'][] = $thread_data;
         }
+
+        $this->render_data['tile_width'] = $this->domain->setting('catalog_tile_width');
+        $this->render_data['tile_height'] = $this->domain->setting('catalog_tile_height');
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);

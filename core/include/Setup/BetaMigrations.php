@@ -461,8 +461,15 @@ class BetaMigrations
                     'r9k_unoriginal_mute', 'r9k_global_mute_check', 'r9k_mute_time_range', 'r9k_mute_base_number',
                     'upload_renzoku', 'scale_upload_filesize_units', 'scale_new_post_filesize_units',
                     'display_iec_filesize_units', 'binary_filesize_conversion', 'filesize_precision',
-                    'filesize_unit_prefix', 'auto_archive_min_replies', 'mod_links_merge'];
+                    'filesize_unit_prefix', 'auto_archive_min_replies', 'mod_links_merge', 'catalog_tile_width',
+                    'catalog_tile_height', 'catalog_show_multiple_uploads', 'catalog_first_preview_full_size',
+                    'catalog_max_multi_preview_display_width', 'catalog_max_multi_preview_display_height',
+                    'catalog_max_uploads_row', 'first_preview_own_row'];
                 $this->newBoardSettings($new_board_settings);
+
+                $old_board_setting_names = ['max_catalog_display_width', 'max_catalog_display_height'];
+                $new_board_setting_names = ['catalog_max_preview_display_width', 'catalog_max_preview_display_height'];
+                $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
 

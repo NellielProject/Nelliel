@@ -79,9 +79,9 @@ class OutputPost extends Output
                 $file_data = array();
 
                 if (nel_true_empty($upload->data('embed_url'))) {
-                    $file_data = $output_file_info->render($upload, $post, [], true);
+                    $file_data = $output_file_info->render($upload, $post, ['multiple' => $post->data('file_count') > 1], true);
                 } else {
-                    $file_data = $output_embed_info->render($upload, $post, [], true);
+                    $file_data = $output_embed_info->render($upload, $post, ['multiple' => $post->data('file_count') > 1], true);
                 }
 
                 $upload_row[] = $file_data;
