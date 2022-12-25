@@ -190,11 +190,16 @@ td {
 	border: var(--reply-post-border);
 	margin: 3px;
 	padding: 3px;
-	overflow-x: hidden;
+	overflow: hidden;
+}
+
+.catalog-tile:focus {
+	overflow: auto;
 }
 
 .catalog-open-link {
 	text-align: center;
+	text-decoration: none;
 }
 
 .catalog-thread-info {

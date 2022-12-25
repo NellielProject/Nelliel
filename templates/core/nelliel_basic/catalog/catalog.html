@@ -1,19 +1,18 @@
 <div class="catalog-page">
 	<h1 class="catalog-title">{{ catalog_title }}</h1>
-	{{# catalog_entries }}
-	<div class="catalog-tile" style="width: 100%; max-width: {{ tile_width }}px; max-height: {{ tile_height }}px;">
-		<div class="catalog-open-link">
-			<a href="{{ open_url }}">
-		{{# upload_rows }}
-			{{# row }}
-			{{> catalog/file_preview }}
-			{{/ row }}
-			<br>
-		{{/ upload_rows }}
-		{{^ upload_rows }}
-			{{ open_text }}
-		{{/ upload_rows }}
-			</a>
+{{# catalog_entries }}
+	<div tabindex="0" class="catalog-tile" style="width: 100%; width: {{ tile_width }}px; height: {{ tile_height }}px;">
+		<div class="op subject text-center">
+			<a class="op subject catalog-open-link" href="{{ open_url }}">{{ subject }}</a>
+	{{# is_cyclic }}
+			<img src="{{ status_cyclic }}" width="16" height="16" alt="Cyclic icon" class="thread-status-icon">
+	{{/ is_cyclic }}
+	{{# is_sticky }}
+			<img src="{{ status_sticky }}" width="16" height="16" alt="Sticky icon" class="thread-status-icon">
+	{{/ is_sticky }}
+	{{# is_locked }}
+			<img src="{{ status_locked }}" width="16" height="16" alt="Lock icon" class="thread-status-icon">
+	{{/ is_locked }}
 		</div>
 		<div class="catalog-thread-info">
 			<span>R: </span>
@@ -22,23 +21,24 @@
 			<span>{{ total_uploads }}</span>
 			<span> / P: </span>
 			<span>{{ index_page }}</span>
-		{{# is_cyclic }}
-			<img src="{{ status_cyclic }}" width="16" height="16" alt="Cyclic icon" class="thread-status-icon">
-		{{/ is_cyclic }}
-		{{# is_sticky }}
-			<img src="{{ status_sticky }}" width="16" height="16" alt="Sticky icon" class="thread-status-icon">
-		{{/ is_sticky }}
-		{{# is_locked }}
-			<img src="{{ status_locked }}" width="16" height="16" alt="Lock icon" class="thread-status-icon">
-		{{/ is_locked }}
 		</div>
-		<div class="op-subject">{{ first_post_subject }}</div>
-		<p class="reply-post-text">
-			<span class="reply-post-comment">
+		<div class="catalog-open-link">
+			<a href="{{ open_url }}">
+	{{# upload_rows }}
+		{{# row }}
+			{{> catalog/file_preview }}
+		{{/ row }}
+			<br>
+	{{/ upload_rows }}
+	{{^ upload_rows }}
+			{{ open_text }}
+	{{/ upload_rows }}
+			</a>
+		</div>
+		<div class="reply comment-container">
 			{{> thread/pieces/comment_markup }}
-			</span>
-			<span class="mod-comment">{{ mod_comment }}</span>
-		</p>
+		</div>
 	</div>
-	{{/ catalog_entries }}
+
+{{/ catalog_entries }}
 </div>

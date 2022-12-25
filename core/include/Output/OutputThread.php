@@ -56,6 +56,7 @@ class OutputThread extends Output
             if ($this->domain->setting('prefix_board_title')) {
                 $page_title .= $this->domain->reference('title');
             }
+
             if ($this->domain->setting('subject_in_title') && !nel_true_empty($op_post->data('subject'))) {
                 $page_title .= ' - ' . $op_post->data('subject');
             } else if ($this->domain->setting('slug_in_title') && !nel_true_empty($thread->data('slug'))) {
@@ -218,7 +219,8 @@ class OutputThread extends Output
 
             if (NEL_ENABLE_JSON_API) {
                 $json_filename = $thread->contentID()->threadID() . NEL_JSON_EXT;
-                $this->file_handler->writeFile($thread->pageFilePath() . $json_filename, $thread->getJSON()->getJSON(true));
+                $this->file_handler->writeFile($thread->pageFilePath() . $json_filename,
+                    $thread->getJSON()->getJSON(true));
             }
         } else {
             echo $output;

@@ -5,7 +5,6 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Content\ContentID;
 use Nelliel\Domains\DomainBoard;
 use PDO;
 
@@ -46,8 +45,7 @@ class OutputCatalog extends Output
                 continue;
             }
 
-            $post_content_id = new ContentId('cid_' . $thread->contentID()->threadID() . '_' . $op_id . '_0');
-            $post = $post_content_id->getInstanceFromID($this->domain);
+            $post = $thread->firstPost();
             $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
 
             if ($this->session->inModmode($this->domain) && !$this->writeMode()) {
@@ -87,6 +85,13 @@ class OutputCatalog extends Output
                 $thread_data['single_file'] = true;
                 $thread_data['multi_file'] = false;
                 $thread_data['single_multiple'] = 'single';
+
+                if (!nel_true_empty($post->data('subject'))) {
+                    $thread_data['subject'] = $post->data('subject');
+                } else {
+                    $thread_data['subject'] = '#' . $post->data('post_number');
+                }
+
                 $upload = $uploads[0];
 
                 if (nel_true_empty($upload->data('embed_url'))) {
@@ -142,7 +147,6 @@ class OutputCatalog extends Output
 
         $this->render_data['tile_width'] = $this->domain->setting('catalog_tile_width');
         $this->render_data['tile_height'] = $this->domain->setting('catalog_tile_height');
-
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
