@@ -82,14 +82,17 @@ class OutputMenu extends Output
         $styles = $this->domain->frontEndData()->getAllStyles(true);
         $render_data = array();
         $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
+        $default_style = $this->domain->id() === Domain::GLOBAL ? nel_site_domain()->setting('default_style') : $this->domain->setting(
+            'default_style');
 
         foreach ($styles as $style) {
-            if ($this->domain->id() !== Domain::SITE && $this->domain->id() !== Domain::GLOBAL && !in_array($style->id(), $enabled_styles)) {
+            if ($this->domain->id() !== Domain::SITE && $this->domain->id() !== Domain::GLOBAL &&
+                !in_array($style->id(), $enabled_styles)) {
                 continue;
             }
 
             $style_data = array();
-            $style_data['stylesheet'] = ($this->domain->setting('default_style') === $style->id()) ? 'stylesheet' : 'alternate stylesheet';
+            $style_data['stylesheet'] = ($default_style === $style->id()) ? 'stylesheet' : 'alternate stylesheet';
             $style_data['style_id'] = $style->id();
             $style_data['stylesheet_url'] = $style->getMainFileWebPath();
             $style_data['style_name'] = $style->info('name');
