@@ -10,6 +10,7 @@ use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Content\ContentID;
 use PDO;
+use Nelliel\Domains\Domain;
 
 class Overboard
 {
@@ -66,6 +67,26 @@ class Overboard
         $prepared = $this->database->prepare(
             'DELETE FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "thread_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared, [$thread->contentID()->threadID(), $thread->domain()->id()]);
+    }
+
+    /**
+     * Get overboard thread list
+     */
+    public function getThreads(): array
+    {
+        $active_threads = array();
+        $query = 'SELECT * FROM "' . NEL_OVERBOARD_TABLE .
+            '" ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC';
+
+        $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+
+        foreach ($thread_list as $thread) {
+            $content_id = new ContentID(ContentID::createIDString(intval($thread['thread_id'])));
+            $thread_domain = Domain::getDomainFromID($thread['board_id'], $this->database);
+            $active_threads[] = $content_id->getInstanceFromID($thread_domain);
+        }
+
+        return $active_threads;
     }
 
     /**

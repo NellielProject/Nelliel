@@ -121,6 +121,7 @@ class OutputThread extends Output
         $this->render_data['thread_info_id'] = 'thread-header-info-' . $thread_content_id->getIDString();
         $this->render_data['thread_options_id'] = 'thread-header-options-' . $thread_content_id->getIDString();
         $this->render_data['board_id'] = $this->domain->id();
+        $this->render_data['board_safety'] = $this->domain->setting('safety_level');
         $generate_first_posts = $post_count > $this->domain->setting('first_posts_threshold');
         $generate_last_posts = $post_count > $this->domain->setting('last_posts_threshold');
         $first_posts_increments = json_decode($this->domain->setting('first_posts_increments'));
