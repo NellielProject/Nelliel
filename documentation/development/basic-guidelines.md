@@ -65,5 +65,13 @@ Nelliel returns a numeric error id along with an error message. This keeps the b
 ## Server-side vs Client-side
 As much functionality as possible should be implemented server-side. Client-side scripting should only be used for niceties or features that cannot be done fully server-side.
 
+## Core vs Plugins
+Most functionality can be put in the core code base. However anything that is:
+ - both complex to implement and very niche or opinionated
+ - subject to regular changes in implementation
+ - reliant on third-party services
+ 
+ should be considered for implementation via plugin instead of added directly to core. This is not a hard rule but is recommended to simplify future maintenance.
+
 ## AI Code 	Generation
 Current code generation AI (e.g. GitHub Copilot) raises issues with copyright and open source licenses with no practical method of vetting the original context. Until these tools become better actors or the legal concerns are reasonably settled, code from broad-sourced generators is prohibited.
