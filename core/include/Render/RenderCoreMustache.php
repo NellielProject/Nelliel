@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use Nelliel\Output\Filter;
+use phpDOMExtend\DOMEscaper;
 
 class RenderCoreMustache extends RenderCore
 {
@@ -19,8 +20,9 @@ class RenderCoreMustache extends RenderCore
         $this->domain = $domain;
         $this->output_filter = new Filter();
         $this->file_handler = nel_utilities()->fileHandler();
-        $this->escaper = new \phpDOMExtend\DOMEscaper();
-        $this->template_loaders['file'] = new FileSystemLoader($this->domain->templatePath(), ['extension' => '.html']);
+        $this->escaper = new DOMEscaper();
+        $this->template_loaders['file'] = new MultipathFileSystemLoader($this->domain->templatePath(),
+            ['extension' => '.html']);
         $this->newMustache();
     }
 
@@ -36,7 +38,6 @@ class RenderCoreMustache extends RenderCore
         $this->mustache_engine = new \Mustache_Engine($options);
         $this->mustache_engine->setLoader($this->template_loaders['file']);
         $this->mustache_engine->setPartialsLoader($this->template_loaders['file']);
-        $this->mustache_engine->setLoader($this->template_loaders['file']);
         $this->mustache_engine->addHelper('esc',
             ['html' => function ($value) {
                 return $this->escapeString($value, 'html');

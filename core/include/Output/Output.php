@@ -29,6 +29,7 @@ abstract class Output
     protected $session;
     protected $default_body_template = 'empty_body';
     protected $timer;
+    protected $templates_path;
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -41,16 +42,17 @@ abstract class Output
         $this->output_filter = new Filter();
         $this->template_substitutes = new TemplateSubstitutes();
         $this->session = new Session();
+        $this->templates_path = $this->domain->templatePath();
     }
 
-    protected function renderSetup()
+    protected function renderSetup(): void
     {
         $this->render_data = array();
         $this->render_data['page_language'] = $this->domain->locale();
         $this->uiDefines();
     }
 
-    protected function selectRenderCore(string $core_id)
+    protected function selectRenderCore(string $core_id): void
     {
         if ($core_id === 'mustache') {
             self::$render_cores['mustache'] = self::$render_cores['mustache'] ?? new RenderCoreMustache($this->domain);
@@ -76,7 +78,7 @@ abstract class Output
         };
     }
 
-    protected function setupTimer(bool $formatted = true, int $precision = 4)
+    protected function setupTimer(bool $formatted = true, int $precision = 4): void
     {
         if ($this->domain->setting('show_render_timer')) {
             $this->timer = new Timer();
@@ -92,6 +94,7 @@ abstract class Output
 
         if ($this->core_id === 'mustache') {
             $this->render_core->renderEngine()->getLoader()->updateSubstituteTemplates($substitutes);
+            $this->render_core->renderEngine()->getLoader()->setTemplatePath($this->templates_path);
 
             if ($data_only) {
                 return $render_data;
@@ -107,7 +110,7 @@ abstract class Output
         return $output;
     }
 
-    public function writeMode(bool $status = null)
+    public function writeMode(bool $status = null): bool
     {
         if (!is_null($status)) {
             $this->write_mode = $status;
@@ -116,7 +119,12 @@ abstract class Output
         return $this->write_mode;
     }
 
-    protected function setBodyTemplate(string $template)
+    protected function setTemplatesPath(string $path): void
+    {
+        $this->templates_path = $path;
+    }
+
+    protected function setBodyTemplate(string $template): void
     {
         $this->template_substitutes->add($this->default_body_template, $template);
     }
