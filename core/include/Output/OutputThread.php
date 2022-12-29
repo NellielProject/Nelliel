@@ -173,10 +173,10 @@ class OutputThread extends Output
             $post_counter ++;
         }
 
-        $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
+        $this->render_data['use_report_captcha'] = nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_report_captcha');
         $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
         $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
-        $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
+        $this->render_data['use_report_recaptcha'] = nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
 
         if (!$expand && !$collapse) {

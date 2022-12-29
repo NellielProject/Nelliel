@@ -40,14 +40,15 @@ class NewPost
         $error_data = ['board_id' => $this->domain->id()];
         $captcha = new CAPTCHA($this->domain);
 
-        if ($this->domain->setting('use_post_captcha')) {
+        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_post_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha->verify($captcha_key, $captcha_answer);
         }
 
-        if ($this->domain->setting('use_post_recaptcha')) {
-            $captcha->verifyReCAPTCHA();
+        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_post_recaptcha')) {
+            //$captcha->verifyReCAPTCHA();
+            $captcha->verify('', '');
         }
 
         if ($this->domain->reference('locked') &&

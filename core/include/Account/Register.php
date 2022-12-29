@@ -27,13 +27,13 @@ class Register
     {
         $captcha = new CAPTCHA($this->domain);
 
-        if ($this->domain->setting('use_register_captcha')) {
+        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_register_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha->verify($captcha_key, $captcha_answer);
         }
 
-        if ($this->domain->setting('use_register_recaptcha')) {
+        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_register_recaptcha')) {
             $captcha->verifyReCAPTCHA();
         }
 

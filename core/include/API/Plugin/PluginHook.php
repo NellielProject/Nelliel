@@ -42,7 +42,7 @@ class PluginHook
             return false;
         }
 
-        if (!is_callable([$function_name])) {
+        if (!is_callable($function_name)) {
             return false;
         }
 

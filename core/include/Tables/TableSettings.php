@@ -140,6 +140,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'visitor_id_lifespan', '31536000', 'How long a visitor ID will be valid (seconds). Default is 1 year.', '{"type":"number"}']);
 
         // CAPTCHA
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'enable_captchas', '1', 'Enable CAPTCHAs. All enabled CAPTCHA implementations will be used.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_native_captcha', '0', 'Use Nelliel\'s native CAPTCHA.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_width', '250', 'Width of CAPTCHA image.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_height', '80', 'Height of CAPTCHA image.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_character_count', '5', 'Number of characters in CAPTCHA.', '{"type":"number"}']);
@@ -148,9 +150,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_site_key', '', 'reCAPTCHA site key.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_sekrit_key', '', 'reCAPTCHA secret key.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_type', 'CHECKBOX', 'reCAPTCHA type.', '{"type":"select"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_captcha', '0', 'Use CAPTCHA for login.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_captcha', '0', 'Use CAPTCHAs for login.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_recaptcha', '0', 'Use reCAPTCHA for login.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_captcha', '0', 'Use CAPTCHA for registration.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_captcha', '0', 'Use CAPTCHAs for registration.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_recaptcha', '0', 'Use reCAPTCHA for registration.', '{"type":"checkbox"}']);
 
         // Overboard

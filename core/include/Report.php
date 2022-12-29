@@ -25,13 +25,13 @@ class Report
     {
         $captcha = new CAPTCHA($this->domain);
 
-        if ($this->domain->setting('use_report_captcha')) {
+        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_report_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
         }
 
-        if ($this->domain->setting('use_report_recaptcha')) {
+        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_report_recaptcha')) {
             $captcha->verifyReCAPTCHA();
         }
 

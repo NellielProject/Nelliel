@@ -190,3 +190,18 @@ Called before parsing loop markup.
 |:---:|:-------------|:-------|:---------|:---------|:----------|
 |1    |`$markup_data`|`string`|Yes       |Yes       |Data for the markups that will be used.|
 |2    |`$text`       |`string`|No        |No        |String of unmodified text.|
+
+### nel-in-before-captcha-verify
+Added: v0.9.30
+
+Called before verifying the native CAPTCHA.
+ 
+**Arguments**
+
+|Order|Argument           |Type     |Modifiable|Returnable|Description|                               
+|:---:|:------------------|:--------|:---------|:---------|:----------|
+|1    |`$failed`          |`boolean`|Yes       |Yes       |Boolean indicating if a CAPTCHA verification has failed.|
+|2    |`$domain`          |`string` |No        |No        |Instance of `Nelliel\Domains\Domain` the CAPTCHA was submitted through.|
+|3    |`$captcha_instance`|`object` |No        |No        |The active instance of `\Nelliel\AntiSpam\CAPTCHA`.|
+|4    |`$key`             |`string` |No        |No        |CAPTCHA key.|
+|5    |`$answer`          |`string` |No        |No        |CAPTCHA answer.|
