@@ -19,6 +19,8 @@ use Nelliel\Tables\TableR9KContent;
 use Nelliel\Tables\TableR9KMutes;
 use Nelliel\Tables\TableStatistics;
 use Nelliel\Tables\TableScripts;
+use Nelliel\Tables\TableOverboard;
+use Nelliel\Overboard;
 
 class BetaMigrations
 {
@@ -545,6 +547,15 @@ class BetaMigrations
                 $scripts_table->createTable();
 
                 echo ' - ' . __('Scripts table added.') . '<br>';
+
+                // Update overboard table
+                nel_database('core')->exec('DROP TABLE "nelliel_overboard"');
+                $overboard_table = new TableOverboard(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $overboard_table->createTable();
+                $overboard = new Overboard(nel_database('core'));
+                $overboard->rebuild();
+
+                echo ' - ' . __('Overboard table updated.') . '<br>';
 
                 $migration_count ++;
         }

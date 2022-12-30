@@ -32,7 +32,7 @@ class OutputOverboard extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->overboard(['uri' => $uri, 'sfw' => $sfw], true);
         $overboard = new Overboard($this->database);
-        $threads = $overboard->getThreads();
+        $threads = $overboard->getThreads($sfw ? 'sfw' : 'all');
         $thread_count = count($threads);
         $threads_done = 0;
         $gen_data = array();

@@ -148,6 +148,7 @@ class Thread
         $this->deleteFromDisk($parent_delete);
         $this->domain->updateStatistics();
         $this->archive_prune->updateThreads();
+        $this->overboard->removeThread($this);
         return true;
     }
 
