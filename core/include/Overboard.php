@@ -26,6 +26,10 @@ class Overboard
     public function addThread(Thread $thread, string $overboard_id = null): void
     {
         $add = function ($overboard_id) use ($thread) {
+            if (!$this->canInclude($thread, $overboard_id)) {
+                return;
+            }
+
             if ($this->threadPresent($thread, $overboard_id)) {
                 $this->updateThread($thread, $overboard_id);
             } else {
@@ -111,10 +115,16 @@ class Overboard
             '" WHERE "overboard_id" = ? ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC');
         $thread_list = $this->database->executePreparedFetchAll($prepared, [$overboard_id], PDO::FETCH_ASSOC);
 
-        foreach ($thread_list as $thread) {
-            $content_id = new ContentID(ContentID::createIDString(intval($thread['thread_id'])));
-            $thread_domain = Domain::getDomainFromID($thread['board_id'], $this->database);
-            $active_threads[] = $content_id->getInstanceFromID($thread_domain);
+        foreach ($thread_list as $thread_data) {
+            $content_id = new ContentID(ContentID::createIDString(intval($thread_data['thread_id'])));
+            $thread_domain = Domain::getDomainFromID($thread_data['board_id'], $this->database);
+            $thread = $content_id->getInstanceFromID($thread_domain);
+
+            if (!$this->canInclude($thread, $overboard_id)) {
+                continue;
+            }
+
+            $active_threads[] = $thread;
         }
 
         return $active_threads;
@@ -129,7 +139,7 @@ class Overboard
         $sfw_limit = nel_site_domain()->setting('sfw_overboard_threads');
 
         foreach ($this->getThreads('sfw') as $thread) {
-            if ($sfw_total > $sfw_limit || $thread->domain()->setting('safety_level') !== 'SFW') {
+            if ($sfw_total > $sfw_limit || !$this->canInclude($thread, 'sfw')) {
                 $this->removeThread($thread, 'sfw');
                 continue;
             }
@@ -141,7 +151,7 @@ class Overboard
         $all_limit = nel_site_domain()->setting('overboard_threads');
 
         foreach ($this->getThreads('all') as $thread) {
-            if ($all_total > $all_limit) {
+            if ($all_total > $all_limit || !$this->canInclude($thread, 'all')) {
                 $this->removeThread($thread, 'all');
                 continue;
             }
@@ -187,5 +197,26 @@ class Overboard
                 }
             }
         }
+    }
+
+    private function canInclude(Thread $thread, string $overboard_id): bool
+    {
+        if ($overboard_id === 'all') {
+            if ($thread->domain()->setting('safety_level') === 'NSFL' && !nel_site_domain()->setting(
+                'nsfl_on_overboard')) {
+                return false;
+            }
+        }
+        if ($overboard_id === 'sfw') {
+            if (!nel_site_domain()->setting('sfw_overboard_active')) {
+                return false;
+            }
+
+            if ($thread->domain()->setting('safety_level') !== 'SFW') {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

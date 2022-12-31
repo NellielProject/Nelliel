@@ -10,7 +10,6 @@ use Nelliel\Content\ContentID;
 use Nelliel\Content\Thread;
 use Nelliel\Database\NellielPDO;
 use PDO;
-use Nelliel\Statistics;
 
 class DomainBoard extends Domain implements NellielCacheInterface
 {

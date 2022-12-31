@@ -89,10 +89,12 @@ class Regen
 
     public function overboard(DomainSite $site_domain): void
     {
-        $output_overboard = new OutputOverboard($site_domain, true);
+        $output_overboard = new OutputOverboard(nel_global_domain(), true);
 
         if ($site_domain->setting('overboard_active')) {
             $output_overboard->render([], false);
+            $output_overboard->catalog(['overboard_id' => 'all', 'uri' => $site_domain->setting('overboard_uri')],
+                false);
         } else {
             $path = NEL_PUBLIC_PATH . $site_domain->setting('overboard_uri');
 
@@ -103,6 +105,8 @@ class Regen
 
         if ($site_domain->setting('sfw_overboard_active')) {
             $output_overboard->render(['sfw' => true], false);
+            $output_overboard->catalog(['overboard_id' => 'sfw', 'uri' => $site_domain->setting('sfw_overboard_uri')],
+                false);
         } else {
             $path = NEL_PUBLIC_PATH . $site_domain->setting('sfw_overboard_uri');
 

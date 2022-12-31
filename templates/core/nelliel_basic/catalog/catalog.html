@@ -2,6 +2,9 @@
 	<h1 class="catalog-title">{{ catalog_title }}</h1>
 {{# catalog_entries }}
 	<div tabindex="0" class="catalog-tile" style="width: 100%; width: {{ tile_width }}px; height: {{ tile_height }}px;">
+		{{# overboard }}
+			{{> thread/pieces/posted_in }}
+		{{/ overboard }}
 		<div class="op subject text-center">
 			<a class="op subject catalog-open-link" href="{{ open_url }}">{{ subject }}</a>
 	{{# is_cyclic }}

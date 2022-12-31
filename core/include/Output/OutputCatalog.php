@@ -6,7 +6,6 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\DomainBoard;
-use PDO;
 
 class OutputCatalog extends Output
 {
@@ -25,26 +24,15 @@ class OutputCatalog extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
-        $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->id() . '/';
-        $threads = $this->domain->activeThreads(true);
+        $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->reference('board_uri') . '/';
         $thread_count = 1;
 
-        foreach ($threads as $thread) {
+        foreach ($this->domain->activeThreads(true) as $thread) {
             if (is_null($thread) || !$thread->exists()) {
                 continue;
             }
 
             $thread_data = array();
-            $prepared = $this->database->prepare(
-                'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-                '" WHERE "parent_thread" = ? AND "op" = 1');
-            $op_id = $this->database->executePreparedFetch($prepared, [$thread->contentID()->threadID()],
-                PDO::FETCH_COLUMN);
-
-            if (empty($op_id)) {
-                continue;
-            }
-
             $post = $thread->firstPost();
             $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
 
@@ -53,22 +41,18 @@ class OutputCatalog extends Output
             }
 
             $thread_data['first_post_subject'] = $post->data('subject');
+            $output_post = new OutputPost($this->domain, false);
 
-            if (!nel_true_empty($post->data('comment'))) {
-                $output_post = new OutputPost($this->domain, false);
-
-                if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_markup'])) {
-                    $thread_data['comment_markup'] = $post->getCache()['comment_markup'];
-                } else {
-                    $thread_data['comment_markup'] = $output_post->parseComment($post->data('comment'), $post);
-                }
+            if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_markup'])) {
+                $thread_data['comment_markup'] = $post->getCache()['comment_markup'];
+            } else {
+                $thread_data['comment_markup'] = $output_post->parseComment($post->data('comment'), $post);
             }
 
             $thread_data['mod-comment'] = $post->data('mod_comment');
             $thread_data['reply_count'] = $thread->data('post_count') - 1;
             $thread_data['total_uploads'] = $thread->data('total_uploads');
-            $index_page = ceil($thread_count / $this->domain->setting('threads_per_page'));
-            $thread_data['index_page'] = $index_page;
+            $thread_data['index_page'] = ceil($thread_count / $thread->domain()->setting('threads_per_page'));
             $ui_image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('ui_image_set'));
             $thread_data['is_sticky'] = $thread->data('sticky');
             $thread_data['status_sticky'] = $ui_image_set->getWebPath('ui', 'status_sticky', true);

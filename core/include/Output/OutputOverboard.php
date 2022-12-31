@@ -25,14 +25,14 @@ class OutputOverboard extends Output
         $this->setBodyTemplate('index/index');
         $this->render_data['page_language'] = $this->domain->locale();
         $sfw = $parameters['sfw'] ?? false;
-        $uri = $sfw ? $this->site_domain->setting('sfw_overboard_uri') : $this->site_domain->setting('overboard_uri');
-        $allow_nsfl = $this->site_domain->setting('nsfl_on_overboard');
+        $overboard_id = $parameters['overboard_id'] ?? 'all';
+        $uri = $parameters['uri'] ?? $this->site_domain->setting('overboard_uri');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->overboard(['uri' => $uri, 'sfw' => $sfw], true);
         $overboard = new Overboard($this->database);
-        $threads = $overboard->getThreads($sfw ? 'sfw' : 'all');
+        $threads = $overboard->getThreads($overboard_id);
         $thread_count = count($threads);
         $threads_done = 0;
         $gen_data = array();
@@ -65,16 +65,6 @@ class OutputOverboard extends Output
 
             $thread = $threads[$i];
             $thread_domain = new DomainBoard($thread->domain()->id(), $this->database);
-            $board_safety_level = $thread->domain()->setting('safety_level');
-
-            if ($sfw && $board_safety_level !== 'SFW') {
-                continue;
-            }
-
-            if ($board_safety_level === 'NSFL' && !$allow_nsfl) {
-                continue;
-            }
-
             $thread_input = array();
             $output_post = new OutputPost($thread_domain, $this->write_mode);
             $thread_input = array();
@@ -118,5 +108,142 @@ class OutputOverboard extends Output
             $threads_on_page ++;
             $threads_done ++;
         }
+    }
+
+    public function catalog(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $this->setupTimer();
+        $this->setBodyTemplate('catalog/catalog');
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['header'] = $output_header->general([], true);
+        $overboard_id = $parameters['overboard_id'] ?? 'all';
+        $uri = $parameters['uri'] ?? 'overboard';
+        $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $uri . '/';
+        $this->render_data['overboard'] = true;
+        $overboard = new Overboard($this->database);
+        $thread_count = 1;
+
+        foreach ($overboard->getThreads($overboard_id) as $thread) {
+            if (is_null($thread) || !$thread->exists()) {
+                continue;
+            }
+
+            $thread_data = array();
+            $post = $thread->firstPost();
+            $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
+
+            if ($this->session->inModmode($this->domain) && !$this->writeMode()) {
+                $thread_data['open_url'] .= '&modmode=true';
+            }
+
+            $thread_data['first_post_subject'] = $post->data('subject');
+            $output_post = new OutputPost($this->domain, false);
+
+            if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_markup'])) {
+                $thread_data['comment_markup'] = $post->getCache()['comment_markup'];
+            } else {
+                $thread_data['comment_markup'] = $output_post->parseComment($post->data('comment'), $post);
+            }
+
+            $thread_data['mod-comment'] = $post->data('mod_comment');
+            $thread_data['reply_count'] = $thread->data('post_count') - 1;
+            $thread_data['total_uploads'] = $thread->data('total_uploads');
+            $thread_data['index_page'] = ceil($thread_count / $thread->domain()->setting('threads_per_page'));
+            $ui_image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('ui_image_set'));
+            $thread_data['is_sticky'] = $thread->data('sticky');
+            $thread_data['status_sticky'] = $ui_image_set->getWebPath('ui', 'status_sticky', true);
+            $thread_data['is_locked'] = $thread->data('locked');
+            $thread_data['status_locked'] = $ui_image_set->getWebPath('ui', 'status_locked', true);
+            $thread_data['is_cyclic'] = $thread->data('cyclic');
+            $thread_data['status_cyclic'] = $ui_image_set->getWebPath('ui', 'status_cyclic', true);
+            $thread_data['board_id'] = $thread->domain()->id();
+            $thread_data['board_url'] = NEL_BASE_WEB_PATH . $thread->domain()->id() . '/';
+            $thread_data['board_safety'] = $thread->domain()->setting('safety_level');
+            $uploads = $post->getUploads();
+            $upload_count = count($uploads);
+
+            if ($upload_count > 0) {
+                $output_file_info = new OutputFile($this->domain, $this->write_mode);
+                $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
+                $thread_data['single_file'] = true;
+                $thread_data['multi_file'] = false;
+                $thread_data['single_multiple'] = 'single';
+
+                if (!nel_true_empty($post->data('subject'))) {
+                    $thread_data['subject'] = $post->data('subject');
+                } else {
+                    $thread_data['subject'] = '#' . $post->data('post_number');
+                }
+
+                $upload = $uploads[0];
+
+                if (nel_true_empty($upload->data('embed_url'))) {
+                    $file_data = $output_file_info->render($upload, $post, ['catalog' => true], true);
+                } else {
+                    $file_data = $output_embed_info->render($upload, $post, ['catalog' => true], true);
+                }
+
+                $upload_row = array();
+                $first = true;
+                $multiple = $upload_count > 1 && $this->domain->setting('catalog_show_multiple_uploads');
+
+                foreach ($uploads as $upload) {
+                    if ($upload->data('deleted') && !$this->domain->setting('display_deleted_placeholder')) {
+                        continue;
+                    }
+
+                    $file_data = array();
+
+                    if (nel_true_empty($upload->data('embed_url'))) {
+                        $file_data = $output_file_info->render($upload, $post,
+                            ['catalog' => true, 'first' => $first, 'multiple' => $multiple], true);
+                    } else {
+                        $file_data = $output_embed_info->render($upload, $post,
+                            ['catalog' => true, 'first' => $first, 'multiple' => $multiple], true);
+                    }
+
+                    $upload_row[] = $file_data;
+
+                    if (!$this->domain->setting('catalog_show_multiple_uploads')) {
+                        break;
+                    }
+
+                    if (($first && $this->domain->setting('catalog_first_preview_own_row')) ||
+                        count($upload_row) == $this->domain->setting('catalog_max_uploads_row')) {
+                            $thread_data['upload_rows'][]['row'] = $upload_row;
+                            $upload_row = array();
+                        }
+
+                        $first = false;
+                }
+
+                if (!empty($upload_row)) {
+                    $thread_data['upload_rows'][]['row'] = $upload_row;
+                }
+            } else {
+                $thread_data['open_text'] = _gettext('Open thread');
+            }
+
+            $thread_count ++;
+            $this->render_data['catalog_entries'][] = $thread_data;
+        }
+
+        $this->render_data['tile_width'] = $this->domain->setting('catalog_tile_width');
+        $this->render_data['tile_height'] = $this->domain->setting('catalog_tile_height');
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
+        $this->render_data['footer'] = $output_footer->render([], true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
+
+        if ($this->write_mode) {
+            $file = NEL_PUBLIC_PATH . $uri . '/catalog.html';
+            $this->file_handler->writeFile($file, $output);
+        } else {
+            echo $output;
+        }
+
+        return $output;
     }
 }
