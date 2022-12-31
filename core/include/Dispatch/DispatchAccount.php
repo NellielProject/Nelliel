@@ -72,7 +72,6 @@ class DispatchAccount extends Dispatch
                 if ($inputs['method'] === 'GET') {
                     $private_message = new PrivateMessage($this->domain->database(), $this->session,
                         intval($inputs['message_id'] ?? 0));
-                    $private_message->canAccess();
 
                     switch ($inputs['action']) {
                         case 'view':
@@ -97,7 +96,6 @@ class DispatchAccount extends Dispatch
 
                 if ($inputs['method'] === 'POST') {
                     $private_message = new PrivateMessage($this->domain->database(), $this->session);
-                    $private_message->canAccess();
 
                     switch ($inputs['action']) {
                         case 'send':
