@@ -47,10 +47,12 @@ class OutputHeader extends Output
         $this->render_data['board_navigation'] = $output_navigation->boardLinks([], true);
         $this->render_data['use_board_header'] = true;
         $this->render_data['board_uri'] = '/' . $uri . '/';
+        $this->render_data['name'] = '/' . $uri . '/';
+
         $board_name = $this->domain->setting('name');
 
         if ($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name'))) {
-            $this->render_data['name'] = ' - ' . $board_name;
+            $this->render_data['name'] .= ' - ' . $board_name;
         }
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(

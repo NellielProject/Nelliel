@@ -60,4 +60,33 @@ class OutputNavigation extends Output
         $render_data['blank_page_url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'blank';
         return $render_data;
     }
+
+    public function boardPages(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $in_modmode = $parameters['in_modmode'] ?? false;
+        $render_data = array();
+
+        if (!$this->write_mode) {
+            $render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog'], true);
+            $render_data['index_url'] = nel_build_router_url([$this->domain->id(), 'index'], true);
+        }
+
+        if ($in_modmode) {
+            $render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads'], false, 'modmode');
+            $render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog'], true, 'modmode');
+            $render_data['index_url'] = nel_build_router_url([$this->domain->id()], true, 'modmode');
+        } else {
+            $render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads']);
+            $render_data['catalog_url'] = 'catalog.html';
+            $render_data['index_url'] = 'index.html';
+        }
+
+        $render_data['show_catalog_link'] = $this->domain->setting('enable_catalog') &&
+            $this->domain->setting('show_catalog_link');
+        $render_data['show_index_link'] = $this->domain->setting('enable_index') &&
+            $this->domain->setting('show_index_link');
+
+        return $render_data;
+    }
 }

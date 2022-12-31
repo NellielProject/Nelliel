@@ -23,8 +23,22 @@ class OutputCatalog extends Output
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->general([], true);
-        $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $this->domain->reference('board_uri') . '/';
+        $this->render_data['catalog_navigation_top'] = $this->domain->setting('catalog_nav_top');
+        $this->render_data['catalog_navigation_bottom'] = $this->domain->setting('catalog_nav_bottom');
+        $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
+
+        if ($this->render_data['in_modmode']) {
+            $manage_headers['header'] = _gettext('Moderator Mode');
+            $manage_headers['sub_header'] = _gettext('View Catalog');
+            $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
+        } else {
+            $this->render_data['header'] = $output_header->board([], true);
+        }
+
+        $this->render_data['header']['name'] = _gettext('Catalog of') . ' ' . $this->render_data['header']['name'];
+        $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
+        $this->render_data['page_navigation'] = $output_navigation->boardPages(
+            ['in_modmode' => $this->render_data['in_modmode']], $data_only);
         $thread_count = 1;
 
         foreach ($this->domain->activeThreads(true) as $thread) {

@@ -467,7 +467,8 @@ class BetaMigrations
                     'filesize_unit_prefix', 'auto_archive_min_replies', 'mod_links_merge', 'catalog_tile_width',
                     'catalog_tile_height', 'catalog_show_multiple_uploads', 'catalog_first_preview_full_size',
                     'catalog_max_multi_preview_display_width', 'catalog_max_multi_preview_display_height',
-                    'catalog_max_uploads_row', 'first_preview_own_row'];
+                    'catalog_max_uploads_row', 'first_preview_own_row', 'show_index_link', 'catalog_nav_top',
+                    'catalog_nav_bottom'];
                 $this->newBoardSettings($new_board_settings);
 
                 $old_board_setting_names = ['max_catalog_display_width', 'max_catalog_display_height'];

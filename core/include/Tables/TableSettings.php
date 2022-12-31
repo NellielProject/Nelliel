@@ -355,20 +355,23 @@ class TableSettings extends Table
 
         // Index Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_index', '1', 'Render the index pages.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_index_link', '1', 'Show link for the index in page navigation. Will not display if index is disabled.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_top', '0', 'Display navigation at top of index page.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_bottom', '1', 'Display navigation at bottom of index page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'index_thread_replies', '5', 'How many replies to a thread should be displayed on the index page.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'index_sticky_replies', '1', 'How many replies to a stickied thread should be displayed on the index page.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'threads_per_page', '10', 'Threads per page.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_index_comment_lines', '15', 'How many lines of comment to display when abbreviated.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_top', '0', 'Display index navigation at top of page.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'index_nav_bottom', '1', 'Display index navigation at bottom of page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'first_posts_increments', '[100]', 'Increments for first X posts. Leave empty to disable. Enter as JSON array of integers.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'first_posts_threshold', '200', 'Minimum posts in a thread before generating first X posts.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'last_posts_increments', '[50,100,200,500]', 'Increments for last X posts. Leave empty to disable. Enter as JSON array of integers.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'last_posts_threshold', '100', 'Minimum posts in a thread before generating last X posts.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_catalog_link', '1', 'Show link for the catalog in the index navigation. Will not display if catalog is disabled.', '{"type":"checkbox"}']);
 
         // Catalog Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_catalog', '1', 'Render the catalog pages.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_catalog_link', '1', 'Show link for the catalog in page navigation. Will not display if catalog is disabled.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_nav_top', '1', 'Display navigation at top of catalog page.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_nav_bottom', '1', 'Display navigation at bottom of catalog page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_tile_width', '250', 'Width of catalog tiles.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_tile_height', '300', 'Height of catalog tiles.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_show_multiple_uploads', '1', 'Render the catalog pages.', '{"type":"checkbox"}']);

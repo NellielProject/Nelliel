@@ -31,25 +31,17 @@ class OutputIndex extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
-        if (!$this->write_mode) {
-            $this->render_data['render'] = '-render';
-            $this->render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog'], true);
-        }
-
         if ($this->render_data['in_modmode']) {
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Index');
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads'], false, 'modmode');
-            $this->render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog'], true, 'modmode');
         } else {
             $this->render_data['header'] = $output_header->board([], true);
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads']);
-            $this->render_data['catalog_url'] = 'catalog.html';
         }
 
-        $this->render_data['show_catalog_link'] = $this->domain->setting('enable_catalog') &&
-            $this->domain->setting('show_catalog_link');
+        $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
+        $this->render_data['page_navigation'] = $output_navigation->boardPages(['in_modmode' => $this->render_data['in_modmode']], $data_only);
+
         $threads = $this->domain->activeThreads(true);
         $thread_count = count($threads);
         $threads_done = 0;
@@ -88,10 +80,12 @@ class OutputIndex extends Output
         $this->render_data['index_navigation_top'] = $this->domain->setting('index_nav_top');
         $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;
-        $this->render_data['use_report_captcha'] = nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_report_captcha');
+        $this->render_data['use_report_captcha'] = nel_site_domain()->setting('enable_captchas') &&
+            $this->domain->setting('use_report_captcha');
         $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
         $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
-        $this->render_data['use_report_recaptcha'] = nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_report_recaptcha');
+        $this->render_data['use_report_recaptcha'] = nel_site_domain()->setting('enable_captchas') &&
+            $this->domain->setting('use_report_recaptcha');
         $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
