@@ -18,7 +18,7 @@ class OutputOverboard extends Output
         parent::__construct($domain, $write_mode);
     }
 
-    public function render(array $parameters, bool $data_only)
+    public function index(array $parameters, bool $data_only)
     {
         $this->renderSetup();
         $this->setupTimer();
@@ -26,11 +26,13 @@ class OutputOverboard extends Output
         $this->render_data['page_language'] = $this->domain->locale();
         $sfw = $parameters['sfw'] ?? false;
         $overboard_id = $parameters['overboard_id'] ?? 'all';
+        $this->render_data['show_catalog_link'] = $parameters['catalog'] ?? false;
         $uri = $parameters['uri'] ?? $this->site_domain->setting('overboard_uri');
+        $overboard_name = $parameters['name'] ?? __('Overboard');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->overboard(['uri' => $uri, 'sfw' => $sfw], true);
+        $this->render_data['header'] = $output_header->overboard(['name' => $overboard_name], true);
         $overboard = new Overboard($this->database);
         $threads = $overboard->getThreads($overboard_id);
         $thread_count = count($threads);
@@ -44,10 +46,22 @@ class OutputOverboard extends Output
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
         $this->render_data['overboard'] = true;
+        $this->render_data['index_navigation_top'] = true;
+        $this->render_data['show_catalog_link'] = true;
+        $this->render_data['catalog_url'] = 'catalog.html';
+
+        if ($sfw) {
+            $index_replies = $this->site_domain->setting('sfw_overboard_thread_replies');
+            $threads_per_page = $this->site_domain->setting('sfw_overboard_threads');
+        } else {
+            $index_replies = $this->site_domain->setting('overboard_thread_replies');
+            $threads_per_page = $this->site_domain->setting('overboard_threads');
+        }
+
         $threads_on_page = 0;
 
         for ($i = 0; $i <= $thread_count; $i ++) {
-            if ($threads_on_page >= $this->site_domain->setting('overboard_threads') || $i === $thread_count) {
+            if ($threads_on_page >= $threads_per_page || $i === $thread_count) {
                 $this->render_data['index_navigation'] = false;
                 $output_footer = new OutputFooter($this->site_domain, $this->write_mode);
                 $this->render_data['footer'] = $output_footer->render([], true);
@@ -74,12 +88,6 @@ class OutputOverboard extends Output
             $thread_input['thread_id'] = $thread->data('thread_id');
             $thread_input['thread_expand_id'] = 'thread-expand-' . $thread->contentID()->getIDString();
             $thread_input['thread_corral_id'] = 'thread-corral-' . $thread->contentID()->getIDString();
-
-            if ($sfw) {
-                $index_replies = $this->site_domain->setting('sfw_overboard_thread_replies');
-            } else {
-                $index_replies = $this->site_domain->setting('overboard_thread_replies');
-            }
 
             $thread_input['omitted_count'] = $thread->data('post_count') - $index_replies - 1; // Subtract 1 to account for OP
             $gen_data['abbreviate'] = $thread_input['omitted_count'] > 0;
@@ -115,13 +123,14 @@ class OutputOverboard extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('catalog/catalog');
+        $overboard_id = $parameters['overboard_id'] ?? 'all';
+        $uri = $parameters['uri'] ?? 'overboard';
+        $overboard_name = $parameters['name'] ?? __('Overboard');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->general([], true);
-        $overboard_id = $parameters['overboard_id'] ?? 'all';
-        $uri = $parameters['uri'] ?? 'overboard';
-        $this->render_data['catalog_title'] = _gettext('Catalog of ') . '/' . $uri . '/';
+        $this->render_data['header'] = $output_header->overboard([], true);
+        $this->render_data['catalog_title'] = __('Catalog of ') . $overboard_name;
         $this->render_data['overboard'] = true;
         $overboard = new Overboard($this->database);
         $thread_count = 1;
@@ -213,11 +222,11 @@ class OutputOverboard extends Output
 
                     if (($first && $this->domain->setting('catalog_first_preview_own_row')) ||
                         count($upload_row) == $this->domain->setting('catalog_max_uploads_row')) {
-                            $thread_data['upload_rows'][]['row'] = $upload_row;
-                            $upload_row = array();
-                        }
+                        $thread_data['upload_rows'][]['row'] = $upload_row;
+                        $upload_row = array();
+                    }
 
-                        $first = false;
+                    $first = false;
                 }
 
                 if (!empty($upload_row)) {
@@ -239,7 +248,7 @@ class OutputOverboard extends Output
 
         if ($this->write_mode) {
             $file = NEL_PUBLIC_PATH . $uri . '/catalog.html';
-            $this->file_handler->writeFile($file, $output);
+            $this->file_handler->writeFile($file, $output, true);
         } else {
             echo $output;
         }

@@ -5,12 +5,11 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\API\JSON\CatalogJSON;
 use Nelliel\API\JSON\IndexJSON;
-use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
-use Nelliel\API\JSON\CatalogJSON;
 
 class OutputIndex extends Output
 {

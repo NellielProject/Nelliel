@@ -92,9 +92,13 @@ class Regen
         $output_overboard = new OutputOverboard(nel_global_domain(), true);
 
         if ($site_domain->setting('overboard_active')) {
-            $output_overboard->render([], false);
-            $output_overboard->catalog(['overboard_id' => 'all', 'uri' => $site_domain->setting('overboard_uri')],
+            $output_overboard->index(
+                ['uri' => $site_domain->setting('overboard_uri'), 'name' => $site_domain->setting('overboard_name')],
                 false);
+            $output_overboard->catalog(
+                ['overboard_id' => 'all', 'uri' => $site_domain->setting('overboard_uri'),
+                    'catalog' => $site_domain->setting('overboard_catalog'),
+                    'name' => $site_domain->setting('overboard_name')], false);
         } else {
             $path = NEL_PUBLIC_PATH . $site_domain->setting('overboard_uri');
 
@@ -104,9 +108,13 @@ class Regen
         }
 
         if ($site_domain->setting('sfw_overboard_active')) {
-            $output_overboard->render(['sfw' => true], false);
-            $output_overboard->catalog(['overboard_id' => 'sfw', 'uri' => $site_domain->setting('sfw_overboard_uri')],
-                false);
+            $output_overboard->index(
+                ['uri' => $site_domain->setting('sfw_overboard_uri'),
+                    'name' => $site_domain->setting('sfw_overboard_name'), 'sfw' => true], false);
+            $output_overboard->catalog(
+                ['overboard_id' => 'sfw', 'uri' => $site_domain->setting('sfw_overboard_uri'),
+                    'catalog' => $site_domain->setting('sfw_overboard_catalog'),
+                    'name' => $site_domain->setting('sfw_overboard_name')], false);
         } else {
             $path = NEL_PUBLIC_PATH . $site_domain->setting('sfw_overboard_uri');
 

@@ -452,7 +452,8 @@ class BetaMigrations
 
                 // Update site settings
                 $new_site_settings = ['pm_snippet_length', 'min_time_between_site_stat_updates',
-                    'min_time_between_board_stat_updates', 'enable_captchas', 'use_native_captcha'];
+                    'min_time_between_board_stat_updates', 'enable_captchas', 'use_native_captcha', 'overboard_name',
+                    'overboard_catalog', 'sfw_overboard_name', 'sfw_overboard_catalog'];
                 $this->newSiteSettings($new_site_settings);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';

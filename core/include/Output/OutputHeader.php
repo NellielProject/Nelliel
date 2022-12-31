@@ -63,8 +63,6 @@ class OutputHeader extends Output
     public function overboard(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $uri = $parameters['uri'] ?? $this->domain->reference('board_directory');
-        $this->render_data['sfw'] = $parameters['sfw'] ?? false;
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
@@ -73,17 +71,11 @@ class OutputHeader extends Output
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $this->render_data['board_navigation'] = $output_navigation->boardLinks([], true);
         $this->render_data['use_overboard_header'] = true;
-        $this->render_data['board_uri'] = '/' . $uri . '/';
-        $board_name = $this->domain->setting('name');
-
-        if ($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name'))) {
-            $this->render_data['name'] = ' - ' . $board_name;
-        }
-
+        $this->render_data['overboard_name'] = $parameters['name'] ?? null;
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
             'description') : '';
         $this->displayBanners();
-        $output = $this->output('header', $data_only, true, $this->render_data);
+        $output = $this->output('headers/overboard', $data_only, true, $this->render_data);
         return $output;
     }
 

@@ -156,15 +156,19 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_recaptcha', '0', 'Use reCAPTCHA for registration.', '{"type":"checkbox"}']);
 
         // Overboard
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'overboard_active', '0', 'Enable overboard', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'overboard_uri', 'overboard', 'Overboard URI', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'overboard_threads', '20', 'Maximum threads on overboard', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'overboard_thread_replies', '5', 'How many replies to a thread should be displayed on the overboard', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'nsfl_on_overboard', '0', 'Include NSFL content on overboard', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'sfw_overboard_active', '0', 'Enable SFW overboard', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'sfw_overboard_uri', 'sfwoverboard', 'SFW overboard URI', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_threads', '20', 'Maximum threads on SFW overboard', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_thread_replies', '5', 'How many replies to a thread should be displayed on the SFW overboard', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'overboard_active', '0', 'Enable overboard.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'overboard_uri', 'overboard', 'Overboard URI.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'overboard_name', 'Overboard', 'Name of the overboard.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'overboard_catalog', '0', 'Enable catalog view for the overboard.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'overboard_threads', '20', 'Maximum threads on the overboard.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'overboard_thread_replies', '5', 'How many replies to a thread should be displayed on the overboard.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'nsfl_on_overboard', '0', 'Include NSFL content on the overboard.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'sfw_overboard_active', '0', 'Enable SFW overboard.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'sfw_overboard_uri', 'sfwoverboard', 'SFW overboard URI.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'sfw_overboard_name', 'SFW Overboard', 'Name of the SFW overboard.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'sfw_overboard_catalog', '0', 'Enable catalog view for the SFW overboard.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_threads', '20', 'Maximum threads on the SFW overboard.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_thread_replies', '5', 'How many replies to a thread should be displayed on the SFW overboard.', '{"type":"number"}']);
 
         // Board
         // General
