@@ -13,9 +13,11 @@
 		</div>
 {{/ headers }}
 {{# post_backlinks_header }}
+	{{# has_backlinks }}
 		<div>
 			{{> thread/pieces/backlink }}
 		</div>
+	{{/ has_backlinks }}
 {{/ post_backlinks_header }}
 		<div class="{{ op_reply }} content-container">
 {{# single_file }}
@@ -29,9 +31,11 @@
 {{/ post_comments }}
 		</div>
 {{# post_backlinks_footer }}
+	{{# has_backlinks }}
 		<div>
 			{{> thread/pieces/backlink }}
 		</div>
+	{{/ has_backlinks }}
 {{/ post_backlinks_footer }}
 	</div>
 </div>
