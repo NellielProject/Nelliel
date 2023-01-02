@@ -5,7 +5,6 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use ChrisUllyott\FileSize;
 use Lamansky\Fraction\Fraction;
 use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
@@ -27,21 +26,31 @@ class OutputFile extends Output
         $multiple = $parameters['multiple'] ?? false;
         $template = ($multiple) ? 'thread/multiple_content' : 'thread/single_content';
         $this->render_data['is_file'] = true;
-        $this->render_data['file_container_id'] = 'file-container-' . $file->contentID()->getIDString();
+        $this->render_data['file_container_id'] = 'upload-container-' . $file->contentID()->getIDString();
         $this->render_data['file_content_id'] = $file->contentID()->getIDString();
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->session->inModmode($this->domain)) {
-            $this->render_data['mod_delete_upload_url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'delete']);
-            $this->render_data['mod_move_upload_url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'move']);
+            if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
+                $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'delete']);
+                $this->render_data['file_modmode_options'][] = $this->render_data['mod_links_delete'];
+            }
 
-            $spoiler_option = $file->data('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
-            $spoiler_action = $file->data('spoiler') ? 'unspoiler' : 'spoiler';
-            $this->render_data['mod_spoiler_option'] = $this->render_data[$spoiler_option];
-            $this->render_data['mod_spoiler_url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $file->contentID()->getIDString(), $spoiler_action]);
+            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
+                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'move']);
+                $this->render_data['file_modmode_options'][] = $this->render_data['mod_links_move'];
+            }
+
+            if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
+                $this->render_data['mod_links_spoiler']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'spoiler']);
+                $this->render_data['mod_links_unspoiler']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'unspoiler']);
+                $spoiler_id = $file->data('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
+                $this->render_data['file_modmode_options'][] = $this->render_data[$spoiler_id];
+            }
         }
 
         $units = $this->domain->setting('scale_upload_filesize_units') ? null : $this->domain->setting(
@@ -130,6 +139,12 @@ class OutputFile extends Output
         $has_static_preview = !nel_true_empty($file->data('static_preview_name')) && $preview_size_not_zero;
         $has_animated_preview = !nel_true_empty($file->data('animated_preview_name')) && $preview_size_not_zero;
         $preview_type = null;
+
+        $this->render_data['content_links_hide_file']['content_id'] = $file->contentID()->getIDString();
+        $this->render_data['file_options'][] = $this->render_data['content_links_hide_file'];
+        $this->render_data['content_links_show_upload_meta']['content_id'] = $file->contentID()->getIDString();
+        $this->render_data['content_links_show_upload_meta']['query_class'] = 'js-hide-file';
+        $this->render_data['file_options'][] = $this->render_data['content_links_show_upload_meta'];
 
         if ($file->data('deleted') && $this->domain->setting('display_deleted_placeholder')) {
             $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_file');
@@ -236,8 +251,8 @@ class OutputFile extends Output
             }
 
             $displayed_op = array();
-            $displayed_op['button_url'] = $content_op->data('url') . NEL_URL_BASE . $this->render_data['file_url'];
-            $displayed_op['button_text'] = $content_op->data('label');
+            $displayed_op['url'] = $content_op->data('url') . NEL_URL_BASE . $this->render_data['file_url'];
+            $displayed_op['text'] = $content_op->data('label');
             $this->render_data['content_ops'][] = $displayed_op;
         }
 

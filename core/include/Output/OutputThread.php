@@ -228,7 +228,4 @@ class OutputThread extends Output
             nel_clean_exit();
         }
     }
-
-    private function lastPosts()
-    {}
 }

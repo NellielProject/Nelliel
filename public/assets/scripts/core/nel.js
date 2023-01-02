@@ -124,14 +124,10 @@ nelliel.events.processPostClick = function(event) {
 
 		if (command === "expand-thread" || command === "collapse-thread") {
 			nelliel.ui.expandCollapseThread(event.target, command);
-		} else if (command === "expand-thread-render" || command === "collapse-thread-render") {
-			nelliel.ui.expandCollapseThread(event.target, command, true);
 		} else if (command === "cite-post") {
 			nelliel.ui.citePost(nelliel.core.contentID(event.target.getAttribute("data-content-id")));
-		} else if (command === "show-file-meta" || command === "hide-file-meta") {
-			nelliel.ui.showHideFileMeta(event.target);
-		} else if (command === "add-file-meta") {
-			addNewFileMeta(event.target, command);
+		} else if (command === "show-upload-meta" || command === "hide-upload-meta") {
+			nelliel.ui.showHideUploadMeta(event.target);
 		} else if (command === "inline-expand") {
 			nelliel.ui.inlineExpand(event.target, command);
 			event.preventDefault();
@@ -281,13 +277,6 @@ nelliel.core.unhideJSonly = function(element) {
 
 function updatePostPassword(new_password) {
 	nelliel.core.storeInLocalStorage("post_password", new_password);
-}
-
-function addNewFileMeta(element, command) {
-	var target_id = element.id.replace("add-", "form-");
-	var target_element = document.getElementById(target_id);
-	target_element.className = target_element.className.replace(/\bhidden\b/g, "");
-	element.className += " hidden";
 }
 
 function setStyle(style, update = false) {

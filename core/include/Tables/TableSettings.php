@@ -476,8 +476,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'early404_page_threshold', '3', 'Last page of the index before early 404 pruning begins. Threads beyond this page will be checked.', '{"type":"number"}']);
 
         // Moderator Links
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delimiter_left', '[', 'Delimiter on the left side of moderation links.', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delimiter_right', ']', 'Delimiter on the right side of moderation links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_left_bracket', '[', 'Bracket on the left side of moderation links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_right_bracket', ']', 'Bracket on the right side of moderation links.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_ban', 'Ban', 'Ban', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delete', 'Delete', 'Delete', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_delete_by_ip', 'Delete By IP', 'Delete By IP', '{"type":"text"}']);
@@ -496,5 +496,25 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_merge', 'Merge', 'Merge', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_spoiler', 'Spoiler', 'Spoiler', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unspoiler', 'Unspoiler', 'Unspoiler', '{"type":"text"}']);
+
+        // Content Links
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_left_bracket', '[', 'Bracket on the left side of content links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_right_bracket', ']', 'Bracket on the right side of content links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_reply', 'Reply', 'Reply', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_show_thread', 'Show Thread', 'Show Thread', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_hide_thread', 'Hide Thread', 'Hide Thread', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_show_post', 'Show Post', 'Show Post', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_hide_post', 'Hide Post', 'Hide Post', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_show_file', 'Show File', 'Show File', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_hide_file', 'Hide File', 'Hide File', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_show_embed', 'Show Embed', 'Show Embed', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_hide_embed', 'Hide Embed', 'Hide Embed', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_show_upload_meta', 'Show Meta', 'Show Meta', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_hide_upload_meta', 'Hide Meta', 'Hide Meta', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_cite_post', 'Cite', 'Cite', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_download_file', 'Download', 'Download', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_first_posts', 'First %d posts', 'First %d posts', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_last_posts', 'Last %d posts', 'Last %d posts', '{"type":"text"}']);
+
     }
 }

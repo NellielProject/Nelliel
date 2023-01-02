@@ -24,7 +24,7 @@ class OutputEmbed extends Output
         $first = $parameters['first'] ?? false;
         $multiple = $parameters['multiple'] ?? false;
         $this->render_data['is_embed'] = true;
-        $this->render_data['embed_container_id'] = 'embed-container-' . $embed->contentID()->getIDString();
+        $this->render_data['embed_container_id'] = 'upload-container-' . $embed->contentID()->getIDString();
         $this->render_data['embed_content_id'] = $embed->contentID()->getIDString();
         $this->render_data['original_url'] = $embed->data('embed_url');
         $this->render_data['display_url'] = $embed->data('embed_url');
@@ -37,16 +37,26 @@ class OutputEmbed extends Output
         }
 
         if ($this->session->inModmode($this->domain)) {
-            $this->render_data['mod_delete_upload_url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'delete']);
-            $this->render_data['mod_move_upload_url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'move']);
+            if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
+                $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'delete']);
+                $this->render_data['embed_modmode_options'][] = $this->render_data['mod_links_delete'];
+            }
 
-            $spoiler_option = $embed->data('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
-            $spoiler_action = $embed->data('spoiler') ? 'unspoiler' : 'spoiler';
-            $this->render_data['mod_spoiler_option'] = $this->render_data[$spoiler_option];
-            $this->render_data['mod_spoiler_url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $embed->contentID()->getIDString(), $spoiler_action]);
+            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
+                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'move']);
+                $this->render_data['embed_modmode_options'][] = $this->render_data['mod_links_move'];
+            }
+
+            if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
+                $this->render_data['mod_links_spoiler']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $embed->contentID()->getIDString(), 'spoiler']);
+                $this->render_data['mod_links_unspoiler']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $embed->contentID()->getIDString(), 'unspoiler']);
+                $spoiler_id = $embed->data('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
+                $this->render_data['embed_modmode_options'][] = $this->render_data[$spoiler_id];
+            }
         }
 
         if ($catalog) {
@@ -72,6 +82,9 @@ class OutputEmbed extends Output
 
         $this->render_data['max_preview_width'] = $max_width;
         $this->render_data['max_preview_height'] = $max_height;
+
+        $this->render_data['content_links_hide_embed']['content_id'] = $embed->contentID()->getIDString();
+        $this->render_data['embed_options'][] = $this->render_data['content_links_hide_embed'];
 
         if ($embed->data('deleted')) {
             $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_embed');

@@ -1,0 +1,6 @@
+{{^ command }}
+<span class="{{ query_class }} bracketed-link">{{ left_bracket }}<a href="{{ url }}">{{ text }}</a>{{ right_bracket }}</span>
+{{/ command }}
+{{# command }}
+<span class="{{ query_class }} hidden bracketed-link" data-jsonly="">{{ left_bracket }}<a href="#" data-command="{{ command }}" data-alt-command="{{ alt_command }}" data-content-id="{{ content_id }}" data-url="{{ url }}" data-alt-url="{{ alt_url }}" data-alt-visual="{{ alt_text }}">{{ text }}</a>{{ right_bracket }}</span>
+{{/ command }}

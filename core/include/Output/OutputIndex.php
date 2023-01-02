@@ -7,6 +7,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\API\JSON\CatalogJSON;
 use Nelliel\API\JSON\IndexJSON;
+use Nelliel\Content\Post;
+use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
@@ -40,7 +42,8 @@ class OutputIndex extends Output
         }
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
-        $this->render_data['page_navigation'] = $output_navigation->boardPages(['in_modmode' => $this->render_data['in_modmode']], $data_only);
+        $this->render_data['page_navigation'] = $output_navigation->boardPages(
+            ['in_modmode' => $this->render_data['in_modmode']], $data_only);
 
         $threads = $this->domain->activeThreads(true);
         $thread_count = count($threads);
@@ -103,6 +106,8 @@ class OutputIndex extends Output
         $gen_data['index_rendering'] = true;
         $threads_on_page = 0;
 
+        $this->render_data['threads'] = array();
+
         foreach ($threads as $thread) {
             if (is_null($thread) || !$thread->exists()) {
                 continue;
@@ -133,6 +138,15 @@ class OutputIndex extends Output
             $gen_data['abbreviate'] = $thread_input['omitted_count'] > 0;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
             $abbreviate_start = $thread->data('post_count') - $index_replies;
+
+            if ($this->session->inModmode($this->domain) && !$this->write_mode) {
+                $modmode_options = $this->modmodeHeaders($thread);
+                $thread_input['thread_modmode_options'] = $modmode_options['thread_modmode_options'];
+                $thread_input['post_modmode_options'] = $modmode_options['post_modmode_options'];
+            }
+
+            $options = $this->threadHeaders($thread, $thread->firstPost(), $gen_data, $thread->contentID()->threadID());
+            $thread_input['thread_options'] = $options['thread'];
             $post_counter = 1;
 
             foreach ($posts as $post) {
@@ -213,5 +227,189 @@ class OutputIndex extends Output
         }
 
         return $output;
+    }
+
+    private function modmodeHeaders(Thread $thread): array
+    {
+        $post = $thread->firstPost();
+        $options = array();
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
+            !empty($post->data('ip_address'))) {
+            $ip = $post->data('ip_address');
+        } else {
+            $ip = $post->data('hashed_ip_address');
+        }
+
+        $this->render_data['mod_ip_address'] = $ip;
+        $this->render_data['in_modmode'] = true;
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
+            $this->render_data['mod_links_lock']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'lock']);
+            $this->render_data['mod_links_unlock']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unlock']);
+            $lock_id = $thread->data('locked') ? 'mod_links_unlock' : 'mod_links_lock';
+            $options['thread_modmode_options'][] = $this->render_data[$lock_id];
+
+            $this->render_data['mod_links_sticky']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sticky']);
+            $this->render_data['mod_links_unsticky']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsticky']);
+            $sticky_id = $thread->data('sticky') ? 'mod_links_unsticky' : 'mod_links_sticky';
+            $options['thread_modmode_options'][] = $this->render_data[$sticky_id];
+
+            $this->render_data['mod_links_permasage']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sage']);
+            $this->render_data['mod_links_unpermasage']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsage']);
+            $permasage_id = $thread->data('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
+            $options['thread_modmode_options'][] = $this->render_data[$permasage_id];
+
+            $this->render_data['mod_links_cyclic']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'cyclic']);
+            $this->render_data['mod_links_non_cyclic']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'non-cyclic']);
+            $cyclic_id = $thread->data('cyclic') ? 'mod_links_non_cyclic' : 'mod_links_cyclic';
+            $options['thread_modmode_options'][] = $this->render_data[$cyclic_id];
+        }
+
+        if (!$thread->data('shadow')) {
+            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
+                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
+                $options['thread_modmode_options'][] = $this->render_data['mod_links_move'];
+            }
+
+            if ($this->session->user()->checkPermission($this->domain, 'perm_merge_threads')) {
+                $this->render_data['mod_links_merge']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'merge']);
+                $options['thread_modmode_options'][] = $this->render_data['mod_links_merge'];
+            }
+        }
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_bans')) {
+            $this->render_data['mod_links_ban']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban']);
+            $options['post_modmode_options'][] = $this->render_data['mod_links_ban'];
+        }
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
+            $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete']);
+            $options['post_modmode_options'][] = $this->render_data['mod_links_delete'];
+        }
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_delete_by_ip')) {
+            $this->render_data['mod_links_delete_by_ip']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete-by-ip']);
+            $this->render_data['post_modmode_options'][] = $this->render_data['mod_links_delete_by_ip'];
+
+            $this->render_data['mod_links_global_delete_by_ip']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'global-delete-by-ip']);
+            $options['post_modmode_options'][] = $this->render_data['mod_links_global_delete_by_ip'];
+        }
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_bans') &&
+            $this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
+            $this->render_data['mod_links_ban_and_delete']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban-delete']);
+            $options['post_modmode_options'][] = $this->render_data['mod_links_ban_and_delete'];
+        }
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_edit_posts')) {
+            $this->render_data['mod_links_edit']['url'] = nel_build_router_url(
+                [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
+            $options['post_modmode_options'][] = $this->render_data['mod_links_edit'];
+        }
+
+        if (!$thread->data('shadow')) {
+            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
+                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
+                    [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'move']);
+                $options['post_modmode_options'][] = $this->render_data['mod_links_move'];
+            }
+        }
+
+        return $options;
+    }
+
+    private function threadHeaders(Thread $thread, Post $post, array $gen_data, int $in_thread_number): array
+    {
+        $thread_headers = array();
+        $options = array();
+        $this->render_data['headers'] = array();
+        $post_content_id = $post->contentID();
+
+        $this->render_data['headers']['thread_url'] = $thread->getURL(!$this->write_mode);
+        $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
+        $thread_headers['post_content_id'] = $post_content_id->getIDString();
+        $thread_headers['index_render'] = true;
+
+        if ($gen_data['abbreviate']) {
+            if ($this->session->inModmode($this->domain)) {
+                $this->render_data['content_links_expand_thread']['url'] = $thread->getURL(!$this->write_mode,
+                    'expand&modmode');
+                $this->render_data['content_links_expand_thread']['alt_url'] = $thread->getURL(!$this->write_mode,
+                    'collapse&modmode');
+            } else {
+                $this->render_data['content_links_expand_thread']['url'] = $thread->getURL(!$this->write_mode, 'expand');
+                $this->render_data['content_links_expand_thread']['alt_url'] = $thread->getURL(!$this->write_mode,
+                    'collapse');
+            }
+
+            $this->render_data['content_links_expand_thread']['query_class'] = 'js-hide-thread';
+            $this->render_data['content_links_expand_thread']['content_id'] = $thread->contentID()->getIDString();
+            $options['thread'][] = $this->render_data['content_links_expand_thread'];
+        }
+
+        if ($this->session->inModmode($this->domain)) {
+            $this->render_data['content_links_reply']['url'] = $thread->getURL(!$this->write_mode, 'modmode');
+        } else {
+            $this->render_data['content_links_reply']['url'] = $thread->getURL(!$this->write_mode);
+        }
+
+        $this->render_data['content_links_reply']['query_class'] = 'js-hide-thread';
+        $this->render_data['content_links_reply']['content_id'] = $thread->contentID()->getIDString();
+        $options['thread'][] = $this->render_data['content_links_reply'];
+        $this->render_data['content_links_hide_thread']['content_id'] = $post->contentID()->getIDString();
+        $options['thread'][] = $this->render_data['content_links_hide_thread'];
+
+        $first_posts_increments = json_decode($this->domain->setting('first_posts_increments'));
+        $first_posts_format = $thread->pageBasename() . $this->site_domain->setting('first_posts_filename_format');
+
+        if (is_array($first_posts_increments) &&
+            $thread->data('post_count') > $this->domain->setting('first_posts_threshold')) {
+            foreach ($first_posts_increments as $increment) {
+                if ($thread->data('post_count') >= $increment) {
+                    $this->render_data['content_links_first_posts']['url'] = $this->domain->reference('page_web_path') .
+                        $thread->contentID()->threadID() . '/' . sprintf($first_posts_format, $increment) . NEL_PAGE_EXT;
+                    $this->render_data['content_links_first_posts']['text'] = sprintf(
+                        $this->render_data['content_links_first_posts']['text'], $increment);
+                    $this->render_data['content_links_first_posts']['query_class'] = 'js-hide-thread';
+                    $options['thread'][] = $this->render_data['content_links_first_posts'];
+                }
+            }
+        }
+
+        $last_posts_increments = json_decode($this->domain->setting('last_posts_increments'));
+        $last_posts_format = $thread->pageBasename() . $this->site_domain->setting('last_posts_filename_format');
+
+        if (is_array($last_posts_increments) &&
+            $thread->data('post_count') > $this->domain->setting('last_posts_threshold')) {
+            foreach ($last_posts_increments as $increment) {
+                if ($thread->data('post_count') >= $increment) {
+                    $this->render_data['content_links_last_posts']['url'] = $this->domain->reference('page_web_path') .
+                        $thread->contentID()->threadID() . '/' . sprintf($last_posts_format, $increment) . NEL_PAGE_EXT;
+                    $this->render_data['content_links_last_posts']['text'] = sprintf(
+                        $this->render_data['content_links_last_posts']['text'], $increment);
+                    $this->render_data['content_links_last_posts']['query_class'] = 'js-hide-thread';
+                    $options['thread'][] = $this->render_data['content_links_last_posts'];
+                }
+            }
+        }
+
+        $this->render_data['headers']['thread_headers'] = $thread_headers;
+        return $options;
     }
 }

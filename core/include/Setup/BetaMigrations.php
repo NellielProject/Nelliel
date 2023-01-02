@@ -433,8 +433,8 @@ class BetaMigrations
                     'allow_moving_replies', 'allow_moving_uploads', 'mod_links_spoiler', 'mod_links_unspoiler'];
                 $this->newBoardSettings($new_board_settings);
 
-                $old_board_setting_names = ['mod_links_edit_post'];
-                $new_board_setting_names = ['mod_links_edit'];
+                $old_board_setting_names = ['mod_links_edit_post', 'mod_links_delimiter_left', 'mod_links_delimiter_right'];
+                $new_board_setting_names = ['mod_links_edit', 'mod_links_left_bracket', 'mod_links_right_bracket'];
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';

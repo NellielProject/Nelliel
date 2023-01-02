@@ -74,8 +74,8 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['site', 'site_footer_text', '', 1]);
         $this->insertDefaultRow(['board', 'description', '', 1]);
         $this->insertDefaultRow(['board', 'board_content_disclaimer', '', 1]);
-        $this->insertDefaultRow(['board', 'mod_links_delimiter_left', '', 1]);
-        $this->insertDefaultRow(['board', 'mod_links_delimiter_right', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_left_bracket', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_right_bracket', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_ban', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_delete', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_delete_by_ip', '', 1]);
@@ -90,6 +90,27 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'mod_links_cyclic', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_non_cyclic', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_edit', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_move', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_merge', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_spoiler', '', 1]);
+        $this->insertDefaultRow(['board', 'mod_links_unspoiler', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_left_bracket', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_right_bracket', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_reply', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_show_thread', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_hide_thread', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_show_post', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_hide_post', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_show_file', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_hide_file', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_show_embed', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_hide_embed', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_show_upload_meta', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_hide_upload_meta', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_cite_post', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_download_file', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_first_posts', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_last_posts', '', 1]);
         $this->insertDefaultRow(['board', 'filesize_unit_prefix', '{"Bytes (B)": "B", "Kilobytes (KB)": "KB", "Kibibytes (KiB)": "KiB", "Megabytes (MB)": "MB", "Mebibytes (MiB)": "MiB", "Gigabytes (GB)": "GB", "Gibibytes (GiB)": "GiB", "Terabytes (TB)": "TB", "Tebibytes (TiB)": "TiB", "Petabytes (PB)": "PB", "Pebibytes (PiB)": "PiB", "Exabytes (EB)": "EB", "Exbibytes (EiB)": "EiB", "Zettabytes (ZB)": "ZB", "Zebibytes (ZiB)": "ZiB", "Yottabytes (YB)": "YB", "Yobibytes (YiB)": "YiB"}', 0]);
     }
 }

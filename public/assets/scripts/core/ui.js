@@ -14,6 +14,7 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
 	if (post_container == null) {
 		return;
 	}
+
 	var thread_header_options = post_container.querySelector(".thread-header-options");
 
 	if (element == null) {
@@ -21,13 +22,12 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
 	}
 
 	var post_header_options = post_container.querySelector(".post-header-options");
-	var expand_thread = thread_header_options.querySelector(".expand-thread");
-	var reply_thread = thread_header_options.querySelector(".reply-thread");
 	var thread_expand = document.getElementById("thread-expand-" + "cid_" + content_id.thread_id + "_0_0");
-
-	nelliel.ui.toggleHidden(post_header_options);
-	nelliel.ui.toggleHidden(expand_thread);
-	nelliel.ui.toggleHidden(reply_thread);
+	var hide_thread_elements = post_container.querySelectorAll(".js-hide-thread");
+	
+	for (let element of hide_thread_elements) {
+		nelliel.ui.toggleHidden(element);
+	}
 
 	if (command === "hide-thread") {
 		dataBin.hidden_threads[content_id.id_string] = Date.now();
@@ -49,8 +49,8 @@ nelliel.ui.hideShowThread = function(element, command, content_id) {
 	}
 
 	nelliel.ui.swapContentAttribute(element, "data-alt-visual");
+	nelliel.ui.switchDataCommand(element, null, null);
 	nelliel.ui.toggleHidden(thread_expand);
-	nelliel.ui.switchDataCommand(element, "hide-thread", "show-thread");
 }
 
 nelliel.ui.hideShowPost = function(element, command, content_id) {
@@ -74,6 +74,12 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
 	if (element == null) {
 		element = post_header_options.querySelector(".toggle-post");
 	}
+	
+	var hide_post_elements = post_container.querySelectorAll(".js-hide-post");
+	
+	for (let element of hide_post_elements) {
+		nelliel.ui.toggleHidden(element);
+	}
 
 	var content_container = post_container.querySelector(".content-container");
 	nelliel.ui.toggleHidden(content_container);
@@ -92,7 +98,7 @@ nelliel.ui.hideShowPost = function(element, command, content_id) {
 		nelliel.core.storeInLocalStorage(dataBin.hidden_posts_id, dataBin.hidden_posts);
 	}
 
-	nelliel.ui.switchDataCommand(element, "hide-post", "show-post");
+	nelliel.ui.switchDataCommand(element, null, null);
 	nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
@@ -105,19 +111,21 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
 		content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
 	}
 
-	var file_container = document.getElementById("file-container-" + content_id.id_string);
+	var file_container = document.getElementById("upload-container-" + content_id.id_string);
 
 	if (file_container == null) {
 		return;
 	}
 
-	var file_preview = file_container.querySelector(".file-preview");
-
 	if (element == null) {
 		element = file_container.querySelector(".toggle-file");
 	}
 
-	nelliel.ui.toggleHidden(file_preview);
+	var hide_file_elements = file_container.querySelectorAll(".js-hide-file");
+	
+	for (let element of hide_file_elements) {
+		nelliel.ui.toggleHidden(element);
+	}
 
 	if (command == "hide-file") {
 		dataBin.hidden_files[content_id.id_string] = Date.now();
@@ -130,7 +138,7 @@ nelliel.ui.hideShowFile = function(element, command, content_id) {
 	}
 
 	nelliel.core.storeInLocalStorage(dataBin.hidden_files_id, dataBin.hidden_files);
-	nelliel.ui.switchDataCommand(element, "hide-file", "show-file");
+	nelliel.ui.switchDataCommand(element, null, null);
 	nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 }
 
@@ -143,13 +151,19 @@ nelliel.ui.hideShowEmbed = function(element, command, content_id) {
 		content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
 	}
 
-	var embed_container = document.getElementById("embed-container-" + content_id.id_string);
+	var embed_container = document.getElementById("upload-container-" + content_id.id_string);
 	var embed_frame = embed_container.querySelector(".embed-frame");
 
 	if (element == null) {
 		element = embed_container.querySelector(".toggle-embed");
 	}
 
+	var hide_embed_elements = embed_container.querySelectorAll(".js-hide-embed");
+	
+	for (let element of hide_embed_elements) {
+		nelliel.ui.toggleHidden(element);
+	}
+	
 	nelliel.ui.toggleHidden(embed_frame);
 
 	if (command == "hide-embed") {
@@ -185,17 +199,17 @@ nelliel.ui.applyHideContent = function() {
 	}
 }
 
-nelliel.ui.showHideFileMeta = function(element) {
+nelliel.ui.showHideUploadMeta = function(element) {
 	if (element === null) {
 		return;
 	}
 
 	var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"))
-	var file_container = document.getElementById("file-container-" + content_id.id_string);
-	var meta_element = file_container.querySelector(".file-meta");
+	var upload_container = document.getElementById("upload-container-" + content_id.id_string);
+	var meta_element = upload_container.querySelector(".upload-meta");
 	nelliel.ui.swapContentAttribute(element, "data-alt-visual");
 	nelliel.ui.toggleHidden(meta_element);
-	nelliel.ui.switchDataCommand(element, "show-file-meta", "hide-file-meta");
+	nelliel.ui.switchDataCommand(element, null, null);
 }
 
 nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
@@ -204,34 +218,14 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 	}
 
 	var content_id = nelliel.core.contentID(element.getAttribute("data-content-id"));
-	var thread_url = element.getAttribute("data-thread-url");
+	var thread_url = element.getAttribute("data-url");
 	var target_element = document.getElementById("thread-expand-" + content_id.id_string);
 
-	if (!target_element) {
+	if (target_element === null) {
 		return;
 	}
 
-	if (dynamic) {
-		if (command === "expand-thread-render") {
-			thread_url = thread_url + "?expand";
-		}
-
-		if (command === "collapse-thread-render") {
-			thread_url = thread_url + "?collapse";
-		}
-
-		if (dataBin.is_modmode) {
-			thread_url = thread_url + encodeURIComponent("&modmode");
-		}
-
-		var command1 = "expand-thread-render";
-		var command2 = "collapse-thread-render";
-	} else {
-		var command1 = "expand-thread";
-		var command2 = "collapse-thread";
-	}
-
-	if (command === "expand-thread" || command === "expand-thread-render") {
+	if (command === "expand-thread") {
 		dataBin.collapsedThreads[content_id.id_string] = target_element.innerHTML;
 		var request = new XMLHttpRequest();
 		request.open('GET', thread_url);
@@ -247,12 +241,13 @@ nelliel.ui.expandCollapseThread = function(element, command, dynamic = false) {
 		request.send();
 	}
 
-	if (command === "collapse-thread" || command === "collapse-thread-render") {
+	if (command === "collapse-thread") {
 		target_element.innerHTML = dataBin.collapsedThreads[content_id.id_string];
 	}
 
 	nelliel.ui.swapContentAttribute(element, "data-alt-visual");
-	nelliel.ui.switchDataCommand(element, command1, command2);
+	nelliel.ui.switchDataCommand(element, null, null);
+	nelliel.ui.switchDataURL(element);
 	nelliel.ui.applyHideContent();
 }
 
@@ -459,6 +454,14 @@ nelliel.ui.switchDataCommand = function(element, option_one, option_two) {
 		return;
 	}
 
+	if (option_one === null && option_two === null) {
+		var command = element.getAttribute("data-command");
+		var alt_command = element.getAttribute("data-alt-command");
+		element.setAttribute("data-command", alt_command);
+		element.setAttribute("data-alt-command", command);
+		return;
+	}
+
 	var data_command = element.getAttribute("data-command");
 
 	if (data_command.indexOf(option_one) > -1) {
@@ -466,6 +469,22 @@ nelliel.ui.switchDataCommand = function(element, option_one, option_two) {
 	} else if (data_command.indexOf(option_two) > -1) {
 		element.setAttribute("data-command", option_one);
 	}
+}
+
+nelliel.ui.switchDataURL = function(element) {
+	if (element === null) {
+		return;
+	}
+
+	var url = element.getAttribute("data-url");
+	var alt_url = element.getAttribute("data-alt-url");
+
+	if (url === null || alt_url === null) {
+		return;
+	}
+
+	element.setAttribute("data-url", alt_url);
+	element.setAttribute("data-alt-url", url);
 }
 
 nelliel.ui.addBoundingClientRectProperties = function(bounding_rect) {

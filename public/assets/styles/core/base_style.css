@@ -727,11 +727,11 @@ td {
 	filter: var(--thread-status-icon-color, inherit);
 }
 
-.text-button {
+.bracketed-link {
 	white-space: nowrap;
 }
 
-.text-button a {
+.bracketed-link a {
 	text-decoration: none;
 }
 
@@ -751,4 +751,8 @@ td {
 
 .shadow-thread-header {
 	font-weight: bold;
+}
+
+.upload-meta {
+	text-align: left;
 }
