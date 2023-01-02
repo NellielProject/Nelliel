@@ -1,3 +1,29 @@
+<div>
+	<div>
+		<a href="#section-general" data-i18n="">General</a>
+	</div>
+	<div>
+		<a href="#section-banners" data-i18n="">Banners</a>
+	</div>
+	<div>
+		<a href="#section-filenames-and-structure" data-i18n="">Filenames and Structure</a>
+	</div>
+	<div>
+		<a href="#section-rendering" data-i18n="">Rendering</a>
+	</div>
+	<div>
+		<a href="#section-uploads" data-i18n="">Uploads</a>
+	</div>
+	<div>
+		<a href="#section-hashing-and-security" data-i18n="">Hashing and Security</a>
+	</div>
+	<div>
+		<a href="#section-captcha" data-i18n="">CAPTCHA</a>
+	</div>
+	<div>
+		<a href="#section-overboard" data-i18n="">Overboard</a>
+	</div>
+</div>
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 {{# settings_data }}
 	<table>
@@ -11,7 +37,7 @@
 		</thead>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">General</th>
+				<th id="section-general" colspan="3" data-i18n="">General</th>
 			</tr>
 	{{# name }}
 			{{> panels/pieces/settings/text }}
@@ -109,7 +135,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Banners</th>
+				<th id="section-banners" colspan="3" data-i18n="">Banners</th>
 			</tr>
 	{{# show_banners }}
 			{{> panels/pieces/settings/checkbox }}
@@ -123,7 +149,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Filenames and Structure</th>
+				<th id="section-filenames-and-structure" colspan="3" data-i18n="">Filenames and Structure</th>
 			</tr>
 	{{# index_filename_format }}
 			{{> panels/pieces/settings/text }}
@@ -146,7 +172,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Rendering</th>
+				<th id="section-rendering" colspan="3" data-i18n="">Rendering</th>
 			</tr>
 	{{# base_image_set }}
 			{{> panels/pieces/settings/select }}
@@ -181,7 +207,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Uploads</th>
+				<th id="section-uploads" colspan="3" data-i18n="">Uploads</th>
 			</tr>
 	{{# graphics_handler }}
 			{{> panels/pieces/settings/select }}
@@ -201,7 +227,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Hashing and Security</th>
+				<th id="section-hashing-and-security" colspan="3" data-i18n="">Hashing and Security</th>
 			</tr>
 	{{# post_password_algorithm }}
 			{{> panels/pieces/settings/text }}
@@ -230,7 +256,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">CAPTCHA</th>
+				<th id="section-captcha" colspan="3" data-i18n="">CAPTCHA</th>
 			</tr>
 	{{# enable_captchas }}
 			{{> panels/pieces/settings/checkbox }}
@@ -277,7 +303,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Overboard</th>
+				<th id="section-overboard" colspan="3" data-i18n="">Overboard</th>
 			</tr>
 	{{# overboard_active }}
 			{{> panels/pieces/settings/checkbox }}
