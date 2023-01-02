@@ -37,8 +37,10 @@ class OutputIndex extends Output
             $manage_headers['header'] = _gettext('Moderator Mode');
             $manage_headers['sub_header'] = _gettext('View Index');
             $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads'], false, 'modmode');
         } else {
             $this->render_data['header'] = $output_header->board([], true);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads']);
         }
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);

@@ -196,7 +196,7 @@ class NewPost
         $regen->index($this->domain);
 
         if ($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active')) {
-            $regen->overboard(nel_global_domain());
+            $regen->overboard($site_domain);
         }
 
         return $thread->contentID()->threadID();
