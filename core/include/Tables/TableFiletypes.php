@@ -27,14 +27,14 @@ class TableFiletypes extends Table
             'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'format' => ['row_check' => true, 'auto_inc' => false],
-            'extensions' => ['row_check' => false, 'auto_inc' => false],
-            'category' => ['row_check' => true, 'auto_inc' => false],
-            'mimetypes' => ['row_check' => false, 'auto_inc' => false],
-            'magic_regex' => ['row_check' => false, 'auto_inc' => false],
-            'label' => ['row_check' => false, 'auto_inc' => false],
-            'enabled' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'format' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'extensions' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'category' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'mimetypes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'magic_regex' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'label' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

@@ -31,18 +31,18 @@ class TableLogs extends Table
             'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'log_id' => ['row_check' => false, 'auto_inc' => true],
-            'level' => ['row_check' => false, 'auto_inc' => false],
-            'event' => ['row_check' => false, 'auto_inc' => false],
-            'message' => ['row_check' => false, 'auto_inc' => false],
-            'message_values' => ['row_check' => false, 'auto_inc' => false],
-            'time' => ['row_check' => false, 'auto_inc' => false],
-            'domain_id' => ['row_check' => false, 'auto_inc' => false],
-            'username' => ['row_check' => false, 'auto_inc' => false],
-            'ip_address' => ['row_check' => false, 'auto_inc' => false],
-            'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false],
-            'visitor_id' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'log_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'level' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'event' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'message' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'message_values' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'domain_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

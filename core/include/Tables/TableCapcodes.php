@@ -24,11 +24,11 @@ class TableCapcodes extends Table
             'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'capcode_id' => ['row_check' => false, 'auto_inc' => true],
-            'capcode' => ['row_check' => true, 'auto_inc' => false],
-            'output' => ['row_check' => false, 'auto_inc' => false],
-            'enabled' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'capcode_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'capcode' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'output' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

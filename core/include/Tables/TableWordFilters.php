@@ -26,13 +26,13 @@ class TableWordFilters extends Table
             'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'filter_id' => ['row_check' => false, 'auto_inc' => true],
-            'board_id' => ['row_check' => false, 'auto_inc' => false],
-            'text_match' => ['row_check' => false, 'auto_inc' => false],
-            'replacement' => ['row_check' => false, 'auto_inc' => false],
-            'is_regex' => ['row_check' => false, 'auto_inc' => false],
-            'enabled' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'filter_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'text_match' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'replacement' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'is_regex' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

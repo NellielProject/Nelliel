@@ -23,11 +23,11 @@ class TableCache extends Table
             'regen' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
-            'domain_id' => ['row_check' => true, 'auto_inc' => false],
-            'cache_key' => ['row_check' => true, 'auto_inc' => false],
-            'cache_data' => ['row_check' => false, 'auto_inc' => false],
-            'regen' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'cache_key' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'cache_data' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'regen' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

@@ -26,13 +26,13 @@ class TableUsers extends Table
             'last_login' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'username' => ['row_check' => true, 'auto_inc' => false],
-            'display_name' => ['row_check' => false, 'auto_inc' => false],
-            'password' => ['row_check' => false, 'auto_inc' => false],
-            'active' => ['row_check' => false, 'auto_inc' => false],
-            'owner' => ['row_check' => false, 'auto_inc' => false],
-            'last_login' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'username' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'display_name' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'password' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'active' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'owner' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'last_login' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

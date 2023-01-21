@@ -24,11 +24,11 @@ class TableSettingOptions extends Table
             'raw_output' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'setting_category' => ['row_check' => true, 'auto_inc' => false],
-            'setting_name' => ['row_check' => true, 'auto_inc' => false],
-            'menu_data' => ['row_check' => false, 'auto_inc' => false],
-            'raw_output' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'setting_category' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'setting_name' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'menu_data' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
+            'raw_output' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

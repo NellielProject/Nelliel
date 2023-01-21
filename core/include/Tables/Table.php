@@ -141,7 +141,7 @@ abstract class Table
         }
 
         $prepared = $sql_helpers->buildPreparedInsert($this->table_name, $insert_columns);
-        $sql_helpers->bindToPrepared($prepared, $insert_columns, $insert_values, $insert_pdo_types);
+        $sql_helpers->bindToPrepared($prepared, array_keys($insert_columns), $insert_values, $insert_pdo_types);
         $this->database->executePrepared($prepared);
     }
 

@@ -22,9 +22,9 @@ class TableUserRoles extends Table
             'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'username' => ['row_check' => true, 'auto_inc' => false],
-            'role_id' => ['row_check' => true, 'auto_inc' => false],
-            'domain_id' => ['row_check' => true, 'auto_inc' => false]];
+            'username' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'role_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

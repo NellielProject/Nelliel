@@ -27,14 +27,14 @@ class TableSettings extends Table
             'input_attributes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'setting_category' => ['row_check' => true, 'auto_inc' => false],
-            'setting_owner' => ['row_check' => false, 'auto_inc' => false],
-            'data_type' => ['row_check' => false, 'auto_inc' => false],
-            'setting_name' => ['row_check' => true, 'auto_inc' => false],
-            'default_value' => ['row_check' => false, 'auto_inc' => false],
-            'setting_description' => ['row_check' => false, 'auto_inc' => false],
-            'input_attributes' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'setting_category' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'setting_owner' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'data_type' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'setting_name' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'default_value' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
+            'setting_description' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
+            'input_attributes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

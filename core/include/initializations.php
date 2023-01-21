@@ -5,6 +5,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Setup\Setup;
 use Nelliel\Setup\Upgrade;
+use Nelliel\Tables\TableSettings;
 
 Mustache_Autoloader::register();
 

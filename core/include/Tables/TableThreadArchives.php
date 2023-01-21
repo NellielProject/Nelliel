@@ -24,11 +24,11 @@ class TableThreadArchives extends Table
             'permanent' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
-            'thread_id' => ['row_check' => true, 'auto_inc' => false],
-            'thread_data' => ['row_check' => false, 'auto_inc' => false],
-            'time_added' => ['row_check' => false, 'auto_inc' => false],
-            'permanent' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'thread_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'thread_data' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'time_added' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'permanent' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

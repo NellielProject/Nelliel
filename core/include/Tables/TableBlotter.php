@@ -23,10 +23,10 @@ class TableBlotter extends Table
             'text' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'record_id' => ['row_check' => true, 'auto_inc' => true],
-            'time' => ['row_check' => false, 'auto_inc' => false],
-            'text' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'record_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
+            'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'text' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

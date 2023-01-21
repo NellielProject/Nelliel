@@ -23,10 +23,10 @@ class TableBoardConfigs extends Table
             'setting_value' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'edit_lock' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
-            'board_id' => ['row_check' => true, 'auto_inc' => false],
-            'setting_name' => ['row_check' => true, 'auto_inc' => false],
-            'setting_value' => ['row_check' => false, 'auto_inc' => false],
-            'edit_lock' => ['row_check' => false, 'auto_inc' => false]];
+            'board_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'setting_name' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'setting_value' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'edit_lock' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

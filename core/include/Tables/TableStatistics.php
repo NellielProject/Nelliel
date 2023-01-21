@@ -23,11 +23,11 @@ class TableStatistics extends Table
             'last_updated' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
-            'domain_id' => ['row_check' => true, 'auto_inc' => false],
-            'statistic' => ['row_check' => true, 'auto_inc' => false],
-            'value' => ['row_check' => false, 'auto_inc' => false],
-            'last_updated' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'statistic' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'value' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'last_updated' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

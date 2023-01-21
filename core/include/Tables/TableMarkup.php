@@ -27,14 +27,14 @@ class TableMarkup extends Table
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'markup_id' => ['row_check' => true, 'auto_inc' => true],
-            'label' => ['row_check' => false, 'auto_inc' => false],
-            'type' => ['row_check' => false, 'auto_inc' => false],
-            'match' => ['row_check' => false, 'auto_inc' => false],
-            'replace' => ['row_check' => false, 'auto_inc' => false],
-            'enabled' => ['row_check' => false, 'auto_inc' => false],
-            'notes' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'markup_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
+            'label' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'type' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'match' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'replace' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

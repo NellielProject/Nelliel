@@ -26,13 +26,13 @@ class TableNews extends Table
             'text' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'article_id' => ['row_check' => false, 'auto_inc' => true],
-            'username' => ['row_check' => false, 'auto_inc' => false],
-            'name' => ['row_check' => false, 'auto_inc' => false],
-            'time' => ['row_check' => false, 'auto_inc' => false],
-            'headline' => ['row_check' => false, 'auto_inc' => false],
-            'text' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'article_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'name' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'headline' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'text' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

@@ -26,13 +26,13 @@ class TableBanAppeals extends Table
             'pending' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
             'denied' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
-            'appeal_id' => ['row_check' => true, 'auto_inc' => true],
-            'ban_id' => ['row_check' => false, 'auto_inc' => false],
-            'time' => ['row_check' => false, 'auto_inc' => false],
-            'appeal' => ['row_check' => false, 'auto_inc' => false],
-            'response' => ['row_check' => false, 'auto_inc' => false],
-            'pending' => ['row_check' => false, 'auto_inc' => false],
-            'denied' => ['row_check' => false, 'auto_inc' => false]];
+            'appeal_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
+            'ban_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'appeal' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'response' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'pending' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'denied' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

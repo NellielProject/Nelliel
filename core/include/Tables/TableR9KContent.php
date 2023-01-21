@@ -23,11 +23,11 @@ class TableR9KContent extends Table
             'post_time' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
-            'entry' => ['row_check' => true, 'auto_inc' => false],
-            'board_id' => ['row_check' => false, 'auto_inc' => false],
-            'content_hash' => ['row_check' => false, 'auto_inc' => false],
-            'post_time' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'entry' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'content_hash' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'post_time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

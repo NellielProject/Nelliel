@@ -25,12 +25,12 @@ class TableNoticeboard extends Table
             'message' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_types = [
-            'notice_id' => ['row_check' => false, 'auto_inc' => true],
-            'username' => ['row_check' => false, 'auto_inc' => false],
-            'time' => ['row_check' => false, 'auto_inc' => false],
-            'subject' => ['row_check' => false, 'auto_inc' => false],
-            'message' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'notice_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'subject' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'message' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

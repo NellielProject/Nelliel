@@ -24,11 +24,11 @@ class TablePlugins extends Table
             'parsed_ini' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
-            'plugin_id' => ['row_check' => true, 'auto_inc' => false],
-            'directory' => ['row_check' => false, 'auto_inc' => false],
-            'initializer' => ['row_check' => false, 'auto_inc' => false],
-            'parsed_ini' => ['row_check' => false, 'auto_inc' => false],
-            'enabled' => ['row_check' => false, 'auto_inc' => false]];
+            'plugin_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'directory' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'initializer' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'parsed_ini' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 
