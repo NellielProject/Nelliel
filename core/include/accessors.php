@@ -4,10 +4,10 @@ declare(strict_types = 1);
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Monolog\Logger;
-use Nelliel\Database\DatabaseConnector;
-use Nelliel\Database\NellielPDO;
 use Nelliel\API\Plugin\PluginAPI;
 use Nelliel\Account\Session;
+use Nelliel\Database\DatabaseConnector;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\DomainGlobal;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Logging\NellielDatabaseHandler;
@@ -16,14 +16,14 @@ use Nelliel\Utility\Utilities;
 
 function nel_database(string $database_key): NellielPDO
 {
-    static $databases = array();
+    static $database_connections = array();
 
-    if (!array_key_exists($database_key, $databases)) {
-        $new_database = new DatabaseConnector($database_key);
-        $databases[$database_key] = $new_database->connection();
+    if (!array_key_exists($database_key, $database_connections)) {
+        $new_connector = new DatabaseConnector();
+        $database_connections[$database_key] = $new_connector->getConnection($database_key);
     }
 
-    return $databases[$database_key];
+    return $database_connections[$database_key];
 }
 
 function nel_plugins(): PluginAPI

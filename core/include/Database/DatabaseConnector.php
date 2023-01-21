@@ -10,118 +10,115 @@ use PDOException;
 
 class DatabaseConnector
 {
-    protected $database_key;
-    protected $config = array();
-    protected $options = array();
-    protected $connection;
 
-    function __construct(string $database_key)
+    function __construct()
+    {}
+
+    public function getConnection(string $database_key): NellielPDO
     {
-        $this->database_key = $database_key;
-        $this->setValues();
+        $config = $this->getConfigValues($database_key);
 
-        switch ($this->config['sqltype']) {
+        switch ($config['sqltype']) {
             case 'MYSQL':
-                $this->connection = $this->mysql();
+                $connection = $this->mysql($config);
                 break;
 
             case 'MARIADB':
-                $this->connection = $this->mariadb();
+                $connection = $this->mariadb($config);
                 break;
 
             case 'POSTGRESQL':
-                $this->connection = $this->postgresql();
+                $connection = $this->postgresql($config);
                 break;
 
             case 'SQLITE':
-                $this->connection = $this->sqlite();
+                $connection = $this->sqlite($config);
                 break;
 
             default:
                 nel_derp(2, _gettext('Invalid database type given in config.'));
         }
 
-        $this->connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
-        $this->connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+        $connection->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);
+        $connection->setAttribute(PDO::ATTR_STRINGIFY_FETCHES, true);
+        $connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        $connection->setAttribute(PDO::ATTR_TIMEOUT, $config['timeout']);
+        $connection->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+        return $connection;
     }
 
-    public function connection(): NellielPDO
+    protected function getConfigValues(string $database_key): array
     {
-        return $this->connection;
+        $db_config = NEL_DATABASES[$database_key] ?? array();
+        $config['sqltype'] = $db_config['sqltype'] ?? '';
+        $config['timeout'] = $db_config['timeout'] ?? 30;
+        $type = utf8_strtolower($config['sqltype']);
+        $config['database'] = $db_config[$type]['database'] ?? '';
+        $config['schema'] = $db_config[$type]['schema'] ?? '';
+        $config['host'] = $db_config[$type]['host'] ?? '';
+        $config['port'] = $db_config[$type]['port'] ?? '';
+        $config['user'] = $db_config[$type]['user'] ?? '';
+        $config['password'] = $db_config[$type]['password'] ?? '';
+        $config['encoding'] = $db_config[$type]['encoding'] ?? '';
+        $config['file_name'] = $db_config[$type]['file_name'] ?? '';
+        $config['path'] = $db_config[$type]['path'] ?? '';
+        return $config;
     }
 
-    protected function setValues(): void
-    {
-        $db_config = NEL_DATABASES[$this->database_key] ?? array();
-        $this->options[PDO::ATTR_DEFAULT_FETCH_MODE] = PDO::FETCH_ASSOC;
-        $this->options[PDO::ATTR_EMULATE_PREPARES] = false;
-        $this->options[PDO::ATTR_ERRMODE] = PDO::ERRMODE_EXCEPTION;
-        $this->options[PDO::ATTR_TIMEOUT] = $db_config['timeout'];
-
-        $this->config['sqltype'] = $db_config['sqltype'] ?? '';
-        $type = utf8_strtolower($this->config['sqltype']);
-        $this->config['database'] = $db_config[$type]['database'] ?? '';
-        $this->config['schema'] = $db_config[$type]['schema'] ?? '';
-        $this->config['host'] = $db_config[$type]['host'] ?? '';
-        $this->config['port'] = $db_config[$type]['port'] ?? '';
-        $this->config['user'] = $db_config[$type]['user'] ?? '';
-        $this->config['password'] = $db_config[$type]['password'] ?? '';
-        $this->config['encoding'] = $db_config[$type]['encoding'] ?? '';
-        $this->config['file_name'] = $db_config[$type]['file_name'] ?? '';
-        $this->config['path'] = $db_config[$type]['path'] ?? '';
-    }
-
-    protected function newConnection(string $dsn, ?string $username = null, ?string $password = null,
+    protected function newConnection(string $dsn, $config, ?string $username = null, ?string $password = null,
         ?array $options = null): NellielPDO
     {
         // Just in case things go wrong we want to avoid sensitive info leaking
         try {
-            $connection = new NellielPDO($this->config, $dsn, $username, $password, $options);
+            $connection = new NellielPDO($config, $dsn, $username, $password, $options);
             return $connection;
         } catch (PDOException $exception) {
             nel_derp(1, _gettext('Error connecting to database. Check config values and verify database setup.'));
         }
     }
 
-    protected function mysql(): NellielPDO
+    protected function mysql(array $config): NellielPDO
     {
-        $dsn = 'mysql:host=' . $this->config['host'] . ';port=' . $this->config['port'] . ';dbname=' .
-            $this->config['database'] . ';charset=' . $this->config['encoding'] . ';';
-        $connection = $this->newConnection($dsn, $this->config['user'], $this->config['password'], $this->options);
+        $options = array();
+        $dsn = 'mysql:host=' . $config['host'] . ';port=' . $config['port'] . ';dbname=' . $config['database'] .
+            ';charset=' . $config['encoding'] . ';';
+        $connection = $this->newConnection($dsn, $config, $config['user'], $config['password'], $options);
         $connection->exec("SET SESSION sql_mode='ANSI';");
         return $connection;
     }
 
-    protected function mariadb(): NellielPDO
+    protected function mariadb(array $config): NellielPDO
     {
-        $dsn = 'mysql:host=' . $this->config['host'] . ';port=' . $this->config['port'] . ';dbname=' .
-            $this->config['database'] . ';charset=' . $this->config['encoding'] . ';';
-        $connection = $this->newConnection($dsn, $this->config['user'], $this->config['password'], $this->options);
+        $options = array();
+        $dsn = 'mysql:host=' . $config['host'] . ';port=' . $config['port'] . ';dbname=' . $config['database'] .
+            ';charset=' . $config['encoding'] . ';';
+        $connection = $this->newConnection($dsn, $config, $config['user'], $config['password'], $options);
         $connection->exec("SET SESSION sql_mode='ANSI';");
         return $connection;
     }
 
-    protected function postgresql(): NellielPDO
+    protected function postgresql(array $config): NellielPDO
     {
-        $dsn = 'pgsql:host=' . $this->config['host'] . ';port=' . $this->config['port'] . ';dbname=' .
-            $this->config['database'] . ';';
-        $connection = $this->newConnection($dsn, $this->config['user'], $this->config['password'], $this->options);
-        $connection->exec(
-            "SET search_path TO " . $this->config['schema'] . "; SET names '" . $this->config['encoding'] . "';");
+        $options = array();
+        $dsn = 'pgsql:host=' . $config['host'] . ';port=' . $config['port'] . ';dbname=' . $config['database'] . ';';
+        $connection = $this->newConnection($dsn, $config, $config['user'], $config['password'], $options);
+        $connection->exec("SET search_path TO " . $config['schema'] . "; SET names '" . $config['encoding'] . "';");
         return $connection;
     }
 
-    protected function sqlite(): NellielPDO
+    protected function sqlite(array $config): NellielPDO
     {
-        if ($this->config['path'] === '') {
+        $options = array();
+
+        if ($config['path'] === '') {
             $path = NEL_CORE_PATH;
         } else {
-            $path = $this->config['path'];
+            $path = $config['path'];
         }
 
-        $dsn = 'sqlite:' . $path . $this->config['file_name'];
-        $connection = $this->newConnection($dsn);
-        $connection->exec('PRAGMA encoding = "' . $this->config['encoding'] . '"; PRAGMA foreign_keys = ON;');
+        $dsn = 'sqlite:' . $path . $config['file_name'];
+        $connection = $this->newConnection($dsn, $config, null, null, $options);
+        $connection->exec('PRAGMA encoding = "' . $config['encoding'] . '"; PRAGMA foreign_keys = ON;');
         return $connection;
     }
 }
