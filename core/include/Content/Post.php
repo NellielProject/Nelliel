@@ -99,12 +99,14 @@ class Post
             $where_keys = ['where_post_number'];
             $where_values = [$this->content_id->postID()];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
-                $where_columns, $where_keys);
+                $where_columns, $where_keys, $this->sql_helpers->parameterize($column_list),
+                $this->sql_helpers->parameterize($where_keys));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
             $this->database->executePrepared($prepared);
         } else {
-            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
+            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list,
+                $this->sql_helpers->parameterize($column_list));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->database->executePrepared($prepared);
         }

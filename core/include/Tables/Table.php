@@ -71,6 +71,13 @@ abstract class Table
     {
         $sql_helpers = nel_utilities()->sqlHelpers();
         $data = array();
+        $update_columns = array();
+        $update_values = array();
+        $update_pdo_types = array();
+        $where_columns = array();
+        $where_keys = array();
+        $where_values = array();
+        $where_pdo_types = array();
         $index = 0;
 
         foreach ($this->column_checks as $column_name => $info) {
@@ -78,14 +85,37 @@ abstract class Table
                 continue;
             }
 
+            if ($this->column_checks[$column_name]['row_check'] && isset($values[$index])) {
+                $where_columns[] = $column_name;
+                $where_keys[] = $column_name;
+                $where_values[] = $values[$index];
+                $where_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
+            }
+
             if (isset($values[$index])) {
                 $data[$column_name] = $values[$index];
+            }
+
+            if ($info['update'] ?? false) {
+                $update_columns[] = $column_name;
+                $update_values[] = $values[$index];
+                $update_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
             }
 
             $index ++;
         }
 
         if ($this->rowExists($data)) {
+
+            if (empty($update_columns)) {
+                return;
+            }
+
+            $prepared = $sql_helpers->buildPreparedUpdate($this->table_name, $update_columns, $where_columns,
+                $where_keys);
+            $sql_helpers->bindToPrepared($prepared, array_keys(array_merge($update_columns, $where_columns)),
+                array_merge($update_values, $where_values), array_merge($update_pdo_types, $where_pdo_types));
+            $this->database->executePrepared($prepared);
             return;
         }
 

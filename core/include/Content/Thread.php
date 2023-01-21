@@ -6,18 +6,17 @@ namespace Nelliel\Content;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
+use Nelliel\Cites;
 use Nelliel\FGSFDS;
 use Nelliel\Moar;
 use Nelliel\Overboard;
+use Nelliel\Regen;
 use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Tables\TableThreads;
 use PDO;
-use Nelliel\Regen;
-use Nelliel\Statistics;
-use Nelliel\Cites;
 
 class Thread
 {
@@ -95,18 +94,19 @@ class Thread
         $pdo_types = $this->main_table->getPDOTypes($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
-
         if ($this->main_table->rowExists($filtered_data)) {
             $where_columns = ['thread_id'];
             $where_keys = ['where_thread_id'];
             $where_values = [$this->content_id->threadID()];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
-                $where_columns, $where_keys);
+                $where_columns, $where_keys, $this->sql_helpers->parameterize($column_list),
+                $this->sql_helpers->parameterize($where_keys));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
             $this->database->executePrepared($prepared);
         } else {
-            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
+            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list,
+                $this->sql_helpers->parameterize($column_list));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->database->executePrepared($prepared);
         }

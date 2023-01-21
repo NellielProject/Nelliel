@@ -91,11 +91,13 @@ class Upload
             $where_keys = ['where_upload_id'];
             $where_values = [$this->data('upload_id')];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
-                $where_columns, $where_keys);
+                $where_columns, $where_keys, $this->sql_helpers->parameterize($column_list),
+                $this->sql_helpers->parameterize($where_keys));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
         } else {
-            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
+            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list,
+                $this->sql_helpers->parameterize($column_list));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
         }
 
@@ -364,7 +366,7 @@ class Upload
         $new_board = $new_post->domain()->id() !== $this->domain()->id();
         $parent = $this->getParent();
 
-        if($is_shadow) {
+        if ($is_shadow) {
             $this->changeData('shadow', true);
             $this->writeToDatabase();
         }
@@ -378,7 +380,7 @@ class Upload
             $new_upload->storeMoar($this->content_moar);
             $new_upload->changeData('parent_thread', $new_post->contentID()->threadID());
             $new_upload->changeData('post_ref', $new_post->contentID()->postID());
-            //$new_upload->changeData('upload_id', null);
+            // $new_upload->changeData('upload_id', null);
         } else {
             $new_upload = $this;
             $new_upload->contentID()->changePostID($new_post->contentID()->postID());
@@ -398,13 +400,13 @@ class Upload
                 if ($this->fileDeduplicated() || $is_shadow) {
                     $file_handler->copyFile(
                         $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
-                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' . $new_upload->data(
-                            'extension'));
+                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' .
+                        $new_upload->data('extension'));
                 } else {
                     $file_handler->moveFile(
                         $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
-                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' . $new_upload->data(
-                            'extension'));
+                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' .
+                        $new_upload->data('extension'));
                 }
             }
 
