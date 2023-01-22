@@ -207,7 +207,7 @@ class NellielPDO extends PDO
             return array();
         }
 
-        return (array) $result->fetchAll($fetch_style);
+        return $result->fetchAll($fetch_style);
     }
 
     public function executePrepared(PDOStatement $prepared, ?array $parameters = null, bool $close_cursor = true): bool
@@ -252,7 +252,7 @@ class NellielPDO extends PDO
             return array();
         }
 
-        return (array) $prepared->fetchAll($fetch_style);
+        return $prepared->fetchAll($fetch_style);
     }
 
     public function config(): array
