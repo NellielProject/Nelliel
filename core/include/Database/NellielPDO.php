@@ -184,34 +184,30 @@ class NellielPDO extends PDO
         return $result !== false;
     }
 
-    public function executeFetch(string $query, int $fetch_style = PDO::FETCH_BOTH)
+    public function executeFetch(string $query, int $fetch_style = PDO::FETCH_ASSOC, bool $close_cursor = true)
     {
         $result = $this->query($query);
 
-        if ($result !== false) {
-            if ($fetch_style === PDO::FETCH_COLUMN) {
-                $fetched_result = $result->fetchColumn();
-            } else {
-                $fetched_result = $result->fetch($fetch_style);
-            }
-        } else {
-            $fetched_result = false;
+        if ($result === false) {
+            return $result;
         }
 
-        return $fetched_result;
+        if ($close_cursor) {
+            $result->closeCursor();
+        }
+
+        return $result->fetch($fetch_style);
     }
 
-    public function executeFetchAll(string $query, int $fetch_style = PDO::FETCH_BOTH): array
+    public function executeFetchAll(string $query, int $fetch_style = PDO::FETCH_ASSOC): array
     {
         $result = $this->query($query);
 
-        if ($result !== false) {
-            $fetched_result = $result->fetchAll($fetch_style);
-        } else {
-            $fetched_result = array();
+        if ($result === false) {
+            return array();
         }
 
-        return $fetched_result;
+        return (array) $result->fetchAll($fetch_style);
     }
 
     public function executePrepared(PDOStatement $prepared, ?array $parameters = null, bool $close_cursor = true): bool
@@ -230,39 +226,33 @@ class NellielPDO extends PDO
     }
 
     public function executePreparedFetch(PDOStatement $prepared, ?array $parameters = null,
-        int $fetch_style = PDO::FETCH_BOTH, bool $close_cursor = true)
+        int $fetch_style = PDO::FETCH_ASSOC, bool $close_cursor = true)
     {
         $result = $this->executePrepared($prepared, $parameters, false);
 
-        if ($result !== false) {
-            if ($fetch_style === PDO::FETCH_COLUMN) {
-                $fetched_result = $prepared->fetchColumn();
-            } else {
-                $fetched_result = $prepared->fetch($fetch_style);
-            }
+        if ($result === false) {
+            return $result;
+        }
 
-            if ($close_cursor) {
-                $prepared->closeCursor();
-            }
-        } else {
-            $fetched_result = false;
+        $fetched_result = $prepared->fetch($fetch_style);
+
+        if ($close_cursor) {
+            $prepared->closeCursor();
         }
 
         return $fetched_result;
     }
 
     public function executePreparedFetchAll(PDOStatement $prepared, ?array $parameters = null,
-        int $fetch_style = PDO::FETCH_BOTH): array
+        int $fetch_style = PDO::FETCH_ASSOC): array
     {
         $result = $this->executePrepared($prepared, $parameters, false);
 
-        if ($result !== false) {
-            $fetched_result = $prepared->fetchAll($fetch_style);
-        } else {
-            $fetched_result = array();
+        if ($result === false) {
+            return array();
         }
 
-        return $fetched_result;
+        return (array) $prepared->fetchAll($fetch_style);
     }
 
     public function config(): array
