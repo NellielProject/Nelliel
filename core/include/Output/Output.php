@@ -94,7 +94,7 @@ abstract class Output
 
         if ($this->core_id === 'mustache') {
             $this->render_core->renderEngine()->getLoader()->updateSubstituteTemplates($substitutes);
-            $this->render_core->renderEngine()->getLoader()->setTemplatePath($this->templates_path);
+            $this->render_core->renderEngine()->getLoader()->setDefaultTemplatePath($this->templates_path);
 
             if ($data_only) {
                 return $render_data;

@@ -9,32 +9,41 @@ use Mustache_Loader;
 
 class MultipathFileSystemLoader implements Mustache_Loader
 {
+    protected $template_paths = array();
     protected $templates = array();
     protected $substitutes = array();
-    protected $templates_path = '';
     protected $extension = '.html';
 
     function __construct(string $baseDir, array $options = array())
     {
         if (array_key_exists('extension', $options)) {
-            $this->extension = !empty($options['extension']) ? '.' . ltrim($options['extension'], '.') : '';
+            $this->setExtension($options['extension']);
         }
     }
 
     public function load($name): string
     {
-        $final_name = $this->substitutes[$name] ?? $name;
+        $substitute_name = $this->substitutes[$name] ?? $name;
+        $split = explode('<>', $substitute_name);
 
-        if (!isset($this->templates[$this->templates_path][$final_name])) {
-            $this->templates[$this->templates_path][$final_name] = $this->loadFile($final_name);
+        if (!isset($split[1])) {
+            $path_id = 'default';
+            $final_name = $substitute_name;
+        } else {
+            $path_id = $split[0];
+            $final_name = $split[1];
         }
 
-        return $this->templates[$this->templates_path][$final_name];
+        if (!isset($this->templates[$path_id][$final_name])) {
+            $this->templates[$path_id][$final_name] = $this->loadFile($path_id, $final_name);
+        }
+
+        return $this->templates[$path_id][$final_name];
     }
 
-    protected function loadFile(string $file): string
+    protected function loadFile(string $path_id, string $file): string
     {
-        $file_path = $this->templates_path . $file . $this->extension;
+        $file_path = $this->template_paths[$path_id] . $file . $this->extension;
         return (string) file_get_contents($file_path);
     }
 
@@ -47,13 +56,24 @@ class MultipathFileSystemLoader implements Mustache_Loader
         $this->substitutes = array_merge($this->substitutes, $substitutes);
     }
 
-    public function setTemplatePath(string $path): bool
+    public function addTemplatePath(string $id, string $path): bool
     {
-        if (!file_exists($path)) {
-            return false;
-        }
+        $this->template_paths[$id] = rtrim($path, '/') . '/';
+        return file_exists($path);
+    }
 
-        $this->templates_path = rtrim($path, '/') . '/';
-        return true;
+    public function removeTemplatePath(string $id, string $path): void
+    {
+        unset($this->template_paths[$id]);
+    }
+
+    public function setDefaultTemplatePath(string $path): bool
+    {
+        return $this->addTemplatePath('default', $path);
+    }
+
+    public function setExtension(string $extension): void
+    {
+        $this->extension = !empty($extension) ? '.' . ltrim($extension, '.') : '';
     }
 }
