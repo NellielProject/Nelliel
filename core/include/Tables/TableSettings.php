@@ -74,7 +74,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_favicon', '0', 'Show site favicon.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'home_page', '', 'Site home page. If empty, will default to the base web path.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'generate_home_page', '0', 'Generate a standard home page.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'locale', 'en_US', 'Locale for site (use ISO language + country code).', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'locale', NEL_DEFAULT_LOCALE, 'Default locale for site. Use ISO language and country codes separated by underscore.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'time_zone', 'UTC', 'Default time zone used on the site.', '{"type":"select"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'only_alphanumeric_board_ids', '1', 'Allow only alphanumeric board IDs.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'default_source_subdirectory', 'source', 'Default name for the source subdirectory.', '{"type":"text"}']);
@@ -179,7 +179,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_description', '1', 'Display board description in header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'favicon', '', 'Board favicon.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_favicon', '0', 'Show board favicon.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'locale', 'en_US', 'Locale for the board (use ISO language + country code).', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'locale', NEL_DEFAULT_LOCALE, 'Locale for this board. Use ISO language and country codes separated by underscore.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'time_zone', 'UTC', 'Default time zone used for this board.', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'exclude_from_overboards', '0', 'Exclude threads on this board from the overboards.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'user_delete_own', '1', 'Let users delete own posts and content.', '{"type":"checkbox"}']);

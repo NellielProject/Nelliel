@@ -30,7 +30,7 @@ abstract class Domain implements NellielCacheInterface
     protected $render_active;
     protected $template_path;
     protected $translator;
-    protected $locale;
+    protected $locale = NEL_DEFAULT_LOCALE;
     protected $language;
     protected $statistics;
 
@@ -112,10 +112,6 @@ abstract class Domain implements NellielCacheInterface
 
     public function locale(bool $html_format = false)
     {
-        if (!isset($this->locale)) {
-            return NEL_DEFAULT_LOCALE;
-        }
-
         // Convert underscore notation to hyphen for HTML
         if ($html_format) {
             return utf8_str_replace('_', '-', $this->locale());
@@ -126,7 +122,7 @@ abstract class Domain implements NellielCacheInterface
 
     public function updateLocale(string $locale)
     {
-        $this->locale = $locale;
+        $this->locale = utf8_str_replace('-', '_', $locale);
     }
 
     public function frontEndData()
