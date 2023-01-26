@@ -51,8 +51,8 @@ class OutputPanelBans extends Output
 
             $ban_data['reason'] = $ban_hammer->getData('reason');
             $ban_data['seen'] = $ban_hammer->getData('seen');
-            $ban_data['expiration'] = date("D F jS Y  H:i:s",
-                intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')));
+            $ban_data['expiration'] = $this->domain->domainDateTime(
+                intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')))->format("D F jS Y  H:i:s");
             $ban_data['appeal'] = $ban_hammer->getData('appeal');
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
@@ -132,9 +132,10 @@ class OutputPanelBans extends Output
 
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
         $this->render_data['ban_board'] = $ban_hammer->getData('board_id');
-        $this->render_data['start_time_formatted'] = date("D F jS Y  H:i:s", intval($ban_hammer->getData('start_time')));
-        $this->render_data['expiration'] = date("D F jS Y  H:i:s",
-            intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')));
+        $this->render_data['start_time_formatted'] = $this->domain->domainDateTime(
+            intval($ban_hammer->getData('start_time')))->format("D F jS Y  H:i:s");
+        $this->render_data['expiration'] = $this->domain->domainDateTime(
+            intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')))->format("D F jS Y  H:i:s");
         $times = $ban_hammer->getData('times');
         $this->render_data['years'] = $times['years'];
         $this->render_data['days'] = $times['days'];

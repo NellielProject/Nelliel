@@ -37,7 +37,7 @@ class OutputPanelBlotter extends Output
             $entry_info = array();
             $entry_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $entry_info['time'] = date('Y/m/d', intval($entry['time']));
+            $entry_info['time'] = $this->domain->domainDateTime(intval($entry['time']))->format('Y/m/d');
             $entry_info['text'] = $entry['text'];
             $entry_info['delete_url'] = nel_build_router_url([Domain::SITE, 'blotter', $entry['record_id'], 'delete']);
             $this->render_data['blotter_entry'][] = $entry_info;

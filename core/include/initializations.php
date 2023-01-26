@@ -5,7 +5,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Setup\Setup;
 use Nelliel\Setup\Upgrade;
-use Nelliel\Tables\TableSettings;
 
 Mustache_Autoloader::register();
 
@@ -51,6 +50,8 @@ if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
 }
 
 unset($file_handler);
+
+date_default_timezone_set(nel_site_domain()->setting('time_zone') ?? 'UTC');
 
 define('NEL_SETUP_GOOD', true);
 

@@ -36,7 +36,7 @@ class OutputPrivateMessages extends Output
             $message_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $message_info['message_read'] = ($message['message_read'] == 1) ? 'X' : null;
-            $message_info['time'] = date('Y/m/d l H:i', intval($message['time_sent']));
+            $message_info['time'] = $this->domain->domainDateTime(intval($message['time_sent']))->format('Y/m/d l H:i');
             $message_info['sender'] = $message['sender'];
 
             if (utf8_strlen($message['message']) > $snippet_length) {

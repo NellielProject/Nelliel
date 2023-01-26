@@ -37,7 +37,7 @@ class OutputAccount extends Output
             $info['notice_id'] = $notice['notice_id'];
             $info['user'] = $notice['username'];
             $info['subject'] = $notice['subject'];
-            $info['time'] = date('Y/m/d', intval($notice['time']));
+            $info['time'] = $this->domain->domainDateTime(intval($notice['time']))->format('Y/m/d');
             $info['message'] = $notice['message'];
             $info['url'] = nel_build_router_url([$this->domain->id(), 'noticeboard', $notice['notice_id']]);
             $this->render_data['notices'][] = $info;

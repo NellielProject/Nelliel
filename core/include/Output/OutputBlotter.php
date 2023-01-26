@@ -36,20 +36,18 @@ class OutputBlotter extends Output
     {
         $database = $this->domain->database();
         $blotter_entries = $database->executeFetchAll('SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" DESC',
-                PDO::FETCH_ASSOC);
+            PDO::FETCH_ASSOC);
         $limit_counter = 0;
         $entry_list = array();
 
-        foreach ($blotter_entries as $entry)
-        {
-            if ($limit !== 0 && $limit_counter >= $limit)
-            {
+        foreach ($blotter_entries as $entry) {
+            if ($limit !== 0 && $limit_counter >= $limit) {
                 break;
             }
 
             $info = array();
             $info['text'] = $entry['text'];
-            $info['time'] = date('Y/m/d', intval($entry['time']));
+            $info['time'] = $this->domain->domainDateTime(intval($entry['time']))->format('Y/m/d');
             $entry_list[] = $info;
             $limit_counter ++;
         }

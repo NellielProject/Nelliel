@@ -247,6 +247,8 @@ class OutputPanelBoardConfig extends Output
             $this->render_data['settings_data']['filetype_image_set']['setting_value'] ?? '');
         $this->render_data['settings_data']['template_id']['options'] = $output_menu->configTemplates(
             $this->render_data['settings_data']['template_id']['setting_value'] ?? '');
+        $this->render_data['settings_data']['time_zone']['options'] = $output_menu->timezones(
+            $this->render_data['settings_data']['time_zone']['setting_value'] ?? '');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

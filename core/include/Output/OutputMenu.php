@@ -6,6 +6,7 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use DateTimeZone;
 use PDO;
 
 class OutputMenu extends Output
@@ -65,6 +66,26 @@ class OutputMenu extends Output
             $option_data = array();
             $option_data['option_value'] = $template->id();
             $option_data['option_label'] = $template->info('name');
+
+            if ($option_data['option_value'] === $selected) {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
+    }
+
+    public function timezones(string $selected): array
+    {
+        $timezones = DateTimeZone::listIdentifiers();
+        $options = array();
+
+        foreach ($timezones as $timezone) {
+            $option_data = array();
+            $option_data['option_value'] = $timezone;
+            $option_data['option_label'] = $timezone;
 
             if ($option_data['option_value'] === $selected) {
                 $option_data['option_selected'] = 'selected';

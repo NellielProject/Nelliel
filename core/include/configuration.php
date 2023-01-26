@@ -15,9 +15,6 @@ if (file_exists(NEL_CONFIG_FILES_PATH . 'additional_databases.php')) {
     include NEL_CONFIG_FILES_PATH . 'additional_databases.php';
 }
 
-define('NEL_DEFAULT_TIME_ZONE', $base_config['default_time_zone'] ?? 'UTC');
-date_default_timezone_set(NEL_DEFAULT_TIME_ZONE);
-
 define('NEL_INSTALL_KEY', $base_config['install_key'] ?? '');
 define('NEL_DIRECTORY_PERM', $base_config['directory_perm'] ?? '0775');
 define('NEL_FILES_PERM', $base_config['file_perm'] ?? '0664');

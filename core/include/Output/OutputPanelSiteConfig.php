@@ -83,11 +83,13 @@ class OutputPanelSiteConfig extends Output
 
         $output_menu = new OutputMenu($this->domain, false);
         $this->render_data['settings_data']['base_image_set']['options'] = $output_menu->configImageSets(
-            $this->domain->setting('base_image_set'));
+            $this->render_data['settings_data']['base_image_set']['setting_value'] ?? '');
         $this->render_data['settings_data']['template_id']['options'] = $output_menu->configTemplates(
-            $this->domain->setting('template_id'));
+            $this->render_data['settings_data']['template_id']['setting_value'] ?? '');
         $this->render_data['settings_data']['default_style']['options'] = $output_menu->configStyles(
-            $this->domain->setting('default_style'));
+            $this->render_data['settings_data']['default_style']['setting_value'] ?? '');
+        $this->render_data['settings_data']['time_zone']['options'] = $output_menu->timezones(
+            $this->render_data['settings_data']['time_zone']['setting_value'] ?? '');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->render([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

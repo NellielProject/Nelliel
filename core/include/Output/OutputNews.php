@@ -7,6 +7,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use PDO;
+use DateTime;
+use DateTimeZone;
 
 class OutputNews extends Output
 {
@@ -51,8 +53,8 @@ class OutputNews extends Output
             $news_info['headline'] = $news_entry['headline'];
             $news_info['name'] = $news_entry['name'];
             $news_info['poster'] = ' ' . _gettext('by') . ' ' . $news_entry['name'];
-            $news_info['time'] = ' - ' . date('Y/m/d l H:i', intval($news_entry['time']));
-            $news_info['news_lines'] = array();
+            $news_info['time'] = ' - ' . $this->domain->domainDateTime(intval($news_entry['time']))->format('Y/m/d l H:i T');
+            $news_info['news_lines'] = array();;
 
             foreach ($this->output_filter->newlinesToArray($news_entry['text']) as $line)
             {

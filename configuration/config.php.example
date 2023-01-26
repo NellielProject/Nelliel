@@ -11,10 +11,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 // === General Settings ===
 //
 
-// The default time zone that will be used.
-// An extensive list of supported time zones can be found here: https://www.php.net/manual/en/timezones.php
-$base_config['default_time_zone'] = 'UTC';
-
 // The fallback default value for locale.
 // If a locale is specified elsewhere, but no language file exists for it, this value will be used instead.
 // If the language file for this value is also missing, Nelliel will fallback to 'en_US' which is included in standard distribution.

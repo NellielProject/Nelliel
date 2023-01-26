@@ -11,6 +11,8 @@ use Nelliel\Database\NellielPDO;
 use Nelliel\FrontEnd\FrontEndData;
 use Nelliel\Language\Language;
 use Nelliel\Language\Translator;
+use DateTime;
+use DateTimeZone;
 use PDO;
 
 abstract class Domain implements NellielCacheInterface
@@ -163,5 +165,13 @@ abstract class Domain implements NellielCacheInterface
         $prepared->bindValue(1, $domain_id, PDO::PARAM_STR);
         $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         return $result !== false;
+    }
+
+    public function domainDateTime(int $timestamp): DateTime
+    {
+        $date_time = new DateTime();
+        $date_time->setTimestamp($timestamp);
+        $date_time->setTimezone(new DateTimeZone((string) $this->setting('time_zone')));
+        return $date_time;
     }
 }
