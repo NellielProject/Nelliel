@@ -52,7 +52,8 @@ class OutputPanelBans extends Output
             $ban_data['reason'] = $ban_hammer->getData('reason');
             $ban_data['seen'] = $ban_hammer->getData('seen');
             $ban_data['expiration'] = $this->domain->domainDateTime(
-                intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')))->format("D F jS Y  H:i:s");
+                intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')))->format(
+                $this->site_domain->setting('control_panel_list_time_format'));
             $ban_data['appeal'] = $ban_hammer->getData('appeal');
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');

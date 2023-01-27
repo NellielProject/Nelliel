@@ -91,7 +91,7 @@ class OutputPanelThreads extends Output
                 '&actions=delete&content-id=' . $content_id->getIDString();
             $thread_info['delete_text'] = _gettext('Delete Thread');
             $thread_info['last_update'] = $this->domain->domainDateTime(intval($thread->data('last_update')))->format(
-                $this->domain->setting('post_date_format'));
+                $this->domain->setting('post_time_format'));
             $thread_info['subject'] = $op_post->data('subject');
             $thread_info['thread_url'] = $thread->getURL(
                 $this->session->user()->checkPermission($this->domain, 'perm_mod_mode'));
@@ -146,7 +146,7 @@ class OutputPanelThreads extends Output
             $post_info['sticky_text'] = _gettext('Sticky Post');
             $post_info['parent_thread'] = $post['parent_thread'];
             $post_info['post_time'] = $this->domain->domainDateTime(intval($post['post_time']))->format(
-                $this->domain->setting('post_date_format'));
+                $this->domain->setting('post_time_format'));
             $post_info['subject'] = $post['subject'];
             $post_info['thread_url'] = $this->domain->reference('page_directory') . '/' . $post['parent_thread'] . '/' .
                 $post['post_number'] . '.html';

@@ -72,7 +72,8 @@ class OutputIndex extends Output
         if ($this->site_domain->setting('show_blotter') && !empty($blotter_entries)) {
             foreach ($blotter_entries as $entry) {
                 $blotter_data = array();
-                $blotter_data['time'] = $this->domain->domainDateTime(intval($entry['time']))->format('Y/m/d');
+                $blotter_data['time'] = $this->domain->domainDateTime(intval($entry['time']))->format(
+                    $this->site_domain->setting('blotter_time_format'));
                 $blotter_data['text'] = $entry['text'];
                 $this->render_data['blotter_entries'][] = $blotter_data;
             }

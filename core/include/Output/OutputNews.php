@@ -38,14 +38,12 @@ class OutputNews extends Output
     {
         $database = $this->domain->database();
         $news_entries = $database->executeFetchAll('SELECT * FROM "' . NEL_NEWS_TABLE . '" ORDER BY "time" DESC',
-                PDO::FETCH_ASSOC);
+            PDO::FETCH_ASSOC);
         $limit_counter = 0;
         $entry_list = array();
 
-        foreach ($news_entries as $news_entry)
-        {
-            if ($limit !== 0 && $limit_counter >= $limit)
-            {
+        foreach ($news_entries as $news_entry) {
+            if ($limit !== 0 && $limit_counter >= $limit) {
                 break;
             }
 
@@ -53,11 +51,13 @@ class OutputNews extends Output
             $news_info['headline'] = $news_entry['headline'];
             $news_info['name'] = $news_entry['name'];
             $news_info['poster'] = ' ' . _gettext('by') . ' ' . $news_entry['name'];
-            $news_info['time'] = ' - ' . $this->domain->domainDateTime(intval($news_entry['time']))->format('Y/m/d l H:i T');
-            $news_info['news_lines'] = array();;
+            $news_info['time'] = ' - ' .
+                $this->domain->domainDateTime(intval($news_entry['time']))->format(
+                    $this->site_domain->setting('news_time_format'));
+            $news_info['news_lines'] = array();
+            ;
 
-            foreach ($this->output_filter->newlinesToArray($news_entry['text']) as $line)
-            {
+            foreach ($this->output_filter->newlinesToArray($news_entry['text']) as $line) {
                 $news_info['news_lines'][]['news_line'] = $line;
             }
 

@@ -47,7 +47,8 @@ class OutputBlotter extends Output
 
             $info = array();
             $info['text'] = $entry['text'];
-            $info['time'] = $this->domain->domainDateTime(intval($entry['time']))->format('Y/m/d');
+            $info['time'] = $this->domain->domainDateTime(intval($entry['time']))->format(
+                $this->site_domain->setting('blotter_time_format'));
             $entry_list[] = $info;
             $limit_counter ++;
         }

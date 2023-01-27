@@ -39,7 +39,8 @@ class OutputPanelNews extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $entry_info['name'] = $news_entry['name'];
             $entry_info['headline'] = $news_entry['headline'];
-            $entry_info['time'] = $this->domain->domainDateTime(intval($news_entry['time']))->format('Y/m/d (D) H:i:s');
+            $entry_info['time'] = $this->domain->domainDateTime(intval($news_entry['time']))->format(
+                $this->site_domain->setting('control_panel_list_time_format'));
             $entry_info['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'news', $news_entry['article_id'], 'delete']);
             $this->render_data['news_entry'][] = $entry_info;

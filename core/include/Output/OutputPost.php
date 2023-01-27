@@ -218,7 +218,7 @@ class OutputPost extends Output
         $this->render_data['post_options'][] = $this->render_data['content_links_cite_post'];
 
         $post_headers['post_time'] = $this->domain->domainDateTime(
-            intval($post->data('post_time')))->format($this->domain->setting('post_date_format'));
+            intval($post->data('post_time')))->format($this->domain->setting('post_time_format'));
         $post_headers['post_number'] = $post->contentID()->postID();
         $post_headers['post_number_url'] = $post->getURL($this->session->inModmode($this->domain) && !$this->write_mode);
         $post_headers['post_number_url_cite'] = $post_headers['post_number_url'] . 'cite';

@@ -121,6 +121,10 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'external_link_referrer_policy', 'strict-origin-when-cross-origin', 'Referrer policy for external links. Overrides site policy if different.', '{"type":"select"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'nofollow_external_links', '1', 'Add rel="nofollow" to external links.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_page_regen_time', '0', 'How long the script can take to regenerate board or site pages. 0 sets unlimited time.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'private_message_time_format', 'Y/m/d l H:i', 'Time format for private messages. (PHP DateTime format).', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'blotter_time_format', 'Y/m/d', 'Time format for blotter posts. (PHP DateTime format).', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'news_time_format', 'Y/m/d l H:i T', 'Time format for news posts. (PHP DateTime format).', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'control_panel_list_time_format', 'Y/m/d (D) H:i:s', 'Time format for entries in control panel lists. (PHP DateTime format).', '{"type":"text"}']);
 
         // Uploads
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', 'GD', 'Preferred graphics handler', '{"type":"select"}']);
@@ -208,7 +212,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_ban_appeals', '2', 'Maximum number of appeals per ban.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_ip_range_ban_appeals', '0', 'Allow appeals for IP range bans.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_ban_mod_name', '0', 'Display the username of who set the ban.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ban_page_date_format', 'F jS, Y H:i e', 'Format for times on the ban page (PHP date() function).', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ban_page_time_format', 'F jS, Y H:i e', 'Time format for the ban page. (PHP DateTime format).', '{"type":"text"}']);
 
         // R9K
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'r9k_enable_board', '0', 'Use R9K on this board.', '{"type":"checkbox"}']);
@@ -392,7 +396,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'prefix_board_title', '1', 'Prefix the board title (URI and name) to the page title of threads.', '{"type":"checkbox"}']);
 
         // Post Rendering
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'post_date_format', 'Y/m/d (D) H:i:s', 'Format for post time (PHP date() function).', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'post_time_format', 'Y/m/d (D) H:i:s', 'Time format for posts. (PHP DateTime format).', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'indent_marker', '>>', 'Indent marker next to replies.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'tripcode_marker', '!', 'Tripcode marker.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'no_comment_text', '(no comment)', 'Text when there is no comment.', '{"type":"text"}']);

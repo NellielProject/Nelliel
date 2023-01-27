@@ -43,7 +43,8 @@ class OutputPanelNoticeboard extends Output
             $notice_info['name'] = $notice['username'];
             $notice_info['message'] = $notice['message'];
             $notice_info['subject'] = $notice['subject'];
-            $notice_info['time'] = $this->domain->domainDateTime(intval($notice['time']))->format('Y/m/d (D) H:i:s');
+            $notice_info['time'] = $this->domain->domainDateTime(intval($notice['time']))->format(
+                $this->site_domain->setting('control_panel_list_time_format'));
             $notice_info['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'noticeboard', $notice['notice_id'], 'delete']);
             $this->render_data['notices'][] = $notice_info;

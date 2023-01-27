@@ -301,7 +301,7 @@ class BetaMigrations
                     'require_op_email', 'enable_op_subject_field', 'require_op_subject', 'enable_op_comment_field',
                     'require_op_comment', 'show_render_timer', 'show_poster_id', 'show_static_preview',
                     'show_animated_preview', 'show_original_name', 'show_allowed_filetypes', 'show_allowed_embeds',
-                    'show_form_max_filesize', 'show_thumbnailed_message', 'show_video_preview', 'post_date_format'];
+                    'show_form_max_filesize', 'show_thumbnailed_message', 'show_video_preview', 'post_time_format'];
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
@@ -454,7 +454,8 @@ class BetaMigrations
                 // Update site settings
                 $new_site_settings = ['pm_snippet_length', 'min_time_between_site_stat_updates',
                     'min_time_between_board_stat_updates', 'enable_captchas', 'use_native_captcha', 'overboard_name',
-                    'overboard_catalog', 'sfw_overboard_name', 'sfw_overboard_catalog'];
+                    'overboard_catalog', 'sfw_overboard_name', 'sfw_overboard_catalog', 'private_message_time_format',
+                    'blotter_time_format', 'news_time_format', 'control_panel_list_time_format'];
                 $this->newSiteSettings($new_site_settings);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
@@ -477,8 +478,10 @@ class BetaMigrations
                     'content_links_last_posts'];
                 $this->newBoardSettings($new_board_settings);
 
-                $old_board_setting_names = ['max_catalog_display_width', 'max_catalog_display_height'];
-                $new_board_setting_names = ['catalog_max_preview_display_width', 'catalog_max_preview_display_height'];
+                $old_board_setting_names = ['max_catalog_display_width', 'max_catalog_display_height',
+                    'post_date_format', 'ban_page_date_format'];
+                $new_board_setting_names = ['catalog_max_preview_display_width', 'catalog_max_preview_display_height',
+                    'post_time_format', 'ban_page_time_format'];
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
