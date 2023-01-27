@@ -174,13 +174,11 @@ class OutputThread extends Output
             $post_counter ++;
         }
 
-        $this->render_data['use_report_captcha'] = nel_site_domain()->setting('enable_captchas') &&
-            $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
-        $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
-        $this->render_data['use_report_recaptcha'] = nel_site_domain()->setting('enable_captchas') &&
-            $this->domain->setting('use_report_recaptcha');
-        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
+        if ($this->site_domain->setting('enable_captchas') && $this->domain->setting('use_report_captcha')) {
+            $this->render_data['use_report_captcha'] = true;
+            $output_native_captchas = new OutputCAPTCHA($this->domain, $this->write_mode);
+            $this->render_data['report_captchas'] = $output_native_captchas->render(['area' => 'report'], false);
+        }
 
         if (!$expand && !$collapse) {
             $this->render_data['index_navigation'] = true;

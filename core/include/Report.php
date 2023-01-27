@@ -31,10 +31,6 @@ class Report
             $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
         }
 
-        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_report_recaptcha')) {
-            $captcha->verifyReCAPTCHA();
-        }
-
         $reports = array();
 
         foreach ($_POST as $name => $value) {

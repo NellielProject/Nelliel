@@ -5,22 +5,22 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Overboard;
 use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBoardDefaults;
 use Nelliel\Tables\TableLogs;
 use Nelliel\Tables\TableMarkup;
+use Nelliel\Tables\TableOverboard;
 use Nelliel\Tables\TablePermissions;
-use Nelliel\Tables\TableRolePermissions;
-use Nelliel\Tables\TableSettingOptions;
-use Nelliel\Tables\TableSettings;
-use Nelliel\Utility\FileHandler;
-use PDO;
 use Nelliel\Tables\TableR9KContent;
 use Nelliel\Tables\TableR9KMutes;
-use Nelliel\Tables\TableStatistics;
+use Nelliel\Tables\TableRolePermissions;
 use Nelliel\Tables\TableScripts;
-use Nelliel\Tables\TableOverboard;
-use Nelliel\Overboard;
+use Nelliel\Tables\TableSettingOptions;
+use Nelliel\Tables\TableSettings;
+use Nelliel\Tables\TableStatistics;
+use Nelliel\Utility\FileHandler;
+use PDO;
 
 class BetaMigrations
 {
@@ -525,6 +525,10 @@ class BetaMigrations
                 $new_board_setting_names = ['catalog_max_preview_display_width', 'catalog_max_preview_display_height',
                     'post_time_format', 'ban_page_time_format'];
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
+
+                $removed_site_settings = ['recaptcha_site_key', 'recaptcha_sekrit_key', 'recaptcha_type',
+                    'use_login_recaptcha', 'use_register_recaptcha', 'use_post_recaptcha', 'use_report_recaptcha'];
+                $this->removeBoardSettings($removed_site_settings);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
 

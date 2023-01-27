@@ -33,10 +33,6 @@ class Register
             $captcha->verify($captcha_key, $captcha_answer);
         }
 
-        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_register_recaptcha')) {
-            $captcha->verifyReCAPTCHA();
-        }
-
         $register_username = (isset($_POST['register_username'])) ? strval($_POST['register_username']) : '';
         $register_password = (isset($_POST['register_super_sekrit'])) ? strval($_POST['register_super_sekrit']) : '';
         $register_password_confirm = (isset($_POST['register_super_sekrit_confirm'])) ? strval(

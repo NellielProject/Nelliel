@@ -34,10 +34,6 @@ class Login
             $captcha->verify($captcha_key, $captcha_answer);
         }
 
-        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_login_recaptcha')) {
-            $captcha->verifyReCAPTCHA();
-        }
-
         $return_url = nel_build_router_url([Domain::SITE, 'account', 'login']);
         $return_link = new ReturnLink($return_url, __('Return to login page'));
         $error_context = ['return_link' => $return_link];

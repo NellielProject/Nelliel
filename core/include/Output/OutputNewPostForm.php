@@ -8,7 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\FileTypes;
 use Nelliel\Domains\Domain;
 use PDO;
-use ChrisUllyott\FileSize;
 
 class OutputNewPostForm extends Output
 {
@@ -103,12 +102,13 @@ class OutputNewPostForm extends Output
         $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
-        $this->render_data['use_post_captcha'] = nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_post_captcha');
-        $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
-        $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
-        $this->render_data['use_post_recaptcha'] = nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_post_recaptcha');
-        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
-        $this->render_data['captcha_label'] = true;
+
+        if ($this->site_domain->setting('enable_captchas') && $this->domain->setting('use_post_captcha')) {
+            $this->render_data['use_new_post_captcha'] = true;
+            $output_native_captchas = new OutputCAPTCHA($this->domain, $this->write_mode);
+            $this->render_data['post_form_captchas'] = $output_native_captchas->render(['area' => 'new-post-form'], false);
+        }
+
         $this->render_data['new_post_submit'] = ($response_to) ? _gettext('Reply') : _gettext('New thread');
         $this->postingRules();
         $output = $this->output('thread/new_post_form', $data_only, true, $this->render_data);

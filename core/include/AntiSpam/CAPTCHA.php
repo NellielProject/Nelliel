@@ -191,7 +191,7 @@ class CAPTCHA
     public function verify(string $key, string $answer)
     {
         $failed = false;
-        $failed = nel_plugins()->processHook('nel-in-before-captcha-verify', [$this->domain, $this, $key, $answer], $failed);
+        $failed = nel_plugins()->processHook('nel-inb4-captcha-verify', [$this->domain, $this, $key, $answer], $failed);
 
         if ($this->site_domain->setting('use_native_captcha') && !$failed) {
             $expiration = time() - $this->site_domain->setting('captcha_timeout');
@@ -230,20 +230,5 @@ class CAPTCHA
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "time_created" < ?');
         $this->database->executePrepared($prepared, [$expiration]);
-    }
-
-    public function verifyReCAPTCHA()
-    {
-        $response = $_POST['g-recaptcha-response'] ?? '';
-        $result = file_get_contents(
-            'https://www.google.com/recaptcha/api/siteverify?secret=' .
-            $this->site_domain->setting('recaptcha_sekrit_key') . '&response=' . $response);
-        $verification = json_decode($result);
-
-        if (!$verification->success) {
-            nel_derp(71, _gettext('reCAPTCHA test failed.'));
-        }
-
-        return;
     }
 }

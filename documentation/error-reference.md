@@ -67,7 +67,6 @@ Error 66: Age threshold. (Content/Thread.php)
 Error 67: Invalid embed URL. (Content/Upload.php)  
 
 Error 70: CAPTCHA failed. (CAPTCHA.php)  
-Error 71: reCAPTCHA failed. (CAPTCHA.php)  
 Error 72: Requesting CAPTCHAs too fast. (CAPTCHA.php)  
 
 Error 75: Post rejected by if-then. (NewPost/ActionsPost.php)  

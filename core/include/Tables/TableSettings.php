@@ -146,19 +146,14 @@ class TableSettings extends Table
 
         // CAPTCHA
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'enable_captchas', '1', 'Enable CAPTCHAs. All enabled CAPTCHA implementations will be used.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_native_captcha', '0', 'Use Nelliel\'s native CAPTCHA.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_native_captcha', '1', 'Use Nelliel\'s native CAPTCHA.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_width', '250', 'Width of CAPTCHA image.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_height', '80', 'Height of CAPTCHA image.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_character_count', '5', 'Number of characters in CAPTCHA.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_timeout', '1800', 'CAPTCHA timeout (seconds).', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_rate_limit', '12', 'CAPTCHA requests per IP in one minute (0 to disable check).', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_site_key', '', 'reCAPTCHA site key.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_sekrit_key', '', 'reCAPTCHA secret key.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'recaptcha_type', 'CHECKBOX', 'reCAPTCHA type.', '{"type":"select"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_captcha', '0', 'Use CAPTCHAs for login.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_login_recaptcha', '0', 'Use reCAPTCHA for login.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_captcha', '0', 'Use CAPTCHAs for registration.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_register_recaptcha', '0', 'Use reCAPTCHA for registration.', '{"type":"checkbox"}']);
 
         // Overboard
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'overboard_active', '0', 'Enable overboard.', '{"type":"checkbox"}']);
@@ -474,9 +469,7 @@ class TableSettings extends Table
 
         // Anti-spam
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_post_captcha', '0', 'Use CAPTCHA for new posts and threads', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_post_recaptcha', '0', 'Use reCAPTCHA for new posts and threads', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_report_captcha', '0', 'Use CAPTCHA for making reports', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_report_recaptcha', '0', 'Use reCAPTCHA for making reports', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'enable_early404', '0', 'Enable early 404. Threads past the specified page with less than the specified number of posts will be pruned when a new thread is made.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'early404_replies_threshold', '5', 'Minimum replies needed to avoid being pruned by early 404.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'early404_page_threshold', '3', 'Last page of the index before early 404 pruning begins. Threads beyond this page will be checked.', '{"type":"number"}']);

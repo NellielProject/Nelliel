@@ -9,7 +9,6 @@ use Nelliel\API\JSON\CatalogJSON;
 use Nelliel\API\JSON\IndexJSON;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
-use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
 
@@ -86,16 +85,15 @@ class OutputIndex extends Output
         $this->render_data['index_navigation_top'] = $this->domain->setting('index_nav_top');
         $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;
-        $this->render_data['use_report_captcha'] = nel_site_domain()->setting('enable_captchas') &&
-            $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
-        $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
-        $this->render_data['use_report_recaptcha'] = nel_site_domain()->setting('enable_captchas') &&
-            $this->domain->setting('use_report_recaptcha');
-        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
+
+        if ($this->site_domain->setting('enable_captchas') && $this->domain->setting('use_report_captcha')) {
+            $this->render_data['use_report_captcha'] = true;
+            $output_native_captchas = new OutputCAPTCHA($this->domain, $this->write_mode);
+            $this->render_data['report_captchas'] = $output_native_captchas->render(['area' => 'report'], false);
+        }
 
         if (empty($threads)) {
             $index_format = $this->site_domain->setting('first_index_filename_format');

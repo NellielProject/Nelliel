@@ -60,7 +60,7 @@ class Markup
             $markup_data = $this->getMarkupData('block');
         }
 
-        $markup_data = nel_plugins()->processHook('nel-in-before-markup-blocks', [$text], $markup_data);
+        $markup_data = nel_plugins()->processHook('nel-inb4-markup-blocks', [$text], $markup_data);
         $modified_text = $text;
         $modified_blocks = array();
 
@@ -110,7 +110,7 @@ class Markup
         }
 
         $lines = explode("\n", $text);
-        $markup_data = nel_plugins()->processHook('nel-in-before-markup-lines', [$lines], $markup_data);
+        $markup_data = nel_plugins()->processHook('nel-inb4-markup-lines', [$lines], $markup_data);
 
         if (!is_array($lines)) {
             return $text;
@@ -135,7 +135,7 @@ class Markup
             $markup_data = $this->getMarkupData('simple');
         }
 
-        $markup_data = nel_plugins()->processHook('nel-in-before-markup-simple', [$text], $markup_data);
+        $markup_data = nel_plugins()->processHook('nel-inb4-markup-simple', [$text], $markup_data);
         $modified_text = $text;
 
         foreach ($markup_data as $data) {
@@ -151,7 +151,7 @@ class Markup
             $markup_data = $this->getMarkupData('loop');
         }
 
-        $markup_data = nel_plugins()->processHook('nel-in-before-markup-loops', [$text], $markup_data);
+        $markup_data = nel_plugins()->processHook('nel-inb4-markup-loops', [$text], $markup_data);
         $modified_text = $text;
 
         foreach ($markup_data as $data) {

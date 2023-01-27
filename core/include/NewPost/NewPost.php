@@ -46,11 +46,6 @@ class NewPost
             $captcha->verify($captcha_key, $captcha_answer);
         }
 
-        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_post_recaptcha')) {
-            //$captcha->verifyReCAPTCHA();
-            $captcha->verify('', '');
-        }
-
         if ($this->domain->reference('locked') &&
             !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_board')) {
             nel_derp(11, _gettext('Board is locked. Cannot make new post.'), $error_data);

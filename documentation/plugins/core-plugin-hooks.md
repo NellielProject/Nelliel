@@ -143,7 +143,7 @@ Called when regenerating board pages.
 |:---:|:--------------|:-------|:---------|:---------|:----------|
 |1    |`$board_domain`|`object`|No        |No        |The instance of `Nelliel\Domains\DomainBoard` being used.|
 
-### nel-in-before-markup-blocks
+### nel-inb4-markup-blocks
 Added: v0.9.30
 
 Called before parsing block markup.
@@ -155,7 +155,7 @@ Called before parsing block markup.
 |1    |`$markup_data`|`array` |Yes       |Yes       |Data for the markups that will be used.|
 |2    |`$text`       |`string`|No        |No        |String of unmodified text.|
 
-### nel-in-before-markup-lines
+### nel-inb4-markup-lines
 Added: v0.9.30
 
 Called before parsing line markup.
@@ -167,7 +167,7 @@ Called before parsing line markup.
 |1    |`$markup_data`|`array`|Yes       |Yes       |Data for the markups that will be used.|
 |2    |`$lines`      |`array`|No        |No        |Array of text split into lines.|
 
-### nel-in-before-markup-simple
+### nel-inb4-markup-simple
 Added: v0.9.30
 
 Called before parsing simple markup.
@@ -179,7 +179,7 @@ Called before parsing simple markup.
 |1    |`$markup_data`|`string`|Yes       |Yes       |Data for the markups that will be used.|
 |2    |`$text`       |`string`|No        |No        |String of unmodified text.|
 
-### nel-in-before-markup-loops
+### nel-inb4-markup-loops
 Added: v0.9.30
 
 Called before parsing loop markup.
@@ -191,7 +191,7 @@ Called before parsing loop markup.
 |1    |`$markup_data`|`string`|Yes       |Yes       |Data for the markups that will be used.|
 |2    |`$text`       |`string`|No        |No        |String of unmodified text.|
 
-### nel-in-before-captcha-verify
+### nel-inb4-captcha-verify
 Added: v0.9.30
 
 Called before verifying the native CAPTCHA.
@@ -201,7 +201,21 @@ Called before verifying the native CAPTCHA.
 |Order|Argument           |Type     |Modifiable|Returnable|Description|                               
 |:---:|:------------------|:--------|:---------|:---------|:----------|
 |1    |`$failed`          |`boolean`|Yes       |Yes       |Boolean indicating if a CAPTCHA verification has failed.|
-|2    |`$domain`          |`string` |No        |No        |Instance of `Nelliel\Domains\Domain` the CAPTCHA was submitted through.|
+|2    |`$domain`          |`object` |No        |No        |Instance of `Nelliel\Domains\Domain` the CAPTCHA was submitted through.|
 |3    |`$captcha_instance`|`object` |No        |No        |The active instance of `\Nelliel\AntiSpam\CAPTCHA`.|
 |4    |`$key`             |`string` |No        |No        |CAPTCHA key.|
 |5    |`$answer`          |`string` |No        |No        |CAPTCHA answer.|
+
+### nel-in-during-captcha-generation
+Added: v0.9.30
+
+Called during CAPTCHA generation.
+ 
+**Arguments**
+
+|Order|Argument     |Type     |Modifiable|Returnable|Description|                               
+|:---:|:------------|:--------|:---------|:---------|:----------|
+|1    |`$captchas`  |`array`  |Yes       |Yes       |Array of CAPTCHAs already generated.|
+|2    |`$domain`    |`object` |No        |No        |Instance of `Nelliel\Domains\Domain`.|
+|3    |`$write_mode`|`boolean`|No        |No        |Whether output is being written to file.|
+|4    |`$area`      |`string` |No        |No        |The area calling for CAPTCHA generation.|
