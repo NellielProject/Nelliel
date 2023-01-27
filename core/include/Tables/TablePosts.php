@@ -92,7 +92,7 @@ class TablePosts extends Table
             capcode             VARCHAR(255) DEFAULT NULL,
             email               VARCHAR(255) DEFAULT NULL,
             subject             VARCHAR(255) DEFAULT NULL,
-            comment             TEXT DEFAULT NULL,
+            comment             ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_ip_address   VARCHAR(128) NOT NULL,
             visitor_id          VARCHAR(128) NOT NULL,
@@ -107,7 +107,7 @@ class TablePosts extends Table
             username            VARCHAR(50) DEFAULT NULL,
             mod_comment         TEXT DEFAULT NULL,
             regen_cache         SMALLINT NOT NULL DEFAULT 0,
-            cache               TEXT DEFAULT NULL,
+            cache               ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (post_number),
             CONSTRAINT fk_' . $this->table_name . '__threads

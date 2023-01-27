@@ -39,7 +39,7 @@ class TableSettingOptions extends Table
         CREATE TABLE ' . $this->table_name . ' (
             setting_category    VARCHAR(50) NOT NULL,
             setting_name        VARCHAR(50) NOT NULL,
-            menu_data           TEXT NOT NULL,
+            menu_data           ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             raw_output          SMALLINT NOT NULL DEFAULT 0,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (setting_category, setting_name),

@@ -37,7 +37,7 @@ class TableBoardConfigs extends Table
         CREATE TABLE ' . $this->table_name . ' (
             board_id        VARCHAR(50) NOT NULL,
             setting_name    VARCHAR(50) NOT NULL,
-            setting_value   TEXT NOT NULL,
+            setting_value   ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             edit_lock       SMALLINT NOT NULL DEFAULT 0,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (board_id, setting_name),
             CONSTRAINT fk_board_configs__domain_registry

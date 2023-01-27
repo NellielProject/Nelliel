@@ -451,6 +451,38 @@ class BetaMigrations
             case 'v0.9.29':
                 echo '<br>' . __('Updating from v0.9.29 to ???...') . '<br>';
 
+                // Update settings table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_settings" MODIFY "default_value" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Settings table updated.') . '<br>';
+                }
+
+                // Update setting options table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_setting_options" MODIFY "menu_data" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Setting options table updated.') . '<br>';
+                }
+
+                // Update site and table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_settings" MODIFY "default_value" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Site config updated.') . '<br>';
+                }
+
+                // Update site config table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_site_config" MODIFY "setting_value" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Site config table updated.') . '<br>';
+                }
+
                 // Update site settings
                 $new_site_settings = ['pm_snippet_length', 'min_time_between_site_stat_updates',
                     'min_time_between_board_stat_updates', 'enable_captchas', 'use_native_captcha', 'overboard_name',
@@ -459,6 +491,16 @@ class BetaMigrations
                 $this->newSiteSettings($new_site_settings);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
+
+                // Update board configs and defaults tables
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_board_configs" MODIFY "setting_value" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_board_defaults" MODIFY "setting_value" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Board configs and defaults tables updated.') . '<br>';
+                }
 
                 // Update board settings
                 $new_board_settings = ['allow_shadow_message', 'shadow_message_override', 'r9k_enable_board',
@@ -509,6 +551,13 @@ class BetaMigrations
                     nel_database('core')->exec(
                         'ALTER TABLE "' . $prefix . '_posts' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
                     nel_database('core')->exec('ALTER TABLE "' . $prefix . '_posts' . '" DROP COLUMN "content_hash"');
+
+                    if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                        nel_database('core')->exec(
+                            'ALTER TABLE "' . $prefix . '_posts' . '" MODIFY comment LONGTEXT DEFAULT NULL');
+                        nel_database('core')->exec(
+                            'ALTER TABLE "' . $prefix . '_posts' . '" MODIFY cache LONGTEXT DEFAULT NULL');
+                    }
                 }
 
                 echo ' - ' . __('Post tables updated.') . '<br>';
@@ -567,6 +616,27 @@ class BetaMigrations
                 $overboard->rebuild();
 
                 echo ' - ' . __('Overboard table updated.') . '<br>';
+
+                // Update news table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_news" MODIFY "text" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('News table updated.') . '<br>';
+                }
+
+                // Update pages table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_pages" MODIFY "text" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Pages table updated.') . '<br>';
+                }
+
+                // Update cache table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_cache" MODIFY "cache_data" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Cache table updated.') . '<br>';
+                }
 
                 $migration_count ++;
         }

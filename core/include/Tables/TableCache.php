@@ -38,7 +38,7 @@ class TableCache extends Table
         CREATE TABLE ' . $this->table_name . ' (
             domain_id       VARCHAR(50) NOT NULL,
             cache_key       VARCHAR(50) NOT NULL,
-            cache_data      TEXT NOT NULL,
+            cache_data      ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             regen           SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (domain_id, cache_key),

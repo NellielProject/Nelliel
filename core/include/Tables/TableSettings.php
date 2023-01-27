@@ -47,7 +47,7 @@ class TableSettings extends Table
             setting_owner       VARCHAR(50) NOT NULL,
             data_type           VARCHAR(50) NOT NULL,
             setting_name        VARCHAR(50) NOT NULL,
-            default_value       TEXT NOT NULL,
+            default_value       ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             setting_description TEXT NOT NULL,
             input_attributes    TEXT NOT NULL,
             moar                TEXT DEFAULT NULL,

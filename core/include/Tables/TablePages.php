@@ -48,7 +48,7 @@ class TablePages extends Table
             domain_id       VARCHAR(50) NOT NULL,
             uri             VARCHAR(255) NOT NULL,
             title           VARCHAR(255) NOT NULL,
-            text            TEXT NOT NULL,
+            text            ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             markup_type     VARCHAR(50) NOT NULL,
             show_link       SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL,

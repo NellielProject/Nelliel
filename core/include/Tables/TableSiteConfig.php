@@ -32,7 +32,7 @@ class TableSiteConfig extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             setting_name    VARCHAR(50) NOT NULL,
-            setting_value   TEXT NOT NULL,
+            setting_value   ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (setting_name)
         ) ' . $options . ';';
 
