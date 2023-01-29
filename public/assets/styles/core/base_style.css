@@ -264,6 +264,7 @@ td {
 	line-height: 1.0rem;
 	font-family: Menlo, Monaco, "Courier New", monospace;
 	display: inline-block;
+	text-align: unset;
 }
 
 .shift-jis-art {
@@ -271,6 +272,7 @@ td {
 	line-height: 18px;
 	font-family: Mona, "MS PGothic", "ＭＳ Ｐゴシック", "MS PGothic AA", IPAMonaPGothic, "IPA モナー Pゴシック", submona, sans-serif;
 	display: inline-block;
+	text-align: unset;
 }
 
 .post-cite {

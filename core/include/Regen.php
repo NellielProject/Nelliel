@@ -18,6 +18,7 @@ use Nelliel\Output\OutputNews;
 use Nelliel\Output\OutputOverboard;
 use Nelliel\Output\OutputThread;
 use PDO;
+use Nelliel\Output\OutputFAQ;
 
 class Regen
 {
@@ -72,6 +73,12 @@ class Regen
     {
         $output_blotter = new OutputBlotter($domain, true);
         $output_blotter->render(array(), false);
+    }
+
+    public function faq(Domain $domain): void
+    {
+        $output_faq = new OutputFAQ($domain, true);
+        $output_faq->render(array(), false);
     }
 
     public function index(Domain $domain): void
@@ -151,6 +158,7 @@ class Regen
         set_time_limit($site_domain->setting('max_page_regen_time'));
         $this->blotter($site_domain);
         $this->news($site_domain);
+        $this->faq($site_domain);
         $this->homePage($site_domain);
         $prepared = $site_domain->database()->prepare(
             'SELECT "uri" FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = :domain_id');
