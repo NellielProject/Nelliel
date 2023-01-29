@@ -33,7 +33,7 @@ class TableSettings extends Table
             'setting_name' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'default_value' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
             'setting_description' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
-            'input_attributes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'input_attributes' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
@@ -191,8 +191,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_moving_replies', '1', 'Let individual replies from threads be moved.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_moving_uploads', '1', 'Let files and embeds be moved between posts.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_shadow_message', '1', 'Give the option of leaving a shadow message when moving or merging threads.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'shadow_message_moved', 'This thread has been moved to %s', 'Shadow thread message for moved threads. %s will be filled in with a cite link to the thread\'s new location. (sprintf).', '{"type":"select"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'shadow_message_merged', 'This thread has been merged into %s', 'Shadow thread message for merged threads. %s will be filled in with a cite link to the thread\'s new location. (sprintf)', '{"type":"select"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'shadow_message_moved', 'This thread has been moved to %s', 'Shadow thread message for moved threads. %s will be filled in with a cite link to the thread\'s new location. (sprintf).', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'shadow_message_merged', 'This thread has been merged into %s', 'Shadow thread message for merged threads. %s will be filled in with a cite link to the thread\'s new location. (sprintf)', '{"type":"textarea"}']);
 
         // Banners
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_banners', '0', 'Display board banners if available.', '{"type":"checkbox"}']);
@@ -313,14 +313,14 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'thread_renzoku', '120', 'Cooldown for new threads (seconds.)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'reply_renzoku', '30', 'Cooldown for new replies (seconds).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'upload_renzoku', '30', 'Cooldown for posts with uploads (seconds).', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'threads_per_hour_limit', '0', 'Maximum new threads per hour. O to disable.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'threads_per_hour_limit', '0', 'Maximum new threads per hour. 0 to disable.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_cites', '30', 'Maximum cite in a comment.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_crossboard_cites', '15', 'Maximum cross-board cites in a comment.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_comment_urls', '15', 'Maximum URL links allowed in a comment.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'trim_comment_newlines_start', '0', 'Trim extra newlines and whitespace at start of comment.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'trim_comment_newlines_end', '1', 'Trim extra newlines and whitespace at the end of comment.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_anonymous_names', '1', 'Use the list of anonymous names when name field is empty or disabled.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'anonymous_names', '["Anonymous"]', 'Names that can be randomly chosen when a name is not provided or forced anonymous is on. Enter as JSON array of strings.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'anonymous_names', '["Anonymous"]', 'Names that can be randomly chosen when a name is not provided or forced anonymous is on. Enter as JSON array of strings.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'always_noko', '0', 'Always return to thread (noko) after making a post.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'automatic_gets', '[]', 'List of post numbers to be automatically stickied as a GET. Enter as JSON array of integers.', '{"type":"text"}']);
 
