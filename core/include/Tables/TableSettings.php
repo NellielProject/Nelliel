@@ -500,6 +500,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_left_bracket', '[', 'Bracket on the left side of content links.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_right_bracket', ']', 'Bracket on the right side of content links.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_reply', 'Reply', 'Reply', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_expand_thread', 'Expand', 'Expand', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_collapse_thread', 'Collapse', 'Collapse', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_show_thread', 'Show Thread', 'Show Thread', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_hide_thread', 'Hide Thread', 'Hide Thread', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_show_post', 'Show Post', 'Show Post', '{"type":"text"}']);
