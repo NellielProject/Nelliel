@@ -41,7 +41,7 @@ class TableNoticeboard extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             notice_id   ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            username    VARCHAR(50) NOT NULL,
+            username    VARCHAR(50) DEFAULT NULL,
             time        BIGINT NOT NULL,
             subject     TEXT NOT NULL,
             message     TEXT NOT NULL,
@@ -50,7 +50,7 @@ class TableNoticeboard extends Table
             CONSTRAINT fk_noticeboard__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
-            ON DELETE CASCADE
+            ON DELETE SET NULL
         ) ' . $options . ';';
 
         return $schema;

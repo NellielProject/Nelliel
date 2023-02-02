@@ -166,7 +166,7 @@ class Overboard
     public function purge(string $overboard_id = null): void
     {
         if (is_null($overboard_id)) {
-            $this->database->exec('DELETE FROM "' . NEL_OVERBOARD_TABLE);
+            $this->database->exec('DELETE FROM "' . NEL_OVERBOARD_TABLE . '"');
         } else {
             $prepared = $this->database->prepare('DELETE FROM "' . NEL_OVERBOARD_TABLE . '" WHERE "overboard_id" = ?');
             $this->database->executePrepared($prepared, [$overboard_id]);
@@ -187,12 +187,12 @@ class Overboard
             $board = Domain::getDomainFromID($board_id, $this->database);
 
             if ($all_overboards) {
-                foreach ($board->activeThreads() as $thread) {
+                foreach ($board->activeThreads(true) as $thread) {
                     $this->addThread($thread, 'sfw');
                     $this->addThread($thread, 'all');
                 }
             } else {
-                foreach ($board->activeThreads() as $thread) {
+                foreach ($board->activeThreads(true) as $thread) {
                     $this->addThread($thread, $overboard_id);
                 }
             }

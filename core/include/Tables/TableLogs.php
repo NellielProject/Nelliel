@@ -72,6 +72,7 @@ class TableLogs extends Table
             CONSTRAINT fk_logs__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
+            ON DELETE SET NULL
         ) ' . $options . ';';
 
         return $schema;

@@ -43,7 +43,7 @@ class TableNews extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             article_id  ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            username    VARCHAR(50) NOT NULL,
+            username    VARCHAR(50) DEFAULT NULL,
             name        VARCHAR(255) NOT NULL,
             time        BIGINT NOT NULL,
             headline    VARCHAR(255) NOT NULL,
@@ -53,7 +53,7 @@ class TableNews extends Table
             CONSTRAINT fk_news__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
-            ON DELETE CASCADE
+            ON DELETE SET NULL
         ) ' . $options . ';';
 
         return $schema;

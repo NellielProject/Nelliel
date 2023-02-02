@@ -67,7 +67,7 @@ abstract class Table
         return $this->database->rowExists($this->table_name, $check_columns, $check_values, $check_pdo_types);
     }
 
-    protected function insertDefaultRow(array $values)
+    public function insertDefaultRow(array $values)
     {
         $sql_helpers = nel_utilities()->sqlHelpers();
         $data = array();
@@ -220,7 +220,7 @@ abstract class Table
         if (!$result) {
             nel_derp(103,
                 sprintf(
-                    _gettext('Creation of %s failed! Check database settings and config.php then retry installation.'),
+                    _gettext('Creation of table %s failed! Check database settings and config.php then retry installation.'),
                     $table_name));
         }
 
