@@ -85,7 +85,6 @@ class OutputIndex extends Output
         $this->render_data['index_navigation_top'] = $this->domain->setting('index_nav_top');
         $this->render_data['index_navigation_bottom'] = $this->domain->setting('index_nav_bottom');
         $this->render_data['footer_form'] = true;
-        $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
 
@@ -210,7 +209,7 @@ class OutputIndex extends Output
     private function doOutput(array $gen_data, string $index_basename, int $page, bool $data_only)
     {
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->board([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
         if ($this->write_mode) {

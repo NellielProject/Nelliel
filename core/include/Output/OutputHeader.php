@@ -25,12 +25,12 @@ class OutputHeader extends Output
         $this->render_data['styles'] = $output_menu->styles([], true);
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
-        $this->render_data['use_site_header'] = true;
+        $this->render_data['use_general_header'] = true;
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
             'description') : '';
         $this->displayBanners();
-        $output = $this->output('header', $data_only, true, $this->render_data);
+        $output = $this->output('headers/general', $data_only, true, $this->render_data);
         return $output;
     }
 
@@ -58,26 +58,7 @@ class OutputHeader extends Output
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
             'description') : '';
         $this->displayBanners();
-        $output = $this->output('header', $data_only, true, $this->render_data);
-        return $output;
-    }
-
-    public function overboard(array $parameters, bool $data_only)
-    {
-        $this->renderSetup();
-        $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
-        $this->render_data['show_styles'] = true;
-        $output_menu = new OutputMenu($this->domain, $this->write_mode);
-        $this->render_data['styles'] = $output_menu->styles([], true);
-        $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
-        $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
-        $this->render_data['board_navigation'] = $output_navigation->boardLinks([], true);
-        $this->render_data['use_overboard_header'] = true;
-        $this->render_data['overboard_name'] = $parameters['name'] ?? null;
-        $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
-            'description') : '';
-        $this->displayBanners();
-        $output = $this->output('headers/overboard', $data_only, true, $this->render_data);
+        $output = $this->output('headers/board', $data_only, true, $this->render_data);
         return $output;
     }
 
@@ -88,7 +69,8 @@ class OutputHeader extends Output
         $this->render_data['panel'] = $parameters['panel'] ?? '';
         $this->render_data['section'] = $parameters['section'] ?? '';
         $this->render_data['show_styles'] = true;
-        $this->render_data['is_panel'] = $parameters['is_panel'] ?? false;
+        $this->render_data['show_sub_header'] = !empty($parameters['panel']) || !empty($parameters['section']);
+        $this->render_data['use_manage_header'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if ($this->domain->id() === Domain::SITE) {
@@ -103,17 +85,33 @@ class OutputHeader extends Output
         $this->render_data['styles'] = $output_menu->styles([], true);
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
-        $output = $this->output('header', $data_only, true, $this->render_data);
+        $output = $this->output('headers/manage', $data_only, true, $this->render_data);
         return $output;
     }
 
     private function displayBanners()
     {
         $banners = new Banners();
-        $this->render_data['show_banner'] = $this->domain->setting('show_banners') &&
-            !empty($banners->getList($this->domain->reference('banners_path'), true));
-        $this->render_data['banner_display_width'] = $this->domain->setting('banner_display_width');
-        $this->render_data['banner_display_height'] = $this->domain->setting('banner_display_height');
-        $this->render_data['banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
+        $is_board_domain = $this->domain->id() !== Domain::SITE && $this->domain->id() !== Domain::GLOBAL;
+        $site_banners_available = !empty($banners->getList($this->site_domain->reference('banners_path'), true));
+        $board_banners_available = !empty($banners->getList($this->domain->reference('banners_path'), true));
+
+        if ($site_banners_available && (!$is_board_domain || $this->site_domain->setting('show_top_banners_on_boards'))) {
+            $this->render_data['site_banner_url'] = nel_build_router_url(
+                [$this->site_domain->id(), 'banners', 'random']);
+            $this->render_data['show_site_top_banner'] = $this->site_domain->setting('show_top_banners');
+            $this->render_data['site_banner_url'] = nel_build_router_url(
+                [$this->site_domain->id(), 'banners', 'random']);
+            $this->render_data['site_banner_display_width'] = $this->site_domain->setting('banner_display_width');
+            $this->render_data['site_banner_display_height'] = $this->site_domain->setting('banner_display_height');
+        }
+
+        if ($is_board_domain && $board_banners_available) {
+            $this->render_data['board_banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
+            $this->render_data['show_board_top_banner'] = $this->domain->setting('show_top_banners');
+            $this->render_data['board_banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
+            $this->render_data['board_banner_display_width'] = $this->site_domain->setting('banner_display_width');
+            $this->render_data['board_banner_display_height'] = $this->site_domain->setting('banner_display_height');
+        }
     }
 }

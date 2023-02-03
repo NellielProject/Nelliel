@@ -140,9 +140,18 @@
 			<tr>
 				<th id="section-banners" colspan="3" data-i18n="">Banners</th>
 			</tr>
-	{{# show_banners }}
+	{{# show_top_banners }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ show_banners}}
+	{{/ show_top_banners }}
+	{{# show_bottom_banners }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_bottom_banners }}
+	{{# show_top_banners_on_boards }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_top_banners_on_boards }}
+	{{# show_bottom_banners_on_boards }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_bottom_banners_on_boards }}
 	{{# banner_display_width }}
 			{{> panels/pieces/settings/number }}
 	{{/ banner_display_width }}

@@ -102,7 +102,6 @@ class OutputThread extends Output
             $this->render_data['abbreviate'] = false;
             $output_new_post_form = new OutputNewPostForm($this->domain, $this->write_mode);
             $this->render_data['new_post_form'] = $output_new_post_form->render(['response_to' => $thread_id], true);
-            $this->render_data['show_styles'] = true;
             $output_menu = new OutputMenu($this->domain, $this->write_mode);
             $this->render_data['styles'] = $output_menu->styles([], true);
             $this->render_data['return_link'] = true;
@@ -184,7 +183,7 @@ class OutputThread extends Output
             $this->render_data['index_navigation'] = true;
             $this->render_data['footer_form'] = true;
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
-            $this->render_data['footer'] = $output_footer->render([], true);
+            $this->render_data['footer'] = $output_footer->board([], true);
         }
 
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

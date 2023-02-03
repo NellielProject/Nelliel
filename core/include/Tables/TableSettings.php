@@ -98,7 +98,10 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'min_time_between_board_stat_updates', '30', 'Minimum time between board statistics updates (seconds).', '{"type":"number"}']);
 
         // Banners
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_banners', '0', 'Display site banners if available.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_top_banners', '0', 'Display site banners at the top of public site pages.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_bottom_banners', '0', 'Display site banners at the bottom of public site pages.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_top_banners_on_boards', '0', 'Display site banners at the top of public board pages.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_bottom_banners_on_boards', '0', 'Display site banners at the bottom of public board pages.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'banner_display_width', '300', 'Display width of site banners.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'banner_display_height', '100', 'Display height of site banners.', '{"type":"number"}']);
 
@@ -195,7 +198,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'shadow_message_merged', 'This thread has been merged into %s', 'Shadow thread message for merged threads. %s will be filled in with a cite link to the thread\'s new location. (sprintf)', '{"type":"textarea"}']);
 
         // Banners
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_banners', '0', 'Display board banners if available.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_top_banners', '0', 'Display board banners at the top of public pages.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_bottom_banners', '0', 'Display board banners at the bottom of public pages.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'banner_display_width', '300', 'Display width of site banners.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'banner_display_height', '100', 'Display height of site banners.', '{"type":"number"}']);
 
@@ -375,7 +379,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_nav_bottom', '1', 'Display navigation at bottom of catalog page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_tile_width', '250', 'Width of catalog tiles.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_tile_height', '300', 'Height of catalog tiles.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_show_multiple_uploads', '1', 'Render the catalog pages.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_show_multiple_uploads', '1', 'Show multiple upload previews.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_first_preview_full_size', '1', 'First preview in a multiple upload tile will retain the size of a single upload preview.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'catalog_first_preview_own_row', '1', 'First preview in a multiple upload tile will remain by itself on the top row.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'catalog_max_preview_display_width', '120', 'Maximum display width for a single catalog preview.', '{"type":"number"}']);

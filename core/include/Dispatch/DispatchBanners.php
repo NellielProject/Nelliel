@@ -26,11 +26,8 @@ class DispatchBanners extends Dispatch
             case 'random':
                 $banners_list = array();
                 $web_path = NEL_BANNERS_WEB_PATH;
-
-                if ($this->domain->setting('show_banners')) {
-                    $banners_list = $banners->getList($this->domain->reference('banners_path'), true);
-                    $web_path = $this->domain->reference('banners_web_path');
-                }
+                $banners_list = $banners->getList($this->domain->reference('banners_path'), true);
+                $web_path = $this->domain->reference('banners_web_path');
 
                 if (!empty($banners_list)) {
                     $banner = $banners->getRandomBanner($banners_list);

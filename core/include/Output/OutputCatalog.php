@@ -146,7 +146,7 @@ class OutputCatalog extends Output
         $this->render_data['tile_width'] = $this->domain->setting('catalog_tile_width');
         $this->render_data['tile_height'] = $this->domain->setting('catalog_tile_height');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->board([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
         if ($this->write_mode) {

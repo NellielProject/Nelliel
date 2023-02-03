@@ -21,7 +21,6 @@ class OutputPanelFileFilters extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/file_filters_main');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('File Filters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -76,7 +75,7 @@ class OutputPanelFileFilters extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -93,7 +92,6 @@ class OutputPanelFileFilters extends Output
     {
         $this->renderSetup();
         $editing = $parameters['editing'] ?? true;
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('File Filters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -123,7 +121,7 @@ class OutputPanelFileFilters extends Output
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['boards_select'] = $output_menu->boards('board_id', $this->render_data['board_id'], true);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

@@ -29,6 +29,7 @@ class BetaMigrations
 {
     private $file_handler;
     private $upgrade;
+    private $setting_defaults_inserted = false;
 
     function __construct(FileHandler $file_handler, Upgrade $upgrade)
     {
@@ -538,8 +539,17 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $new_site_settings = ['pm_snippet_length', 'min_time_between_site_stat_updates',
                     'min_time_between_board_stat_updates', 'enable_captchas', 'use_native_captcha', 'overboard_name',
                     'overboard_catalog', 'sfw_overboard_name', 'sfw_overboard_catalog', 'private_message_time_format',
-                    'blotter_time_format', 'news_time_format', 'control_panel_list_time_format', 'time_zone'];
+                    'blotter_time_format', 'news_time_format', 'control_panel_list_time_format', 'time_zone',
+                    'show_bottom_banners'];
                 $this->newSiteSettings($new_site_settings);
+
+                $old_site_setting_names = ['show_banners'];
+                $new_site_setting_names = ['show_top_banners'];
+                $this->renameSiteSettings($old_site_setting_names, $new_site_setting_names);
+
+                $removed_site_settings = ['recaptcha_site_key', 'recaptcha_sekrit_key', 'recaptcha_type',
+                    'use_login_recaptcha', 'use_register_recaptcha', 'use_post_recaptcha', 'use_report_recaptcha'];
+                $this->removeSiteSettings($removed_site_settings);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
@@ -568,19 +578,18 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     'content_links_show_post', 'content_links_hide_post', 'content_links_show_file',
                     'content_links_hide_file', 'content_links_show_embed', 'content_links_hide_embed',
                     'content_links_show_upload', 'content_links_hide_upload', 'content_links_cite_post',
-                    'content_links_download_file', 'content_links_first_posts', 'content_links_last_posts', 'time_zone'];
+                    'content_links_download_file', 'content_links_first_posts', 'content_links_last_posts', 'time_zone',
+                    'show_bottom_banners', 'show_top_banners_on_boards', 'show_bottom_banners_on_boards'];
                 $this->newBoardSettings($new_board_settings);
 
                 $old_board_setting_names = ['max_catalog_display_width', 'max_catalog_display_height',
-                    'ban_page_date_format'];
+                    'ban_page_date_format', 'show_banners'];
                 $new_board_setting_names = ['catalog_max_preview_display_width', 'catalog_max_preview_display_height',
-                    'ban_page_time_format'];
+                    'ban_page_time_format', 'show_top_banners'];
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
-                $removed_site_settings = ['recaptcha_site_key', 'recaptcha_sekrit_key', 'recaptcha_type',
-                    'use_login_recaptcha', 'use_register_recaptcha', 'use_post_recaptcha', 'use_report_recaptcha',
-                    'post_date_format'];
-                $this->removeBoardSettings($removed_site_settings);
+                $removed_board_settings = ['post_date_format'];
+                $this->removeBoardSettings($removed_board_settings);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
 
@@ -767,19 +776,27 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
         return $board_ids;
     }
 
-    private function newSiteSettings(array $names): void
+    private function newSiteSettings(array $names, bool $reinsert = false): void
     {
-        $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
-        $settings_table->insertDefaults();
+        if (!$this->setting_defaults_inserted || $reinsert) {
+            $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+            $settings_table->insertDefaults();
+            $this->setting_defaults_inserted = true;
+        }
+
         $setting_options_table = new TableSettingOptions(nel_database('core'), nel_utilities()->sqlCompatibility());
         $setting_options_table->insertDefaults();
         $this->copyToSiteConfig($names);
     }
 
-    private function newBoardSettings(array $names): void
+    private function newBoardSettings(array $names, bool $reinsert = false): void
     {
-        $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
-        $settings_table->insertDefaults();
+        if (!$this->setting_defaults_inserted || $reinsert) {
+            $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+            $settings_table->insertDefaults();
+            $this->setting_defaults_inserted = true;
+        }
+
         $setting_options_table = new TableSettingOptions(nel_database('core'), nel_utilities()->sqlCompatibility());
         $setting_options_table->insertDefaults();
         $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());

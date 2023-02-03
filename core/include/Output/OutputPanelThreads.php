@@ -41,7 +41,6 @@ class OutputPanelThreads extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/thread');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -109,7 +108,7 @@ class OutputPanelThreads extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -119,7 +118,6 @@ class OutputPanelThreads extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/thread_expand');
-        $parameters['is_panel'] = true;
         $thread_id = $parameters['thread_id'] ?? 0;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -158,7 +156,7 @@ class OutputPanelThreads extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -168,7 +166,6 @@ class OutputPanelThreads extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/threads_edit_post');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit Post');
         $post = $parameters['post'] ?? null;
@@ -184,7 +181,7 @@ class OutputPanelThreads extends Output
         $this->render_data['form_action'] = nel_build_router_url(
             [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -194,7 +191,6 @@ class OutputPanelThreads extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/threads_move');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Move');
         $content_id = $parameters['content_id'] ?? new ContentID();
@@ -213,7 +209,7 @@ class OutputPanelThreads extends Output
         $this->render_data['form_action'] = nel_build_router_url(
             [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'move']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -223,7 +219,6 @@ class OutputPanelThreads extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/threads_merge');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Merge');
         $content_id = $parameters['content_id'] ?? new ContentID();
@@ -239,7 +234,7 @@ class OutputPanelThreads extends Output
         $this->render_data['form_action'] = nel_build_router_url(
             [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'merge']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

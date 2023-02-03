@@ -23,7 +23,6 @@ class OutputPanelBans extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/bans_main');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -67,7 +66,7 @@ class OutputPanelBans extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -77,7 +76,6 @@ class OutputPanelBans extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/bans_new');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('New Ban');
         $content_id = $parameters['content_id'] ?? null;
@@ -104,7 +102,7 @@ class OutputPanelBans extends Output
 
         $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'bans', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -167,7 +165,7 @@ class OutputPanelBans extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

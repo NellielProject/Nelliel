@@ -1,0 +1,18 @@
+{{^ overboard }}
+<hr class="clear">
+{{/ overboard }}
+{{# show_styles }}
+	{{> menu/styles }}
+{{/ show_styles }}
+<footer class="footer">
+{{> pieces/bottom_banners }}
+{{# site_footer_lines }}
+<div class="footer-text">
+	{{ text }}
+</div>
+{{/ site_footer_lines }}
+{{> pieces/attribution_links }}
+{{# show_stats }}
+{{> pieces/render_stats }}
+{{/ show_stats }}
+</footer>

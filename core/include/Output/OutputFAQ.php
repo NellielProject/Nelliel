@@ -25,7 +25,7 @@ class OutputFAQ extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->general([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         $this->file_handler->writeFile(NEL_PUBLIC_PATH . 'faq.html', $output);
     }

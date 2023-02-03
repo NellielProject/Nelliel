@@ -165,9 +165,12 @@
 			<tr>
 				<th id="section-banners" colspan="3" data-i18n="">Banners</th>
 			</tr>
-	{{# show_banners }}
+	{{# show_top_banners }}
 		{{> panels/pieces/settings/checkbox }}
-	{{/ show_banners }}
+	{{/ show_top_banners }}
+	{{# show_bottom_banners }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ show_bottom_banners }}
 	{{# banner_display_width }}
 		{{> panels/pieces/settings/number }}
 	{{/ banner_display_width }}

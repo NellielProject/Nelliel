@@ -20,7 +20,6 @@ class OutputPanelMain extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/main_site');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Site');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -137,7 +136,7 @@ class OutputPanelMain extends Output
             [$this->domain->id(), 'language', 'gettext', 'extract']);
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -148,7 +147,6 @@ class OutputPanelMain extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/main_global');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? __('Main');
         $parameters['section'] = $parameters['section'] ?? __('Global');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -182,7 +180,7 @@ class OutputPanelMain extends Output
             [$this->domain->id(), 'regen', 'cache']);
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -193,7 +191,6 @@ class OutputPanelMain extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/main_board');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? __('Main');
         $parameters['section'] = $parameters['section'] ?? __('Board');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -238,7 +235,7 @@ class OutputPanelMain extends Output
         $this->render_data['regen_caches_url'] = nel_build_router_url([$this->domain->id(), 'regen', 'cache']);
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

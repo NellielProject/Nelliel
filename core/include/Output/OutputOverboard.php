@@ -32,7 +32,7 @@ class OutputOverboard extends Output
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->overboard(['name' => $overboard_name], true);
+        $this->render_data['header'] = $output_header->general(['name' => $overboard_name], true);
         $overboard = new Overboard($this->database);
         $threads = $overboard->getThreads($overboard_id);
         $thread_count = count($threads);
@@ -42,7 +42,6 @@ class OutputOverboard extends Output
         $gen_data['index_rendering'] = true;
         $this->render_data['hide_post_select'] = true;
         $this->render_data['hide_file_select'] = true;
-        $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
         $this->render_data['overboard'] = true;
@@ -64,7 +63,7 @@ class OutputOverboard extends Output
             if ($threads_on_page >= $threads_per_page || $i === $thread_count) {
                 $this->render_data['index_navigation'] = false;
                 $output_footer = new OutputFooter($this->site_domain, $this->write_mode);
-                $this->render_data['footer'] = $output_footer->render([], true);
+                $this->render_data['footer'] = $output_footer->general([], true);
                 $output = $this->output('basic_page', $data_only, true, $this->render_data);
                 $index_filename = 'index' . NEL_PAGE_EXT;
 
@@ -129,7 +128,7 @@ class OutputOverboard extends Output
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->overboard([], true);
+        $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['catalog_title'] = __('Catalog of ') . $overboard_name;
         $this->render_data['overboard'] = true;
         $overboard = new Overboard($this->database);
@@ -243,7 +242,7 @@ class OutputOverboard extends Output
         $this->render_data['tile_width'] = $this->domain->setting('catalog_tile_width');
         $this->render_data['tile_height'] = $this->domain->setting('catalog_tile_height');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->general([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
 
         if ($this->write_mode) {
