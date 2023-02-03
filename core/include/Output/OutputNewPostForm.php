@@ -74,16 +74,16 @@ class OutputNewPostForm extends Output
         }
 
         if (!$response_to) {
-            $this->render_data['allow_files'] = $this->domain->setting('allow_op_files');
+            $this->render_data['allow_files'] = $this->domain->setting('allow_op_files') && $this->domain->setting('max_op_files') > 0 && $this->domain->setting('max_op_total_uploads') > 0;
             $this->render_data['file_required'] = $this->domain->setting('require_op_file');
-            $this->render_data['allow_embeds'] = $this->domain->setting('allow_op_embeds');
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_op_embeds') && $this->domain->setting('max_reply_files') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
             $this->render_data['embed_required'] = $this->domain->setting('require_op_embed');
             $max_files = intval($this->domain->setting('max_op_files'));
             $max_embeds = intval($this->domain->setting('max_op_embeds'));
         } else {
-            $this->render_data['allow_files'] = $this->domain->setting('allow_reply_files');
+            $this->render_data['allow_files'] = $this->domain->setting('allow_reply_files') && $this->domain->setting('max_reply_files') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
             $this->render_data['file_required'] = $this->domain->setting('require_reply_file');
-            $this->render_data['allow_embeds'] = $this->domain->setting('allow_reply_embeds');
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_reply_embeds') && $this->domain->setting('max_reply_embeds') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
             $this->render_data['embed_required'] = $this->domain->setting('require_reply_embed');
             $max_files = intval($this->domain->setting('max_reply_files'));
             $max_embeds = intval($this->domain->setting('max_reply_embeds'));
