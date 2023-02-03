@@ -20,7 +20,10 @@ class OutputHeader extends Output
     {
         $this->renderSetup();
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
-        $this->render_data['show_styles'] = true;
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['styles'] = $output_menu->styles([], true);
+        $this->render_data['show_top_styles'] = $this->domain->setting('show_top_styles');
+        $this->render_data['show_bottom_styles'] = $this->domain->setting('show_bottom_styles');
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
@@ -39,9 +42,10 @@ class OutputHeader extends Output
         $this->renderSetup();
         $uri = $parameters['uri'] ?? $this->domain->reference('board_directory');
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
-        $this->render_data['show_styles'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
+        $this->render_data['show_top_styles'] = $this->domain->setting('show_top_styles');
+        $this->render_data['show_bottom_styles'] = $this->domain->setting('show_bottom_styles');
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $this->render_data['board_navigation'] = $output_navigation->boardLinks([], true);
@@ -68,7 +72,6 @@ class OutputHeader extends Output
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $this->render_data['panel'] = $parameters['panel'] ?? '';
         $this->render_data['section'] = $parameters['section'] ?? '';
-        $this->render_data['show_styles'] = true;
         $this->render_data['show_sub_header'] = !empty($parameters['panel']) || !empty($parameters['section']);
         $this->render_data['use_manage_header'] = true;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
@@ -83,6 +86,8 @@ class OutputHeader extends Output
         }
 
         $this->render_data['styles'] = $output_menu->styles([], true);
+        $this->render_data['show_top_styles'] = $this->domain->setting('show_top_styles');
+        $this->render_data['show_bottom_styles'] = $this->domain->setting('show_bottom_styles');
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $output = $this->output('headers/manage', $data_only, true, $this->render_data);

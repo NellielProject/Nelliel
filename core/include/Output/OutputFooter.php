@@ -20,7 +20,6 @@ class OutputFooter extends Output
     {
         $this->renderSetup();
         $this->render_data['use_general_footer'] = true;
-        $this->render_data['show_styles'] = true;
         $this->allFooters();
         $this->displayBanners();
         $output = $this->output('footers/general', $data_only, true, $this->render_data);
@@ -31,7 +30,6 @@ class OutputFooter extends Output
     {
         $this->renderSetup();
         $this->render_data['use_board_footer'] = true;
-        $this->render_data['show_styles'] = true;
         $this->allFooters();
         $this->displayBanners();
         $output = $this->output('footers/board', $data_only, true, $this->render_data);
@@ -42,7 +40,6 @@ class OutputFooter extends Output
     {
         $this->renderSetup();
         $this->render_data['use_manage_footer'] = true;
-        $this->render_data['show_styles'] = true;
         $this->allFooters();
         $output = $this->output('footers/manage', $data_only, true, $this->render_data);
         return $output;
@@ -64,6 +61,8 @@ class OutputFooter extends Output
 
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
+        $this->render_data['show_top_styles'] = $this->domain->setting('show_top_styles');
+        $this->render_data['show_bottom_styles'] = $this->domain->setting('show_bottom_styles');
     }
 
     private function displayBanners(): void

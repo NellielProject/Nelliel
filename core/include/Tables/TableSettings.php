@@ -128,6 +128,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'blotter_time_format', 'Y/m/d', 'Time format for blotter posts. (PHP DateTime format).', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'news_time_format', 'Y/m/d l H:i T', 'Time format for news posts. (PHP DateTime format).', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'control_panel_list_time_format', 'Y/m/d (D) H:i:s', 'Time format for entries in control panel lists. (PHP DateTime format).', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_top_styles', '1', 'Show styles menu in the header.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_bottom_styles', '0', 'Show styles menu in the footer.', '{"type":"checkbox"}']);
 
         // Uploads
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', 'GD', 'Preferred graphics handler', '{"type":"select"}']);
@@ -450,7 +452,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_display_ratio', '0', 'Show the display ratio for media that has dimensions.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'scale_upload_filesize_units', '0', 'Automatically choose unit prefixes based on upload filesize.', '{"type":"checkbox"}']);
 
-
         // New Post Form Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_allowed_filetypes', '1', 'Show a list of allowed filetypes on the new post form.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_allowed_embeds', '1', 'Show a list of allowed embeds on the new post form.', '{"type":"checkbox"}']);
@@ -470,6 +471,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'binary_filesize_conversion', '1', 'Use binary for converting formatted filesize between prefixes.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'filesize_precision', '2', 'Precision of formatted filesize.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'filesize_unit_prefix', 'KB', 'Default unit prefix for filesizes.', '{"type":"select"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_top_styles', '1', 'Show styles menu in the header.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_bottom_styles', '1', 'Show styles menu in the footer.', '{"type":"checkbox"}']);
 
         // Anti-spam
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_post_captcha', '0', 'Use CAPTCHA for new posts and threads', '{"type":"checkbox"}']);
