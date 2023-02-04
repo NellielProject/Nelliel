@@ -61,7 +61,7 @@ class FileTypes
             }
 
             foreach ($extensions as $extension) {
-                $extensions_map[$extension] = $data['format'];
+                $extensions_map[utf8_strtolower($extension)] = $data['format'];
             }
         }
 
@@ -87,7 +87,7 @@ class FileTypes
             return $extension_data;
         }
 
-        $extension_data = self::$formats[self::$extensions_map[$extension]];
+        $extension_data = self::$formats[self::$extensions_map[utf8_strtolower($extension)]];
         return $extension_data;
     }
 
@@ -98,7 +98,7 @@ class FileTypes
 
     public function isValidExtension(string $extension): bool
     {
-        return isset(self::$extensions_map[$extension]);
+        return isset(self::$extensions_map[utf8_strtolower($extension)]);
     }
 
     private function loadSettingsIfNot(Domain $domain): void
@@ -150,7 +150,7 @@ class FileTypes
 
         $valid_types = json_decode($extension_data['mimetypes'], true);
 
-        if(empty($valid_types)) {
+        if (empty($valid_types)) {
             return '';
         }
 

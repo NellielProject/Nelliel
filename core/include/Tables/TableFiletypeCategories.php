@@ -56,6 +56,7 @@ class TableFiletypeCategories extends Table
         $this->insertDefaultRow(['video', 'Video', 1]);
         $this->insertDefaultRow(['document', 'Document', 1]);
         $this->insertDefaultRow(['archive', 'Archive', 1]);
+        $this->insertDefaultRow(['font', 'Font', 1]);
         $this->insertDefaultRow(['other', 'Other', 1]);
     }
 }

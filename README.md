@@ -7,7 +7,7 @@ A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby
 ## Notable Features
  - [Plugin API](documentation/plugins/plugin-api.md)
  - [JSON API](documentation/json-api/api.md)
- - Customizable filetype checks with 65 formats included by default
+ - Customizable filetype checks with 84 formats included by default
  - Over 400 settings
  - Web-based control panels for most configuration and functions
  - Flexible role and permission system

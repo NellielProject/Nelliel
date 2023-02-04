@@ -72,11 +72,11 @@ class TableFiletypes extends Table
         // IMPORTANT: If the regex has / in it, that needs to be escaped since that's the delimiter Nelliel uses
 
         // Graphics formats
-        $this->insertDefaultRow(['jpeg', '["jpg","jpe","jpeg"]', 'graphics', '["image/jpeg"]', '^\xFF\xD8\xFF', 'JPEG', 1]);
+        $this->insertDefaultRow(['jpeg', '["jpg", "jpe", "jpeg"]', 'graphics', '["image/jpeg"]', '^\xFF\xD8\xFF', 'JPEG', 1]);
         $this->insertDefaultRow(['gif', '["gif"]', 'graphics', '["image/gif"]', '^(?:GIF87a|GIF89a)', 'GIF', 1]);
         $this->insertDefaultRow(['png', '["png"]', 'graphics', '["image/png"]', '^\x89\x50\x4E\x47\x0D\x0A\x1A\x0A', 'PNG', 1]);
-        $this->insertDefaultRow(['jpeg2000', '["jp2"]', 'graphics', '["image/jp2"]', '^\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A', 'JPEG2000', 1]);
-        $this->insertDefaultRow(['tiff', '["tif","tiff"]', 'graphics', '["image/tiff"]', '^II\*\x00|^MM\x00\*', 'TIFF', 1]);
+        $this->insertDefaultRow(['jpeg2000', '["jp2"]', 'graphics', '["image/jp2"]', '^\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A', 'JPEG 2000', 1]);
+        $this->insertDefaultRow(['tiff', '["tif", "tiff"]', 'graphics', '["image/tiff"]', '^II\*\x00|^MM\x00\*', 'TIFF', 1]);
         $this->insertDefaultRow(['bmp', '["bmp"]', 'graphics', '["image/bmp", "image/x-bmp"]', '^BM.{10}\x00\x00.{1}\x00\x00\x00.{8}\x01\x00.{1}\x00', 'BMP', 1]);
         $this->insertDefaultRow(['icon', '["ico"]', 'graphics', '["image/vnd.microsoft.icon", "image/x-icon"]', '^\x00\x00\x01\x00', 'Icon', 1]);
         $this->insertDefaultRow(['photoshop', '["psd"]', 'graphics', '["image/vnd.adobe.photoshop"]', '^8BPS\x00\x01', 'Photoshop', 1]);
@@ -94,23 +94,35 @@ class TableFiletypes extends Table
         $this->insertDefaultRow(['wbmp', '["wbmp"]', 'graphics', '["image/vnd.wap.wbmp"]', '^\x00[\x00|\x01]', 'Wireless Bitmap', 1]);
         $this->insertDefaultRow(['xbitmap', '["xbm"]', 'graphics', '["image/x-xbitmap"]', '^#define ', 'X BitMap', 1]);
         $this->insertDefaultRow(['xpixmap', '["xpm"]', 'graphics', '["image/x-xpixmap"]', '^\/\* XPM \*\/\x0D\x0Astatic char \*', 'X PixMap', 1]);
+        $this->insertDefaultRow(['avif', '["avif"]', 'graphics', '["image/avif"]', '^.{4}ftyp(?:avif|avis|mif1)', 'AVIF', 1]);
+        $this->insertDefaultRow(['apng', '["png", "apng"]', 'graphics', '["image/apng", "image/vnd.mozilla.apng"]', '^\x89\x50\x4E\x47\x0D\x0A\x1A\x0A.*acTL', 'APNG', 1]);
+        $this->insertDefaultRow(['jpx', '["jpx", "jpf"]', 'graphics', '["image/jpx"]', '^\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A.{4)\x66\x74\x79\x70\x78\x20', 'JPX', 1]);
+        $this->insertDefaultRow(['flif', '["flif"]', 'graphics', '["image/flif"]', '^FLIF[1|3|4|A|C|D|Q|S|T|a|c|d][0|1|2]', 'Free Lossless Image Format', 1]);
+        $this->insertDefaultRow(['xcf', '["xcf"]', 'graphics', '["image/x-xcf"]', '^gimp xcf', 'GIMP XCF', 1]);
+        $this->insertDefaultRow(['jpeg-xr', '["jxr", "hdp", "wdp"]', 'graphics', '["image/jxr", "image/vnd.ms-photo"]', '^\x49\x49\xBC\x01', 'JPEG XR', 1]);
+        $this->insertDefaultRow(['jpeg-xl', '["jxl"]', 'graphics', '["image/jxl"]', '^(?:\xFF\x0A|\x00\x00\x00\x0C\x4A\x58\x4C\x20\x0D\x0A\x87\x0A)', 'JPEG XL', 1]);
+        $this->insertDefaultRow(['bpg', '["bpg"]', 'graphics', '["image/bpg"]', '^\x42\x50\x47\xFB', 'Better Portable Graphics', 1]);
+        $this->insertDefaultRow(['heif', '["heif", "heic"]', 'graphics', '["image/heif", "image/heic"]', '^.{4}ftyp(?:mif1|msf1|heic|heix|hevc|hevx)', 'HEIF/HEIC', 1]);
+        $this->insertDefaultRow(['cur', '["cur"]', 'graphics', '["image/x-win-bitmap"]', '^\x00\x00\x02\x00', 'Windows Cursor', 1]);
 
         // Audio formats
         $this->insertDefaultRow(['wave', '["wav"]', 'audio', '["audio/wav", "audio/x-wav"]', '^RIFF.{4}WAVEfmt', 'WAVE', 1]);
-        $this->insertDefaultRow(['aiff', '["aif","aiff"]', 'audio', '["audio/aiff", "audio/x-aiff"]', '^FORM.{4}AIFF', 'AIFF', 1]);
+        $this->insertDefaultRow(['aiff', '["aif", "aiff"]', 'audio', '["audio/aiff", "audio/x-aiff"]', '^FORM.{4}AIFF', 'AIFF', 1]);
         $this->insertDefaultRow(['mp3', '["mp3"]', 'audio', '["audio/mpeg"]', '^ID3|\xFF[\xE3\xF2\xF3\xFA\FB]{1}', 'MP3', 1]);
         $this->insertDefaultRow(['m4a', '["m4a"]', 'audio', '["audio/mp4", "audio/x-m4a"]', '^.{4}ftypM4A', 'MPEG-4 Audio', 1]);
         $this->insertDefaultRow(['flac', '["flac"]', 'audio', '["audio/flac", "audio/x-flac"]', '^fLaC\x00\x00\x00\x22', 'FLAC', 1]);
         $this->insertDefaultRow(['aac', '["aac"]', 'audio', '["audio/aac"]', '^ADIF|^\xFF(?:\xF1|\xF9)', 'AAC', 1]);
-        $this->insertDefaultRow(['ogg-audio', '["oga","ogg"]', 'audio', '["audio/ogg"]', '^OggS', 'OGG Audio', 1]);
+        $this->insertDefaultRow(['ogg-audio', '["oga", "ogg"]', 'audio', '["audio/ogg"]', '^OggS', 'OGG Audio', 1]);
         $this->insertDefaultRow(['au', '["au","snd"]', 'audio', '["audio/basic"]', '^\.snd', 'AU', 1]);
         $this->insertDefaultRow(['ac3', '["ac3"]', 'audio', '["audio/ac3"]', '^\x0B\x77', 'AC3', 1]);
         $this->insertDefaultRow(['wma', '["wma"]', 'audio', '["audio/x-ms-wma"]', '^\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C', 'Windows Media Audio', 1]);
-        $this->insertDefaultRow(['midi', '["mid","midi"]', 'audio', '["audio/midi", "audio/x-midi"]', '^MThd\x00{3}\x06\x00[\x00-\x02].{4}MTrk', 'MIDI', 1]);
+        $this->insertDefaultRow(['midi', '["mid", "midi"]', 'audio', '["audio/midi", "audio/x-midi"]', '^MThd\x00{3}\x06\x00[\x00-\x02].{4}MTrk', 'MIDI', 1]);
         $this->insertDefaultRow(['mka', '["mka"]', 'audio', '["audio/x-matroska"]', '^\x1A\x45\xDF\xA3.{0,32}\x42\x82\x88matroska\x42\x87', 'Matroska Audio', 1]);
+        $this->insertDefaultRow(['mp1', '["mp1"]', 'audio', '["audio/mpeg", "audio/MPA"]', '^\xFF[\xF6\xF7\xFE\xFF]{1}', 'MP1', 1]);
+        $this->insertDefaultRow(['mp2', '["mp2", "mpa", "mpw"]', 'audio', '["audio/mpeg", "audio/MPA"]', '^\xFF[\xF4\xF5\xFC\xFD]{1}', 'MP2', 1]);
 
         // Video formats
-        $this->insertDefaultRow(['mpeg', '["mpg","mpeg","mpe","m1v","m2v"]', 'video', '["video/mpeg"]', '^\x00\x00\x01[\xB3\xBA]', 'MPEG-1/MPEG-2', 1]);
+        $this->insertDefaultRow(['mpeg', '["mpg", "mpeg", "mpe", "m1v", "m2v"]', 'video', '["video/mpeg"]', '^\x00\x00\x01[\xB3\xBA]', 'MPEG-1/MPEG-2', 1]);
         $this->insertDefaultRow(['quicktime', '["mov"]', 'video', '["video/quicktime"]', '^.{4}(?:cmov|free|ftypqt|mdat|moov|pnot|skip|wide)', 'Quicktime', 1]);
         $this->insertDefaultRow(['avi', '["avi"]', 'video', '["video/x-msvideo"]', '^RIFF.{4}AVI\x20LIST', 'AVI', 1]);
         $this->insertDefaultRow(['wmv', '["wmv"]', 'video', '["video/x-ms-wmv"]', '^\x30\x26\xB2\x75\x8E\x66\xCF\x11\xA6\xD9\x00\xAA\x00\x62\xCE\x6C', 'Windows Media Video', 1]);
@@ -121,6 +133,7 @@ class TableFiletypes extends Table
         $this->insertDefaultRow(['webm', '["webm"]', 'video', '["video/webm"]', '^\x1A\x45\xDF\xA3.{0,32}\x42\x82\x84webm\x42\x87', 'WebM', 1]);
         $this->insertDefaultRow(['3gp', '["3gp", "3gpp"]', 'video', '["video/3gpp"]', '^.{4}ftyp3gp', '3GP', 1]);
         $this->insertDefaultRow(['ogg-video', '["ogv"]', 'video', '["video/ogg"]', '^OggS', 'Ogg Video', 1]);
+        $this->insertDefaultRow(['mjpeg2000', '["mj2", "mjp2"]', 'video', '["video/mj2"]', '^\x00\x00\x00\x0C\x6A\x50\x20\x20\x0D\x0A\x87\x0A.{4}\x66\x74\x79\x70\x6D\x6A\x70\x32', 'Motion JPEG 2000', 1]);
 
         // General document formats
         $this->insertDefaultRow(['rtf', '["rtf"]', 'document', '["text/rtf", "application/rtf"]', '{\\rtf[1]?', 'Rich Text', 1]);
@@ -134,17 +147,23 @@ class TableFiletypes extends Table
         $this->insertDefaultRow(['plaintext', '["txt"]', 'document', '["text/plain"]', '', 'Plaintext', 1]);
 
         // Archive formats
-        $this->insertDefaultRow(['gzip', '["gz","tgz","gzip"]', 'archive', '["application/gzip", "application/x-gzip"]', '^\x1F[\x8B\x9E]\x08', 'GZip', 1]);
-        $this->insertDefaultRow(['bzip2', '["bz2","tbz2","tbz"]', 'archive', '["application/x-bzip2"]', '^BZh.{1}1AY&SY', 'bzip2', 1]);
+        $this->insertDefaultRow(['gzip', '["gz", "tgz", "gzip"]', 'archive', '["application/gzip", "application/x-gzip"]', '^\x1F[\x8B\x9E]\x08', 'GZip', 1]);
+        $this->insertDefaultRow(['bzip2', '["bz2", "tbz2", "tbz"]', 'archive', '["application/x-bzip2"]', '^BZh.{1}1AY&SY', 'bzip2', 1]);
         $this->insertDefaultRow(['tar', '["tar"]', 'archive', '["application/x-tar"]', '^.{257}ustar|[\x21-\xEF].{104}[\x30-\x37][\20-\x37]\x00.{5}{2}', 'TAR', 1]);
         $this->insertDefaultRow(['7zip', '["7z"]', 'archive', '["application/x-7z-compressed"]', '^\x37\x7A\xBC\xAF\x27\x1C', '7z', 1]);
         $this->insertDefaultRow(['binhex', '["hqx"]', 'archive', '["application/mac-binhex40"]', '^\(This file must be converted with BinHex', 'BinHex', 1]);
-        $this->insertDefaultRow(['lha', '["lzh","lha"]', 'archive', '["application/x-lzh-compressed"]', '^.{2}-(?:lh[0-7])-', 'LHA', 1]);
+        $this->insertDefaultRow(['lha', '["lzh", "lha"]', 'archive', '["application/x-lzh-compressed"]', '^.{2}-(?:lh[0-7])-', 'LHA', 1]);
         $this->insertDefaultRow(['zip', '["zip"]', 'archive', '["application/zip"]', '^.{0,4}PK(?:[\x03\x04]|[\x05\x06]|[\x07\x08])', 'Zip', 1]);
         $this->insertDefaultRow(['rar', '["rar"]', 'archive', '["application/vnd.rar", "application/x-rar-compressed"]', '^Rar\x21\x1A\x07[\x00\x01]', 'RAR', 1]);
-        $this->insertDefaultRow(['stuffit', '["sit","sitx"]', 'archive', '["application/x-stuffit", "application/x-sit"]', '^StuffIt|^SIT\!', 'StuffIt', 1]);
+        $this->insertDefaultRow(['stuffit', '["sit", "sitx"]', 'archive', '["application/x-stuffit", "application/x-sit"]', '^StuffIt|^SIT\!', 'StuffIt', 1]);
         $this->insertDefaultRow(['iso', '["iso"]', 'archive', '["application/x-iso9660-image"]', '^(?:.{32769}|.{34817}|.{36865})CD001', 'ISO Disk Image', 1]);
         $this->insertDefaultRow(['dmg', '["dmg"]', 'archive', '["application/x-apple-diskimage"]', 'koly.{508}$', 'Apple Disk Image', 1]);
+        $this->insertDefaultRow(['compress', '["z"]', 'archive', '["application/x-compress"]', '^\x1F\x9D', 'compress', 1]);
+
+        // Font formats
+        $this->insertDefaultRow(['truetype', '["ttf"]', 'font', '["font/ttf"]', '^\x00\x01\x00\x00\x00', 'TrueType', 1]);
+        $this->insertDefaultRow(['opentype', '["otf", "ttf"]', 'font', '["font/otf"]', '^(?:\x00\x01\x00\x00\x00|OTTO)', 'OpenType', 1]);
+        $this->insertDefaultRow(['woff', '["woff", "woff2"]', 'font', '["font/woff", "font/woff2"]', '^(?:wOFF|wOF2)', 'WOFF', 1]);
 
         // Other formats
         $this->insertDefaultRow(['swf', '["swf"]', 'other', '["application/vnd.adobe.flash-movie", "application/x-shockwave-flash"]', '^CWS|FWS|ZWS', 'Flash/Shockwave', 1]);

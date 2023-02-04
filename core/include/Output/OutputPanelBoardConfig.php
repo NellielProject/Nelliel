@@ -87,7 +87,6 @@ class OutputPanelBoardConfig extends Output
 
                 if (!empty($data['extensions'])) {
                     $extensions = ' - ';
-
                     foreach (json_decode($data['extensions'], true) as $extension) {
                         $extensions .= $extension . ', ';
                     }
