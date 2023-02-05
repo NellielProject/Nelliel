@@ -2,9 +2,10 @@
 declare(strict_types = 1);
 
 define('NELLIEL_VERSION', 'v0.9.29'); // Version
-define('NELLIEL_COPYRIGHT', '2010-2022 Nelliel Project'); // Copyright line
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('NELLIEL_PHP_MINIMUM', '7.2.0'); // Minimum PHP version
+define('NELLIEL_COPYRIGHT_DATES', '2010-2023'); // Copyright dates
+define('NELLIEL_COPYRIGHT_LINE', NELLIEL_COPYRIGHT_DATES . ' Nelliel Project'); // Full copyright line
 
 define('NEL_PUBLIC_PATH', realpath('.') . '/'); // Base path where imgboard.php resides
 
