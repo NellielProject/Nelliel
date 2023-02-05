@@ -7,4 +7,4 @@ Guide for upgrading Nelliel.
 4. Once login is completed the upgrade script will run to perform migrations and any other functions required.
 5. After the script finishes the upgrade is done and normal functions will automatically resume.
 
-NOTE: Users may need to manually refresh some pages to reload CSS and Javascript files.
+NOTE: Users may need to manually do a hard refresh on some pages to reload CSS and Javascript files.

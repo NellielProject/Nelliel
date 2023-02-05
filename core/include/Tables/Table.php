@@ -35,7 +35,7 @@ abstract class Table
         }
     }
 
-    protected function updateVersionsTable()
+    protected function updateVersionsTable(): void
     {
         if ($this->database->rowExists(NEL_VERSIONS_TABLE, ['id'], [$this->table_name])) {
             $prepared = $this->database->prepare(
@@ -67,7 +67,7 @@ abstract class Table
         return $this->database->rowExists($this->table_name, $check_columns, $check_values, $check_pdo_types);
     }
 
-    public function insertDefaultRow(array $values)
+    public function insertDefaultRow(array $values): void
     {
         $sql_helpers = nel_utilities()->sqlHelpers();
         $data = array();
@@ -145,7 +145,7 @@ abstract class Table
         $this->database->executePrepared($prepared);
     }
 
-    public function verifyStructure()
+    public function verifyStructure(): array
     {
         $missing_columns = array();
 
@@ -158,7 +158,7 @@ abstract class Table
         return $missing_columns;
     }
 
-    public function checkAndRepair()
+    public function checkAndRepair(): bool
     {
         if (!$this->database->tableExists($this->table_name)) {
             $this->createTable();
@@ -173,7 +173,7 @@ abstract class Table
         }
     }
 
-    public function tableName(string $new_name = null)
+    public function tableName(string $new_name = null): string
     {
         if (!is_null($new_name)) {
             $this->table_name = $new_name;
@@ -182,7 +182,7 @@ abstract class Table
         return $this->table_name;
     }
 
-    public function copyFrom($source_table_name, array $columns = array())
+    public function copyFrom($source_table_name, array $columns = array()): void
     {
         $column_list = '';
 
@@ -204,12 +204,12 @@ abstract class Table
         }
     }
 
-    public function schemaVersion()
+    public function schemaVersion(): int
     {
         return $this->schema_version;
     }
 
-    public function createTableQuery($schema, $table_name)
+    public function createTableQuery($schema, $table_name): bool
     {
         if ($this->database->tableExists($table_name)) {
             return false;
@@ -224,7 +224,7 @@ abstract class Table
                     $table_name));
         }
 
-        return $result;
+        return true;
     }
 
     public function columnTypes(): array
