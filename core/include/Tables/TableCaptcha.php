@@ -26,13 +26,13 @@ class TableCaptcha extends Table
             'solved' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
-            'captcha_key' => ['row_check' => true, 'auto_inc' => false],
-            'captcha_text' => ['row_check' => false, 'auto_inc' => false],
-            'domain_id' => ['row_check' => false, 'auto_inc' => false],
-            'time_created' => ['row_check' => false, 'auto_inc' => false],
-            'seen' => ['row_check' => false, 'auto_inc' => false],
-            'solved' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'captcha_key' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'captcha_text' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'domain_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'time_created' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'seen' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'solved' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

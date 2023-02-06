@@ -46,7 +46,6 @@ class AdminBoardConfig extends Admin
                 WHERE "' . NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "' . NEL_SETTINGS_TABLE .
             '"."setting_category" = \'board\'');
         $board_settings = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
-        $raw_html = $this->session_user->checkPermission($this->domain, 'perm_raw_html');
         $changes = 0;
 
         foreach ($board_settings as $setting) {
@@ -102,10 +101,14 @@ class AdminBoardConfig extends Admin
 
                 $new_value = json_encode($content_ops_array);
             } else {
-                $new_value = nel_form_input_default($new_value);
+                if (is_array($new_value)) {
+                    $new_value = nel_form_input_default($new_value);
+                }
+
                 $new_value = nel_typecast($new_value, $setting_name);
 
-                if (is_string($new_value) && !$raw_html && ($setting['raw_output'] ?? false)) {
+                if (is_string($new_value) && !$this->session_user->checkPermission($this->domain, 'perm_raw_html') &&
+                    ($setting['raw_output'] ?? false)) {
                     $new_value = htmlspecialchars($new_value, ENT_QUOTES, 'UTF-8');
                 }
             }
@@ -121,7 +124,7 @@ class AdminBoardConfig extends Admin
             $this->domain->reload();
             nel_site_domain()->reload();
             $regen = new Regen();
-            $regen->allBoardPages($this->domain);
+            $regen->boardPages($this->domain);
         }
 
         $this->panel();

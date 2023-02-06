@@ -22,7 +22,6 @@ class OutputPanelUsers extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/users_main');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -56,7 +55,7 @@ class OutputPanelUsers extends Output
 
         $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'users', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -72,7 +71,6 @@ class OutputPanelUsers extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/users_edit');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $username = $parameters['username'] ?? '';
@@ -140,7 +138,7 @@ class OutputPanelUsers extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

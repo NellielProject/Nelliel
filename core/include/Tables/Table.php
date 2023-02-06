@@ -35,7 +35,7 @@ abstract class Table
         }
     }
 
-    protected function updateVersionsTable()
+    protected function updateVersionsTable(): void
     {
         if ($this->database->rowExists(NEL_VERSIONS_TABLE, ['id'], [$this->table_name])) {
             $prepared = $this->database->prepare(
@@ -67,10 +67,17 @@ abstract class Table
         return $this->database->rowExists($this->table_name, $check_columns, $check_values, $check_pdo_types);
     }
 
-    protected function insertDefaultRow(array $values)
+    public function insertDefaultRow(array $values): void
     {
         $sql_helpers = nel_utilities()->sqlHelpers();
         $data = array();
+        $update_columns = array();
+        $update_values = array();
+        $update_pdo_types = array();
+        $where_columns = array();
+        $where_keys = array();
+        $where_values = array();
+        $where_pdo_types = array();
         $index = 0;
 
         foreach ($this->column_checks as $column_name => $info) {
@@ -78,14 +85,37 @@ abstract class Table
                 continue;
             }
 
+            if ($this->column_checks[$column_name]['row_check'] && isset($values[$index])) {
+                $where_columns[] = $column_name;
+                $where_keys[] = $column_name;
+                $where_values[] = $values[$index];
+                $where_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
+            }
+
             if (isset($values[$index])) {
                 $data[$column_name] = $values[$index];
+            }
+
+            if ($info['update'] ?? false) {
+                $update_columns[] = $column_name;
+                $update_values[] = $values[$index];
+                $update_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
             }
 
             $index ++;
         }
 
         if ($this->rowExists($data)) {
+
+            if (empty($update_columns)) {
+                return;
+            }
+
+            $prepared = $sql_helpers->buildPreparedUpdate($this->table_name, $update_columns, $where_columns,
+                $where_keys);
+            $sql_helpers->bindToPrepared($prepared, array_keys(array_merge($update_columns, $where_columns)),
+                array_merge($update_values, $where_values), array_merge($update_pdo_types, $where_pdo_types));
+            $this->database->executePrepared($prepared);
             return;
         }
 
@@ -111,11 +141,11 @@ abstract class Table
         }
 
         $prepared = $sql_helpers->buildPreparedInsert($this->table_name, $insert_columns);
-        $sql_helpers->bindToPrepared($prepared, $insert_columns, $insert_values, $insert_pdo_types);
+        $sql_helpers->bindToPrepared($prepared, array_keys($insert_columns), $insert_values, $insert_pdo_types);
         $this->database->executePrepared($prepared);
     }
 
-    public function verifyStructure()
+    public function verifyStructure(): array
     {
         $missing_columns = array();
 
@@ -128,7 +158,7 @@ abstract class Table
         return $missing_columns;
     }
 
-    public function checkAndRepair()
+    public function checkAndRepair(): bool
     {
         if (!$this->database->tableExists($this->table_name)) {
             $this->createTable();
@@ -143,7 +173,7 @@ abstract class Table
         }
     }
 
-    public function tableName(string $new_name = null)
+    public function tableName(string $new_name = null): string
     {
         if (!is_null($new_name)) {
             $this->table_name = $new_name;
@@ -152,7 +182,7 @@ abstract class Table
         return $this->table_name;
     }
 
-    public function copyFrom($source_table_name, array $columns = array())
+    public function copyFrom($source_table_name, array $columns = array()): void
     {
         $column_list = '';
 
@@ -174,12 +204,12 @@ abstract class Table
         }
     }
 
-    public function schemaVersion()
+    public function schemaVersion(): int
     {
         return $this->schema_version;
     }
 
-    public function createTableQuery($schema, $table_name)
+    public function createTableQuery($schema, $table_name): bool
     {
         if ($this->database->tableExists($table_name)) {
             return false;
@@ -190,11 +220,11 @@ abstract class Table
         if (!$result) {
             nel_derp(103,
                 sprintf(
-                    _gettext('Creation of %s failed! Check database settings and config.php then retry installation.'),
+                    _gettext('Creation of table %s failed! Check database settings and config.php then retry installation.'),
                     $table_name));
         }
 
-        return $result;
+        return true;
     }
 
     public function columnTypes(): array

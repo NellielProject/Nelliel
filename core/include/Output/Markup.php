@@ -7,70 +7,32 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Cites;
 use Nelliel\Content\Post;
+use Nelliel\Database\NellielPDO;
+use PDO;
 
 class Markup
 {
-    protected $post;
-    protected $dynamic_urls;
+    private $database;
+    private $post;
+    private $dynamic_urls;
+    private $markup_data;
 
-    function __construct()
-    {}
+    function __construct(NellielPDO $database)
+    {
+        $this->database = $database;
+    }
 
     public function getMarkupData(string $type): array
     {
-        $markup_data = array();
-
-        // TODO: retrieve from settings
-        // Note: All markup regex should be designed to work with both escaped and unescaped HTML
-        switch ($type) {
-            case 'simple':
-                $markup_data[] = ['id' => 'spoiler', 'match' => '/\|\|(.+?)\|\|/us',
-                    'replace' => '<span class="markup-spoiler">$1</span>'];
-                $markup_data[] = ['id' => 'italic',
-                    'match' => '/(?:(?<!\*))\*{2}(.+?)(?:(?<!\*))\*{2}(?:(?!\*))/us',
-                    'replace' => '<span class="markup-italic">$1</span>'];
-                $markup_data[] = ['id' => 'vichan-italic',
-                    'match' => "/(?:(?<!'|&#039;|&apos;))(?:'|&#039;|&apos;){2}(.+?)(?:(?<!'|&#039;|&apos;))(?:'|&#039;|&apos;){2}(?:(?!'|&#039;|&apos;))/us",
-                    'replace' => '<span class="markup-italic">$1</span>'];
-                $markup_data[] = ['id' => 'bold',
-                    'match' => '/(?:(?<!\*))\*{3}(.+?)(?:(?<!\*))\*{3}(?:(?!\*))/us',
-                    'replace' => '<span class="markup-bold">$1</span>'];
-                $markup_data[] = ['id' => 'vichan-bold',
-                    'match' => "/(?:(?<!'|&#039;|&apos;))(?:'|&#039;|&apos;){3}(.+?)(?:(?<!'|&#039;|&apos;))(?:'|&#039;|&apos;){3}(?:(?!'|&#039;|&apos;))/us",
-                    'replace' => '<span class="markup-bold">$1</span>'];
-                $markup_data[] = ['id' => 'underline', 'match' => '/__(.+?)__/us',
-                    'replace' => '<span class="markup-underline">$1</span>'];
-                $markup_data[] = ['id' => 'strikethrough', 'match' => '/~~(.+?)~~/us',
-                    'replace' => '<span class="markup-strikethrough">$1</span>'];
-                break;
-
-            case 'loops':
-                $markup_data[] = ['id' => 'nested-spoiler', 'match' => '/\[spoiler (\d+)\](.*?)\[\/spoiler \1\]/us',
-                    'replace' => '<span class="markup-spoiler">$2</span>'];
-                break;
-
-            case 'lines':
-                $markup_data['greentext'] = ['match' => '/^(&gt;(?!&gt;\d+|&gt;&gt;\/[^\/]+\/).*)$/u',
-                    'replace' => '<span class="markup-greentext">$1</span>'];
-                $markup_data['pinktext'] = ['match' => '/^(&lt;.*)$/u',
-                    'replace' => '<span class="markup-pinktext">$1</span>'];
-                $markup_data['orangetext'] = ['match' => '/^(\^.*)$/u',
-                    'replace' => '<span class="markup-orangetext">$1</span>'];
-                break;
-
-            case 'callbacks':
-
-                break;
-
-            case 'blocks':
-                $markup_data[] = ['id' => 'ascii-art', 'match' => '/\[ascii\]|\[\/ascii\]/',
-                    'replace' => '<pre class="ascii-art">$1</pre>'];
-                $markup_data[] = ['id' => 'shift-jis-art', 'match' => '/\[sjis]|\[\/sjis\]/',
-                    'replace' => '<pre class="shift-jis-art">$1</pre>'];
-                break;
+        if (is_null($this->markup_data)) {
+            $markup_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_MARKUP_TABLE . '"', PDO::FETCH_ASSOC);
+            foreach ($markup_list as $markup) {
+                $this->markup_data[$markup['type']][$markup['label']] = ['match' => $markup['match'],
+                    'replace' => $markup['replace']];
+            }
         }
 
-        return $markup_data;
+        return $this->markup_data[$type] ?? array();
     }
 
     public function parsePostComments(string $text, Post $post, bool $dynamic_urls): string
@@ -87,18 +49,18 @@ class Markup
         $modified_text = $text;
         $modified_text = $this->parseSimple($modified_text);
         $modified_text = $this->parseLoops($modified_text);
-        $modified_text = $this->parseCallbacks($modified_text);
         $modified_text = $this->parseURLs($modified_text);
         $modified_text = $this->parseCites($modified_text);
         return $modified_text;
     }
 
-    public function parseBlocks(string $text, array $markup_data = null, $recursive_call = false): string
+    public function parseBlocks(string $text, array $markup_data = array(), $recursive_call = false): string
     {
-        if (is_null($markup_data)) {
-            $markup_data = $this->getMarkupData('blocks');
+        if (empty($markup_data)) {
+            $markup_data = $this->getMarkupData('block');
         }
 
+        $markup_data = nel_plugins()->processHook('nel-inb4-markup-blocks', [$text], $markup_data);
         $modified_text = $text;
         $modified_blocks = array();
 
@@ -141,13 +103,14 @@ class Markup
         return $modified_text;
     }
 
-    public function parseLines(string $text, array $markup_data = null): string
+    public function parseLines(string $text, array $markup_data = array()): string
     {
-        if (is_null($markup_data)) {
-            $markup_data = $this->getMarkupData('lines');
+        if (empty($markup_data)) {
+            $markup_data = $this->getMarkupData('line');
         }
 
         $lines = explode("\n", $text);
+        $markup_data = nel_plugins()->processHook('nel-inb4-markup-lines', [$lines], $markup_data);
 
         if (!is_array($lines)) {
             return $text;
@@ -166,12 +129,13 @@ class Markup
         return implode("\n", $modified_lines);
     }
 
-    public function parseSimple(string $text, array $markup_data = null): string
+    public function parseSimple(string $text, array $markup_data = array()): string
     {
-        if (is_null($markup_data)) {
+        if (empty($markup_data)) {
             $markup_data = $this->getMarkupData('simple');
         }
 
+        $markup_data = nel_plugins()->processHook('nel-inb4-markup-simple', [$text], $markup_data);
         $modified_text = $text;
 
         foreach ($markup_data as $data) {
@@ -181,12 +145,13 @@ class Markup
         return $modified_text;
     }
 
-    public function parseLoops(string $text, array $markup_data = null): string
+    public function parseLoops(string $text, array $markup_data = array()): string
     {
-        if (is_null($markup_data)) {
-            $markup_data = $this->getMarkupData('loops');
+        if (empty($markup_data)) {
+            $markup_data = $this->getMarkupData('loop');
         }
 
+        $markup_data = nel_plugins()->processHook('nel-inb4-markup-loops', [$text], $markup_data);
         $modified_text = $text;
 
         foreach ($markup_data as $data) {
@@ -194,21 +159,6 @@ class Markup
                 $compare = $modified_text;
                 $modified_text = preg_replace($data['match'], $data['replace'], $modified_text);
             } while ($compare !== $modified_text);
-        }
-
-        return $modified_text;
-    }
-
-    public function parseCallbacks(string $text, array $markup_data = null): string
-    {
-        if (is_null($markup_data)) {
-            $markup_data = $this->getMarkupData('callbacks');
-        }
-
-        $modified_text = $text;
-
-        foreach ($markup_data as $data) {
-            $modified_text = preg_replace_callback($data['match'], $data['replace'], $modified_text);
         }
 
         return $modified_text;

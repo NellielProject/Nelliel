@@ -69,10 +69,10 @@ class DispatchAccount extends Dispatch
                     nel_derp(511, _gettext('You cannot use the private message system.'));
                 }
 
-                $private_message = new PrivateMessage($this->domain->database(), $this->session, intval($inputs['message_id'] ?? 0));
-                $private_message->canAccess();
-
                 if ($inputs['method'] === 'GET') {
+                    $private_message = new PrivateMessage($this->domain->database(), $this->session,
+                        intval($inputs['message_id'] ?? 0));
+
                     switch ($inputs['action']) {
                         case 'view':
                             $private_message->view();
@@ -95,6 +95,8 @@ class DispatchAccount extends Dispatch
                 }
 
                 if ($inputs['method'] === 'POST') {
+                    $private_message = new PrivateMessage($this->domain->database(), $this->session);
+
                     switch ($inputs['action']) {
                         case 'send':
                             $private_message->collectFromPOST();

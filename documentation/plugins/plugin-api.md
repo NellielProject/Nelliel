@@ -80,3 +80,5 @@ To remove a class method from a hook, call the method `removeMethod`. Five param
 5. `$priority` - [Optional] Sets the priority of execution. Defaults to 10.
 
 Returns `true` if successful. Otherwise returns `false`.
+
+NOTE: Registered methods must have public visibility. Protected and private methods cannot be called by the plugin system.

@@ -26,13 +26,13 @@ class TableNews extends Table
             'text' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'article_id' => ['row_check' => false, 'auto_inc' => true],
-            'username' => ['row_check' => false, 'auto_inc' => false],
-            'name' => ['row_check' => false, 'auto_inc' => false],
-            'time' => ['row_check' => false, 'auto_inc' => false],
-            'headline' => ['row_check' => false, 'auto_inc' => false],
-            'text' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'article_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'name' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'headline' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'text' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 
@@ -43,17 +43,17 @@ class TableNews extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             article_id  ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            username    VARCHAR(50) NOT NULL,
+            username    VARCHAR(50) DEFAULT NULL,
             name        VARCHAR(255) NOT NULL,
             time        BIGINT NOT NULL,
             headline    VARCHAR(255) NOT NULL,
-            text        TEXT NOT NULL,
+            text        ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             moar        TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (article_id),
             CONSTRAINT fk_news__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
-            ON DELETE CASCADE
+            ON DELETE SET NULL
         ) ' . $options . ';';
 
         return $schema;

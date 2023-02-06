@@ -21,7 +21,6 @@ class OutputPanelNoticeboard extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/noticeboard');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Noticeboard');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -43,14 +42,15 @@ class OutputPanelNoticeboard extends Output
             $notice_info['name'] = $notice['username'];
             $notice_info['message'] = $notice['message'];
             $notice_info['subject'] = $notice['subject'];
-            $notice_info['time'] = date('Y/m/d (D) H:i:s', intval($notice['time']));
+            $notice_info['time'] = $this->domain->domainDateTime(intval($notice['time']))->format(
+                $this->site_domain->setting('control_panel_list_time_format'));
             $notice_info['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'noticeboard', $notice['notice_id'], 'delete']);
             $this->render_data['notices'][] = $notice_info;
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

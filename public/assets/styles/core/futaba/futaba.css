@@ -48,15 +48,21 @@
 	--pinktext-color: #FF5A57;
 	--orangetext-background: inherit;
 	--orangetext-color: #F28800;
-	--external-link: underline;
+	--external-link-text-decoration: underline;
 	--spoiler-color: #000000;
 	--unspoiler-color: #EEEEEE;
+	--post-cite-text-decoration: underline;
+	--board-cite-text-decoration: underline;
+	--invalid-cite-text-decoration: line-through;
 
 	--news-article-background: #F0E0D6;
 	--news-article-header-background: #EEAA88;
 	--news-headline-color: inherit;
 	--news-paragraph-color: inherit;
 	--thread-status-icon-color: invert(10%) sepia(72%) saturate(7484%) hue-rotate(359deg) brightness(102%) contrast(109%);
+	--boards-navigation-align: center;
+	--ban-page-background: #F0E0D6;
+	--ban-paragraph-color: inherit;
 }
 
 .posting-rules-list {

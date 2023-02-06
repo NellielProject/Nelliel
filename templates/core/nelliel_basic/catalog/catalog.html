@@ -1,0 +1,53 @@
+<div class="catalog-page">
+	<h1 class="catalog-title">{{ catalog_title }}</h1>
+{{# catalog_navigation_top }}
+	{{> navigation/board_pages }}
+{{/ catalog_navigation_top }}
+{{# catalog_entries }}
+	<div tabindex="0" class="catalog-tile" style="width: 100%; width: {{ tile_width }}px; height: {{ tile_height }}px;">
+		{{# overboard }}
+			{{> thread/pieces/posted_in }}
+		{{/ overboard }}
+		<div class="op subject text-center">
+			<a class="op subject catalog-open-link" href="{{ open_url }}">{{ subject }}</a>
+	{{# is_cyclic }}
+			<img src="{{ status_cyclic }}" width="16" height="16" alt="Cyclic icon" class="thread-status-icon">
+	{{/ is_cyclic }}
+	{{# is_sticky }}
+			<img src="{{ status_sticky }}" width="16" height="16" alt="Sticky icon" class="thread-status-icon">
+	{{/ is_sticky }}
+	{{# is_locked }}
+			<img src="{{ status_locked }}" width="16" height="16" alt="Lock icon" class="thread-status-icon">
+	{{/ is_locked }}
+		</div>
+		<div class="catalog-thread-info">
+			<span>R: </span>
+			<span>{{ reply_count }}</span>
+			<span> / F: </span>
+			<span>{{ total_uploads }}</span>
+			<span> / P: </span>
+			<span>{{ index_page }}</span>
+		</div>
+		<div class="catalog-open-link">
+			<a href="{{ open_url }}">
+	{{# upload_rows }}
+		{{# row }}
+			{{> catalog/file_preview }}
+		{{/ row }}
+			<br>
+	{{/ upload_rows }}
+	{{^ upload_rows }}
+			{{ open_text }}
+	{{/ upload_rows }}
+			</a>
+		</div>
+		<div class="reply comment-container">
+			{{> thread/pieces/comment_markup }}
+		</div>
+	</div>
+
+{{/ catalog_entries }}
+{{# catalog_navigation_bottom }}
+	{{> navigation/board_pages }}
+{{/ catalog_navigation_bottom }}
+</div>

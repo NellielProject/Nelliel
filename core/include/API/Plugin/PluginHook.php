@@ -42,6 +42,10 @@ class PluginHook
             return false;
         }
 
+        if (!is_callable($function_name)) {
+            return false;
+        }
+
         $this->registered[] = ['type' => 'function', 'function_name' => $function_name, 'plugin_id' => $plugin_id,
             'priority' => $priority];
         $this->unsorted = true;
@@ -54,6 +58,10 @@ class PluginHook
     public function addMethod(object $class, string $method_name, string $plugin_id, int $priority): bool
     {
         if ($this->in_progress) {
+            return false;
+        }
+
+        if (!is_callable([$class, $method_name])) {
             return false;
         }
 
@@ -100,7 +108,8 @@ class PluginHook
     }
 
     /**
-     * Gets the index of the specified function. Returns null if not found.
+     * Gets the index of the specified function.
+     * Returns null if not found.
      */
     private function functionKey(string $function_name, string $plugin_id, int $priority): ?int
     {
@@ -119,7 +128,8 @@ class PluginHook
     }
 
     /**
-     * Gets the index of the specified method. Returns null if not found.
+     * Gets the index of the specified method.
+     * Returns null if not found.
      */
     private function methodKey(string $method_name, object $class, string $plugin_id, int $priority): ?int
     {
@@ -159,6 +169,7 @@ class PluginHook
         }
 
         $modified = $returnable;
+        $return_value = null;
 
         foreach ($this->registered as $registered) {
             if ($registered['type'] === 'function' && function_exists($registered['function_name'])) {

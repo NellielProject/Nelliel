@@ -27,14 +27,14 @@ class TableReports extends Table
             'reason' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'report_id' => ['row_check' => false, 'auto_inc' => true],
-            'board_id' => ['row_check' => false, 'auto_inc' => false],
-            'content_id' => ['row_check' => false, 'auto_inc' => false],
-            'reporter_ip' => ['row_check' => false, 'auto_inc' => false],
-            'hashed_reporter_ip' => ['row_check' => false, 'auto_inc' => false],
-            'visitor_id' => ['row_check' => false, 'auto_inc' => false],
-            'reason' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'report_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'content_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'hashed_reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'reason' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

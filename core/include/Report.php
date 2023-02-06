@@ -25,14 +25,10 @@ class Report
     {
         $captcha = new CAPTCHA($this->domain);
 
-        if ($this->domain->setting('use_report_captcha')) {
+        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_report_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
-        }
-
-        if ($this->domain->setting('use_report_recaptcha')) {
-            $captcha->verifyReCAPTCHA();
         }
 
         $reports = array();
@@ -48,7 +44,7 @@ class Report
                     if (nel_site_domain()->setting('store_unhashed_ip')) {
                         $report_data['reporter_ip'] = nel_request_ip_address();
                     } else {
-                        $report_data['reporter_ip'] = '';
+                        $report_data['reporter_ip'] = null;
                     }
 
                     $report_data['hashed_reporter_ip'] = nel_request_ip_address(true);

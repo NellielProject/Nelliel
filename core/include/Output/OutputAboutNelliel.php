@@ -25,11 +25,10 @@ class OutputAboutNelliel extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general($parameters, true);
-        $this->render_data['nelliel_version'] = _gettext('Version: ') . NELLIEL_VERSION;
         $this->render_data['disclaimer_image_url'] = NEL_MEDIA_WEB_PATH . 'core/about/luna_canterlot_disclaimer.png';
         $this->render_data['disclaimer_alt_text'] = 'Luna Canterlot Voice';
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->general([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

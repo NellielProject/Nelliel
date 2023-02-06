@@ -3,29 +3,21 @@
 	<div class="indents">{{ indents_marker }}</div>
 	<div id="{{ post_container_id }}" class="{{ op_reply }} post">
 {{# headers }}
-	{{# in_modmode }}
-		<div class="modmode-header">
-		{{^ response }}
-			{{> thread/pieces/thread_modmode }}
-		{{/ response }}
-		</div>
-	{{/ in_modmode }}
-		<div class="modmode-header">
-	{{# in_modmode }}
-			{{> thread/pieces/post_modmode }}
-	{{/ in_modmode }}
-		</div>
 		<div class="{{ op_reply }} headers-container">
 			{{> thread/headers/post_info }}
 			{{> thread/headers/thread_info }}
 			{{> thread/headers/post_options }}
+	{{# is_op }}
 			{{> thread/headers/thread_options }}
+	{{/ is_op }}
 		</div>
 {{/ headers }}
 {{# post_backlinks_header }}
+	{{# has_backlinks }}
 		<div>
 			{{> thread/pieces/backlink }}
 		</div>
+	{{/ has_backlinks }}
 {{/ post_backlinks_header }}
 		<div class="{{ op_reply }} content-container">
 {{# single_file }}
@@ -39,9 +31,11 @@
 {{/ post_comments }}
 		</div>
 {{# post_backlinks_footer }}
+	{{# has_backlinks }}
 		<div>
 			{{> thread/pieces/backlink }}
 		</div>
+	{{/ has_backlinks }}
 {{/ post_backlinks_footer }}
 	</div>
 </div>

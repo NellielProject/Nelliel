@@ -18,8 +18,7 @@ class DomainSite extends Domain implements NellielCacheInterface
         $this->database = $database;
         $this->utilitySetup();
         $this->locale();
-        $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))
-            ->getPath());
+        $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))->getPath());
     }
 
     protected function loadSettings(): void
@@ -71,6 +70,9 @@ class DomainSite extends Domain implements NellielCacheInterface
 
         return $settings;
     }
+
+    public function updateStatistics(): void
+    {}
 
     public function regenCache()
     {

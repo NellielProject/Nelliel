@@ -39,13 +39,18 @@ class OutputRegisterPage extends Output
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'account', 'register']);
         $this->render_data['login_url'] = nel_build_router_url([Domain::SITE, 'account', 'login']);
-        $this->render_data['use_register_captcha'] = $this->domain->setting('use_register_captcha');
+
+        if (nel_site_domain()->setting('enable_captchas') && ($this->domain->setting('use_register_captcha'))) {
+            $output_native_captchas = new OutputCAPTCHA($this->domain, $this->write_mode);
+            $this->render_data['captchas'] = $output_native_captchas->render(['area' => 'user-register'], false);
+        }
+
+        $this->render_data['use_register_captcha'] = nel_site_domain()->setting('enable_captchas') &&
+            $this->domain->setting('use_register_captcha');
         $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
         $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
-        $this->render_data['use_register_recaptcha'] = $this->domain->setting('use_register_recaptcha');
-        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->general([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -61,7 +66,7 @@ class OutputRegisterPage extends Output
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['login_url'] = nel_build_router_url([Domain::SITE, 'account', 'login']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->general([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

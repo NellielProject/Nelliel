@@ -1,6 +1,11 @@
+{{# page_navigation }}
 <div>
 	{{> navigation/basic_pagination }}
+	{{# show_index_link }}
+	<span class="text-button">[<a href="{{ index_url }}" data-i18n="">Index</a>]</span>
+	{{/ show_index_link }}
 	{{# show_catalog_link }}
 	<span class="text-button">[<a href="{{ catalog_url }}" data-i18n="">Catalog</a>]</span>
 	{{/ show_catalog_link }}
 </div>
+{{/ page_navigation }}

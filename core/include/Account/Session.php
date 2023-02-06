@@ -134,7 +134,7 @@ class Session
     public function terminate(): void
     {
         $_SESSION = array();
-        setcookie(session_name(), '', time() - NEL_OVER_9000, NEL_BASE_WEB_PATH, '', false, true);
+        setcookie(session_name(), '', time() - OVER_9000, NEL_BASE_WEB_PATH, '', false, true);
         session_destroy();
         self::$setup_done = false;
         self::$user = null;

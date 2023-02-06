@@ -26,13 +26,13 @@ class TablePrivateMessages extends Table
             'message_read' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
-            'message_id' => ['row_check' => false, 'auto_inc' => true],
-            'sender' => ['row_check' => false, 'auto_inc' => false],
-            'recipient' => ['row_check' => false, 'auto_inc' => false],
-            'message' => ['row_check' => false, 'auto_inc' => false],
-            'time_sent' => ['row_check' => false, 'auto_inc' => false],
-            'message_read' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'message_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'sender' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'recipient' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'message' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'time_sent' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'message_read' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

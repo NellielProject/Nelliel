@@ -31,8 +31,8 @@ class OutputBanPage extends Output
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['ban_board'] = ($ban_hammer->getData('board_id') === Domain::GLOBAL) ? _gettext('All Boards') : $ban_hammer->getData(
             'board_id');
-        $this->render_data['ban_time'] = date($this->domain->setting('ban_page_date_format'),
-            intval($ban_hammer->getData('start_time')));
+        $this->render_data['ban_time'] = $this->domain->domainDateTime(intval($ban_hammer->getData('start_time')))->format(
+            $this->domain->setting('ban_page_time_format'));
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
         $ban_expire = $ban_hammer->getData('length') + $ban_hammer->getData('start_time');
         $expire_interval = ($ban_expire - time() >= 0) ? $ban_expire - time() : 0;
@@ -54,7 +54,8 @@ class OutputBanPage extends Output
         }
 
         $this->render_data['ban_length'] = $duration;
-        $this->render_data['ban_expiration'] = date("F jS, Y H:i e", intval($ban_expire));
+        $this->render_data['ban_expiration'] = $this->domain->domainDateTime(intval($ban_expire))->format(
+            $this->domain->setting('ban_page_time_format'));
         $this->render_data['ban_reason'] = $ban_hammer->getData('reason');
         $this->render_data['ban_ip'] = nel_request_ip_address();
 
@@ -108,7 +109,7 @@ class OutputBanPage extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->general([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

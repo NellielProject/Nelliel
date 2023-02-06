@@ -6,6 +6,7 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
+use DateTimeZone;
 use PDO;
 
 class OutputMenu extends Output
@@ -76,6 +77,26 @@ class OutputMenu extends Output
         return $options;
     }
 
+    public function timezones(string $selected): array
+    {
+        $timezones = DateTimeZone::listIdentifiers();
+        $options = array();
+
+        foreach ($timezones as $timezone) {
+            $option_data = array();
+            $option_data['option_value'] = $timezone;
+            $option_data['option_label'] = $timezone;
+
+            if ($option_data['option_value'] === $selected) {
+                $option_data['option_selected'] = 'selected';
+            }
+
+            $options[] = $option_data;
+        }
+
+        return $options;
+    }
+
     public function styles(array $parameters, bool $data_only)
     {
         $this->renderSetup();
@@ -83,7 +104,7 @@ class OutputMenu extends Output
         $render_data = array();
         $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
         $default_style = $this->domain->id() === Domain::GLOBAL ? nel_site_domain()->setting('default_style') : $this->domain->setting(
-            'default_style');
+            'default_style'); // TODO: Better solution
 
         foreach ($styles as $style) {
             if ($this->domain->id() !== Domain::SITE && $this->domain->id() !== Domain::GLOBAL &&

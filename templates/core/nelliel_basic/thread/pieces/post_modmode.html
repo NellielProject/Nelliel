@@ -1,9 +1,5 @@
 <span data-i18n="">Post:</span>
 <span class="text-button">[<span>{{ mod_ip_address }}</span>]</span>
-{{# mod_can_ban }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_ban_url }}">{{{ mod_links_ban }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_ban }}
-{{# mod_can_delete }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_delete_url }}">{{{ mod_links_delete }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_delete }}
-{{# mod_can_by_ip }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_delete_by_ip_url }}">{{{ mod_links_delete_by_ip }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_by_ip }}
-{{# mod_can_global_by_ip }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_global_delete_by_ip_url }}">{{{ mod_links_global_delete_by_ip }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_global_by_ip }}
-{{# mod_can_ban_delete }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_ban_delete_url }}">{{{ mod_links_ban_and_delete }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_ban_delete }}
-{{# mod_can_edit }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_edit_url }}">{{{ mod_links_edit_post }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_edit }}
-{{# mod_can_move }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_move_post_url }}">{{{ mod_links_move }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_move }}
+{{# post_modmode_options }}
+	{{> pieces/bracketed_link }}
+{{/ post_modmode_options }}

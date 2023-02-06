@@ -27,14 +27,14 @@ class TablePages extends Table
             'show_link' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
-            'page_id' => ['row_check' => false, 'auto_inc' => true],
-            'domain_id' => ['row_check' => true, 'auto_inc' => false],
-            'uri' => ['row_check' => true, 'auto_inc' => false],
-            'title' => ['row_check' => false, 'auto_inc' => false],
-            'text' => ['row_check' => false, 'auto_inc' => false],
-            'markup_type' => ['row_check' => false, 'auto_inc' => false],
-            'show_link' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false]];
+            'page_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'uri' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'title' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'text' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'markup_type' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'show_link' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 
@@ -48,7 +48,7 @@ class TablePages extends Table
             domain_id       VARCHAR(50) NOT NULL,
             uri             VARCHAR(255) NOT NULL,
             title           VARCHAR(255) NOT NULL,
-            text            TEXT NOT NULL,
+            text            ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             markup_type     VARCHAR(50) NOT NULL,
             show_link       SMALLINT NOT NULL DEFAULT 0,
             moar            TEXT DEFAULT NULL,

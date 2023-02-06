@@ -22,7 +22,6 @@ class OutputPanelBoardConfig extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/board_config');
-        $parameters['is_panel'] = true;
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $defaults = $parameters['defaults'] ?? false;
         $filetypes = new FileTypes($this->database);
@@ -88,7 +87,6 @@ class OutputPanelBoardConfig extends Output
 
                 if (!empty($data['extensions'])) {
                     $extensions = ' - ';
-
                     foreach (json_decode($data['extensions'], true) as $extension) {
                         $extensions .= $extension . ', ';
                     }
@@ -247,8 +245,10 @@ class OutputPanelBoardConfig extends Output
             $this->render_data['settings_data']['filetype_image_set']['setting_value'] ?? '');
         $this->render_data['settings_data']['template_id']['options'] = $output_menu->configTemplates(
             $this->render_data['settings_data']['template_id']['setting_value'] ?? '');
+        $this->render_data['settings_data']['time_zone']['options'] = $output_menu->timezones(
+            $this->render_data['settings_data']['time_zone']['setting_value'] ?? '');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

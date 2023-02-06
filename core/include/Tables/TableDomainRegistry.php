@@ -23,9 +23,9 @@ class TableDomainRegistry extends Table
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'domain_id' => ['row_check' => true, 'auto_inc' => false],
-            'notes' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

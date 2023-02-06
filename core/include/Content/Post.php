@@ -99,12 +99,14 @@ class Post
             $where_keys = ['where_post_number'];
             $where_values = [$this->content_id->postID()];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
-                $where_columns, $where_keys);
+                $where_columns, $where_keys, $this->sql_helpers->parameterize($column_list),
+                $this->sql_helpers->parameterize($where_keys));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
             $this->database->executePrepared($prepared);
         } else {
-            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
+            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list,
+                $this->sql_helpers->parameterize($column_list));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->database->executePrepared($prepared);
         }
@@ -140,7 +142,7 @@ class Post
             }
         }
 
-        // Threads can have just OP deleted but right now we don't use that.
+        // Threads can technically have just OP deleted but right now we don't use that
         if ($this->data('op') && !$parent_delete) {
             return $this->getParent()->delete($perm_override);
         }
@@ -153,6 +155,7 @@ class Post
 
         $this->deleteFromDatabase($parent_delete);
         $this->deleteFromDisk($parent_delete);
+        $this->domain->updateStatistics();
 
         if (!$parent_delete) {
             $parent_thread = $this->getParent();
@@ -175,7 +178,6 @@ class Post
             'DELETE FROM "' . $this->domain->reference('posts_table') . '" WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$this->content_id->postID()]);
         $cites = new Cites($this->database);
-        $cites->updateForPost($this);
         $cites->removeForPost($this);
         return true;
     }
@@ -377,7 +379,7 @@ class Post
     {
         $cache_array = array();
         $output_post = new OutputPost($this->domain, false);
-        $cache_array['comment_data'] = $output_post->parseComment($this->data('comment'), $this);
+        $cache_array['comment_markup'] = $output_post->parseComment($this->data('comment'), $this);
         $cache_array['backlink_data'] = $output_post->generateBacklinks($this);
         $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
         $prepared = $this->database->prepare(
@@ -512,36 +514,46 @@ class Post
         return $this->json;
     }
 
-    public function move(Thread $new_thread, bool $parent_move): Post
+    public function move(Thread $new_thread, bool $is_shadow): Post
     {
-        $new_board = $new_thread->domain()->id() !== $this->domain()->id();
+        $cross_board = $new_thread->domain()->id() !== $this->domain()->id();
 
-        if ($new_board) {
+        if ($is_shadow) {
+            $this->changeData('shadow', true);
+            $this->writeToDatabase();
+        }
+
+        if ($cross_board) {
             $new_post = new Post(new ContentID(), $new_thread->domain());
             $new_post->transferData($this->transferData());
             $new_post->storeMoar($this->content_moar);
             $new_post->reserveDatabaseRow();
+
+            // If this is OP and we're moving the whole thread, finish preparation before continuing
+            if ($this->data('op')) {
+                $new_thread->contentID()->changeThreadID($new_post->contentID()->postID());
+                $new_thread->changedata('thread_id', $new_thread->contentID()->threadID());
+                $new_thread->writeToDatabase();
+                $new_thread->createDirectories();
+            }
         } else {
             $new_post = $this;
-        }
-
-        // If this is OP and we're moving the whole thread, finish preparation before continuing
-        if ($parent_move && $this->data('op')) {
-            $new_thread->contentID()->changeThreadID($new_post->contentID()->postID());
-            $new_thread->changedata('thread_id', $new_thread->contentID()->threadID());
-            $new_thread->writeToDatabase();
-            $new_thread->createDirectories();
         }
 
         $new_thread->addPost($new_post);
         $new_post->writeToDatabase();
 
         foreach ($this->getUploads() as $upload) {
-            $upload->move($new_post, true);
+            $upload->move($new_post, $is_shadow);
         }
 
-        if ($new_board) {
-            $this->delete(true, $parent_move);
+        if ($cross_board) {
+            if (!$is_shadow) {
+                $this->delete(true, false);
+            }
+
+            $cites = new Cites($this->domain()->database());
+            $cites->addCitesFromPost($new_post);
         }
 
         return $new_post;

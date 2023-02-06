@@ -14,7 +14,8 @@
 		"mustache/mustache" : "~2.14",
 		"nikic/fast-route" : "~1.3",
 		"monolog/monolog" : "~2.3",
-		"lamansky/fraction" : "~1.0"
+		"lamansky/fraction" : "~1.0",
+		"chrisullyott/php-filesize" : "~4.2"
 	},
 	"require-dev" : {
 		"phpunit/phpunit" : "~8.5.21"

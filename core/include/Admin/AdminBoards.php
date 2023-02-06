@@ -163,7 +163,7 @@ class AdminBoards extends Admin
         $domain = new DomainBoard($board_id, $this->database);
         $regen = new Regen();
         $domain->regenCache();
-        $regen->allBoardPages($domain);
+        $regen->boardPages($domain);
         $this->panel();
     }
 

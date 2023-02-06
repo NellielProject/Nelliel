@@ -190,14 +190,20 @@ class CAPTCHA
 
     public function verify(string $key, string $answer)
     {
-        $expiration = time() - $this->site_domain->setting('captcha_timeout');
-        $prepared = $this->database->prepare(
-            'SELECT * FROM "' . NEL_CAPTCHA_TABLE .
-            '" WHERE "captcha_key" = ? AND "captcha_text" = ? AND "time_created" > ?');
-        $result = $this->database->executePreparedFetch($prepared, [$key, $answer, $expiration], PDO::FETCH_ASSOC);
+        $failed = false;
+        $failed = nel_plugins()->processHook('nel-inb4-captcha-verify', [$this->domain, $this, $key, $answer], $failed);
 
-        if ($result === false) {
-            nel_derp(70, _gettext('CAPTCHA test failed.'));
+        if ($this->site_domain->setting('use_native_captcha') && !$failed) {
+            $expiration = time() - $this->site_domain->setting('captcha_timeout');
+            $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_CAPTCHA_TABLE .
+                '" WHERE "captcha_key" = ? AND "captcha_text" = ? AND "time_created" > ?');
+            $result = $this->database->executePreparedFetch($prepared, [$key, $answer, $expiration], PDO::FETCH_ASSOC);
+            $failed = $result === false;
+        }
+
+        if ($failed) {
+            nel_derp(70, _gettext('CAPTCHA check failed.'));
         }
 
         $this->remove($key);
@@ -224,20 +230,5 @@ class CAPTCHA
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_CAPTCHA_TABLE . '" WHERE "time_created" < ?');
         $this->database->executePrepared($prepared, [$expiration]);
-    }
-
-    public function verifyReCAPTCHA()
-    {
-        $response = $_POST['g-recaptcha-response'] ?? '';
-        $result = file_get_contents(
-            'https://www.google.com/recaptcha/api/siteverify?secret=' .
-            $this->site_domain->setting('recaptcha_sekrit_key') . '&response=' . $response);
-        $verification = json_decode($result);
-
-        if (!$verification->success) {
-            nel_derp(71, _gettext('reCAPTCHA test failed.'));
-        }
-
-        return;
     }
 }

@@ -118,6 +118,19 @@ class DispatchModeration extends Dispatch
 
                         break;
 
+                    case 'merge':
+                        if ($inputs['method'] === 'GET') {
+                            $output_panel_threads = new OutputPanelThreads($this->domain, false);
+                            $output_panel_threads->merge(['content_id' => $content_id], false);
+                        }
+
+                        if ($inputs['method'] === 'POST') {
+                            $admin_threads->merge($content_id);
+                            $redirect->doRedirect(true);
+                        }
+
+                        break;
+
                     case 'spoiler':
                     case 'unspoiler':
                         if ($inputs['method'] === 'GET') {

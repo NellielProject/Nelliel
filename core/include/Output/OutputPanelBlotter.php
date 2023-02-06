@@ -21,7 +21,6 @@ class OutputPanelBlotter extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/blotter_main');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Blotter');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -37,14 +36,15 @@ class OutputPanelBlotter extends Output
             $entry_info = array();
             $entry_info['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $entry_info['time'] = date('Y/m/d', intval($entry['time']));
+            $entry_info['time'] = $this->domain->domainDateTime(intval($entry['time']))->format(
+                $this->site_domain->setting('control_panel_list_time_format'));
             $entry_info['text'] = $entry['text'];
             $entry_info['delete_url'] = nel_build_router_url([Domain::SITE, 'blotter', $entry['record_id'], 'delete']);
             $this->render_data['blotter_entry'][] = $entry_info;
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

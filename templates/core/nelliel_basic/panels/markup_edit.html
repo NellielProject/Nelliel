@@ -1,0 +1,31 @@
+<form accept-charset="utf-8" action="{{ form_action }}" method="post">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="label" class="display-cell" data-i18n="">Label</label>
+			<input id="label" class="display-cell" type="text" name="label" size="30" value="{{ label }}">
+		</div>
+		<div class="display-row">
+			<label for="match" class="display-cell" data-i18n="">Match</label>
+			<textarea id="match" class="display-cell" name="match" cols="64" rows="3">{{ match }}</textarea>
+		</div>
+		<div class="display-row">
+			<label for="replace" class="display-cell" data-i18n="">Replace</label>
+			<textarea id="replace" class="display-cell" name="replace" cols="64" rows="3">{{ replace }}</textarea>
+		</div>
+		<div class="display-row">
+			<label for="type" class="display-cell" data-i18n="">Type</label>
+			<input id="type" class="display-cell" type="text" name="type" size="30" value="{{ type }}">
+		</div>
+		<div class="display-row">
+			<label for="enabled" class="display-cell" data-i18n="">Enabled</label>
+			<input id="enabled" class="display-cell" type="checkbox" value="1" name="enabled" {{ enabled }}>
+		</div>
+		<div class="display-row">
+			<label for="notes" class="display-cell" data-i18n="">Notes</label>
+			<textarea id="notes" class="display-cell" name="notes" cols="64" rows="3">{{ notes }}</textarea>
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Update Markup" data-i18n-attributes="value">
+		</div>
+	</div>
+</form>

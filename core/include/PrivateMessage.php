@@ -17,10 +17,10 @@ class PrivateMessage
     private $session;
     private $sql_compatibility;
     private $table;
-    private $message_id = 0;
+    private $message_id;
     private $data = array();
 
-    function __construct(NellielPDO $database, Session $session, int $message_id = 0)
+    function __construct(NellielPDO $database, Session $session, int $message_id = null)
     {
         $this->database = $database;
         $this->session = $session;
@@ -28,7 +28,7 @@ class PrivateMessage
         $this->table = new TablePrivateMessages($this->database, $this->sql_compatibility);
         $this->changeData('message_id', $message_id);
 
-        if ($message_id > 0) {
+        if (!is_null($message_id)) {
             $this->message_id = $message_id;
             $this->load();
         }
@@ -54,8 +54,8 @@ class PrivateMessage
     public function collectFromPOST(): void
     {
         $this->changeData('sender', $this->session->user()->id());
-        $this->changeData('recipient', $_POST['recipient'] ?? '');
-        $this->changeData('message', $_POST['message'] ?? '');
+        $this->changeData('recipient', utf8_strtolower($_POST['recipient'] ?? ''));
+        $this->changeData('message', utf8_strtolower($_POST['message'] ?? ''));
     }
 
     public function data(string $key)
@@ -75,6 +75,7 @@ class PrivateMessage
 
     public function reply()
     {
+        $this->canAccess();
         $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
         $output_private_messages->newMessage(['reply_id' => $this->message_id], false);
         nel_clean_exit();
@@ -82,6 +83,7 @@ class PrivateMessage
 
     public function view()
     {
+        $this->canAccess();
         $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
         $output_private_messages->viewMessage(['message_id' => $this->message_id], false);
         nel_clean_exit();
@@ -114,6 +116,7 @@ class PrivateMessage
 
     public function markRead(): void
     {
+        $this->canAccess();
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_PRIVATE_MESSAGES_TABLE . '" SET "message_read" = 1 WHERE "message_id" = ?');
         $prepared->bindValue(1, $this->message_id, PDO::PARAM_INT);
@@ -122,6 +125,7 @@ class PrivateMessage
 
     public function delete(): void
     {
+        $this->canAccess();
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PRIVATE_MESSAGES_TABLE . '" WHERE "message_id" = ?');
         $prepared->bindValue(1, $this->message_id, PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
@@ -129,9 +133,10 @@ class PrivateMessage
 
     public function canAccess()
     {
-        if ($this->message_id > 0 && $this->data('sender') !== $this->session->user()->id() &&
-            $this->data('recipient') !== $this->session->user()->id()) {
-            nel_derp(225, _gettext('You are not allowed to view that message.'));
+        if ($this->data('sender') !== $this->session->user()->id() &&
+            $this->data('recipient') !== $this->session->user()->id() &&
+            !$this->session->user()->checkPermission(nel_site_domain(), 'perm_manage_private_messages')) {
+            nel_derp(225, __('You cannot access that private message.'));
         }
     }
 }

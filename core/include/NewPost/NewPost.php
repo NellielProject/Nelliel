@@ -40,14 +40,10 @@ class NewPost
         $error_data = ['board_id' => $this->domain->id()];
         $captcha = new CAPTCHA($this->domain);
 
-        if ($this->domain->setting('use_post_captcha')) {
+        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_post_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha->verify($captcha_key, $captcha_answer);
-        }
-
-        if ($this->domain->setting('use_post_recaptcha')) {
-            $captcha->verifyReCAPTCHA();
         }
 
         if ($this->domain->reference('locked') &&
@@ -126,7 +122,8 @@ class NewPost
         $thread = new Thread(new ContentID(ContentID::createIDString($thread_id, 0, 0)), $this->domain);
         $thread->addPost($post);
         $post->writeToDatabase();
-        $this->addCites($post);
+        $cites = new Cites($this->database);
+        $cites->addCitesFromPost($post);
         $post->storeCache();
         $post->createDirectories();
 
@@ -186,6 +183,7 @@ class NewPost
 
         $update_overboard = new Overboard($this->database);
         $update_overboard->addThread($thread);
+        $this->domain->updateStatistics();
 
         // Generate thread page if it doesn't exist, otherwise update
         $regen = new Regen();
@@ -216,14 +214,25 @@ class NewPost
 
         $prepared = $this->database->prepare(
             'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
-            '" WHERE "post_time" > ? AND "op" = ? AND "hashed_ip_address" = ?');
+            '" WHERE "post_time" > ? AND "op" = ? AND "hashed_ip_address" = ? LIMIT 1');
         $prepared->bindValue(1, $renzoku_setting, PDO::PARAM_INT);
         $prepared->bindValue(2, $op_value, PDO::PARAM_INT);
         $prepared->bindValue(3, nel_request_ip_address(true), PDO::PARAM_STR);
         $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
-        if ($renzoku > 0 && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
+        if ($renzoku !== false && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
             nel_derp(3, _gettext("Flood detected! You're posting too fast, slow down."), $error_data);
+        }
+
+        $prepared = $this->database->prepare(
+            'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "post_time" > ? AND "hashed_ip_address" = ? AND "total_uploads" > 0 LIMIT 1');
+        $prepared->bindValue(1, $time - $this->domain->setting('upload_renzoku'), PDO::PARAM_INT);
+        $prepared->bindValue(2, nel_request_ip_address(true), PDO::PARAM_STR);
+        $upload_renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+        if ($upload_renzoku !== false && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
+            nel_derp(57, _gettext("Flood detected! You're making posts with uploads too fast."), $error_data);
         }
 
         if ($post->data('parent_thread') != 0) {
@@ -268,26 +277,5 @@ class NewPost
                 }
             }
         }
-    }
-
-    private function addCites(Post $post)
-    {
-        $cites = new Cites($this->database);
-
-        if (nel_true_empty($post->data('comment'))) {
-            return;
-        }
-
-        $cite_list = $cites->getCitesFromText($post->data('comment'));
-
-        foreach ($cite_list as $cite) {
-            $cite_data = $cites->getCiteData($cite, $this->domain, $post->contentID());
-
-            if ($cite_data['exists'] || $cite_data['future']) {
-                $cites->addCite($cite_data);
-            }
-        }
-
-        $cites->updateForPost($post);
     }
 }

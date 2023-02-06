@@ -23,7 +23,16 @@ class DomainGlobal extends Domain implements NellielCacheInterface
 
     protected function loadSettings(): void
     {
-        ;
+        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
+            'domains/' . $this->domain_id);
+
+        if (empty($settings)) {
+            $settings = $this->loadSettingsFromDatabase();
+            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
+                'domains/' . $this->domain_id);
+        }
+
+        $this->settings = $settings;
     }
 
     protected function loadReferences(): void
@@ -33,8 +42,22 @@ class DomainGlobal extends Domain implements NellielCacheInterface
 
     protected function loadSettingsFromDatabase(): array
     {
-        return array();
+        $settings = array();
+        $query = 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_DEFAULTS_TABLE . '" ON "' .
+            NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_DEFAULTS_TABLE .
+            '"."setting_name" WHERE "setting_category" = \'board\'';
+        $config_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+
+        foreach ($config_list as $config) {
+            $config['setting_value'] = nel_typecast($config['setting_value'], $config['data_type']);
+            $settings[$config['setting_name']] = $config['setting_value'];
+        }
+
+        return $settings;
     }
+
+    public function updateStatistics(): void
+    {}
 
     public function exists()
     {

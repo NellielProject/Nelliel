@@ -21,7 +21,6 @@ class OutputPanelNews extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/news');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('News');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -39,14 +38,15 @@ class OutputPanelNews extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $entry_info['name'] = $news_entry['name'];
             $entry_info['headline'] = $news_entry['headline'];
-            $entry_info['time'] = date('Y/m/d (D) H:i:s', intval($news_entry['time']));
+            $entry_info['time'] = $this->domain->domainDateTime(intval($news_entry['time']))->format(
+                $this->site_domain->setting('control_panel_list_time_format'));
             $entry_info['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'news', $news_entry['article_id'], 'delete']);
             $this->render_data['news_entry'][] = $entry_info;
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

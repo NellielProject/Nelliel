@@ -23,10 +23,10 @@ class TableVersions extends Table
             'original' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'current' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
-            'id' => ['row_check' => true, 'auto_inc' => false],
-            'type' => ['row_check' => true, 'auto_inc' => false],
-            'original' => ['row_check' => false, 'auto_inc' => false],
-            'current' => ['row_check' => false, 'auto_inc' => false]];
+            'id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'type' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'original' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'current' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

@@ -1,3 +1,65 @@
+<div>
+	<div>
+		<a href="#section-general" data-i18n="">General</a>
+	</div>
+	<div>
+		<a href="#section-banners" data-i18n="">Banners</a>
+	</div>
+	<div>
+		<a href="#section-bans" data-i18n="">Bans</a>
+	</div>
+	<div>
+		<a href="#section-r9k" data-i18n="">R9K</a>
+	</div>
+	<div>
+		<a href="#section-new-post-form" data-i18n="">New Post Form</a>
+	</div>
+	<div>
+		<a href="#section-uploads" data-i18n="">Uploads</a>
+	</div>
+	<div>
+		<a href="#section-other-new-post" data-i18n="">Other New Post</a>
+	</div>
+	<div>
+		<a href="#section-preview-generation" data-i18n="">Preview Generation</a>
+	</div>
+	<div>
+		<a href="#section-threads" data-i18n="">Threads</a>
+	</div>
+	<div>
+		<a href="#section-index-rendering" data-i18n="">Index Rendering</a>
+	</div>
+	<div>
+		<a href="#section-catalog-rendering" data-i18n="">Catalog Rendering</a>
+	</div>
+	<div>
+		<a href="#section-thread-rendering" data-i18n="">Thread Rendering</a>
+	</div>
+	<div>
+		<a href="#section-post-rendering" data-i18n="">Post Rendering</a>
+	</div>
+	<div>
+		<a href="#section-upload-rendering" data-i18n="">Upload Rendering</a>
+	</div>
+	<div>
+		<a href="#section-new-post-form-rendering" data-i18n="">New Post Form Rendering</a>
+	</div>
+	<div>
+		<a href="#section-other-rendering" data-i18n="">Other Rendering</a>
+	</div>
+	<div>
+		<a href="#section-anti-spam" data-i18n="">Anti-spam</a>
+	</div>
+	<div>
+		<a href="#section-moderator-links" data-i18n="">Moderator Links</a>
+	</div>
+	<div>
+		<a href="#section-content-links" data-i18n="">Content Links</a>
+	</div>
+	<div>
+		<a href="#section-filetypes-selection" data-i18n="">Filetypes</a>
+	</div>
+</div>
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 {{# settings_data }}
 	<table>
@@ -15,7 +77,7 @@
 		</thead>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">General</th>
+				<th id="section-general" colspan="5" data-i18n="">General</th>
 			</tr>
 	{{# name }}
 			{{> panels/pieces/settings/text }}
@@ -38,6 +100,9 @@
 	{{# locale }}
 			{{> panels/pieces/settings/text }}
 	{{/ locale }}
+	{{# time_zone }}
+			{{> panels/pieces/settings/select }}
+	{{/ time_zone }}
 	{{# exclude_from_overboards }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ exclude_from_overboards }}
@@ -86,14 +151,26 @@
 	{{# allow_moving_uploads }}
 		{{> panels/pieces/settings/checkbox }}
 	{{/ allow_moving_uploads }}
+	{{# allow_shadow_message }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ allow_shadow_message }}
+	{{# shadow_message_moved }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ shadow_message_moved }}
+	{{# shadow_message_merged }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ shadow_message_merged }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Banners</th>
+				<th id="section-banners" colspan="3" data-i18n="">Banners</th>
 			</tr>
-	{{# show_banners }}
+	{{# show_top_banners }}
 		{{> panels/pieces/settings/checkbox }}
-	{{/ show_banners }}
+	{{/ show_top_banners }}
+	{{# show_bottom_banners }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ show_bottom_banners }}
 	{{# banner_display_width }}
 		{{> panels/pieces/settings/number }}
 	{{/ banner_display_width }}
@@ -103,7 +180,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Bans</th>
+				<th id="section-bans" colspan="3" data-i18n="">Bans</th>
 			</tr>
 	{{# must_see_ban }}
 			{{> panels/pieces/settings/checkbox }}
@@ -126,13 +203,42 @@
 	{{# show_ban_mod_name }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_ban_mod_name }}
-	{{# ban_page_date_format }}
+	{{# ban_page_time_format }}
 			{{> panels/pieces/settings/text }}
-	{{/ ban_page_date_format }}
+	{{/ ban_page_time_format }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">New Post Form</th>
+				<th id="section-r9k" colspan="3" data-i18n="">R9K</th>
+			</tr>
+	{{# r9k_enable_board }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_enable_board }}
+	{{# r9k_global_unoriginal_check }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_global_unoriginal_check }}
+	{{# r9k_strip_repeating }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_strip_repeating }}
+	{{# r9k_include_unicode_letters }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_include_unicode_letters }}
+	{{# r9k_unoriginal_mute }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_unoriginal_mute }}
+	{{# r9k_global_mute_check }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ r9k_global_mute_check }}
+	{{# r9k_mute_time_range }}
+			{{> panels/pieces/settings/number }}
+	{{/ r9k_mute_time_range }}
+	{{# r9k_mute_base_number }}
+			{{> panels/pieces/settings/number }}
+	{{/ r9k_mute_base_number }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th id="section-new-post-form" colspan="5" data-i18n="">New Post Form</th>
 			</tr>
 	{{# enable_op_name_field }}
 			{{> panels/pieces/settings/checkbox }}
@@ -260,8 +366,11 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Uploads</th>
+				<th id="section-uploads" colspan="5" data-i18n="">Uploads</th>
 			</tr>
+	{{# enable_uploads }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_uploads }}
 	{{# allow_op_files }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ allow_op_files }}
@@ -377,7 +486,7 @@
 		<tr class="row1">
 			{{> panels/pieces/settings/setting_name }}
 			<td>
-				<a href="#filetypes-selection" data-i18n="">Filetypes Selection</a>
+				<a href="#section-filetypes-selection" data-i18n="">Filetypes Selection</a>
 			</td>
 		{{# show_lock_update }}
 			{{> panels/pieces/settings/lock_update }}
@@ -391,7 +500,7 @@
 		</tbody>
 		<tbody>
 		<tr>
-			<th colspan="5" data-i18n="">Other New Post</th>
+			<th id="section-other-new-post" colspan="5" data-i18n="">Other New Post</th>
 		</tr>
 	{{# allow_sage }}
 			{{> panels/pieces/settings/checkbox }}
@@ -414,6 +523,9 @@
 	{{# reply_renzoku }}
 			{{> panels/pieces/settings/number }}
 	{{/ reply_renzoku }}
+	{{# upload_renzoku }}
+			{{> panels/pieces/settings/number }}
+	{{/ upload_renzoku }}
 	{{# threads_per_hour_limit }}
 			{{> panels/pieces/settings/number }}
 	{{/ threads_per_hour_limit }}
@@ -436,7 +548,7 @@
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_anonymous_names }}
 	{{# anonymous_names }}
-			{{> panels/pieces/settings/text }}
+			{{> panels/pieces/settings/textarea }}
 	{{/ anonymous_names }}
 	{{# always_noko }}
 			{{> panels/pieces/settings/checkbox }}
@@ -447,7 +559,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Preview Generation</th>
+				<th id="section-preview-generation" colspan="5" data-i18n="">Preview Generation</th>
 			</tr>
 	{{# create_static_preview }}
 			{{> panels/pieces/settings/checkbox }}
@@ -488,7 +600,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Threads</th>
+				<th id="section-threads" colspan="5" data-i18n="">Threads</th>
 			</tr>
 	{{# limit_post_count }}
 			{{> panels/pieces/settings/checkbox }}
@@ -511,6 +623,9 @@
 	{{# old_threads }}
 			{{> panels/pieces/settings/select }}
 	{{/ old_threads }}
+	{{# auto_archive_min_replies }}
+			{{> panels/pieces/settings/number }}
+	{{/ auto_archive_min_replies }}
 	{{# max_archive_threads }}
 			{{> panels/pieces/settings/number }}
 	{{/ max_archive_threads }}
@@ -532,11 +647,20 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Index Rendering</th>
+				<th id="section-index-rendering" colspan="5" data-i18n="">Index Rendering</th>
 			</tr>
 	{{# enable_index }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ enable_index }}
+	{{# show_index_link }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_index_link }}
+	{{# index_nav_top }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ index_nav_top }}
+	{{# index_nav_bottom }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ index_nav_bottom }}
 	{{# index_thread_replies }}
 			{{> panels/pieces/settings/number }}
 	{{/ index_thread_replies }}
@@ -552,12 +676,6 @@
 	{{# max_index_comment_length }}
 			{{> panels/pieces/settings/number }}
 	{{/ max_index_comment_length }}
-	{{# index_nav_top }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ index_nav_top }}
-	{{# index_nav_bottom }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ index_nav_bottom }}
 	{{# first_posts_increments }}
 			{{> panels/pieces/settings/text }}
 	{{/ first_posts_increments }}
@@ -576,15 +694,54 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Catalog Rendering</th>
+				<th id="section-catalog-rendering" colspan="5" data-i18n="">Catalog Rendering</th>
 			</tr>
 	{{# enable_catalog }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ enable_catalog }}
+	{{# show_catalog_link }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_catalog_link }}
+	{{# catalog_nav_top }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ catalog_nav_top }}
+	{{# catalog_nav_bottom }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ catalog_nav_bottom }}
+	{{# catalog_tile_width }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_tile_width }}
+	{{# catalog_tile_height }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_tile_height }}
+	{{# catalog_show_multiple_uploads }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ catalog_show_multiple_uploads }}
+	{{# catalog_first_preview_full_size }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ catalog_first_preview_full_size }}
+	{{# catalog_first_preview_own_row }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ catalog_first_preview_own_row }}
+	{{# catalog_max_preview_display_width }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_preview_display_width }}
+	{{# catalog_max_preview_display_height }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_preview_display_height }}
+	{{# catalog_max_multi_preview_display_width }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_multi_preview_display_width }}
+	{{# catalog_max_multi_preview_display_height }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_multi_preview_display_height }}
+	{{# catalog_max_uploads_row }}
+			{{> panels/pieces/settings/number }}
+	{{/ catalog_max_uploads_row }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Thread Rendering</th>
+				<th id="section-thread-rendering" colspan="5" data-i18n="">Thread Rendering</th>
 			</tr>
 	{{# subject_in_title }}
 			{{> panels/pieces/settings/checkbox }}
@@ -601,11 +758,11 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Post Rendering</th>
+				<th id="section-post-rendering" colspan="5" data-i18n="">Post Rendering</th>
 			</tr>
-	{{# post_date_format }}
+	{{# post_time_format }}
 			{{> panels/pieces/settings/text }}
-	{{/ post_date_format }}
+	{{/ post_time_format }}
 	{{# indent_marker }}
 			{{> panels/pieces/settings/text }}
 	{{/ indent_marker }}
@@ -666,7 +823,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Uploads Rendering</th>
+				<th id="section-upload-rendering" colspan="5" data-i18n="">Upload Rendering</th>
 			</tr>
 	{{# show_static_preview }}
 			{{> panels/pieces/settings/checkbox }}
@@ -725,12 +882,6 @@
 	{{# max_reply_multi_display_height }}
 			{{> panels/pieces/settings/number }}
 	{{/ max_reply_multi_display_height }}
-	{{# max_catalog_display_width }}
-			{{> panels/pieces/settings/number }}
-	{{/ max_catalog_display_width }}
-	{{# max_catalog_display_height }}
-			{{> panels/pieces/settings/number }}
-	{{/ max_catalog_display_height }}
 	{{# image_spoiler_cover }}
 			{{> panels/pieces/settings/text }}
 	{{/ image_spoiler_cover }}
@@ -785,10 +936,13 @@
 	{{# show_display_ratio }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_display_ratio }}
+	{{# scale_upload_filesize_units }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ scale_upload_filesize_units }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">New Post Form Rendering</th>
+				<th id="section-new-post-form-rendering" colspan="5" data-i18n="">New Post Form Rendering</th>
 			</tr>
 	{{# show_allowed_filetypes }}
 			{{> panels/pieces/settings/checkbox }}
@@ -802,10 +956,13 @@
 	{{# show_thumbnailed_message }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_thumbnailed_message }}
+	{{# scale_new_post_filesize_units }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ scale_new_post_filesize_units }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Other Rendering</th>
+				<th id="section-other-rendering" colspan="5" data-i18n="">Other Rendering</th>
 			</tr>
 	{{# template_id }}
 			{{> panels/pieces/settings/select }}
@@ -828,23 +985,35 @@
 	{{# generate_catalog }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ generate_catalog }}
+	{{# display_iec_filesize_units }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ display_iec_filesize_units }}
+	{{# binary_filesize_conversion }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ binary_filesize_conversion }}
+	{{# filesize_precision }}
+			{{> panels/pieces/settings/number }}
+	{{/ filesize_precision }}
+	{{# filesize_unit_prefix }}
+			{{> panels/pieces/settings/select }}
+	{{/ filesize_unit_prefix }}
+	{{# show_top_styles }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_top_styles }}
+	{{# show_bottom_styles }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_bottom_styles }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Anti-spam</th>
+				<th id="section-anti-spam" colspan="5" data-i18n="">Anti-spam</th>
 			</tr>
 	{{# use_post_captcha }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_post_captcha }}
-	{{# use_post_recaptcha }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ use_post_recaptcha }}
 	{{# use_report_captcha }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_report_captcha }}
-	{{# use_report_recaptcha }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ use_report_recaptcha }}
 	{{# enable_early404 }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ enable_early404 }}
@@ -857,14 +1026,14 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="5" data-i18n="">Moderator Links</th>
+				<th id="section-moderator-links" colspan="5" data-i18n="">Moderator Links</th>
 			</tr>
-	{{# mod_links_delimiter_left }}
+	{{# mod_links_left_bracket }}
 			{{> panels/pieces/settings/text }}
-	{{/ mod_links_delimiter_left }}
-	{{# mod_links_delimiter_right }}
+	{{/ mod_links_left_bracket }}
+	{{# mod_links_right_bracket }}
 			{{> panels/pieces/settings/text }}
-	{{/ mod_links_delimiter_right }}
+	{{/ mod_links_right_bracket }}
 	{{# mod_links_ban }}
 			{{> panels/pieces/settings/text }}
 	{{/ mod_links_ban }}
@@ -908,9 +1077,71 @@
 			{{> panels/pieces/settings/text }}
 	{{/ mod_links_edit_post }}
 		</tbody>
+		<tbody>
+			<tr>
+				<th id="section-content-links" colspan="5" data-i18n="">Content Links</th>
+			</tr>
+	{{# content_links_left_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_left_bracket }}
+	{{# content_links_right_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_right_bracket }}
+	{{# content_links_reply }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_reply }}
+	{{# content_links_expand_thread }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_expand_thread }}
+	{{# content_links_collapse_thread }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_collapse_thread }}
+	{{# content_links_show_thread }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_show_thread }}
+	{{# content_links_hide_thread }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_hide_thread }}
+	{{# content_links_show_post }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_show_post }}
+	{{# content_links_hide_post }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_hide_post }}
+	{{# content_links_show_file }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_show_file }}
+	{{# content_links_hide_file }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_hide_file }}
+	{{# content_links_show_embed }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_show_embed }}
+	{{# content_links_hide_embed }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_hide_embed }}
+	{{# content_links_show_upload_meta }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_show_upload_meta }}
+	{{# content_links_hide_upload_meta }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_hide_upload_meta }}
+	{{# content_links_cite_post }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_cite_post }}
+	{{# content_links_download_file }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_download_file }}
+	{{# content_links_first_posts }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_first_posts }}
+	{{# content_links_last_posts }}
+			{{> panels/pieces/settings/text }}
+	{{/ content_links_last_posts }}
+		</tbody>
 	</table>
 	<hr>
-	<a id="filetypes-selection"></a>
+	<a id="section-filetypes-selection"></a>
 	<div class="bold" data-i18n="">Filetypes Selection</div>
 	{{# enabled_filetypes }}
 	<div class="display-table text-left">

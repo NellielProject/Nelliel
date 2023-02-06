@@ -56,6 +56,7 @@ class OutputThread extends Output
             if ($this->domain->setting('prefix_board_title')) {
                 $page_title .= $this->domain->reference('title');
             }
+
             if ($this->domain->setting('subject_in_title') && !nel_true_empty($op_post->data('subject'))) {
                 $page_title .= ' - ' . $op_post->data('subject');
             } else if ($this->domain->setting('slug_in_title') && !nel_true_empty($thread->data('slug'))) {
@@ -87,7 +88,8 @@ class OutputThread extends Output
 
             foreach ($blotter_entries as $entry) {
                 $blotter_data = array();
-                $blotter_data['time'] = date('Y/m/d', intval($entry['time']));
+                $blotter_data['time'] = $this->domain->domainDateTime(intval($entry['time']))->format(
+                    $this->site_domain->setting('blotter_time_format'));
                 $blotter_data['text'] = $entry['text'];
                 $this->render_data['blotter_entries'][] = $blotter_data;
             }
@@ -100,7 +102,6 @@ class OutputThread extends Output
             $this->render_data['abbreviate'] = false;
             $output_new_post_form = new OutputNewPostForm($this->domain, $this->write_mode);
             $this->render_data['new_post_form'] = $output_new_post_form->render(['response_to' => $thread_id], true);
-            $this->render_data['show_styles'] = true;
             $output_menu = new OutputMenu($this->domain, $this->write_mode);
             $this->render_data['styles'] = $output_menu->styles([], true);
             $this->render_data['return_link'] = true;
@@ -120,6 +121,7 @@ class OutputThread extends Output
         $this->render_data['thread_info_id'] = 'thread-header-info-' . $thread_content_id->getIDString();
         $this->render_data['thread_options_id'] = 'thread-header-options-' . $thread_content_id->getIDString();
         $this->render_data['board_id'] = $this->domain->id();
+        $this->render_data['board_safety'] = $this->domain->setting('safety_level');
         $generate_first_posts = $post_count > $this->domain->setting('first_posts_threshold');
         $generate_last_posts = $post_count > $this->domain->setting('last_posts_threshold');
         $first_posts_increments = json_decode($this->domain->setting('first_posts_increments'));
@@ -171,17 +173,17 @@ class OutputThread extends Output
             $post_counter ++;
         }
 
-        $this->render_data['use_report_captcha'] = $this->domain->setting('use_report_captcha');
-        $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
-        $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
-        $this->render_data['use_report_recaptcha'] = $this->domain->setting('use_report_recaptcha');
-        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
+        if ($this->site_domain->setting('enable_captchas') && $this->domain->setting('use_report_captcha')) {
+            $this->render_data['use_report_captcha'] = true;
+            $output_native_captchas = new OutputCAPTCHA($this->domain, $this->write_mode);
+            $this->render_data['report_captchas'] = $output_native_captchas->render(['area' => 'report'], false);
+        }
 
         if (!$expand && !$collapse) {
             $this->render_data['index_navigation'] = true;
             $this->render_data['footer_form'] = true;
             $output_footer = new OutputFooter($this->domain, $this->write_mode);
-            $this->render_data['footer'] = $output_footer->render([], true);
+            $this->render_data['footer'] = $output_footer->board([], true);
         }
 
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -218,14 +220,12 @@ class OutputThread extends Output
 
             if (NEL_ENABLE_JSON_API) {
                 $json_filename = $thread->contentID()->threadID() . NEL_JSON_EXT;
-                $this->file_handler->writeFile($thread->pageFilePath() . $json_filename, $thread->getJSON()->getJSON());
+                $this->file_handler->writeFile($thread->pageFilePath() . $json_filename,
+                    $thread->getJSON()->getJSON(true));
             }
         } else {
             echo $output;
             nel_clean_exit();
         }
     }
-
-    private function lastPosts()
-    {}
 }

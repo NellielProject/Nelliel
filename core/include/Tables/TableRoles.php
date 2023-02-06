@@ -24,11 +24,11 @@ class TableRoles extends Table
             'capcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'role_id' => ['row_check' => true, 'auto_inc' => false],
-            'role_level' => ['row_check' => false, 'auto_inc' => false],
-            'role_title' => ['row_check' => false, 'auto_inc' => false],
-            'capcode' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'role_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'role_level' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'role_title' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'capcode' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

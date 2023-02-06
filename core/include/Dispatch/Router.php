@@ -318,8 +318,28 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchModeration';
                         $r->addRoute(['GET', 'POST'],
-                            '/{section:modmode}/{content_id:[^\/]+}[/{action:ban|ban-delete|delete|delete-by-ip|global-delete-by-ip|lock|unlock|sticky|unsticky|sage|unsage|cyclic|non-cyclic|edit|move|spoiler|unspoiler}]',
+                            '/{section:modmode}/{content_id:[^\/]+}[/{action:ban|ban-delete|delete|delete-by-ip|global-delete-by-ip|lock|unlock|sticky|unsticky|sage|unsage|cyclic|non-cyclic|edit|move|merge|spoiler|unspoiler}]',
                             $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:markup}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchMarkup';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:modify}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:scripts}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchScripts';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:modify}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
                     });
 
                 // For now this is ALWAYS last

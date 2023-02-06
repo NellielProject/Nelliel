@@ -27,7 +27,7 @@ class OutputBlotter extends Output
         $this->render_data['header'] = $output_header->general([], true);
         $this->render_data['blotter_entries'] = $this->blotterList();
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->general([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         $this->file_handler->writeFile(NEL_PUBLIC_PATH . 'blotter.html', $output);
     }
@@ -36,20 +36,19 @@ class OutputBlotter extends Output
     {
         $database = $this->domain->database();
         $blotter_entries = $database->executeFetchAll('SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" DESC',
-                PDO::FETCH_ASSOC);
+            PDO::FETCH_ASSOC);
         $limit_counter = 0;
         $entry_list = array();
 
-        foreach ($blotter_entries as $entry)
-        {
-            if ($limit !== 0 && $limit_counter >= $limit)
-            {
+        foreach ($blotter_entries as $entry) {
+            if ($limit !== 0 && $limit_counter >= $limit) {
                 break;
             }
 
             $info = array();
             $info['text'] = $entry['text'];
-            $info['time'] = date('Y/m/d', intval($entry['time']));
+            $info['time'] = $this->domain->domainDateTime(intval($entry['time']))->format(
+                $this->site_domain->setting('blotter_time_format'));
             $entry_list[] = $info;
             $limit_counter ++;
         }

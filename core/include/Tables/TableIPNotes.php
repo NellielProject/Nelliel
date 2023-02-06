@@ -26,13 +26,13 @@ class TableIPNotes extends Table
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
-            'note_id' => ['row_check' => false, 'auto_inc' => true],
-            'username' => ['row_check' => false, 'auto_inc' => false],
-            'ip_address' => ['row_check' => false, 'auto_inc' => false],
-            'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false],
-            'time' => ['row_check' => false, 'auto_inc' => false],
-            'notes' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'note_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

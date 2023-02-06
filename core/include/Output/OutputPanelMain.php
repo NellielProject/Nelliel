@@ -20,7 +20,6 @@ class OutputPanelMain extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/main_site');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Site');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -106,10 +105,18 @@ class OutputPanelMain extends Output
         $this->render_data['module_noticeboard'] = $this->session->user()->checkPermission($this->domain,
             'perm_noticeboard_view');
         $this->render_data['noticeboard_url'] = nel_build_router_url([$this->domain->id(), 'noticeboard']);
-        ;
+
         $this->render_data['module_plugins'] = $this->session->user()->checkPermission($this->domain,
             'perm_manage_plugins');
         $this->render_data['plugins_url'] = nel_build_router_url([$this->domain->id(), 'plugins']);
+
+        $this->render_data['module_markup'] = $this->session->user()->checkPermission($this->domain,
+            'perm_manage_markup');
+        $this->render_data['markup_url'] = nel_build_router_url([$this->domain->id(), 'markup']);
+
+        $this->render_data['module_scripts'] = $this->session->user()->checkPermission($this->domain,
+            'perm_manage_scripts');
+        $this->render_data['scripts_url'] = nel_build_router_url([$this->domain->id(), 'scripts']);
 
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_overboard');
@@ -129,7 +136,7 @@ class OutputPanelMain extends Output
             [$this->domain->id(), 'language', 'gettext', 'extract']);
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -140,7 +147,6 @@ class OutputPanelMain extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/main_global');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? __('Main');
         $parameters['section'] = $parameters['section'] ?? __('Global');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -174,7 +180,7 @@ class OutputPanelMain extends Output
             [$this->domain->id(), 'regen', 'cache']);
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -185,7 +191,6 @@ class OutputPanelMain extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/main_board');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? __('Main');
         $parameters['section'] = $parameters['section'] ?? __('Board');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -230,7 +235,7 @@ class OutputPanelMain extends Output
         $this->render_data['regen_caches_url'] = nel_build_router_url([$this->domain->id(), 'regen', 'cache']);
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

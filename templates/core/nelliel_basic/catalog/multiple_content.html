@@ -1,0 +1,24 @@
+{{# upload_rows }}
+	<div class="multiple upload-row">
+	{{# row }}
+		{{^ deleted_url }}
+		{{# is_file }}
+		<div id="{{ file_container_id }}" class="multiple file-container">
+			{{> thread/files/multi_file_header }}
+			{{> thread/files/file_preview }}
+		</div>
+		{{/ is_file }}
+		{{# is_embed }}
+		<div id="{{ embed_container_id }}" class="multiple embed-container">
+			{{> thread/embeds/multiple_embed_header }}
+			{{> thread/embeds/embed_frame }}
+		</div>
+		{{/ is_embed }}
+		{{/ deleted_url }}
+		{{# deleted_url }}
+		{{> thread/files/deleted }}
+		{{/ deleted_url }}
+	{{/ row }}
+	</div>
+	<div class="clear"></div>
+{{/ upload_rows }}

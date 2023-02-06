@@ -92,18 +92,14 @@
 			{{/ raw_html }}
 		</label>
 		{{/ flags }}
-		{{# use_post_captcha }}
-		<div class="new-post-form-row" data-jsevents="click">
+		{{# use_new_post_captcha }}
+		<div class="new-post-form-row">
 			<span class="new-post-form-label" data-i18n="">CAPTCHA</span>
+			{{# post_form_captchas }}
 			{{> pieces/captcha }}
+			{{/ post_form_captchas }}
 		</div>
-		{{/ use_post_captcha }}
-		{{# use_post_recaptcha }}
-		<div class="new-post-form-row" data-jsevents="click">
-			<span class="new-post-form-label" data-i18n="">reCAPTCHA</span>
-			{{> pieces/recaptcha }}
-		</div>
-		{{/ use_post_recaptcha }}
+		{{/ use_new_post_captcha }}
 		<div class="new-post-form-row">
 			<span class="display-cell"></span>
 			<input type="submit" value="{{ new_post_submit }}">&nbsp;&nbsp;&nbsp;&nbsp;

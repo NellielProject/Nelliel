@@ -11,13 +11,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 // === General Settings ===
 //
 
-// The default time zone that will be used.
-// An extensive list of supported time zones can be found here: https://www.php.net/manual/en/timezones.php
-$base_config['default_time_zone'] = 'UTC';
-
-// The fallback default value for locale.
-// If a locale is specified elsewhere, but no language file exists for it, this value will be used instead.
-// If the language file for this value is also missing, Nelliel will fallback to 'en_US' which is included in standard distribution.
+// The fallback default value for locale. Only used for installation and if no other locale setting is available.
 // Locale should follow the standard format using ISO-639 language and ISO-3166 country codes, e.g. 'en_US' for 'English (United States)'.
 // The available locales and their translations can be found in the directory 'languages/locale'.
 $base_config['default_locale'] = 'en_US';
@@ -137,6 +131,9 @@ $db_config['core']['sqlite']['encoding'] = 'UTF-8';
 // Default file and directory permissions. Must be in the proper octal format.
 $base_config['directory_perm'] = '0755';
 $base_config['file_perm'] = '0644';
+
+// Base directory for temporary files. When empty, the system default is used.
+$base_config['base_temp_directory'] = '';
 
 // Enable/disable plugins.
 $base_config['enable_plugins'] = true;

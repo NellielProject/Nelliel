@@ -1,6 +1,4 @@
 <span data-i18n="">Thread:</span>
-{{# mod_can_lock }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_lock_url }}">{{{ mod_lock_option }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_lock }}
-{{# mod_can_sticky }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_sticky_url }}">{{{ mod_sticky_option }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_sticky }}
-{{# mod_can_permasage }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_sage_url }}">{{{ mod_sage_option }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_permasage }}
-{{# mod_can_cyclic }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_cyclic_url }}">{{{ mod_cyclic_option }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_cyclic }}
-{{# mod_can_move }}<span class="text-button">{{{ mod_links_delimiter_left }}}<a href="{{ mod_move_thread_url }}">{{{ mod_links_move }}}</a>{{{ mod_links_delimiter_right }}}</span>{{/ mod_can_move }}
+{{# thread_modmode_options }}
+	{{> pieces/bracketed_link }}
+{{/ thread_modmode_options }}

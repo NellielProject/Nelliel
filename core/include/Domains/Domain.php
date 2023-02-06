@@ -6,10 +6,13 @@ namespace Nelliel\Domains;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\NellielCacheInterface;
+use Nelliel\Statistics;
 use Nelliel\Database\NellielPDO;
 use Nelliel\FrontEnd\FrontEndData;
 use Nelliel\Language\Language;
 use Nelliel\Language\Translator;
+use DateTime;
+use DateTimeZone;
 use PDO;
 
 abstract class Domain implements NellielCacheInterface
@@ -27,14 +30,17 @@ abstract class Domain implements NellielCacheInterface
     protected $render_active;
     protected $template_path;
     protected $translator;
-    protected $locale;
+    protected $locale = NEL_DEFAULT_LOCALE;
     protected $language;
+    protected $statistics;
 
     protected abstract function loadSettings(): void;
 
     protected abstract function loadReferences(): void;
 
     protected abstract function loadSettingsFromDatabase(): array;
+
+    public abstract function updateStatistics(): void;
 
     protected function utilitySetup()
     {
@@ -43,6 +49,7 @@ abstract class Domain implements NellielCacheInterface
         $this->cache_handler = nel_utilities()->cacheHandler();
         $this->translator = new Translator($this);
         $this->language = new Language();
+        $this->statistics = new Statistics();
     }
 
     public function database(NellielPDO $new_database = null)
@@ -105,10 +112,6 @@ abstract class Domain implements NellielCacheInterface
 
     public function locale(bool $html_format = false)
     {
-        if (!isset($this->locale)) {
-            return NEL_DEFAULT_LOCALE;
-        }
-
         // Convert underscore notation to hyphen for HTML
         if ($html_format) {
             return utf8_str_replace('_', '-', $this->locale());
@@ -119,7 +122,7 @@ abstract class Domain implements NellielCacheInterface
 
     public function updateLocale(string $locale)
     {
-        $this->locale = $locale;
+        $this->locale = utf8_str_replace('-', '_', $locale);
     }
 
     public function frontEndData()
@@ -158,5 +161,13 @@ abstract class Domain implements NellielCacheInterface
         $prepared->bindValue(1, $domain_id, PDO::PARAM_STR);
         $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
         return $result !== false;
+    }
+
+    public function domainDateTime(int $timestamp): DateTime
+    {
+        $date_time = new DateTime();
+        $date_time->setTimestamp($timestamp);
+        $date_time->setTimezone(new DateTimeZone((string) $this->setting('time_zone')));
+        return $date_time;
     }
 }

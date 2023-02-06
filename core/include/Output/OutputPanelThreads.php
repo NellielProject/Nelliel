@@ -41,7 +41,6 @@ class OutputPanelThreads extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/thread');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -90,7 +89,8 @@ class OutputPanelThreads extends Output
             $thread_info['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
                 '&actions=delete&content-id=' . $content_id->getIDString();
             $thread_info['delete_text'] = _gettext('Delete Thread');
-            $thread_info['last_update'] = date($this->domain->setting('post_date_format'), $thread->data('last_update'));
+            $thread_info['last_update'] = $this->domain->domainDateTime(intval($thread->data('last_update')))->format(
+                $this->domain->setting('post_time_format'));
             $thread_info['subject'] = $op_post->data('subject');
             $thread_info['thread_url'] = $thread->getURL(
                 $this->session->user()->checkPermission($this->domain, 'perm_mod_mode'));
@@ -108,7 +108,7 @@ class OutputPanelThreads extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -118,7 +118,6 @@ class OutputPanelThreads extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/thread_expand');
-        $parameters['is_panel'] = true;
         $thread_id = $parameters['thread_id'] ?? 0;
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
@@ -144,7 +143,8 @@ class OutputPanelThreads extends Output
                 '&actions=sticky&content-id=' . $base_content_id;
             $post_info['sticky_text'] = _gettext('Sticky Post');
             $post_info['parent_thread'] = $post['parent_thread'];
-            $post_info['post_time'] = date($this->domain->setting('post_date_format'), intval($post['post_time']));
+            $post_info['post_time'] = $this->domain->domainDateTime(intval($post['post_time']))->format(
+                $this->domain->setting('post_time_format'));
             $post_info['subject'] = $post['subject'];
             $post_info['thread_url'] = $this->domain->reference('page_directory') . '/' . $post['parent_thread'] . '/' .
                 $post['post_number'] . '.html';
@@ -156,7 +156,7 @@ class OutputPanelThreads extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -166,7 +166,6 @@ class OutputPanelThreads extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/threads_edit_post');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit Post');
         $post = $parameters['post'] ?? null;
@@ -182,7 +181,7 @@ class OutputPanelThreads extends Output
         $this->render_data['form_action'] = nel_build_router_url(
             [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -192,7 +191,6 @@ class OutputPanelThreads extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/threads_move');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Move');
         $content_id = $parameters['content_id'] ?? new ContentID();
@@ -207,10 +205,36 @@ class OutputPanelThreads extends Output
         $this->render_data['move_post'] = $content_id->isPost();
         $this->render_data['move_upload'] = $content_id->isUpload();
         $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
+        $this->render_data['allow_shadow_message'] = $this->domain->setting('allow_shadow_message');
         $this->render_data['form_action'] = nel_build_router_url(
             [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'move']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
+        echo $output;
+        return $output;
+    }
+
+    public function merge(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $this->setBodyTemplate('panels/threads_merge');
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Merge');
+        $content_id = $parameters['content_id'] ?? new ContentID();
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['current_board'] = $this->domain->id();
+        $this->render_data['boards_select'] = $output_menu->boards('target_board', $this->domain->id(), true);
+        $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
+        $this->render_data['allow_shadow_message'] = $this->domain->setting('allow_shadow_message');
+        $this->render_data['form_action'] = nel_build_router_url(
+            [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'merge']);
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

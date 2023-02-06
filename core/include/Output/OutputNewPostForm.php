@@ -74,16 +74,16 @@ class OutputNewPostForm extends Output
         }
 
         if (!$response_to) {
-            $this->render_data['allow_files'] = $this->domain->setting('allow_op_files');
+            $this->render_data['allow_files'] = $this->domain->setting('allow_op_files') && $this->domain->setting('max_op_files') > 0 && $this->domain->setting('max_op_total_uploads') > 0;
             $this->render_data['file_required'] = $this->domain->setting('require_op_file');
-            $this->render_data['allow_embeds'] = $this->domain->setting('allow_op_embeds');
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_op_embeds') && $this->domain->setting('max_reply_files') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
             $this->render_data['embed_required'] = $this->domain->setting('require_op_embed');
             $max_files = intval($this->domain->setting('max_op_files'));
             $max_embeds = intval($this->domain->setting('max_op_embeds'));
         } else {
-            $this->render_data['allow_files'] = $this->domain->setting('allow_reply_files');
+            $this->render_data['allow_files'] = $this->domain->setting('allow_reply_files') && $this->domain->setting('max_reply_files') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
             $this->render_data['file_required'] = $this->domain->setting('require_reply_file');
-            $this->render_data['allow_embeds'] = $this->domain->setting('allow_reply_embeds');
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_reply_embeds') && $this->domain->setting('max_reply_embeds') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
             $this->render_data['embed_required'] = $this->domain->setting('require_reply_embed');
             $max_files = intval($this->domain->setting('max_reply_files'));
             $max_embeds = intval($this->domain->setting('max_reply_embeds'));
@@ -102,12 +102,13 @@ class OutputNewPostForm extends Output
         $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
-        $this->render_data['use_post_captcha'] = $this->domain->setting('use_post_captcha');
-        $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
-        $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);
-        $this->render_data['use_post_recaptcha'] = $this->domain->setting('use_post_recaptcha');
-        $this->render_data['recaptcha_sitekey'] = $this->site_domain->setting('recaptcha_site_key');
-        $this->render_data['captcha_label'] = true;
+
+        if ($this->site_domain->setting('enable_captchas') && $this->domain->setting('use_post_captcha')) {
+            $this->render_data['use_new_post_captcha'] = true;
+            $output_native_captchas = new OutputCAPTCHA($this->domain, $this->write_mode);
+            $this->render_data['post_form_captchas'] = $output_native_captchas->render(['area' => 'new-post-form'], false);
+        }
+
         $this->render_data['new_post_submit'] = ($response_to) ? _gettext('Reply') : _gettext('New thread');
         $this->postingRules();
         $output = $this->output('thread/new_post_form', $data_only, true, $this->render_data);
@@ -179,8 +180,14 @@ class OutputNewPostForm extends Output
         }
 
         if ($this->domain->setting('show_form_max_filesize') && $this->render_data['allow_files']) {
+            $units = $this->domain->setting('scale_new_post_filesize_units') ? null : $this->domain->setting(
+                'filesize_unit_prefix');
+            $formatted_max_filesize = nel_size_format((int) $this->domain->setting('max_filesize'),
+                $this->domain->setting('display_iec_filesize_units'),
+                $this->domain->setting('binary_filesize_conversion'), $this->domain->setting('filesize_precision'),
+                $units);
             $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
-                _gettext('Maximum file size allowed is %dKB'), $this->domain->setting('max_filesize') / 1024);
+                _gettext('Maximum file size allowed is %s'), $formatted_max_filesize);
         }
 
         if ($this->domain->setting('show_thumbnailed_message') && $this->render_data['allow_files']) {

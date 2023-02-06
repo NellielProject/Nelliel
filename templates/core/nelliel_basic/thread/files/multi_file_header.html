@@ -7,25 +7,26 @@
 {{^ hide_file_select }}
 	<input type="checkbox" name="{{ file_content_id }}" value="action">
 {{/ hide_file_select }}
-	<span class="hide-file hidden text-button" data-jsonly="">[<a class="toggle-file" href="#" data-command="hide-file" data-content-id="{{ file_content_id }}" data-alt-visual="Hide File" data-i18n-attributes="data-alt-visual" data-i18n="">Show File</a>]</span>
-	<span class="hidden text-button" data-jsonly="">[<a href="#" data-command="show-file-meta" data-content-id="{{ file_content_id }}" data-alt-visual="Less Info" data-i18n-attributes="data-alt-visual" data-i18n="">More Info</a>]</span>
-	<span class="file-meta hidden">
+{{# file_options }}
+	{{> pieces/bracketed_link }}
+{{/ file_options }}
+</div>
+<div>
+	{{ display_image_dimensions }} {{ display_filesize}} {{ display_ratio }}
+</div>
+<div class="{{ op_reply }} multiple file-info">
+{{# show_download_link }}
+		<span class="text-button">[<a href="{{ file_url }}" class="download-link" download="{{ download_filename }}" data-i18n="">Download</a>]</span>
+{{/ show_download_link }}
+		<a href="{{ file_url }}" target="_blank" class="file-link">{{ display_filename }}</a>
+</div>
+<div class="js-hide-file">
+	<span class="upload-meta hidden">
 {{# file_metadata }}
 		<span class="file-hash">{{ metadata }}</span>
 {{/ file_metadata }}
 	</span>
 </div>
-<div class="{{ op_reply }} multiple file-info">
-	<div>
-{{# show_download_link }}
-		<span class="text-button">[<a href="{{ file_url }}" class="download-link" download="{{ download_filename }}" data-i18n="">Download</a>]</span>
-{{/ show_download_link }}
-		<a href="{{ file_url }}" target="_blank" class="file-link">{{ display_filename }}</a>
-	</div>
-	<div>
-		{{ display_image_dimensions }} {{ display_filesize}} {{ display_ratio }}
-	</div>
-</div>
-<div class="multiple content-ops">
-{{> thread/pieces/content_ops }}
+<div class="js-hide-file multiple content-ops">
+	{{> thread/pieces/content_ops }}
 </div>

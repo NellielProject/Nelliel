@@ -1,0 +1,17 @@
+<header class="header">
+{{# board_navigation }}
+	{{> navigation/board_links }}
+{{/ board_navigation }}
+{{# show_top_styles }}
+	{{> menu/styles }}
+{{/ show_top_styles }}
+{{# site_navigation }}
+	{{> navigation/site_links }}
+{{/ site_navigation }}
+{{> pieces/top_banners }}
+<h1 class="header-name">{{ name }}</h1>
+<h2 class="header-description">{{ description }}</h2>
+</header>
+{{^ overboard }}
+<hr class="clear">
+{{/ overboard }}

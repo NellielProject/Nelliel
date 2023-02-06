@@ -132,6 +132,10 @@ class PluginAPI
         $plugins = array();
 
         foreach ($inis as $ini) {
+            if(!isset($ini['id'])) {
+                continue;
+            }
+
             if ($id_only) {
                 $plugins[] = $ini['id'];
             } else {

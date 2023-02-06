@@ -22,9 +22,9 @@ class TableBoardDefaults extends Table
             'setting_value' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'edit_lock' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
-            'setting_name' => ['row_check' => true, 'auto_inc' => false],
-            'setting_value' => ['row_check' => false, 'auto_inc' => false],
-            'edit_lock' => ['row_check' => false, 'auto_inc' => false]];
+            'setting_name' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'setting_value' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'edit_lock' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 
@@ -34,7 +34,7 @@ class TableBoardDefaults extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             setting_name    VARCHAR(50) NOT NULL,
-            setting_value   TEXT NOT NULL,
+            setting_value   ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             edit_lock       SMALLINT NOT NULL DEFAULT 0,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (setting_name)
         ) ' . $options . ';';

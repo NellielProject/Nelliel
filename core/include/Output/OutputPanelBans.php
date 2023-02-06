@@ -23,7 +23,6 @@ class OutputPanelBans extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/bans_main');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -51,8 +50,9 @@ class OutputPanelBans extends Output
 
             $ban_data['reason'] = $ban_hammer->getData('reason');
             $ban_data['seen'] = $ban_hammer->getData('seen');
-            $ban_data['expiration'] = date("D F jS Y  H:i:s",
-                intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')));
+            $ban_data['expiration'] = $this->domain->domainDateTime(
+                intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')))->format(
+                $this->site_domain->setting('control_panel_list_time_format'));
             $ban_data['appeal'] = $ban_hammer->getData('appeal');
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
@@ -66,7 +66,7 @@ class OutputPanelBans extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -76,7 +76,6 @@ class OutputPanelBans extends Output
     {
         $this->renderSetup();
         $this->setBodyTemplate('panels/bans_new');
-        $parameters['is_panel'] = true;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('New Ban');
         $content_id = $parameters['content_id'] ?? null;
@@ -103,7 +102,7 @@ class OutputPanelBans extends Output
 
         $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'bans', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;
@@ -132,9 +131,10 @@ class OutputPanelBans extends Output
 
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
         $this->render_data['ban_board'] = $ban_hammer->getData('board_id');
-        $this->render_data['start_time_formatted'] = date("D F jS Y  H:i:s", intval($ban_hammer->getData('start_time')));
-        $this->render_data['expiration'] = date("D F jS Y  H:i:s",
-            intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')));
+        $this->render_data['start_time_formatted'] = $this->domain->domainDateTime(
+            intval($ban_hammer->getData('start_time')))->format("D F jS Y  H:i:s");
+        $this->render_data['expiration'] = $this->domain->domainDateTime(
+            intval($ban_hammer->getData('length') + $ban_hammer->getData('start_time')))->format("D F jS Y  H:i:s");
         $times = $ban_hammer->getData('times');
         $this->render_data['years'] = $times['years'];
         $this->render_data['days'] = $times['days'];
@@ -165,7 +165,7 @@ class OutputPanelBans extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

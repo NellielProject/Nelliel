@@ -22,9 +22,9 @@ class TablePermissions extends Table
             'description' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'permission' => ['row_check' => true, 'auto_inc' => false],
-            'description' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'permission' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'description' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 
@@ -70,6 +70,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_ip_notes_delete', 'Delete IP notes.']);
         $this->insertDefaultRow(['perm_view_public_logs', 'View full logs.']);
         $this->insertDefaultRow(['perm_view_system_logs', 'View system logs.']);
+        $this->insertDefaultRow(['perm_manage_markup', 'Manage markup entries.']);
         $this->insertDefaultRow(['perm_manage_news', 'Manage news entries.']);
         $this->insertDefaultRow(['perm_noticeboard_view', 'View the staff noticeboard.']);
         $this->insertDefaultRow(['perm_noticeboard_post', 'Post on the staff noticeboard.']);
@@ -81,6 +82,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_dismiss_reports', 'Manage reports.']);
         $this->insertDefaultRow(['perm_view_roles', 'View roles.']);
         $this->insertDefaultRow(['perm_manage_roles', 'Manage roles.']);
+        $this->insertDefaultRow(['perm_manage_scripts', 'Manage scripts.']);
         $this->insertDefaultRow(['perm_modify_site_config', 'Manage site configuration.']);
         $this->insertDefaultRow(['perm_manage_styles', 'Manage styles.']);
         $this->insertDefaultRow(['perm_manage_templates', 'Manage templates.']);
@@ -108,6 +110,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_delete_content', 'Delete posts and threads.']);
         $this->insertDefaultRow(['perm_view_unhashed_ip', 'View unhashed IP addresses.']);
         $this->insertDefaultRow(['perm_use_private_messages', 'View and send private messages.']);
+        $this->insertDefaultRow(['perm_manage_private_messages', 'Manage all private messages.']);
         $this->insertDefaultRow(['perm_raw_html', 'Can use raw HTML input.']);
     }
 }

@@ -17,8 +17,9 @@ class SQLHelpers
         $this->database = $database;
     }
 
-    public function buildPreparedInsert(string $table_name, array $column_list): PDOStatement
+    public function buildPreparedInsert(string $table_name, array $column_list, array $column_named = array()): PDOStatement
     {
+        $named = !empty($column_named);
         $query = 'INSERT INTO "' . $table_name . '" (';
         $columns = '';
         $values = '';
@@ -28,7 +29,12 @@ class SQLHelpers
 
         for ($i = 0; $i <= $limit; $i ++) {
             $columns .= '"' . $column_list[$i] . '"';
-            $values .= ':' . $column_list[$i];
+
+            if ($named) {
+                $values .= $column_named[$i];
+            } else {
+                $values .= '?';
+            }
 
             if ($multiple && $i < $limit) {
                 $columns .= ', ';
@@ -40,8 +46,10 @@ class SQLHelpers
         return $this->database->prepare($query);
     }
 
-    public function buildPreparedUpdate(string $table_name, array $column_list, array $where_columns, array $where_keys): PDOStatement
+    public function buildPreparedUpdate(string $table_name, array $column_list, array $where_columns, array $where_keys,
+        array $column_named = array(), array $where_named = array()): PDOStatement
     {
+        $named = !empty($column_named) && !empty($where_named);
         $query = 'UPDATE "' . $table_name . '" SET ';
         $columns = '';
         $where = ' WHERE ';
@@ -50,7 +58,13 @@ class SQLHelpers
         $limit = $column_count - 1;
 
         for ($i = 0; $i < $column_count; $i ++) {
-            $columns .= '"' . $column_list[$i] . '" =  :' . $column_list[$i];
+            if ($named) {
+                $placeholder = $column_named[$i];
+            } else {
+                $placeholder = '?';
+            }
+
+            $columns .= '"' . $column_list[$i] . '" = ' . $placeholder;
 
             if ($multiple && $i < $limit) {
                 $columns .= ', ';
@@ -62,7 +76,13 @@ class SQLHelpers
         $limit = $where_count - 1;
 
         for ($i = 0; $i < $where_count; $i ++) {
-            $where .= '"' . $where_columns[$i] . '" = :' . $where_keys[$i];
+            if ($named) {
+                $placeholder = $where_named[$i];
+            } else {
+                $placeholder = '?';
+            }
+
+            $where .= '"' . $where_columns[$i] . '" = ' . $placeholder;
 
             if ($multiple && $i < $limit) {
                 $where .= ' AND ';
@@ -78,11 +98,26 @@ class SQLHelpers
         $count = count($keys);
 
         for ($i = 0; $i < $count; $i ++) {
-            if (!is_null($pdo_types)) {
-                $prepared->bindValue(':' . $keys[$i], $values[$i], $pdo_types[$i]);
+            if (is_int($keys[$i])) {
+                $bind_key = $i + 1;
             } else {
-                $prepared->bindValue(':' . $keys[$i], $values[$i]);
+                $bind_key = $keys[$i];
+            }
+
+            if (!is_null($pdo_types)) {
+                $prepared->bindValue($bind_key, $values[$i], $pdo_types[$i]);
+            } else {
+                $prepared->bindValue($bind_key, $values[$i]);
             }
         }
+    }
+
+    public function parameterize(array $strings): array
+    {
+        $parameterize = function ($string) {
+            return ':' . $string;
+        };
+
+        return array_map($parameterize, $strings);
     }
 }

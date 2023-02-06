@@ -24,11 +24,11 @@ class TableCites extends Table
             'target_board' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'target_post' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
-            'cite_id' => ['row_check' => false, 'auto_inc' => true],
-            'source_board' => ['row_check' => true, 'auto_inc' => false],
-            'source_post' => ['row_check' => true, 'auto_inc' => false],
-            'target_board' => ['row_check' => true, 'auto_inc' => false],
-            'target_post' => ['row_check' => true, 'auto_inc' => false]];
+            'cite_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
+            'source_board' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'source_post' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'target_board' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'target_post' => ['row_check' => true, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

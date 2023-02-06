@@ -1,14 +1,14 @@
 # Nelliel Imageboard
 ## About
-A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby/)-style imageboard.
+A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby/)-style imageboard which attempts to retain the feel of old school imageboards.
 
-**WARNING: At present Nelliel is in a beta stage of development. It is still incomplete and not yet recommended for production use.**
+**IMPORTANT: Nelliel is in a beta stage of development and will have bugs and incomplete features.**
 
 ## Notable Features
  - [Plugin API](documentation/plugins/plugin-api.md)
- - [JSON API](documentation/JSON-API.md)
- - Fully customizable filetype checks with 65 formats included by default
- - Over 300 settings
+ - [JSON API](documentation/json-api/api.md)
+ - Customizable filetype checks with 84 formats included by default
+ - Over 400 settings
  - Web-based control panels for most configuration and functions
  - Flexible role and permission system
 
@@ -26,7 +26,7 @@ Required:
 - [PHP libxml](https://www.php.net/manual/en/book.libxml.php)
 - [PHP session](https://www.php.net/manual/en/book.session.php)
 
-These requirements are well behind the leading edge and should be widely available. The PHP extensions required are usually included and enabled with a standard install; if not, they are almost always available in official repositories. If for some reason even the minimum cannot be provided, find a new host. Srsly.
+These requirements are intentionally well behind the leading edge and should be widely available. The PHP extensions required are usually included and enabled with a standard install; if not, they are almost always available in official repositories. If for some reason even the minimum cannot be provided, find a new host. Srsly.
 
 ## Optional Requirements
 These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not required and the software will work without them:
@@ -39,7 +39,7 @@ These are optional things that Nelliel or one of its libraries can utilize for e
 See [INSTALL.md](INSTALL.md) for installation instructions.
 
 ## Plugins
-Nelliel has a plugin system that will allow extension of the software without having to worry about mods that can be easily broken during updates. Details about using the API are available in [plugin-api.md](documentation/plugins/plugin-api.md).
+Nelliel has a plugin system to allow extension of the software without having to worry about mods that can be easily broken during updates. Details about using the API are available in [plugin-api.md](documentation/plugins/plugin-api.md).
 
 ## License
 Nelliel is released under the [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause). This can be viewed in [LICENSE.md](LICENSE.md) or the About Nelliel page.

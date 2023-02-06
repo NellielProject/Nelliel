@@ -5,10 +5,10 @@ namespace Nelliel\Domains;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\FileTypes;
 use Nelliel\NellielCacheInterface;
-use Nelliel\Database\NellielPDO;
 use Nelliel\Content\ContentID;
+use Nelliel\Content\Thread;
+use Nelliel\Database\NellielPDO;
 use PDO;
 
 class DomainBoard extends Domain implements NellielCacheInterface
@@ -116,6 +116,44 @@ class DomainBoard extends Domain implements NellielCacheInterface
         return $settings;
     }
 
+    public function updateStatistics(): void
+    {
+        $limit = time() - nel_site_domain()->setting('min_time_between_board_stat_updates');
+
+        if ($this->statistics->get($this, 'last_update') > $limit) {
+            return;
+        }
+
+        $thread_count = (int) $this->database->executeFetch(
+            'SELECT COUNT(*) FROM "' . $this->reference('threads_table') . '"', PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'thread_count', $thread_count);
+        $post_count = (int) $this->database->executeFetch(
+            'SELECT COUNT(*) FROM "' . $this->reference('posts_table') . '"', PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'post_count', $post_count);
+        $all_time_post_count = (int) $this->database->executeFetch(
+            'SELECT MAX("post_number") FROM "' . $this->reference('posts_table') . '"', PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'all_time_post_count', $all_time_post_count);
+        $posts_per_month = (int) $this->database->executeFetch(
+            'SELECT COUNT(*) FROM "' . $this->reference('posts_table') . '" WHERE "post_time" >= ' .
+            (time() - (3600 * 24 * 30)) . '', PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'posts_per_month', $posts_per_month);
+        $posts_per_day = (int) $this->database->executeFetch(
+            'SELECT COUNT(*) FROM "' . $this->reference('posts_table') . '" WHERE "post_time" >= ' .
+            (time() - (3600 * 24)) . '', PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'posts_per_day', $posts_per_day);
+        $posts_per_hour = (int) $this->database->executeFetch(
+            'SELECT COUNT(*) FROM "' . $this->reference('posts_table') . '" WHERE "post_time" >= ' . (time() - 3600) . '',
+            PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'posts_per_hour', $posts_per_hour);
+        $file_count = (int) $this->database->executeFetch(
+            'SELECT COUNT(*) FROM "' . $this->reference('uploads_table') . '" WHERE "filesize" > 0', PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'file_count', $file_count);
+        $total_filesize = (int) $this->database->executeFetch(
+            'SELECT SUM("filesize") FROM "' . $this->reference('uploads_table') . '"', PDO::FETCH_COLUMN);
+        $this->statistics->update($this, 'total_filesize', $total_filesize);
+        $this->statistics->update($this, 'last_update', time());
+    }
+
     public function exists()
     {
         $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
@@ -156,5 +194,11 @@ class DomainBoard extends Domain implements NellielCacheInterface
         }
 
         return $active_threads;
+    }
+
+    public function getThread(int $thread_id): Thread
+    {
+        $content_id = new ContentID(ContentID::createIDString($thread_id));
+        return $content_id->getInstanceFromID($this);
     }
 }

@@ -5,7 +5,6 @@ namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\ArchiveAndPrune;
 use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
@@ -36,7 +35,7 @@ class DispatchRegen extends Dispatch
                         nel_derp(500, __('You are not allowed to regenerate site pages.'));
                     }
 
-                    $regen->allSitePages($this->domain);
+                    $regen->sitePages($this->domain);
                     $forward = 'site';
                 } else if ($this->domain->id() === Domain::GLOBAL) {
                     if (!$user->checkPermission($this->domain, 'perm_regen_pages')) {
@@ -50,7 +49,7 @@ class DispatchRegen extends Dispatch
                         nel_derp(504, __('You are not allowed to regenerate pages on this board.'));
                     }
 
-                    $regen->allBoardPages($this->domain);
+                    $regen->boardPages($this->domain);
                     $forward = 'board';
                 }
 

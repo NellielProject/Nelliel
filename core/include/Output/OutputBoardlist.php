@@ -22,11 +22,13 @@ class OutputBoardlist extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('boardlist');
+        $parameters['panel'] = $parameters['panel'] ?? _gettext('Boardlist');
+        $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $authorization = new Authorization($this->database);
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
-        $this->render_data['header'] = $output_header->general($parameters, true);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ?');
         $user_roles = $this->database->executePreparedFetchAll($prepared, [$this->session->user()
             ->id()], PDO::FETCH_ASSOC);
@@ -86,7 +88,7 @@ class OutputBoardlist extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

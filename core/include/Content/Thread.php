@@ -6,16 +6,17 @@ namespace Nelliel\Content;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
+use Nelliel\Cites;
 use Nelliel\FGSFDS;
 use Nelliel\Moar;
 use Nelliel\Overboard;
+use Nelliel\Regen;
 use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Tables\TableThreads;
 use PDO;
-use Nelliel\Regen;
 
 class Thread
 {
@@ -93,18 +94,19 @@ class Thread
         $pdo_types = $this->main_table->getPDOTypes($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
-
         if ($this->main_table->rowExists($filtered_data)) {
             $where_columns = ['thread_id'];
             $where_keys = ['where_thread_id'];
             $where_values = [$this->content_id->threadID()];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
-                $where_columns, $where_keys);
+                $where_columns, $where_keys, $this->sql_helpers->parameterize($column_list),
+                $this->sql_helpers->parameterize($where_keys));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->sql_helpers->bindToPrepared($prepared, $where_keys, $where_values);
             $this->database->executePrepared($prepared);
         } else {
-            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list);
+            $prepared = $this->sql_helpers->buildPreparedInsert($this->main_table->tableName(), $column_list,
+                $this->sql_helpers->parameterize($column_list));
             $this->sql_helpers->bindToPrepared($prepared, $column_list, $values, $pdo_types);
             $this->database->executePrepared($prepared);
         }
@@ -144,7 +146,9 @@ class Thread
 
         $this->deleteFromDatabase($parent_delete);
         $this->deleteFromDisk($parent_delete);
+        $this->domain->updateStatistics();
         $this->archive_prune->updateThreads();
+        $this->overboard->removeThread($this);
         return true;
     }
 
@@ -193,12 +197,19 @@ class Thread
     public function updateCounts()
     {
         $prepared = $this->database->prepare(
-            'SELECT COUNT("post_number") FROM "' . $this->domain->reference('posts_table') .
-            '" WHERE "parent_thread" = ?');
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') . '" WHERE "parent_thread" = ?');
         $post_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
             PDO::FETCH_COLUMN);
 
         $this->changeData('post_count', $post_count);
+
+        $prepared = $this->database->prepare(
+            'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? AND "sage" = 0');
+        $bump_count = $this->database->executePreparedFetch($prepared, [$this->content_id->threadID()],
+            PDO::FETCH_COLUMN);
+
+        $this->changeData('bump_count', $bump_count);
 
         $prepared = $this->database->prepare(
             'SELECT COUNT(*) FROM "' . $this->domain->reference('uploads_table') . '" WHERE "parent_thread" = ?');
@@ -220,8 +231,8 @@ class Thread
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') && $this->data('post_count') > $this->domain->setting(
-            'max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') &&
+            $this->data('bump_count') > $this->domain->setting('max_bumps')) {
             return;
         }
 
@@ -298,10 +309,9 @@ class Thread
             '" WHERE "parent_thread" = ? ORDER BY "post_number" DESC');
         $descending_post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
             PDO::FETCH_ASSOC);
-        $post_count = count($descending_post_list);
-        $bump_limit = $this->domain->setting('max_posts');
+        $bump_limit = $this->domain->setting('max_bumps');
 
-        if ($post_count > $bump_limit) {
+        if ($this->data('post_count') > $bump_limit) {
             $old_post_list = array_slice($descending_post_list, $bump_limit - 1);
 
             foreach ($old_post_list as $old_post) {
@@ -420,18 +430,12 @@ class Thread
         return $page_filename;
     }
 
-    public function getURL(bool $dynamic): string
+    public function getURL(bool $dynamic, string $query_string = ''): string
     {
         if ($dynamic) {
-            if (nel_session()->inModmode($this->domain)) {
-                return nel_build_router_url(
-                    [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
-                        $this->pageBasename()]);
-            } else {
-                return nel_build_router_url(
-                    [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
-                        $this->pageBasename()], false, 'modmode');
-            }
+            return nel_build_router_url(
+                [$this->domain->id(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
+                    $this->pageBasename()], $query_string === '', $query_string);
         }
 
         $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
@@ -557,14 +561,46 @@ class Thread
         return !empty($this->content_data);
     }
 
-    public function getPosts(): array
+    public function getPosts(bool $ids_only = false): array
     {
         $posts = array();
         $prepared = $this->database->prepare(
             'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
-            '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC');
+            '" WHERE "parent_thread" = ? ORDER BY "post_time" ASC, "post_time_milli" ASC, "post_number" ASC');
         $post_list = $this->database->executePreparedFetchAll($prepared, [$this->content_id->threadID()],
             PDO::FETCH_COLUMN);
+
+        if ($ids_only) {
+            return $post_list;
+        }
+
+        foreach ($post_list as $id) {
+            $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), intval($id)));
+            $posts[] = $content_id->getInstanceFromID($this->domain);
+        }
+
+        return $posts;
+    }
+
+    public function lastReplies(int $limit): array
+    {
+        $last_replies = array();
+        $offset = $this->data('post_count') - $limit;
+
+        if ($this->data('post_count') == 1) {
+            return $last_replies;
+        }
+
+        if ($offset < 1) {
+            $offset = 1;
+        }
+
+        $posts = array();
+        $prepared = $this->database->prepare(
+            'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
+            '" WHERE "parent_thread" = ? ORDER BY "post_number" ASC LIMIT ? OFFSET ?');
+        $post_list = $this->database->executePreparedFetchAll($prepared,
+            [$this->content_id->threadID(), $limit, $offset], PDO::FETCH_COLUMN);
 
         foreach ($post_list as $id) {
             $content_id = new ContentID(ContentID::createIDString($this->content_id->threadID(), intval($id)));
@@ -598,6 +634,7 @@ class Thread
             $this->changeData('last_update_milli', $post->data('post_time_milli'));
             $this->changeData('post_count', 1);
             $this->changeData('slug', $this->generateSlug($post));
+            $this->changeData('salt', base64_encode(random_bytes(32)));
             $post->changeData('reply_to', 0);
             $post->changeData('op', true);
         } else {
@@ -606,7 +643,7 @@ class Thread
             $this->changeData('post_count', $this->data('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                ($this->data('post_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
+                ($this->data('bump_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
                 !$this->data('permasage'))) {
                 $this->changeData('bump_time', $post->data('post_time'));
                 $this->changeData('bump_time_milli', $post->data('post_time_milli'));
@@ -616,18 +653,22 @@ class Thread
             $post->changeData('op', false);
         }
 
+        $this->writeToDatabase();
         $post->contentID()->changeThreadID($this->content_id->threadID());
         $post->changeData('parent_thread', $this->content_id->threadID());
         $this->writeToDatabase();
         $post->writeToDatabase();
     }
 
-    public function move(DomainBoard $domain): Thread
+    public function move(DomainBoard $domain, bool $keep_shadow): Thread
     {
-        if ($domain->id() === $this->domain->id()) {
+        $cross_board = $domain->id() !== $this->domain->id();
+
+        if (!$cross_board) {
             return $this;
         }
 
+        $old_post_ids = $this->getPosts(true);
         $original_posts = $this->getPosts();
         $first_post = true;
         $new_thread = null;
@@ -636,19 +677,77 @@ class Thread
             if ($first_post) {
                 $new_thread = new Thread(new ContentID(), $domain);
                 $new_thread->transferData($this->transferData());
-                $first_post = false;
-            }
+                $post->move($new_thread, true);
 
-            // If this is OP, will also finish thread setup
-            $post->move($new_thread, true);
+                if ($keep_shadow) {
+                    $this->changeData('shadow', true);
+                    $this->getMoar()->modify('shadow_board_id', $domain->id());
+                    $this->getMoar()->modify('shadow_thread_id', $new_thread->contentID()->threadID());
+                    $this->getMoar()->modify('shadow_type', 'moved');
+                    $this->changeData('locked', true);
+                    $this->writeToDatabase();
+                }
+
+                $first_post = false;
+            } else {
+                $post->move($new_thread, false);
+            }
         }
 
-        // TODO: Optionally make this a shadow post instead
-        $this->delete(true, true);
+        $cites = new Cites($post->domain()->database());
+        $new_post_ids = $new_thread->getPosts(true);
+        $post_id_conversions = array();
+        $post_count = count($old_post_ids);
+
+        for ($i = 0; $i < $post_count; $i ++) {
+            $post_id_conversions[$old_post_ids[$i]] = $new_post_ids[$i];
+        }
+
+        $cites->updateForMovedThread($this->domain(), $new_thread, $post_id_conversions);
+
+        if (!$keep_shadow) {
+            $this->delete(true, true);
+        }
+
         $regen = new Regen();
         $regen->threads($domain, true, [$new_thread->contentID()->threadID()]);
         $regen->index($domain);
         $regen->index($this->domain);
         return $new_thread;
+    }
+
+    public function merge(Thread $incoming_thread, bool $keep_shadow): void
+    {
+        $cross_board = $incoming_thread->domain()->id() === $this->domain->id();
+        $moved_incoming = $incoming_thread->move($this->domain, $keep_shadow);
+        $moved_first = $moved_incoming->firstPost();
+        $moved_first->changeData('op', false);
+        $moved_first->writeToDatabase();
+        $target_thread_id = $this->content_id->threadID();
+
+        foreach ($moved_incoming->getPosts() as $incoming_post) {
+            $incoming_post->changeData('parent_thread', $target_thread_id);
+            $incoming_post->writeToDatabase();
+
+            foreach ($incoming_post->getUploads() as $incoming_upload) {
+                $incoming_upload->changeData('parent_thread', $target_thread_id);
+                $incoming_upload->writeToDatabase();
+            }
+        }
+
+        $this->updateBumpTime();
+        $this->updateUpdateTime();
+        $this->updateCounts();
+
+        if ($cross_board && $keep_shadow) {
+            $incoming_thread->changeData('shadow', true);
+            $incoming_thread->getMoar()->modify('shadow_board_id', $this->domain->id());
+            $incoming_thread->getMoar()->modify('shadow_thread_id', $this->contentID()->threadID());
+            $incoming_thread->getMoar()->modify('shadow_type', 'merged');
+            $incoming_thread->changeData('locked', true);
+            $incoming_thread->writeToDatabase();
+        } else {
+            $incoming_thread->delete(true, true);
+        }
     }
 }

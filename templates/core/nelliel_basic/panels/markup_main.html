@@ -1,0 +1,29 @@
+<div>
+	<a href="{{ new_url }}">New markup</a>
+</div>
+<hr>
+<table >
+	<caption data-i18n="">List of markup</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Label</th>
+			<th scope="col" data-i18n="">Notes</th>
+			<th scope="col" data-i18n="">Enabled</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# markup_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ label }}</td>
+			<td>{{ notes }}</td>
+			<td>{{ enabled }}</td>
+			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ delete_url }}" data-i18n="">Delete</a>]</span>
+			</td>
+		</tr>
+{{/ markup_list }}
+	</tbody>
+</table>

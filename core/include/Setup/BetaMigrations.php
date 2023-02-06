@@ -5,20 +5,31 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Overboard;
 use Nelliel\Tables\TableBanAppeals;
+use Nelliel\Tables\TableBans;
 use Nelliel\Tables\TableBoardDefaults;
+use Nelliel\Tables\TableLogs;
+use Nelliel\Tables\TableMarkup;
+use Nelliel\Tables\TableNews;
+use Nelliel\Tables\TableNoticeboard;
+use Nelliel\Tables\TableOverboard;
 use Nelliel\Tables\TablePermissions;
+use Nelliel\Tables\TableR9KContent;
+use Nelliel\Tables\TableR9KMutes;
 use Nelliel\Tables\TableRolePermissions;
+use Nelliel\Tables\TableScripts;
 use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
+use Nelliel\Tables\TableStatistics;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TableLogs;
 
 class BetaMigrations
 {
     private $file_handler;
     private $upgrade;
+    private $setting_defaults_inserted = false;
 
     function __construct(FileHandler $file_handler, Upgrade $upgrade)
     {
@@ -26,6 +37,10 @@ class BetaMigrations
         $this->upgrade = $upgrade;
     }
 
+    // NOTES
+    // Hardcode table names for their value in a given version as the constants may change later on.
+    // SQLite does not support DROP COLUMN until recent versions. When SQLite is selected, just set the column empty or null to indicate it is unused.
+    // SQLite does not handle automatically filling values in NOT NULL columns. If adding a column, include an empty default if a default is not already given.
     public function doMigrations(): int
     {
         $migration_count = 0;
@@ -46,7 +61,12 @@ class BetaMigrations
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_filetypes" ADD COLUMN mimetypes TEXT NOT NULL DEFAULT \'\'');
                 nel_database('core')->exec('UPDATE "nelliel_filetypes" SET "mimetypes" = "mime"');
-                nel_database('core')->exec('ALTER TABLE "nelliel_filetypes" DROP COLUMN "mime"');
+
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_filetypes" DROP COLUMN "mime"');
+                } else {
+                    nel_database('core')->exec('UPDATE "nelliel_filetypes" SET "mime" = \'\'');
+                }
 
                 $old_data = nel_database('core')->executeFetchAll(
                     'SELECT "format", "mimetypes" FROM "nelliel_filetypes"', PDO::FETCH_ASSOC);
@@ -220,12 +240,12 @@ class BetaMigrations
 
                 echo ' - ' . __('Plugins table updated.') . '<br>';
 
-                // Update permissions table
+                // Update permissions and role permissions table
                 $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $permissions_table->insertDefaults();
+                $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage static pages.']);
                 $role_permissions_table = new TableRolePermissions(nel_database('core'),
                     nel_utilities()->sqlCompatibility());
-                $role_permissions_table->insertDefaults();
+                $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
@@ -294,7 +314,7 @@ class BetaMigrations
                     'require_op_email', 'enable_op_subject_field', 'require_op_subject', 'enable_op_comment_field',
                     'require_op_comment', 'show_render_timer', 'show_poster_id', 'show_static_preview',
                     'show_animated_preview', 'show_original_name', 'show_allowed_filetypes', 'show_allowed_embeds',
-                    'show_form_max_filesize', 'show_thumbnailed_message', 'show_video_preview', 'post_date_format'];
+                    'show_form_max_filesize', 'show_thumbnailed_message', 'show_video_preview', 'post_time_format'];
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
@@ -313,23 +333,54 @@ class BetaMigrations
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
-                // Update ban appeals
+                // Create ban appeals table and update bans
+                $bans_data = nel_database('core')->executeFetchAll('SELECT * FROM "nelliel_bans"', PDO::FETCH_ASSOC);
+                nel_database('core')->exec('DROP TABLE "nelliel_bans"');
+                $bans_table = new TableBans(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $bans_table->createTable();
                 $ban_appeals_table = new TableBanAppeals(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $ban_appeals_table->createTable();
 
-                echo ' - ' . __('Ban appeals table added.') . '<br>';
+                $bans_insert = nel_database('core')->prepare(
+                    'INSERT INTO "' . NEL_BANS_TABLE .
+                    '" ("ban_id", "board_id", "creator", "ip_type", "ip_address_start", "ip_address_end", "hashed_ip_address", "visitor_id", "reason", "start_time", "length", "seen", "appeal_allowed")
+VALUES (:ban_id, :board_id, :creator, :ip_type, :ip_address_start, :ip_address_end, :hashed_ip_address, :visitor_id, :reason, :start_time, :length, :seen, :appeal_allowed)');
+                $appeal_insert = nel_database('core')->prepare(
+                    'INSERT INTO "' . NEL_BAN_APPEALS_TABLE .
+                    '" ("ban_id", "time", "appeal", "response", "pending", "denied")
+VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
-                // Update bans
-                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
-                    nel_database('core')->exec('ALTER TABLE "nelliel_bans" DROP COLUMN appeal');
-                    nel_database('core')->exec('ALTER TABLE "nelliel_bans" DROP COLUMN appeal_response');
-                    nel_database('core')->exec('ALTER TABLE "nelliel_bans" DROP COLUMN appeal_status');
+                foreach ($bans_data as $data) {
+                    $bans_insert->bindValue(':ban_id', $data['ban_id'], PDO::PARAM_STR);
+                    $bans_insert->bindValue(':board_id', $data['board_id'], PDO::PARAM_STR);
+                    $bans_insert->bindValue(':creator', $data['creator'], PDO::PARAM_STR);
+                    $bans_insert->bindValue(':ip_type', $data['ip_type'], PDO::PARAM_STR);
+                    $bans_insert->bindValue(':ip_address_start', $data['ip_address_start'], PDO::PARAM_STR);
+                    $bans_insert->bindValue(':ip_address_end', $data['ip_address_end'], PDO::PARAM_STR);
+                    $bans_insert->bindValue(':hashed_ip_address', $data['hashed_ip_address'], PDO::PARAM_STR);
+                    $bans_insert->bindValue(':visitor_id', $data['visitor_id'], PDO::PARAM_STR);
+                    $bans_insert->bindValue(':reason', $data['reason'], PDO::PARAM_STR);
+                    $bans_insert->bindValue(':start_time', $data['start_time'], PDO::PARAM_INT);
+                    $bans_insert->bindValue(':length', $data['length'], PDO::PARAM_INT);
+                    $bans_insert->bindValue(':seen', $data['seen'], PDO::PARAM_INT);
+                    $appeal_allowed = $data['appeal_status'] != 2 ? 1 : 0;
+                    $bans_insert->bindValue(':appeal_allowed', $appeal_allowed, PDO::PARAM_INT);
+                    nel_database('core')->executePrepared($bans_insert);
+
+                    if ($data['appeal_status'] > 0) {
+                        $pending = $data['appeal_status'] == 1 ? 1 : 0;
+                        $denied = $data['appeal_status'] == 2 ? 1 : 0;
+                        $appeal_insert->bindValue(':ban_id', $data['ban_id'], PDO::PARAM_STR);
+                        $appeal_insert->bindValue(':time', time(), PDO::PARAM_INT);
+                        $appeal_insert->bindValue(':appeal', $data['appeal'], PDO::PARAM_STR);
+                        $appeal_insert->bindValue(':response', $data['appeal_response'], PDO::PARAM_STR);
+                        $appeal_insert->bindValue(':pending', $pending, PDO::PARAM_INT);
+                        $appeal_insert->bindValue(':denied', $denied, PDO::PARAM_INT);
+                        nel_database('core')->executePrepared($appeal_insert);
+                    }
                 }
 
-                nel_database('core')->exec(
-                    'ALTER TABLE "nelliel_bans" ADD COLUMN appeal_allowed SMALLINT NOT NULL DEFAULT 0');
-
-                echo ' - ' . __('Updated bans table.') . '<br>';
+                echo ' - ' . __('Added ban appeals table and updated bans table.') . '<br>';
 
                 // Update users
                 nel_database('core')->exec(
@@ -337,6 +388,8 @@ class BetaMigrations
 
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
                     nel_database('core')->exec('ALTER TABLE "nelliel_users" DROP COLUMN locked');
+                } else {
+                    nel_database('core')->exec('UPDATE "nelliel_users" SET "locked" = 0');
                 }
 
                 echo ' - ' . __('Updated users table.') . '<br>';
@@ -412,12 +465,17 @@ class BetaMigrations
 
                 // Update log tables
                 nel_database('core')->exec('ALTER TABLE "nelliel_logs" RENAME TO nelliel_system_logs');
-                nel_database('core')->exec('ALTER TABLE "nelliel_system_logs" DROP COLUMN "channel"');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_system_logs" ADD COLUMN message_values TEXT NOT NULL DEFAULT \'\'');
                 $public_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $public_logs_table->tableName('nelliel_public_logs');
                 $public_logs_table->createTable();
+
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_system_logs" DROP COLUMN "channel"');
+                } else {
+                    nel_database('core')->exec('UPDATE "nelliel_system_logs" SET "channel" = \'\'');
+                }
 
                 echo ' - ' . __('Updated log tables.') . '<br>';
 
@@ -426,9 +484,11 @@ class BetaMigrations
                     'allow_moving_replies', 'allow_moving_uploads', 'mod_links_spoiler', 'mod_links_unspoiler'];
                 $this->newBoardSettings($new_board_settings);
 
-                $old_board_setting_names = ['mod_links_edit_post'];
-                $new_board_setting_names = ['mod_links_edit'];
+                $old_board_setting_names = ['mod_links_delimiter_left', 'mod_links_delimiter_right'];
+                $new_board_setting_names = ['mod_links_left_bracket', 'mod_links_right_bracket'];
                 $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
+
+                $this->removeBoardSettings(['mod_links_edit_post']);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
 
@@ -442,6 +502,243 @@ class BetaMigrations
 
             case 'v0.9.29':
                 echo '<br>' . __('Updating from v0.9.29 to ???...') . '<br>';
+
+                // Update settings table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_settings" MODIFY "default_value" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Settings table updated.') . '<br>';
+                }
+
+                // Update setting options table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_setting_options" MODIFY "menu_data" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Setting options table updated.') . '<br>';
+                }
+
+                // Update site and table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_settings" MODIFY "default_value" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Site config updated.') . '<br>';
+                }
+
+                // Update site config table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_site_config" MODIFY "setting_value" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Site config table updated.') . '<br>';
+                }
+
+                // Update site settings
+                $new_site_settings = ['pm_snippet_length', 'min_time_between_site_stat_updates',
+                    'min_time_between_board_stat_updates', 'enable_captchas', 'use_native_captcha', 'overboard_name',
+                    'overboard_catalog', 'sfw_overboard_name', 'sfw_overboard_catalog', 'private_message_time_format',
+                    'blotter_time_format', 'news_time_format', 'control_panel_list_time_format', 'time_zone',
+                    'show_bottom_banners', 'show_top_styles', 'show_bottom_styles'];
+                $this->newSiteSettings($new_site_settings);
+
+                $old_site_setting_names = ['show_banners'];
+                $new_site_setting_names = ['show_top_banners'];
+                $this->renameSiteSettings($old_site_setting_names, $new_site_setting_names);
+
+                $removed_site_settings = ['recaptcha_site_key', 'recaptcha_sekrit_key', 'recaptcha_type',
+                    'use_login_recaptcha', 'use_register_recaptcha', 'use_post_recaptcha', 'use_report_recaptcha'];
+                $this->removeSiteSettings($removed_site_settings);
+
+                echo ' - ' . __('Site settings updated.') . '<br>';
+
+                // Update board configs and defaults tables
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_board_configs" MODIFY "setting_value" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_board_defaults" MODIFY "setting_value" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Board configs and defaults tables updated.') . '<br>';
+                }
+
+                // Update board settings
+                $new_board_settings = ['allow_shadow_message', 'shadow_message_override', 'r9k_enable_board',
+                    'r9k_global_unoriginal_check', 'r9k_strip_repeating', 'r9k_include_unicode_letters',
+                    'r9k_unoriginal_mute', 'r9k_global_mute_check', 'r9k_mute_time_range', 'r9k_mute_base_number',
+                    'upload_renzoku', 'scale_upload_filesize_units', 'scale_new_post_filesize_units',
+                    'display_iec_filesize_units', 'binary_filesize_conversion', 'filesize_precision',
+                    'filesize_unit_prefix', 'auto_archive_min_replies', 'mod_links_merge', 'catalog_tile_width',
+                    'catalog_tile_height', 'catalog_show_multiple_uploads', 'catalog_first_preview_full_size',
+                    'catalog_max_multi_preview_display_width', 'catalog_max_multi_preview_display_height',
+                    'catalog_max_uploads_row', 'first_preview_own_row', 'show_index_link', 'catalog_nav_top',
+                    'catalog_nav_bottom', 'content_links_reply', 'content_links_expand_thread',
+                    'content_links_collapse_thread', 'content_links_show_thread', 'content_links_hide_thread',
+                    'content_links_show_post', 'content_links_hide_post', 'content_links_show_file',
+                    'content_links_hide_file', 'content_links_show_embed', 'content_links_hide_embed',
+                    'content_links_show_upload', 'content_links_hide_upload', 'content_links_cite_post',
+                    'content_links_download_file', 'content_links_first_posts', 'content_links_last_posts', 'time_zone',
+                    'show_bottom_banners', 'show_top_banners_on_boards', 'show_bottom_banners_on_boards',
+                    'show_top_styles', 'show_bottom_styles'];
+                $this->newBoardSettings($new_board_settings);
+
+                $old_board_setting_names = ['max_catalog_display_width', 'max_catalog_display_height',
+                    'ban_page_date_format', 'show_banners'];
+                $new_board_setting_names = ['catalog_max_preview_display_width', 'catalog_max_preview_display_height',
+                    'ban_page_time_format', 'show_top_banners'];
+                $this->renameBoardSettings($old_board_setting_names, $new_board_setting_names);
+
+                $removed_board_settings = ['post_date_format'];
+                $this->removeBoardSettings($removed_board_settings);
+
+                echo ' - ' . __('Board settings updated.') . '<br>';
+
+                // Update thread tables
+                $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN bump_count SMALLINT NOT NULL DEFAULT 0');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN salt VARCHAR(255) NOT NULL DEFAULT \'\'');
+                }
+
+                echo ' - ' . __('Thread tables updated.') . '<br>';
+
+                // Update post tables
+                $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_posts' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
+
+                    if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                        nel_database('core')->exec(
+                            'ALTER TABLE "' . $prefix . '_posts' . '" DROP COLUMN "content_hash"');
+                    } else {
+                        nel_database('core')->exec('UPDATE "' . $prefix . '_posts' . '" SET "content_hash" = \'\'');
+                    }
+
+                    if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                        nel_database('core')->exec(
+                            'ALTER TABLE "' . $prefix . '_posts' . '" MODIFY comment LONGTEXT DEFAULT NULL');
+                        nel_database('core')->exec(
+                            'ALTER TABLE "' . $prefix . '_posts' . '" MODIFY cache LONGTEXT DEFAULT NULL');
+                    }
+                }
+
+                echo ' - ' . __('Post tables updated.') . '<br>';
+
+                // Update upload tables
+                $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_uploads' . '" ADD COLUMN shadow SMALLINT NOT NULL DEFAULT 0');
+                }
+
+                echo ' - ' . __('Upload tables updated.') . '<br>';
+
+                // Create markup table
+                $markup_table = new TableMarkup(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $markup_table->createTable();
+
+                echo ' - ' . __('Markup table added.') . '<br>';
+
+                // Update permissions and role permissions table
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaults();
+                $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $role_permissions_table->insertDefaults();
+
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
+                // Create R9K content and mutes tables
+                $r9k_content_table = new TableR9KContent(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $r9k_content_table->createTable();
+                $r9k_mutes_table = new TableR9KMutes(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $r9k_mutes_table->createTable();
+
+                echo ' - ' . __('R9K content and mutes tables added.') . '<br>';
+
+                // Create statistics table
+                $statistics_table = new TableStatistics(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $statistics_table->createTable();
+
+                echo ' - ' . __('Statistics table added.') . '<br>';
+
+                // Create scripts table
+                $scripts_table = new TableScripts(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $scripts_table->createTable();
+
+                echo ' - ' . __('Scripts table added.') . '<br>';
+
+                // Update overboard table
+                nel_database('core')->exec('DROP TABLE "nelliel_overboard"');
+                $overboard_table = new TableOverboard(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $overboard_table->createTable();
+                $overboard = new Overboard(nel_database('core'));
+                $overboard->rebuild();
+
+                echo ' - ' . __('Overboard table updated.') . '<br>';
+
+                // Update news table
+                nel_database('core')->exec('ALTER TABLE "nelliel_news" RENAME TO nelliel_old_news');
+                $news_table = new TableNews(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $news_table->createTable();
+                nel_database('core')->exec('INSERT INTO "nelliel_news" SELECT * FROM "nelliel_old_news"');
+                nel_database('core')->exec('DROP TABLE "nelliel_old_news"');
+
+                echo ' - ' . __('News table updated.') . '<br>';
+
+                // Update pages table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_pages" MODIFY "text" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Pages table updated.') . '<br>';
+                }
+
+                // Update cache table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_cache" MODIFY "cache_data" LONGTEXT DEFAULT NULL');
+
+                    echo ' - ' . __('Cache table updated.') . '<br>';
+                }
+
+                // Update noticeboard table
+                nel_database('core')->exec('ALTER TABLE "nelliel_noticeboard" RENAME TO nelliel_old_noticeboard');
+                $noticeboard_table = new TableNoticeboard(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $noticeboard_table->createTable();
+                nel_database('core')->exec('INSERT INTO "nelliel_noticeboard" SELECT * FROM "nelliel_old_noticeboard"');
+                nel_database('core')->exec('DROP TABLE "nelliel_old_noticeboard"');
+
+                echo ' - ' . __('Noticeboard table updated.') . '<br>';
+
+                // Update log tables
+                nel_database('core')->exec('ALTER TABLE "nelliel_system_logs" RENAME TO nelliel_old_system_logs');
+                $system_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $system_logs_table->tableName('nelliel_system_logs');
+                $system_logs_table->createTable();
+                nel_database('core')->exec('INSERT INTO "nelliel_system_logs" SELECT * FROM "nelliel_system_logs"');
+                nel_database('core')->exec('DROP TABLE "nelliel_system_logs"');
+
+                nel_database('core')->exec('ALTER TABLE "nelliel_public_logs" RENAME TO nelliel_old_public_logs');
+                $public_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $public_logs_table->tableName('nelliel_public_logs');
+                $public_logs_table->createTable();
+                nel_database('core')->exec('INSERT INTO "nelliel_public_logs" SELECT * FROM "nelliel_public_logs"');
+                nel_database('core')->exec('DROP TABLE "nelliel_public_logs"');
+
+                echo ' - ' . __('Log tables updated.') . '<br>';
+
+                $migration_count ++;
         }
 
         return $migration_count;
@@ -480,19 +777,27 @@ class BetaMigrations
         return $board_ids;
     }
 
-    private function newSiteSettings(array $names): void
+    private function newSiteSettings(array $names, bool $reinsert = false): void
     {
-        $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
-        $settings_table->insertDefaults();
+        if (!$this->setting_defaults_inserted || $reinsert) {
+            $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+            $settings_table->insertDefaults();
+            $this->setting_defaults_inserted = true;
+        }
+
         $setting_options_table = new TableSettingOptions(nel_database('core'), nel_utilities()->sqlCompatibility());
         $setting_options_table->insertDefaults();
         $this->copyToSiteConfig($names);
     }
 
-    private function newBoardSettings(array $names): void
+    private function newBoardSettings(array $names, bool $reinsert = false): void
     {
-        $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
-        $settings_table->insertDefaults();
+        if (!$this->setting_defaults_inserted || $reinsert) {
+            $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+            $settings_table->insertDefaults();
+            $this->setting_defaults_inserted = true;
+        }
+
         $setting_options_table = new TableSettingOptions(nel_database('core'), nel_utilities()->sqlCompatibility());
         $setting_options_table->insertDefaults();
         $board_defaults_table = new TableBoardDefaults(nel_database('core'), nel_utilities()->sqlCompatibility());
@@ -517,7 +822,7 @@ class BetaMigrations
         $name_count = count($source_names);
 
         for ($i = 0; $i < $name_count; $i ++) {
-            $site_config_update->bindValue(':source_name', $source_names[$i]);
+            $site_config_select->bindValue(':source_name', $source_names[$i]);
             $value = nel_database('core')->executePreparedFetch($site_config_select, null, PDO::FETCH_COLUMN);
             $site_config_update->bindValue(':new_value', $value);
             $site_config_update->bindValue(':target_name', $target_names[$i]);

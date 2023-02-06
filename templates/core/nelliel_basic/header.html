@@ -1,24 +1,9 @@
-<header>
-{{# board_navigation }}
-	{{> navigation/board_links }}
-{{/ board_navigation }}
-{{# show_styles }}
-	{{> menu/styles }}
-{{/ show_styles }}
-{{# site_navigation }}
-	{{> navigation/site_links }}
-{{/ site_navigation }}
-{{# use_site_header }}
-	{{> headers/site }}
-{{/ use_site_header }}
+{{# use_general_header }}
+	{{> headers/general }}
+{{/ use_general_header }}
 {{# use_board_header }}
 	{{> headers/board }}
 {{/ use_board_header }}
-{{# use_overboard_header }}
-	{{> headers/overboard }}
-{{/ use_overboard_header }}
-{{# is_panel }}
-	{{> headers/panel }}
-{{/ is_panel }}
-</header>
-<hr class="clear">
+{{# use_manage_header }}
+	{{> headers/manage }}
+{{/ use_manage_header }}

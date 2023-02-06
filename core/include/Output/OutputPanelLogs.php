@@ -21,7 +21,6 @@ class OutputPanelLogs extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('panels/logs');
-        $parameters['is_panel'] = true;
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
         $page = (int) $parameters['page'] ?? 1;
         $entries = $parameters['entries'] ?? 20;
@@ -111,7 +110,7 @@ class OutputPanelLogs extends Output
         $this->render_data['public_logs_url'] = nel_build_router_url([$this->domain->id(), 'logs', 'public']);
         $this->render_data['combined_logs_url'] = nel_build_router_url([$this->domain->id(), 'logs', 'combined']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+        $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         echo $output;
         return $output;

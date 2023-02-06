@@ -1,3 +1,29 @@
+<div>
+	<div>
+		<a href="#section-general" data-i18n="">General</a>
+	</div>
+	<div>
+		<a href="#section-banners" data-i18n="">Banners</a>
+	</div>
+	<div>
+		<a href="#section-filenames-and-structure" data-i18n="">Filenames and Structure</a>
+	</div>
+	<div>
+		<a href="#section-rendering" data-i18n="">Rendering</a>
+	</div>
+	<div>
+		<a href="#section-uploads" data-i18n="">Uploads</a>
+	</div>
+	<div>
+		<a href="#section-hashing-and-security" data-i18n="">Hashing and Security</a>
+	</div>
+	<div>
+		<a href="#section-captcha" data-i18n="">CAPTCHA</a>
+	</div>
+	<div>
+		<a href="#section-overboard" data-i18n="">Overboard</a>
+	</div>
+</div>
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 {{# settings_data }}
 	<table>
@@ -11,7 +37,7 @@
 		</thead>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">General</th>
+				<th id="section-general" colspan="3" data-i18n="">General</th>
 			</tr>
 	{{# name }}
 			{{> panels/pieces/settings/text }}
@@ -46,6 +72,9 @@
 	{{# locale }}
 			{{> panels/pieces/settings/text }}
 	{{/ locale }}
+	{{# time_zone }}
+			{{> panels/pieces/settings/select }}
+	{{/ time_zone }}
 	{{# only_alphanumeric_board_ids }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ only_alphanumeric_board_ids }}
@@ -97,14 +126,32 @@
 	{{# allow_user_registration }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ allow_user_registration }}
+	{{# pm_snippet_length }}
+			{{> panels/pieces/settings/number }}
+	{{/ pm_snippet_length }}
+	{{# min_time_between_site_stat_updates }}
+			{{> panels/pieces/settings/number }}
+	{{/ min_time_between_site_stat_updates }}
+	{{# min_time_between_board_stat_updates }}
+			{{> panels/pieces/settings/number }}
+	{{/ min_time_between_board_stat_updates }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Banners</th>
+				<th id="section-banners" colspan="3" data-i18n="">Banners</th>
 			</tr>
-	{{# show_banners }}
+	{{# show_top_banners }}
 			{{> panels/pieces/settings/checkbox }}
-	{{/ show_banners}}
+	{{/ show_top_banners }}
+	{{# show_bottom_banners }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_bottom_banners }}
+	{{# show_top_banners_on_boards }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_top_banners_on_boards }}
+	{{# show_bottom_banners_on_boards }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_bottom_banners_on_boards }}
 	{{# banner_display_width }}
 			{{> panels/pieces/settings/number }}
 	{{/ banner_display_width }}
@@ -114,7 +161,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Filenames and Structure</th>
+				<th id="section-filenames-and-structure" colspan="3" data-i18n="">Filenames and Structure</th>
 			</tr>
 	{{# index_filename_format }}
 			{{> panels/pieces/settings/text }}
@@ -137,7 +184,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Rendering</th>
+				<th id="section-rendering" colspan="3" data-i18n="">Rendering</th>
 			</tr>
 	{{# base_image_set }}
 			{{> panels/pieces/settings/select }}
@@ -169,10 +216,28 @@
 	{{# max_page_regen_time }}
 			{{> panels/pieces/settings/number }}
 	{{/ max_page_regen_time }}
+	{{# private_message_time_format }}
+			{{> panels/pieces/settings/text }}
+	{{/ private_message_time_format }}
+	{{# blotter_time_format }}
+			{{> panels/pieces/settings/text }}
+	{{/ blotter_time_format }}
+	{{# news_time_format }}
+			{{> panels/pieces/settings/text }}
+	{{/ news_time_format }}
+	{{# control_panel_list_time_format }}
+			{{> panels/pieces/settings/text }}
+	{{/ control_panel_list_time_format }}
+	{{# show_top_styles }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_top_styles }}
+	{{# show_bottom_styles }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_bottom_styles }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Uploads</th>
+				<th id="section-uploads" colspan="3" data-i18n="">Uploads</th>
 			</tr>
 	{{# graphics_handler }}
 			{{> panels/pieces/settings/select }}
@@ -192,7 +257,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Hashing and Security</th>
+				<th id="section-hashing-and-security" colspan="3" data-i18n="">Hashing and Security</th>
 			</tr>
 	{{# post_password_algorithm }}
 			{{> panels/pieces/settings/text }}
@@ -221,8 +286,14 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">CAPTCHA</th>
+				<th id="section-captcha" colspan="3" data-i18n="">CAPTCHA</th>
 			</tr>
+	{{# enable_captchas }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ enable_captchas }}
+	{{# use_native_captcha }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ use_native_captcha }}
 	{{# captcha_width }}
 			{{> panels/pieces/settings/number }}
 	{{/ captcha_width }}
@@ -238,31 +309,16 @@
 	{{# captcha_rate_limit }}
 			{{> panels/pieces/settings/number }}
 	{{/ captcha_rate_limit }}
-	{{# recaptcha_site_key }}
-			{{> panels/pieces/settings/text }}
-	{{/ recaptcha_site_key }}
-	{{# recaptcha_sekrit_key }}
-			{{> panels/pieces/settings/text }}
-	{{/ recaptcha_sekrit_key }}
-	{{# recaptcha_type }}
-			{{> panels/pieces/settings/select }}
-	{{/ recaptcha_type }}
 	{{# use_login_captcha }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_login_captcha }}
-	{{# use_login_recaptcha }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ use_login_recaptcha }}
 	{{# use_register_captcha }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_register_captcha }}
-	{{# use_register_recaptcha }}
-			{{> panels/pieces/settings/checkbox }}
-	{{/ use_register_recaptcha }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th colspan="3" data-i18n="">Overboard</th>
+				<th id="section-overboard" colspan="3" data-i18n="">Overboard</th>
 			</tr>
 	{{# overboard_active }}
 			{{> panels/pieces/settings/checkbox }}
@@ -270,6 +326,12 @@
 	{{# overboard_uri }}
 			{{> panels/pieces/settings/text }}
 	{{/ overboard_uri }}
+	{{# overboard_name }}
+			{{> panels/pieces/settings/text }}
+	{{/ overboard_name }}
+	{{# overboard_catalog }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ overboard_catalog }}
 	{{# overboard_threads }}
 			{{> panels/pieces/settings/number }}
 	{{/ overboard_threads }}
@@ -285,6 +347,12 @@
 	{{# sfw_overboard_uri }}
 			{{> panels/pieces/settings/text }}
 	{{/ sfw_overboard_uri }}
+	{{# sfw_overboard_name }}
+			{{> panels/pieces/settings/text }}
+	{{/ sfw_overboard_name }}
+	{{# sfw_overboard_catalog }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ sfw_overboard_catalog }}
 	{{# sfw_overboard_threads }}
 			{{> panels/pieces/settings/number }}
 	{{/ sfw_overboard_threads }}

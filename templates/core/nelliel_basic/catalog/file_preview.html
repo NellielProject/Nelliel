@@ -1,0 +1,8 @@
+{{# video_preview }}
+<video preload="metadata" class="video-preview" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;" controls>
+	<source src="{{ video_url }}" type="{{ mime_type }}">
+</video>
+{{/ video_preview }}
+{{# image_preview }}
+<img src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}">
+{{/ image_preview }}

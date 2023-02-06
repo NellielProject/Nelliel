@@ -33,20 +33,20 @@ class TableBans extends Table
             'appeal_allowed' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
-            'ban_id' => ['row_check' => true, 'auto_inc' => true],
-            'board_id' => ['row_check' => false, 'auto_inc' => false],
-            'creator' => ['row_check' => false, 'auto_inc' => false],
-            'ip_type' => ['row_check' => false, 'auto_inc' => false],
-            'ip_address_start' => ['row_check' => false, 'auto_inc' => false],
-            'ip_address_end' => ['row_check' => false, 'auto_inc' => false],
-            'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false],
-            'visitor_id' => ['row_check' => false, 'auto_inc' => false],
-            'reason' => ['row_check' => false, 'auto_inc' => false],
-            'start_time' => ['row_check' => false, 'auto_inc' => false],
-            'length' => ['row_check' => false, 'auto_inc' => false],
-            'seen' => ['row_check' => false, 'auto_inc' => false],
-            'appeal_allowed' => ['row_check' => false, 'auto_inc' => false],
-            'moar' => ['row_check' => false, 'auto_inc' => false]];
+            'ban_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
+            'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'creator' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'ip_type' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'ip_address_start' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'ip_address_end' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'reason' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'start_time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'length' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'seen' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'appeal_allowed' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

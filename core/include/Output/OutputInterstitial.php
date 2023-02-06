@@ -41,7 +41,13 @@ class OutputInterstitial extends Output
         }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+
+        if ($is_manage) {
+            $this->render_data['footer'] = $output_footer->manage([], true);
+        } else {
+            $this->render_data['footer'] = $output_footer->general([], true);
+        }
+
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         return $output;
     }
@@ -72,7 +78,13 @@ class OutputInterstitial extends Output
         $this->render_data['no_url'] = $no_info['url'];
         $this->render_data['no_text'] = $no_info['text'];
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
-        $this->render_data['footer'] = $output_footer->render([], true);
+
+        if ($is_manage) {
+            $this->render_data['footer'] = $output_footer->manage([], true);
+        } else {
+            $this->render_data['footer'] = $output_footer->general([], true);
+        }
+
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
         return $output;
     }

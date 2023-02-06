@@ -23,10 +23,10 @@ class TableStyles extends Table
             'parsed_ini' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'enabled' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
-            'style_id' => ['row_check' => true, 'auto_inc' => false],
-            'directory' => ['row_check' => false, 'auto_inc' => false],
-            'parsed_ini' => ['row_check' => false, 'auto_inc' => false],
-            'enabled' => ['row_check' => false, 'auto_inc' => false]];
+            'style_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'directory' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'parsed_ini' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 

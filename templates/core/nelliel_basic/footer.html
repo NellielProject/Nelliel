@@ -1,16 +1,9 @@
-<footer class="footer">
-{{# board_footer_lines }}
-	<div class="footer-text">
-		{{ text }}
-	</div>
-{{/ board_footer_lines }}
-{{# site_footer_lines }}
-	<div class="footer-text">
-		{{ text }}
-	</div>
-{{/ site_footer_lines }}
-	{{> pieces/attribution_links }}
-{{# show_stats }}
-	{{> pieces/render_stats }}
-{{/ show_stats }}
-</footer>
+{{# use_general_footer }}
+	{{> footers/general }}
+{{/ use_general_footer}}
+{{# use_board_footer }}
+	{{> footers/board }}
+{{/ use_board_footer }}
+{{# use_manage_footer }}
+	{{> footers/manage }}
+{{/ use_manage_footer }}
