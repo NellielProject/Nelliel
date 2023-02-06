@@ -1,4 +1,55 @@
 # Nelliel Changelog
+## v0.9.30 (2023/2/6)
+### Added
+ - Snippet setting for private messages
+ - Shadow threads
+ - Customizable markup with control panel
+ - R9K
+ - Upload cooldown
+ - Statistics
+ - php-filesize library and new settings for filesize rendering
+ - Customizable javascript files
+ - Per-thread salts
+ - More plugin hooks
+ - More CSS variables
+ - New file loader for templates
+ - Catalog view for overboard
+ - New overboard settings
+ - Customizable moderator and content UI links
+ - Section links in settings control panels
+ - More settings for date/time formatting
+ - Basic FAQ
+ - New banner settings
+ - Settings for styles menu
+ - More filetypes
+
+### Changed
+ - Improved file handling
+ - Updated JSON API documentation
+ - Better cite handling
+ - Improved catalog rendering
+ - Improved overboard rendering
+ - `DatabaseConnector` is now stateless and only hands off a connection
+ - Moved timezone settings to web settings
+ - Made some TEXT columns LONGTEXT in MySQL/MariaDB
+ - Converted some setting fields to textarea
+ - Improved banner handling
+
+### Fixed
+ - No default style in global panel
+ - Overboards not being removed when disabled
+ - Fixed various post and thread moving issues
+ - Board page navigation
+ - Private message security
+ - Users control panel not storing password
+ - Missing form action
+ - Missing thread expand/collapse link
+ - More migrations debugging
+ - Upload field visible when uploads no allowed
+
+### Removed
+ - ReCAPTCHA (all CAPTCHA besides the basic native one will be done through plugins)
+
 ## v0.9.29 (2022/10/3)
 ### Added
  - Enable/disable for file filters

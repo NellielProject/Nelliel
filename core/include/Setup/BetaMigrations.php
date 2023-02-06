@@ -501,7 +501,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.29':
-                echo '<br>' . __('Updating from v0.9.29 to ???...') . '<br>';
+                echo '<br>' . __('Updating from v0.9.29 to v0.9.30...') . '<br>';
 
                 // Update settings table
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
@@ -739,6 +739,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo ' - ' . __('Log tables updated.') . '<br>';
 
                 $migration_count ++;
+
+            case 'v0.9.30':
+                echo '<br>' . __('Updating from v0.9.30 to ???...') . '<br>';
         }
 
         return $migration_count;
