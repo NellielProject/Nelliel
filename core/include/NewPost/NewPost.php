@@ -61,40 +61,6 @@ class NewPost
 
         // Check if post is ok
         $this->isPostOk($post, $time['time']);
-
-        // Process FGSFDS
-        if ($this->domain->setting('process_new_post_commands')) {
-            $fgsfds = new FGSFDS();
-            $post_fgsfds = $post->data('fgsfds') ?? '';
-
-            $fgsfds->addFromString($post_fgsfds, true);
-            $post_email = $post->data('email') ?? '';
-
-            // If there are duplicates, the FGSFDS field takes precedence
-            if ($this->domain->setting('allow_email_commands')) {
-                $email_parts = explode(' ', $post_email);
-
-                if (is_array($email_parts) && count($email_parts) > 0 &&
-                    preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1) {
-                    $fgsfds->addFromString($post_email, false);
-
-                    if (!$this->domain->setting('keep_email_commands')) {
-                        $post->changeData('email', null);
-                    }
-                }
-            }
-
-            if (!$fgsfds->commandIsSet('noko') && $this->domain->setting('always_noko')) {
-                $fgsfds->addCommand('noko', true);
-            }
-
-            $post->changeData('sage', false);
-
-            if ($this->domain->setting('allow_sage')) {
-                $post->changeData('sage', $fgsfds->commandIsSet('sage'));
-            }
-        }
-
         $uploads = $uploads_handler->process($post);
         $spoon = !empty($uploads);
         $post->changeData('total_uploads', count($uploads));
@@ -126,6 +92,7 @@ class NewPost
         $cites->addCitesFromPost($post);
         $post->storeCache();
         $post->createDirectories();
+        $fgsfds = new FGSFDS();
 
         if ($fgsfds->commandIsSet('noko')) {
             $fgsfds->updateCommandData('noko', 'topic', $thread->contentID()->threadID());

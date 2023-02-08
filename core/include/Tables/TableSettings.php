@@ -198,6 +198,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_shadow_message', '1', 'Give the option of leaving a shadow message when moving or merging threads.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'shadow_message_moved', 'This thread has been moved to %s', 'Shadow thread message for moved threads. %s will be filled in with a cite link to the thread\'s new location. (sprintf).', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'shadow_message_merged', 'This thread has been merged into %s', 'Shadow thread message for merged threads. %s will be filled in with a cite link to the thread\'s new location. (sprintf)', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_dice_rolls', '1', 'Allow posters to use dice rolls.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_dice', '99', 'Maximum number of dice that can be rolled at once.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_dice_sides', '9999', 'Maximum sides on dice.', '{"type":"number"}']);
 
         // Banners
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_top_banners', '0', 'Display board banners at the top of public pages.', '{"type":"checkbox"}']);

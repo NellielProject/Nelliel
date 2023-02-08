@@ -160,6 +160,15 @@
 	{{# shadow_message_merged }}
 			{{> panels/pieces/settings/textarea }}
 	{{/ shadow_message_merged }}
+	{{# allow_dice_rolls }}
+		{{> panels/pieces/settings/checkbox }}
+	{{/ allow_dice_rolls }}
+	{{# max_dice }}
+		{{> panels/pieces/settings/number }}
+	{{/ max_dice }}
+	{{# max_dice_sides}}
+		{{> panels/pieces/settings/number }}
+	{{/ max_dice_sides }}
 		</tbody>
 		<tbody>
 			<tr>

@@ -11,8 +11,7 @@ class FGSFDS
 
     function __construct(string $input = null)
     {
-        if (!is_null($input))
-        {
+        if (!is_null($input)) {
             $this->addFromString($input);
         }
     }
@@ -22,25 +21,21 @@ class FGSFDS
         $commands = explode(' ', $input);
         $commands_added = false;
 
-        foreach ($commands as $command)
-        {
+        foreach ($commands as $command) {
             $command = utf8_trim($command);
 
-            if ($command === '')
-            {
+            if ($command === '') {
                 continue;
             }
 
             // TODO: work on this
             $value = explode('=', $command);
 
-            if ($value[0] === $command)
-            {
+            if ($value[0] === $command) {
                 $value = null;
             }
 
-            if($this->addCommand($command, $value, $overwrite))
-            {
+            if ($this->addCommand($command, $value, $overwrite)) {
                 $commands_added = true;
             }
         }
@@ -50,8 +45,7 @@ class FGSFDS
 
     public function addCommand(string $command, $value, bool $overwrite = false): bool
     {
-        if ($this->commandIsSet($command) && !$overwrite)
-        {
+        if ($this->commandIsSet($command) && !$overwrite) {
             return false;
         }
 
@@ -76,8 +70,7 @@ class FGSFDS
 
     public function getCommandData(string $command, string $key = '')
     {
-        if($key === '')
-        {
+        if ($key === '') {
             return self::$commands[$command]['data'] ?? null;
         }
 
@@ -92,5 +85,10 @@ class FGSFDS
     public function removeCommand(string $command): void
     {
         unset(self::$commands[$command]);
+    }
+
+    public function commandList(): array
+    {
+        return self::$commands;
     }
 }

@@ -12,6 +12,8 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;
 use Nelliel\ROBOT9000;
+use Nelliel\Dice;
+use Nelliel\FGSFDS;
 
 class PostData
 {
@@ -209,6 +211,26 @@ class PostData
         $time = nel_get_microtime();
         $post->changeData('post_time', $time['time']);
         $post->changeData('post_time_milli', $time['milli']);
+
+        if ($this->domain->setting('process_new_post_commands')) {
+            $this->processFGSFDS($post);
+        }
+
+        $fgsfds = new FGSFDS();
+
+        if (!$fgsfds->commandIsSet('noko') && $this->domain->setting('always_noko')) {
+            $fgsfds->addCommand('noko', true);
+        }
+
+        $post->changeData('sage', false);
+
+        if ($this->domain->setting('allow_sage')) {
+            $post->changeData('sage', $fgsfds->commandIsSet('sage'));
+        }
+
+        if ($this->domain->setting('allow_dice_rolls')) {
+            $this->rollDice($post);
+        }
     }
 
     public function checkEntry($post_item, $type)
@@ -375,6 +397,60 @@ class PostData
             $r9k->addMute($this->domain, $poster_hash);
             $mute_time = $r9k->calculateMuteTime($this->domain, $mute_count + 1);
             nel_derp(55, sprintf(__('Unoriginal content detected! You have been muted for %d seconds.'), $mute_time));
+        }
+    }
+
+    private function rollDice(Post $post): void
+    {
+        $fgsfds = new FGSFDS();
+        $dice_instance = new Dice();
+        $matches = array();
+
+        foreach ($fgsfds->commandList() as $command => $value) {
+
+            if (preg_match(Dice::DICE_REGEX, $command, $matches) !== 1) {
+                continue;
+            }
+
+            $dice = intval($matches[1] ?? 1);
+
+            if ($dice > $this->domain->setting('max_dice')) {
+                $dice = $this->domain->setting('max_dice');
+            }
+
+            $sides = intval($matches[2] ?? 6);
+
+            if ($sides > $this->domain->setting('max_dice_sides')) {
+                $sides = $this->domain->setting('max_dice_sides');
+            }
+
+            $modifier = intval($matches[3] ?? 0);
+
+            // If multiple rolls, only the last one is used
+            $post->getMoar()->modify('dice_roll', $dice_instance->roll($dice, $sides, $modifier));
+        }
+    }
+
+    private function processFGSFDS(Post $post)
+    {
+        $fgsfds = new FGSFDS();
+        $post_fgsfds = $post->data('fgsfds') ?? '';
+
+        $fgsfds->addFromString($post_fgsfds, true);
+        $post_email = $post->data('email') ?? '';
+
+        // If there are duplicates, the FGSFDS field takes precedence
+        if ($this->domain->setting('allow_email_commands')) {
+            $email_parts = explode(' ', $post_email);
+
+            if (is_array($email_parts) && count($email_parts) > 0 &&
+                preg_match('/[^@]@[^@\s]+(?:\.|\:)/', $email_parts[0]) !== 1) {
+                $fgsfds->addFromString($post_email, false);
+
+                if (!$this->domain->setting('keep_email_commands')) {
+                    $post->changeData('email', null);
+                }
+            }
         }
     }
 }
