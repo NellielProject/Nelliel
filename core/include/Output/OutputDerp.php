@@ -22,12 +22,13 @@ class OutputDerp extends Output
         $this->setupTimer();
         $this->setBodyTemplate('derp');
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render([], true);
+        $this->render_data['head'] = $output_head->render(['title' => $this->site_domain->setting('error_message_header')], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $diagnostic = $parameters['diagnostic'] ?? array();
         $context = $parameters['context'] ?? array();
         $return_link = $context['return_link'] ?? new ReturnLink();
+        $this->render_data['error_header'] = $this->site_domain->setting('error_message_header');
         $this->render_data['error_id'] = $diagnostic['error_id'];
         $this->render_data['error_message'] = $diagnostic['error_message'];
         $this->render_data['error_data'] = '';

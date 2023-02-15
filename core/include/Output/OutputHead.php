@@ -21,8 +21,6 @@ class OutputHead extends Output
         $this->renderSetup();
         $page_title = $parameters['page_title'] ?? $this->domain->reference('title');
         $this->render_data['site_referrer_policy'] = $this->site_domain->setting('site_referrer_policy');
-        // $this->render_data['main_js_file'] = NEL_SCRIPTS_WEB_PATH . 'core/nel.js';
-        // $this->render_data['js_ui_url'] = NEL_SCRIPTS_WEB_PATH . 'core/ui.js';
         $this->scripts();
         $this->render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
         $this->render_data['support_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/support.css';

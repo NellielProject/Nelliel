@@ -116,7 +116,7 @@ class TableSettings extends Table
         // Rendering
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'base_image_set', 'images-nelliel-basic', 'Base image set.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'default_style', 'style-nelliel', 'Default style for site pages and control panels.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_blotter', '1', 'Show the short list of blotter entries.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_blotter', '1', 'Show the short list of blotter entries.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'small_blotter_limit', '3', 'Maximum entries to show in the blotter short list.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'template_id', 'template-nelliel-basic', 'ID of default template for site', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_render_timer', '1', 'Show the rendering timer.', '{"type":"checkbox"}']);
@@ -130,6 +130,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'control_panel_list_time_format', 'Y/m/d (D) H:i:s', 'Time format for entries in control panel lists. (PHP DateTime format).', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_top_styles', '1', 'Show styles menu in the header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_bottom_styles', '0', 'Show styles menu in the footer.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'error_message_header', 'oh god how did this get here', 'Title shown for error messages.', '{"type":"text"}']);
 
         // Uploads
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', 'GD', 'Preferred graphics handler', '{"type":"select"}']);

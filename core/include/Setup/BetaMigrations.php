@@ -742,6 +742,14 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
             case 'v0.9.30':
                 echo '<br>' . __('Updating from v0.9.30 to ???...') . '<br>';
+
+                // Update site settings
+                $new_site_settings = ['error_message_header'];
+                $this->newSiteSettings($new_site_settings);
+
+                echo ' - ' . __('Site settings updated.') . '<br>';
+
+                $migration_count ++;
         }
 
         return $migration_count;
