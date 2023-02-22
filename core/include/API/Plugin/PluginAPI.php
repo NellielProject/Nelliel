@@ -42,7 +42,8 @@ class PluginAPI
     }
 
     /**
-     * Verifies if hook is valid. If it does not exist, creates the hook.
+     * Verifies if hook is valid.
+     * If it does not exist, creates the hook.
      */
     private function verifyOrCreateHook(string $hook_name, bool $new = true): bool
     {
@@ -132,7 +133,7 @@ class PluginAPI
         $plugins = array();
 
         foreach ($inis as $ini) {
-            if(!isset($ini['id'])) {
+            if (!isset($ini['id'])) {
                 continue;
             }
 
@@ -206,44 +207,50 @@ class PluginAPI
         }
 
         foreach ($enabled_plugins as $plugin) {
+            $failed_requirements = array();
             $min_php = $plugin->info('min_php');
 
             if ($min_php !== '' && !version_compare(PHP_VERSION, $min_php, '>=')) {
-                continue;
+                $failed_requirements[] = 'min_php';
             }
 
             $min_nelliel = $plugin->info('min_nelliel');
 
             if ($min_nelliel !== '' && !version_compare(NELLIEL_VERSION, $min_nelliel, '>=')) {
-                continue;
+                $failed_requirements[] = 'min_nelliel';
             }
 
             $api_version = $plugin->info('api_version');
 
             if ($api_version !== '' && $api_version != self::API_VERSION) {
-                continue;
+                $failed_requirements[] = 'api_version';
             }
 
+            $missing_dependencies = array();
             $dependencies = array_map('trim', explode(',', $plugin->info('dependencies')));
-            $load = true;
 
             foreach ($dependencies as $dependency) {
                 if ($dependency !== '' && !in_array($dependency, $enabled_plugin_ids)) {
-                    $load = false;
-                    break;
+                    $missing_dependencies[] = $dependency;
                 }
             }
 
-            if ($load) {
-                if (!file_exists($plugin->initializerFile())) {
-                    continue;
-                }
+            $load_fails = array();
 
-                self::$loaded_plugin_ids[] = $plugin->id();
-                self::$loaded_plugins[$plugin->id()] = $plugin;
-                include_once $plugin->initializerFile();
-                $this->processHook('nel-in-after-plugin-loaded', [$plugin->id()]);
+            if (!file_exists($plugin->initializerFile())) {
+                $load_fails[] = 'initializer_missing';
             }
+
+            if (!empty($failed_requirements) || !empty($missing_dependencies) || !empty($load_fails)) {
+                $this->processHook('nel-in-after-plugin-load-fail',
+                    [$plugin->id(), $failed_requirements, $missing_dependencies, $load_fails]);
+                continue;
+            }
+
+            self::$loaded_plugin_ids[] = $plugin->id();
+            self::$loaded_plugins[$plugin->id()] = $plugin;
+            include_once $plugin->initializerFile();
+            $this->processHook('nel-in-after-plugin-loaded', [$plugin->id()]);
         }
 
         $this->processHook('nel-in-after-all-plugins-loaded', []);

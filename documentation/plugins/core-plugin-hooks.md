@@ -6,6 +6,20 @@ Documentation of official hooks in the Nelliel codebase. These hooks have three 
 
 ## Hook List
 
+### nel-in-after-plugin-load-fail
+Added: v0.9.31
+
+Called after a plugin fails to load.
+ 
+**Arguments**
+
+|Order|Argument               |Type    |Modifiable|Returnable|Description|                               
+|:---:|:----------------------|:-------|:---------|:---------|:----------|
+|1    |`$plugin_id`           |`string`|No        |No        |ID of the plugin.|
+|2    |`$failed_requirements` |`array` |No        |No        |Minimum requirements that were not met.|
+|3    |`$missing_dependencies`|`array` |No        |No        |Missing hard dependencies.|
+|4    |`$load_fails`          |`array` |No        |No        |Other reasons for loading failure.|
+
 ### nel-in-after-plugin-loaded
 Added: v0.9.27
 
@@ -15,7 +29,7 @@ Called after the successful loading of a plugin.
 
 |Order|Argument    |Type    |Modifiable|Returnable|Description|                               
 |:---:|:-----------|:-------|:---------|:---------|:----------|
-|1    |`$plugin_id`|`string`|No        |No        |ID of the plugin that was loaded.|
+|1    |`$plugin_id`|`string`|No        |No        |ID of the plugin.|
 
 ### nel-in-after-all-plugins-loaded
 Added: v0.9.27
