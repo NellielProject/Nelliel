@@ -344,25 +344,25 @@ class Uploads
     private function checkFiletype(Upload $upload, string $extension, string $file): void
     {
         $filetypes = new FileTypes($this->domain->database());
+        $file_format = $filetypes->getFileFormat($extension, $file);
 
-        if (!$filetypes->isValidExtension($extension)) {
+        if (empty($file_format)) {
             nel_derp(21, _gettext('Unrecognized file type.'));
         }
 
-        if (!$filetypes->extensionIsEnabled($this->domain, $extension)) {
+        $format_data = $filetypes->formatData($file_format);
+
+        if (!$filetypes->formatIsEnabled($this->domain, $file_format)) {
             nel_derp(22, _gettext('File type is not allowed.'));
         }
 
-        $mime = $filetypes->getFileMime($extension, $file);
-
-        if ($mime === '') {
-            nel_derp(23, _gettext('Incorrect file type detected (does not match extension). Possible Hax.'));
+        if (!$filetypes->formatHasExtension($extension, $file_format)) {
+            nel_derp(23, _gettext('Detected file format does not match extension. Possible Hax.'));
         }
 
-        $type_data = $filetypes->extensionData($extension);
-        $upload->changeData('category', $type_data['category']);
-        $upload->changeData('format', $type_data['format']);
-        $upload->changeData('mime', $mime);
+        $upload->changeData('category', $format_data['category']);
+        $upload->changeData('format', $format_data['format']);
+        $upload->changeData('mime', $filetypes->getFormatMime($file_format));
     }
 
     private function embeds(Post $post)

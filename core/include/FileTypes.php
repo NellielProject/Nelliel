@@ -13,9 +13,12 @@ class FileTypes
 {
     private $cache_handler;
     private $database;
-    private static $formats;
     private static $settings;
-    private static $categories;
+    private static $categories_list;
+    private static $formats_list;
+    private static $extensions_list;
+    private static $categories_map;
+    private static $formats_map;
     private static $extensions_map;
 
     function __construct(NellielPDO $database)
@@ -33,8 +36,6 @@ class FileTypes
         $formats = array();
         $categories = array();
         $extensions_map = array();
-        // TODO: Add multiple item cache read/write
-        // $filetype_data = $this->cache_handler->loadArrayFromFile('filetype_data', 'filetype_data.php');
         $filetype_data = array();
 
         if (empty($filetype_data)) {
@@ -42,18 +43,16 @@ class FileTypes
                 PDO::FETCH_ASSOC);
             $category_data = $this->database->executeFetchAll('SELECT * FROM "' . NEL_FILETYPE_CATEGORIES_TABLE . '"',
                 PDO::FETCH_ASSOC);
-
-            // $this->cache_handler->writeArrayToFile('filetype_data', $filetype_data, 'filetype_data.php');
         }
 
         foreach ($category_data as $data) {
             $categories[$data['category']] = $data;
+            self::$categories_list[] = $data['category'];
         }
-
-        self::$categories = $categories;
 
         foreach ($filetype_data as $data) {
             $formats[$data['format']] = $data;
+            self::$formats_list[] = $data['format'];
             $extensions = json_decode($data['extensions'], true);
 
             if (empty($extensions)) {
@@ -61,107 +60,74 @@ class FileTypes
             }
 
             foreach ($extensions as $extension) {
-                $extensions_map[utf8_strtolower($extension)] = $data['format'];
+                $extensions_map[utf8_strtolower($extension)][] = $data['format'];
+                self::$extensions_list[] = utf8_strtolower($extension);
             }
         }
 
-        self::$categories = $categories;
-        self::$formats = $formats;
+        self::$categories_map = $categories;
+        self::$formats_map = $formats;
         self::$extensions_map = $extensions_map;
     }
 
-    public function formatData(string $format = null): array
+    public function categoryData(string $category): array
     {
-        if (!is_null($format)) {
-            return self::$formats[$format] ?? array();
-        }
-
-        return self::$formats;
+        return self::$categories_map[$category] ?? array();
     }
 
-    public function extensionData(string $extension): array
+    public function formatData(string $format): array
     {
-        $extension_data = array();
-
-        if (!$this->isValidExtension($extension)) {
-            return $extension_data;
-        }
-
-        $extension_data = self::$formats[self::$extensions_map[utf8_strtolower($extension)]];
-        return $extension_data;
+        return self::$formats_map[$format] ?? array();
     }
 
     public function categories(): array
     {
-        return self::$categories;
+        return self::$categories_list;
     }
 
-    public function isValidExtension(string $extension): bool
+    public function formats(): array
     {
-        return isset(self::$extensions_map[utf8_strtolower($extension)]);
+        return self::$formats_list;
+    }
+
+    public function extensions(): array
+    {
+        return self::$extensions_list;
+    }
+
+    public function formatHasExtension(string $extension, string $format): bool
+    {
+        return in_array(utf8_strtolower($extension), $this->formatExtensions($format));
     }
 
     private function loadSettingsIfNot(Domain $domain): void
     {
         if (!isset(self::$settings[$domain->id()])) {
-            $enabled_filetypes = $domain->setting('enabled_filetypes') ?? '';
-            self::$settings[$domain->id()] = json_decode($enabled_filetypes, true);
+            $enabled_filetypes = json_decode($domain->setting('enabled_filetypes') ?? '', true);
+
+            foreach ($enabled_filetypes as $category => $formats) {
+                self::$settings[$domain->id()]['enabled_categories'][$category] = ['formats' => $formats['formats']];
+
+                foreach ($formats as $format) {
+                    self::$settings[$domain->id()]['enabled_formats'][] = $format;
+                }
+            }
         }
     }
 
-    public function categoryIsEnabled(Domain $domain, string $type): bool
+    public function categoryIsEnabled(Domain $domain, string $category): bool
     {
-        $this->loadSettingsIfNot($domain);
-        return in_array($type, $this->enabledCategories($domain));
+        return in_array($category, $this->enabledCategories($domain));
     }
 
-    public function formatIsEnabled(Domain $domain, string $type, string $format): bool
+    public function formatIsEnabled(Domain $domain, string $format): bool
     {
-        $this->loadSettingsIfNot($domain);
-        return in_array($format, $this->enabledFormats($domain, $type));
+        return in_array($format, $this->enabledFormats($domain));
     }
 
-    public function extensionIsEnabled(Domain $domain, string $extension): bool
+    public function getFileFormat(string $extension, string $file): string
     {
-        $this->loadSettingsIfNot($domain);
-        $extension_data = $this->extensionData($extension);
-
-        if (empty($extension_data)) {
-            return false;
-        }
-
-        $type = $extension_data['category'];
-        $format = $extension_data['format'];
-        return $this->categoryIsEnabled($domain, $type) && $this->formatIsEnabled($domain, $type, $format);
-    }
-
-    public function verifyFile(string $extension, string $file): bool
-    {
-        return $this->getFileMime($extension, $file) !== '';
-    }
-
-    public function getFileMime(string $extension, string $file): string
-    {
-        $extension_data = $this->extensionData($extension);
-
-        if (empty($extension_data)) {
-            return '';
-        }
-
-        $valid_types = json_decode($extension_data['mimetypes'], true);
-
-        if (empty($valid_types)) {
-            return '';
-        }
-
-        // Test with PHP first as checks should generally be better (if libmagic has a matching entry)
-        $mime = mime_content_type($file);
-
-        if ($mime !== 'application/octet-stream' && in_array($mime, $valid_types)) {
-            return $mime;
-        }
-
-        // Fallback to custom check if a match wasn't found
+        $extension_formats = self::$extensions_map[utf8_strtolower($extension)];
         $start_buffer = 65535;
         $end_buffer = 65535;
         $file_length = filesize($file);
@@ -169,12 +135,23 @@ class FileTypes
         $file_test_begin = file_get_contents($file, false, null, 0, $start_buffer);
         $file_test_end = file_get_contents($file, false, null, $end_offset);
 
-        if (preg_match('/' . $extension_data['magic_regex'] . '/s', $file_test_begin) ||
-            preg_match('/' . $extension_data['magic_regex'] . '/s', $file_test_end)) {
-            return $valid_types[0];
+        foreach ($extension_formats as $format) {
+            $format_data = $this->formatData($format);
+
+            if (preg_match('/' . $format_data['magic_regex'] . '/s', $file_test_begin) ||
+                preg_match('/' . $format_data['magic_regex'] . '/s', $file_test_end)) {
+                return $format;
+            }
         }
 
         return '';
+    }
+
+    public function getFormatMime(string $format)
+    {
+        $format_data = $this->formatData($format);
+        $mimes = json_decode($format_data['mimetypes'], true);
+        return $mimes[0];
     }
 
     public function enabledCategories(Domain $domain): array
@@ -182,37 +159,22 @@ class FileTypes
         $this->loadSettingsIfNot($domain);
         $enabled = array();
 
-        foreach (self::$settings[$domain->id()] as $category => $settings) {
-            if (isset($settings['enabled']) && $settings['enabled']) {
-                $enabled[] = $category;
-            }
+        foreach (self::$settings[$domain->id()]['enabled_categories'] as $category => $data) {
+            $enabled[] = $category;
         }
 
         return $enabled;
     }
 
-    public function enabledFormats(Domain $domain, string $type): array
+    public function enabledFormats(Domain $domain, ?string $category = null): array
     {
         $this->loadSettingsIfNot($domain);
-        $enabled = array();
 
-        if (!isset(self::$settings[$domain->id()][$type]) || !isset(self::$settings[$domain->id()][$type]['formats']) ||
-            !self::$settings[$domain->id()][$type]['enabled']) {
-            return $enabled;
+        if (is_null($category)) {
+            return self::$settings[$domain->id()]['enabled_formats'];
         }
 
-        foreach (self::$settings[$domain->id()][$type]['formats'] as $format) {
-            if (isset(self::$formats[$format])) {
-                $enabled[] = $format;
-            }
-        }
-
-        return $enabled;
-    }
-
-    public function availableFormats(): array
-    {
-        return array_keys(self::$formats);
+        return self::$settings[$domain->id()]['enabled_categories'][$category]['formats'];
     }
 
     public function formatExtensions(string $format): array

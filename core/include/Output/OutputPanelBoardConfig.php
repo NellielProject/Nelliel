@@ -50,32 +50,36 @@ class OutputPanelBoardConfig extends Output
 
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $user_lock_override = $this->session->user()->checkPermission($this->domain, 'perm_manage_board_config_override');
-        $formats_data = $filetypes->formatData();
         $enabled_array = json_decode($enabled_types['setting_value'], true);
         $types_edit_lock = $defaults_list['enabled_filetypes']['edit_lock'] == 1 && !$defaults && !$user_lock_override;
 
         foreach ($filetypes->categories() as $category) {
-            $category_data = array();
-            $category_data['item_label'] = _gettext($category['label'] ?? '');
-            $category_data['category_select']['name'] = $category['category'];
-            $category_data['category_select']['input_name'] = 'enabled_filetypes[' . $category['category'] . '][enabled]';
+            $category_data = $filetypes->categoryData($category);
+            $category_output = array();
+            $category_output['item_label'] = _gettext($category_data['label'] ?? '');
+            $category_output['category_select']['name'] = $category_data['category'];
+            $category_output['category_select']['input_name'] = 'enabled_filetypes[' . $category_data['category'] .
+                '][enabled]';
 
-            if (isset($enabled_array[$category['category']]) && $enabled_array[$category['category']]['enabled']) {
-                $category_data['category_select']['checked'] = 'checked';
+            if (isset($enabled_array[$category_data['category']]) &&
+                $enabled_array[$category_data['category']]['enabled']) {
+                $category_output['category_select']['checked'] = 'checked';
             }
 
-            $category_data['category_select']['disabled'] = ($types_edit_lock) ? 'disabled' : '';
-            $enabled_formats = $enabled_array[$category['category']] ?? array();
+            $category_output['category_select']['disabled'] = ($types_edit_lock) ? 'disabled' : '';
+            $enabled_formats = $enabled_array[$category_data['category']] ?? array();
             $entry_row['entry'] = array();
 
-            foreach ($formats_data as $format => $data) {
-                if ($data['category'] !== $category['category']) {
+            foreach ($filetypes->formats() as $format) {
+                $format_data = $filetypes->formatData($format);
+
+                if ($format_data['category'] !== $category_data['category']) {
                     continue;
                 }
 
                 $set = array();
-                $set['input_name'] = 'enabled_filetypes[' . $data['category'] . '][formats][' . $format . ']';
-                $set['item_label'] = _gettext($data['label'] ?? '');
+                $set['input_name'] = 'enabled_filetypes[' . $format_data['category'] . '][formats][' . $format . ']';
+                $set['item_label'] = _gettext($format_data['label'] ?? '');
 
                 if (!empty($enabled_formats) && isset($enabled_formats['formats']) &&
                     array_search($format, $enabled_formats['formats']) !== false) {
@@ -85,9 +89,9 @@ class OutputPanelBoardConfig extends Output
                 $set['disabled'] = ($types_edit_lock) ? 'disabled' : '';
                 $extensions = '';
 
-                if (!empty($data['extensions'])) {
+                if (!empty($format_data['extensions'])) {
                     $extensions = ' - ';
-                    foreach (json_decode($data['extensions'], true) as $extension) {
+                    foreach (json_decode($format_data['extensions'], true) as $extension) {
                         $extensions .= $extension . ', ';
                     }
 
@@ -97,15 +101,15 @@ class OutputPanelBoardConfig extends Output
                 $set['item_label'] .= $extensions;
 
                 if (count($entry_row['entry']) === 3) {
-                    $category_data['entry_rows'][] = $entry_row;
+                    $category_output['entry_rows'][] = $entry_row;
                     $entry_row['entry'] = array();
                 }
 
                 $entry_row['entry'][] = $set;
             }
 
-            $category_data['entry_rows'][] = $entry_row;
-            $this->render_data['settings_data']['file_types'][] = $category_data;
+            $category_output['entry_rows'][] = $entry_row;
+            $this->render_data['settings_data']['file_types'][] = $category_output;
         }
 
         $this->render_data['show_lock_update'] = $defaults;
