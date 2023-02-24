@@ -1,4 +1,7 @@
-rror 0: Unknown error.  
+# Error Reference
+This is a quick reference of all error codes, where they trigger and a shorthand description.
+
+Error 0: Unknown error.  
 Error 1: Database connection error. (database.php)  
 Error 2: Invalid database type. (database.php)  
 Error 3: Posting flood. (NewPost/NewPost.php)  
@@ -51,10 +54,10 @@ Error 49: Email too long. (NewPost/PostData.php)
 Error 50: Subject too long. (NewPost/PostData.php)  
 Error 51: Comment too long. (NewPost/PostData.php)  
 Error 52: Not valid upload. (NewPost/Uploads.php)  
-Error 53: R9K already muted. (NewPost/PostData.php) 
-Error 54: R9K unoriginal. (NewPost/PostData.php) 
-Error 55: R9K unoriginal and muted. (NewPost/PostData.php) 
-Error 56: Uploads disabled. (NewPost/Uploads.php) 
+Error 53: R9K already muted. (NewPost/PostData.php)  
+Error 54: R9K unoriginal. (NewPost/PostData.php)  
+Error 55: R9K unoriginal and muted. (NewPost/PostData.php)  
+Error 56: Uploads disabled. (NewPost/Uploads.php)  
 Error 57: Upload flood. (NewPost/NewPost.php)  
 
 Error 60: Password does not match post. (Content/Post.php)  
@@ -212,9 +215,9 @@ Error 432: perm_noticeboard_delete (Admin/AdminNoticeboard.php)
 Error 435: perm_manage_scripts (Admin/AdminScripts.php)  
 
 Error 500: perm_regen_pages (site) (Dispatch/DispatchRegen.php)  
-Error 501: perm_regen_cache (site) (Dispatch/DispatchRegen.php) 
+Error 501: perm_regen_cache (site) (Dispatch/DispatchRegen.php)  
 Error 502: perm_regen_pages (global) (Dispatch/DispatchRegen.php)  
-Error 503: perm_regen_cache (global) (Dispatch/DispatchRegen.php) 
+Error 503: perm_regen_cache (global) (Dispatch/DispatchRegen.php)  
 Error 504: perm_regen_pages (board) (Dispatch/DispatchRegen.php)  
 Error 505: perm_regen_cache (board) (Dispatch/DispatchRegen.php)  
 Error 506: perm_regen_overboard (Dispatch/DispatchRegen.php)  

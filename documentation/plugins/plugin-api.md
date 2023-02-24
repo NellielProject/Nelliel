@@ -25,19 +25,21 @@ Once all checks are completed successfully the initializer file will be loaded a
 During the loading phase plugins may register functions or methods, add or remove their own hooks and do internal preparation. Plugins should avoid causing effects outside of themselves until the loading phase for all plugins is complete.
 
 ## Hooks
-The core of Nelliel's plugin API is hooks. Hooks may occur in any part of the Nelliel code or in the code of plugins. When execution reaches a hook, it will check for any functions or methods registered to it and call those before continuing. Plugins may also define their own hooks for other plugins to utilize.
+Nelliel's plugin API uses hooks as its interface. Hooks may occur in any part of the Nelliel code or in the code of plugins. When execution reaches a hook, it will check for any functions or methods registered to it and call those before continuing. Plugins may also define their own hooks for other plugins to utilize.
 
 In order to avoid naming collisions, hooks set by Nelliel are prepended by `nel-`. Hooks defined by plugins must be prepended by their own unique prefix.
+
+The list of core hooks can be found in [core-plugin-hooks.md](documentation/plugins/core-plugin-hooks.md).
 
 ## Hook Arguments and Return Values
 Hooks will provide zero or more arguments when called.
 
-If a return value is expected the first argument will be the returnable value. This variable can be modified before being returned. If the variable's type is changed or it is not returned then the last valid value will be used. All other arguments are either solely informational values or passed by reference to allow modification.
+If a return value is expected the first argument will be the returnable value. This variable can be modified before being returned. If the variable's type is changed or it is not returned then the last valid value will be used. All other arguments are either solely informational values or passed by reference to allow direct modification.
 
 ## Using Hooks
 A hook will be processed at any time code execution reaches the `processHook` call. Functions and methods can be added or removed at any time before or after a hook has been called but cannot be changed while the hook is being processed.
 
-All registrations on a hook will be sorted by priority first. If the priority of two or more are the same they will be sorted by the order they were added. A function or method can be registered to a hook as many times as desired.
+All registrations on a hook will be sorted by priority when it is called. If the priority of two or more are the same they will be sorted by the order they were added. A function or method can be registered to a hook as many times as desired.
 
 ## Hook Creation
 Both Nelliel and plugins can define hooks. This is done by calling the method `processHook`. Three parameters can be passed:

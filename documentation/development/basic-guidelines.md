@@ -41,7 +41,7 @@ PostgreSQL: 10
 SQLite: 3.22  
 
 ### Browser Support
-Nelliel must be fully functional with Firefox, Chrome, Safari and Edge. Maintaining compatibility with older versions of these browsers is encouraged when reasonably possible.
+Nelliel must be fully functional with recent versions of major browsers. Maintaining compatibility with older versions or less common browsers is encouraged when reasonable to do so.
 
 ## Versioning
 After the 1.0 Release, Nelliel versioning will follow Major.Minor.Patch under these definitions:
@@ -63,15 +63,15 @@ Nelliel returns a numeric error id along with an error message. This keeps the b
  All error codes in core must be listed in `error-reference.md`.
  
 ## Server-side vs Client-side
-As much functionality as possible should be implemented server-side. Client-side scripting should only be used for niceties or features that cannot be done fully server-side.
+As much functionality and rendering as possible should be implemented server-side. Client-side scripting should only be used for niceties or features that cannot be done fully server-side. All primary functions for posting and moderation must continue to work even if a user has disabled scripts. 
 
 ## Core vs Plugins
 Most functionality can be put in the core code base. However anything that is:
- - both complex to implement and very niche or opinionated
+ - both complex to implement and opinionated or niche
  - subject to regular changes in implementation
  - reliant on third-party services
  
- should be considered for implementation via plugin instead of added directly to core. This is not a hard rule but is recommended to simplify future maintenance.
+ should be strongly considered for implementation via plugin instead of added directly to core. This simplifies maintenance and avoids bloating the code base over time.
 
 ## AI Code 	Generation
-Current code generation AI (e.g. GitHub Copilot) raises issues with copyright and open source licenses with no practical method of vetting the original context. Until these tools become better actors or the legal concerns are reasonably settled, code from broad-sourced generators is prohibited.
+Current code generation AI (e.g. GitHub Copilot) raises issues with copyright and open source licenses with no practical method of vetting the original context. Until these tools become better actors or the mentioned concerns are reasonably settled, code from broad-sourced generators is prohibited.

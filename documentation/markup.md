@@ -4,6 +4,7 @@ Nelliel provides options for text formatting and markup in posts. The available 
 
 ## Types
 
+These are the markup types available through the markup interface:
  - **Simple:** Basic inline tags such as those used for bold or underline text.
  - **Line:** Markup applied only to a full line.
  - **Block:** Parsed in multi-line blocks. Excludes other markup inside the block.
