@@ -1,0 +1,1 @@
+Fun fact: Git does not recognize empty directories.

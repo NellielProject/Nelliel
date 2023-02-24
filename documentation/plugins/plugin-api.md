@@ -1,6 +1,6 @@
 # Nelliel Plugin API Basic Documentation
 
-Documentation on the basic functioning and usage of the plugin API.
+Documentation on the functions of the plugin API. For instructions on using plugins see [using-plugins.md](using-plugins.md).
 
 ## Current API Version
 1
@@ -29,7 +29,7 @@ Nelliel's plugin API uses hooks as its interface. Hooks may occur in any part of
 
 In order to avoid naming collisions, hooks set by Nelliel are prepended by `nel-`. Hooks defined by plugins must be prepended by their own unique prefix.
 
-The list of core hooks can be found in [core-plugin-hooks.md](documentation/plugins/core-plugin-hooks.md).
+The list of core hooks can be found in [core-plugin-hooks.md](core-plugin-hooks.md).
 
 ## Hook Arguments and Return Values
 Hooks will provide zero or more arguments when called.
