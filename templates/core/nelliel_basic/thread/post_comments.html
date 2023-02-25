@@ -1,4 +1,7 @@
 <div class="{{ op_reply }} comment-container">
+{{# show_dice_roll }}
+	{{> thread/pieces/dice_roll }}
+{{/ show_dice_roll }}
 {{# show_user_comments }}
 	{{> thread/pieces/comment_markup }}
 {{/ show_user_comments }}

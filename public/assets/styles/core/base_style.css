@@ -540,6 +540,10 @@ td {
 	color: var(--op-post-comments-color, var(--post-comments-color));
 }
 
+.op.comment-container {
+	margin-top: 0.35em;
+}
+
 /* Reply post */
 .reply.post-header-info {
 
@@ -571,6 +575,10 @@ td {
 
 .reply.post-comments {
 	color: var(--reply-post-comments-color, var(--post-comments-color));
+}
+
+.reply.comment-container {
+	margin-top: 0.35em;
 }
 
 .indents {

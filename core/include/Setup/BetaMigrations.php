@@ -749,6 +749,12 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
+                // Update board settings
+                $new_board_settings = ['list_all_dice_rolls'];
+                $this->newBoardSettings($new_board_settings);
+
+                echo ' - ' . __('Board settings updated.') . '<br>';
+
                 $migration_count ++;
         }
 

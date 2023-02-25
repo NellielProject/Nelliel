@@ -201,7 +201,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'shadow_message_merged', 'This thread has been merged into %s', 'Shadow thread message for merged threads. %s will be filled in with a cite link to the thread\'s new location. (sprintf)', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_dice_rolls', '1', 'Allow posters to use dice rolls.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_dice', '99', 'Maximum number of dice that can be rolled at once.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_dice_sides', '9999', 'Maximum sides on dice.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_dice_sides', '999', 'Maximum sides on dice.', '{"type":"number"}']);
 
         // Banners
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_top_banners', '0', 'Display board banners at the top of public pages.', '{"type":"checkbox"}']);
@@ -421,6 +421,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_post_subject', '1', 'Show the post subject.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_user_comments', '1', 'Show the user comments.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_mod_comments', '1', 'Show the mod comments.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'list_all_dice_rolls', '0', 'List the results of each dice roll.', '{"type":"checkbox"}']);
 
         // Upload Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_static_preview', '1', 'Display static image previews when available.', '{"type":"checkbox"}']);

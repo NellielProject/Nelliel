@@ -80,8 +80,8 @@ class OutputPost extends Output
                 $file_data = array();
 
                 if (nel_true_empty($upload->data('embed_url'))) {
-                    $file_data = $output_file_info->render($upload, $post, [
-                        'multiple' => $post->data('file_count') > 1], true);
+                    $file_data = $output_file_info->render($upload, $post,
+                        ['multiple' => $post->data('file_count') > 1], true);
                 } else {
                     $file_data = $output_embed_info->render($upload, $post,
                         ['multiple' => $post->data('file_count') > 1], true);
@@ -133,6 +133,24 @@ class OutputPost extends Output
             }
 
             $this->render_data['shadow_message'] = sprintf(htmlspecialchars($shadow_message), $shadow_cite);
+        }
+
+        $dice_roll = $post->getMoar()->get('dice_roll');
+
+        if (!is_null($dice_roll)) {
+            $this->render_data['show_dice_roll'] = true;
+            $modifier = $dice_roll['modifier'] > 0 ? '+' . $dice_roll['modifier'] : $dice_roll['modifier'];
+
+            if ($this->domain->setting('list_all_dice_rolls')) {
+                $rolls = implode(', ', $dice_roll['rolls']);
+                $this->render_data['dice_roll_results'] = sprintf(__('Rolled %d %d-sided dice with modifier of %s'),
+                    $dice_roll['dice'], $dice_roll['sides'], $modifier);
+                $this->render_data['dice_roll_list'] = sprintf('%s %s = %d', $rolls, $modifier, $dice_roll['total']);
+            } else {
+                $this->render_data['dice_roll_results'] = sprintf(
+                    __('Rolled %d %d-sided dice with modifier of %s = %d'), $dice_roll['dice'], $dice_roll['sides'],
+                    $modifier, $dice_roll['total']);
+            }
         }
 
         $output = $this->output('thread/post', $data_only, true, $this->render_data);
@@ -337,17 +355,6 @@ class OutputPost extends Output
         $engine = new Markup($this->database);
         $escaped_comment = htmlspecialchars($comment, ENT_NOQUOTES, 'UTF-8');
         $parsed_markup = $engine->parsePostComments($escaped_comment, $post, $dynamic_urls);
-
-        $dice_roll = $post->getMoar()->get('dice_roll');
-
-        if (!is_null($dice_roll)) {
-            $modifier = $dice_roll['modifier'] > 0 ? '+' . $dice_roll['modifier'] : $dice_roll['modifier'];
-            $dice_roll_line = sprintf(__('Rolled %d %d-sided dice with modifier of %s = %d'), $dice_roll['dice'],
-                $dice_roll['sides'], $modifier, $dice_roll['total']);
-            $parsed_markup = '<span class="dice-roll">' . $dice_roll_line . '<span>
-' . $parsed_markup;
-        }
-
         return $parsed_markup;
     }
 }
