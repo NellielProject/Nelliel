@@ -105,8 +105,13 @@ class FileTypes
         if (!isset(self::$settings[$domain->id()])) {
             $enabled_filetypes = json_decode($domain->setting('enabled_filetypes') ?? '', true);
 
-            foreach ($enabled_filetypes as $category => $formats) {
-                self::$settings[$domain->id()]['enabled_categories'][$category] = ['formats' => $formats['formats']];
+            foreach ($enabled_filetypes as $category => $data) {
+                if ($data['enabled'] ?? false === false) {
+                    continue;
+                }
+
+                $formats = $data['formats'] ?? array();
+                self::$settings[$domain->id()]['enabled_categories'][$category] = ['formats' => $formats ?? array()];
 
                 foreach ($formats as $format) {
                     self::$settings[$domain->id()]['enabled_formats'][] = $format;
