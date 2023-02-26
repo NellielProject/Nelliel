@@ -757,64 +757,38 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 // Update moar database columns
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_bans" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_blotter" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_board_data" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_cache" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_capcodes" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_captcha" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_content_ops" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_bans" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_blotter" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_board_data" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_cache" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_capcodes" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_captcha" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_content_ops" MODIFY "moar" LONGTEXT DEFAULT NULL');
                     nel_database('core')->exec(
                         'ALTER TABLE "nelliel_domain_registry" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_embeds" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_file_filters" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_filetypes" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_ip_notes" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_markup" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_news" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_noticeboard" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_overboard" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_pages" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_permissions" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_embeds" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_file_filters" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_filetypes" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_ip_notes" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_markup" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_news" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_noticeboard" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_overboard" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_pages" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_permissions" MODIFY "moar" LONGTEXT DEFAULT NULL');
                     nel_database('core')->exec(
                         'ALTER TABLE "nelliel_private_messages" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_r9k_content" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_r9k_mutes" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_reports" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_roles" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_scripts" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_r9k_content" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_r9k_mutes" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_reports" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_roles" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_scripts" MODIFY "moar" LONGTEXT DEFAULT NULL');
                     nel_database('core')->exec(
                         'ALTER TABLE "nelliel_setting_options" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_settings" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_statistics" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_users" MODIFY "moar" LONGTEXT DEFAULT NULL');
-                    nel_database('core')->exec(
-                        'ALTER TABLE "nelliel_wordfilters" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_settings" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_statistics" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_users" MODIFY "moar" LONGTEXT DEFAULT NULL');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_wordfilters" MODIFY "moar" LONGTEXT DEFAULT NULL');
 
                     $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
                         PDO::FETCH_COLUMN);
@@ -832,6 +806,34 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                     echo ' - ' . __('Moar database columns updated.') . '<br>';
                 }
+
+                // Add moar moar columns
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_ban_appeals" ADD COLUMN moar ' .
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_board_configs" ADD COLUMN moar ' .
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_board_defaults" ADD COLUMN moar ' .
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_image_sets" ADD COLUMN moar ' .
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_plugins" ADD COLUMN moar ' .
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_site_config" ADD COLUMN moar ' .
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_styles" ADD COLUMN moar ' .
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_templates" ADD COLUMN moar ' .
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+
+                echo ' - ' . __('Moar moar columns added to database.') . '<br>';
 
                 $migration_count ++;
         }

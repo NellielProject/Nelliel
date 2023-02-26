@@ -22,13 +22,15 @@ class TablePlugins extends Table
             'directory' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'initializer' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'parsed_ini' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT]];
+            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'plugin_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'directory' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'initializer' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'parsed_ini' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
+            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 
@@ -42,6 +44,7 @@ class TablePlugins extends Table
             initializer VARCHAR(255) NOT NULL,
             parsed_ini  TEXT NOT NULL,
             enabled     SMALLINT NOT NULL DEFAULT 0,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (plugin_id)
         ) ' . $options . ';';
 
