@@ -35,7 +35,7 @@ class TablePermissions extends Table
         CREATE TABLE ' . $this->table_name . ' (
             permission      VARCHAR(50) NOT NULL,
             description     TEXT NOT NULL,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (permission)
         ) ' . $options . ';';
 

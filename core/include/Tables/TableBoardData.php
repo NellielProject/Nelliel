@@ -53,7 +53,7 @@ class TableBoardData extends Table
             page_directory      VARCHAR(255) NOT NULL,
             archive_directory   VARCHAR(255) NOT NULL,
             locked              SMALLINT NOT NULL DEFAULT 0,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (board_id),
             CONSTRAINT uc_db_prefix UNIQUE (db_prefix),
             CONSTRAINT fk_board_data__domain_registry

@@ -39,7 +39,7 @@ class TableStatistics extends Table
             domain_id       VARCHAR(50) NOT NULL,
             statistic       VARCHAR(50) NOT NULL,
             value           BIGINT NOT NULL,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (domain_id, statistic),
             CONSTRAINT fk_statistics__domain_registry
             FOREIGN KEY (domain_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

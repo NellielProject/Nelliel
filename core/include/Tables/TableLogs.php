@@ -63,7 +63,7 @@ class TableLogs extends Table
             ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_ip_address   VARCHAR(128) DEFAULT NULL,
             visitor_id          VARCHAR(128) DEFAULT NULL,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (log_id),
             CONSTRAINT fk_logs__domain_registry
             FOREIGN KEY (domain_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

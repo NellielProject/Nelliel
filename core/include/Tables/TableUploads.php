@@ -116,7 +116,7 @@ class TableUploads extends Table
             exif                    TEXT DEFAULT NULL,
             regen_cache             SMALLINT NOT NULL DEFAULT 0,
             cache                   TEXT DEFAULT NULL,
-            moar                    TEXT DEFAULT NULL,
+            moar                    ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (upload_id),
             CONSTRAINT fk_' . $this->table_name . '__threads
             FOREIGN KEY (parent_thread) REFERENCES ' . $other_tables['threads_table'] . ' (thread_id)

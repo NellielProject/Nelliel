@@ -50,7 +50,7 @@ class TableFiletypes extends Table
             magic_regex     TEXT NOT NULL,
             label           VARCHAR(255) NOT NULL,
             enabled         SMALLINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (format),
             CONSTRAINT fk_filetypes__filetype_categories
             FOREIGN KEY (category) REFERENCES ' . NEL_FILETYPE_CATEGORIES_TABLE . ' (category)

@@ -92,7 +92,7 @@ class TableThreads extends Table
             salt                VARCHAR(255) NOT NULL,
             regen_cache         SMALLINT NOT NULL DEFAULT 0,
             cache               TEXT DEFAULT NULL,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (thread_id)
         ) ' . $options . ';';
 

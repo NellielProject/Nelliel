@@ -42,7 +42,7 @@ class TableCapcodes extends Table
             capcode     VARCHAR(255) NOT NULL,
             output      TEXT NOT NULL,
             enabled     SMALLINT NOT NULL DEFAULT 0,
-            moar        TEXT DEFAULT NULL,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (capcode_id)
         ) ' . $options . ';';
 

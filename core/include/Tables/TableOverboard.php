@@ -47,7 +47,7 @@ class TableOverboard extends Table
             bump_time           BIGINT NOT NULL,
             bump_time_milli     SMALLINT NOT NULL,
             sticky              SMALLINT NOT NULL DEFAULT 0,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (overboard_id, thread_id, board_id),
             CONSTRAINT fk_overboard__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

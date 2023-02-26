@@ -51,7 +51,7 @@ class TableMarkup extends Table
             replace     TEXT NOT NULL,
             enabled     SMALLINT NOT NULL DEFAULT 0,
             notes       TEXT DEFAULT NULL,
-            moar        TEXT DEFAULT NULL,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (markup_id)
         ) ' . $options . ';';
 

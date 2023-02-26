@@ -50,7 +50,7 @@ class TableSettings extends Table
             default_value       ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             setting_description TEXT NOT NULL,
             input_attributes    TEXT NOT NULL,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (setting_category, setting_name)
         ) ' . $options . ';';
 

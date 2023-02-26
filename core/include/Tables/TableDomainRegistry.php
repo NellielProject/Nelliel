@@ -36,7 +36,7 @@ class TableDomainRegistry extends Table
         CREATE TABLE ' . $this->table_name . ' (
             domain_id   VARCHAR(50) NOT NULL,
             notes       TEXT DEFAULT NULL,
-            moar        TEXT DEFAULT NULL,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (domain_id)
         ) ' . $options . ';';
 

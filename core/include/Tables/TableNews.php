@@ -48,7 +48,7 @@ class TableNews extends Table
             time        BIGINT NOT NULL,
             headline    VARCHAR(255) NOT NULL,
             text        ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
-            moar        TEXT DEFAULT NULL,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (article_id),
             CONSTRAINT fk_news__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)

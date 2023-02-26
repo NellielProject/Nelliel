@@ -51,7 +51,7 @@ class TableReports extends Table
             hashed_reporter_ip  VARCHAR(128) NOT NULL,
             visitor_id          VARCHAR(128) NOT NULL,
             reason              TEXT NOT NULL,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (report_id),
             CONSTRAINT fk_reports__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

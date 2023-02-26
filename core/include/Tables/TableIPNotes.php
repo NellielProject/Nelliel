@@ -48,7 +48,7 @@ class TableIPNotes extends Table
             hashed_ip_address   VARCHAR(128) NOT NULL,
             time                BIGINT NOT NULL,
             notes               TEXT NOT NULL,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (note_id),
             CONSTRAINT fk_ip_notes__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)

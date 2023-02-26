@@ -48,7 +48,7 @@ class TableFileFilters extends Table
             notes       TEXT DEFAULT NULL,
             board_id    VARCHAR(50) NOT NULL,
             enabled     SMALLINT NOT NULL DEFAULT 0,
-            moar        TEXT DEFAULT NULL,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (filter_id),
             CONSTRAINT fk_file_filters__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

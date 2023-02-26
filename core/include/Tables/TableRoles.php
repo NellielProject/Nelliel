@@ -41,7 +41,7 @@ class TableRoles extends Table
             role_level      SMALLINT NOT NULL DEFAULT 0,
             role_title      VARCHAR(255) NOT NULL,
             capcode         VARCHAR(255) DEFAULT NULL,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (role_id)
         ) ' . $options . ';';
 

@@ -69,7 +69,7 @@ class TableBans extends Table
             length              BIGINT NOT NULL,
             seen                SMALLINT NOT NULL DEFAULT 0,
             appeal_allowed      SMALLINT NOT NULL DEFAULT 0,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (ban_id),
             CONSTRAINT fk_bans__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

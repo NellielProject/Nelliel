@@ -48,7 +48,7 @@ class TableWordFilters extends Table
             replacement TEXT NOT NULL,
             is_regex    SMALLINT NOT NULL DEFAULT 0,
             enabled     SMALLINT NOT NULL DEFAULT 0,
-            moar        TEXT DEFAULT NULL,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (filter_id),
             CONSTRAINT fk_wordfilters__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

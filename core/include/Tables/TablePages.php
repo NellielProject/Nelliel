@@ -51,7 +51,7 @@ class TablePages extends Table
             text            ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             markup_type     VARCHAR(50) NOT NULL,
             show_link       SMALLINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (page_id),
             CONSTRAINT uc_domain_id__uri UNIQUE (domain_id, uri),
             CONSTRAINT fk_' . $this->table_name . '_' . NEL_DOMAIN_REGISTRY_TABLE . '

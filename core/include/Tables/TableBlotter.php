@@ -39,7 +39,7 @@ class TableBlotter extends Table
             record_id   ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             time        BIGINT NOT NULL,
             text        TEXT NOT NULL,
-            moar        TEXT DEFAULT NULL,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (record_id)
         ) ' . $options . ';';
 

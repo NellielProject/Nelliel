@@ -41,7 +41,7 @@ class TableSettingOptions extends Table
             setting_name        VARCHAR(50) NOT NULL,
             menu_data           ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             raw_output          SMALLINT NOT NULL DEFAULT 0,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (setting_category, setting_name),
             UNIQUE (setting_category, setting_name),
             CONSTRAINT fk_setting_options__settings
