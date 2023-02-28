@@ -1,11 +1,11 @@
 ## Installation
-Basic installation guide. Please note that installing and running a modern imageboard requires basic knowledge of web hosting and use of a terminal or shell. The install process is kept as short and universal as possible but may need modifications for your environment.
+Basic installation guide. Installation requires basic knowledge of web hosting and use of a terminal or shell. The install process is kept as short and universal as possible but may need modifications for your environment.
 
 1. Unarchive the files for Nelliel to the desired location. This must be somewhere outside of the web-accessible areas but is otherwise left to your discretion.
 2. Make sure the PHP process has read, write and execute permissions on the `public` directory, `public/assets` directory and `core` directory.
 3. Run `composer install --no-dev` in the main directory.
-4. Set the `public` directory as web root for the domain or subdomain you are using. If this is not possible, continue to step 5.
-5. (If step 4 was successful, continue to step 6) In rare cases it will not be possible to use the `public` directory. If a different location is necessary:
+4. Set the `public` directory as web root for the domain or subdomain you are using. If this is not possible, continue to step 5; otherwise skip to step 6.
+5. In rare cases it will not be possible to use the `public` directory. If a different location is necessary:
  - Move all files in the `public` directory to the web-accessible location.
  - Update the `$core_path` variable in `nelliel_base.php` so that it points to the main directory (where `composer.json` is).
  - Make sure the PHP process has read, write and execute permissions on this directory and the `assets` directory.

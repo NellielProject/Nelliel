@@ -1,8 +1,8 @@
 # Nelliel Imageboard
 ## About
-A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby/)-style imageboard which attempts to retain the feel of old school imageboards.
+A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby/)-style imageboard.
 
-**IMPORTANT: Nelliel is in a beta stage of development and will have bugs and incomplete features.**
+**IMPORTANT: Nelliel is in a beta stage of development and still has bugs and incomplete features.**
 
 ## Notable Features
  - [Plugin API](documentation/plugins/plugin-api.md)
