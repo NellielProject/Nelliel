@@ -456,6 +456,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'download_original_name', '1', 'Download link will use original file name if available.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_display_ratio', '0', 'Show the display ratio for media that has dimensions.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'scale_upload_filesize_units', '0', 'Automatically choose unit prefixes based on upload filesize.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'preview_lazy_loading', '0', 'Use lazy loading for preview images.', '{"type":"checkbox"}']);
 
         // New Post Form Rendering
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'show_allowed_filetypes', '1', 'Show a list of allowed filetypes on the new post form.', '{"type":"checkbox"}']);

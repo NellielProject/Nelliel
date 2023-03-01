@@ -53,6 +53,7 @@ abstract class Output
         $this->render_data['nelliel_package'] = NELLIEL_PACKAGE;
         $this->render_data['nelliel_copyright_dates'] = NELLIEL_COPYRIGHT_DATES;
         $this->render_data['nelliel_copyright_line'] = NELLIEL_COPYRIGHT_LINE;
+        $this->render_data['preview_loading'] = $this->domain->setting('preview_lazy_loading') ? 'lazy' : 'eager';
         $this->uiDefines();
     }
 
