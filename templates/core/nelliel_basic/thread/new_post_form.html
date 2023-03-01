@@ -11,7 +11,7 @@
 			{{# display_email_field }}
 		<label class="new-post-form-row">
 			<span class="new-post-form-label" data-i18n="">E-mail</span>
-			<input class="new-post-form-input" type="text" name="new_post[post_info][spam_target]" size="30" maxlength=" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}" placeholder="{{ email_field_placeholder }}" value="{{ spam_target }}" {{ require_email }}>
+			<input class="new-post-form-input" type="text" name="new_post[post_info][spam_target]" size="30" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}" placeholder="{{ email_field_placeholder }}" value="{{ spam_target }}" {{ require_email }}>
 		</label>
 			{{/ display_email_field }}
 		{{/ forced_anonymous }}
@@ -28,12 +28,12 @@
 		</label>
 		{{/ display_comment_field }}
 		{{# allow_files }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label" data-i18n="">Files</span>
+		<span class="new-post-form-row">
+			<label for="new-post-form-files" class="new-post-form-label" data-i18n="">Files</label>
 			<span>{{ file_max_message }}</span>
 			<br>
 			{{# allowed_files }}
-			<input class="new-post-form-input" type="file" name="upload_files[]">
+			<input id="new-post-form-files" class="new-post-form-input" type="file" name="upload_files[]">
 			<br>
 			{{/ allowed_files }}
 			{{# spoilers_enabled }}
@@ -43,7 +43,7 @@
 				<span data-i18n="">Spoiler</span>
 			</span>
 			{{/ spoilers_enabled }}
-		</label>
+		</span>
 		{{/ allow_files}}
 		{{# allow_embeds }}
 		<label class="new-post-form-row">

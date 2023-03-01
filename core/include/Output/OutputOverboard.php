@@ -23,7 +23,6 @@ class OutputOverboard extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('index/index');
-        $this->render_data['page_language'] = $this->domain->locale();
         $sfw = $parameters['sfw'] ?? false;
         $overboard_id = $parameters['overboard_id'] ?? 'all';
         $this->render_data['show_catalog_link'] = $parameters['catalog'] ?? false;

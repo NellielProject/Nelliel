@@ -202,6 +202,8 @@ class OutputFile extends Output
                     $this->render_data['preview_url'] = $file->previewWebPath() . rawurlencode($preview_name);
                 }
 
+                $this->render_data['preview_alt_text'] = sprintf(__('Preview of %s'),
+                    $this->render_data['display_filename']);
                 $preview_type = 'image';
             } else if ($this->domain->setting('use_file_image')) {
                 $image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('filetype_image_set'));
@@ -218,6 +220,7 @@ class OutputFile extends Output
                 }
 
                 $this->render_data['preview_url'] = $web_path;
+                $this->render_data['preview_alt_text'] = sprintf(__('%s filetype image'), $format);
                 $preview_type = 'unsized_image';
             }
 

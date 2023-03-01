@@ -48,7 +48,7 @@ abstract class Output
     protected function renderSetup(): void
     {
         $this->render_data = array();
-        $this->render_data['page_language'] = $this->domain->locale();
+        $this->render_data['page_language'] = $this->domain->locale(true);
         $this->render_data['nelliel_version'] = NELLIEL_VERSION;
         $this->render_data['nelliel_package'] = NELLIEL_PACKAGE;
         $this->render_data['nelliel_copyright_dates'] = NELLIEL_COPYRIGHT_DATES;

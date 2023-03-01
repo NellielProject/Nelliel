@@ -9,8 +9,12 @@
 	{{> navigation/site_links }}
 {{/ site_navigation }}
 {{> pieces/top_banners }}
+{{# name }}
 <h1 class="header-name">{{ name }}</h1>
+{{/ name }}
+{{# description }}
 <h2 class="header-description">{{ description }}</h2>
+{{/ description }}
 </header>
 {{^ overboard }}
 <hr class="clear">
