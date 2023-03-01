@@ -25,7 +25,7 @@ class OutputIndex extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('index/index');
-        $page = $parameters['page'] ?? 1;
+        $page = intval($parameters['page'] ?? 1);
         $page_title = $this->domain->reference('title');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['page_title' => $page_title], true);
@@ -105,17 +105,25 @@ class OutputIndex extends Output
 
         $gen_data['index_rendering'] = true;
         $threads_on_page = 0;
-
         $this->render_data['threads'] = array();
+
+        if ($page > 1) {
+            $thread_offset = $this->domain->setting('threads_per_page') * ($page - 1);
+        } else {
+            $thread_offset = 0;
+        }
 
         foreach ($threads as $thread) {
             if (is_null($thread) || !$thread->exists()) {
                 continue;
             }
 
+            if ($threads_done < $thread_offset) {
+                $threads_done ++;
+                continue;
+            }
+
             $thread_input = array();
-            $index_format = ($page === 1) ? $this->site_domain->setting('first_index_filename_format') : $this->site_domain->setting(
-                'index_filename_format');
             $posts = $thread->getPosts();
 
             if (empty($posts)) {
@@ -167,7 +175,9 @@ class OutputIndex extends Output
             $threads_on_page ++;
             $threads_done ++;
 
-            if ($threads_on_page >= $this->domain->setting('threads_per_page')) {
+            if ($threads_on_page === $this->domain->setting('threads_per_page') || $threads_done === $thread_count) {
+                $index_format = ($page === 1) ? $this->site_domain->setting('first_index_filename_format') : $this->site_domain->setting(
+                    'index_filename_format');
                 $this->render_data['pagination'] = $this->indexNavigation($page, $page_count);
                 $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $page, $data_only);
 
@@ -190,19 +200,26 @@ class OutputIndex extends Output
                 $catalog_json->getJSON(true));
         }
 
-        $this->render_data['pagination'] = $this->indexNavigation($page, $page_count);
-        $output = $this->doOutput($gen_data, sprintf($index_format, ($page)), $page, $data_only);
         return $output;
     }
 
     private function indexNavigation(int $page, int $page_count)
     {
+        if (!$this->write_mode) {
+            $query_string = $this->session->inModmode($this->domain) ? '?modmode' : '';
+            $first_index = nel_build_router_url([$this->domain->id()], true) . $query_string;
+            $index = nel_build_router_url([$this->domain->id()], true) . '%d' . $query_string;
+        } else {
+            $first_index = $this->site_domain->setting('first_index_filename_format') . NEL_PAGE_EXT;
+            $index = $this->site_domain->setting('index_filename_format') . NEL_PAGE_EXT;
+        }
+
         $pagination_object = new Pagination();
         $pagination_object->setPrevious(_gettext('Previous'));
         $pagination_object->setNext(_gettext('Next'));
-        $pagination_object->setPage('%d', $this->site_domain->setting('index_filename_format') . NEL_PAGE_EXT);
-        $pagination_object->setFirst('%d', $this->site_domain->setting('first_index_filename_format') . NEL_PAGE_EXT);
-        $pagination_object->setLast('%d', $this->site_domain->setting('index_filename_format') . NEL_PAGE_EXT);
+        $pagination_object->setPage('%d', $index);
+        $pagination_object->setFirst('%d', $first_index);
+        $pagination_object->setLast('%d', $index);
         return $pagination_object->generateNumerical(1, $page_count, $page);
     }
 
