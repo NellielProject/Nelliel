@@ -65,9 +65,9 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_manage_filetypes', 'Manage filetypes.']);
         $this->insertDefaultRow(['perm_manage_file_filters', 'Manage file filters.']);
         $this->insertDefaultRow(['perm_manage_image_sets', 'Manage image sets.']);
-        $this->insertDefaultRow(['perm_ip_notes_view', 'View IP notes.']);
-        $this->insertDefaultRow(['perm_ip_notes_add', 'Add new IP notes.']);
-        $this->insertDefaultRow(['perm_ip_notes_delete', 'Delete IP notes.']);
+        $this->insertDefaultRow(['perm_view_ip_info', 'View info for an IP.']);
+        $this->insertDefaultRow(['perm_add_ip_notes', 'Add new IP notes.']);
+        $this->insertDefaultRow(['perm_delete_ip_notes', 'Delete IP notes.']);
         $this->insertDefaultRow(['perm_view_public_logs', 'View full logs.']);
         $this->insertDefaultRow(['perm_view_system_logs', 'View system logs.']);
         $this->insertDefaultRow(['perm_manage_markup', 'Manage markup entries.']);

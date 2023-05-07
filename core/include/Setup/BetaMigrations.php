@@ -242,10 +242,12 @@ class BetaMigrations
 
                 // Update permissions and role permissions table
                 $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage static pages.']);
+                $permissions_table->insertDefaults();
+                // $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage static pages.']);
                 $role_permissions_table = new TableRolePermissions(nel_database('core'),
                     nel_utilities()->sqlCompatibility());
-                $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
+                $role_permissions_table->insertDefaults();
+                // $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
@@ -834,6 +836,25 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
 
                 echo ' - ' . __('Moar moar columns added to database.') . '<br>';
+
+                // Update permissions and role permissions tables
+                $permissions = ['perm_ip_notes_add' => 'perm_add_ip_notes', 'perm_ip_notes_delete' => 'perm_delete_ip_notes'];
+                $permission_update = nel_database('core')->prepare(
+                    'UPDATE "nelliel_permissions" SET "permission" = :new WHERE "permission" = :old');
+
+                foreach ($permissions as $old => $new) {
+                    $permission_update->bindValue(':new', $new);
+                    $permission_update->bindValue(':old', $old);
+                    nel_database('core')->executePrepared($permission_update);
+                }
+
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaults();
+                $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $role_permissions_table->insertDefaults();
+
+                echo ' - ' . __('Updated permissions and role permissions tables.') . '<br>';
 
                 $migration_count ++;
         }
