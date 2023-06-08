@@ -21,8 +21,8 @@ class TableReports extends Table
             'report_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'content_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'reporter_ip' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
             'hashed_reporter_ip' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'reporter_ip' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
             'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'reason' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
@@ -30,8 +30,8 @@ class TableReports extends Table
             'report_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'content_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'reason' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
@@ -47,8 +47,8 @@ class TableReports extends Table
             report_id           ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             board_id            VARCHAR(50) NOT NULL,
             content_id          VARCHAR(255) NOT NULL,
-            reporter_ip         ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_reporter_ip  VARCHAR(128) NOT NULL,
+            reporter_ip         ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             visitor_id          VARCHAR(128) NOT NULL,
             reason              TEXT NOT NULL,
             moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
@@ -56,7 +56,11 @@ class TableReports extends Table
             CONSTRAINT fk_reports__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
-            ON DELETE CASCADE
+            ON DELETE CASCADE,
+            CONSTRAINT fk_reports__ip_info
+            FOREIGN KEY (hashed_reporter_ip) REFERENCES ' . NEL_IP_INFO_TABLE . ' (hashed_ip_address)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL
         ) ' . $options . ';';
 
         return $schema;

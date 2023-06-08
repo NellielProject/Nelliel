@@ -14,6 +14,7 @@ use Nelliel\Domains\Domain;
 use Nelliel\ROBOT9000;
 use Nelliel\Dice;
 use Nelliel\FGSFDS;
+use Nelliel\IPInfo;
 
 class PostData
 {
@@ -39,8 +40,9 @@ class PostData
         $post->contentID()->changeThreadID($post->data('parent_thread'));
         $post->changeData('op', $post->data('parent_thread') === 0);
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
-        $post->changeData('ip_address', nel_request_ip_address());
-        $post->changeData('hashed_ip_address', nel_request_ip_address(true));
+        $ip_info = new IPInfo(nel_request_ip_address(true), nel_request_ip_address());
+        $post->changeData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
+        $post->changeData('ip_address', nel_prepare_ip_for_storage($ip_info->getInfo('ip_address')));
         $post->changeData('visitor_id', nel_visitor_id(), false);
 
         $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'] ?? '', 'string');

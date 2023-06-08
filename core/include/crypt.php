@@ -55,23 +55,37 @@ function nel_set_password_algorithm(string $algorithm): void
     }
 }
 
-function nel_password_hash(string $password, int $algorithm, array $options = array())
+function nel_password_hash(string $password, int $algorithm, array $options = array(), bool $new_hash = false)
 {
+    static $hashes = array();
+
+    if (!$new_hash && array_key_exists($password, $hashes)) {
+        return $hashes[$password];
+    }
+
     switch ($algorithm) {
         case PASSWORD_BCRYPT:
             $options['cost'] = $options['cost'] ?? NEL_PASSWORD_BCRYPT_COST;
-            return password_hash($password, $algorithm, $options);
+            $hash = password_hash($password, $algorithm, $options);
+            break;
 
         case PASSWORD_ARGON2I:
         case PASSWORD_ARGON2ID:
             $options['memory_cost'] = $options['memory_cost'] ?? NEL_PASSWORD_ARGON2_MEMORY_COST;
             $options['time_cost'] = $options['time_cost'] ?? NEL_PASSWORD_ARGON2_TIME_COST;
             $options['threads'] = $options['threads'] ?? NEL_PASSWORD_ARGON2_THREADS;
-            return password_hash($password, $algorithm, $options);
+            $hash = password_hash($password, $algorithm, $options);
+            break;
 
         default:
             return false;
     }
+
+    if ($hash !== false) {
+        $hashes[$password] = $hash;
+    }
+
+    return $hash;
 }
 
 function nel_password_verify(string $password, string $hash): bool
@@ -90,14 +104,21 @@ function nel_password_needs_rehash(string $password, int $algorithm, array $opti
     return password_needs_rehash($password, $algorithm);
 }
 
-function nel_ip_hash(string $ip_address)
+function nel_ip_hash(string $ip_address, bool $new_hash = false)
 {
-    $hashed_ip = hash_hmac('sha256', $ip_address, NEL_IP_ADDRESS_PEPPER);
-    return utf8_substr($hashed_ip, 0, 32);
-}
+    static $hashes = array();
 
-function nel_post_password_hash(string $password): string
-{
-    $hashed_password = hash_hmac('sha256', $password, NEL_POST_PASSWORD_PEPPER);
-    return $hashed_password;
+    if (!$new_hash && array_key_exists($ip_address, $hashes)) {
+        return $hashes[$ip_address];
+    }
+
+    // Bcrypt provides salting to compensate for the small IPv4 space but we can't properly compare IP hashes when salted in the normal manner.
+    // So for this specific case we compromise: pass a constant value for the salt, then keep only the output hash so it functions as a pepper.
+    // Based on NPFChan
+    $full_hash = crypt($ip_address,
+        '$2y$' . NEL_IP_BCRYPT_COST . '$' . str_replace('+', '/', NEL_IP_ADDRESS_PEPPER) . '$');
+    $modified_hash = preg_replace('/[.\/]/', '_', $full_hash);
+    $hashes[$ip_address] = utf8_substr($modified_hash, -31);
+
+    return $hashes[$ip_address];
 }

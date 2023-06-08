@@ -116,6 +116,11 @@ function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = 
     $packed_ip_address = @inet_pton($ip_address);
 
     if ($packed_ip_address === false) {
+        // Check if the error is simply due to the address already being packed
+        if (inet_ntop($ip_address) !== false) {
+            return $ip_address;
+        }
+
         return null;
     }
 

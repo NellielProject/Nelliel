@@ -5,11 +5,12 @@ namespace Nelliel\Account;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\IPInfo;
+use Nelliel\ReturnLink;
+use Nelliel\AntiSpam\CAPTCHA;
 use Nelliel\Auth\AuthUser;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\AntiSpam\CAPTCHA;
-use Nelliel\ReturnLink;
 
 class Login
 {
@@ -39,24 +40,25 @@ class Login
         $error_context = ['return_link' => $return_link];
 
         $attempt_time = time();
-        $hashed_ip_address = nel_request_ip_address(true);
+        $ip_info = new IPInfo(nel_request_ip_address(true), nel_request_ip_address());
+        var_dump(nel_request_ip_address(true));
         $form_username = strval($_POST['username'] ?? '');
         $session_username = strval($_SESSION['username'] ?? '');
         $form_password = strval($_POST['super_sekrit'] ?? '');
         $rate_limit = nel_utilities()->rateLimit();
 
-        if ($rate_limit->lastTime($hashed_ip_address, 'login') > $attempt_time - 3) {
-            $rate_limit->updateAttempts($hashed_ip_address, 'login');
+        if ($rate_limit->lastTime($ip_info->getInfo('hashed_ip_address'), 'login') > $attempt_time - 3) {
+            $rate_limit->updateAttempts($ip_info->getInfo('hashed_ip_address'), 'login');
             nel_derp(203, _gettext('Detecting rapid login attempts. Wait a few seconds.'), $error_context);
         }
 
         if (empty($form_username)) {
-            $rate_limit->updateAttempts($hashed_ip_address, 'login');
+            $rate_limit->updateAttempts($ip_info->getInfo('hashed_ip_address'), 'login');
             nel_derp(200, _gettext('No user ID provided.'), $error_context);
         }
 
         if (empty($form_password)) {
-            $rate_limit->updateAttempts($hashed_ip_address, 'login');
+            $rate_limit->updateAttempts($ip_info->getInfo('hashed_ip_address'), 'login');
             nel_derp(201, _gettext('No password provided.'), $error_context);
         }
 
@@ -75,11 +77,11 @@ class Login
         }
 
         if (!$valid_user || !$valid_password) {
-            $rate_limit->updateAttempts($hashed_ip_address, 'login');
+            $rate_limit->updateAttempts($ip_info->getInfo('hashed_ip_address'), 'login');
             nel_derp(202, _gettext('Username or password is incorrect.'), $error_context);
         }
 
-        $rate_limit->clearAttempts($hashed_ip_address, 'login', true);
+        $rate_limit->clearAttempts($ip_info->getInfo('hashed_ip_address'), 'login', true);
         $user->changeData('last_login', $attempt_time);
         nel_logger('system')->info('Logged in.', ['event' => 'login', 'username' => $user->id()]);
         return $user;

@@ -68,7 +68,6 @@ class Post
             return true;
         }
 
-        $result['ip_address'] = nel_convert_ip_from_storage($result['ip_address']);
         $column_types = $this->main_table->columnTypes();
 
         foreach ($result as $name => $value) {
@@ -87,7 +86,6 @@ class Post
         }
 
         $filtered_data = $this->main_table->filterColumns($this->content_data);
-        $filtered_data['ip_address'] = nel_prepare_ip_for_storage($this->data('ip_address'));
         $filtered_data['moar'] = $this->getMoar()->getJSON();
         $pdo_types = $this->main_table->getPDOTypes($filtered_data);
         $column_list = array_keys($filtered_data);
@@ -225,12 +223,13 @@ class Post
 
         if (!$flag && $this->domain->setting('user_delete_own')) {
             if (!nel_true_empty($this->data('password'))) {
-                $flag = hash_equals($this->content_data['password'], nel_post_password_hash($update_sekrit));
+                $flag = hash_equals($this->content_data['password'],
+                    nel_password_hash($update_sekrit, NEL_PASSWORD_ALGORITHM));
             }
 
             if (!$flag && $this->domain->setting('allow_op_thread_moderation')) {
                 $flag = hash_equals($this->getParent()->firstPost()->data('password'),
-                    nel_post_password_hash($update_sekrit));
+                    nel_password_hash($update_sekrit, NEL_PASSWORD_ALGORITHM));
             }
         }
 

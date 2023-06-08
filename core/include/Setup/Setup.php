@@ -62,6 +62,7 @@ use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
+use Nelliel\Tables\TableIPInfo;
 
 class Setup
 {
@@ -324,18 +325,22 @@ class Setup
         $users_table->createTable();
         $ip_notes_table = new TableIPNotes($this->database, $this->sql_compatibility);
         $ip_notes_table->createTable();
-        $system_logs_table = new TableLogs($this->database, $this->sql_compatibility);
-        $system_logs_table->tableName(NEL_SYSTEM_LOGS_TABLE);
-        $system_logs_table->createTable();
-        $public_logs_table = new TableLogs($this->database, $this->sql_compatibility);
-        $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
-        $public_logs_table->createTable();
         $news_table = new TableNews($this->database, $this->sql_compatibility);
         $news_table->createTable();
         $private_messages_table = new TablePrivateMessages($this->database, $this->sql_compatibility);
         $private_messages_table->createTable();
         $noticeboard_table = new TableNoticeboard($this->database, $this->sql_compatibility);
         $noticeboard_table->createTable();
+
+        // The following tables rely on the users and ip info tables
+        $ip_info_table = new TableIPInfo($this->database, $this->sql_compatibility);
+        $ip_info_table->createTable();
+        $system_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $system_logs_table->tableName(NEL_SYSTEM_LOGS_TABLE);
+        $system_logs_table->createTable();
+        $public_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
+        $public_logs_table->createTable();
 
         // The following tables rely on the users and roles tables
         $user_roles_table = new TableUserRoles($this->database, $this->sql_compatibility);

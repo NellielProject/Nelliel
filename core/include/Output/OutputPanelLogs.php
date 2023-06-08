@@ -134,7 +134,7 @@ class OutputPanelLogs extends Output
 
             if ($type === 'ip') {
                 if (!$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
-                    $final_values[] = nel_ip_hash($value);
+                    $final_values[] = nel_ip_hash($value); // TODO: Fix this somehow
                 } else {
                     $final_values[] = $value;
                 }

@@ -70,7 +70,7 @@ class ConditionsPost implements Conditions
                     $met = $condition === $this->post->data('secure_tripcode');
                     break;
 
-                case 'ip_address':
+                case 'ip_address': // TODO: Fix this
                     $met = preg_match($condition, $this->post->data('ip_address'));
                     break;
 

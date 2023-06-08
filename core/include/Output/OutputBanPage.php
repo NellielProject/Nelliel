@@ -100,7 +100,7 @@ class OutputBanPage extends Output
             } else if ($ban_hammer->getData('length') < $this->domain->setting('min_time_before_ban_appeal') ||
                 time() - $ban_hammer->getData('start_time') < $this->domain->setting('min_time_before_ban_appeal')) {
                 $this->render_data['min_time_not_met'] = true;
-            } else if ($ban_hammer->getData('ip_type') == BansAccess::RANGE &&
+            } else if ($ban_hammer->getData('ban_type') == BansAccess::RANGE &&
                 !$this->domain->setting('allow_ip_range_ban_appeals')) {
                 $this->render_data['no_ip_range'] = true;
             } else {

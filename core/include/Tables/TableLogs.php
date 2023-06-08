@@ -26,8 +26,8 @@ class TableLogs extends Table
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
             'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
             'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
@@ -39,8 +39,8 @@ class TableLogs extends Table
             'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'domain_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
@@ -60,9 +60,9 @@ class TableLogs extends Table
             time                BIGINT NOT NULL,
             domain_id           VARCHAR(50) NOT NULL,
             username            VARCHAR(50) DEFAULT NULL,
+            hashed_ip_address   VARCHAR(255) DEFAULT NULL,
             ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
-            hashed_ip_address   VARCHAR(128) DEFAULT NULL,
-            visitor_id          VARCHAR(128) DEFAULT NULL,
+            visitor_id          VARCHAR(255) DEFAULT NULL,
             moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (log_id),
             CONSTRAINT fk_logs__domain_registry
@@ -71,6 +71,10 @@ class TableLogs extends Table
             ON DELETE CASCADE,
             CONSTRAINT fk_logs__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
+            CONSTRAINT fk_logs__ip_info
+            FOREIGN KEY (hashed_ip_address) REFERENCES ' . NEL_IP_INFO_TABLE . ' (hashed_ip_address)
             ON UPDATE CASCADE
             ON DELETE SET NULL
         ) ' . $options . ';';

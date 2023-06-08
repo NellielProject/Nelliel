@@ -25,13 +25,7 @@ class Snacks
         $this->domain = $domain;
         $this->database = $domain->database();
         $this->bans_access = $bans_access;
-
-        if (nel_site_domain()->setting('store_unhashed_ip')) {
-            $this->ip_address = nel_request_ip_address();
-        } else {
-            $this->ip_address = null;
-        }
-
+        $this->ip_address = nel_request_ip_address();
         $this->hashed_ip_address = nel_request_ip_address(true);
     }
 
@@ -97,9 +91,11 @@ class Snacks
             nel_derp(159, __('Minimum time before appealing this ban has not been reached.'));
         }
 
-        if ($ban_hammer->getData('ip_type') == BansAccess::RANGE && !$this->domain->setting(
-            'allow_ip_range_ban_appeals')) {
-            nel_derp(151, __('You cannot appeal a range ban.'));
+        if (($ban_hammer->getData('ban_type') == BansAccess::RANGE ||
+            $ban_hammer->getData('ban_type') == BansAccess::HASHED_SUBNET)) {
+            if (!$this->domain->setting('allow_ip_range_ban_appeals')) {
+                nel_derp(151, __('You cannot appeal a range ban.'));
+            }
         }
 
         if ($this->ip_address !== $ban_hammer->getData('ip_address_start') &&
@@ -117,11 +113,13 @@ class Snacks
     /**
      * Apply any bans relevant to the current request.
      */
-    public function applyBan(): void
+    public function applyBans(): void
     {
+        $ip_info = new IPInfo(nel_request_ip_address(true), nel_request_ip_address());
         $this->banAppeal();
         $this->checkRangeBans();
-        $this->checkIPBans();
+        $this->checkSubnetBans($ip_info);
+        $this->checkIPBans($ip_info);
     }
 
     /**
@@ -161,7 +159,7 @@ class Snacks
      */
     private function checkRangeBans(): void
     {
-        $bans_range = $this->bans_access->getBansByType(BansAccess::RANGE, $this->domain->id());
+        $bans_range = $this->bans_access->getByType(BansAccess::RANGE, $this->domain->id());
 
         foreach ($bans_range as $ban_hammer) {
             if ($this->checkExpired($ban_hammer, true)) {
@@ -183,19 +181,46 @@ class Snacks
     /**
      * Check through existing IP bans to see if any are applicable.
      */
-    private function checkIPBans(): void
+    private function checkIPBans(IPInfo $ip_info): void
     {
-        if (nel_site_domain()->setting('store_unhashed_ip')) {
-            $bans_ip = $this->bans_access->getBansByIP($this->ip_address);
-        } else {
-            $bans_ip = array();
-        }
-
-        $bans_hashed = $this->bans_access->getBansByHashedIP($this->hashed_ip_address);
-        $bans = array_merge($bans_ip, $bans_hashed);
+        $hashed_bans = $this->bans_access->getForHashedIP($ip_info->getInfo('hashed_ip_address'));
+        $ip_bans = $this->bans_access->getForIP($ip_info->getInfo('ip_address'));
+        $bans = array_merge($hashed_bans, $ip_bans);
         $longest = null;
 
         foreach ($bans as $ban_hammer) {
+            if ($this->checkExpired($ban_hammer, true)) {
+                continue;
+            }
+
+            if ($ban_hammer->getData('board_id') === Domain::GLOBAL ||
+                $ban_hammer->getData('board_id') === $this->domain->id()) {
+                if (empty($longest) || $ban_hammer->timeToExpiration() > $longest->timeToExpiration()) {
+                    $longest = $ban_hammer;
+                }
+
+                continue;
+            }
+        }
+
+        if (is_null($longest)) {
+            return;
+        }
+
+        $this->banPage($longest);
+    }
+
+    /**
+     * Check through existing subnet bans.
+     */
+    private function checkSubnetBans(IPInfo $ip_info): void
+    {
+        $small_subnet_bans = $this->bans_access->getForSubnet($ip_info->getInfo('hashed_small_subnet'));
+        $large_subnet_bans = $this->bans_access->getForSubnet($ip_info->getInfo('hashed_large_subnet'));
+        $subnet_bans = array_merge($small_subnet_bans, $large_subnet_bans);
+        $longest = null;
+
+        foreach ($subnet_bans as $ban_hammer) {
             if ($this->checkExpired($ban_hammer, true)) {
                 continue;
             }

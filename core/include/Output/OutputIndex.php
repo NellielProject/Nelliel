@@ -253,9 +253,13 @@ class OutputIndex extends Output
 
         if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
             !empty($post->data('ip_address'))) {
-            $ip = $post->data('ip_address');
+            $ip = nel_convert_ip_from_storage($post->data('ip_address'));
         } else {
-            $ip = $post->data('hashed_ip_address');
+            if (!empty($post->data('hashed_ip_address'))) {
+                $ip = $post->data('hashed_ip_address');
+            } else {
+                $ip = $post->data('visitor_id');
+            }
         }
 
         $this->render_data['mod_ip_address'] = $ip;

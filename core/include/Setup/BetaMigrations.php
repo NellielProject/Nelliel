@@ -9,19 +9,24 @@ use Nelliel\Overboard;
 use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBans;
 use Nelliel\Tables\TableBoardDefaults;
+use Nelliel\Tables\TableIPInfo;
 use Nelliel\Tables\TableLogs;
 use Nelliel\Tables\TableMarkup;
 use Nelliel\Tables\TableNews;
 use Nelliel\Tables\TableNoticeboard;
 use Nelliel\Tables\TableOverboard;
 use Nelliel\Tables\TablePermissions;
+use Nelliel\Tables\TablePosts;
 use Nelliel\Tables\TableR9KContent;
 use Nelliel\Tables\TableR9KMutes;
+use Nelliel\Tables\TableReports;
 use Nelliel\Tables\TableRolePermissions;
 use Nelliel\Tables\TableScripts;
 use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Tables\TableStatistics;
+use Nelliel\Tables\TableThreads;
+use Nelliel\Tables\TableUploads;
 use Nelliel\Utility\FileHandler;
 use PDO;
 
@@ -240,16 +245,16 @@ class BetaMigrations
 
                 echo ' - ' . __('Plugins table updated.') . '<br>';
 
-                // Update permissions and role permissions table
-                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $permissions_table->insertDefaults();
-                // $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage static pages.']);
-                $role_permissions_table = new TableRolePermissions(nel_database('core'),
-                    nel_utilities()->sqlCompatibility());
-                $role_permissions_table->insertDefaults();
-                // $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
+                if (version_compare(NELLIEL_VERSION, 'v0.9.30', '<')) {
+                    // Update permissions and role permissions table
+                    $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage static pages.']);
+                    $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                        nel_utilities()->sqlCompatibility());
+                    $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
 
-                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+                    echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+                }
 
                 // Update core template info
                 $template_instance = nel_site_domain()->frontEndData()->getTemplate('template-nelliel-basic');
@@ -335,54 +340,56 @@ class BetaMigrations
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
-                // Create ban appeals table and update bans
-                $bans_data = nel_database('core')->executeFetchAll('SELECT * FROM "nelliel_bans"', PDO::FETCH_ASSOC);
-                nel_database('core')->exec('DROP TABLE "nelliel_bans"');
-                $bans_table = new TableBans(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $bans_table->createTable();
-                $ban_appeals_table = new TableBanAppeals(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $ban_appeals_table->createTable();
+                if (version_compare(NELLIEL_VERSION, 'v0.9.30', '<')) {
+                    // Create ban appeals table and update bans
+                    $bans_data = nel_database('core')->executeFetchAll('SELECT * FROM "nelliel_bans"', PDO::FETCH_ASSOC);
+                    nel_database('core')->exec('DROP TABLE "nelliel_bans"');
+                    $bans_table = new TableBans(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $bans_table->createTable();
+                    $ban_appeals_table = new TableBanAppeals(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $ban_appeals_table->createTable();
 
-                $bans_insert = nel_database('core')->prepare(
-                    'INSERT INTO "' . NEL_BANS_TABLE .
-                    '" ("ban_id", "board_id", "creator", "ip_type", "ip_address_start", "ip_address_end", "hashed_ip_address", "visitor_id", "reason", "start_time", "length", "seen", "appeal_allowed")
+                    $bans_insert = nel_database('core')->prepare(
+                        'INSERT INTO "' . NEL_BANS_TABLE .
+                        '" ("ban_id", "board_id", "creator", "ip_type", "ip_address_start", "ip_address_end", "hashed_ip_address", "visitor_id", "reason", "start_time", "length", "seen", "appeal_allowed")
 VALUES (:ban_id, :board_id, :creator, :ip_type, :ip_address_start, :ip_address_end, :hashed_ip_address, :visitor_id, :reason, :start_time, :length, :seen, :appeal_allowed)');
-                $appeal_insert = nel_database('core')->prepare(
-                    'INSERT INTO "' . NEL_BAN_APPEALS_TABLE .
-                    '" ("ban_id", "time", "appeal", "response", "pending", "denied")
+                    $appeal_insert = nel_database('core')->prepare(
+                        'INSERT INTO "' . NEL_BAN_APPEALS_TABLE .
+                        '" ("ban_id", "time", "appeal", "response", "pending", "denied")
 VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
-                foreach ($bans_data as $data) {
-                    $bans_insert->bindValue(':ban_id', $data['ban_id'], PDO::PARAM_STR);
-                    $bans_insert->bindValue(':board_id', $data['board_id'], PDO::PARAM_STR);
-                    $bans_insert->bindValue(':creator', $data['creator'], PDO::PARAM_STR);
-                    $bans_insert->bindValue(':ip_type', $data['ip_type'], PDO::PARAM_STR);
-                    $bans_insert->bindValue(':ip_address_start', $data['ip_address_start'], PDO::PARAM_STR);
-                    $bans_insert->bindValue(':ip_address_end', $data['ip_address_end'], PDO::PARAM_STR);
-                    $bans_insert->bindValue(':hashed_ip_address', $data['hashed_ip_address'], PDO::PARAM_STR);
-                    $bans_insert->bindValue(':visitor_id', $data['visitor_id'], PDO::PARAM_STR);
-                    $bans_insert->bindValue(':reason', $data['reason'], PDO::PARAM_STR);
-                    $bans_insert->bindValue(':start_time', $data['start_time'], PDO::PARAM_INT);
-                    $bans_insert->bindValue(':length', $data['length'], PDO::PARAM_INT);
-                    $bans_insert->bindValue(':seen', $data['seen'], PDO::PARAM_INT);
-                    $appeal_allowed = $data['appeal_status'] != 2 ? 1 : 0;
-                    $bans_insert->bindValue(':appeal_allowed', $appeal_allowed, PDO::PARAM_INT);
-                    nel_database('core')->executePrepared($bans_insert);
+                    foreach ($bans_data as $data) {
+                        $bans_insert->bindValue(':ban_id', $data['ban_id'], PDO::PARAM_STR);
+                        $bans_insert->bindValue(':board_id', $data['board_id'], PDO::PARAM_STR);
+                        $bans_insert->bindValue(':creator', $data['creator'], PDO::PARAM_STR);
+                        $bans_insert->bindValue(':ip_type', $data['ip_type'], PDO::PARAM_STR);
+                        $bans_insert->bindValue(':ip_address_start', $data['ip_address_start'], PDO::PARAM_STR);
+                        $bans_insert->bindValue(':ip_address_end', $data['ip_address_end'], PDO::PARAM_STR);
+                        $bans_insert->bindValue(':hashed_ip_address', $data['hashed_ip_address'], PDO::PARAM_STR);
+                        $bans_insert->bindValue(':visitor_id', $data['visitor_id'], PDO::PARAM_STR);
+                        $bans_insert->bindValue(':reason', $data['reason'], PDO::PARAM_STR);
+                        $bans_insert->bindValue(':start_time', $data['start_time'], PDO::PARAM_INT);
+                        $bans_insert->bindValue(':length', $data['length'], PDO::PARAM_INT);
+                        $bans_insert->bindValue(':seen', $data['seen'], PDO::PARAM_INT);
+                        $appeal_allowed = $data['appeal_status'] != 2 ? 1 : 0;
+                        $bans_insert->bindValue(':appeal_allowed', $appeal_allowed, PDO::PARAM_INT);
+                        nel_database('core')->executePrepared($bans_insert);
 
-                    if ($data['appeal_status'] > 0) {
-                        $pending = $data['appeal_status'] == 1 ? 1 : 0;
-                        $denied = $data['appeal_status'] == 2 ? 1 : 0;
-                        $appeal_insert->bindValue(':ban_id', $data['ban_id'], PDO::PARAM_STR);
-                        $appeal_insert->bindValue(':time', time(), PDO::PARAM_INT);
-                        $appeal_insert->bindValue(':appeal', $data['appeal'], PDO::PARAM_STR);
-                        $appeal_insert->bindValue(':response', $data['appeal_response'], PDO::PARAM_STR);
-                        $appeal_insert->bindValue(':pending', $pending, PDO::PARAM_INT);
-                        $appeal_insert->bindValue(':denied', $denied, PDO::PARAM_INT);
-                        nel_database('core')->executePrepared($appeal_insert);
+                        if ($data['appeal_status'] > 0) {
+                            $pending = $data['appeal_status'] == 1 ? 1 : 0;
+                            $denied = $data['appeal_status'] == 2 ? 1 : 0;
+                            $appeal_insert->bindValue(':ban_id', $data['ban_id'], PDO::PARAM_STR);
+                            $appeal_insert->bindValue(':time', time(), PDO::PARAM_INT);
+                            $appeal_insert->bindValue(':appeal', $data['appeal'], PDO::PARAM_STR);
+                            $appeal_insert->bindValue(':response', $data['appeal_response'], PDO::PARAM_STR);
+                            $appeal_insert->bindValue(':pending', $pending, PDO::PARAM_INT);
+                            $appeal_insert->bindValue(':denied', $denied, PDO::PARAM_INT);
+                            nel_database('core')->executePrepared($appeal_insert);
+                        }
                     }
-                }
 
-                echo ' - ' . __('Added ban appeals table and updated bans table.') . '<br>';
+                    echo ' - ' . __('Added ban appeals table and updated bans table.') . '<br>';
+                }
 
                 // Update users
                 nel_database('core')->exec(
@@ -394,7 +401,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     nel_database('core')->exec('UPDATE "nelliel_users" SET "locked" = 0');
                 }
 
-                echo ' - ' . __('Updated users table.') . '<br>';
+                echo ' - ' . __('Users table updated.') . '<br>';
 
                 $migration_count ++;
 
@@ -405,7 +412,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_file_filters" ADD COLUMN enabled SMALLINT NOT NULL DEFAULT 0');
 
-                echo ' - ' . __('Updated file filters table.') . '<br>';
+                echo ' - ' . __('File filters table updated.') . '<br>';
 
                 // Update site and global domain IDs
                 $prepared = nel_database('core')->exec(
@@ -413,7 +420,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $prepared = nel_database('core')->exec(
                     'UPDATE "nelliel_domain_registry" SET "domain_id" = \'global\' WHERE "domain_id" = \'_global_\'');
 
-                echo ' - ' . __('Updated site and global domain IDs.') . '<br>';
+                echo ' - ' . __('Site and global domain IDs updated.') . '<br>';
 
                 // Update roles table
                 $prepared = nel_database('core')->exec(
@@ -427,7 +434,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $prepared = nel_database('core')->exec(
                     'UPDATE "nelliel_roles" SET "role_id" = \'basic_user\' WHERE "role_id" = \'BASIC_USER\'');
 
-                echo ' - ' . __('Updated roles table.') . '<br>';
+                echo ' - ' . __('Roles table updated.') . '<br>';
 
                 // Update permissions and role permissions tables
                 $permissions = ['perm_word_filters_manage' => 'perm_manage_wordfilters',
@@ -458,17 +465,31 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     nel_database('core')->executePrepared($permission_update);
                 }
 
-                echo ' - ' . __('Updated permissions and role permissions tables.') . '<br>';
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
                 // Update wordfilters table
                 nel_database('core')->exec('ALTER TABLE "nelliel_word_filters" RENAME TO nelliel_wordfilters');
 
-                echo ' - ' . __('Updated wordfilters table.') . '<br>';
+                echo ' - ' . __('Wordfilters table updated.') . '<br>';
 
                 // Update log tables
                 nel_database('core')->exec('ALTER TABLE "nelliel_logs" RENAME TO nelliel_system_logs');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_system_logs" ADD COLUMN message_values TEXT NOT NULL DEFAULT \'\'');
+
+                $ips = nel_database('core')->executeFetchAll('SELECT "ip_address" FROM "nelliel_system_logs"',
+                    PDO::FETCH_ASSOC);
+
+                foreach ($ips as $ip) {
+                    if ($ip['ip_address'] !== nel_prepare_ip_for_storage($ip['ip_address'])) {
+                        $ip_fix = nel_database('core')->prepare(
+                            'UPDATE "nelliel_system_logs" SET "ip_address" = ? WHERE "ip_address" = ?');
+                        $ip_fix->bindValue(1, nel_prepare_ip_for_storage($ip['ip_address']));
+                        $ip_fix->bindValue(2, $ip['ip_address']);
+                        nel_database('core')->executePrepared($ip_fix);
+                    }
+                }
+
                 $public_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $public_logs_table->tableName('nelliel_public_logs');
                 $public_logs_table->createTable();
@@ -479,7 +500,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     nel_database('core')->exec('UPDATE "nelliel_system_logs" SET "channel" = \'\'');
                 }
 
-                echo ' - ' . __('Updated log tables.') . '<br>';
+                echo ' - ' . __('Log tables updated.') . '<br>';
 
                 // Update board settings
                 $new_board_settings = ['allow_no_markup', 'allow_op_thread_moderation', 'mod_links_move',
@@ -582,7 +603,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     'content_links_show_upload', 'content_links_hide_upload', 'content_links_cite_post',
                     'content_links_download_file', 'content_links_first_posts', 'content_links_last_posts', 'time_zone',
                     'show_bottom_banners', 'show_top_banners_on_boards', 'show_bottom_banners_on_boards',
-                    'show_top_styles', 'show_bottom_styles'];
+                    'show_top_styles', 'show_bottom_styles', 'enable_uploads'];
                 $this->newBoardSettings($new_board_settings);
 
                 $old_board_setting_names = ['max_catalog_display_width', 'max_catalog_display_height',
@@ -653,14 +674,16 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Markup table added.') . '<br>';
 
-                // Update permissions and role permissions table
-                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $permissions_table->insertDefaults();
-                $role_permissions_table = new TableRolePermissions(nel_database('core'),
-                    nel_utilities()->sqlCompatibility());
-                $role_permissions_table->insertDefaults();
+                if (version_compare(NELLIEL_VERSION, 'v0.9.30', '<')) {
+                    // Update permissions and role permissions table
+                    $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $permissions_table->insertDefaults();
+                    $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                        nel_utilities()->sqlCompatibility());
+                    $role_permissions_table->insertDefaults();
 
-                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+                    echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+                }
 
                 // Create R9K content and mutes tables
                 $r9k_content_table = new TableR9KContent(nel_database('core'), nel_utilities()->sqlCompatibility());
@@ -723,22 +746,24 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Noticeboard table updated.') . '<br>';
 
-                // Update log tables
-                nel_database('core')->exec('ALTER TABLE "nelliel_system_logs" RENAME TO nelliel_old_system_logs');
-                $system_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $system_logs_table->tableName('nelliel_system_logs');
-                $system_logs_table->createTable();
-                nel_database('core')->exec('INSERT INTO "nelliel_system_logs" SELECT * FROM "nelliel_system_logs"');
-                nel_database('core')->exec('DROP TABLE "nelliel_system_logs"');
+                if (version_compare(NELLIEL_VERSION, 'v0.9.30', '=')) {
+                    // Update log tables
+                    nel_database('core')->exec('ALTER TABLE "nelliel_system_logs" RENAME TO nelliel_old_system_logs');
+                    $system_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $system_logs_table->tableName('nelliel_system_logs');
+                    $system_logs_table->createTable();
+                    nel_database('core')->exec('INSERT INTO "nelliel_system_logs" SELECT * FROM "nelliel_system_logs"');
+                    nel_database('core')->exec('DROP TABLE "nelliel_system_logs"');
 
-                nel_database('core')->exec('ALTER TABLE "nelliel_public_logs" RENAME TO nelliel_old_public_logs');
-                $public_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $public_logs_table->tableName('nelliel_public_logs');
-                $public_logs_table->createTable();
-                nel_database('core')->exec('INSERT INTO "nelliel_public_logs" SELECT * FROM "nelliel_public_logs"');
-                nel_database('core')->exec('DROP TABLE "nelliel_public_logs"');
+                    nel_database('core')->exec('ALTER TABLE "nelliel_public_logs" RENAME TO nelliel_old_public_logs');
+                    $public_logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $public_logs_table->tableName('nelliel_public_logs');
+                    $public_logs_table->createTable();
+                    nel_database('core')->exec('INSERT INTO "nelliel_public_logs" SELECT * FROM "nelliel_public_logs"');
+                    nel_database('core')->exec('DROP TABLE "nelliel_public_logs"');
 
-                echo ' - ' . __('Log tables updated.') . '<br>';
+                    echo ' - ' . __('Log tables updated.') . '<br>';
+                }
 
                 $migration_count ++;
 
@@ -746,7 +771,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo '<br>' . __('Updating from v0.9.30 to ???...') . '<br>';
 
                 // Update site settings
-                $new_site_settings = ['error_message_header'];
+                $new_site_settings = ['error_message_header', 'ipv6_identification_cidr', 'ipv4_small_subnet_cidr',
+                    'ipv4_large_subnet_cidr', 'ipv6_small_subnet_cidr', 'ipv6_large_subnet_cidr'];
                 $this->newSiteSettings($new_site_settings);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
@@ -811,34 +837,32 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 // Add moar moar columns
                 nel_database('core')->exec(
-                    'ALTER TABLE "nelliel_ban_appeals" ADD COLUMN moar ' .
-                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
-                nel_database('core')->exec(
                     'ALTER TABLE "nelliel_board_configs" ADD COLUMN moar ' .
-                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_board_defaults" ADD COLUMN moar ' .
-                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_image_sets" ADD COLUMN moar ' .
-                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_plugins" ADD COLUMN moar ' .
-                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_site_config" ADD COLUMN moar ' .
-                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_styles" ADD COLUMN moar ' .
-                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_templates" ADD COLUMN moar ' .
-                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL,');
+                    nel_utilities()->sqlCompatibility()->textType('LONGTEXT') . ' DEFAULT NULL');
 
                 echo ' - ' . __('Moar moar columns added to database.') . '<br>';
 
                 // Update permissions and role permissions tables
-                $permissions = ['perm_ip_notes_add' => 'perm_add_ip_notes', 'perm_ip_notes_delete' => 'perm_delete_ip_notes'];
+                $permissions = ['perm_ip_notes_add' => 'perm_add_ip_notes',
+                    'perm_ip_notes_delete' => 'perm_delete_ip_notes'];
                 $permission_update = nel_database('core')->prepare(
                     'UPDATE "nelliel_permissions" SET "permission" = :new WHERE "permission" = :old');
 
@@ -855,6 +879,203 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $role_permissions_table->insertDefaults();
 
                 echo ' - ' . __('Updated permissions and role permissions tables.') . '<br>';
+
+                // Add IP info table
+                $ip_info_table = new TableIPInfo(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $ip_info_table->createTable();
+
+                echo ' - ' . __('Added IP info table.') . '<br>';
+
+                // Update thread, post and upload tables
+                $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($db_prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_threads' . '" RENAME TO ' . $prefix . '_threads_old');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_posts' . '" RENAME TO ' . $prefix . '_posts_old');
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_uploads' . '" RENAME TO ' . $prefix . '_uploads_old');
+                    nel_database('core')->exec('DROP INDEX "ix_' . $prefix . '_posts__parent_thread"');
+                    nel_database('core')->exec('DROP INDEX "ix_' . $prefix . '_posts__hashed_ip_address"');
+                    nel_database('core')->exec('DROP INDEX "ix_' . $prefix . '_uploads__post_ref"');
+                    nel_database('core')->exec('DROP INDEX "ix_' . $prefix . '_uploads__filename"');
+                    nel_database('core')->exec('DROP INDEX "ix_' . $prefix . '_uploads__static_preview_name"');
+                    nel_database('core')->exec('DROP INDEX "ix_' . $prefix . '_uploads__animated_preview_name"');
+                    nel_database('core')->exec('DROP INDEX "ix_' . $prefix . '_uploads__md5"');
+
+                    $threads_table = new TableThreads(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $threads_table->tableName($prefix . '_threads');
+                    $threads_table->createTable();
+                    $posts_table = new TablePosts(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $posts_table->tableName($prefix . '_posts');
+                    $posts_table->createTable(['threads_table' => $prefix . '_threads']);
+                    $uploads_table = new TableUploads(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $uploads_table->tableName($prefix . '_uploads');
+                    $uploads_table->createTable(
+                        ['threads_table' => $prefix . '_threads', 'posts_table' => $prefix . '_posts']);
+
+                    $ips = nel_database('core')->executeFetchAll(
+                        'SELECT "hashed_ip_address", "ip_address" FROM "' . $prefix . '_posts_old"', PDO::FETCH_ASSOC);
+                    $ip_transfer = nel_database('core')->prepare(
+                        'INSERT INTO "nelliel_ip_info" ("hashed_ip_address", "ip_address") VALUES (?, ?)');
+
+                    foreach ($ips as $ip) {
+                        if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address'],
+                            [$ip['hashed_ip_address']]) &&
+                            !nel_database('core')->rowExists('nelliel_ip_info', ['ip_address'], [$ip['ip_address']])) {
+                            $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
+                            $ip_transfer->bindValue(2, $ip['ip_address']);
+                            nel_database('core')->executePrepared($ip_transfer);
+                        }
+                    }
+
+                    nel_database('core')->exec(
+                        'INSERT INTO "' . $prefix .
+                        '_threads"
+                        SELECT "thread_id", "bump_time", "bump_time_milli", "last_update", "last_update_milli", "post_count",
+                            "bump_count", "total_uploads", "file_count", "embed_count", "permasage", "sticky", "cyclic", "old", "preserve", "locked",
+                            "shadow", "slug", "salt", "regen_cache", "cache", "moar"
+                        FROM "' . $prefix . '_threads_old"');
+                    nel_database('core')->exec(
+                        'INSERT INTO "' . $prefix .
+                        '_posts"
+                        SELECT "post_number", "parent_thread", "reply_to", "name", "password", "tripcode", "secure_tripcode", "capcode", "email", "subject", "comment",
+                            "hashed_ip_address", "ip_address", "visitor_id", "post_time", "post_time_milli", "total_uploads", "file_count", "embed_count", "op",
+                            "sage", "shadow", "username", "mod_comment", "regen_cache", "cache", "moar"
+                        FROM "' . $prefix . '_posts_old"');
+                    nel_database('core')->exec(
+                        'INSERT INTO "' . $prefix .
+                        '_uploads"
+                        SELECT "upload_id", "parent_thread", "post_ref", "upload_order", "category", "format", "mime", "filename", "extension",
+                            "original_filename", "display_width", "display_height", "static_preview_name", "animated_preview_name", "preview_width",
+                            "preview_height", "filesize", "md5", "sha1", "sha256", "sha512", "embed_url", "spoiler", "deleted", "shadow",
+                            "exif", "regen_cache", "cache", "moar"
+                        FROM "' . $prefix . '_uploads_old"');
+
+                    nel_database('core')->exec('DROP TABLE "' . $prefix . '_uploads_old"');
+                    nel_database('core')->exec('DROP TABLE "' . $prefix . '_posts_old"');
+                    nel_database('core')->exec('DROP TABLE "' . $prefix . '_threads_old"');
+                }
+
+                echo ' - ' . __('Thread, post and upload tables updated.') . '<br>';
+
+                // Update bans table
+                nel_database('core')->exec('ALTER TABLE "nelliel_bans" RENAME TO nelliel_bans_old');
+
+                $appeals_exist = nel_database('core')->tableExists('nelliel_ban_appeals');
+
+                if ($appeals_exist) {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_ban_appeals" RENAME TO nelliel_ban_appeals_old');
+                }
+
+                nel_database('core')->exec('DROP INDEX "hashed_ip_address"');
+
+                $threads_table = new TableBans(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $threads_table->createTable();
+                $threads_table = new TableBanAppeals(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $threads_table->createTable();
+
+                $ips = nel_database('core')->executeFetchAll(
+                    'SELECT "hashed_ip_address", "ip_address" FROM "nelliel_bans_old"', PDO::FETCH_ASSOC);
+                $ip_transfer = nel_database('core')->prepare(
+                    'INSERT INTO "nelliel_ip_info" ("hashed_ip_address", "ip_address") VALUES (?, ?)');
+
+                foreach ($ips as $ip) {
+                    if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address', 'ip_address'],
+                        [$ip['hashed_ip_address'], nel_prepare_ip_for_storage($ip['ip_address'])])) {
+                        $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
+                        $ip_transfer->bindValue(2, nel_prepare_ip_for_storage($ip['ip_address']));
+                        nel_database('core')->executePrepared($ip_transfer);
+                    }
+                }
+
+                nel_database('core')->exec('INSERT INTO "nelliel_bans" SELECT * FROM "nelliel_bans_old"');
+
+                if ($appeals_exist) {
+                    nel_database('core')->exec(
+                        'INSERT INTO "nelliel_ban_appeals" SELECT * FROM "nelliel_ban_appeals_old"');
+                    nel_database('core')->exec('DROP TABLE "nelliel_ban_appeals_old"');
+                }
+
+                nel_database('core')->exec('DROP TABLE "nelliel_bans_old"');
+
+                echo ' - ' . __('Bans table updated.') . '<br>';
+
+                // Update log tables
+                nel_database('core')->exec('ALTER TABLE "nelliel_system_logs" RENAME TO nelliel_system_logs_old');
+                nel_database('core')->exec('ALTER TABLE "nelliel_public_logs" RENAME TO nelliel_public_logs_old');
+
+                $logs_table = new TableLogs(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $logs_table->tableName('nelliel_system_logs');
+                $logs_table->createTable();
+                $logs_table->tableName('nelliel_public_logs');
+                $logs_table->createTable();
+
+                $system_ips = nel_database('core')->executeFetchAll(
+                    'SELECT "hashed_ip_address", "ip_address" FROM "nelliel_system_logs_old"', PDO::FETCH_ASSOC);
+                $public_ips = nel_database('core')->executeFetchAll(
+                    'SELECT "hashed_ip_address", "ip_address" FROM "nelliel_public_logs_old"', PDO::FETCH_ASSOC);
+                $ips = array_merge($system_ips, $public_ips);
+                $ip_transfer = nel_database('core')->prepare(
+                    'INSERT INTO "nelliel_ip_info" ("hashed_ip_address", "ip_address") VALUES (?, ?)');
+
+                foreach ($ips as $ip) {
+                    // Earlier log entries may not have a properly encoded IP
+                    if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address'],
+                        [$ip['hashed_ip_address']]) &&
+                        !nel_database('core')->rowExists('nelliel_ip_info', ['ip_address'], [$ip['ip_address']])) {
+                        $ip_transfer->bindValue(1, $ip['hashed_ip_address'], PDO::PARAM_STR);
+                        $ip_transfer->bindValue(2, nel_prepare_ip_for_storage($ip['ip_address']), PDO::PARAM_LOB);
+                        nel_database('core')->executePrepared($ip_transfer);
+                    } else {
+                        $prepared = nel_database('core')->prepare(
+                            'UPDATE "nelliel_system_logs" SET "ip_address" = NULL, "hashed_ip_address" = NULL WHERE "hashed_ip_address" = ?');
+                        $prepared->bindValue(1, $ip['hashed_ip_address'], PDO::PARAM_STR);
+                        nel_database('core')->executePrepared($prepared);
+                    }
+                }
+
+                nel_database('core')->exec(
+                    'INSERT INTO "nelliel_system_logs"
+                    SELECT "log_id", "level", "event", "message", "message_values", "time", "domain_id", "username", "hashed_ip_address", "ip_address", "visitor_id", "moar"
+                    FROM "nelliel_system_logs_old"');
+                nel_database('core')->exec(
+                    'INSERT INTO "nelliel_public_logs"
+                    SELECT "log_id", "level", "event", "message", "message_values", "time", "domain_id", "username", "hashed_ip_address", "ip_address", "visitor_id", "moar"
+                    FROM "nelliel_public_logs_old"');
+                nel_database('core')->exec('DROP TABLE "nelliel_system_logs_old"');
+                nel_database('core')->exec('DROP TABLE "nelliel_public_logs_old"');
+
+                echo ' - ' . __('Log tables updated.') . '<br>';
+
+                // Update reports table
+                nel_database('core')->exec('ALTER TABLE "nelliel_reports" RENAME TO nelliel_reports_old');
+
+                $threads_table = new TableReports(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $threads_table->createTable();
+
+                $ips = nel_database('core')->executeFetchAll(
+                    'SELECT "hashed_ip_address", "ip_address" FROM "nelliel_reports_old"', PDO::FETCH_ASSOC);
+                $ip_transfer = nel_database('core')->prepare(
+                    'INSERT INTO "nelliel_ip_info" ("hashed_ip_address", "ip_address") VALUES (?, ?)');
+
+                foreach ($ips as $ip) {
+                    if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address', 'ip_address'],
+                        [$ip['hashed_ip_address'], nel_prepare_ip_for_storage($ip['ip_address'])])) {
+                        $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
+                        $ip_transfer->bindValue(2, nel_prepare_ip_for_storage($ip['ip_address']));
+                        nel_database('core')->executePrepared($ip_transfer);
+                    }
+                }
+
+                nel_database('core')->exec(
+                    'INSERT INTO "nelliel_reports"
+                    SELECT "report_id", "board_id", "content_id", "hashed_reporter_ip", "reporter_ip", "visitor_id", "reason", "moar" FROM "nelliel_reports_old"');
+                nel_database('core')->exec('DROP TABLE "nelliel_reports_old"');
+
+                echo ' - ' . __('Reports table updated.') . '<br>';
 
                 $migration_count ++;
         }
