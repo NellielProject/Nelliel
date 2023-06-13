@@ -1,8 +1,16 @@
 <h1>You are banned!</h1>
 <div class="ban-page">
+{{# global }}
+	<p class="ban-paragraph">
+		<span data-i18n="">You have been globally banned from all boards due to:</span>
+	</p>
+{{/ global }}
+{{^ global }}
 	<p class="ban-paragraph">
 		You have been banned from <b>{{ ban_board }}</b> due to:
 	</p>
+{{/ global }}
+
 	<p class="ban-paragraph">
 		<b>{{ ban_reason }}</b>
 	</p>
@@ -10,7 +18,7 @@
 		This ban was set on <b>{{ ban_time }}</b>{{# creator }} by {{ creator }}<b>{{/ creator }}</b>. It will expire on <b>{{ ban_expiration }}</b> which is <b>{{ ban_length }}</b> from now.
 	</p>
 	<p class="ban-paragraph">
-		<span data-i18n="">The IP detected is</span> {{ ban_ip }}
+		<span data-i18n="">Your ip is</span> {{ ban_ip }}
 	</p>
 {{# extra_text }}
 	<p class="ban-paragraph">

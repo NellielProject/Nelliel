@@ -5,11 +5,11 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\BansAccess;
 use Nelliel\Domains\Domain;
 use DateInterval;
 use DateTime;
 use PDO;
-use Nelliel\BansAccess;
 
 class OutputBanPage extends Output
 {
@@ -29,8 +29,8 @@ class OutputBanPage extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
-        $this->render_data['ban_board'] = ($ban_hammer->getData('board_id') === Domain::GLOBAL) ? _gettext('All Boards') : $ban_hammer->getData(
-            'board_id');
+        $this->render_data['ban_board'] = $ban_hammer->getData('board_id');
+        $this->render_data['global'] = $ban_hammer->getData('board_id') === Domain::GLOBAL;
         $this->render_data['ban_time'] = $this->domain->domainDateTime(intval($ban_hammer->getData('start_time')))->format(
             $this->domain->setting('ban_page_time_format'));
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
