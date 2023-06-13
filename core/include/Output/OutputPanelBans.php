@@ -58,9 +58,9 @@ class OutputPanelBans extends Output
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
             $ban_data['can_modify'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_modify');
             $ban_data['can_delete'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_delete');
-            $this->render_data['modify_url'] = nel_build_router_url(
+            $ban_data['modify_url'] = nel_build_router_url(
                 [$this->domain->id(), 'bans', $ban_hammer->getData('ban_id'), 'modify']);
-            $this->render_data['delete_url'] = nel_build_router_url(
+            $ban_data['delete_url'] = nel_build_router_url(
                 [$this->domain->id(), 'bans', $ban_hammer->getData('ban_id'), 'delete']);
             $this->render_data['ban_list'][] = $ban_data;
         }
@@ -80,15 +80,22 @@ class OutputPanelBans extends Output
         $parameters['section'] = $parameters['section'] ?? _gettext('New Ban');
         $content_id = $parameters['content_id'] ?? null;
 
+        $this->render_data['ban_type_select']['select_name'] = 'ban_type';
+        $this->render_data['ban_type_select']['options'][] = ['option_label' => __('IP address'),
+            'option_value' => 'ip'];
+        $this->render_data['ban_type_select']['options'][] = ['option_label' => __('Range'), 'option_value' => 'range'];
+        $this->render_data['ban_type_select']['options'][] = ['option_label' => __('Subnet'),
+            'option_value' => 'subnet'];
+
         if (!is_null($content_id)) {
             $content = $content_id->getInstanceFromID($this->domain);
-            $poster_ip = $content->data('ip_address');
 
-            if (empty($poster_ip)) {
-                $poster_ip = $content->data('hashed_ip_address');
+            if (empty($content->data('ip_address')) ||
+                !$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
+                $this->render_data['ban_ip'] = $content->data('hashed_ip_address');
+            } else {
+                $this->render_data['ban_ip'] = nel_convert_ip_from_storage($content->data('ip_address'));
             }
-
-            $this->render_data['ban_ip'] = $poster_ip;
         }
 
         $output_head = new OutputHead($this->domain, $this->write_mode);

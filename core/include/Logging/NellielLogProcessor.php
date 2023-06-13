@@ -15,7 +15,7 @@ class NellielLogProcessor implements ProcessorInterface
     function __invoke($record): array
     {
         $record['extra']['event'] = $record['context']['event'] ?? '';
-        $ip_info = new IPInfo(nel_request_ip_address(true), nel_request_ip_address());
+        $ip_info = new IPInfo(nel_request_ip_address());
         $record['extra']['hashed_ip_address'] = $ip_info->getInfo('hashed_ip_address');
         $record['extra']['ip_address'] = $ip_info->getInfo('ip_address');
         $record['extra']['message_values'] = json_encode($record['context']['values'] ?? '');

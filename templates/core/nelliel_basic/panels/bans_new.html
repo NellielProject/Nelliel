@@ -18,6 +18,13 @@
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
+		{{# ban_type_select }}
+				{{> menu//select }}
+		{{/ ban_type_select }}
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
 				<input type="hidden" name="ban_global[default]" value="0">
 				<input id="ban_global" type="checkbox" name="ban_global[value]" value="1" {{ global }}>
 				<label for="ban_global" data-i18n="">Ban from all boards. This overrides any specific boards.</label>

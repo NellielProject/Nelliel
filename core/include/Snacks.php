@@ -115,7 +115,7 @@ class Snacks
      */
     public function applyBans(): void
     {
-        $ip_info = new IPInfo(nel_request_ip_address(true), nel_request_ip_address());
+        $ip_info = new IPInfo(nel_request_ip_address());
         $this->banAppeal();
         $this->checkRangeBans();
         $this->checkSubnetBans($ip_info);

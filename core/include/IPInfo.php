@@ -5,9 +5,10 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use IPTools\Network;
-use PDO;
 use IPTools\IP;
+use IPTools\Network;
+use Exception;
+use PDO;
 
 class IPInfo
 {
@@ -15,14 +16,24 @@ class IPInfo
     private $ip_address;
     private $info = array();
     private $database;
+    private $unloaded = true;
 
-    function __construct(string $hashed_ip_address, string $ip_address = null)
+    function __construct(string $ip_address, bool $process = true)
     {
         $this->database = nel_site_domain()->database();
-        $this->hashed_ip_address = $hashed_ip_address;
 
-        if (!$this->hashInDatabase() && !is_null($ip_address)) {
-            $this->updateIP($ip_address);
+        if (nel_is_unhashed_ip($ip_address)) {
+            $this->ip_address = $ip_address;
+
+            if ($process && !$this->IPInDatabase()) {
+                $this->updateIP($ip_address);
+            }
+        } else {
+            $this->hashed_ip_address = $ip_address;
+
+            if ($process && !$this->hashInDatabase()) {
+                $this->updateIP($ip_address);
+            }
         }
 
         $this->load();
@@ -87,25 +98,34 @@ class IPInfo
 
     public function updateIP(string $new_ip_address): void
     {
-        $this->info['ip_address'] = $new_ip_address;
-        $this->ip_address = $new_ip_address;
-        $this->hashed_ip_address = nel_ip_hash($new_ip_address, true);
-        $ip = new IP($new_ip_address);
+        if (nel_is_unhashed_ip($new_ip_address)) {
+            $ip = new IP($new_ip_address);
+            $this->info['ip_address'] = $new_ip_address;
+            $this->ip_address = $new_ip_address;
+            $this->hashed_ip_address = nel_ip_hash($new_ip_address, true);
+            $this->info['hashed_ip_address'] = $this->hashed_ip_address;
 
-        if ($ip->getVersion() === IP::IP_V6) {
-            $small_network = Network::parse(
-                $new_ip_address . '/' . nel_site_domain()->setting('ipv6_small_subnet_cidr'));
-            $large_network = Network::parse(
-                $new_ip_address . '/' . nel_site_domain()->setting('ipv6_large_subnet_cidr'));
+            if ($ip->getVersion() === IP::IP_V6) {
+                $small_network = Network::parse(
+                    $new_ip_address . '/' . nel_site_domain()->setting('ipv6_small_subnet_cidr'));
+                $large_network = Network::parse(
+                    $new_ip_address . '/' . nel_site_domain()->setting('ipv6_large_subnet_cidr'));
+            } else {
+                $small_network = Network::parse(
+                    $new_ip_address . '/' . nel_site_domain()->setting('ipv4_small_subnet_cidr'));
+                $large_network = Network::parse(
+                    $new_ip_address . '/' . nel_site_domain()->setting('ipv4_large_subnet_cidr'));
+            }
+
+            $this->info['hashed_small_subnet'] = nel_ip_hash($small_network->getCIDR(), true);
+            $this->info['hashed_large_subnet'] = nel_ip_hash($large_network->getCIDR(), true);
         } else {
-            $small_network = Network::parse(
-                $new_ip_address . '/' . nel_site_domain()->setting('ipv4_small_subnet_cidr'));
-            $large_network = Network::parse(
-                $new_ip_address . '/' . nel_site_domain()->setting('ipv4_large_subnet_cidr'));
+            $this->info['ip_address'] = null;
+            $this->ip_address = null;
+            $this->hashed_ip_address = $new_ip_address;
+            $this->info['hashed_ip_address'] = $this->hashed_ip_address;
         }
 
-        $this->info['hashed_small_subnet'] = nel_ip_hash($small_network->getCIDR(), true);
-        $this->info['hashed_large_subnet'] = nel_ip_hash($large_network->getCIDR(), true);
         $this->store();
     }
 

@@ -40,7 +40,7 @@ class Login
         $error_context = ['return_link' => $return_link];
 
         $attempt_time = time();
-        $ip_info = new IPInfo(nel_request_ip_address(true), nel_request_ip_address());
+        $ip_info = new IPInfo(nel_request_ip_address());
         var_dump(nel_request_ip_address(true));
         $form_username = strval($_POST['username'] ?? '');
         $session_username = strval($_SESSION['username'] ?? '');

@@ -6,6 +6,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Redirect;
 use Nelliel\Auth\Authorization;
 use ChrisUllyott\FileSize;
+use IPTools\IP;
 
 function nel_clean_exit()
 {
@@ -109,6 +110,10 @@ function nel_form_input_default(array $input)
 
 function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = true)
 {
+    if (is_null($ip_address)) {
+        return null;
+    }
+
     if ($unhashed_check && !nel_site_domain()->setting('store_unhashed_ip')) {
         return null;
     }
@@ -117,7 +122,7 @@ function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = 
 
     if ($packed_ip_address === false) {
         // Check if the error is simply due to the address already being packed
-        if (inet_ntop($ip_address) !== false) {
+        if (@inet_ntop($ip_address) !== false) {
             return $ip_address;
         }
 
@@ -243,4 +248,14 @@ function nel_size_format(int $bytes, bool $use_iec, bool $binary, int $precision
     }
 
     return $output;
+}
+
+function nel_is_unhashed_ip(string $ip): bool
+{
+    try {
+        new IP($ip);
+        return true;
+    } catch (Exception $e) {
+        return false;
+    }
 }

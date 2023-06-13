@@ -40,7 +40,7 @@ class Report
                 if ($value == 'action') {
                     $report_data['content_id'] = $name;
                     $report_data['reason'] = $_POST['report_reason'] ?? null;
-                    $ip_info = new IPInfo(nel_request_ip_address(true), nel_request_ip_address());
+                    $ip_info = new IPInfo(nel_request_ip_address());
                     $report_data['hashed_reporter_ip'] = $ip_info->getInfo('hashed_ip_address');
                     $report_data['visitor_id'] = nel_visitor_id();
                     $reports[] = $report_data;
