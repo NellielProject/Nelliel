@@ -17,6 +17,7 @@
 			</span>
 		</div>
 		<div class="display-row">
+			<span class="display-cell">Ban type:</span>
 			<span class="display-cell">
 		{{# ban_type_select }}
 				{{> menu//select }}
@@ -56,7 +57,7 @@
 				<textarea id="ban_reason" name="ban_reason" cols="32" rows="3"></textarea>
 			</span>
 		</div>
-		{{# is_post_ban }}
+		{{# from_content }}
 		<div class="display-row">
 			<span class="display-cell">
 				<label for="mod_post_comment" data-i18n="">Attach comment to post (optional):</label>
@@ -65,7 +66,7 @@
 				<textarea id="mod_post_comment" name="mod_post_comment" cols="32" rows="3"></textarea>
 			</span>
 		</div>
-		{{/ is_post_ban }}
+		{{/ from_content }}
 		<div class="display-row">
 			<span class="display-cell">
 				<input type="submit" value="Add Ban" data-i18n-attributes="value">

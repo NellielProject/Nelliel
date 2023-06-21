@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\BanHammer;
 use Nelliel\BansAccess;
+use Nelliel\IPInfo;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -83,18 +84,42 @@ class OutputPanelBans extends Output
         $this->render_data['ban_type_select']['select_name'] = 'ban_type';
         $this->render_data['ban_type_select']['options'][] = ['option_label' => __('IP address'),
             'option_value' => 'ip'];
-        $this->render_data['ban_type_select']['options'][] = ['option_label' => __('Range'), 'option_value' => 'range'];
-        $this->render_data['ban_type_select']['options'][] = ['option_label' => __('Subnet'),
-            'option_value' => 'subnet'];
 
-        if (!is_null($content_id)) {
+        $can_range_ban = $this->session->user()->checkPermission($this->domain, 'perm_range_bans');
+        $from_content = !is_null($content_id);
+        $this->render_data['from_content'] = $from_content;
+
+        if ($can_range_ban) {
+            $this->render_data['ban_type_select']['options'][] = ['option_label' => __('Range'),
+                'option_value' => 'range'];
+
+            if (!$from_content) {
+                $this->render_data['ban_type_select']['options'][] = ['option_label' => __('Subnet'),
+                    'option_value' => 'subnet'];
+            }
+        }
+
+        if ($from_content) {
             $content = $content_id->getInstanceFromID($this->domain);
+            $ip_info = new IPInfo($content->data('hashed_ip_address'));
 
-            if (empty($content->data('ip_address')) ||
+            if (empty($ip_info->getInfo('ip_address')) ||
                 !$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
-                $this->render_data['ban_ip'] = $content->data('hashed_ip_address');
+                $this->render_data['ban_ip'] = $ip_info->getInfo('hashed_ip_address');
             } else {
                 $this->render_data['ban_ip'] = nel_convert_ip_from_storage($content->data('ip_address'));
+            }
+
+            if ($can_range_ban) {
+                if (!is_null($ip_info->getInfo('hashed_small_subnet'))) {
+                    $this->render_data['ban_type_select']['options'][] = ['option_label' => __('Small subnet'),
+                        'option_value' => 'small_subnet'];
+                }
+
+                if (!is_null($ip_info->getInfo('hashed_large_subnet'))) {
+                    $this->render_data['ban_type_select']['options'][] = ['option_label' => __('Large subnet'),
+                        'option_value' => 'large_subnet'];
+                }
             }
         }
 
