@@ -68,7 +68,7 @@ class BanHammer
         }
 
         if (empty($this->ban_data['creator'])) {
-            $this->ban_data['creator'] = $_SESSION['username'];
+            $this->ban_data['creator'] = $this->session->user()->id();
         }
 
         $ip_address = $_POST['ban_ip'] ?? null;
@@ -94,7 +94,6 @@ class BanHammer
             $this->ban_data['hashed_subnet'] = $ip_address;
             $this->ban_data['ban_type'] = BansAccess::HASHED_SUBNET;
         } else if ($type === 'small_subnet') {
-            var_dump($ip_info->getInfo('hashed_small_subnet'));
             $this->ban_data['hashed_subnet'] = $ip_info->getInfo('hashed_small_subnet');
             $this->ban_data['ban_type'] = BansAccess::HASHED_SUBNET;
         } else if ($type === 'large_subnet') {

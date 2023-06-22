@@ -41,7 +41,6 @@ class Login
 
         $attempt_time = time();
         $ip_info = new IPInfo(nel_request_ip_address());
-        var_dump(nel_request_ip_address(true));
         $form_username = strval($_POST['username'] ?? '');
         $session_username = strval($_SESSION['username'] ?? '');
         $form_password = strval($_POST['super_sekrit'] ?? '');

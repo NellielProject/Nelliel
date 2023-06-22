@@ -53,7 +53,7 @@ class OutputPanelMain extends Output
             'perm_modify_board_defaults');
         $this->render_data['board_defaults_url'] = nel_build_router_url([$this->domain->id(), 'board-defaults']);
 
-        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_view');
+        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_view_bans');
         $this->render_data['bans_url'] = nel_build_router_url([$this->domain->id(), 'bans']);
 
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
@@ -154,7 +154,7 @@ class OutputPanelMain extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_view');
+        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_view_bans');
         $this->render_data['bans_url'] = nel_build_router_url([$this->domain->id(), 'bans']);
 
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
@@ -198,7 +198,7 @@ class OutputPanelMain extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_view');
+        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_view_bans');
         $this->render_data['bans_url'] = nel_build_router_url([$this->domain->id(), 'bans']);
 
         $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,

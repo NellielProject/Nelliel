@@ -30,7 +30,7 @@ class OutputPanelBans extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['can_add'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_add');
+        $this->render_data['can_add'] = $this->session->user()->checkPermission($this->domain, 'perm_add_bans');
         $bans_access = new BansAccess($this->database);
         $ban_list = $bans_access->getBans($this->domain->id());
         $this->render_data['new_ban_url'] = nel_build_router_url([$this->domain->id(), 'bans', 'new']);
@@ -57,8 +57,8 @@ class OutputPanelBans extends Output
             $ban_data['appeal'] = $ban_hammer->getData('appeal');
             $ban_data['appeal_response'] = $ban_hammer->getData('appeal_response');
             $ban_data['appeal_status'] = $ban_hammer->getData('appeal_status');
-            $ban_data['can_modify'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_modify');
-            $ban_data['can_delete'] = $this->session->user()->checkPermission($this->domain, 'perm_bans_delete');
+            $ban_data['can_modify'] = $this->session->user()->checkPermission($this->domain, 'perm_modify_bans');
+            $ban_data['can_delete'] = $this->session->user()->checkPermission($this->domain, 'perm_delete_bans');
             $ban_data['modify_url'] = nel_build_router_url(
                 [$this->domain->id(), 'bans', $ban_hammer->getData('ban_id'), 'modify']);
             $ban_data['delete_url'] = nel_build_router_url(
@@ -85,7 +85,7 @@ class OutputPanelBans extends Output
         $this->render_data['ban_type_select']['options'][] = ['option_label' => __('IP address'),
             'option_value' => 'ip'];
 
-        $can_range_ban = $this->session->user()->checkPermission($this->domain, 'perm_range_bans');
+        $can_range_ban = $this->session->user()->checkPermission($this->domain, 'perm_add_range_bans');
         $from_content = !is_null($content_id);
         $this->render_data['from_content'] = $from_content;
 

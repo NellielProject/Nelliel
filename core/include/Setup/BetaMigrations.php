@@ -196,6 +196,15 @@ class BetaMigrations
 
                 echo ' - ' . __('Thread tables updated.') . '<br>';
 
+                // Update permissions and role permissions table
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage plugins.']);
+                $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
+
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
                 $migration_count ++;
 
             case 'v0.9.26':
@@ -245,16 +254,24 @@ class BetaMigrations
 
                 echo ' - ' . __('Plugins table updated.') . '<br>';
 
-                if (version_compare(NELLIEL_VERSION, 'v0.9.30', '<')) {
-                    // Update permissions and role permissions table
-                    $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                    $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage static pages.']);
-                    $role_permissions_table = new TableRolePermissions(nel_database('core'),
-                        nel_utilities()->sqlCompatibility());
-                    $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
+                // Update permissions and role permissions tables
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaults();
+                $this->addRolePermission('perm_pages_manage');
 
-                    echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
-                }
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
+                // if (version_compare(NELLIEL_VERSION, 'v0.9.30', '<')) {
+                // Update permissions and role permissions table
+                // $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                // $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage static pages.']);
+                // $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                // nel_utilities()->sqlCompatibility());
+                // $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
+                // $this->addPermission('perm_plugins_manage', 'Manage static pages.');
+
+                // echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+                // }
 
                 // Update core template info
                 $template_instance = nel_site_domain()->frontEndData()->getTemplate('template-nelliel-basic');
@@ -674,16 +691,28 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Markup table added.') . '<br>';
 
-                if (version_compare(NELLIEL_VERSION, 'v0.9.30', '<')) {
-                    // Update permissions and role permissions table
-                    $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                    $permissions_table->insertDefaults();
-                    $role_permissions_table = new TableRolePermissions(nel_database('core'),
-                        nel_utilities()->sqlCompatibility());
-                    $role_permissions_table->insertDefaults();
+                // Update permissions and role permissions tables
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaults();
+                $this->addRolePermission('perm_plugins_manage');
+                $this->addRolePermission('perm_manage_markup');
+                $this->addRolePermission('perm_manage_private_messages');
+                $this->addRolePermission('perm_manage_scripts');
 
-                    echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
-                }
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
+                /*
+                 * if (version_compare(NELLIEL_VERSION, 'v0.9.30', '<')) {
+                 * // Update permissions and role permissions table
+                 * $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                 * $permissions_table->insertDefaults();
+                 * $role_permissions_table = new TableRolePermissions(nel_database('core'),
+                 * nel_utilities()->sqlCompatibility());
+                 * $role_permissions_table->insertDefaults();
+                 *
+                 * echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+                 * }
+                 */
 
                 // Create R9K content and mutes tables
                 $r9k_content_table = new TableR9KContent(nel_database('core'), nel_utilities()->sqlCompatibility());
@@ -1077,6 +1106,17 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Reports table updated.') . '<br>';
 
+                // Update permissions and role permissions tables
+                $permissions = ['perm_bans_view' => 'perm_view_bans', 'perm_bans_add' => 'perm_add_bans',
+                    'perm_bans_modify' => 'perm_modify_bans', 'perm_bans_delete' => 'perm_delete_bans'];
+                $permission_update = nel_database('core')->prepare(
+                    'UPDATE "nelliel_permissions" SET "permission" = :new WHERE "permission" = :old');
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaults();
+                $this->addRolePermission('perm_add_range_bans');
+
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
                 $migration_count ++;
         }
 
@@ -1248,6 +1288,25 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
             $board_configs_delete->bindValue(':name', $names[$i]);
             nel_database('core')->executePrepared($board_configs_delete);
+        }
+    }
+
+    private function addRolePermission(string $permission)
+    {
+        $role_ids = nel_database('core')->executeFetchAll('SELECT "role_id" FROM "nelliel_roles"', PDO::FETCH_COLUMN);
+        $add_role_permission = nel_database('core')->prepare(
+            'INSERT INTO "nelliel_role_permissions"
+                    ("role_id", "permission", "perm_setting") VALUES (?, ?, 0)');
+
+        foreach ($role_ids as $role_id) {
+            if (nel_database('core')->rowExists('nelliel_role_permissions', ['role_id', 'permission'],
+                [$role_id, $permission])) {
+                continue;
+            }
+
+            $add_role_permission->bindValue(1, $role_id);
+            $add_role_permission->bindValue(2, $permission);
+            nel_database('core')->executePrepared($add_role_permission);
         }
     }
 }
