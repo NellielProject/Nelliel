@@ -27,6 +27,14 @@
 			</span>
 		</div>
 		<div class="display-row">
+			<span class="display-cell" data-i18n="">Ban type:</span>
+			<span class="display-cell">
+		{{# ban_type_select }}
+				{{> menu/select }}
+		{{/ ban_type_select }}
+			</span>
+		</div>
+		<div class="display-row">
 			<span class="display-cell">
 				<label for="ban_board" data-i18n="">Apply ban to this board:</label>
 			</span>
@@ -38,7 +46,7 @@
 			<span class="display-cell">
 				<input type="hidden" name="ban_global[default]" value="0">
 				<input id="ban_global" type="checkbox" name="ban_global[value]" value="1" {{ global }}>
-				<label for="ban_global" data-i18n="">Ban from all boards. This overrides any specific boards.</label>
+				<label for="ban_global" data-i18n="">Global ban from all boards.</label>
 			</span>
 		</div>
 		<div class="display-row">
@@ -74,6 +82,13 @@
 				<textarea id="ban_reason" name="ban_reason" cols="25" rows="3">{{ ban_reason }}</textarea>
 			</span>
 		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<input type="hidden" name="allow_appeal[default]" value="0">
+				<input id="allow_appeal" type="checkbox" name="allow_appeal[value]" value="1" {{ allow_appeal }}>
+				<label for="allow_appeal" data-i18n="">Allow appeals for this ban.</label>
+			</span>
+		</div>
 {{# has_appeal }}
 		<div class="display-row">
 			<input type="hidden" name="appeal_id" value="{{ appeal_id }}">
@@ -97,28 +112,16 @@
 				<textarea id="ban-appeal-response" name="ban_appeal_response" cols="25" rows="3">{{ appeal_response }}</textarea>
 			</span>
 		</div>
+		</div>
 		<div class="display-row">
+			<span class="display-cell" data-i18n="">Appeal status:</span>
 			<span class="display-cell">
-				<input type="hidden" name="appeal_denied[default]" value="0">
-				<input id="appeal_denied" type="checkbox" name="appeal_denied[value]" value="1" {{ denied }}>
-				<label for="appeal_denied" data-i18n="">Mark appeal as denied.</label>
+		{{# appeal_status_select }}
+				{{> menu/select }}
+		{{/ appeal_status_select }}
 			</span>
 		</div>
 {{/ has_appeal }}
-		<div class="display-row">
-			<span class="display-cell">
-				<input type="hidden" name="ban_global[default]" value="0">
-				<input id="ban_global" type="checkbox" name="ban_global[value]" value="1" {{ global }}>
-				<label for="ban_global" data-i18n="">Ban from all boards. This overrides specific boards.</label>
-			</span>
-		</div>
-		<div class="display-row">
-			<span class="display-cell">
-				<input type="hidden" name="appeal_allowed[default]" value="0">
-				<input id="appeal_allowed" type="checkbox" name="appeal_allowed[value]" value="1" {{ appeal_allowed }}>
-				<label for="appeal_allowed" data-i18n="">Allow appeals. Does not affect existing appeals.</label>
-			</span>
-		</div>
 		<div class="display-row">
 			<span class="display-cell">
 				<input type="hidden" name="delete_ban[default]" value="0">

@@ -92,7 +92,6 @@ Error 131: Delete item limit. (ThreadHandler.php)
 
 Error 140: Filename purged by filter. (Utility/FileHandler.php)  
 
-Error 150: Invalid ban ID. (Snacks.php)  
 Error 151: Can't appeal range ban. (Snacks.php)  
 Error 152: IP does not match. (Snacks.php)  
 Error 153: Pending appeal. (Snacks.php)  

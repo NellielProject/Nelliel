@@ -145,8 +145,7 @@ class BansAccess
         $ban_hammers = array();
 
         foreach ($ban_ids as $ban_id) {
-            $ban_hammer = new BanHammer($this->database);
-            $ban_hammer->loadFromID($ban_id);
+            $ban_hammer = new BanHammer($this->database, (int) $ban_id);
             $ban_hammers[] = $ban_hammer;
         }
 

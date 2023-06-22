@@ -16,12 +16,9 @@ use Nelliel\BansAccess;
 
 class AdminBans extends Admin
 {
-    private $ban_hammer;
-
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->ban_hammer = new BanHammer($this->database);
         $this->data_table = NEL_BANS_TABLE;
         $this->id_column = 'ban_id';
         $this->panel_name = _gettext('Bans');
@@ -50,14 +47,15 @@ class AdminBans extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_add_bans');
-        $this->ban_hammer->collectFromPOST();
+        $ban_hammer = new BanHammer($this->database);
+        $ban_hammer->collectFromPOST();
 
-        if ($this->ban_hammer->getData('ban_type') === BansAccess::RANGE ||
-            $this->ban_hammer->getData('ban_type') === BansAccess::HASHED_SUBNET) {
+        if ($ban_hammer->getData('ban_type') === BansAccess::RANGE ||
+            $ban_hammer->getData('ban_type') === BansAccess::HASHED_SUBNET) {
             $this->verifyPermissions($this->domain, 'perm_add_range_bans');
         }
 
-        $this->ban_hammer->apply();
+        $ban_hammer->apply();
 
         if (isset($_GET['content-id'])) {
             $content_id = new ContentID($_GET['content-id']);
@@ -87,18 +85,17 @@ class AdminBans extends Admin
     public function update(string $ban_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_modify_bans');
-        $this->ban_hammer->loadFromID($ban_id);
-        $this->ban_hammer->collectFromPOST();
-        $this->ban_hammer->apply();
-        $this->ban_hammer->updateAppealFromPOST();
+        $ban_hammer = new BanHammer($this->database, (int) $ban_id);
+        $ban_hammer->collectFromPOST();
+        $ban_hammer->apply();
         $this->panel();
     }
 
     public function delete(string $ban_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_delete_bans');
-        $this->ban_hammer->loadFromID($ban_id);
-        $this->ban_hammer->delete();
+        $ban_hammer = new BanHammer($this->database, (int) $ban_id);
+        $ban_hammer->delete();
         $this->panel();
     }
 

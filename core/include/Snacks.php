@@ -61,10 +61,9 @@ class Snacks
      */
     public function banAppeal(): void
     {
-        $bawww = $_POST['bawww'] ?? null;
-        $ban_id = $_POST['ban_id'] ?? null;
+        $ban_id = intval($_POST['ban_id'] ?? 0);
 
-        if (empty($bawww) || empty($ban_id)) {
+        if ($ban_id === 0) {
             return;
         }
 
@@ -72,11 +71,7 @@ class Snacks
             nel_derp(156, __('Ban appeals are not enabled.'));
         }
 
-        $ban_hammer = new BanHammer($this->database);
-
-        if (!$ban_hammer->loadFromID($ban_id)) {
-            nel_derp(150, __('Invalid ban ID given.'));
-        }
+        $ban_hammer = new BanHammer($this->database, $ban_id);
 
         if (!$ban_hammer->getData('appeal_allowed')) {
             nel_derp(160, __('This ban cannot be appealed.'));
@@ -107,7 +102,7 @@ class Snacks
             nel_derp(153, __('There is already a pending appeal for this ban.'));
         }
 
-        $ban_hammer->addAppeal($bawww);
+        $ban_hammer->addAppeal();
     }
 
     /**

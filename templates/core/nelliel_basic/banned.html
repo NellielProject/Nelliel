@@ -40,9 +40,6 @@
 {{# not_this_ban }}
 	<p class="ban-paragraph" data-i18n="">You are not allowed to appeal this ban.</p>
 {{/ not_this_ban }}
-{{# max_appeals }}
-	<p class="ban-paragraph" data-i18n="">This ban has reached the maxmimum number of appeals.</p>
-{{/ max_appeals }}
 {{# no_ip_range }}
 	<p class="ban-paragraph" data-i18n="">This is part of a range ban. You cannot appeal it.</p>
 {{/ no_ip_range }}
@@ -55,17 +52,20 @@
 	{{/ pending }}
 	{{# previous_responded }}
 		{{# previous_denied }}
-	<p class="ban-paragraph" data-i18n="">Your last appeal was reviewed and denied.</p>
+	<p class="ban-paragraph" data-i18n="">The previous appeal was reviewed and denied.</p>
 		{{/ previous_denied }}
 		{{# previous_modified }}
-	<p class="ban-paragraph" data-i18n="">Your last appeal has been reviewed and the ban has been altered.</p>
+	<p class="ban-paragraph" data-i18n="">The previous appeal has been reviewed and the ban has been altered.</p>
 		{{/ previous_modified }}
 		{{# show_response }}
 	<p class="ban-paragraph">
-		<span class="label" data-i18n="">This is the response to your last appeal:</span>
+		<span class="label" data-i18n="">This is the response to the previous appeal:</span>
 		<b>{{ previous_response }}</b>
 	</p>
 		{{/ show_response }}
 	{{/ previous_responded }}
+	{{# max_appeals }}
+	<p class="ban-paragraph" data-i18n="">This ban has reached the maxmimum number of appeals.</p>
+	{{/ max_appeals }}
 {{/ appealed }}
 </div>
