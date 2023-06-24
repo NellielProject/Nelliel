@@ -8,24 +8,26 @@
 	<caption data-i18n="">List of bans</caption>
 	<thead>
 		<tr>
+			<th scope="col" data-i18n="">Type</th>
 			<th scope="col" data-i18n="">Target</th>
 			<th scope="col" data-i18n="">Board</th>
 			<th scope="col" data-i18n="">Reason</th>
 			<th scope="col" data-i18n="">Expiration</th>
-			<th scope="col" data-i18n="">Appealed</th>
 			<th scope="col" data-i18n="">Seen</th>
+			<th scope="col" data-i18n="">Appealed</th>
 			<th scope="col" data-i18n="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 {{# ban_list }}
 		<tr class="row1">
+			<td>{{ type }}</td>
 			<td>{{ target }}</td>
 			<td>{{ board_id }}</td>
 			<td>{{ reason }}</td>
 			<td>{{ expiration }}</td>
-			<td>{{ appealed }}</td>
 			<td>{{ seen }}</td>
+			<td>{{ appealed }}</td>
 			<td>
 	{{# can_modify }}
 				<span class="text-button">[<a href="{{ modify_url }}" data-i18n="">Modify</a>]</span>

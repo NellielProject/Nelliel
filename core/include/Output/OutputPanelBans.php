@@ -45,18 +45,22 @@ class OutputPanelBans extends Output
             switch ($ban_hammer->getData('ban_type')) {
                 case BansAccess::IP:
                     $ban_data['target'] = $ban_hammer->getData('ip_address');
+                    $ban_data['type'] = __('IP');
                     break;
 
                 case BansAccess::HASHED_IP:
                     $ban_data['target'] = $ban_hammer->getData('hashed_ip_address');
+                    $ban_data['type'] = __('IP');
                     break;
 
                 case BansAccess::RANGE:
                     $ban_data['target'] = $ban_hammer->getData('range_start') . '-' . $ban_hammer->getData('range_end');
+                    $ban_data['type'] = __('Range');
                     break;
 
                 case BansAccess::HASHED_SUBNET:
                     $ban_data['target'] = $ban_hammer->getData('hashed_subnet');
+                    $ban_data['type'] = __('Subnet');
                     break;
             }
 
