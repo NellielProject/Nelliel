@@ -25,18 +25,9 @@ class BansAccess
         $this->database = $database;
     }
 
-    public function getByID($ban_id)
+    public function getByID(int $ban_id): BanHammer
     {
-        $prepared = $this->database->prepare('SELECT * FROM "' . NEL_BANS_TABLE . '" WHERE "ban_id" = ?');
-        $ban_info = $this->database->executePreparedFetch($prepared, [$ban_id], PDO::FETCH_ASSOC);
-
-        if ($ban_info !== false) {
-            $ban_info['times'] = $this->secondsToTimeArray($ban_info['length']);
-        } else {
-            $ban_info = array();
-        }
-
-        return $ban_info;
+        return new BanHammer($this->database, $ban_id);
     }
 
     public function getForIP(string $ban_ip, string $board_id = null): array

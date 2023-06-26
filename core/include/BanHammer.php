@@ -44,13 +44,7 @@ class BanHammer
     {
         $existing_ban = $this->exists();
 
-        $ban_id = intval($_POST['ban_id'] ?? 0);
-
-        if ($ban_id <= 0) {
-            return;
-        } else {
-            $this->ban_id = $ban_id;
-        }
+        $this->ban_id = intval($_POST['ban_id'] ?? 0);
 
         if ($existing_ban) {
             $delete_ban = $_POST['delete_ban'] ?? 0;
@@ -64,15 +58,16 @@ class BanHammer
                 }
             }
         }
+
         $this->ban_data['board_id'] = utf8_strtolower($_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null);
-        $this->ban_data['seen'] = $_POST['ban_seen'] ?? $this->ban_data['seen'] ?? 0;
+        $this->ban_data['seen'] = $this->ban_data['seen'] ?? 0;
         $global = $_POST['ban_global'] ?? 0;
 
         if (is_array($global)) {
             $global = nel_form_input_default($global);
         }
 
-        if ($global > 0) {
+        if ($global > 0 || $this->ban_data['board_id'] === Domain::GLOBAL) {
             $this->ban_data['board_id'] = Domain::GLOBAL;
         } else {
             $board_domain = new DomainBoard($this->ban_data['board_id'], $this->database);
@@ -132,51 +127,31 @@ class BanHammer
             nel_derp(154, _gettext('Provided IP or hash is invalid or you selected the wrong type.'));
         }
 
-        $this->ban_data['times']['years'] = $_POST['ban_time_years'] ?? $this->ban_data['times']['years'] ?? 0;
-        $this->ban_data['times']['months'] = $_POST['ban_time_months'] ?? $this->ban_data['times']['months'] ?? 0;
-        $this->ban_data['times']['days'] = $_POST['ban_time_days'] ?? $this->ban_data['times']['days'] ?? 0;
-        $this->ban_data['times']['hours'] = $_POST['ban_time_hours'] ?? $this->ban_data['times']['hours'] ?? 0;
-        $this->ban_data['times']['minutes'] = $_POST['ban_time_minutes'] ?? $this->ban_data['times']['minutes'] ?? 0;
-        $this->ban_data['times']['seconds'] = $_POST['ban_time_seconds'] ?? $this->ban_data['times']['seconds'] ?? 0;
+        $time = $_POST['ban_length'] ?? '';
+        $length = 0;
 
-        if (empty($this->ban_data['start_time']) && !isset($_POST['ban_start_time'])) {
+        if (is_numeric($time)) {
+            $time = $time . 'seconds';
+        }
+
+        $length = nel_strtotime($time) - time();
+
+        if ($length < 1) {
+            nel_derp(150, _gettext('Invalid ban length given.'));
+        }
+
+        $this->ban_data['length'] = $length;
+
+        if (empty($this->ban_data['start_time'])) {
             $this->ban_data['start_time'] = time();
-        } else {
-            $this->ban_data['start_time'] = $_POST['ban_start_time'] ?? $this->ban_data['start_time'];
         }
 
         $this->ban_data['reason'] = $_POST['ban_reason'] ?? $this->ban_data['reason'] ?? null;
-
-        if (empty($this->ban_data['start_time']) && !isset($_POST['ban_start_time'])) {
-            $this->ban_data['start_time'] = time();
-        } else {
-            $this->ban_data['start_time'] = $_POST['ban_start_time'] ?? $this->ban_data['start_time'];
-        }
-
-        $this->ban_data['length'] = $this->timeArrayToSeconds($this->ban_data['times']);
         $this->ban_data['appeal_allowed'] = $_POST['appeal_allowed'] ?? 0;
 
         if (is_array($this->ban_data['appeal_allowed'])) {
             $this->ban_data['appeal_allowed'] = nel_form_input_default($this->ban_data['appeal_allowed']);
         }
-    }
-
-    private function secondsToTimeArray($seconds)
-    {
-        $time = array();
-        $time['years'] = floor($seconds / 31536000);
-        $time['months'] = floor(($seconds % 31536000) / 2592000);
-        $time['days'] = floor((($seconds % 31536000) % 2592000) / 86400);
-        $time['hours'] = floor(((($seconds % 31536000) % 2592000) % 86400) / 3600);
-        $time['minutes'] = floor((((($seconds % 31536000) % 2592000) % 86400) % 3600) / 60);
-        $time['seconds'] = $seconds % 60;
-        return $time;
-    }
-
-    private function timeArrayToSeconds(array $time)
-    {
-        return ($time['years'] * 31536000) + ($time['months'] * 2592000) + ($time['days'] * 86400) +
-            ($time['hours'] * 3600) + ($time['minutes'] * 60) + $time['seconds'];
     }
 
     public function timeToExpiration()
@@ -217,7 +192,7 @@ class BanHammer
             $this->ban_data['length'] = intval($ban_data['length']);
             $this->ban_data['seen'] = intval($ban_data['seen']);
             $this->ban_data['appeal_allowed'] = intval($ban_data['appeal_allowed']);
-            $this->ban_data['times'] = $this->secondsToTimeArray($ban_data['length']);
+            $this->ban_data['times'] = intval($ban_data['length']);
 
             $prepared = $this->database->prepare(
                 'SELECT "appeal_id" FROM "' . NEL_BAN_APPEALS_TABLE . '" WHERE "ban_id" = ?');
@@ -246,8 +221,8 @@ class BanHammer
                 '" SET "board_id" = ?, "ban_type" = ?, "creator" = ?,
                  "ip_address" = ?, "hashed_ip_address" = ?, "hashed_subnet" = ?, "range_start" = ?, "range_end" = ?,
                  "reason" = ?, "start_time" = ?, "length" = ?, "seen" = ?, "appeal_allowed" = ? WHERE "ban_id" = ?');
+            $prepared->bindValue(14, $this->ban_id, PDO::PARAM_INT);
         } else {
-            $prepared->bindValue(14, $this->ban_data['ban_id'], PDO::PARAM_INT);
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_BANS_TABLE .
                 '" ("board_id", "ban_type", "creator", "ip_address", "hashed_ip_address", "hashed_subnet", "range_start",

@@ -50,28 +50,16 @@
 			</span>
 		</div>
 		<div class="display-row">
-			<span class="display-cell" data-i18n="">Ban length:</span>
 			<span class="display-cell">
-				<label for="ban_time_years" data-i18n="">Years</label>
-				<input id="ban_time_years" type="number" name="ban_time_years" size="6" value="{{ years }}">&nbsp;&nbsp;&nbsp;
-				<label for="ban_time_days" data-i18n="">Days</label>
-				<input id="ban_time_days" type="number" name="ban_time_days" size="6" value="{{ days }}">&nbsp;&nbsp;&nbsp;
+				<label for="ban_length" data-i18n="">Ban length:</label>
 			</span>
-		</div>
-		<div class="display-row">
-			<span class="display-cell"></span>
 			<span class="display-cell">
-				<label for="ban_time_hours" data-i18n="">Hours</label>
-				<input id="ban_time_hours"  type="number" name="ban_time_hours" size="6" value="{{ hours }}">&nbsp;&nbsp;&nbsp;
-				<label for="ban_time_minutes" data-i18n="">Minutes</label>
-				<input id="ban_time_minutes"  type="number" name="ban_time_minutes" size="6" value="{{ minutes }}">&nbsp;&nbsp;&nbsp;
+				<input id="ban_length" type="text" name="ban_length" value="{{ ban_length }}">
 			</span>
 		</div>
 		<div class="display-row">
 			<span class="display-cell">
 				<input type="hidden" name="ban_id" value="{{ ban_id }}">
-				<input id="ban-start-field" type="hidden" name="ban_start_time" value="{{ start_time }}">
-				<input type="hidden" name="ban_seen" value="{{ seen }}">
 			</span>
 		</div>
 		<div class="display-row">

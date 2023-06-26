@@ -259,3 +259,16 @@ function nel_is_unhashed_ip(string $ip): bool
         return false;
     }
 }
+
+function nel_strtotime(string $time): int
+{
+    $time = preg_replace('/(\d+)\s?ye?a?r?s?/', '$1years', $time);
+    $time = preg_replace('/(\d+)\s?mont?h?s?/', '$1months', $time);
+    $time = preg_replace('/(\d+)\s?we?e?k?s?/', '$1weeks', $time);
+    $time = preg_replace('/(\d+)\s?da?y?s?/', '$1days', $time);
+    $time = preg_replace('/(\d+)\s?ho?u?r?s?/', '$1hours', $time);
+    $time = preg_replace('/(\d+)\s?m[^o]i?n?u?t?e?s?/', '$1minutes', $time);
+    $time = preg_replace('/(\d+)\s?se?c?o?n?d?s/', '$1seconds', $time);
+
+    return intval(strtotime($time));
+}
