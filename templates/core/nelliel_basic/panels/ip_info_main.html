@@ -1,5 +1,27 @@
+{{# has_data }}
+	{{# can_view_unhashed }}
+<div>
+	<span data-i18n="">IP:</span>
+	<span>{{ ip_address }}</span>
+</div>
+	{{/ can_view_unhashed }}
+<div>
+	<span data-i18n="">Hash:</span>
+	<span>{{ hashed_ip_address }}</span>
+</div>
+<div>
+	<span data-i18n="">Last activity:</span>
+	<span>{{ last_activity }}</span>
+</div>
+{{/ has_data }}
+{{^ has_data }}
+<p>
+	<span data-i18n="">No activity or info available for:</span> {{ access_id }}
+</p>
+{{/ has_data }}
+<hr>
 <table >
-	<caption>{{ ip_id }}</caption>
+	<caption>{{ access_id }}</caption>
 	<thead>
 		<tr>
 			<th scope="col" data-i18n="">Username</th>
@@ -27,8 +49,9 @@
 <form accept-charset="utf-8" action="{{ notes_form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="hash_type" class="display-cell" data-i18n="">Notes</label>
-			<input id="hash_type" class="display-cell" type="text" name="notes" size="30" value="{{ notes }}">
+			<label for="notes" class="display-cell" data-i18n="">Notes</label>
+			<input id="notes" class="display-cell" type="text" name="notes" size="30" value="{{ notes }}">
+			<input type="hidden" name="ip_address" value="{{ access_id }}">
 		</div>
 		<div class="display-row">
 			<input type="submit" value="Add Note" data-i18n-attributes="value">

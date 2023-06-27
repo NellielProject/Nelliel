@@ -214,10 +214,10 @@ Error 432: perm_noticeboard_delete (Admin/AdminNoticeboard.php)
 
 Error 435: perm_manage_scripts (Admin/AdminScripts.php)  
 
-Error 440: perm_view_ip_info (Dispatch/DispatchIPInfo.php)  
-
-Error 445: perm_add_ip_notes (Admin/AdminIPNotes.php)  
-Error 446: perm_delete_ip_notes (Admin/AdminIPNotes.php)  
+Error 440: perm_view_unhashed_ip (Dispatch/DispatchIPInfo.php)  
+Error 441: perm_view_ip_info (Dispatch/DispatchIPInfo.php)  
+Error 442: perm_add_ip_notes (Dispatch/DispatchIPInfo.php)  
+Error 443: perm_delete_ip_notes (Dispatch/DispatchIPInfo.php)  
 
 Error 500: perm_regen_pages (site) (Dispatch/DispatchRegen.php)  
 Error 501: perm_regen_cache (site) (Dispatch/DispatchRegen.php)  
