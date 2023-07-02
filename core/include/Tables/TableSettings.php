@@ -131,6 +131,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_top_styles', '1', 'Show styles menu in the header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_bottom_styles', '0', 'Show styles menu in the footer.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'error_message_header', 'oh god how did this get here', 'Title shown for error messages.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_error_images', '1', 'Show images on error page.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'error_image_set', 'images-nelliel-basic', 'Error page image set.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'error_image_max_size', '350', 'Maximum dimensions for error page images.', '{"type":"number"}']);
 
         // Uploads
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', 'GD', 'Preferred graphics handler', '{"type":"select"}']);

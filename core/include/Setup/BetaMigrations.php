@@ -29,6 +29,7 @@ use Nelliel\Tables\TableThreads;
 use Nelliel\Tables\TableUploads;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Tables\TableIPNotes;
 
 class BetaMigrations
 {
@@ -801,7 +802,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 // Update site settings
                 $new_site_settings = ['error_message_header', 'ipv6_identification_cidr', 'ipv4_small_subnet_cidr',
-                    'ipv4_large_subnet_cidr', 'ipv6_small_subnet_cidr', 'ipv6_large_subnet_cidr'];
+                    'ipv4_large_subnet_cidr', 'ipv6_small_subnet_cidr', 'ipv6_large_subnet_cidr', 'error_image_set',
+                    'error_image_max_size', 'show_error_images'];
                 $this->newSiteSettings($new_site_settings);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
@@ -1116,6 +1118,21 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $this->addRolePermission('perm_add_range_bans');
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
+                // Update IP notes table
+                nel_database('core')->exec('DROP TABLE "ip_notes"'); // Simplest because we never used it before
+                $ip_notes_table = new TableIPNotes(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $ip_notes_table->createTable();
+
+                echo ' - ' . __('IP notes table updated.') . '<br>';
+
+                // Update core image set info
+                $image_set_instance = nel_site_domain()->frontEndData()->getImageSet('images-nelliel-basic');
+                $enabled = $image_set_instance->enabled();
+                $image_set_instance->install(true);
+                $image_set_instance->enable($enabled);
+
+                echo ' - ' . __('Image set info updated.') . '<br>';
 
                 $migration_count ++;
         }

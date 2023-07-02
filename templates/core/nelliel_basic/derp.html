@@ -6,6 +6,11 @@
 	</div>
 	<p>{{ error_message }}</p>
 	<p>{{ error_data }}</p>
+{{# show_image }}
+	<div>
+		<img src="{{ image_url }}" alt="{{ image_alt }}" style="max-width: {{ image_max_size }}px; max-height: {{ image_max_size }}px;">
+	</div>
+{{/ show_image }}
 {{# show_return_link }}
 	<p>
 		{{> pieces/return_link }}

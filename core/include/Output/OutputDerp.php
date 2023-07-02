@@ -54,6 +54,17 @@ class OutputDerp extends Output
             $this->render_data['show_return_link'] = true;
         }
 
+        $image_set = $this->domain->frontEndData()->getImageSet($this->site_domain->setting('error_image_set'));
+        $web_path = $image_set->getWebPath('error', strval($diagnostic['error_id']), true);
+
+        if ($web_path === '') {
+            $web_path = $image_set->getWebPath('error', 'default', true);
+        }
+
+        $this->render_data['show_image'] = $this->site_domain->setting('show_error_images');
+        $this->render_data['image_url'] = $web_path;
+        $this->render_data['image_alt'] = sprintf(__('Error %s image'), $diagnostic['error_id']);
+        $this->render_data['image_max_size'] = $this->site_domain->setting('error_image_max_size');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->general([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

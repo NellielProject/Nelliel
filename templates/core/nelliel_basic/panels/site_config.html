@@ -237,6 +237,15 @@
 	{{# error_message_header }}
 			{{> panels/pieces/settings/text }}
 	{{/ error_message_header }}
+	{{# show_error_images }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_error_images }}
+	{{# error_image_set }}
+			{{> panels/pieces/settings/select }}
+	{{/ error_image_set }}
+	{{# error_image_max_size }}
+			{{> panels/pieces/settings/number }}
+	{{/ error_image_max_size }}
 		</tbody>
 		<tbody>
 			<tr>
