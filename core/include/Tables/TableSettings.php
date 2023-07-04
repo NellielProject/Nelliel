@@ -143,7 +143,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphicsmagick_animated_args', '%s -auto-orient -coalesce -thumbnail %dx%d %s', 'Arguments given to GraphicsMagick for creating animated previews.', '{"type":"text"}']);
 
         // Hashing and Security
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'post_password_algorithm', 'sha256', 'Post password hash algorithm.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'secure_tripcode_algorithm', 'sha256', 'Secure tripcode hash algorithm.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'do_password_rehash', '0', 'Rehash account passwords.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'login_delay', '3', 'Delay between login attempts.', '{"type":"number"}']);

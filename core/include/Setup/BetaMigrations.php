@@ -806,6 +806,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     'error_image_max_size', 'show_error_images'];
                 $this->newSiteSettings($new_site_settings);
 
+                $removed_site_settings = ['post_password_algorithm'];
+                $this->removeSiteSettings($removed_site_settings);
+
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
                 // Update board settings
