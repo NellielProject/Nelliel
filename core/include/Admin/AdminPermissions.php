@@ -64,7 +64,7 @@ class AdminPermissions extends Admin
 
         switch ($perm) {
             case 'perm_manage_permissions':
-                nel_derp(365, _gettext('You are not allowed to manage permissions.'));
+                nel_derp(365, _gettext('You are not allowed to manage permissions.'), 403);
                 break;
 
             default:

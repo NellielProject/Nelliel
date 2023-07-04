@@ -54,7 +54,7 @@ abstract class Admin
 
     protected function defaultPermissionError()
     {
-        nel_derp(300, _gettext('You do not have permission for that.'));
+        nel_derp(300, _gettext('You do not have permission for that.'), 403);
     }
 }
 

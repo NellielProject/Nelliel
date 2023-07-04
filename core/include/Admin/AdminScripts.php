@@ -88,7 +88,7 @@ class AdminScripts extends Admin
 
         switch ($perm) {
             case 'perm_manage_scripts':
-                nel_derp(435, _gettext('You are not allowed to manage scripts.'));
+                nel_derp(435, _gettext('You are not allowed to manage scripts.'), 403);
                 break;
 
             default:

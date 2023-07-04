@@ -20,7 +20,7 @@ function nel_early_derp(int $error_id, string $error_message, array $context = a
     die();
 }
 
-function nel_derp(int $error_id, string $error_message, array $context = array())
+function nel_derp(int $error_id, string $error_message, int $response_code = 0, array $context = array())
 {
     static $already_derping;
 
@@ -44,8 +44,8 @@ function nel_derp(int $error_id, string $error_message, array $context = array()
     $diagnostic['error_message'] = (!empty($error_message)) ? $error_message : __("I just don't know what went wrong!");
 
     if (!empty($context)) {
-        $diagnostic['bad_filename'] = (isset($context['bad_filename'])) ? $context['bad_filename'] : null;
-        $remove_files = isset($context['remove_files']) && $context['remove_files'] === true;
+        $diagnostic['bad_filename'] = $context['bad_filename'] ?? null;
+        $remove_files = boolval($context['remove_files'] ?? false);
 
         if ($remove_files && isset($context['files'])) {
             foreach ($context['files'] as $file) {
@@ -62,6 +62,8 @@ function nel_derp(int $error_id, string $error_message, array $context = array()
 
     $output_derp = new OutputDerp($domain, false);
     $parameters = ['context' => $context, 'diagnostic' => $diagnostic];
+    $response_code = $response_code !== 0 ? $response_code : http_response_code();
+    http_response_code($response_code);
     echo $output_derp->render($parameters, false);
 
     nel_clean_exit();

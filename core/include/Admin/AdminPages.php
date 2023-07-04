@@ -123,7 +123,7 @@ class AdminPages extends Admin
 
         switch ($perm) {
             case 'perm_manage_pages':
-                nel_derp(360, _gettext('You are not allowed to manage static pages.'));
+                nel_derp(360, _gettext('You are not allowed to manage static pages.'), 403);
                 break;
 
             default:

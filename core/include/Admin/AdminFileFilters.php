@@ -115,7 +115,7 @@ class AdminFileFilters extends Admin
 
         switch ($perm) {
             case 'perm_manage_file_filters':
-                nel_derp(340, _gettext('You are not allowed to manage file filters.'));
+                nel_derp(340, _gettext('You are not allowed to manage file filters.'), 403);
                 break;
 
             default:

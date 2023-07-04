@@ -33,7 +33,8 @@ class PostData
     {
         if (!isset($_POST['new_post'])) {
             nel_derp(40,
-                "No POST data was received. The request may have been too big or server settings need to be adjusted.");
+                __(
+                    'No POST data was received. The request may have been too big or server settings need to be adjusted.'));
         }
 
         $post->changeData('parent_thread', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));

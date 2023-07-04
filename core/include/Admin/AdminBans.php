@@ -107,23 +107,23 @@ class AdminBans extends Admin
 
         switch ($perm) {
             case 'perm_view_bans':
-                nel_derp(310, sprintf(_gettext('You do not have access to the %s control panel.'), $this->panel_name));
+                nel_derp(310, sprintf(_gettext('You do not have access to the %s control panel.'), $this->panel_name), 403);
                 break;
 
             case 'perm_add_bans':
-                nel_derp(311, _gettext('You cannot add new bans.'));
+                nel_derp(311, _gettext('You cannot add new bans.'), 403);
                 break;
 
             case 'perm_modify_bans':
-                nel_derp(312, _gettext('You cannot modify existing bans.'));
+                nel_derp(312, _gettext('You cannot modify existing bans.'), 403);
                 break;
 
             case 'perm_delete_bans':
-                nel_derp(313, _gettext('You cannot delete existing bans.'));
+                nel_derp(313, _gettext('You cannot delete existing bans.'), 403);
                 break;
 
             case 'perm_add_range_bans':
-                nel_derp(314, _gettext('You cannot add new range bans.'));
+                nel_derp(314, _gettext('You cannot add new range bans.'), 403);
                 break;
 
             default:

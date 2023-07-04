@@ -53,12 +53,12 @@ class Login
 
         if (empty($form_username)) {
             $rate_limit->updateAttempts($ip_info->getInfo('hashed_ip_address'), 'login');
-            nel_derp(200, _gettext('No user ID provided.'), $error_context);
+            nel_derp(200, _gettext('No user ID provided.'), 401, $error_context);
         }
 
         if (empty($form_password)) {
             $rate_limit->updateAttempts($ip_info->getInfo('hashed_ip_address'), 'login');
-            nel_derp(201, _gettext('No password provided.'), $error_context);
+            nel_derp(201, _gettext('No password provided.'), 401, $error_context);
         }
 
         $user = $this->authorization->getUser($form_username);
@@ -77,7 +77,7 @@ class Login
 
         if (!$valid_user || !$valid_password) {
             $rate_limit->updateAttempts($ip_info->getInfo('hashed_ip_address'), 'login');
-            nel_derp(202, _gettext('Username or password is incorrect.'), $error_context);
+            nel_derp(202, _gettext('Username or password is incorrect.'), 401, $error_context);
         }
 
         $rate_limit->clearAttempts($ip_info->getInfo('hashed_ip_address'), 'login', true);

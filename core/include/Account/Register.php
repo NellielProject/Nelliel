@@ -53,11 +53,11 @@ class Register
         }
 
         if (empty($register_username)) {
-            nel_derp(210, _gettext('No user ID provided.'));
+            nel_derp(210, _gettext('No user ID provided.'), 401);
         }
 
         if (empty($register_password)) {
-            nel_derp(211, _gettext('No password provided.'));
+            nel_derp(211, _gettext('No password provided.'), 401);
         }
 
         if ($this->authorization->userExists($register_username)) {
@@ -65,7 +65,7 @@ class Register
         }
 
         if (!hash_equals($register_password, $register_password_confirm)) {
-            nel_derp(213, _gettext('Passwords do not match.'));
+            nel_derp(213, _gettext('Passwords do not match.'), 401);
         }
 
         $new_user = $this->authorization->getUser($register_username);

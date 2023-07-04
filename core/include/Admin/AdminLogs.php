@@ -56,11 +56,11 @@ class AdminLogs extends Admin
 
         switch ($perm) {
             case 'perm_view_public_logs':
-                nel_derp(355, _gettext('You are not allowed to view the public logs.'));
+                nel_derp(355, _gettext('You are not allowed to view the public logs.'), 403);
                 break;
 
             case 'perm_view_system_logs':
-                nel_derp(356, _gettext('You are not allowed to view the system logs.'));
+                nel_derp(356, _gettext('You are not allowed to view the system logs.'), 403);
                 break;
 
             default:

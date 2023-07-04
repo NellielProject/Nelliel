@@ -75,7 +75,7 @@ class Language
         int $default_category)
     {
         if (!$user->checkPermission($domain, 'perm_extract_gettext')) {
-            nel_derp(510, _gettext('You are not allowed to extract the gettext strings.'));
+            nel_derp(510, _gettext('You are not allowed to extract the gettext strings.'), 403);
         }
 
         $extractor = new LanguageExtractor($domain, self::$gettext);

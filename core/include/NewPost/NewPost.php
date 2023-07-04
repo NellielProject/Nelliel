@@ -48,7 +48,7 @@ class NewPost
 
         if ($this->domain->reference('locked') &&
             !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_board')) {
-            nel_derp(11, _gettext('Board is locked. Cannot make new post.'), $error_data);
+            nel_derp(11, _gettext('Board is locked. Cannot make new post.'), 403, $error_data);
         }
 
         $authorization = new Authorization($this->database);
@@ -67,12 +67,12 @@ class NewPost
 
         if (!$spoon) {
             if (!$post->data('comment')) {
-                nel_derp(9, _gettext('Post contains zero content. What was the point of this?'), $error_data);
+                nel_derp(9, _gettext('Post contains zero content. What was the point of this?'), 0, $error_data);
             }
         }
 
         if (utf8_strlen($post->data('comment')) > $this->domain->setting('max_comment_length')) {
-            nel_derp(10, _gettext('Post is too long. Try looking up the word concise.'), $error_data);
+            nel_derp(10, _gettext('Post is too long. Try looking up the word concise.'), 0, $error_data);
         }
 
         if (!is_null($post->data('password'))) {
@@ -188,7 +188,7 @@ class NewPost
         $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if ($renzoku !== false && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
-            nel_derp(3, _gettext("Flood detected! You're posting too fast, slow down."), $error_data);
+            nel_derp(3, _gettext("Flood detected! You're posting too fast, slow down."), 0, $error_data);
         }
 
         $prepared = $this->database->prepare(
@@ -199,7 +199,7 @@ class NewPost
         $upload_renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
         if ($upload_renzoku !== false && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
-            nel_derp(57, _gettext("Flood detected! You're making posts with uploads too fast."), $error_data);
+            nel_derp(57, _gettext("Flood detected! You're making posts with uploads too fast."), 0, $error_data);
         }
 
         if ($post->data('parent_thread') != 0) {
@@ -211,24 +211,24 @@ class NewPost
             if (!empty($thread_info)) {
                 if ($thread_info['locked'] == 1 &&
                     !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_thread')) {
-                    nel_derp(4, _gettext('This thread is locked, you cannot post in it.'), $error_data);
+                    nel_derp(4, _gettext('This thread is locked, you cannot post in it.'), 0, $error_data);
                 }
 
                 if ($thread_info['old'] != 0) {
-                    nel_derp(5, _gettext('The thread you tried posting in is currently inaccessible or archived.'),
+                    nel_derp(5, _gettext('The thread you tried posting in is currently inaccessible or archived.'), 0,
                         $error_data);
                 }
             } else {
-                nel_derp(6, _gettext('The thread you tried posting in could not be found.'), $error_data);
+                nel_derp(6, _gettext('The thread you tried posting in could not be found.'), 404, $error_data);
             }
 
             if ($this->domain->setting('limit_post_count') && $thread_info['cyclic'] != 1 &&
                 $thread_info['post_count'] >= $this->domain->setting('max_posts')) {
-                nel_derp(7, _gettext('The thread has reached maximum posts.'), $error_data);
+                nel_derp(7, _gettext('The thread has reached maximum posts.'), 0, $error_data);
             }
 
             if ($thread_info['old'] != 0) {
-                nel_derp(8, _gettext('The thread is archived or buffered and cannot be posted to.'), $error_data);
+                nel_derp(8, _gettext('The thread is archived or buffered and cannot be posted to.'), 0, $error_data);
             }
         } else {
             if ($this->domain->setting('threads_per_hour_limit') > 0 &&
@@ -240,7 +240,7 @@ class NewPost
                 $thread_count = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
                 if ($thread_count >= $this->domain->setting('threads_per_hour_limit')) {
-                    nel_derp(37, _gettext('The maximum threads per hour has been reached.'), $error_data);
+                    nel_derp(37, _gettext('The maximum threads per hour has been reached.'), 0, $error_data);
                 }
             }
         }

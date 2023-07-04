@@ -63,11 +63,11 @@ class AdminReports extends Admin
         switch ($perm)
         {
             case 'perm_view_reports':
-                nel_derp(370, _gettext('You are not allowed to view reports.'));
+                nel_derp(370, _gettext('You are not allowed to view reports.'), 403);
                 break;
 
             case 'perm_dismiss_reports':
-                nel_derp(371, _gettext('You are not allowed to dismiss reports.'));
+                nel_derp(371, _gettext('You are not allowed to dismiss reports.'), 403);
                 break;
 
             default:

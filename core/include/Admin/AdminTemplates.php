@@ -66,7 +66,7 @@ class AdminTemplates extends Admin
 
         switch ($perm) {
             case 'perm_manage_templates':
-                nel_derp(390, _gettext('You are not allowed to manage templates.'));
+                nel_derp(390, _gettext('You are not allowed to manage templates.'), 403);
                 break;
 
             default:

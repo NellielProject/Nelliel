@@ -95,11 +95,11 @@ class AdminUsers extends Admin
 
         switch ($perm) {
             case 'perm_view_users':
-                nel_derp(395, _gettext('You are not allowed to view users.'));
+                nel_derp(395, _gettext('You are not allowed to view users.'), 403);
                 break;
 
             case 'perm_manage_users':
-                nel_derp(396, _gettext('You are not allowed to manage users.'));
+                nel_derp(396, _gettext('You are not allowed to manage users.'), 403);
                 break;
 
             default:

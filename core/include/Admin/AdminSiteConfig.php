@@ -100,7 +100,7 @@ class AdminSiteConfig extends Admin
 
         switch ($perm) {
             case 'perm_modify_site_config':
-                nel_derp(380, _gettext('You are not allowed to modify the site configuration.'));
+                nel_derp(380, _gettext('You are not allowed to modify the site configuration.'), 403);
                 break;
 
             default:

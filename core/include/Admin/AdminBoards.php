@@ -223,19 +223,19 @@ class AdminBoards extends Admin
 
         switch ($perm) {
             case 'perm_boards_view':
-                nel_derp(325, sprintf(_gettext('You do not have access to the %s control panel.'), $this->panel_name));
+                nel_derp(325, sprintf(_gettext('You do not have access to the %s control panel.'), $this->panel_name), 403);
                 break;
 
             case 'perm_boards_add':
-                nel_derp(311, _gettext('You cannot add new boards.'));
+                nel_derp(311, _gettext('You cannot add new boards.'), 403);
                 break;
 
             case 'perm_boards_modify':
-                nel_derp(312, _gettext('You cannot modify existing boards.'));
+                nel_derp(312, _gettext('You cannot modify existing boards.'), 403);
                 break;
 
             case 'perm_boards_delete':
-                nel_derp(313, _gettext('You cannot delete existing boards.'));
+                nel_derp(313, _gettext('You cannot delete existing boards.'), 403);
                 break;
 
             default:

@@ -90,7 +90,7 @@ class AdminMarkup extends Admin
 
         switch ($perm) {
             case 'perm_markup_manage':
-                nel_derp(0, _gettext('You are not allowed to manage markup.'));
+                nel_derp(0, _gettext('You are not allowed to manage markup.'), 403);
                 break;
 
             default:

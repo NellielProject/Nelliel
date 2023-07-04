@@ -31,13 +31,13 @@ class DispatchIPInfo extends Dispatch
         $forward_url = false;
 
         if (nel_is_unhashed_ip($ip) && !$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
-            nel_derp(440, _gettext('You cannot access info for unhashed IPs.'));
+            nel_derp(440, _gettext('You cannot access info for unhashed IPs.'), 403);
         }
 
         switch ($inputs['section']) {
             case 'view':
                 if (!$this->session->user()->checkPermission($this->domain, 'perm_view_ip_info')) {
-                    nel_derp(441, _gettext('You are not allowed to view IP info.'));
+                    nel_derp(441, _gettext('You are not allowed to view IP info.'), 403);
                 }
 
                 $output_panel = new OutputPanelIPInfo($this->domain, false);
@@ -46,7 +46,7 @@ class DispatchIPInfo extends Dispatch
 
             case 'add-note':
                 if (!$this->session->user()->checkPermission($this->domain, 'perm_add_ip_notes')) {
-                    nel_derp(442, _gettext('You are not allowed to add IP notes.'));
+                    nel_derp(442, _gettext('You are not allowed to add IP notes.'), 403);
                 }
 
                 $ip_address = $_POST['ip_address'] ?? '';
@@ -58,7 +58,7 @@ class DispatchIPInfo extends Dispatch
 
             case 'delete-note':
                 if (!$this->session->user()->checkPermission($this->domain, 'perm_delete_ip_notes')) {
-                    nel_derp(443, _gettext('You are not allowed to delete IP notes.'));
+                    nel_derp(443, _gettext('You are not allowed to delete IP notes.'), 403);
                 }
 
                 $ip_note = new IPNote($this->domain->database(), $note_id);

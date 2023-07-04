@@ -118,7 +118,7 @@ class AdminWordfilters extends Admin
 
         switch ($perm) {
             case 'perm_manage_wordfilters':
-                nel_derp(400, _gettext('You are not allowed to manage wordfilters.'));
+                nel_derp(400, _gettext('You are not allowed to manage wordfilters.'), 403);
                 break;
 
             default:

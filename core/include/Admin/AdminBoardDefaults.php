@@ -156,7 +156,7 @@ class AdminBoardDefaults extends Admin
 
         switch ($perm) {
             case 'perm_modify_board_defaults':
-                nel_derp(320, _gettext('You are not allowed to modify the default board configuration.'));
+                nel_derp(320, _gettext('You are not allowed to modify the default board configuration.'), 403);
                 break;
 
             default:
