@@ -69,6 +69,19 @@ class NewPost
             if (!$post->data('comment')) {
                 nel_derp(9, _gettext('Post contains zero content. What was the point of this?'), 0, $error_data);
             }
+        } else {
+            $renzoku_setting = $time['time'] - $this->domain->setting('upload_renzoku');
+            $prepared = $this->database->prepare(
+                'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "post_time" > ? AND "hashed_ip_address" = ? AND "total_uploads" > 0 LIMIT 1');
+            $prepared->bindValue(1, $renzoku_setting, PDO::PARAM_INT);
+            $prepared->bindValue(2, nel_request_ip_address(true), PDO::PARAM_STR);
+            $upload_renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+            if ($upload_renzoku !== false &&
+                !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
+                nel_derp(57, _gettext("Flood detected! You're making posts with uploads too fast."), 0, $error_data);
+            }
         }
 
         if (utf8_strlen($post->data('comment')) > $this->domain->setting('max_comment_length')) {
@@ -189,17 +202,6 @@ class NewPost
 
         if ($renzoku !== false && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
             nel_derp(3, _gettext("Flood detected! You're posting too fast, slow down."), 0, $error_data);
-        }
-
-        $prepared = $this->database->prepare(
-            'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
-            '" WHERE "post_time" > ? AND "hashed_ip_address" = ? AND "total_uploads" > 0 LIMIT 1');
-        $prepared->bindValue(1, $time - $this->domain->setting('upload_renzoku'), PDO::PARAM_INT);
-        $prepared->bindValue(2, nel_request_ip_address(true), PDO::PARAM_STR);
-        $upload_renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
-
-        if ($upload_renzoku !== false && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
-            nel_derp(57, _gettext("Flood detected! You're making posts with uploads too fast."), 0, $error_data);
         }
 
         if ($post->data('parent_thread') != 0) {
