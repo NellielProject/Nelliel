@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
+use Nelliel\GlobalRecents;
 use Nelliel\Moar;
 use Nelliel\API\JSON\PostJSON;
 use Nelliel\Account\Session;
@@ -29,6 +30,7 @@ class Post
     protected $parent = null;
     protected $json;
     protected $sql_helpers;
+    protected $global_recents;
 
     function __construct(ContentID $content_id, Domain $domain, bool $load = true)
     {
@@ -41,6 +43,7 @@ class Post
         $this->main_table->tableName($domain->reference('posts_table'));
         $this->json = new PostJSON($this);
         $this->sql_helpers = nel_utilities()->sqlHelpers();
+        $this->global_recents = new GlobalRecents($this->database);
 
         if ($load) {
             $this->loadFromDatabase(true);
@@ -153,6 +156,7 @@ class Post
 
         $this->deleteFromDatabase($parent_delete);
         $this->deleteFromDisk($parent_delete);
+        $this->global_recents->removePost($this);
         $this->domain->updateStatistics();
 
         if (!$parent_delete) {

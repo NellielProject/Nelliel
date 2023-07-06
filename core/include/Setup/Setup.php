@@ -63,6 +63,7 @@ use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
 use Nelliel\Tables\TableIPInfo;
+use Nelliel\Tables\TableGlobalRecents;
 
 class Setup
 {
@@ -295,6 +296,8 @@ class Setup
         $statistics_table->createTable();
         $scripts_table = new TableScripts($this->database, $this->sql_compatibility);
         $scripts_table->createTable();
+        $global_recents_table = new TableGlobalRecents($this->database, $this->sql_compatibility);
+        $global_recents_table->createTable();
 
         // The following tables rely on the settings table
         $settings_table = new TableSettings($this->database, $this->sql_compatibility);

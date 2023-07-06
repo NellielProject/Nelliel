@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
 use Nelliel\FGSFDS;
+use Nelliel\GlobalRecents;
 use Nelliel\Overboard;
 use Nelliel\Regen;
 use Nelliel\Account\Session;
@@ -163,6 +164,8 @@ class NewPost
 
         $update_overboard = new Overboard($this->database);
         $update_overboard->addThread($thread);
+        $update_global_recents = new GlobalRecents($this->database);
+        $update_global_recents->addPost($post);
         $this->domain->updateStatistics();
 
         // Generate thread page if it doesn't exist, otherwise update

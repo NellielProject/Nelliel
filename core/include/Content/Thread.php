@@ -146,9 +146,9 @@ class Thread
 
         $this->deleteFromDatabase($parent_delete);
         $this->deleteFromDisk($parent_delete);
+        $this->overboard->removeThread($this);
         $this->domain->updateStatistics();
         $this->archive_prune->updateThreads();
-        $this->overboard->removeThread($this);
         return true;
     }
 

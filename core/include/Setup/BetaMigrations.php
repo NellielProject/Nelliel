@@ -5,11 +5,14 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\GlobalRecents;
 use Nelliel\Overboard;
 use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBans;
 use Nelliel\Tables\TableBoardDefaults;
+use Nelliel\Tables\TableGlobalRecents;
 use Nelliel\Tables\TableIPInfo;
+use Nelliel\Tables\TableIPNotes;
 use Nelliel\Tables\TableLogs;
 use Nelliel\Tables\TableMarkup;
 use Nelliel\Tables\TableNews;
@@ -29,7 +32,6 @@ use Nelliel\Tables\TableThreads;
 use Nelliel\Tables\TableUploads;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TableIPNotes;
 
 class BetaMigrations
 {
@@ -803,7 +805,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 // Update site settings
                 $new_site_settings = ['error_message_header', 'ipv6_identification_cidr', 'ipv4_small_subnet_cidr',
                     'ipv4_large_subnet_cidr', 'ipv6_small_subnet_cidr', 'ipv6_large_subnet_cidr', 'error_image_set',
-                    'error_image_max_size', 'show_error_images'];
+                    'error_image_max_size', 'show_error_images', 'max_recent_posts'];
                 $this->newSiteSettings($new_site_settings);
 
                 $removed_site_settings = ['post_password_algorithm'];
@@ -1145,6 +1147,14 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $overboard->rebuild();
 
                 echo ' - ' . __('Overboard table updated.') . '<br>';
+
+                // Add global recents table
+                $global_recents_table = new TableGlobalRecents(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $global_recents_table->createTable();
+                $global_recents = new GlobalRecents(nel_database('core'));
+                $global_recents->rebuild();
+
+                echo ' - ' . __('Global recents table added.') . '<br>';
 
                 $migration_count ++;
         }

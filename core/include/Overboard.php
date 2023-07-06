@@ -67,7 +67,7 @@ class Overboard
         $prepared = $this->database->prepare(
             'INSERT INTO "' . NEL_OVERBOARD_TABLE .
             '" ("overboard_id", "thread_id", "bump_time", "bump_time_milli", "board_id") VALUES
-                    (?, ?, ?, ?, ?, ?)');
+                    (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
             [$overboard_id, $thread->contentID()->threadID(), $thread->data('bump_time'),
                 $thread->data('bump_time_milli'), $thread->domain()->id()]);
@@ -80,7 +80,7 @@ class Overboard
     {
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_OVERBOARD_TABLE .
-            '" SET "bump_time" = ?, "bump_time_milli" = ?, WHERE "overboard_id" = ? AND "thread_id" = ? AND "board_id" = ?');
+            '" SET "bump_time" = ?, "bump_time_milli" = ? WHERE "overboard_id" = ? AND "thread_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared,
             [$thread->data('bump_time'), $thread->data('bump_time_milli'), $overboard_id,
                 $thread->contentID()->threadID(), $thread->domain()->id()]);
@@ -197,6 +197,8 @@ class Overboard
                 }
             }
         }
+
+        $this->prune();
     }
 
     private function canInclude(Thread $thread, string $overboard_id): bool

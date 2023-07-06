@@ -43,6 +43,7 @@ define('NEL_EMBEDS_TABLE', 'nelliel_embeds');
 define('NEL_FILE_FILTERS_TABLE', 'nelliel_file_filters');
 define('NEL_FILETYPES_TABLE', 'nelliel_filetypes');
 define('NEL_FILETYPE_CATEGORIES_TABLE', 'nelliel_filetype_categories');
+define('NEL_GLOBAL_RECENTS_TABLE', 'nelliel_global_recents');
 define('NEL_IMAGE_SETS_TABLE', 'nelliel_image_sets');
 define('NEL_IP_INFO_TABLE', 'nelliel_ip_info');
 define('NEL_IP_NOTES_TABLE', 'nelliel_ip_notes');

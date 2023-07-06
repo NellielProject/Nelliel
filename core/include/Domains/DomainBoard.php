@@ -196,6 +196,24 @@ class DomainBoard extends Domain implements NellielCacheInterface
         return $active_threads;
     }
 
+    public function recentPosts(int $limit): array
+    {
+        $recent_posts = array();
+
+        $prepared = $this->database->prepare(
+            'SELECT "post_id" FROM "' . $this->reference('posts_table') .
+            '" ORDER BY "post_time" DESC, "post_time_milli" DESC LIMIT ?');
+        $post_list = $this->database->executePreparedFetchAll($prepared, [$limit], PDO::FETCH_ASSOC);
+
+        foreach ($post_list as $post) {
+            $content_id = new ContentID(
+                ContentID::createIDString(intval($post['parent_thread']), intval($post['post_id'])));
+            $recent_posts[] = $content_id->getInstanceFromID($this);
+        }
+
+        return $recent_posts;
+    }
+
     public function getThread(int $thread_id): Thread
     {
         $content_id = new ContentID(ContentID::createIDString($thread_id));
