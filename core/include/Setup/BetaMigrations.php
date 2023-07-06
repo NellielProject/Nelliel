@@ -1123,7 +1123,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
                 // Update IP notes table
-                nel_database('core')->exec('DROP TABLE "ip_notes"'); // Simplest because we never used it before
+                nel_database('core')->exec('DROP TABLE "nelliel_ip_notes"'); // Simplest because we never used it before
                 $ip_notes_table = new TableIPNotes(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $ip_notes_table->createTable();
 
@@ -1136,6 +1136,15 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $image_set_instance->enable($enabled);
 
                 echo ' - ' . __('Image set info updated.') . '<br>';
+
+                // Update overboard table
+                nel_database('core')->exec('DROP TABLE "nelliel_overboard"');
+                $overboard_table = new TableOverboard(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $overboard_table->createTable();
+                $overboard = new Overboard(nel_database('core'));
+                $overboard->rebuild();
+
+                echo ' - ' . __('Overboard table updated.') . '<br>';
 
                 $migration_count ++;
         }
