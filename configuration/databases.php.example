@@ -1,0 +1,115 @@
+<?php
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+//
+// Example database config. Use this as a guide for adding additional databases.
+// If you wish to configure databases manually, copy this file to databases.php before installing and adjust the configutation for your needs.
+//
+
+//
+// Each database configuration has a unique identifier. Identifiers are not case sensitive.
+// 'core' is the identifier of the primary database. this must always be available to Nelliel.
+// Multiple database types can be configured under one identifier then a single type is selected for use with the 'sqltype' setting.
+//
+
+// Which type of database.
+// Currently supported types: MYSQL, MARIADB, POSTGRESQL, SQLITE
+$db_config['core']['sqltype'] = '';
+
+//
+// Configuration for MySQL
+//
+
+// Name of database.
+$db_config['core']['mysql']['database'] = '';
+
+// Timeout for the database connection.
+$db_config['core']['mysql']['timeout'] = 30;
+
+// MySQL Server address.
+$db_config['core']['mysql']['host'] = 'localhost';
+
+// MySQL server port. Default is 3306.
+$db_config['core']['mysql']['port'] = '3306';
+
+// Name of database user.
+$db_config['core']['mysql']['user'] = '';
+
+// Password of database user.
+$db_config['core']['mysql']['password'] = '';
+
+// The character encoding to use.
+$db_config['core']['mysql']['encoding'] = 'utf8mb4';
+
+//
+// Configuration for MariaDB
+//
+
+// Name of database.
+$db_config['core']['mariadb']['database'] = '';
+
+// Timeout for the database connection.
+$db_config['core']['mariadb']['timeout'] = 30;
+
+// MySQL Server address.
+$db_config['core']['mariadb']['host'] = 'localhost';
+
+// MySQL server port. Default is 3306.
+$db_config['core']['mariadb']['port'] = '3306';
+
+// Name of database user.
+$db_config['core']['mariadb']['user'] = '';
+
+// Password of database user.
+$db_config['core']['mariadb']['password'] = '';
+
+// The character encoding to use.
+$db_config['core']['mariadb']['encoding'] = 'utf8mb4';
+
+//
+// Configuration for PostgreSQL
+//
+
+// Name of database.
+$db_config['core']['postgresql']['database'] = '';
+
+// Timeout for the database connection.
+$db_config['core']['postgresql']['timeout'] = 30;
+
+// PostgreSQL Server address.
+$db_config['core']['postgresql']['host'] = 'localhost';
+
+// PostgreSQL server port. Default is 5432.
+$db_config['core']['postgresql']['port'] = '5432';
+
+// Name of database user.
+$db_config['core']['postgresql']['user'] = '';
+
+// Password of database user.
+$db_config['core']['postgresql']['password'] = '';
+
+// Which schema to use. Default is 'public'.
+$db_config['core']['postgresql']['schema'] = 'public';
+
+// The character encoding to use.
+$db_config['core']['postgresql']['encoding'] = 'UTF-8';
+
+//
+// Configuration for SQLite
+//
+
+// WARNING: The database path MUST be a location outside of web-accessible directories!
+// Otherwise someone could just download the whole thing.
+// If this is not possible on your host, do not use SQLite for your database!
+
+// Filename of SQLite database.
+$db_config['core']['sqlite']['file_name'] = 'nelliel.sqlite';
+
+// Timeout for the database connection.
+$db_config['core']['sqlite']['timeout'] = 30;
+
+// Path where the database is to be located. Defaults to the core directory if empty.
+$db_config['core']['sqlite']['path'] = '';
+
+// The character encoding to use. Should be fine as-is.
+$db_config['core']['sqlite']['encoding'] = 'UTF-8';

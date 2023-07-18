@@ -10,10 +10,7 @@ $db_config = array();
 $crypt_config = array();
 
 require_once NEL_CONFIG_FILES_PATH . 'config.php';
-
-if (file_exists(NEL_CONFIG_FILES_PATH . 'additional_databases.php')) {
-    include NEL_CONFIG_FILES_PATH . 'additional_databases.php';
-}
+require_once NEL_CONFIG_FILES_PATH . 'databases.php';
 
 define('NEL_INSTALL_KEY', $base_config['install_key'] ?? '');
 define('NEL_DIRECTORY_PERM', $base_config['directory_perm'] ?? '0775');
