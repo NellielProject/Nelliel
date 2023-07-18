@@ -2,7 +2,7 @@
 Basic installation guide. Installation requires basic knowledge of web hosting and use of a terminal or shell. The install process is kept as short and universal as possible but may need modifications for your environment.
 
 1. Unarchive the files for Nelliel to the desired location. This must be somewhere outside of the web-accessible areas but is otherwise left to your discretion.
-2. Make sure the PHP process has read, write and execute permissions on the `public` directory, `public/assets` directory and `core` directory.
+2. Make sure the PHP process has read, write and execute permissions on the following directories: `public`, `public/assets`, `configuration` and `core`.
 3. Run `composer install --no-dev` in the main directory.
 4. Set the `public` directory as web root for the domain or subdomain you are using. If this is not possible, continue to step 5; otherwise skip to step 6.
 5. In rare cases it will not be possible to use the `public` directory. If a different location is necessary:
@@ -14,10 +14,8 @@ Basic installation guide. Installation requires basic knowledge of web hosting a
  - For SQLite the database file will be created inside the `core` directory by default and requires no other setup.
 7. Go to the `configuration` directory and rename `config.php.example` to `config.php` then open the file to edit settings. Only a few of these settings are required to be changed for installation:  
  - Enter a value for `install_key`. This will be used for the install process.
- - Set `sqltype` to whichever type of database you are using. The current options are MYSQL, MARIADB, POSTGRESQL and SQLITE  
- - There is a configuration section for each type of database. You only need to configure for the type of database you are using.
 8. Navigate to `imgboard.php?install` in a browser. It will request the install key to be entered.
-9. Once the install key has been verified the install routines will run. If anything goes wrong it should give a relevant error message.
+9. Once the install key has been verified follow any further instructions given by hte installer.
 10. At the end of the install you will receive one of two messages:  
  - It will ask you to create a site owner account. This account will have all permissions and cannot be deleted.
  - A message confirming a site owner account already exists and a link to the login page. You can also go to `imgboard.php?route=/site/account/login` if the link does not work for some reason.
