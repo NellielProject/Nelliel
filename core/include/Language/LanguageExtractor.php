@@ -284,7 +284,7 @@ class LanguageExtractor
         $file_handler = nel_utilities()->fileHandler();
         $html_files = $file_handler->recursiveFileList(NEL_TEMPLATES_FILES_PATH . 'core/nelliel_basic/');
         $html_files = array_merge($html_files, $file_handler->recursiveFileList(NEL_INCLUDE_PATH));
-        $render = new RenderCoreDOM();
+        $render = new RenderCoreDOM($file_handler);
 
         foreach ($html_files as $file) {
             $file_id = utf8_str_replace(NEL_BASE_PATH, '', $file->getPathname());

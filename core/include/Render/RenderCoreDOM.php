@@ -1,31 +1,32 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel\Render;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Output\Filter;
+use Nelliel\Utility\FileHandler;
+use phpDOMExtend\ExtendedDOMDocument;
 
 class RenderCoreDOM extends RenderCore
 {
     private $template_instance;
     private $dom_documents;
 
-    function __construct()
+    function __construct(FileHandler $file_handler)
     {
         $this->template_instance = new NellielTemplatesDOM($this);
         $this->template_loaders['file'] = $this->template_instance;
         $this->template_loaders['string'] = $this->template_instance;
         libxml_use_internal_errors(true);
         $this->output_filter = new Filter();
-        $this->file_handler = nel_utilities()->fileHandler();
+        $this->file_handler = $file_handler;
     }
 
     public function newDOMDocument()
     {
-        $dom = new \phpDOMExtend\ExtendedDOMDocument();
+        $dom = new ExtendedDOMDocument();
         $this->dom_documents[spl_object_hash($dom)]['template'] = null;
         $dom->preserveWhiteSpace = true;
         $dom->formatOutput = true;
@@ -36,8 +37,7 @@ class RenderCoreDOM extends RenderCore
 
     public function templatePath($new_path = null)
     {
-        if (!is_null($new_path))
-        {
+        if (!is_null($new_path)) {
             $this->getTemplateInstance()->templatePath($new_path);
         }
 
