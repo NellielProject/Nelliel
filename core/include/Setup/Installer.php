@@ -95,33 +95,70 @@ class Installer
             $this->installKeyForm();
         }
 
-        if ($step === 'install_key') {
+        if ($step === 'install-key') {
             $this->installKeyCheck();
+
+            if (file_exists(NEL_CONFIG_FILES_PATH . 'databases.php')) {
+                echo '
+<!DOCTYPE html>
+<html>
+<head>
+    <title>' . __('Database configuration found') . '</title>
+</head>
+<body>
+    <p>' .
+                    __(
+                        'An existing database configuration has been found. Do you wish to use this configuration or overwrite with a new one?') .
+                    '</p>
+    <form accept-charset="utf-8" action="imgboard.php?install&step=database-select" method="post">
+        <div>
+            <label for="keep_db_config">' . __('Keep existing configuration') .
+                    '</label>
+            <input id="keep_db_config" type="checkbox" name="keep_db_config">
+        </div>
+        <div>
+            <input type="submit" value="' . __('Submit') . '">
+        </div>
+    </form>
+</body></html>';
+                die();
+            }
+
             $this->databaseTypeForm();
         }
 
-        if ($step === 'database_select') {
-            $database_type = $this->databaseTypeCheck();
+        $database_type = $_POST['database_type'] ?? '';
 
-            if ($database_type === 'MYSQL') {
-                $this->mysqlForm();
-            }
+        if ($step === 'database-select') {
 
-            if ($database_type === 'MARIADB') {
-                $this->mariadbForm();
-            }
+            if (!isset($_POST['keep_db_config'])) {
+                if ($database_type === '') {
+                    $this->databaseTypeForm();
+                } else {
 
-            if ($database_type === 'POSTGRESQL') {
-                $this->postgresqlForm();
-            }
+                    $this->databaseTypeCheck($database_type);
 
-            if ($database_type === 'SQLITE') {
-                $this->sqliteForm();
+                    if ($database_type === 'MYSQL') {
+                        $this->mysqlForm();
+                    }
+
+                    if ($database_type === 'MARIADB') {
+                        $this->mariadbForm();
+                    }
+
+                    if ($database_type === 'POSTGRESQL') {
+                        $this->postgresqlForm();
+                    }
+
+                    if ($database_type === 'SQLITE') {
+                        $this->sqliteForm();
+                    }
+                }
             }
         }
 
-        if ($step === 'database_config') {
-            $database_type = $this->databaseTypeCheck();
+        if ($step === 'database-config') {
+            $this->databaseTypeCheck($database_type);
             $database_config = array();
 
             if ($database_type === 'MYSQL') {
@@ -142,13 +179,15 @@ class Installer
 
             $database_config['core']['sqltype'] = $database_type;
             $this->writeDatabaseConfig($database_config, true);
-
-            $db_config = array();
-            require_once NEL_CONFIG_FILES_PATH . 'databases.php';
-            define('NEL_DATABASES', $db_config);
-            $this->database = nel_database('core');
-            $this->sql_compatibility = nel_utilities()->sqlCompatibility();
         }
+
+        $db_config = array();
+        require_once NEL_CONFIG_FILES_PATH . 'databases.php';
+        define('NEL_DATABASES', $db_config);
+        $this->database = nel_database('core');
+        $this->sql_compatibility = nel_utilities()->sqlCompatibility();
+
+        $this->checkDBEngine($database_type);
 
         $generate_files = new GenerateFiles($this->file_handler);
         $install_id = base64_encode(random_bytes(32));
@@ -227,8 +266,7 @@ class Installer
 <body>
     <p>' . __('Enter the install key to continue.') .
             '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=install_key" method="post">
-        <input type="hidden" name="install_key" value="">
+    <form accept-charset="utf-8" action="imgboard.php?install&step=install-key" method="post">
         <div>
             <label for="install_key">' . __('Install Key:') .
             '</label>
@@ -256,7 +294,6 @@ class Installer
         $this->coreDirectoryWritable();
         $this->configurationDirectoryWritable();
         $this->mainDirectoryWritable();
-
     }
 
     private function databaseTypeForm(): void
@@ -270,10 +307,11 @@ class Installer
 <body>
     <p>' . __('Select the type of database to use.') .
             '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=database_select" method="post">
+    <form accept-charset="utf-8" action="imgboard.php?install&step=database-select" method="post">
         <div>
-            <label for="install_key">' . __('Type:') . '</label>
-            <select name="database_type">
+            <label for="database_type">' . __('Type:') .
+            '</label>
+            <select id="database_type" name="database_type">
 	           <option value="MYSQL">' . __('Mysql') . '</option>
 	           <option value="MARIADB">' . __('MariaDB') . '</option>
 	           <option value="POSTGRESQL">' . __('PostgreSQL') . '</option>
@@ -288,15 +326,13 @@ class Installer
         die();
     }
 
-    private function databaseTypeCheck(): string
+    private function databaseTypeCheck(string $type): void
     {
-        $database_type = $_POST['database_type'] ?? '';
+        $valid_types = ['MYSQL', 'MARIADB', 'POSTGRESQL', 'SQLITE'];
 
-        if (!empty($database_type)) {
-            $this->checkDBEngine($database_type);
+        if (!in_array($type, $valid_types)) {
+            nel_derp(112, __('Unrecognized database type.'));
         }
-
-        return $database_type;
     }
 
     private function mysqlForm(): void
@@ -310,7 +346,7 @@ class Installer
 <body>
     <p>' . __('Enter configuration values for this MySQL database.') .
             '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=database_config" method="post">
+    <form accept-charset="utf-8" action="imgboard.php?install&step=database-config" method="post">
         <input type="hidden" name="database_type" value="MYSQL">
         <div>
             <label for="database">' . __('Database:') .
@@ -345,9 +381,7 @@ class Installer
         <div>
             <label for="encoding">' . __('Encoding:') .
             '</label>
-            <select id="encoding" name="encoding">
-	           <option value="utf8mb4">' . __('utf8mb4') . '</option>
-            </select>
+            <input id="encoding" type="text" name="encoding" value="utf8mb4">
         </div>
         <div>
             <input type="submit" value="' . __('Submit') . '">
@@ -416,9 +450,7 @@ class Installer
         <div>
             <label for="encoding">' . __('Encoding:') .
             '</label>
-            <select id="encoding" name="encoding">
-	           <option value="utf8mb4">' . __('utf8mb4') . '</option>
-            </select>
+            <input id="encoding" type="text" name="encoding" value="utf8mb4">
         </div>
         <div>
             <input type="submit" value="' . __('Submit') . '">
@@ -492,9 +524,7 @@ class Installer
         <div>
             <label for="encoding">' . __('Encoding:') .
             '</label>
-            <select id="encoding" name="encoding">
-	           <option value="UTF-8">' . __('UTF-8') . '</option>
-            </select>
+            <input id="encoding" type="text" name="encoding" value="UTF-8">
         </div>
         <div>
             <input type="submit" value="' . __('Submit') . '">
@@ -549,9 +579,7 @@ class Installer
         <div>
             <label for="encoding">' . __('Encoding:') .
             '</label>
-            <select id="encoding" name="encoding">
-	           <option value="UTF-8">' . __('UTF-8') . '</option>
-            </select>
+            <input id="encoding" type="text" name="encoding" value="UTF-8">
         </div>
         <div>
             <input type="submit" value="' . __('Submit') . '">
@@ -573,7 +601,7 @@ class Installer
 
     private function writeDatabaseConfig(array $config, bool $overwrite = false): bool
     {
-        if(!$overwrite && file_exists(NEL_GENERATED_FILES_PATH . 'databases.php')) {
+        if (!$overwrite && file_exists(NEL_CONFIG_FILES_PATH . 'databases.php')) {
             return false;
         }
 
@@ -596,7 +624,7 @@ class Installer
         echo _gettext('PHP version detected: ' . PHP_VERSION), '<br>';
 
         if (version_compare(PHP_VERSION, NELLIEL_PHP_MINIMUM, '<=')) {
-            nel_derp(109, _gettext('This version of PHP is too old! Upgrade to a version supported by Nelliel.'));
+            nel_derp(109, _gettext('This version of PHP is too old! Upgrade to a supported version.'));
         }
     }
 
@@ -613,10 +641,6 @@ class Installer
     private function checkDBEngine(string $type): void
     {
         echo sprintf(__('Database type chosen is: %s'), $type) . '<br>';
-
-        if ($type !== 'MYSQL' && $type !== 'MARIADB' && $type !== 'POSTGRESQL' && $type !== 'SQLITE') {
-            nel_derp(112, __('Unrecognized database type.'));
-        }
 
         if (($type === 'MYSQL' || $type === 'MARIADB') && !$this->checkForInnoDB()) {
             nel_derp(102,
