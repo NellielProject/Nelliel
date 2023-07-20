@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel\Setup;
+namespace Nelliel\Setup\Installer;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
@@ -10,6 +10,8 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use Nelliel\FrontEnd\FrontEndData;
+use Nelliel\Language\Translator;
+use Nelliel\Setup\GenerateFiles;
 use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBans;
 use Nelliel\Tables\TableBlotter;
@@ -68,23 +70,16 @@ class Installer
     protected $database;
     protected $sql_compatibility;
     protected $file_handler;
+    protected $translator;
 
-    function __construct(FileHandler $file_handler)
+    function __construct(FileHandler $file_handler, Translator $translator)
     {
         $this->file_handler = $file_handler;
+        $this->translator = $translator;
     }
 
     public function install()
     {
-        echo '
-<!DOCTYPE html>
-<html>
-<head>
-    <title>' . __('Installer') . '</title>
-</head>
-<body>
-    <p>';
-
         if ($this->checkInstallDone()) {
             nel_derp(108, _gettext('Installation has already been completed!'));
         }
@@ -92,39 +87,17 @@ class Installer
         $step = $_GET['step'] ?? '';
 
         if ($step === '') {
-            $this->installKeyForm();
+            $this->displayform('install_key.html');
         }
 
         if ($step === 'install-key') {
             $this->installKeyCheck();
 
             if (file_exists(NEL_CONFIG_FILES_PATH . 'databases.php')) {
-                echo '
-<!DOCTYPE html>
-<html>
-<head>
-    <title>' . __('Database configuration found') . '</title>
-</head>
-<body>
-    <p>' .
-                    __(
-                        'An existing database configuration has been found. Do you wish to use this configuration or overwrite with a new one?') .
-                    '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=database-select" method="post">
-        <div>
-            <label for="keep_db_config">' . __('Keep existing configuration') .
-                    '</label>
-            <input id="keep_db_config" type="checkbox" name="keep_db_config">
-        </div>
-        <div>
-            <input type="submit" value="' . __('Submit') . '">
-        </div>
-    </form>
-</body></html>';
-                die();
+                $this->displayform('database_found.html');
             }
 
-            $this->databaseTypeForm();
+            $this->displayform('database_type.html');
         }
 
         $database_type = $_POST['database_type'] ?? '';
@@ -133,25 +106,25 @@ class Installer
 
             if (!isset($_POST['keep_db_config'])) {
                 if ($database_type === '') {
-                    $this->databaseTypeForm();
+                    $this->displayform('database_type.html');
                 } else {
 
                     $this->databaseTypeCheck($database_type);
 
                     if ($database_type === 'MYSQL') {
-                        $this->mysqlForm();
+                        $this->displayform('mysql_config.html');
                     }
 
                     if ($database_type === 'MARIADB') {
-                        $this->mariadbForm();
+                        $this->displayform('mariadb_config.html');
                     }
 
                     if ($database_type === 'POSTGRESQL') {
-                        $this->postgresqlForm();
+                        $this->displayform('postgresql_config.html');
                     }
 
                     if ($database_type === 'SQLITE') {
-                        $this->sqliteForm();
+                        $this->displayform('sqlite_config.html');
                     }
                 }
             }
@@ -255,31 +228,6 @@ class Installer
         }
     }
 
-    private function installKeyForm(): void
-    {
-        echo '
-<!DOCTYPE html>
-<html>
-<head>
-    <title>' . __('Install key check') . '</title>
-</head>
-<body>
-    <p>' . __('Enter the install key to continue.') .
-            '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=install-key" method="post">
-        <div>
-            <label for="install_key">' . __('Install Key:') .
-            '</label>
-            <input id="install_key" type="text" name="install_key" maxlength="255">
-        </div>
-        <div>
-            <input type="submit" value="' . __('Submit') . '">
-        </div>
-    </form>
-</body></html>';
-        die();
-    }
-
     private function installKeyCheck(): void
     {
         if (!$this->verifyInstallKey()) {
@@ -296,36 +244,6 @@ class Installer
         $this->mainDirectoryWritable();
     }
 
-    private function databaseTypeForm(): void
-    {
-        echo '
-<!DOCTYPE html>
-<html>
-<head>
-    <title>' . __('Select database type') . '</title>
-</head>
-<body>
-    <p>' . __('Select the type of database to use.') .
-            '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=database-select" method="post">
-        <div>
-            <label for="database_type">' . __('Type:') .
-            '</label>
-            <select id="database_type" name="database_type">
-	           <option value="MYSQL">' . __('Mysql') . '</option>
-	           <option value="MARIADB">' . __('MariaDB') . '</option>
-	           <option value="POSTGRESQL">' . __('PostgreSQL') . '</option>
-	           <option value="SQLITE">' . __('SQLite') . '</option>
-            </select>
-        </div>
-        <div>
-            <input type="submit" value="' . __('Submit') . '">
-        </div>
-    </form>
-</body></html>';
-        die();
-    }
-
     private function databaseTypeCheck(string $type): void
     {
         $valid_types = ['MYSQL', 'MARIADB', 'POSTGRESQL', 'SQLITE'];
@@ -333,62 +251,6 @@ class Installer
         if (!in_array($type, $valid_types)) {
             nel_derp(112, __('Unrecognized database type.'));
         }
-    }
-
-    private function mysqlForm(): void
-    {
-        echo '
-<!DOCTYPE html>
-<html>
-<head>
-    <title>' . __('MySQL database config') . '</title>
-</head>
-<body>
-    <p>' . __('Enter configuration values for this MySQL database.') .
-            '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=database-config" method="post">
-        <input type="hidden" name="database_type" value="MYSQL">
-        <div>
-            <label for="database">' . __('Database:') .
-            '</label>
-            <input id="database" type="text" name="database" value="">
-        </div>
-        <div>
-            <label for="timeout">' . __('Timeout:') .
-            '</label>
-            <input id="timeout" type="number" name="timeout" min="0" value="30">
-        </div>
-        <div>
-            <label for="host">' . __('Host:') .
-            '</label>
-            <input id="host" type="text" name="host" value="localhost">
-        </div>
-        <div>
-            <label for="port">' . __('Port:') .
-            '</label>
-            <input id="port" type="number" name="post" min="0" value="3306">
-        </div>
-        <div>
-            <label for="user">' . __('User:') .
-            '</label>
-            <input id="user" type="text" name="user" value="">
-        </div>
-        <div>
-            <label for="password">' . __('Password:') .
-            '</label>
-            <input id="password" type="text" name="password" value="">
-        </div>
-        <div>
-            <label for="encoding">' . __('Encoding:') .
-            '</label>
-            <input id="encoding" type="text" name="encoding" value="utf8mb4">
-        </div>
-        <div>
-            <input type="submit" value="' . __('Submit') . '">
-        </div>
-    </form>
-</body></html>';
-        die();
     }
 
     private function mysqlConfig(): array
@@ -404,62 +266,6 @@ class Installer
         return $config;
     }
 
-    private function mariadbForm(): void
-    {
-        echo '
-<!DOCTYPE html>
-<html>
-<head>
-    <title>' . __('MariaDB database config') . '</title>
-</head>
-<body>
-    <p>' . __('Enter configuration values for this MariaDB database.') .
-            '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=database_config" method="post">
-        <input type="hidden" name="database_type" value="MARIADB">
-        <div>
-            <label for="database">' . __('Database:') .
-            '</label>
-            <input id="database" type="text" name="database" value="">
-        </div>
-        <div>
-            <label for="timeout">' . __('Timeout:') .
-            '</label>
-            <input id="timeout" type="number" name="timeout" min="0" value="30">
-        </div>
-        <div>
-            <label for="host">' . __('Host:') .
-            '</label>
-            <input id="host" type="text" name="host" value="localhost">
-        </div>
-        <div>
-            <label for="port">' . __('Port:') .
-            '</label>
-            <input id="port" type="number" name="post" min="0" value="3306">
-        </div>
-        <div>
-            <label for="user">' . __('User:') .
-            '</label>
-            <input id="user" type="text" name="user" value="">
-        </div>
-        <div>
-            <label for="password">' . __('Password:') .
-            '</label>
-            <input id="password" type="text" name="password" value="">
-        </div>
-        <div>
-            <label for="encoding">' . __('Encoding:') .
-            '</label>
-            <input id="encoding" type="text" name="encoding" value="utf8mb4">
-        </div>
-        <div>
-            <input type="submit" value="' . __('Submit') . '">
-        </div>
-    </form>
-</body></html>';
-        die();
-    }
-
     private function mariadbConfig(): array
     {
         $config = array();
@@ -471,67 +277,6 @@ class Installer
         $config['password'] = $_POST['password'] ?? '';
         $config['encoding'] = $_POST['encoding'] ?? 'utf8mb4';
         return $config;
-    }
-
-    private function postgresqlForm(): void
-    {
-        echo '
-<!DOCTYPE html>
-<html>
-<head>
-    <title>' . __('PostgreSQL database config') . '</title>
-</head>
-<body>
-    <p>' . __('Enter configuration values for this PostgreSQL database.') .
-            '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=database_config" method="post">
-        <input type="hidden" name="database_type" value="POSTGRESQL">
-        <div>
-            <label for="database">' . __('Database:') .
-            '</label>
-            <input id="database" type="text" name="database" value="">
-        </div>
-        <div>
-            <label for="timeout">' . __('Timeout:') .
-            '</label>
-            <input id="timeout" type="number" name="timeout" min="0" value="30">
-        </div>
-        <div>
-            <label for="host">' . __('Host:') .
-            '</label>
-            <input id="host" type="text" name="host" value="localhost">
-        </div>
-        <div>
-            <label for="port">' . __('Port:') .
-            '</label>
-            <input id="port" type="number" name="post" min="0" value="3306">
-        </div>
-        <div>
-            <label for="user">' . __('User:') .
-            '</label>
-            <input id="user" type="text" name="user" value="">
-        </div>
-        <div>
-            <label for="schema">' . __('Schema:') .
-            '</label>
-            <input id="schema" type="text" name="schema" value="public">
-        </div>
-        <div>
-            <label for="password">' . __('Password:') .
-            '</label>
-            <input id="password" type="text" name="password" value="">
-        </div>
-        <div>
-            <label for="encoding">' . __('Encoding:') .
-            '</label>
-            <input id="encoding" type="text" name="encoding" value="UTF-8">
-        </div>
-        <div>
-            <input type="submit" value="' . __('Submit') . '">
-        </div>
-    </form>
-</body></html>';
-        die();
     }
 
     private function postgresqlConfig(): array
@@ -546,47 +291,6 @@ class Installer
         $config['schema'] = $_POST['schema'] ?? 'public';
         $config['encoding'] = $_POST['encoding'] ?? 'UTF-8';
         return $config;
-    }
-
-    private function sqliteForm(): void
-    {
-        echo '
-<!DOCTYPE html>
-<html>
-<head>
-    <title>' . __('SQLite database config') . '</title>
-</head>
-<body>
-    <p>' . __('Enter configuration values for this SQLite database.') .
-            '</p>
-    <form accept-charset="utf-8" action="imgboard.php?install&step=database_config" method="post">
-        <input type="hidden" name="database_type" value="SQLITE">
-        <div>
-            <label for="file_name">' . __('File name:') .
-            '</label>
-            <input id="file_name" type="text" name="file_name" value="nelliel">
-        </div>
-        <div>
-            <label for="timeout">' . __('Timeout:') .
-            '</label>
-            <input id="timeout" type="number" name="timeout" min="0" value="30">
-        </div>
-        <div>
-            <label for="path">' . __('Path:') .
-            '</label>
-            <input id="path" type="text" name="path" value="">
-        </div>
-        <div>
-            <label for="encoding">' . __('Encoding:') .
-            '</label>
-            <input id="encoding" type="text" name="encoding" value="UTF-8">
-        </div>
-        <div>
-            <input type="submit" value="' . __('Submit') . '">
-        </div>
-    </form>
-</body></html>';
-        die();
     }
 
     private function sqliteConfig(): array
@@ -917,5 +621,12 @@ class Installer
         }
 
         echo _gettext('Core image sets installed.') . '<br>';
+    }
+
+    private function displayform(string $filename)
+    {
+        $html = file_get_contents(__DIR__ . '/forms/' . $filename);
+        echo $this->translator->translateHTML($html);
+        die();
     }
 }

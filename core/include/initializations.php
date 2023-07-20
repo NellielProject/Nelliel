@@ -3,7 +3,8 @@ declare(strict_types = 1);
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Setup\Installer;
+use Nelliel\Language\Translator;
+use Nelliel\Setup\Installer\Installer;
 use Nelliel\Setup\Upgrade;
 use Nelliel\Utility\FileHandler;
 
@@ -14,7 +15,8 @@ nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
 $file_handler = new FileHandler();
-$installer = new Installer($file_handler);
+$translator = new Translator($file_handler);
+$installer = new Installer($file_handler, $translator);
 
 if (isset($_GET['install'])) {
     $installer->install();
