@@ -27,8 +27,8 @@ class Markup
         if (is_null($this->markup_data)) {
             $markup_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_MARKUP_TABLE . '"', PDO::FETCH_ASSOC);
             foreach ($markup_list as $markup) {
-                $this->markup_data[$markup['type']][$markup['label']] = ['match' => $markup['match'],
-                    'replace' => $markup['replace']];
+                $this->markup_data[$markup['type']][$markup['label']] = ['match' => $markup['match_regex'],
+                    'replace' => $markup['replacement']];
             }
         }
 

@@ -45,7 +45,7 @@ class AdminMarkup extends Admin
         $notes = $_POST['notes'] ?? '';
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table .
-            '" ("label", "type", "match", "replace", "enabled", "notes") VALUES (?, ?, ?, ?, ?)');
+            '" ("label", "type", "match_regex", "replacement", "enabled", "notes") VALUES (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$label, $type, $match, $replace, $enabled, $notes]);
         $this->panel();
     }
@@ -69,7 +69,7 @@ class AdminMarkup extends Admin
 
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table .
-            '" SET "label" = ?, "type" = ?, "match" = ?, "replace" = ?, "enabled" = ?, "notes" = ? WHERE "markup_id" = ?');
+            '" SET "label" = ?, "type" = ?, "match_regex" = ?, "replacement" = ?, "enabled" = ?, "notes" = ? WHERE "markup_id" = ?');
         $this->database->executePrepared($prepared, [$label, $type, $match, $replace, $enabled, $notes, $markup_id]);
         $this->panel();
     }

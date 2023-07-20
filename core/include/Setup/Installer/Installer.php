@@ -418,8 +418,6 @@ class Installer
         $file_filters_table->createTable();
         $overboard_table = new TableOverboard($this->database, $this->sql_compatibility);
         $overboard_table->createTable();
-        $reports_table = new TableReports($this->database, $this->sql_compatibility);
-        $reports_table->createTable();
         $cites_table = new TableCites($this->database, $this->sql_compatibility);
         $cites_table->createTable();
         $wordfilters_table = new TableWordfilters($this->database, $this->sql_compatibility);
@@ -479,9 +477,11 @@ class Installer
         $noticeboard_table = new TableNoticeboard($this->database, $this->sql_compatibility);
         $noticeboard_table->createTable();
 
-        // The following tables rely on the users and ip info tables
+        // The following tables rely on ip info tables
         $ip_info_table = new TableIPInfo($this->database, $this->sql_compatibility);
         $ip_info_table->createTable();
+        $reports_table = new TableReports($this->database, $this->sql_compatibility);
+        $reports_table->createTable();
         $system_logs_table = new TableLogs($this->database, $this->sql_compatibility);
         $system_logs_table->tableName(NEL_SYSTEM_LOGS_TABLE);
         $system_logs_table->createTable();

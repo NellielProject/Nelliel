@@ -38,8 +38,8 @@ class OutputPanelMarkup extends Output
             $markup_data['markup_id'] = $markup['markup_id'];
             $markup_data['label'] = $markup['label'];
             $markup_data['type'] = $markup['type'];
-            $markup_data['match'] = $markup['match'];
-            $markup_data['replace'] = $markup['replace'];
+            $markup_data['match'] = $markup['match_regex'];
+            $markup_data['replace'] = $markup['replacement'];
             $markup_data['enabled'] = $markup['enabled'];
             $markup_data['notes'] = $markup['notes'];
             $markup_data['edit_url'] = nel_build_router_url(

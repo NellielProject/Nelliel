@@ -43,7 +43,7 @@ class TableGlobalRecents extends Table
             post_time_milli     SMALLINT NOT NULL,
             moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (content_id, board_id),
-            CONSTRAINT fk_overboard__domain_registry
+            CONSTRAINT fk_recents__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE
