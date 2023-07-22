@@ -91,6 +91,8 @@ class Installer
 
         if ($step === 'install-key') {
             $this->installKeyCheck();
+            $environment_check = new EnvironmentCheck($this->file_handler);
+            $environment_check->check();
         }
 
         $database_setup = new DatabaseSetup($this->file_handler, $this->translator);
@@ -136,7 +138,9 @@ class Installer
                 'Install has finished with no apparent problems! When you\'re ready to continue, follow this link to the login page: '), '<br>';
             echo '<a href="' . NEL_BASE_WEB_PATH . 'imgboard.php?route=/' . Domain::SITE . '/account/login">' .
                 __('Login page') . '</a>';
-            echo '</body></html>';
+            echo '
+    </body>
+</html>';
             die();
         } else {
             echo '
@@ -184,28 +188,10 @@ class Installer
         }
     }
 
-    private function initialChecks(): void
-    {
-        $this->checkPHP();
-        $this->coreDirectoryWritable();
-        $this->configurationDirectoryWritable();
-        $this->mainDirectoryWritable();
-    }
-
     private function verifyInstallKey()
     {
         $install_key = $_POST['install_key'] ?? '';
         return !nel_true_empty(NEL_INSTALL_KEY) && $install_key === NEL_INSTALL_KEY;
-    }
-
-    private function checkPHP()
-    {
-        echo __('Minimum PHP version required: ' . NELLIEL_PHP_MINIMUM), '<br>';
-        echo __('PHP version detected: ' . PHP_VERSION), '<br>';
-
-        if (version_compare(PHP_VERSION, NELLIEL_PHP_MINIMUM, '<=')) {
-            nel_derp(109, __('This version of PHP is too old! Upgrade to a supported version.'));
-        }
     }
 
     public function ownerCreated()
@@ -216,33 +202,6 @@ class Installer
     public function checkInstallDone()
     {
         return file_exists(NEL_GENERATED_FILES_PATH . 'install_done.php');
-    }
-
-    private function coreDirectoryWritable()
-    {
-        if (!is_writable(NEL_CORE_PATH)) {
-            nel_derp(104, __('The core directory not writable.'));
-        } else {
-            echo __('The core directory is writable.'), '<br>';
-        }
-    }
-
-    private function configDirectoryWritable()
-    {
-        if (!is_writable(NEL_CONFIG_FILES_PATH)) {
-            nel_derp(115, __('Configuration directory is not writable.'));
-        } else {
-            echo __('Configuration directory is writable.'), '<br>';
-        }
-    }
-
-    private function mainDirectoryWritable()
-    {
-        if (!is_writable(NEL_BASE_PATH)) {
-            nel_derp(105, __('Nelliel project directory is not writable.'));
-        } else {
-            echo __('Main directory is writable.'), '<br>';
-        }
     }
 
     public function createCoreTables()
@@ -473,7 +432,7 @@ class Installer
         echo __('Core image sets installed.') . '<br>';
     }
 
-    private function displayform(string $filename)
+    private function displayForm(string $filename)
     {
         $html = file_get_contents(__DIR__ . '/forms/' . $filename);
         echo $this->translator->translateHTML($html);

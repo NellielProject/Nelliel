@@ -24,7 +24,7 @@ class DatabaseSetup
 
     public function setup(string $step)
     {
-        if ($step === 'install-key') {
+        if ($step === 'environment-check') {
             if (file_exists(NEL_CONFIG_FILES_PATH . 'databases.php')) {
                 $this->displayForm('database_found.html');
             }
