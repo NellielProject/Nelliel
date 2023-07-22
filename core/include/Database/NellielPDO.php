@@ -25,7 +25,7 @@ class NellielPDO extends PDO
             return false;
         }
 
-        switch ($this->sql_type) {
+        switch ($this->config['sqltype']) {
             case 'MYSQL':
                 $prepared = $this->prepare('SELECT 1 FROM "information_schema"."schemata" WHERE "schema_name" = ?');
                 $result = $this->executePreparedFetch($prepared, [$database_name], PDO::FETCH_COLUMN);

@@ -12,10 +12,9 @@ Basic installation guide. Installation requires basic knowledge of web hosting a
 6. Database preparation:  
  - For MySQL, MariaDB or PostgreSQL you need a database and a user that has CREATE, ALTER and DROP permissions for that database.  
  - For SQLite the database file will be created inside the `core` directory by default and requires no other setup.
-7. Go to the `configuration` directory and rename `config.php.example` to `config.php` then open the file to edit settings. Only a few of these settings are required to be changed for installation:  
- - Enter a value for `install_key`. This will be used for the install process.
+7. Go to the `configuration` directory and rename `config.php.example` to `config.php` then open the file to edit settings. The only setting required to modify before installation is `install_key`.
 8. Navigate to `imgboard.php?install` in a browser. It will request the install key to be entered.
-9. Once the install key has been verified follow any further instructions given by hte installer.
+9. Once the install key has been verified follow instructions given by the installer.
 10. At the end of the install you will receive one of two messages:  
  - It will ask you to create a site owner account. This account will have all permissions and cannot be deleted.
  - A message confirming a site owner account already exists and a link to the login page. You can also go to `imgboard.php?route=/site/account/login` if the link does not work for some reason.
