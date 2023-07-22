@@ -114,7 +114,6 @@ class EnvironmentCheck
     {
         $success = true;
         $directories = array();
-        $directories['main directory'] = is_writable(NEL_BASE_PATH);
         $directories['core'] = is_writable(NEL_CORE_PATH);
         $directories['configuration'] = is_writable(NEL_CONFIG_FILES_PATH);
         $directories['public'] = is_writable(NEL_PUBLIC_PATH);
