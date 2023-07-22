@@ -131,7 +131,7 @@ class DatabaseSetup
 
         if (in_array('sqlite', $pdo_drivers)) {
             echo '
-					<option value="SQLite" data-i18n="">SQLite</option>';
+					<option value="SQLITE" data-i18n="">SQLite</option>';
         }
 
         echo '

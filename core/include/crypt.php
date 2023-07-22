@@ -116,7 +116,7 @@ function nel_ip_hash(string $ip_address, bool $new_hash = false)
     // So for this specific case we compromise: pass a constant value for the salt, then keep only the output hash so it functions as a pepper.
     // Based on NPFChan
     $full_hash = crypt($ip_address,
-        '$2y$' . NEL_IP_BCRYPT_COST . '$' . str_replace('+', '/', NEL_IP_ADDRESS_PEPPER) . '$');
+        '$2y$' . NEL_IP_HASH_BCRYPT_COST . '$' . str_replace('+', '/', NEL_IP_ADDRESS_PEPPER) . '$');
     $modified_hash = preg_replace('/[.\/]/', '_', $full_hash);
     $hashes[$ip_address] = utf8_substr($modified_hash, -31);
 
