@@ -29,7 +29,7 @@ class DatabaseSetup
                 $this->displayForm('database_found.html');
             }
 
-            $this->displayForm('database_type.html');
+            $this->databaseTypeForm();
         }
 
         $database_type = $_POST['database_type'] ?? '';
@@ -37,7 +37,7 @@ class DatabaseSetup
         if ($step === 'database-select') {
             if (!isset($_POST['keep_db_config'])) {
                 if ($database_type === '') {
-                    $this->displayForm('database_type.html');
+                    $this->databaseTypeForm();
                 } else {
 
                     $this->databaseTypeCheck($database_type);
@@ -100,6 +100,50 @@ class DatabaseSetup
         if (!in_array($type, $valid_types)) {
             nel_derp(112, __('Unrecognized database type.'));
         }
+    }
+
+    private function databaseTypeForm(): void
+    {
+        echo '
+<!DOCTYPE html>
+<html>
+	<head>
+		<title data-i18n="">Select database type</title>
+	</head>
+	<body>
+		<p data-i18n="">Select the type of database to use.</p>
+		<form accept-charset="utf-8" action="imgboard.php?install&step=database-select" method="post">
+			<div>
+				<label for="database_type" data-i18n="">Type</label>
+				<select id="database_type" name="database_type">';
+
+        $pdo_drivers = PDO::getAvailableDrivers();
+        if (in_array('mysql', $pdo_drivers)) {
+            echo '
+					<option value="MYSQL" data-i18n="">MySQL</option>
+                    <option value="MARIADB" data-i18n="">MariaDB</option>';
+        }
+
+        if (in_array('pgsql', $pdo_drivers)) {
+            echo '
+					<option value="POSTGRESQL" data-i18n="">PostgreSQL</option>';
+        }
+
+        if (in_array('sqlite', $pdo_drivers)) {
+            echo '
+					<option value="SQLite" data-i18n="">SQLite</option>';
+        }
+
+        echo '
+				</select>
+			</div>
+			<div>
+				<input type="submit" value="Select" data-i18n-attributes="value">
+			</div>
+		</form>
+	</body>
+</html>';
+        die();
     }
 
     private function mysqlConfig(): array

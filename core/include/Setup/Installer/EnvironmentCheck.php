@@ -6,6 +6,7 @@ namespace Nelliel\Setup\Installer;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Utility\FileHandler;
+use PDO;
 
 class EnvironmentCheck
 {
@@ -59,8 +60,10 @@ class EnvironmentCheck
             echo __('All minimum requirements have been met!') . '</p>';
         }
 
-        echo '<p><span  style="font-weight: bold; text-decoration: underline;">' . __('Additional environment information') . '</span><br>';
+        echo '<p><span  style="font-weight: bold; text-decoration: underline;">' .
+            __('Additional environment information') . '</span><br>';
         $this->checkOptionalExtensions();
+        $this->checkPDODrivers();
         echo '</p>';
 
         echo '
@@ -107,26 +110,6 @@ class EnvironmentCheck
         return $success;
     }
 
-    private function checkOptionalExtensions(): void
-    {
-        $optional_extensions = array();
-        $optional_extensions['Imagick'] = extension_loaded('imagick');
-        $optional_extensions['Gmagick'] = extension_loaded('gmagick');
-        $optional_extensions['mbstring'] = extension_loaded('mbstring');
-
-        echo '<p><span  style="font-weight: bold;">' . __('Optional PHP extensions:') . '</span><br>';
-
-        foreach ($optional_extensions as $extension => $present) {
-            if (!$present) {
-                echo $extension . ': <span style="color: red;">' . __('not installed') . '</span><br>';
-            } else {
-                echo $extension . ': <span style="color: green;">' . __('installed') . '</span><br>';
-            }
-        }
-
-        echo '</p>';
-    }
-
     private function checkDirectories(): bool
     {
         $success = true;
@@ -150,5 +133,47 @@ class EnvironmentCheck
 
         echo '</p>';
         return $success;
+    }
+
+    private function checkOptionalExtensions(): void
+    {
+        $optional_extensions = array();
+        $optional_extensions['Imagick'] = extension_loaded('imagick');
+        $optional_extensions['Gmagick'] = extension_loaded('gmagick');
+        $optional_extensions['mbstring'] = extension_loaded('mbstring');
+
+        echo '<p><span  style="font-weight: bold;">' . __('Optional PHP extensions:') . '</span><br>';
+
+        foreach ($optional_extensions as $extension => $present) {
+            if (!$present) {
+                echo $extension . ': <span style="color: red;">' . __('not installed') . '</span><br>';
+            } else {
+                echo $extension . ': <span style="color: green;">' . __('installed') . '</span><br>';
+            }
+        }
+
+        echo '</p>';
+    }
+
+    private function checkPDODrivers(): void
+    {
+        $drivers = array();
+        $pdo_drivers = PDO::getAvailableDrivers();
+        $drivers['MySQL'] = in_array('mysql', $pdo_drivers);
+        $drivers['MariaDB'] = in_array('mysql', $pdo_drivers);
+        $drivers['PostgreSQL'] = in_array('pgsql', $pdo_drivers);
+        $drivers['SQLite'] = in_array('sqlite', $pdo_drivers);
+
+        echo '<p><span  style="font-weight: bold;">' . __('PDO drivers:') . '</span><br>';
+
+        foreach ($drivers as $driver => $installed) {
+            if (!$installed) {
+                echo $driver . ': <span style="color: red;">' . __('not installed') . '</span><br>';
+            } else {
+                echo $driver . ': <span style="color: green;">' . __('installed') . '</span><br>';
+            }
+        }
+
+        echo '</p>';
     }
 }
