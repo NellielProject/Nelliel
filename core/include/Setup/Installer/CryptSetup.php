@@ -6,38 +6,39 @@ namespace Nelliel\Setup\Installer;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Language\Translator;
+use Nelliel\Render\RenderCoreSimple;
 use Nelliel\Utility\FileHandler;
 
 class CryptSetup
 {
-    protected $database;
-    protected $sql_compatibility;
-    protected $file_handler;
-    protected $translator;
+    private $file_handler;
+    private $translator;
+    private $render_core;
 
     function __construct(FileHandler $file_handler, Translator $translator)
     {
         $this->file_handler = $file_handler;
         $this->translator = $translator;
+        $this->render_core = new RenderCoreSimple(NEL_INCLUDE_PATH . 'Setup/Installer/templates/');
     }
 
     public function setup(string $step)
     {
         if ($step === 'crypt-check') {
             if (file_exists(NEL_CONFIG_FILES_PATH . 'crypt.php')) {
-                $this->displayForm('crypt_found.html');
+                $this->output('crypt/crypt_found', ['page_title' => __('Hashing config already exists')]);
             } else {
-                $this->displayForm('crypt_ask.html');
+                $this->output('crypt/crypt_ask', ['page_title' => __('Hashing config')]);
             }
         }
 
         if ($step === 'crypt-config') {
             if (isset($_POST['new_crypt_config'])) {
-                $this->displayForm('crypt_ask.html');
+                $this->output('crypt/crypt_ask', ['page_title' => __('Hashing config')]);
             }
 
             if (isset($_POST['customize_crypt_config'])) {
-                $this->displayForm('crypt_config.html');
+                $this->output('crypt/crypt_config', ['page_title' => __('Hashing config')]);
             }
 
             if (!isset($_POST['keep_crypt_config'])) {
@@ -57,7 +58,7 @@ class CryptSetup
         define('NEL_IP_HASH_BCRYPT_COST', $crypt_config['ip_hash_bcrypt_cost'] ?? '08');
 
         if ($step === 'crypt-config') {
-                $this->displayForm('crypt_config_complete.html');
+            $this->output('crypt/crypt_config_complete', ['page_title' => __('Hashing config complete')]);
         }
     }
 
@@ -97,9 +98,10 @@ class CryptSetup
         return true;
     }
 
-    private function displayForm(string $filename)
+    private function output(string $template_file, array $render_data = array()): void
     {
-        $html = file_get_contents(__DIR__ . '/forms/' . $filename);
+        $render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
+        $html = $this->render_core->renderFromTemplateFile($template_file, $render_data);
         echo $this->translator->translateHTML($html);
         die();
     }

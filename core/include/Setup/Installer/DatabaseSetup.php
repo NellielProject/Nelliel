@@ -8,25 +8,27 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Language\Translator;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Render\RenderCoreSimple;
 
 class DatabaseSetup
 {
-    protected $database;
-    protected $sql_compatibility;
-    protected $file_handler;
-    protected $translator;
+    private $database;
+    private $file_handler;
+    private $translator;
+    private $render_core;
 
     function __construct(FileHandler $file_handler, Translator $translator)
     {
         $this->file_handler = $file_handler;
         $this->translator = $translator;
+        $this->render_core = new RenderCoreSimple(NEL_INCLUDE_PATH . 'Setup/Installer/templates/');
     }
 
     public function setup(string $step)
     {
         if ($step === 'database-check') {
             if (file_exists(NEL_CONFIG_FILES_PATH . 'databases.php')) {
-                $this->displayForm('database_found.html');
+                $this->output('database/database_found', ['page_title' => __('Database config already exists')]);
             }
 
             $this->databaseTypeForm();
@@ -43,19 +45,19 @@ class DatabaseSetup
                     $this->databaseTypeCheck($database_type);
 
                     if ($database_type === 'MYSQL') {
-                        $this->displayForm('mysql_config.html');
+                        $this->output('database/mysql_config', ['page_title' => __('MySQL configuration')]);
                     }
 
                     if ($database_type === 'MARIADB') {
-                        $this->displayForm('mariadb_config.html');
+                        $this->output('database/mariadb_config', ['page_title' => __('MariaDB configuration')]);
                     }
 
                     if ($database_type === 'POSTGRESQL') {
-                        $this->displayForm('postgresql_config.html');
+                        $this->output('database/postgresql_config', ['page_title' => __('PostgreSQL configuration')]);
                     }
 
                     if ($database_type === 'SQLITE') {
-                        $this->displayForm('sqlite_config.html');
+                        $this->output('database/SQLite_config', ['page_title' => __('SQLite configuration')]);
                     }
                 }
             }
@@ -92,7 +94,7 @@ class DatabaseSetup
         $this->checkDBEngine($database_type);
 
         if ($step === 'complete-database-config' || isset($_POST['keep_database_config'])) {
-            $this->displayForm('database_config_complete.html');
+            $this->output('database/database_config_complete', ['page_title' => __('Database config complete')]);
         }
     }
 
@@ -107,46 +109,24 @@ class DatabaseSetup
 
     private function databaseTypeForm(): void
     {
-        echo '
-<!DOCTYPE html>
-<html>
-	<head>
-		<title data-i18n="">Select database type</title>
-	</head>
-	<body>
-		<p data-i18n="">Select the type of database to use.</p>
-		<form accept-charset="utf-8" action="imgboard.php?install&step=database-config" method="post">
-			<div>
-				<label for="database_type" data-i18n="">Type</label>
-				<select id="database_type" name="database_type">';
-
+        $render_data = array();
+        $render_data['page_title'] = 'Database config';
         $pdo_drivers = PDO::getAvailableDrivers();
+
         if (in_array('mysql', $pdo_drivers)) {
-            echo '
-					<option value="MYSQL" data-i18n="">MySQL</option>
-                    <option value="MARIADB" data-i18n="">MariaDB</option>';
+            $render_data['drivers'][] = ['value' => 'MYSQL', 'label' => __('MySQL')];
+            $render_data['drivers'][] = ['value' => 'MARIADB', 'label' => __('MariaDB')];
         }
 
         if (in_array('pgsql', $pdo_drivers)) {
-            echo '
-					<option value="POSTGRESQL" data-i18n="">PostgreSQL</option>';
+            $render_data['drivers'][] = ['value' => 'POSTGRESQL', 'label' => __('PostgreSQL')];
         }
 
         if (in_array('sqlite', $pdo_drivers)) {
-            echo '
-					<option value="SQLITE" data-i18n="">SQLite</option>';
+            $render_data['drivers'][] = ['value' => 'SQLITE', 'label' => __('SQLite')];
         }
 
-        echo '
-				</select>
-			</div>
-			<div>
-				<input type="submit" value="Select" data-i18n-attributes="value">
-			</div>
-		</form>
-	</body>
-</html>';
-        die();
+        $this->output('database/select_database_type', $render_data);
     }
 
     private function mysqlConfig(): array
@@ -212,9 +192,10 @@ class DatabaseSetup
         return true;
     }
 
-    private function displayForm(string $filename)
+    private function output(string $template_file, array $render_data = array()): void
     {
-        $html = file_get_contents(__DIR__ . '/forms/' . $filename);
+        $render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
+        $html = $this->render_core->renderFromTemplateFile($template_file, $render_data);
         echo $this->translator->translateHTML($html);
         die();
     }

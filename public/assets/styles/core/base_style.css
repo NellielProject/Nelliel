@@ -644,6 +644,26 @@ td {
 	margin: 1.0rem 0.5rem;
 }
 
+/* Installer */
+
+.installer-form {
+	display: table;
+}
+
+.installer-form-row {
+	display: table-row;
+}
+
+.installer-form-label {
+	display: table-cell;
+	padding: 3px;
+}
+
+.installer-form-input {
+	display: table-cell;
+	margin: 3px;
+}
+
 /* Other */
 .label {
 	margin-right: 0.2em;

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+	{{> pieces/head }}
+	<body>
+		<p data-i18n="">Enter configuration values for this PostgreSQL database.</p>
+		<form accept-charset="utf-8" action="imgboard.php?install&step=complete-database-config" method="post">
+			<input type="hidden" name="database_type" value="POSTGRESQL">
+			<div class="installer-form">
+				<div class="installer-form-row">
+					<label for="database" class="installer-form-label" data-i18n="">Database</label>
+            		<input id="database" class="installer-form-input" type="text" name="database" value="">
+				</div>
+				<div class="installer-form-row">
+					<label for="timeout" class="installer-form-label" data-i18n="">Timeout</label>
+					<input id="timeout" class="installer-form-input" type="number" name="timeout" min="0" value="30">
+				</div>
+				<div class="installer-form-row">
+					<label for="host" class="installer-form-label" data-i18n="">Host</label>
+					<input id="host" class="installer-form-input" type="text" name="host" value="localhost">
+				</div>
+				<div class="installer-form-row">
+					<label for="port" class="installer-form-label" data-i18n="">Port</label>
+					<input id="port" class="installer-form-input" type="number" name="post" min="0" value="5432">
+				</div>
+				<div class="installer-form-row">
+					<label for="user" class="installer-form-label" data-i18n="">User</label>
+					<input id="user" class="installer-form-input" type="text" name="user" value="">
+				</div>
+				<div class="installer-form-row">
+					<label for="password" class="installer-form-label" data-i18n="">Password</label>
+					<input id="password" class="installer-form-input" type="text" name="password" value="">
+				</div>
+				<div class="installer-form-row">
+					<label for="schema" class="installer-form-label" data-i18n="">Schema</label>
+					<input id="schema" class="installer-form-input" type="text" name="schema" value="public">
+				</div>
+				<div class="installer-form-row">
+					<label for="encoding" class="installer-form-label" data-i18n="">Encoding</label>
+					<input id="encoding" class="installer-form-input" type="text" name="encoding" value="UTF-8">
+				</div>
+				<div class="installer-form-row">
+					<input type="submit" class="installer-form-input" value="Submit" data-i18n-attributes="value">
+				</div>
+			</div>
+		</form>
+	</body>
+</html>

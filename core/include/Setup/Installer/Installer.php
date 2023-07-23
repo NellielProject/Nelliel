@@ -63,18 +63,21 @@ use Nelliel\Tables\TableUsers;
 use Nelliel\Tables\TableVersions;
 use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
+use Nelliel\Render\RenderCoreSimple;
 
 class Installer
 {
-    protected $database;
-    protected $sql_compatibility;
-    protected $file_handler;
-    protected $translator;
+    private $database;
+    private $sql_compatibility;
+    private $file_handler;
+    private $translator;
+    private $render_core;
 
     function __construct(FileHandler $file_handler, Translator $translator)
     {
         $this->file_handler = $file_handler;
         $this->translator = $translator;
+        $this->render_core = new RenderCoreSimple(NEL_INCLUDE_PATH . 'Setup/Installer/templates/');
     }
 
     public function install()
@@ -86,12 +89,13 @@ class Installer
         $step = $_GET['step'] ?? '';
 
         if ($step === '') {
-            $this->displayForm('install_key.html');
+            $render_data['page_title'] = __('Install key check');
+            $this->output('install_key', $render_data);
         }
 
         if ($step === 'verify-install-key') {
             $this->installKeyCheck();
-            $environment_check = new EnvironmentCheck($this->file_handler);
+            $environment_check = new EnvironmentCheck();
             $environment_check->check();
         }
 
@@ -432,9 +436,10 @@ class Installer
         echo __('Core image sets installed.') . '<br>';
     }
 
-    private function displayForm(string $filename)
+    private function output(string $template_file, array $render_data = array()): void
     {
-        $html = file_get_contents(__DIR__ . '/forms/' . $filename);
+        $render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
+        $html = $this->render_core->renderFromTemplateFile($template_file, $render_data);
         echo $this->translator->translateHTML($html);
         die();
     }

@@ -5,17 +5,16 @@ namespace Nelliel\Setup\Installer;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Utility\FileHandler;
+use Nelliel\Render\RenderCoreSimple;
 use PDO;
 
 class EnvironmentCheck
 {
-    protected $database;
-    protected $file_handler;
+    private $render_core;
 
-    function __construct(FileHandler $file_handler)
+    function __construct()
     {
-        $this->file_handler = $file_handler;
+        $this->render_core = new RenderCoreSimple(NEL_INCLUDE_PATH . 'Setup/Installer/templates/');
     }
 
     public function check()
@@ -174,5 +173,12 @@ class EnvironmentCheck
         }
 
         echo '</p>';
+    }
+
+    private function output(string $template_file, array $render_data = array()): void
+    {
+        $html = $this->render_core->renderFromTemplateFile($template_file, $render_data);
+        echo $this->translator->translateHTML($html);
+        die();
     }
 }
