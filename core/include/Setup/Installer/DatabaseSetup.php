@@ -24,7 +24,7 @@ class DatabaseSetup
 
     public function setup(string $step)
     {
-        if ($step === 'environment-check') {
+        if ($step === 'database-check') {
             if (file_exists(NEL_CONFIG_FILES_PATH . 'databases.php')) {
                 $this->displayForm('database_found.html');
             }
@@ -34,8 +34,8 @@ class DatabaseSetup
 
         $database_type = $_POST['database_type'] ?? '';
 
-        if ($step === 'database-select') {
-            if (!isset($_POST['keep_db_config'])) {
+        if ($step === 'database-config') {
+            if (!isset($_POST['keep_database_config'])) {
                 if ($database_type === '') {
                     $this->databaseTypeForm();
                 } else {
@@ -61,7 +61,7 @@ class DatabaseSetup
             }
         }
 
-        if ($step === 'database-config') {
+        if ($step === 'complete-database-config') {
             $this->databaseTypeCheck($database_type);
             $database_config = array();
             $database_config['core']['sqltype'] = $database_type;
@@ -85,12 +85,15 @@ class DatabaseSetup
             $this->writeDatabaseConfig($database_config, true);
         }
 
-        $database_type = $_POST['database_type'] ?? '';
         $db_config = array();
         require_once NEL_CONFIG_FILES_PATH . 'databases.php';
         define('NEL_DATABASES', $db_config);
         $this->database = nel_database('core');
         $this->checkDBEngine($database_type);
+
+        if ($step === 'complete-database-config' || isset($_POST['keep_database_config'])) {
+            $this->displayForm('database_config_complete.html');
+        }
     }
 
     private function databaseTypeCheck(string $type): void
@@ -112,7 +115,7 @@ class DatabaseSetup
 	</head>
 	<body>
 		<p data-i18n="">Select the type of database to use.</p>
-		<form accept-charset="utf-8" action="imgboard.php?install&step=database-select" method="post">
+		<form accept-charset="utf-8" action="imgboard.php?install&step=database-config" method="post">
 			<div>
 				<label for="database_type" data-i18n="">Type</label>
 				<select id="database_type" name="database_type">';

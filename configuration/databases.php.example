@@ -2,8 +2,7 @@
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 //
-// Example database config. Use this as a guide for adding additional databases.
-// If you wish to configure databases manually, copy this file to databases.php before installing and adjust the configutation for your needs.
+// Example file for database configuration.
 //
 
 //

@@ -67,7 +67,7 @@ class EnvironmentCheck
         echo '</p>';
 
         echo '
-        <form accept-charset="utf-8" action="imgboard.php?install&step=environment-check" method="post">
+        <form accept-charset="utf-8" action="imgboard.php?install&step=database-check" method="post">
             <div>
                 <input type="submit" value="' . __('Continue') . '">
             </div>

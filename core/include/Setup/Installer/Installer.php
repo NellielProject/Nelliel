@@ -89,7 +89,7 @@ class Installer
             $this->displayForm('install_key.html');
         }
 
-        if ($step === 'install-key') {
+        if ($step === 'verify-install-key') {
             $this->installKeyCheck();
             $environment_check = new EnvironmentCheck($this->file_handler);
             $environment_check->check();
@@ -97,6 +97,10 @@ class Installer
 
         $database_setup = new DatabaseSetup($this->file_handler, $this->translator);
         $database_setup->setup($step);
+
+        $crypt_setup = new CryptSetup($this->file_handler, $this->translator);
+        $crypt_setup->setup($step);
+
         $this->database = nel_database('core');
         $this->sql_compatibility = nel_utilities()->sqlCompatibility();
 
@@ -182,16 +186,12 @@ class Installer
 
     private function installKeyCheck(): void
     {
-        if (!$this->verifyInstallKey()) {
+        $install_key = $_POST['install_key'] ?? '';
+
+        if (nel_true_empty(NEL_INSTALL_KEY) || $install_key !== NEL_INSTALL_KEY) {
             nel_derp(114, __('Install key does not match or is invalid.'));
             die();
         }
-    }
-
-    private function verifyInstallKey()
-    {
-        $install_key = $_POST['install_key'] ?? '';
-        return !nel_true_empty(NEL_INSTALL_KEY) && $install_key === NEL_INSTALL_KEY;
     }
 
     public function ownerCreated()

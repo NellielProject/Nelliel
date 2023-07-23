@@ -10,9 +10,6 @@ use Nelliel\Utility\FileHandler;
 
 Mustache_Autoloader::register();
 
-require_once NEL_INCLUDE_PATH . 'crypt.php';
-nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
-
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
 $file_handler = new FileHandler();
 $translator = new Translator($file_handler);
@@ -28,6 +25,9 @@ if (!$installer->checkInstallDone()) {
 
 unset($installer);
 
+require_once NEL_INCLUDE_PATH . 'crypt.php';
+nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
+
 $upgrade = new Upgrade($file_handler);
 
 if (isset($_GET['upgrade'])) {
@@ -39,8 +39,6 @@ if (isset($_GET['upgrade'])) {
             _gettext('Versions do not match. An upgrade may be in progress or something is broken. Try again later.'));
     }
 }
-
-unset($upgrade);
 
 if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
     $peppers = array();

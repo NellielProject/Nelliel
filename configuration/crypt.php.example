@@ -1,0 +1,40 @@
+<?php
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+//
+// Example file for hashing configuration.
+//
+
+//
+// === Crypt Settings ===
+//
+
+// Passwords
+// The hashing algorithm to use for account and post passwords.
+// If a selected algorithm is not available, Nelliel will use the PASSWORD_DEFAULT.
+// Current valid options: BCRYPT, ARGON2
+$crypt_config['password_algorithm'] = 'BCRYPT';
+
+// Bcrypt
+
+// PHP default cost is 10; Nelliel default is 12; 04 is the minimum; 31 is maximum.
+$crypt_config['password_bcrypt_cost'] = '12';
+
+// Argon2
+
+// PHP default memory cost is 1024; Nelliel default is 1024.
+$crypt_config['password_argon2_memory_cost'] = 1024;
+
+// PHP default time cost is 2; Nelliel default is 2.
+$crypt_config['password_argon2_time_cost'] = 2;
+
+// PHP default threads is 2; Nelliel default is 2.
+$crypt_config['password_argon2_threads'] = 2;
+
+// IP Addresses
+// The hashing used for IP addresses. Only Bcrypt for now.
+$crypt_config['ip_hash_algorithm'] = 'BCRYPT';
+
+// This is normally a lower security concern than passwords so the default is less to save processing time.
+// PHP default cost is 10; Nelliel default is 08; 04 is the minimum; 31 is maximum.
+$crypt_config['ip_hash_bcrypt_cost'] = '08';
