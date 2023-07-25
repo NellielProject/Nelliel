@@ -29,7 +29,7 @@ class OutputNavigation extends Output
             $board = Domain::getDomainFromID($board_ids[$i], $this->database);
             $board_info = array();
             $board_info['board_url'] = $board->reference('board_web_path');
-            $board_info['name'] = ''; // TODO: Get and use actual name
+            $board_info['name'] = $board->setting('name');
             $board_info['board_uri'] = $board->reference('board_uri');
             $board_info['end'] = $i === $end;
             $render_data['boards'][] = $board_info;

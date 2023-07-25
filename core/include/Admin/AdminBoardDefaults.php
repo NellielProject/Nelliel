@@ -28,7 +28,7 @@ class AdminBoardDefaults extends Admin
     public function panel(): void
     {
         $this->verifyPermissions($this->domain, 'perm_modify_board_defaults');
-        $output_panel = new OutputPanelBoardConfig($this->domain, false); // TODO: Maybe separate output too
+        $output_panel = new OutputPanelBoardConfig($this->domain, false);
         $output_panel->render(['defaults' => true], false);
     }
 

@@ -86,10 +86,11 @@ class AdminSiteConfig extends Admin
 
     private function updateSetting($config_name, $setting)
     {
-        // TODO: Bind to string instead of cast
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_SITE_CONFIG_TABLE . '" SET "setting_value" = ? WHERE "setting_name" = ?');
-        $this->database->executePrepared($prepared, [(string) $setting, $config_name]);
+        $prepared->bindValue(1, $setting, PDO::PARAM_STR);
+        $prepared->bindValue(2, $config_name, PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void

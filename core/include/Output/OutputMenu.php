@@ -103,8 +103,7 @@ class OutputMenu extends Output
         $styles = $this->domain->frontEndData()->getAllStyles(true);
         $render_data = array();
         $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
-        $default_style = $this->domain->id() === Domain::GLOBAL ? nel_site_domain()->setting('default_style') : $this->domain->setting(
-            'default_style'); // TODO: Better solution
+        $default_style = $this->domain->setting('default_style');
 
         foreach ($styles as $style) {
             if ($this->domain->id() !== Domain::SITE && $this->domain->id() !== Domain::GLOBAL &&

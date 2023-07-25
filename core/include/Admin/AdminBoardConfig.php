@@ -148,17 +148,22 @@ class AdminBoardConfig extends Admin
 
     private function updateSetting(Domain $domain, $config_name, $setting, $lock_override)
     {
-        // TODO: Bind to string instead of cast
         if ($lock_override) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . $domain->reference('config_table') .
                 '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ?');
-            $this->database->executePrepared($prepared, [(string) $setting, $config_name, $domain->id()]);
+            $prepared->bindValue(1, $setting, PDO::PARAM_STR);
+            $prepared->bindValue(2, $config_name, PDO::PARAM_STR);
+            $prepared->bindValue(3, $domain->id(), PDO::PARAM_STR);
+            $this->database->executePrepared($prepared);
         } else {
             $prepared = $this->database->prepare(
                 'UPDATE "' . $domain->reference('config_table') .
                 '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ? AND "edit_lock" = 0');
-            $this->database->executePrepared($prepared, [(string) $setting, $config_name, $domain->id()]);
+            $prepared->bindValue(1, $setting, PDO::PARAM_STR);
+            $prepared->bindValue(2, $config_name, PDO::PARAM_STR);
+            $prepared->bindValue(3, $domain->id(), PDO::PARAM_STR);
+            $this->database->executePrepared($prepared);
         }
     }
 }
