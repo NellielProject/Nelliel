@@ -95,7 +95,7 @@ class Installer
 
         if ($step === 'verify-install-key') {
             $this->installKeyCheck();
-            $environment_check = new EnvironmentCheck();
+            $environment_check = new EnvironmentCheck($this->translator);
             $environment_check->check();
         }
 

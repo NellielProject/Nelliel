@@ -5,88 +5,50 @@ namespace Nelliel\Setup\Installer;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Language\Translator;
 use Nelliel\Render\RenderCoreSimple;
 use PDO;
 
 class EnvironmentCheck
 {
+    private $translator;
     private $render_core;
 
-    function __construct()
+    function __construct(Translator $translator)
     {
+        $this->translator = $translator;
         $this->render_core = new RenderCoreSimple(NEL_INCLUDE_PATH . 'Setup/Installer/templates/');
     }
 
     public function check()
     {
-        echo '
-<!DOCTYPE html>
-<html>
-	<head>
-		<title data-i18n="">Environment check</title>
-	</head>
-	<body>
-';
-
-        $php_check = $this->checkPHP();
-        $required_extension_check = $this->checkRequiredExtensions();
-        $directory_check = $this->checkDirectories();
-
-        $success = $php_check && $required_extension_check && $directory_check;
-
-        if (!$success) {
-            echo '<p><span  style="font-weight: bold;">' . __('Problems were detected:') . '</span><br>';
-
-            if (!$php_check) {
-                echo __('PHP version is too old.') . '<br>';
-            }
-
-            if (!$required_extension_check) {
-                echo __('Not all required extensions are installed.') . '<br>';
-            }
-
-            if (!$directory_check) {
-                echo __('Not all directories are writable.') . '</br>';
-            }
-
-            echo '</p>';
-            echo '<p>' .
-                __(
-                    'Some requirements for installation have not been met. Please correct these before retrying installation.') .
-                '</p>';
-            die();
-        } else {
-            echo __('All minimum requirements have been met!') . '</p>';
-        }
-
-        echo '<p><span  style="font-weight: bold; text-decoration: underline;">' .
-            __('Additional environment information') . '</span><br>';
-        $this->checkOptionalExtensions();
-        $this->checkPDODrivers();
-        echo '</p>';
-
-        echo '
-        <form accept-charset="utf-8" action="imgboard.php?install&step=database-check" method="post">
-            <div>
-                <input type="submit" value="' . __('Continue') . '">
-            </div>
-        </form>
-    </body>
-</html>';
-        die();
+        $render_data = array();
+        $render_data['page_title'] = __('Environment check');
+        $render_data['php_check'] = $this->checkPHP();
+        $render_data['required_extensions_check'] = $this->checkRequiredExtensions();
+        $render_data['optional_extensions_check'] = $this->checkOptionalExtensions();
+        $render_data['directory_permissions_check'] = $this->checkDirectories();
+        $render_data['pdo_drivers_check'] = $this->checkPDODrivers();
+        $render_data['minimum_requirements_met'] = !$render_data['php_check']['php_check_failed'] &&
+            !$render_data['required_extensions_check']['extensions_check_failed'] &&
+            !$render_data['directory_permissions_check']['directory_check_failed'] &&
+            !$render_data['pdo_drivers_check']['pdo_driver_check_failed'];
+        $this->output('environment_check', $render_data);
     }
 
-    private function checkPHP(): bool
+    private function checkPHP(): array
     {
-        echo '<p><span  style="font-weight: bold;">' . __('PHP version check:') . '</span><br>';
-        echo __('Minimum PHP version required: ' . NELLIEL_PHP_MINIMUM), '<br>';
-        echo __('PHP version detected: ' . PHP_VERSION), '<br>';
-        return version_compare(PHP_VERSION, NELLIEL_PHP_MINIMUM, '>=');
+        $render_data = array();
+        $render_data['php_minimum'] = NELLIEL_PHP_MINIMUM;
+        $render_data['php_detected'] = PHP_VERSION;
+        $render_data['php_check_failed'] = version_compare(PHP_VERSION, NELLIEL_PHP_MINIMUM, '<');
+        return $render_data;
     }
 
-    private function checkRequiredExtensions(): bool
+    private function checkRequiredExtensions(): array
     {
-        $success = true;
+        $render_data = array();
+        $render_data['extensions_check_failed'] = false;
         $required_extensions = array();
         $required_extensions['PDO'] = extension_loaded('pdo');
         $required_extensions['GD'] = extension_loaded('gd');
@@ -95,66 +57,60 @@ class EnvironmentCheck
         $required_extensions['libxml'] = extension_loaded('libxml');
         $required_extensions['session'] = extension_loaded('session');
 
-        echo '<p><span  style="font-weight: bold;">' . __('Required PHP extensions:') . '</span><br>';
-
-        foreach ($required_extensions as $extension => $present) {
-            if (!$present) {
-                echo $extension . ': <span style="color: red;">' . __('not installed') . '</span><br>';
-                $success = false;
-            } else {
-                echo $extension . ': <span style="color: green;">' . __('installed') . '</span><br>';
+        foreach ($required_extensions as $extension => $installed) {
+            if (!$installed) {
+                $render_data['extensions_check_failed'] = true;
             }
+
+            $render_data['extensions'][] = ['name' => $extension, 'installed' => $installed];
         }
 
-        return $success;
+        return $render_data;
     }
 
-    private function checkDirectories(): bool
+    private function checkDirectories(): array
     {
-        $success = true;
+        $render_data = array();
+        $render_data['directory_check_failed'] = false;
         $directories = array();
         $directories['core'] = is_writable(NEL_CORE_PATH);
         $directories['configuration'] = is_writable(NEL_CONFIG_FILES_PATH);
         $directories['public'] = is_writable(NEL_PUBLIC_PATH);
         $directories['assets'] = is_writable(NEL_ASSETS_FILES_PATH);
 
-        echo '<p><span  style="font-weight: bold;">' . __('Directory permissions check:') . '</span><br>';
-
         foreach ($directories as $directory => $writable) {
             if (!$writable) {
-                echo $directory . ': <span style="color: red;">' . __('not writable') . '</span><br>';
-                $success = false;
-            } else {
-                echo $directory . ': <span style="color: green;">' . __('writable') . '</span><br>';
+                $render_data['directory_check_failed'] = true;
             }
+
+            $render_data['directories'][] = ['directory' => $directory, 'writable' => $writable];
         }
 
-        echo '</p>';
-        return $success;
+        return $render_data;
     }
 
-    private function checkOptionalExtensions(): void
+    private function checkOptionalExtensions(): array
     {
+        $render_data = array();
         $optional_extensions = array();
         $optional_extensions['Imagick'] = extension_loaded('imagick');
         $optional_extensions['Gmagick'] = extension_loaded('gmagick');
         $optional_extensions['mbstring'] = extension_loaded('mbstring');
 
-        echo '<p><span  style="font-weight: bold;">' . __('Optional PHP extensions:') . '</span><br>';
-
-        foreach ($optional_extensions as $extension => $present) {
-            if (!$present) {
-                echo $extension . ': <span style="color: red;">' . __('not installed') . '</span><br>';
-            } else {
-                echo $extension . ': <span style="color: green;">' . __('installed') . '</span><br>';
+        foreach ($optional_extensions as $extension => $installed) {
+            if (!$installed) {
+                continue;
             }
+
+            $render_data['extensions'][] = ['name' => $extension, 'installed' => $installed];
         }
 
-        echo '</p>';
+        return $render_data;
     }
 
-    private function checkPDODrivers(): void
+    private function checkPDODrivers(): array
     {
+        $render_data = array();
         $drivers = array();
         $pdo_drivers = PDO::getAvailableDrivers();
         $drivers['MySQL'] = in_array('mysql', $pdo_drivers);
@@ -162,21 +118,21 @@ class EnvironmentCheck
         $drivers['PostgreSQL'] = in_array('pgsql', $pdo_drivers);
         $drivers['SQLite'] = in_array('sqlite', $pdo_drivers);
 
-        echo '<p><span  style="font-weight: bold;">' . __('PDO drivers:') . '</span><br>';
-
         foreach ($drivers as $driver => $installed) {
             if (!$installed) {
-                echo $driver . ': <span style="color: red;">' . __('not installed') . '</span><br>';
-            } else {
-                echo $driver . ': <span style="color: green;">' . __('installed') . '</span><br>';
+                continue;
             }
+
+            $render_data['drivers'][] = ['driver' => $driver, 'installed' => $installed];
         }
 
-        echo '</p>';
+        $render_data['pdo_driver_check_failed'] = empty($render_data['drivers']);
+        return $render_data;
     }
 
     private function output(string $template_file, array $render_data = array()): void
     {
+        $render_data['base_stylesheet'] = NEL_STYLES_WEB_PATH . 'core/base_style.css';
         $html = $this->render_core->renderFromTemplateFile($template_file, $render_data);
         echo $this->translator->translateHTML($html);
         die();
