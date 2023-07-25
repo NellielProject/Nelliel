@@ -3,6 +3,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 //
 // Example file for database configuration.
+// If you want to manually configure these settings before installing, copy this file to 'databases.php' and edit it.
 //
 
 //

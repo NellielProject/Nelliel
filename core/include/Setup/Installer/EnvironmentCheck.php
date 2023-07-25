@@ -20,8 +20,12 @@ class EnvironmentCheck
         $this->render_core = new RenderCoreSimple(NEL_INCLUDE_PATH . 'Setup/Installer/templates/');
     }
 
-    public function check()
+    public function check(string $step)
     {
+        if ($step !== 'verify-install-key') {
+            return;
+        }
+
         $render_data = array();
         $render_data['page_title'] = __('Environment check');
         $render_data['php_check'] = $this->checkPHP();
@@ -31,7 +35,8 @@ class EnvironmentCheck
         $render_data['pdo_drivers_check'] = $this->checkPDODrivers();
         $render_data['minimum_requirements_met'] = !$render_data['php_check']['php_check_failed'] &&
             !$render_data['required_extensions_check']['extensions_check_failed'] &&
-            !$render_data['directory_permissions_check']['directory_check_failed'] &&
+            !$render_data['directory_permissions_check']['directory_readable_failed'] &&
+            !$render_data['directory_permissions_check']['directory_writable_failed'] &&
             !$render_data['pdo_drivers_check']['pdo_driver_check_failed'];
         $this->output('environment_check', $render_data);
     }
@@ -71,19 +76,32 @@ class EnvironmentCheck
     private function checkDirectories(): array
     {
         $render_data = array();
-        $render_data['directory_check_failed'] = false;
+        $render_data['directory_readable_failed'] = false;
+        $render_data['directory_writable_failed'] = false;
         $directories = array();
-        $directories['core'] = is_writable(NEL_CORE_PATH);
-        $directories['configuration'] = is_writable(NEL_CONFIG_FILES_PATH);
-        $directories['public'] = is_writable(NEL_PUBLIC_PATH);
-        $directories['assets'] = is_writable(NEL_ASSETS_FILES_PATH);
 
-        foreach ($directories as $directory => $writable) {
-            if (!$writable) {
-                $render_data['directory_check_failed'] = true;
+        $directories['core'] = NEL_CORE_PATH;
+        $directories['configuration'] = NEL_CONFIG_FILES_PATH;
+        $directories['public'] = NEL_PUBLIC_PATH;
+        $directories['assets'] = NEL_ASSETS_FILES_PATH;
+
+        foreach ($directories as $directory => $path) {
+            $results = array();
+            $results['directory'] = $directory;
+
+            if (!is_readable($path)) {
+                $render_data['directory_readable_failed'] = true;
+            } else {
+                $results['readable'] = true;
             }
 
-            $render_data['directories'][] = ['directory' => $directory, 'writable' => $writable];
+            if (!is_writable($path)) {
+                $render_data['directory_writable_failed'] = true;
+            } else {
+                $results['writable'] = true;
+            }
+
+            $render_data['directories'][] = $results;
         }
 
         return $render_data;

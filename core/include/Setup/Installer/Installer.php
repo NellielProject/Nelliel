@@ -95,9 +95,18 @@ class Installer
 
         if ($step === 'verify-install-key') {
             $this->installKeyCheck();
-            $environment_check = new EnvironmentCheck($this->translator);
-            $environment_check->check();
         }
+
+        if (!file_exists(NEL_CONFIG_FILES_PATH . 'dnsbl.php')) {
+            copy(NEL_CONFIG_FILES_PATH . 'dnsbl.php.example', NEL_CONFIG_FILES_PATH . 'dnsbl.php');
+        }
+
+        if (!file_exists(NEL_CONFIG_FILES_PATH . 'if_thens.php')) {
+            copy(NEL_CONFIG_FILES_PATH . 'if_thens.php.example', NEL_CONFIG_FILES_PATH . 'if_thens.php');
+        }
+
+        $environment_check = new EnvironmentCheck($this->translator);
+        $environment_check->check($step);
 
         $database_setup = new DatabaseSetup($this->file_handler, $this->translator);
         $database_setup->setup($step);
@@ -190,11 +199,12 @@ class Installer
 
     private function installKeyCheck(): void
     {
-        $install_key = $_POST['install_key'] ?? '';
+        $install_key = '';
+        include NEL_CONFIG_FILES_PATH . 'install_key.php';
+        $given_install_key = $_POST['install_key'] ?? '';
 
-        if (nel_true_empty(NEL_INSTALL_KEY) || $install_key !== NEL_INSTALL_KEY) {
+        if ($install_key === '' || $given_install_key !== $install_key) {
             nel_derp(114, __('Install key does not match or is invalid.'));
-            die();
         }
     }
 

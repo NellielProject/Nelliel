@@ -2,8 +2,7 @@
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 //
-// This file has only the very basic configuration needed to function and do setup.
-// It is intentionally kept short and simple.
+// This file has only basic, low-level configuration needed for setup and core functions.
 // All other settings are accessible from the management panels and stored in the database.
 //
 
@@ -19,11 +18,6 @@ $base_config['default_locale'] = 'en_US';
 // Forces Nelliel to only allow sessions over a secure connection.
 // Once SSL is set up for the site, it is recommended that you set this to true.
 $base_config['secure_session_only'] = false;
-
-// Secret key that must be entered before running the install functions.
-// The key is used to prevent the installer from being hijacked before it's ready.
-// Install will not run if this is blank.
-$base_config['install_key'] = '';
 
 //
 // === Technical Settings ===

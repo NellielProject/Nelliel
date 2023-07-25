@@ -42,17 +42,28 @@
 		<p>
 			<span style="font-weight: bold;" data-i18n="">Directory permissions check</span><br>
 	{{# directories }}
+		{{ directory }}:
+		{{# readable }}
+			 <span style="color: green;" data-i18n="">readable</span> +
+		{{/ readable }}
+		{{^ readable }}
+			<span style="color: red;" data-i18n="">not readable</span> + 
+		{{/ readable }}
 		{{# writable }}
-			{{ directory }}: <span style="color: green;" data-i18n="">writable</span><br>
+			<span style="color: green;" data-i18n="">writable</span>
 		{{/ writable }}
 		{{^ writable }}
-			{{ directory }}: <span style="color: red;" data-i18n="">not writable</span><br>
+			<span style="color: red;" data-i18n="">not writable</span>
 		{{/ writable }}
+		<br>
 	{{/ directories }}
 		</p>
-	{{# directory_check_failed }}
+	{{# directory_readable_failed }}
+		<p style="color: red;" data-i18n="">Some directories are not readable!</p>
+	{{/ directory_readable_failed }}
+	{{# directory_writable_failed }}
 		<p style="color: red;" data-i18n="">Some directories are not writable!</p>
-	{{/ directory_check_failed }}
+	{{/ directory_writable_failed }}
 {{/ directory_permissions_check }}
 {{# pdo_drivers_check }}
 		<p>
