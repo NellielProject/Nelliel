@@ -5,7 +5,7 @@ namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\BansAccess;
+use Nelliel\Bans\BansAccess;
 use Nelliel\DNSBL;
 use Nelliel\FGSFDS;
 use Nelliel\Snacks;

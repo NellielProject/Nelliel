@@ -7,6 +7,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use IPTools\IP;
 use IPTools\Range;
+use Nelliel\Bans\BanHammer;
+use Nelliel\Bans\BansAccess;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputBanPage;
 use PDO;

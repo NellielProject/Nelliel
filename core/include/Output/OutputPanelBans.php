@@ -5,9 +5,9 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\BanHammer;
-use Nelliel\BansAccess;
 use Nelliel\IPInfo;
+use Nelliel\Bans\BanHammer;
+use Nelliel\Bans\BansAccess;
 use Nelliel\Domains\Domain;
 use PDO;
 

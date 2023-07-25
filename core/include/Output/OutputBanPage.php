@@ -5,7 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\BansAccess;
+use Nelliel\Bans\BansAccess;
 use Nelliel\Domains\Domain;
 use DateInterval;
 use DateTime;

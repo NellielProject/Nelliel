@@ -1,11 +1,12 @@
 <?php
 declare(strict_types = 1);
 
-namespace Nelliel;
+namespace Nelliel\Bans;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use IPTools\Range;
+use Nelliel\IPInfo;
 use Nelliel\Account\Session;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;

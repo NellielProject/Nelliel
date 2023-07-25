@@ -5,11 +5,11 @@ namespace Nelliel\NewPost;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\BansAccess;
 use Nelliel\FileTypes;
 use Nelliel\Snacks;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Bans\BansAccess;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
