@@ -23,19 +23,19 @@ class PostJSON extends JSON
         $raw_data['parent_thread'] = $this->post->data('parent_thread');
         $raw_data['reply_to'] = $this->post->data('reply_to');
 
-        if (!nel_true_empty($this->post->data('name'))) {
+        if (!nel_true_empty($this->post->data('name')) && $this->post->domain()->setting('show_poster_name')) {
             $raw_data['name'] = $this->post->data('name');
         }
 
-        if (!nel_true_empty($this->post->data('tripcode'))) {
+        if (!nel_true_empty($this->post->data('tripcode')) && $this->post->domain()->setting('show_tripcodes')) {
             $raw_data['tripcode'] = $this->post->data('tripcode');
         }
 
-        if (!nel_true_empty($this->post->data('secure_tripcode'))) {
+        if (!nel_true_empty($this->post->data('secure_tripcode')) && $this->post->domain()->setting('show_tripcodes')) {
             $raw_data['secure_tripcode'] = $this->post->data('secure_tripcode');
         }
 
-        if (!nel_true_empty($this->post->data('capcode'))) {
+        if (!nel_true_empty($this->post->data('capcode')) && $this->post->domain()->setting('show_capcode')) {
             $raw_data['capcode'] = $this->post->data('capcode');
         }
 
@@ -43,11 +43,11 @@ class PostJSON extends JSON
             $raw_data['email'] = $this->post->data('email');
         }
 
-        if (!nel_true_empty($this->post->data('subject'))) {
+        if (!nel_true_empty($this->post->data('subject')) && $this->post->domain()->setting('show_post_subject')) {
             $raw_data['subject'] = $this->post->data('subject');
         }
 
-        if (!nel_true_empty($this->post->data('comment'))) {
+        if (!nel_true_empty($this->post->data('comment')) && $this->post->domain()->setting('show_user_comments')) {
             $raw_data['comment'] = $this->post->data('comment');
         }
 
@@ -61,7 +61,7 @@ class PostJSON extends JSON
         $raw_data['op'] = $this->post->data('op');
         $raw_data['sage'] = $this->post->data('sage');
 
-        if (!nel_true_empty($this->post->data('mod_comment'))) {
+        if (!nel_true_empty($this->post->data('mod_comment')) && $this->post->domain()->setting('show_mod_comments')) {
             $raw_data['mod_comment'] = $this->post->data('mod_comment');
         }
 

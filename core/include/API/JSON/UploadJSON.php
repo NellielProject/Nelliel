@@ -30,20 +30,27 @@ class UploadJSON extends JSON
             $raw_data['mime'] = $this->upload->data('mime');
             $raw_data['filename'] = $this->upload->data('filename');
             $raw_data['extension'] = $this->upload->data('extension');
-            $raw_data['original_filename'] = $this->upload->data('original_filename');
+
+            if ($this->upload->domain()->setting('show_original_name')) {
+                $raw_data['original_filename'] = $this->upload->data('original_filename');
+            }
+
             $raw_data['display_width'] = $this->upload->data('display_width');
             $raw_data['display_height'] = $this->upload->data('display_height');
         }
 
         $has_preview = !nel_true_empty($this->upload->data('static_preview_name')) ||
             !nel_true_empty($this->upload->data('animated_preview_name'));
+        $preview_visible = $this->upload->data('static_preview_name') || $this->upload->data('animated_preview_name');
 
-        if ($has_preview) {
-            if (!nel_true_empty($this->upload->data('static_preview_name'))) {
+        if ($has_preview && $preview_visible) {
+            if (!nel_true_empty($this->upload->data('static_preview_name')) &&
+                $this->upload->domain()->setting('show_static_preview')) {
                 $raw_data['static_preview_name'] = $this->upload->data('static_preview_name');
             }
 
-            if (!nel_true_empty($this->upload->data('animated_preview_name'))) {
+            if (!nel_true_empty($this->upload->data('animated_preview_name')) &&
+                $this->upload->domain()->setting('show_animated_preview')) {
                 $raw_data['animated_preview_name'] = $this->upload->data('animated_preview_name');
             }
 
