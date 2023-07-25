@@ -51,9 +51,9 @@ class DatabaseConnector
     {
         $db_config = NEL_DATABASES[$database_key] ?? array();
         $config['sqltype'] = $db_config['sqltype'] ?? '';
-        $config['timeout'] = $db_config['timeout'] ?? 30;
         $type = utf8_strtolower($config['sqltype']);
         $config['database'] = $db_config[$type]['database'] ?? '';
+        $config['timeout'] = $db_config[$type]['timeout'] ?? 30;
         $config['schema'] = $db_config[$type]['schema'] ?? '';
         $config['host'] = $db_config[$type]['host'] ?? '';
         $config['port'] = $db_config[$type]['port'] ?? '';

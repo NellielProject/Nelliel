@@ -272,3 +272,45 @@ function nel_strtotime(string $time): int
 
     return intval(strtotime($time));
 }
+
+function nel_config_var_export(array $array, string $prefix = '')
+{
+    $config_output = '';
+
+    foreach ($array as $key => $value) {
+        if (is_int($key) && is_string($value)) {
+            $config_output .= "\n" . $value . ';';
+        } else if (is_array($value)) {
+            $prefix .= '[\'' . $key . '\']';
+            $keys = array_keys($value);
+            $values_array = '';
+
+            foreach($keys as $index) {
+                if(is_int($index) && !is_array($value[$index])) {
+                    $values_array .= $value[$index] . ', ';
+                }
+            }
+
+            if(empty($values_array)) {
+                $line = nel_config_var_export($value, $prefix);
+                $config_output .= $line;
+            } else {
+                $config_output .= "\n" . $prefix . ' = [' . utf8_rtrim($values_array, ' ,') . '];';
+            }
+
+            $prefix = utf8_str_replace('[\'' . $key . '\']', '', $prefix);
+        } else if (is_string($value)) {
+            $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = \'' . $value . '\';';
+        } else if (is_null($value)) {
+            $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = null;';
+        } else if (is_bool($value)) {
+            $boolval = ($value === false) ? 'false' : 'true';
+            $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = ' . $boolval . ';';
+        }
+        else {
+            $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = ' . $value . ';';
+        }
+    }
+
+    return $config_output;
+}

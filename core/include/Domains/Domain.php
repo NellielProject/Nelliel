@@ -47,7 +47,7 @@ abstract class Domain implements NellielCacheInterface
         $this->front_end_data = new FrontEndData($this->database);
         $this->file_handler = nel_utilities()->fileHandler();
         $this->cache_handler = nel_utilities()->cacheHandler();
-        $this->translator = new Translator($this);
+        $this->translator = new Translator($this->file_handler);
         $this->language = new Language();
         $this->statistics = new Statistics();
     }

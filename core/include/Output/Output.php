@@ -63,7 +63,7 @@ abstract class Output
             self::$render_cores['mustache'] = self::$render_cores['mustache'] ?? new RenderCoreMustache($this->domain);
             $this->render_core = self::$render_cores['mustache'];
         } else if ($core_id === 'DOM') {
-            self::$render_cores['DOM'] = self::$render_cores['DOM'] ?? new RenderCoreDOM();
+            self::$render_cores['DOM'] = self::$render_cores['DOM'] ?? new RenderCoreDOM($this->file_hander);
             $this->render_core = self::$render_cores['DOM'];
         } else {
             return;

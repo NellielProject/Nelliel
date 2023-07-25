@@ -1156,6 +1156,37 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Global recents table added.') . '<br>';
 
+                // Update markup table
+
+                // Fixes bug with reserved words; exclude MySQL and MariaDB because it wouldn't have been able to complete installation
+                if ($core_sqltype !== 'MYSQL' && $core_sqltype !== 'MARIADB') {
+
+                    nel_database('core')->exec('ALTER TABLE "nelliel_markup" RENAME TO nelliel_markup_old');
+
+                    $markup_table = new TableMarkup(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $markup_table->createTable();
+
+                    $markup_data = nel_database('core')->executeFetchAll('SELECT * FROM "nelliel_markup_old"',
+                        PDO::FETCH_ASSOC);
+                    $markup_transfer = nel_database('core')->prepare(
+                        'INSERT INTO "nelliel_markup" ("label", "type", "match_regex", "replacement", "enabled", "notes", "moar") VALUES (?, ?, ?, ?, ?, ?, ?)');
+
+                    foreach ($markup_data as $data) {
+                        $markup_transfer->bindValue(1, $data['label'], PDO::PARAM_STR);
+                        $markup_transfer->bindValue(2, $data['type'], PDO::PARAM_STR);
+                        $markup_transfer->bindValue(3, $data['match'], PDO::PARAM_STR);
+                        $markup_transfer->bindValue(4, $data['replace'], PDO::PARAM_STR);
+                        $markup_transfer->bindValue(5, $data['enabled'], PDO::PARAM_INT);
+                        $markup_transfer->bindValue(6, $data['notes'], PDO::PARAM_STR);
+                        $markup_transfer->bindValue(7, $data['moar'], PDO::PARAM_STR);
+                        nel_database('core')->executePrepared($markup_transfer);
+                    }
+
+                    echo ' - ' . __('Markup table updated.') . '<br>';
+                }
+
+                nel_database('core')->exec('DROP TABLE "nelliel_markup_old"');
+
                 $migration_count ++;
         }
 

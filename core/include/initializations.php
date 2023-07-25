@@ -3,27 +3,30 @@ declare(strict_types = 1);
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Setup\Setup;
+use Nelliel\Language\Translator;
+use Nelliel\Setup\Installer\Installer;
 use Nelliel\Setup\Upgrade;
+use Nelliel\Utility\FileHandler;
 
 Mustache_Autoloader::register();
 
-require_once NEL_INCLUDE_PATH . 'crypt.php';
-nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
-
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
-$file_handler = nel_utilities()->fileHandler();
-$setup = new Setup(nel_database('core'), nel_utilities()->sqlCompatibility(), $file_handler);
+$file_handler = new FileHandler();
+$translator = new Translator($file_handler);
+$installer = new Installer($file_handler, $translator);
 
 if (isset($_GET['install'])) {
-    $setup->install();
+    $installer->install();
 }
 
-if (!$setup->checkInstallDone()) {
+if (!$installer->checkInstallDone()) {
     nel_derp(107, _gettext('Installation has not been done yet or is not complete.'));
 }
 
-unset($setup);
+unset($installer);
+
+require_once NEL_INCLUDE_PATH . 'crypt.php';
+nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 $upgrade = new Upgrade($file_handler);
 
@@ -36,8 +39,6 @@ if (isset($_GET['upgrade'])) {
             _gettext('Versions do not match. An upgrade may be in progress or something is broken. Try again later.'));
     }
 }
-
-unset($upgrade);
 
 if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
     $peppers = array();

@@ -1,4 +1,6 @@
 <?php
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+// If you want to manually configure these settings before installing, copy this file to 'if_thens.php' and edit it.
+
 $if_thens = ['new_post' => array()];

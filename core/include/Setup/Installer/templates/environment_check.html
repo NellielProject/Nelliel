@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+	{{> pieces/head }}
+	<body>
+{{# php_check }}
+		<p>
+			<span style="font-weight: bold;" data-i18n="">PHP version check</span><br>
+			<span data-i18n="">Minimum PHP version required:</span> {{ php_minimum }}<br>
+			<span data-i18="">PHP version detected:</span> {{ php_detected }}<br>
+		</p>
+	{{# php_check_failed }}
+		<p style="color: red;" data-i18n="">PHP version is too old!</p>
+	{{/ php_check_failed }}
+{{/ php_check }}
+{{# required_extensions_check }}
+		<p>
+			<span style="font-weight: bold;" data-i18n="">Required PHP extensions</span><br>
+	{{# extensions }}
+		{{# installed }}
+			{{ name }}: <span style="color: green;" data-i18n="">installed</span><br>
+		{{/ installed }}
+		{{^ installed }}
+			{{ name }}: <span style="color: red;" data-i18n="">not installed</span><br>
+		{{/ installed }}
+	{{/ extensions }}
+		</p>
+	{{# extensions_check_failed }}
+		<p style="color: red;" data-i18n="">Some required PHP extensions are not installed!</p>
+	{{/ extensions_check_failed }}
+{{/ required_extensions_check }}
+{{# optional_extensions_check }}
+		<p>
+			<span style="font-weight: bold;" data-i18n="">Optional PHP extensions</span><br>
+	{{# extensions }}
+		{{# installed }}
+			{{ name }}: <span style="color: green;" data-i18n="">installed</span><br>
+		{{/ installed }}
+	{{/ extensions }}
+		</p>
+{{/ optional_extensions_check }}
+{{# directory_permissions_check }}
+		<p>
+			<span style="font-weight: bold;" data-i18n="">Directory permissions check</span><br>
+	{{# directories }}
+		{{ directory }}:
+		{{# readable }}
+			 <span style="color: green;" data-i18n="">readable</span> +
+		{{/ readable }}
+		{{^ readable }}
+			<span style="color: red;" data-i18n="">not readable</span> + 
+		{{/ readable }}
+		{{# writable }}
+			<span style="color: green;" data-i18n="">writable</span>
+		{{/ writable }}
+		{{^ writable }}
+			<span style="color: red;" data-i18n="">not writable</span>
+		{{/ writable }}
+		<br>
+	{{/ directories }}
+		</p>
+	{{# directory_readable_failed }}
+		<p style="color: red;" data-i18n="">Some directories are not readable!</p>
+	{{/ directory_readable_failed }}
+	{{# directory_writable_failed }}
+		<p style="color: red;" data-i18n="">Some directories are not writable!</p>
+	{{/ directory_writable_failed }}
+{{/ directory_permissions_check }}
+{{# pdo_drivers_check }}
+		<p>
+			<span style="font-weight: bold;" data-i18n="">Available PDO database drivers</span><br>
+	{{# drivers }}
+		{{# installed }}
+			{{ driver }}: <span style="color: green;" data-i18n="">installed</span><br>
+		{{/ installed }}
+	{{/ drivers }}
+		</p>
+	{{# pdo_driver_check_failed }}
+		<p style="color: red;" data-i18n="">No database drivers were detected!</p>
+	{{/ pdo_driver_check_failed }}
+{{/ pdo_drivers_check }}
+{{# minimum_requirements_met }}
+		<p data-i18n="">All minimum requirements have been met. Installation can continue.</p>
+		<form accept-charset="utf-8" action="imgboard.php?install&step=database-check" method="post">
+			<div class="installer-form">
+				<div class="installer-form-row">
+					<input class="installer-form-input" type="submit" value="Continue" data-i18n-attributes="value">
+				</div>
+			</div>
+		</form>
+{{/ minimum_requirements_met }}
+{{^ minimum_requirements_met }}
+		<p data-i18n="">Some of the minimum requirements have not been met. Installation cannot continue until this is corrected.</p>
+{{/ minimum_requirements_met }}
+	</body>
+</html>

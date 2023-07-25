@@ -1,8 +1,9 @@
 <?php
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+// If you want to manually configure these settings before installing, copy this file to 'dnsbl.php' and edit it.
+
 // Mostly works the same way vichan's DNSBL config does
 // https://web.archive.org/web/20121003095945/http://tinyboard.org/docs/?p=Config/DNSBL
-
 // Only real difference is exceptions are set in the site settings control panel
 $services[] = [];

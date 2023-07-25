@@ -16,7 +16,7 @@ class TableLogs extends Table
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
-        $this->table_name = NEL_SYSTEM_LOGS_TABLE;
+        $this->table_name = '';
         $this->column_types = [
             'log_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'level' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
@@ -65,15 +65,15 @@ class TableLogs extends Table
             visitor_id          VARCHAR(255) DEFAULT NULL,
             moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (log_id),
-            CONSTRAINT fk_logs__domain_registry
+            CONSTRAINT fk_' . $this->table_name . '__domain_registry
             FOREIGN KEY (domain_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk_logs__users
+            CONSTRAINT fk_' . $this->table_name . '__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
             ON DELETE SET NULL,
-            CONSTRAINT fk_logs__ip_info
+            CONSTRAINT fk_' . $this->table_name . '__ip_info
             FOREIGN KEY (hashed_ip_address) REFERENCES ' . NEL_IP_INFO_TABLE . ' (hashed_ip_address)
             ON UPDATE CASCADE
             ON DELETE SET NULL
