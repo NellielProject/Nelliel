@@ -121,7 +121,10 @@ class Installer
 <!DOCTYPE html>
 <html>
 	<head>
-		<title data-i18n="">Installation running</title>
+        <meta http-equiv="content-type"  content="text/html;charset=utf-8">
+        <title>' . __('Installation running') . '</title>
+        <link rel="stylesheet" type="text/css" href="' . NEL_STYLES_WEB_PATH . 'core/base_style.css' .
+            '">
 	</head>
 	<body>
 ';
@@ -170,24 +173,28 @@ class Installer
     </p>
     <form accept-charset="utf-8" action="imgboard.php?route=/' . Domain::SITE .
                 '/account/register" method="post">
-        <input type="hidden" name="create_owner" value="' . $install_id . '"
-        <div>
-            <label for="register_username">' . __('Username:') .
+        <input type="hidden" name="create_owner" value="' . $install_id .
+                '"
+        <div class="installer-form">
+            <div class="installer-form-row">
+                <label for="register_username" class="installer-form-label">' . __('Username:') .
                 '</label>
-            <input id="register_username" type="text" name="register_username" maxlength="255">
-        </div>
-        <div>
-            <label for="register_super_sekrit">' . __('Password:') .
+                <input id="register_username" class="installer-form-input" type="text" name="register_username" maxlength="255">
+            </div>
+            <div class="installer-form-row">
+                <label for="register_super_sekrit" class="installer-form-label">' . __('Password:') .
                 '</label>
-            <input id="register_super_sekrit" type="password" name="register_super_sekrit" maxlength="255">
-        </div>
-        <div>
-            <label for="register_super_sekrit_confirm">' . __('Confirm password:') .
+                <input id="register_super_sekrit" class="installer-form-input" type="password" name="register_super_sekrit" maxlength="255">
+            </div>
+            <div class="installer-form-row">
+                <label for="register_super_sekrit_confirm" class="installer-form-label">' . __('Confirm password:') .
                 '</label>
-            <input id="register_super_sekrit_confirm" type="password" name="register_super_sekrit_confirm" maxlength="255">
-        </div>
-        <div>
-            <input type="submit" value="' . __('Submit') . '">
+                <input id="register_super_sekrit_confirm" class="installer-form-input" type="password" name="register_super_sekrit_confirm" maxlength="255">
+            </div>
+            <div class="installer-form-row">
+                <input class="installer-form-input" type="submit" value="' . __('Submit') .
+                '">
+            </div>
         </div>
     </form>
 </body></html>';
