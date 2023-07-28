@@ -68,6 +68,7 @@ class OutputPanelPages extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $editing = $parameters['editing'] ?? true;
+        $markup_type = 'none';
 
         if ($editing) {
             $page_id = $parameters['page_id'] ?? 0;
@@ -80,12 +81,16 @@ class OutputPanelPages extends Output
                 $this->render_data['title'] = $page_data['title'];
                 $this->render_data['text'] = $page_data['text'];
                 $this->render_data['domain_id'] = $page_data['domain_id'];
+                $markup_type = $page_data['markup_type'];
             }
         } else {
             $this->render_data['new_page'] = true;
             $form_action = nel_build_router_url([$this->domain->id(), 'pages', 'new']);
         }
 
+        $menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['markup_type_select'] = $menu->markupType($markup_type,
+            $this->session->user()->checkPermission($this->domain, 'perm_raw_html'), $data_only);
         $this->render_data['form_action'] = $form_action;
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);

@@ -51,7 +51,7 @@ class Regen
         }
 
         $output_generic_page = new OutputGenericPage($domain, true);
-        $output = $output_generic_page->render($page['title'], $page['text'], false);
+        $output = $output_generic_page->render($page['title'], $page['text'], $page['markup_type'], false);
         nel_utilities()->fileHandler()->writeFile($domain->reference('base_path') . $page['uri'] . '.html', $output);
     }
 

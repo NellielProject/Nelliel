@@ -15,8 +15,9 @@ class Markup
 {
     private $database;
     private $domain;
-    private $dynamic_urls;
+    private $dynamic_urls = false;
     private $markup_data;
+    private $protocols = '';
 
     function __construct(NellielPDO $database)
     {
@@ -40,6 +41,7 @@ class Markup
     {
         $this->domain = $source_domain;
         $this->dynamic_urls = $dynamic_urls;
+        $this->protocols = (!is_null($source_domain)) ? $source_domain->setting('url_protocols') : '';
         $modified_text = $text;
         $modified_text = $this->parseBlocks($modified_text);
         return $modified_text;
@@ -59,7 +61,7 @@ class Markup
         $modified_text = $text;
         $modified_text = $this->parseSimple($modified_text);
         $modified_text = $this->parseLoops($modified_text);
-        $modified_text = $this->parseURLs($modified_text, $this->domain->setting('url_protocols'));
+        $modified_text = $this->parseURLs($modified_text, $this->protocols);
         $modified_text = $this->parseCites($modified_text, $this->domain, $this->dynamic_urls);
         return $modified_text;
     }

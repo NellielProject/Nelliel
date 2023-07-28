@@ -174,4 +174,31 @@ class OutputMenu extends Output
 
         return $boards;
     }
+
+    public function markupType(string $selected, bool $html, bool $data_only): array
+    {
+        $this->renderSetup();
+        $markup_types = array();
+        $markup_types['select_name'] = 'markup_type';
+        $option_none = array();
+        $option_none['option_label'] = 'None';
+        $option_none['option_value'] = 'none';
+        $option_none['option_selected'] = $selected === 'none' ? 'selected' : '';
+        $markup_types['options'][] = $option_none;
+
+        if ($html) {
+            $option_html = array();
+            $option_html['option_label'] = 'HTML';
+            $option_html['option_value'] = 'html';
+            $option_html['option_selected'] = $selected === 'html' ? 'selected' : '';
+            $markup_types['options'][] = $option_html;
+        }
+
+        $option_imageboard = array();
+        $option_imageboard['option_label'] = 'Imageboard';
+        $option_imageboard['option_value'] = 'imageboard';
+        $option_imageboard['option_selected'] = $selected === 'imageboard' ? 'selected' : '';
+        $markup_types['options'][] = $option_imageboard;
+        return $markup_types;
+    }
 }

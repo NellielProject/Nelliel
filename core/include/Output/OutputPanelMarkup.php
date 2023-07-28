@@ -98,8 +98,8 @@ class OutputPanelMarkup extends Output
                 $this->render_data['markup_id'] = $markup_data['markup_id'];
                 $this->render_data['label'] = $markup_data['label'];
                 $this->render_data['type'] = $markup_data['type'];
-                $this->render_data['match'] = $markup_data['match'];
-                $this->render_data['replace'] = $markup_data['replace'];
+                $this->render_data['match'] = $markup_data['match_regex'];
+                $this->render_data['replace'] = $markup_data['replacement'];
                 $this->render_data['enabled'] = $markup_data['enabled'] == 1 ? 'checked' : '';
                 $this->render_data['notes'] = $markup_data['notes'];
             }
