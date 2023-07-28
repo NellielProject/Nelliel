@@ -107,6 +107,8 @@ class OutputPanelMarkup extends Output
             $form_action = nel_build_router_url([$this->domain->id(), 'markup', 'new']);
         }
 
+        $menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['type_select'] = $menu->markupTypes($markup_data['type'] ?? '', $data_only);
         $this->render_data['form_action'] = $form_action;
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);

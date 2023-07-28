@@ -175,30 +175,58 @@ class OutputMenu extends Output
         return $boards;
     }
 
-    public function markupType(string $selected, bool $html, bool $data_only): array
+    public function markupOptions(string $selected, bool $html, bool $data_only): array
     {
         $this->renderSetup();
-        $markup_types = array();
-        $markup_types['select_name'] = 'markup_type';
+        $markup_options = array();
+        $markup_options['select_name'] = 'markup_type';
         $option_none = array();
-        $option_none['option_label'] = 'None';
+        $option_none['option_label'] = __('None');
         $option_none['option_value'] = 'none';
         $option_none['option_selected'] = $selected === 'none' ? 'selected' : '';
-        $markup_types['options'][] = $option_none;
+        $markup_options['options'][] = $option_none;
 
         if ($html) {
             $option_html = array();
-            $option_html['option_label'] = 'HTML';
+            $option_html['option_label'] = __('HTML');
             $option_html['option_value'] = 'html';
             $option_html['option_selected'] = $selected === 'html' ? 'selected' : '';
-            $markup_types['options'][] = $option_html;
+            $markup_options['options'][] = $option_html;
         }
 
         $option_imageboard = array();
-        $option_imageboard['option_label'] = 'Imageboard';
+        $option_imageboard['option_label'] = __('Imageboard');
         $option_imageboard['option_value'] = 'imageboard';
         $option_imageboard['option_selected'] = $selected === 'imageboard' ? 'selected' : '';
-        $markup_types['options'][] = $option_imageboard;
+        $markup_options['options'][] = $option_imageboard;
+        return $markup_options;
+    }
+
+    public function markupTypes(string $selected, bool $data_only): array
+    {
+        $this->renderSetup();
+        $markup_types = array();
+        $markup_types['select_name'] = 'type';
+        $option_block = array();
+        $option_block['option_label'] = __('Block');
+        $option_block['option_value'] = 'block';
+        $option_block['option_selected'] = $selected === 'block' ? 'selected' : '';
+        $markup_types['options'][] = $option_block;
+        $option_line = array();
+        $option_line['option_label'] = __('Line');
+        $option_line['option_value'] = 'line';
+        $option_line['option_selected'] = $selected === 'line' ? 'selected' : '';
+        $markup_types['options'][] = $option_line;
+        $option_simple = array();
+        $option_simple['option_label'] = __('Simple');
+        $option_simple['option_value'] = 'simple';
+        $option_simple['option_selected'] = $selected === 'simple' ? 'selected' : '';
+        $markup_types['options'][] = $option_simple;
+        $option_loop = array();
+        $option_loop['option_label'] = __('Loop');
+        $option_loop['option_value'] = 'loop';
+        $option_loop['option_selected'] = $selected === 'loop' ? 'selected' : '';
+        $markup_types['options'][] = $option_loop;
         return $markup_types;
     }
 }
