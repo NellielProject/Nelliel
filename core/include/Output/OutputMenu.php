@@ -23,15 +23,7 @@ class OutputMenu extends Output
         $options = array();
 
         foreach ($styles as $style) {
-            $option_data = array();
-            $option_data['option_value'] = $style->id();
-            $option_data['option_label'] = $style->info('name');
-
-            if ($option_data['option_value'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
+            $options[] = $this->createSelectOption($style->info('name'), $style->id(), $selected);
         }
 
         return $options;
@@ -43,15 +35,7 @@ class OutputMenu extends Output
         $options = array();
 
         foreach ($sets as $set) {
-            $option_data = array();
-            $option_data['option_value'] = $set->id();
-            $option_data['option_label'] = $set->info('name');
-
-            if ($option_data['option_value'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
+            $options[] = $this->createSelectOption($set->info('name'), $set->id(), $selected);
         }
 
         return $options;
@@ -63,15 +47,7 @@ class OutputMenu extends Output
         $options = array();
 
         foreach ($templates as $template) {
-            $option_data = array();
-            $option_data['option_value'] = $template->id();
-            $option_data['option_label'] = $template->info('name');
-
-            if ($option_data['option_value'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
+            $options[] = $this->createSelectOption($template->info('name'), $template->id(), $selected);
         }
 
         return $options;
@@ -83,15 +59,7 @@ class OutputMenu extends Output
         $options = array();
 
         foreach ($timezones as $timezone) {
-            $option_data = array();
-            $option_data['option_value'] = $timezone;
-            $option_data['option_label'] = $timezone;
-
-            if ($option_data['option_value'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
+            $options[] = $this->createSelectOption($timezone, $timezone, $selected);
         }
 
         return $options;
@@ -130,22 +98,10 @@ class OutputMenu extends Output
     {
         $this->renderSetup();
         $options = array();
-        $option_none = array();
-        $option_none['option_label'] = '';
-        $option_none['option_value'] = '';
-        $options[] = $option_none;
-        $option_noko = array();
-        $option_noko['option_label'] = 'noko';
-        $option_noko['option_value'] = 'noko';
-        $options[] = $option_noko;
-        $option_sage = array();
-        $option_sage['option_label'] = 'sage';
-        $option_sage['option_value'] = 'sage';
-        $options[] = $option_sage;
-        $option_noko_sage = array();
-        $option_noko_sage['option_label'] = 'noko + sage';
-        $option_noko_sage['option_value'] = 'noko sage';
-        $options[] = $option_noko_sage;
+        $options[] = $this->createSelectOption(__(''), '');
+        $options[] = $this->createSelectOption(__('noko'), 'noko');
+        $options[] = $this->createSelectOption(__('sage'), 'sage');
+        $options[] = $this->createSelectOption(__('noko + sage'), 'noko sage');
         return $options;
     }
 
@@ -155,21 +111,10 @@ class OutputMenu extends Output
             'SELECT "board_id", "board_uri" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
         $boards = array();
         $boards['select_name'] = $name;
-        $option_none = array();
-        $option_none['option_label'] = '';
-        $option_none['option_value'] = '';
-        $boards['options'][] = $option_none;
+        $boards['options'] = $this->createSelectOption('', '', $selected);
 
         foreach ($board_data as $board) {
-            $board_option = array();
-
-            if ($selected === $board['board_id']) {
-                $board_option['option_selected'] = 'selected';
-            }
-
-            $board_option['option_label'] = $board['board_uri'];
-            $board_option['option_value'] = $board['board_id'];
-            $boards['options'][] = $board_option;
+            $boards['options'] = $this->createSelectOption($board['board_uri'], $board['board_id'], $selected);
         }
 
         return $boards;
@@ -180,25 +125,13 @@ class OutputMenu extends Output
         $this->renderSetup();
         $markup_options = array();
         $markup_options['select_name'] = 'markup_type';
-        $option_none = array();
-        $option_none['option_label'] = __('None');
-        $option_none['option_value'] = 'none';
-        $option_none['option_selected'] = $selected === 'none' ? 'selected' : '';
-        $markup_options['options'][] = $option_none;
+        $markup_options['options'][] = $this->createSelectOption(__('None'), 'none', $selected);
 
         if ($html) {
-            $option_html = array();
-            $option_html['option_label'] = __('HTML');
-            $option_html['option_value'] = 'html';
-            $option_html['option_selected'] = $selected === 'html' ? 'selected' : '';
-            $markup_options['options'][] = $option_html;
+            $markup_options['options'][] = $this->createSelectOption(__('HTML'), 'html', $selected);
         }
 
-        $option_imageboard = array();
-        $option_imageboard['option_label'] = __('Imageboard');
-        $option_imageboard['option_value'] = 'imageboard';
-        $option_imageboard['option_selected'] = $selected === 'imageboard' ? 'selected' : '';
-        $markup_options['options'][] = $option_imageboard;
+        $markup_options['options'][] = $this->createSelectOption(__('Imageboard'), 'imageboard', $selected);
         return $markup_options;
     }
 
@@ -207,26 +140,19 @@ class OutputMenu extends Output
         $this->renderSetup();
         $markup_types = array();
         $markup_types['select_name'] = 'type';
-        $option_block = array();
-        $option_block['option_label'] = __('Block');
-        $option_block['option_value'] = 'block';
-        $option_block['option_selected'] = $selected === 'block' ? 'selected' : '';
-        $markup_types['options'][] = $option_block;
-        $option_line = array();
-        $option_line['option_label'] = __('Line');
-        $option_line['option_value'] = 'line';
-        $option_line['option_selected'] = $selected === 'line' ? 'selected' : '';
-        $markup_types['options'][] = $option_line;
-        $option_simple = array();
-        $option_simple['option_label'] = __('Simple');
-        $option_simple['option_value'] = 'simple';
-        $option_simple['option_selected'] = $selected === 'simple' ? 'selected' : '';
-        $markup_types['options'][] = $option_simple;
-        $option_loop = array();
-        $option_loop['option_label'] = __('Loop');
-        $option_loop['option_value'] = 'loop';
-        $option_loop['option_selected'] = $selected === 'loop' ? 'selected' : '';
-        $markup_types['options'][] = $option_loop;
+        $markup_types['options'][] = $this->createSelectOption(__('Block'), 'block', $selected);
+        $markup_types['options'][] = $this->createSelectOption(__('Line'), 'line', $selected);
+        $markup_types['options'][] = $this->createSelectOption(__('Simple'), 'simple', $selected);
+        $markup_types['options'][] = $this->createSelectOption(__('Loop'), 'loop', $selected);
         return $markup_types;
+    }
+
+    private function createSelectOption(string $label, string $value, string $selected): array
+    {
+        $option = array();
+        $option['option_label'] = $label;
+        $option['option_value'] = $value;
+        $option['option_selected'] = $selected === $value ? 'selected' : '';
+        return $option;
     }
 }
