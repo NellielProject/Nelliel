@@ -9,11 +9,12 @@ use Nelliel\Cites;
 use Nelliel\Content\Post;
 use Nelliel\Database\NellielPDO;
 use PDO;
+use Nelliel\Domains\Domain;
 
 class Markup
 {
     private $database;
-    private $post;
+    private $domain;
     private $dynamic_urls;
     private $markup_data;
 
@@ -35,9 +36,18 @@ class Markup
         return $this->markup_data[$type] ?? array();
     }
 
-    public function parsePostComments(string $text, Post $post, bool $dynamic_urls): string
+    public function parseText(string $text, Domain $source_domain = null, bool $dynamic_urls = false): string
     {
-        $this->post = $post;
+        $this->domain = $source_domain;
+        $this->dynamic_urls = $dynamic_urls;
+        $modified_text = $text;
+        $modified_text = $this->parseBlocks($modified_text);
+        return $modified_text;
+    }
+
+    public function parsePostComments(string $text, Post $post, bool $dynamic_urls = false): string
+    {
+        $this->domain = $post->domain();
         $this->dynamic_urls = $dynamic_urls;
         $modified_text = $text;
         $modified_text = $this->parseBlocks($modified_text);
@@ -49,8 +59,8 @@ class Markup
         $modified_text = $text;
         $modified_text = $this->parseSimple($modified_text);
         $modified_text = $this->parseLoops($modified_text);
-        $modified_text = $this->parseURLs($modified_text);
-        $modified_text = $this->parseCites($modified_text);
+        $modified_text = $this->parseURLs($modified_text, $this->domain->setting('url_protocols'));
+        $modified_text = $this->parseCites($modified_text, $this->domain, $this->dynamic_urls);
         return $modified_text;
     }
 
@@ -164,25 +174,17 @@ class Markup
         return $modified_text;
     }
 
-    public function parseCites(string $text, Post $post = null, bool $dynamic_urls = null): string
+    public function parseCites(string $text, Domain $source_domain = null, bool $dynamic_urls = false): string
     {
-        if (is_null($post)) {
-            $post = $this->post;
-        }
-
-        if (is_null($dynamic_urls)) {
-            $dynamic_urls = $this->dynamic_urls;
-        }
-
-        $cites = new Cites($post->domain()->database());
+        $cites = new Cites($this->database);
         $cite_regex = '/((?:>>|&gt;&gt;)\d+|(?:>>>|&gt;&gt;&gt;)\/[^\/]+\/\d*)/u';
 
-        $replace_callback = function ($matches) use ($cites, $post, $dynamic_urls) {
+        $replace_callback = function ($matches) use ($cites, $source_domain, $dynamic_urls) {
             if (!$cites->isCite($matches[0])) {
                 return $matches[0];
             }
 
-            $cite_data = $cites->getCiteData($matches[1], $post->domain(), $post->contentID());
+            $cite_data = $cites->getCiteData($matches[1], $source_domain);
 
             if ($cite_data['exists']) {
                 $cite_url = $cites->generateCiteURL($cite_data, $dynamic_urls);
@@ -203,12 +205,8 @@ class Markup
         return preg_replace_callback($cite_regex, $replace_callback, $text);
     }
 
-    public function parseURLs(string $text, string $protocols = null): string
+    public function parseURLs(string $text, string $protocols): string
     {
-        if (is_null($protocols)) {
-            $protocols = $this->post->domain()->setting('url_protocols');
-        }
-
         $url_regex = '/(' . $protocols . ')(:\/\/)[^\s]+/';
         $site_domain = nel_site_domain();
 

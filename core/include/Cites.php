@@ -15,23 +15,28 @@ use PDO;
 class Cites
 {
     private $database;
-    private $domains = array();
 
     function __construct($database)
     {
         $this->database = $database;
     }
 
-    public function getCiteData(string $text, Domain $source_domain, ContentID $source_content_id): array
+    public function getCiteData(string $text, Domain $source_domain = null): array
     {
         $matches = array();
 
         if (preg_match('/^(?:>>|&gt;&gt;)([\d]+)/u', $text, $matches) === 1) {
             $cite_data['type'] = 'post-cite';
-            $cite_data['target_board'] = $source_domain->id();
             $cite_data['target_post'] = (int) $matches[1];
-            $cite_data['exists'] = $source_domain->exists() &&
-                $this->getThreadID($source_domain, $cite_data['target_post']) !== 0;
+
+            if (is_null($source_domain)) {
+                $cite_data['target_board'] = null;
+                $cite_data['exists'] = false;
+            } else {
+                $cite_data['target_board'] = $source_domain->id();
+                $cite_data['exists'] = $source_domain->exists() &&
+                    $this->getThreadID($source_domain, $cite_data['target_post']) !== 0;
+            }
         } else if (preg_match('/^(?:>>>|&gt;&gt;&gt;)\/(.+?)\/([\d]*)/u', $text, $matches) === 1) {
             $cite_data['target_board'] = $matches[1];
             $target_domain = Domain::getDomainFromID($cite_data['target_board'], $this->database);
@@ -51,8 +56,6 @@ class Cites
             $cite_data['exists'] = false;
         }
 
-        $cite_data['source_board'] = $source_domain->id();
-        $cite_data['source_post'] = $source_content_id->postID();
         return $cite_data;
     }
 
@@ -114,7 +117,7 @@ class Cites
         $this->database->executePrepared($prepared, [$post_id]);
     }
 
-    private function citeStored(array $cite_data): bool
+    private function citeStored(array $cite_data, Domain $source_domain, int $source_post): bool
     {
         if ($cite_data['type'] === 'board-cite') {
             $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
@@ -126,8 +129,8 @@ class Cites
             '" WHERE "source_board" = ? AND "source_post" = ? AND "target_board" = ? AND "target_post" = ? LIMIT 1');
         return !empty(
             $this->database->executePreparedFetch($prepared,
-                [$cite_data['source_board'], $cite_data['source_post'], $cite_data['target_board'],
-                    $cite_data['target_post']], PDO::FETCH_COLUMN));
+                [$source_domain->id(), $source_post, $cite_data['target_board'], $cite_data['target_post']],
+                PDO::FETCH_COLUMN));
     }
 
     public function addCitesFromPost(Post $post): void
@@ -137,22 +140,21 @@ class Cites
         }
 
         $cite_list = $this->getCitesFromText($post->data('comment'));
-        $content_id = $post->contentID();
 
         foreach ($cite_list as $cite) {
-            $cite_data = $this->getCiteData($cite, $post->domain(), $content_id);
+            $cite_data = $this->getCiteData($cite, $post->domain());
 
             if ($cite_data['exists']) {
-                $this->addCite($cite_data);
+                $this->addCite($cite_data, $post->domain(), $post->contentID()->postID());
             }
         }
 
         $this->updateCachesForPost($post);
     }
 
-    public function addCite(array $cite_data): void
+    public function addCite(array $cite_data, Domain $source_domain, int $source_post): void
     {
-        if ($cite_data['type'] === 'board-cite' || $this->citeStored($cite_data)) {
+        if ($cite_data['type'] === 'board-cite' || $this->citeStored($cite_data, $source_domain, $source_post)) {
             return;
         }
 
@@ -160,8 +162,7 @@ class Cites
             'INSERT INTO "' . NEL_CITES_TABLE .
             '" ("source_board", "source_post", "target_board", "target_post") VALUES (?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
-            [$cite_data['source_board'], $cite_data['source_post'], $cite_data['target_board'],
-                $cite_data['target_post']]);
+            [$source_domain->id(), $source_post, $cite_data['target_board'], $cite_data['target_post']]);
     }
 
     public function isCite(string $text): bool

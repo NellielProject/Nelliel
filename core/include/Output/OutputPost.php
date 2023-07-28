@@ -80,8 +80,8 @@ class OutputPost extends Output
                 $file_data = array();
 
                 if (nel_true_empty($upload->data('embed_url'))) {
-                    $file_data = $output_file_info->render($upload, $post,
-                        ['multiple' => $post->data('file_count') > 1], true);
+                    $file_data = $output_file_info->render($upload, $post, [
+                        'multiple' => $post->data('file_count') > 1], true);
                 } else {
                     $file_data = $output_embed_info->render($upload, $post,
                         ['multiple' => $post->data('file_count') > 1], true);
@@ -119,7 +119,7 @@ class OutputPost extends Output
             $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
             $cite_text = '>>>/' . $thread->getMoar()->get('shadow_board_id') . '/' .
                 $thread->getMoar()->get('shadow_thread_id');
-            $shadow_cite = $markup->parseCites($cite_text, $post, $dynamic_urls);
+            $shadow_cite = $markup->parseCites($cite_text, $post->domain(), $dynamic_urls);
             $this->render_data['is_shadow'] = true;
             $shadow_type = $thread->getMoar()->get('shadow_type');
             $shadow_message = '';
@@ -294,7 +294,6 @@ class OutputPost extends Output
     {
         $cites = new Cites($this->database);
         $cite_list = $cites->getForPost($post);
-        $post_content_id = $post->contentID();
         $backlinks = array();
 
         foreach ($cite_list['sources'] as $cite) {
@@ -306,7 +305,7 @@ class OutputPost extends Output
                 $backlink_data['backlink_text'] = '>>>/' . $cite['source_board'] . '/' . $cite['source_post'];
             }
 
-            $cite_data = $cites->getCiteData($backlink_data['backlink_text'], $this->domain, $post_content_id);
+            $cite_data = $cites->getCiteData($backlink_data['backlink_text'], $this->domain);
             $cite_url = '';
 
             if ($cite_data['exists']) {
