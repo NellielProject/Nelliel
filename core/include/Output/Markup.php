@@ -143,7 +143,7 @@ class Markup
             $modified_lines[] = $line;
         }
 
-        return implode("\n", $modified_lines);
+        return implode('', $modified_lines);
     }
 
     public function parseSimple(string $text, array $markup_data = array()): string

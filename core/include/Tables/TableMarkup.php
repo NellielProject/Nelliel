@@ -73,7 +73,7 @@ class TableMarkup extends Table
         $this->insertDefaultRow(['underline', 'simple', '/__(.+?)__/us', '<span class="markup-underline">$1</span>', 1]);
         $this->insertDefaultRow(['strikethrough', 'simple', '/~~(.+?)~~/us', '<span class="markup-strikethrough">$1</span>', 1]);
         $this->insertDefaultRow(['nested-spoiler', 'loop', '/\[spoiler (\d+)\](.*?)\[\/spoiler \1\]/us', '<span class="markup-spoiler">$2</span>', 1]);
-        $this->insertDefaultRow(['greentext', 'line', '/^((>|&gt;)(?!(>|&gt;)\d+|(>>|&gt;&gt;)\/[^\/]+\/).*)[\r\n]$/u', '<span class="markup-greentext">$1</span>', 1]);
+        $this->insertDefaultRow(['greentext', 'line', '/^((>|&gt;)(?!(>|&gt;)\d+|(>>|&gt;&gt;)\/[^\/]+\/).*)$/u', '<span class="markup-greentext">$1</span>', 1]);
         $this->insertDefaultRow(['pinktext', 'line', '/^(&lt;.*)$/u', '<span class="markup-pinktext">$1</span>', 1]); // < could be a valid tag from other markup so we don't match the unescaped version
         $this->insertDefaultRow(['orangetext', 'line', '/^(\^.*)$/u', '<span class="markup-orangetext">$1</span>', 1]);
         $this->insertDefaultRow(['ascii', 'block', '/\[ascii\]|\[\/ascii\]/', '<pre class="ascii-art">$1</pre>', 1]);
