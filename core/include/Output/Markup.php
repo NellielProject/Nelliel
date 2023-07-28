@@ -51,6 +51,7 @@ class Markup
     {
         $this->domain = $post->domain();
         $this->dynamic_urls = $dynamic_urls;
+        $this->protocols = $post->domain()->setting('url_protocols');
         $modified_text = $text;
         $modified_text = $this->parseBlocks($modified_text);
         return $modified_text;
@@ -69,14 +70,16 @@ class Markup
     public function parseBlocks(string $text, array $markup_data = array(), $recursive_call = false): string
     {
         if (empty($markup_data)) {
-            $markup_data = $this->getMarkupData('block');
+            $block_markup = $this->getMarkupData('block');
+        } else {
+            $block_markup = $markup_data['block'];
         }
 
-        $markup_data = nel_plugins()->processHook('nel-inb4-markup-blocks', [$text], $markup_data);
+        $block_markup = nel_plugins()->processHook('nel-inb4-markup-blocks', [$text], $block_markup);
         $modified_text = $text;
         $modified_blocks = array();
 
-        foreach ($markup_data as $data) {
+        foreach ($block_markup as $data) {
             $blocks = preg_split($data['match'], $modified_text);
 
             // If error or only one block, there's no block markup left to parse
@@ -93,7 +96,7 @@ class Markup
                 if ($i % 2 === 0) {
                     $modified = preg_replace('/^(.*)$/us', $data['replace'], $block);
                 } else {
-                    $modified = $this->parseBlocks($block, $markup_data, true);
+                    $modified = $this->parseBlocks($block, $block_markup, true);
                 }
 
                 $modified_blocks[] = $modified;
@@ -118,11 +121,13 @@ class Markup
     public function parseLines(string $text, array $markup_data = array()): string
     {
         if (empty($markup_data)) {
-            $markup_data = $this->getMarkupData('line');
+            $line_markup = $this->getMarkupData('line');
+        } else {
+            $line_markup = $markup_data['line'];
         }
 
         $lines = explode("\n", $text);
-        $markup_data = nel_plugins()->processHook('nel-inb4-markup-lines', [$lines], $markup_data);
+        $line_markup = nel_plugins()->processHook('nel-inb4-markup-lines', [$lines], $line_markup);
 
         if (!is_array($lines)) {
             return $text;
@@ -131,7 +136,7 @@ class Markup
         $modified_lines = array();
 
         foreach ($lines as $line) {
-            foreach ($markup_data as $data) {
+            foreach ($line_markup as $data) {
                 $line = preg_replace($data['match'], $data['replace'], $line);
             }
 
@@ -144,13 +149,15 @@ class Markup
     public function parseSimple(string $text, array $markup_data = array()): string
     {
         if (empty($markup_data)) {
-            $markup_data = $this->getMarkupData('simple');
+            $simple_markup = $this->getMarkupData('simple');
+        } else {
+            $simple_markup = $markup_data['simple'];
         }
 
-        $markup_data = nel_plugins()->processHook('nel-inb4-markup-simple', [$text], $markup_data);
+        $simple_markup = nel_plugins()->processHook('nel-inb4-markup-simple', [$text], $simple_markup);
         $modified_text = $text;
 
-        foreach ($markup_data as $data) {
+        foreach ($simple_markup as $data) {
             $modified_text = preg_replace($data['match'], $data['replace'], $modified_text);
         }
 
@@ -160,13 +167,15 @@ class Markup
     public function parseLoops(string $text, array $markup_data = array()): string
     {
         if (empty($markup_data)) {
-            $markup_data = $this->getMarkupData('loop');
+            $loop_markup = $this->getMarkupData('loop');
+        } else {
+            $loop_markup = $markup_data['loop'];
         }
 
-        $markup_data = nel_plugins()->processHook('nel-inb4-markup-loops', [$text], $markup_data);
+        $loop_markup = nel_plugins()->processHook('nel-inb4-markup-loops', [$text], $loop_markup);
         $modified_text = $text;
 
-        foreach ($markup_data as $data) {
+        foreach ($loop_markup as $data) {
             do {
                 $compare = $modified_text;
                 $modified_text = preg_replace($data['match'], $data['replace'], $modified_text);

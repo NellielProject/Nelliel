@@ -160,6 +160,7 @@ class Regen
         $this->news($site_domain);
         $this->faq($site_domain);
         $this->homePage($site_domain);
+
         $prepared = $site_domain->database()->prepare(
             'SELECT "uri" FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = :domain_id');
         $prepared->bindValue(':domain_id', $site_domain->id());
@@ -187,6 +188,16 @@ class Regen
         $board_domain->database()->query('UPDATE "' . $board_domain->reference('posts_table') . '" SET regen_cache = 1');
         $this->threads($board_domain, true, $ids);
         $this->index($board_domain);
+
+        $prepared = $board_domain->database()->prepare(
+            'SELECT "uri" FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = :domain_id');
+        $prepared->bindValue(':domain_id', $board_domain->id());
+        $pages = $board_domain->database()->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
+
+        foreach ($pages as $page) {
+            $this->page($board_domain, $page['uri']);
+        }
+
         nel_plugins()->processHook('nel-in-after-regen-board-pages', [$board_domain]);
     }
 }

@@ -36,7 +36,7 @@ class OutputGenericPage extends Output
 
         if($markup_type === 'imageboard') {
             $markup = new Markup($this->database);
-            $this->render_data['body_output'] = $markup->parseText($body_text);
+            $this->render_data['body_output'] = $markup->parseText($body_text, $this->domain);
             $this->render_data['preformatted'] = true;
         }
 
