@@ -1,5 +1,5 @@
 ## Installation
-Basic installation guide. Installation requires basic knowledge of web hosting and use of a terminal or shell. The install process is kept as short and universal as possible but may need modifications for your environment.
+Installation requires basic knowledge of web hosting and use of a terminal or shell. The process is kept as short and universal as possible but may need some modifications for your environment.
 
 1. Unarchive the files for Nelliel to the desired location. This must be somewhere outside of the web-accessible areas but is otherwise left to your discretion.
 2. Make sure the PHP process has read, write and execute permissions on the following directories: `public`, `public/assets`, `configuration` and `core`.
