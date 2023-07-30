@@ -18,8 +18,8 @@ class UploadJSON extends JSON
 
     protected function generate(): void
     {
-        $is_file = nel_true_empty($this->upload->data('embed_url'));
         $raw_data = array();
+        $is_file = nel_true_empty($this->upload->data('embed_url'));
         $raw_data['parent_thread'] = $this->upload->data('parent_thread') ?? 0;
         $raw_data['post_ref'] = $this->upload->data('post_ref') ?? 0;
         $raw_data['upload_order'] = $this->upload->data('upload_order');

@@ -11,6 +11,7 @@ use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\DomainBoard;
 use PDO;
+use Nelliel\API\JSON\ThreadlistJSON;
 
 class OutputIndex extends Output
 {
@@ -238,6 +239,11 @@ class OutputIndex extends Output
                 $json_filename = $page . NEL_JSON_EXT;
                 $this->file_handler->writeFile($this->domain->reference('base_path') . $json_filename,
                     $index_json->getJSON(true));
+
+                $threadlist_json = new ThreadlistJSON($this->domain);
+                $json_filename = 'threads' . NEL_JSON_EXT;
+                $this->file_handler->writeFile($this->domain->reference('base_path') . $json_filename,
+                    $threadlist_json->getJSON(true));
             }
         } else {
             echo $output;
