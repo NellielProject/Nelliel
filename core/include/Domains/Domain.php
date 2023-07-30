@@ -40,6 +40,8 @@ abstract class Domain implements NellielCacheInterface
 
     protected abstract function loadSettingsFromDatabase(): array;
 
+    public abstract function exists(): bool;
+
     public abstract function updateStatistics(): void;
 
     protected function utilitySetup()

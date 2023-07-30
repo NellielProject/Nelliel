@@ -59,9 +59,9 @@ class DomainGlobal extends Domain implements NellielCacheInterface
     public function updateStatistics(): void
     {}
 
-    public function exists()
+    public function exists(): bool
     {
-        true;
+        return true;
     }
 
     public function regenCache()

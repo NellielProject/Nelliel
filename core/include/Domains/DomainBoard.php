@@ -154,7 +154,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $this->statistics->update($this, 'last_update', time());
     }
 
-    public function exists()
+    public function exists(): bool
     {
         $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);

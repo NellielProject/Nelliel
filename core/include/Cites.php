@@ -29,7 +29,7 @@ class Cites
             $cite_data['type'] = 'post-cite';
             $cite_data['target_post'] = (int) $matches[1];
 
-            if (is_null($source_domain)) {
+            if (is_null($source_domain) || $source_domain->id() === Domain::SITE) {
                 $cite_data['target_board'] = null;
                 $cite_data['exists'] = false;
             } else {
