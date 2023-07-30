@@ -41,7 +41,7 @@ class Markup
     {
         $this->domain = $source_domain;
         $this->dynamic_urls = $dynamic_urls;
-        $this->protocols = (!is_null($source_domain)) ? $source_domain->setting('url_protocols') : '';
+        $this->protocols = (!is_null($source_domain)) ? $source_domain->setting('url_protocols') ?? '' : '';
         $modified_text = $text;
         $modified_text = $this->parseBlocks($modified_text);
         return $modified_text;
@@ -51,7 +51,7 @@ class Markup
     {
         $this->domain = $post->domain();
         $this->dynamic_urls = $dynamic_urls;
-        $this->protocols = $post->domain()->setting('url_protocols');
+        $this->protocols = $post->domain()->setting('url_protocols') ?? '';
         $modified_text = $text;
         $modified_text = $this->parseBlocks($modified_text);
         return $modified_text;
