@@ -90,7 +90,9 @@ class NewPost
         }
 
         if (!is_null($post->data('password'))) {
-            $post->changeData('password', nel_password_hash($post->data('password'), NEL_PASSWORD_ALGORITHM));
+            $post->changeData('password',
+                nel_password_hash($post->data('password'), nel_crypt_config()->postPasswordAlgorithm(),
+                    nel_crypt_config()->postPasswordOptions()));
         }
 
         // Process if-thens for new post here

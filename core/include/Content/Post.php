@@ -228,12 +228,14 @@ class Post
         if (!$flag && $this->domain->setting('user_delete_own')) {
             if (!nel_true_empty($this->data('password'))) {
                 $flag = hash_equals($this->content_data['password'],
-                    nel_password_hash($update_sekrit, NEL_PASSWORD_ALGORITHM));
+                    nel_password_hash($update_sekrit, nel_crypt_config()->postPasswordAlgorithm(),
+                        nel_crypt_config()->postPasswordOptions()));
             }
 
             if (!$flag && $this->domain->setting('allow_op_thread_moderation')) {
                 $flag = hash_equals($this->getParent()->firstPost()->data('password'),
-                    nel_password_hash($update_sekrit, NEL_PASSWORD_ALGORITHM));
+                    nel_password_hash($update_sekrit, nel_crypt_config()->postPasswordAlgorithm(),
+                        nel_crypt_config()->postPasswordOptions()));
             }
         }
 

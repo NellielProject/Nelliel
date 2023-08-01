@@ -6,27 +6,37 @@
 		<form accept-charset="utf-8" action="imgboard.php?install&step=crypt-config" method="post">
 			<div class="installer-form">
 				<div class="installer-form-row">
-					<label for="password_algorithm" class="installer-form-label" data-i18n="">Password hashing algorithm</label>
-					<select id="password_algorithm" class="installer-form-input" name="password_algorithm">
+					<label for="account_password_algorithm" class="installer-form-label" data-i18n="">Account password hashing algorithm</label>
+					<select id="account_password_algorithm" class="installer-form-input" name="account_password_algorithm">
 						<option value="BCRYPT" data-i18n="">Bcrypt</option>
                     	<option value="ARGON2" data-i18n="">Argon2</option>
 					</select>
 				</div>
 				<div class="installer-form-row">
-					<label for="password_bcrypt_cost" class="installer-form-label" data-i18n="">Bcrypt password cost</label>
-					<input id="password_bcrypt_cost" class="installer-form-input" type="number" name="password_bcrypt_cost" min="4" max="31" value="12">
+					<label for="account_password_bcrypt_cost" class="installer-form-label" data-i18n="">Account password Bcrypt cost</label>
+					<input id="account_password_bcrypt_cost" class="installer-form-input" type="number" name="account_password_bcrypt_cost" min="4" max="31" value="12">
 				</div>
 				<div class="installer-form-row">
-					<label for="password_argon2_memory_cost" class="installer-form-label" data-i18n="">Argon2 password memory cost (must be a power of 2)</label>
-					<input id="password_argon2_memory_cost" class="installer-form-input" type="number" name="password_argon2_memory_cost" min="2" value="1024">
+					<label for="account_password_argon2_memory_cost" class="installer-form-label" data-i18n="">Account password Argon2 memory cost (must be a power of 2)</label>
+					<input id="account_password_argon2_memory_cost" class="installer-form-input" type="number" name="account_password_argon2_memory_cost" min="2" value="1024">
 				</div>
 				<div class="installer-form-row">
-					<label for="password_argon2_time_cost" class="installer-form-label" data-i18n="">Argon2 password time cost</label>
-					<input id="password_argon2_time_cost" class="installer-form-input" type="number" name="password_argon2_time_cost" min="0" value="2">
+					<label for="account_password_argon2_time_cost" class="installer-form-label" data-i18n="">Account password Argon2 time cost</label>
+					<input id="account_password_argon2_time_cost" class="installer-form-input" type="number" name="account_password_argon2_time_cost" min="0" value="2">
 				</div>
 				<div class="installer-form-row">
-					<label for="password_argon2_threads" class="installer-form-label" data-i18n="">Argon2 password threads</label>
-					<input id="password_argon2_threads" class="installer-form-input" type="number" name="password_argon2_threads" min="1" value="2">
+					<label for="account_password_argon2_threads" class="installer-form-label" data-i18n="">Account password Argon2 threads</label>
+					<input id="account_password_argon2_threads" class="installer-form-input" type="number" name="account_password_argon2_threads" min="1" value="2">
+				</div>
+				<div class="installer-form-row">
+					<label for="post_password_algorithm" class="installer-form-label" data-i18n="">Post password algorithm</label>
+					<select id="post_password_algorithm" class="installer-form-input" name="post_password__algorithm">
+						<option value="BCRYPT" data-i18n="">Bcrypt</option>
+					</select>
+				</div>
+				<div class="installer-form-row">
+					<label for="post_password_bcrypt_cost" class="installer-form-label" data-i18n="">Post password Bcrypt cost</label>
+					<input id="post_password_bcrypt_cost" class="installer-form-input" type="number" name="post_password_bcrypt_cost" min="4" max="31" value="8">
 				</div>
 				<div class="installer-form-row">
 					<label for="ip_hash_algorithm" class="installer-form-label" data-i18n="">IP hash algorithm</label>

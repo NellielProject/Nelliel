@@ -67,7 +67,9 @@ class AdminUsers extends Admin
 
             if ($key === 'user_password') {
                 if (!empty($value)) {
-                    $update_user->changeData('password', nel_password_hash($value, NEL_PASSWORD_ALGORITHM));
+                    $update_user->changeData('password',
+                        nel_password_hash($value, nel_crypt_config()->accountPasswordAlgorithm(),
+                            nel_crypt_config()->accountPasswordOptions()));
                 }
 
                 continue;

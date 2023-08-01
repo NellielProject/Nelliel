@@ -129,7 +129,8 @@ class AuthUser extends AuthHandler
 
     public function updatePassword(string $new_password): void
     {
-        $this->changeData('password', nel_password_hash($new_password, NEL_PASSWORD_ALGORITHM));
+        $this->changeData('password', nel_password_hash($new_password, nel_crypt_config()->accountPasswordAlgorithm(),
+            nel_crypt_config()->accountPasswordOptions()));
     }
 
     public function getDomainRole(Domain $domain): AuthRole

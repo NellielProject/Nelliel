@@ -26,7 +26,6 @@ if (!$installer->checkInstallDone()) {
 unset($installer);
 
 require_once NEL_INCLUDE_PATH . 'crypt.php';
-nel_set_password_algorithm(NEL_PASSWORD_PREFERRED_ALGORITHM);
 
 $upgrade = new Upgrade($file_handler);
 

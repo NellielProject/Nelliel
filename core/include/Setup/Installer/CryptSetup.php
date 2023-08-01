@@ -47,16 +47,6 @@ class CryptSetup
             }
         }
 
-        $crypt_config = array();
-        require_once NEL_CONFIG_FILES_PATH . 'crypt.php';
-        define('NEL_PASSWORD_PREFERRED_ALGORITHM', $crypt_config['password_algorithm'] ?? 'BCRYPT');
-        define('NEL_PASSWORD_BCRYPT_COST', $crypt_config['password_bcrypt_cost'] ?? '12');
-        define('NEL_PASSWORD_ARGON2_MEMORY_COST', $crypt_config['password_argon2_memory_cost'] ?? 1024);
-        define('NEL_PASSWORD_ARGON2_TIME_COST', $crypt_config['password_argon2_time_cost'] ?? 2);
-        define('NEL_PASSWORD_ARGON2_THREADS', $crypt_config['password_argon2_threads'] ?? 2);
-        define('NEL_IP_HASH_ALGORITHM', $crypt_config['ip_hash_algorithm'] ?? 'BCRYPT');
-        define('NEL_IP_HASH_BCRYPT_COST', $crypt_config['ip_hash_bcrypt_cost'] ?? '08');
-
         if ($step === 'crypt-config') {
             $this->output('crypt/crypt_config_complete', ['page_title' => __('Hashing config complete')]);
         }
@@ -65,25 +55,16 @@ class CryptSetup
     private function cryptConfig(): array
     {
         $config = array();
-        $config['password_algorithm'] = $_POST['password_algorithm'] ?? 'BCRYPT';
-        $config['password_bcrypt_cost'] = $this->stringifyBcryptCost(intval($_POST['password_bcrypt_cost'] ?? 12));
-        $config['password_argon2_memory_cost'] = intval($_POST['password_argon2_memory_cost'] ?? 1024);
-        $config['password_argon2_time_cost'] = intval($_POST['password_argon2_time_cost'] ?? 2);
-        $config['password_argon2_threads'] = intval($_POST['password_argon2_threads'] ?? 2);
+        $config['account_password_algorithm'] = $_POST['account_password_algorithm'] ?? 'BCRYPT';
+        $config['account_password_bcrypt_cost'] = intval($_POST['account_password_bcrypt_cost'] ?? 12);
+        $config['account_password_argon2_memory_cost'] = intval($_POST['account_password_argon2_memory_cost'] ?? 1024);
+        $config['account_password_argon2_time_cost'] = intval($_POST['account_password_argon2_time_cost'] ?? 2);
+        $config['account_password_argon2_threads'] = intval($_POST['account_password_argon2_threads'] ?? 2);
+        $config['post_password_algorithm'] = $_POST['post_password_algorithm'] ?? 'BCRYPT';
+        $config['post_password_bcrypt_cost'] = intval($_POST['post_password_bcrypt_cost'] ?? 6);
         $config['ip_hash_algorithm'] = $_POST['ip_hash_algorithm'] ?? 'BCRYPT';
-        $config['ip_hash_bcrypt_cost'] = $this->stringifyBcryptCost(intval($_POST['ip_hash_bcrypt_cost'] ?? 8));
+        $config['ip_hash_bcrypt_cost'] = intval($_POST['ip_hash_bcrypt_cost'] ?? 6);
         return $config;
-    }
-
-    private function stringifyBcryptCost(int $cost): string
-    {
-        $string_cost = '';
-
-        if ($cost < 10) {
-            $string_cost .= '0';
-        }
-
-        return $string_cost . $cost;
     }
 
     private function writeCryptConfig(array $config, bool $overwrite = true): bool

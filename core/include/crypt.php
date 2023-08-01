@@ -25,61 +25,19 @@ if (!function_exists('hash_equals')) {
     }
 }
 
-function nel_set_password_algorithm(string $algorithm): void
-{
-    if (defined('NEL_PASSWORD_ALGORITHM')) {
-        return;
-    }
-
-    if ($algorithm === 'ARGON2') {
-        if (defined('PASSWORD_ARGON2ID')) {
-            define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2ID);
-            return;
-        } else if (defined('PASSWORD_ARGON2I')) {
-            define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2I);
-            return;
-        }
-    }
-
-    if (!defined('NEL_PASSWORD_ALGORITHM') || $algorithm === 'BCRYPT') {
-        if (defined('PASSWORD_BCRYPT')) {
-            define('NEL_PASSWORD_ALGORITHM', PASSWORD_BCRYPT);
-            return;
-        }
-    }
-
-    if (defined('PASSWORD_DEFAULT')) {
-        define('NEL_PASSWORD_ALGORITHM', PASSWORD_DEFAULT);
-    } else {
-        nel_derp(101, _gettext("No acceptable password hashing algorithm has been found. We can't function like this."));
-    }
-}
-
 function nel_password_hash(string $password, int $algorithm, array $options = array(), bool $new_hash = false)
 {
     static $hashes = array();
+
+    if (isset($options['pepper'])) {
+        $password = base64_encode(hash_hmac('sha256', $password, (string) $options['pepper']));
+    }
 
     if (!$new_hash && array_key_exists($password, $hashes)) {
         return $hashes[$password];
     }
 
-    switch ($algorithm) {
-        case PASSWORD_BCRYPT:
-            $options['cost'] = $options['cost'] ?? NEL_PASSWORD_BCRYPT_COST;
-            $hash = password_hash($password, $algorithm, $options);
-            break;
-
-        case PASSWORD_ARGON2I:
-        case PASSWORD_ARGON2ID:
-            $options['memory_cost'] = $options['memory_cost'] ?? NEL_PASSWORD_ARGON2_MEMORY_COST;
-            $options['time_cost'] = $options['time_cost'] ?? NEL_PASSWORD_ARGON2_TIME_COST;
-            $options['threads'] = $options['threads'] ?? NEL_PASSWORD_ARGON2_THREADS;
-            $hash = password_hash($password, $algorithm, $options);
-            break;
-
-        default:
-            return false;
-    }
+    $hash = password_hash($password, $algorithm, $options);
 
     if ($hash !== false) {
         $hashes[$password] = $hash;
@@ -116,7 +74,8 @@ function nel_ip_hash(string $ip_address, bool $new_hash = false)
     // So for this specific case we compromise: pass a constant value for the salt, then keep only the output hash so it functions as a pepper.
     // Based on NPFChan
     $full_hash = crypt($ip_address,
-        '$2y$' . NEL_IP_HASH_BCRYPT_COST . '$' . str_replace('+', '/', NEL_IP_ADDRESS_PEPPER) . '$');
+        '$2y$' . nel_crypt_config()->IPHashOptions()['cost'] . '$' .
+        str_replace('+', '/', nel_crypt_config()->IPHashOptions()['pepper']) . '$');
     $modified_hash = preg_replace('/[.\/]/', '_', $full_hash);
     $hashes[$ip_address] = utf8_substr($modified_hash, -31);
 

@@ -6,6 +6,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use IPTools\IP;
 use IPTools\Network;
 use Monolog\Logger;
+use Nelliel\CryptConfig;
 use Nelliel\API\Plugin\PluginAPI;
 use Nelliel\Account\Session;
 use Nelliel\Database\DatabaseConnector;
@@ -95,7 +96,8 @@ function nel_effective_ip(string $ip_address): string
     $ip = new IP($ip_address);
 
     if ($ip->getVersion() === IP::IP_V6) {
-        $effective_ip_address = Network::parse($ip_address . '/' . nel_site_domain()->setting('ipv6_identification_cidr'))->getCIDR();
+        $effective_ip_address = Network::parse(
+            $ip_address . '/' . nel_site_domain()->setting('ipv6_identification_cidr'))->getCIDR();
     } else {
         $effective_ip_address = $ip_address;
     }
@@ -155,4 +157,15 @@ function nel_visitor_id(bool $regenerate = false): string
     }
 
     return $visitor_id;
+}
+
+function nel_crypt_config(bool $reload = false): CryptConfig
+{
+    static $crypt_config;
+
+    if (!isset($crypt_config) || $reload) {
+        $crypt_config = new CryptConfig();
+    }
+
+    return $crypt_config;
 }

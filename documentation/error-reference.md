@@ -74,7 +74,6 @@ Error 72: Requesting CAPTCHAs too fast. (CAPTCHA.php)
 
 Error 75: Post rejected by if-then. (NewPost/ActionsPost.php)  
 
-Error 101: No acceptable password hashing. (crypt.php)  
 Error 102: InnoDB engine unavailable. (Setup/Installer/DatabaseSetup.php)  
 Error 103: Failed to create database table. (Table.php)  
 Error 107: Install not done. (initializations.php)  
