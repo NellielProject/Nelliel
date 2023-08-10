@@ -30,7 +30,7 @@ function nel_password_hash(string $password, int $algorithm, array $options = ar
     static $hashes = array();
 
     if (isset($options['pepper'])) {
-        $password = base64_encode(hash_hmac('sha256', $password, (string) $options['pepper']));
+        $password = nel_pre_hash($password, (string) $options['pepper']);
     }
 
     if (!$new_hash && array_key_exists($password, $hashes)) {
@@ -46,8 +46,22 @@ function nel_password_hash(string $password, int $algorithm, array $options = ar
     return $hash;
 }
 
-function nel_password_verify(string $password, string $hash): bool
+function nel_password_verify(string $password, string $hash, string $pepper = null, bool $new_pass = false): bool
 {
+    static $passwords = array();
+
+    if (!is_null($pepper)) {
+        $password = nel_pre_hash($password, $pepper);
+    }
+
+    if (!$new_pass && array_key_exists($hash, $passwords) && hash_equals($passwords[$hash], $password)) {
+        return true;
+    }
+
+    if ($new_pass || !isset($passwords[$hash])) {
+        $passwords[$hash] = $password;
+    }
+
     return password_verify($password, $hash);
 }
 
@@ -70,7 +84,7 @@ function nel_ip_hash(string $ip_address, bool $new_hash = false)
         return $hashes[$ip_address];
     }
 
-    // Bcrypt provides salting to compensate for the small IPv4 space but we can't properly compare IP hashes when salted in the normal manner.
+    // Bcrypt provides salting that can compensate for the small IPv4 space but we can't properly compare IP hashes when salted in the normal manner.
     // So for this specific case we compromise: pass a constant value for the salt, then keep only the output hash so it functions as a pepper.
     // Based on NPFChan
     $full_hash = crypt($ip_address,
@@ -80,4 +94,10 @@ function nel_ip_hash(string $ip_address, bool $new_hash = false)
     $hashes[$ip_address] = utf8_substr($modified_hash, -31);
 
     return $hashes[$ip_address];
+}
+
+function nel_pre_hash(string $string, string $pepper, string $algorithm = 'sha256'): string
+{
+    $hmac = hash_hmac($algorithm, $string, $pepper, true);
+    return base64_encode($hmac);
 }

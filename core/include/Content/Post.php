@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
+use Nelliel\CryptConfig;
 use Nelliel\GlobalRecents;
 use Nelliel\Moar;
 use Nelliel\API\JSON\PostJSON;
@@ -31,6 +32,7 @@ class Post
     protected $json;
     protected $sql_helpers;
     protected $global_recents;
+    protected $crypt_config;
 
     function __construct(ContentID $content_id, Domain $domain, bool $load = true)
     {
@@ -44,6 +46,7 @@ class Post
         $this->json = new PostJSON($this);
         $this->sql_helpers = nel_utilities()->sqlHelpers();
         $this->global_recents = new GlobalRecents($this->database);
+        $this->crypt_config = new CryptConfig();
 
         if ($load) {
             $this->loadFromDatabase(true);
@@ -227,15 +230,13 @@ class Post
 
         if (!$flag && $this->domain->setting('user_delete_own')) {
             if (!nel_true_empty($this->data('password'))) {
-                $flag = hash_equals($this->content_data['password'],
-                    nel_password_hash($update_sekrit, nel_crypt_config()->postPasswordAlgorithm(),
-                        nel_crypt_config()->postPasswordOptions()));
+                $flag = nel_password_verify($update_sekrit, $this->content_data['password'],
+                    $this->crypt_config->postPasswordOptions()['pepper']);
             }
 
             if (!$flag && $this->domain->setting('allow_op_thread_moderation')) {
-                $flag = hash_equals($this->getParent()->firstPost()->data('password'),
-                    nel_password_hash($update_sekrit, nel_crypt_config()->postPasswordAlgorithm(),
-                        nel_crypt_config()->postPasswordOptions()));
+                $flag = nel_password_verify($update_sekrit, $this->getParent()->firstPost()->data('password'),
+                    $this->crypt_config->postPasswordOptions()['pepper']);
             }
         }
 
