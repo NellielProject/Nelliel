@@ -10,10 +10,10 @@ class CryptConfig
     private $config;
     private $account_password_algorithm;
     private $account_password_options = array();
-    private $post_password_algorithm;
+    private $post_password_strong_algorithm;
     private $post_password_options = array();
-    private $ip_hash_algorithm;
-    private $ip_hash_options = array();
+    private $ip_strong_algorithm;
+    private $ip_options = array();
 
     function __construct()
     {
@@ -45,26 +45,35 @@ class CryptConfig
             $this->account_password_options['threads'] = $crypt_config['account_password_argon2_threads'] ?? 2;
         }
 
-        if ($crypt_config['post_password_algorithm'] === 'BCRYPT') {
+        if ($crypt_config['post_password_strong_algorithm'] === 'BCRYPT') {
             if (defined('PASSWORD_BCRYPT')) {
-                $this->post_password_algorithm = PASSWORD_BCRYPT;
+                $this->post_password_strong_algorithm = PASSWORD_BCRYPT;
             } else {
-                $this->post_password_algorithm = PASSWORD_DEFAULT;
+                $this->post_password_strong_algorithm = PASSWORD_DEFAULT;
             }
 
-            $this->post_password_options['cost'] = intval($crypt_config['post_password_bcrypt_cost'] ?? 6);
-            $this->post_password_options['pepper'] = NEL_POST_PASSWORD_PEPPER;
+            $this->post_password_options['strong_hashing'] = boolval(
+                $crypt_config['post_password_strong_hashing'] ?? false);
+
+            if ($this->post_password_options['strong_hashing']) {
+                $this->post_password_options['cost'] = intval($crypt_config['post_password_strong_bcrypt_cost'] ?? 8);
+            } else {
+                $this->post_password_options['cost'] = 4;
+            }
+
+            $this->post_password_options['pepper'] = (string) NEL_POST_PASSWORD_PEPPER;
         }
 
-        if ($crypt_config['ip_hash_algorithm'] === 'BCRYPT') {
+        if ($crypt_config['ip_strong_algorithm'] === 'BCRYPT') {
             if (defined('PASSWORD_BCRYPT')) {
-                $this->ip_hash_algorithm = PASSWORD_BCRYPT;
+                $this->ip_strong_algorithm = PASSWORD_BCRYPT;
             } else {
-                $this->ip_hash_algorithm = PASSWORD_DEFAULT;
+                $this->ip_strong_algorithm = PASSWORD_DEFAULT;
             }
 
-            $this->ip_hash_options['cost'] = $this->stringifyBcryptCost($crypt_config['ip_hash_bcrypt_cost'] ?? 6);
-            $this->ip_hash_options['pepper'] = NEL_IP_ADDRESS_PEPPER;
+            $this->ip_hash_options['cost'] = $this->stringifyBcryptCost($crypt_config['ip_strong_bcrypt_cost'] ?? 8);
+            $this->ip_hash_options['pepper'] = (string) NEL_IP_ADDRESS_PEPPER;
+            $this->ip_hash_options['strong_hashing'] = boolval($crypt_config['ip_strong_hashing'] ?? false);
         }
     }
 
@@ -97,7 +106,7 @@ class CryptConfig
 
     public function postPasswordAlgorithm()
     {
-        return $this->post_password_algorithm;
+        return $this->post_password_strong_algorithm;
     }
 
     public function postPasswordOptions(): array
@@ -107,7 +116,7 @@ class CryptConfig
 
     public function IPHashAlgorithm()
     {
-        return $this->ip_hash_algorithm;
+        return $this->ip_strong_algorithm;
     }
 
     public function IPHashOptions(): array

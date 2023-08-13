@@ -29,24 +29,32 @@
 					<input id="account_password_argon2_threads" class="installer-form-input" type="number" name="account_password_argon2_threads" min="1" value="2">
 				</div>
 				<div class="installer-form-row">
-					<label for="post_password_algorithm" class="installer-form-label" data-i18n="">Post password algorithm</label>
-					<select id="post_password_algorithm" class="installer-form-input" name="post_password__algorithm">
+					<label for="post_password_strong_hashing" class="installer-form-label" data-i18n="">Use strong hashing for post passwords</label>
+					<input id="post_password_strong_hashing" class="installer-form-input" type="checkbox" name="post_password_strong_hashing" value="1">
+				</div>
+				<div class="installer-form-row">
+					<label for="post_password_strong_algorithm" class="installer-form-label" data-i18n="">Post password strong hashing algorithm</label>
+					<select id="post_password_strong_algorithm" class="installer-form-input" name="post_password_strong_algorithm">
 						<option value="BCRYPT" data-i18n="">Bcrypt</option>
 					</select>
 				</div>
 				<div class="installer-form-row">
-					<label for="post_password_bcrypt_cost" class="installer-form-label" data-i18n="">Post password Bcrypt cost</label>
-					<input id="post_password_bcrypt_cost" class="installer-form-input" type="number" name="post_password_bcrypt_cost" min="4" max="31" value="8">
+					<label for="post_password_strong_bcrypt_cost" class="installer-form-label" data-i18n="">Post password strong Bcrypt cost</label>
+					<input id="post_password_strong_bcrypt_cost" class="installer-form-input" type="number" name="post_password_strong_bcrypt_cost" min="4" max="31" value="8">
 				</div>
 				<div class="installer-form-row">
-					<label for="ip_hash_algorithm" class="installer-form-label" data-i18n="">IP hash algorithm</label>
-					<select id="ip_hash_algorithm" class="installer-form-input" name="ip_hash__algorithm">
+					<label for="ip_strong_hashing" class="installer-form-label" data-i18n="">Use strong hashing for IP addresses</label>
+					<input id="ip_strong_hashing" class="installer-form-input" type="checkbox" name="ip_strong_hashing" value="1">
+				</div>
+				<div class="installer-form-row">
+					<label for="ip_strong_algorithm" class="installer-form-label" data-i18n="">IP strong hashing algorithm</label>
+					<select id="ip_strong_algorithm" class="installer-form-input" name="ip_strong_algorithm">
 						<option value="BCRYPT" data-i18n="">Bcrypt</option>
 					</select>
 				</div>
 				<div class="installer-form-row">
-					<label for="ip_hash_bcrypt_cost" class="installer-form-label" data-i18n="">IP hash Bcrypt cost</label>
-					<input id="ip_hash_bcrypt_cost" class="installer-form-input" type="number" name="ip_hash_bcrypt_cost" min="4" max="31" value="8">
+					<label for="ip_strong_bcrypt_cost" class="installer-form-label" data-i18n="">IP strong Bcrypt cost</label>
+					<input id="ip_strong_bcrypt_cost" class="installer-form-input" type="number" name="ip_strong_bcrypt_cost" min="4" max="31" value="8">
 				</div>
 				<div class="installer-form-row">
 					<input class="installer-form-input" type="submit" value="Submit" data-i18n-attributes="value">

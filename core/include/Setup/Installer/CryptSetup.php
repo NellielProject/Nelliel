@@ -60,10 +60,12 @@ class CryptSetup
         $config['account_password_argon2_memory_cost'] = intval($_POST['account_password_argon2_memory_cost'] ?? 1024);
         $config['account_password_argon2_time_cost'] = intval($_POST['account_password_argon2_time_cost'] ?? 2);
         $config['account_password_argon2_threads'] = intval($_POST['account_password_argon2_threads'] ?? 2);
-        $config['post_password_algorithm'] = $_POST['post_password_algorithm'] ?? 'BCRYPT';
-        $config['post_password_bcrypt_cost'] = intval($_POST['post_password_bcrypt_cost'] ?? 6);
-        $config['ip_hash_algorithm'] = $_POST['ip_hash_algorithm'] ?? 'BCRYPT';
-        $config['ip_hash_bcrypt_cost'] = intval($_POST['ip_hash_bcrypt_cost'] ?? 6);
+        $config['post_password_strong_hashing'] = boolval($_POST['post_password_strong_hashing'] ?? false);
+        $config['post_password_strong_algorithm'] = $_POST['post_password_strong_algorithm'] ?? 'BCRYPT';
+        $config['post_password_strong_bcrypt_cost'] = intval($_POST['post_password_strong_bcrypt_cost'] ?? 6);
+        $config['ip_strong_hashing'] = boolval($_POST['ip_strong_hashing'] ?? false);
+        $config['ip_strong_algorithm'] = $_POST['ip_strong_algorithm'] ?? 'BCRYPT';
+        $config['ip_strong_bcrypt_cost'] = intval($_POST['ip_strong_bcrypt_cost'] ?? 6);
         return $config;
     }
 
