@@ -2,8 +2,8 @@
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 //
-// This file has only basic, low-level configuration needed for setup and core functions.
-// All other settings are accessible from the management panels and stored in the database.
+// Example file for base configuration.
+// If you want to manually configure these settings before installing, copy this file to 'config.php' and edit it.
 //
 
 //
