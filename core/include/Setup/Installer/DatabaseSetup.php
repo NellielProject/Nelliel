@@ -87,9 +87,6 @@ class DatabaseSetup
             $this->writeDatabaseConfig($database_config, true);
         }
 
-        $db_config = array();
-        require_once NEL_CONFIG_FILES_PATH . 'databases.php';
-        define('NEL_DATABASES', $db_config);
         $this->database = nel_database('core');
         $this->checkDBEngine($database_type);
 

@@ -23,7 +23,6 @@ use Nelliel\Tables\TablePosts;
 use Nelliel\Tables\TableR9KContent;
 use Nelliel\Tables\TableR9KMutes;
 use Nelliel\Tables\TableReports;
-use Nelliel\Tables\TableRolePermissions;
 use Nelliel\Tables\TableScripts;
 use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
@@ -202,9 +201,7 @@ class BetaMigrations
                 // Update permissions and role permissions table
                 $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage plugins.']);
-                $role_permissions_table = new TableRolePermissions(nel_database('core'),
-                    nel_utilities()->sqlCompatibility());
-                $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
+                $this->addRolePermission('perm_plugins_manage');
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
@@ -259,22 +256,10 @@ class BetaMigrations
 
                 // Update permissions and role permissions tables
                 $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $permissions_table->insertDefaults();
+                $permissions_table->insertDefaultRow(['perm_pages_manage', 'Manage static pages.']);
                 $this->addRolePermission('perm_pages_manage');
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
-
-                // if (version_compare(NELLIEL_VERSION, 'v0.9.30', '<')) {
-                // Update permissions and role permissions table
-                // $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                // $permissions_table->insertDefaultRow(['perm_plugins_manage', 'Manage static pages.']);
-                // $role_permissions_table = new TableRolePermissions(nel_database('core'),
-                // nel_utilities()->sqlCompatibility());
-                // $role_permissions_table->insertDefaultRow(['SITE_ADMIN', 'perm_plugins_manage', 1]);
-                // $this->addPermission('perm_plugins_manage', 'Manage static pages.');
-
-                // echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
-                // }
 
                 // Update core template info
                 $template_instance = nel_site_domain()->frontEndData()->getTemplate('template-nelliel-basic');
@@ -357,6 +342,8 @@ class BetaMigrations
                 $old_site_settings = ['must_see_ban', 'allow_ban_appeals', 'min_time_before_ban_appeal',
                     'ban_page_extra_text'];
                 $this->removeSiteSettings($old_site_settings);
+                nel_site_domain()->deleteCache();
+                nel_site_domain(true);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
@@ -538,6 +525,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 // Update site settings
                 $new_site_settings = ['max_page_regen_time'];
                 $this->newSiteSettings($new_site_settings);
+                nel_site_domain()->deleteCache();
+                nel_site_domain(true);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
@@ -593,6 +582,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $removed_site_settings = ['recaptcha_site_key', 'recaptcha_sekrit_key', 'recaptcha_type',
                     'use_login_recaptcha', 'use_register_recaptcha', 'use_post_recaptcha', 'use_report_recaptcha'];
                 $this->removeSiteSettings($removed_site_settings);
+                nel_site_domain()->deleteCache();
+                nel_site_domain(true);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
@@ -696,26 +687,14 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 // Update permissions and role permissions tables
                 $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $permissions_table->insertDefaults();
-                $this->addRolePermission('perm_plugins_manage');
+                $permissions_table->insertDefaultRow(['perm_manage_markup', 'Manage markup entries.']);
+                $permissions_table->insertDefaultRow(['perm_manage_private_messages', 'Manage all private messages.']);
+                $permissions_table->insertDefaultRow(['perm_manage_scripts', 'Manage scripts.']);
                 $this->addRolePermission('perm_manage_markup');
                 $this->addRolePermission('perm_manage_private_messages');
                 $this->addRolePermission('perm_manage_scripts');
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
-
-                /*
-                 * if (version_compare(NELLIEL_VERSION, 'v0.9.30', '<')) {
-                 * // Update permissions and role permissions table
-                 * $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                 * $permissions_table->insertDefaults();
-                 * $role_permissions_table = new TableRolePermissions(nel_database('core'),
-                 * nel_utilities()->sqlCompatibility());
-                 * $role_permissions_table->insertDefaults();
-                 *
-                 * echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
-                 * }
-                 */
 
                 // Create R9K content and mutes tables
                 $r9k_content_table = new TableR9KContent(nel_database('core'), nel_utilities()->sqlCompatibility());
@@ -810,6 +789,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 $removed_site_settings = ['post_password_algorithm'];
                 $this->removeSiteSettings($removed_site_settings);
+                nel_site_domain()->deleteCache();
+                nel_site_domain(true);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
@@ -897,8 +878,10 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo ' - ' . __('Moar moar columns added to database.') . '<br>';
 
                 // Update permissions and role permissions tables
-                $permissions = ['perm_ip_notes_add' => 'perm_add_ip_notes',
-                    'perm_ip_notes_delete' => 'perm_delete_ip_notes'];
+                $permissions = ['perm_ip_notes_view' => 'view_ip_info', 'perm_ip_notes_add' => 'perm_add_ip_notes',
+                    'perm_ip_notes_delete' => 'perm_delete_ip_notes', 'perm_bans_view' => 'perm_view_bans',
+                    'perm_bans_add' => 'perm_add_bans', 'perm_bans_modify' => 'perm_modify_bans',
+                    'perm_bans_delete' => 'perm_delete_bans'];
                 $permission_update = nel_database('core')->prepare(
                     'UPDATE "nelliel_permissions" SET "permission" = :new WHERE "permission" = :old');
 
@@ -909,10 +892,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 }
 
                 $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $permissions_table->insertDefaults();
-                $role_permissions_table = new TableRolePermissions(nel_database('core'),
-                    nel_utilities()->sqlCompatibility());
-                $role_permissions_table->insertDefaults();
+                $permissions_table->insertDefaultRow(['perm_add_range_bans', 'Add new range or subnet bans.']);
+                $this->addRolePermission('perm_add_range_bans');
 
                 echo ' - ' . __('Updated permissions and role permissions tables.') . '<br>';
 
@@ -1159,8 +1140,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 // Update markup table
 
                 // Fixes bug with reserved words; exclude MySQL and MariaDB because it wouldn't have been able to complete installation
-                if ($core_sqltype !== 'MYSQL' && $core_sqltype !== 'MARIADB') {
-
+                if ($core_sqltype !== 'MYSQL' && $core_sqltype !== 'MARIADB' && nel_database('core')->columnExists('nelliel_markup', 'match')) {
                     nel_database('core')->exec('ALTER TABLE "nelliel_markup" RENAME TO nelliel_markup_old');
 
                     $markup_table = new TableMarkup(nel_database('core'), nel_utilities()->sqlCompatibility());
@@ -1182,10 +1162,10 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         nel_database('core')->executePrepared($markup_transfer);
                     }
 
+                    nel_database('core')->exec('DROP TABLE "nelliel_markup_old"');
+
                     echo ' - ' . __('Markup table updated.') . '<br>';
                 }
-
-                nel_database('core')->exec('DROP TABLE "nelliel_markup_old"');
 
                 $migration_count ++;
         }

@@ -25,12 +25,6 @@ define('NEL_USE_MUSTACHE_CACHE', $base_config['use_mustache_cache'] ?? true);
 define('NEL_ENABLE_PLUGINS', $base_config['enable_plugins'] ?? true);
 define('NEL_ENABLE_JSON_API', $base_config['enable_json_api'] ?? true);
 
-
-if (!isset($_GET['install'])) {
-    require_once NEL_CONFIG_FILES_PATH . 'databases.php';
-    define('NEL_DATABASES', $db_config);
-}
-
 $file_handler = new FileHandler();
 $base_temp_directory = empty($base_config['base_temp_directory'] ?? '') ? sys_get_temp_dir() : $base_config['base_temp_directory'];
 define('NEL_TEMP_FILES_BASE_DIRECTORY', $base_temp_directory);

@@ -7,6 +7,7 @@ use IPTools\IP;
 use IPTools\Network;
 use Monolog\Logger;
 use Nelliel\CryptConfig;
+use Nelliel\DatabaseConfig;
 use Nelliel\API\Plugin\PluginAPI;
 use Nelliel\Account\Session;
 use Nelliel\Database\DatabaseConnector;
@@ -22,7 +23,7 @@ function nel_database(string $database_key): NellielPDO
     static $database_connections = array();
 
     if (!array_key_exists($database_key, $database_connections)) {
-        $new_connector = new DatabaseConnector();
+        $new_connector = new DatabaseConnector(new DatabaseConfig());
         $database_connections[$database_key] = $new_connector->getConnection($database_key);
     }
 

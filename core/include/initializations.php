@@ -25,7 +25,15 @@ if (!$installer->checkInstallDone()) {
 
 unset($installer);
 
-require_once NEL_INCLUDE_PATH . 'crypt.php';
+if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
+    $peppers = array();
+    include_once NEL_GENERATED_FILES_PATH . 'peppers.php';
+    define('NEL_TRIPCODE_PEPPER', $peppers['tripcode_pepper']);
+    define('NEL_IP_ADDRESS_PEPPER', $peppers['ip_address_pepper']);
+    define('NEL_POSTER_ID_PEPPER', $peppers['poster_id_pepper']);
+    define('NEL_POST_PASSWORD_PEPPER', $peppers['post_password_pepper']);
+    unset($peppers);
+}
 
 $upgrade = new Upgrade($file_handler);
 
@@ -39,17 +47,9 @@ if (isset($_GET['upgrade'])) {
     }
 }
 
-if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
-    $peppers = array();
-    include_once NEL_GENERATED_FILES_PATH . 'peppers.php';
-    define('NEL_TRIPCODE_PEPPER', $peppers['tripcode_pepper']);
-    define('NEL_IP_ADDRESS_PEPPER', $peppers['ip_address_pepper']);
-    define('NEL_POSTER_ID_PEPPER', $peppers['poster_id_pepper']);
-    define('NEL_POST_PASSWORD_PEPPER', $peppers['post_password_pepper']);
-    unset($peppers);
-}
-
 unset($file_handler);
+
+require_once NEL_INCLUDE_PATH . 'crypt.php';
 
 date_default_timezone_set(nel_site_domain()->setting('time_zone') ?? 'UTC');
 
