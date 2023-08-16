@@ -109,7 +109,7 @@ class Setup
         $this->coreDirWritable();
         $file_handler = new FileHandler();
         $generate_files = new GenerateFiles($file_handler);
-        $install_id = base64_encode(random_bytes(32));
+        $install_id = base64_encode(random_bytes(33));
 
         if ($generate_files->peppers(false)) {
             echo _gettext('Peppers file has been created.'), '<br>';

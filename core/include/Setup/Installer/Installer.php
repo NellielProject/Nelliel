@@ -133,7 +133,7 @@ class Installer
         echo __('No database problems detected.'), '<br>';
 
         $generate_files = new GenerateFiles($this->file_handler);
-        $install_id = base64_encode(random_bytes(32));
+        $install_id = base64_encode(random_bytes(33));
 
         if ($generate_files->peppers(false)) {
             echo __('Peppers file has been created.'), '<br>';

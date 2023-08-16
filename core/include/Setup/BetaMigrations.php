@@ -1144,6 +1144,16 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN salt VARCHAR(255) NOT NULL DEFAULT \'\'');
                 }
 
+                $thread_ids = nel_database('core')->executeFetchAll('SELECT "thread_id" FROM "' . $prefix . '_threads"', PDO::FETCH_COLUMN);
+
+                foreach($thread_ids as $thread_id) {
+                    $salt = base64_encode(random_bytes(33));
+                    $prepared = nel_database('core')->prepare('UPDATE "' . $prefix . '_threads" SET "salt" = ? WHERE "thread_id" = ?');
+                    $prepared->bindValue(1, $salt, PDO::PARAM_STR);
+                    $prepared->bindValue(2, $thread_id, PDO::PARAM_INT);
+                    nel_database('core')->executePrepared($prepared);
+                }
+
                 echo ' - ' . __('Thread tables updated.') . '<br>';
 
                 // Update post tables

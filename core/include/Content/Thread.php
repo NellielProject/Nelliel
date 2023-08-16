@@ -634,7 +634,7 @@ class Thread
             $this->changeData('last_update_milli', $post->data('post_time_milli'));
             $this->changeData('post_count', 1);
             $this->changeData('slug', $this->generateSlug($post));
-            $this->changeData('salt', base64_encode(random_bytes(32)));
+            $this->changeData('salt', base64_encode(random_bytes(33)));
             $post->changeData('reply_to', 0);
             $post->changeData('op', true);
         } else {
