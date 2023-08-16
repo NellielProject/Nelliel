@@ -212,8 +212,8 @@ class Snacks
      */
     private function checkSubnetBans(IPInfo $ip_info): void
     {
-        $small_subnet_bans = $this->bans_access->getForSubnet($ip_info->getInfo('hashed_small_subnet'));
-        $large_subnet_bans = $this->bans_access->getForSubnet($ip_info->getInfo('hashed_large_subnet'));
+        $small_subnet_bans = $this->bans_access->getForSubnet($ip_info->getInfo('hashed_small_subnet') ?? '');
+        $large_subnet_bans = $this->bans_access->getForSubnet($ip_info->getInfo('hashed_large_subnet') ?? '');
         $subnet_bans = array_merge($small_subnet_bans, $large_subnet_bans);
         $longest = null;
 
