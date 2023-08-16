@@ -11,10 +11,10 @@ use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
+use Nelliel\Language\Translator;
 use Nelliel\Output\OutputInterstitial;
 use Nelliel\Output\OutputPanelManageBoards;
-use Nelliel\Setup\Setup;
-use Nelliel\Utility\FileHandler;
+use Nelliel\Setup\Installer\Installer;
 use PDO;
 
 class AdminBoards extends Admin
@@ -143,7 +143,7 @@ class AdminBoards extends Admin
         $prepared->bindValue(7, $final_subdirectories['archive'], PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
 
-        $setup = new Setup($this->database, nel_utilities()->sqlCompatibility(), new FileHandler());
+        $installer = new Installer(nel_utilities()->fileHandler(), new Translator(nel_utilities()->fileHandler()));
         $query = 'SELECT "setting_name", "setting_value", "edit_lock" FROM "' . NEL_BOARD_DEFAULTS_TABLE . '"';
         $defaults = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
         $prepared = $this->database->prepare(
@@ -158,8 +158,8 @@ class AdminBoards extends Admin
             $this->database->executePrepared($prepared);
         }
 
-        $setup->createBoardTables($board_id, $db_prefix);
-        $setup->createBoardDirectories($board_id);
+        $installer->createBoardTables($board_id, $db_prefix);
+        $installer->createBoardDirectories($board_id);
         $domain = new DomainBoard($board_id, $this->database);
         $regen = new Regen();
         $domain->regenCache();
@@ -223,7 +223,8 @@ class AdminBoards extends Admin
 
         switch ($perm) {
             case 'perm_boards_view':
-                nel_derp(325, sprintf(_gettext('You do not have access to the %s control panel.'), $this->panel_name), 403);
+                nel_derp(325, sprintf(_gettext('You do not have access to the %s control panel.'), $this->panel_name),
+                    403);
                 break;
 
             case 'perm_boards_add':
