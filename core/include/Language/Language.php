@@ -93,6 +93,10 @@ class Language
         }
     }
 
+    public function changeLanguage(string $locale): void {
+        self::$gettext->language(self::LC_MESSAGES, $locale);
+    }
+
     public function accessGettext()
     {
         return self::$gettext;

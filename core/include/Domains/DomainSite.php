@@ -33,6 +33,7 @@ class DomainSite extends Domain implements NellielCacheInterface
         }
 
         $this->settings = $settings;
+        $this->updateLocale($this->setting('locale'));
     }
 
     protected function loadReferences(): void

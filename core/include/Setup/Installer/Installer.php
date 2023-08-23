@@ -10,7 +10,9 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
 use Nelliel\FrontEnd\FrontEndData;
+use Nelliel\Language\Language;
 use Nelliel\Language\Translator;
+use Nelliel\Render\RenderCoreSimple;
 use Nelliel\Setup\GenerateFiles;
 use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBans;
@@ -63,7 +65,7 @@ use Nelliel\Tables\TableUsers;
 use Nelliel\Tables\TableVersions;
 use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
-use Nelliel\Render\RenderCoreSimple;
+use PDO;
 
 class Installer
 {
@@ -72,6 +74,7 @@ class Installer
     private $file_handler;
     private $translator;
     private $render_core;
+    private $installer_variables = array();
 
     function __construct(FileHandler $file_handler, Translator $translator)
     {
@@ -93,9 +96,21 @@ class Installer
             $this->output('install_key', $render_data);
         }
 
+        if (file_exists(NEL_GENERATED_FILES_PATH . 'installer_variables.php')) {
+            $installer_variables = array();
+            include NEL_GENERATED_FILES_PATH . 'installer_variables.php';
+            $this->installer_variables = $installer_variables;
+        } else {
+            $this->writeVariables();
+        }
+
         if ($step === 'verify-install-key') {
             $this->installKeyCheck();
         }
+
+        $this->setLanguage($step);
+        $language = new Language();
+        $language->changeLanguage($this->installer_variables['default_language']);
 
         if (!file_exists(NEL_CONFIG_FILES_PATH . 'dnsbl.php')) {
             copy(NEL_CONFIG_FILES_PATH . 'dnsbl.php.example', NEL_CONFIG_FILES_PATH . 'dnsbl.php');
@@ -146,6 +161,12 @@ class Installer
         $this->installCoreTemplates();
         $this->installCoreStyles();
         $this->installCoreImageSets();
+
+        $prepared = $this->database->prepare(
+            'UPDATE "' . NEL_SITE_CONFIG_TABLE . '" SET "setting_value" = ? WHERE "setting_name" = \'locale\'');
+        $prepared->bindValue(1, $this->installer_variables['default_language'], PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
+
         $site_domain = new DomainSite($this->database);
         $regen = new Regen();
         $site_domain->regenCache();
@@ -206,6 +227,10 @@ class Installer
 
     private function installKeyCheck(): void
     {
+        if ($this->installer_variables['install_key_confirmed'] ?? false) {
+            return;
+        }
+
         $install_key = '';
         include NEL_CONFIG_FILES_PATH . 'install_key.php';
         $given_install_key = $_POST['install_key'] ?? '';
@@ -213,6 +238,31 @@ class Installer
         if ($install_key === '' || $given_install_key !== $install_key) {
             nel_derp(114, __('Install key does not match or is invalid.'));
         }
+
+        $this->installer_variables['install_key_confirmed'] = true;
+        $this->writeVariables();
+    }
+
+    private function setLanguage(string $step): void
+    {
+        if (isset($this->installer_variables['default_language'])) {
+            return;
+        }
+
+        if ($step === 'set-language') {
+            $this->installer_variables['default_language'] = strval($_POST['default_language'] ?? NEL_DEFAULT_LOCALE);
+            $this->writeVariables();
+        } else {
+            $render_data = array();
+            $render_data['languages'][] = ['value' => 'en_US', 'label' => __('English (United States)')];
+            $this->output('language_select', $render_data);
+        }
+    }
+
+    private function writeVariables()
+    {
+        $this->file_handler->writeInternalFile(NEL_GENERATED_FILES_PATH . 'installer_variables.php',
+            '$installer_variables = ' . var_export($this->installer_variables, true) . ';', true);
     }
 
     public function ownerCreated()

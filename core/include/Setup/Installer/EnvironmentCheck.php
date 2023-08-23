@@ -22,7 +22,7 @@ class EnvironmentCheck
 
     public function check(string $step)
     {
-        if ($step !== 'verify-install-key') {
+        if ($step !== 'set-language') {
             return;
         }
 

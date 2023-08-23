@@ -15,7 +15,6 @@ if (isset($_GET['install']) && !file_exists(NEL_CONFIG_FILES_PATH . 'config.php'
 
 require_once NEL_CONFIG_FILES_PATH . 'config.php';
 
-define('NEL_DEFAULT_LOCALE', $base_config['default_locale'] ?? 'en_US');
 define('NEL_SECURE_SESSION_ONLY', $base_config['secure_session_only'] ?? false);
 define('NEL_DIRECTORY_PERM', $base_config['directory_perm'] ?? '0775');
 define('NEL_FILES_PERM', $base_config['file_perm'] ?? '0664');

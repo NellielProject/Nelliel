@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	{{> pieces/head }}
+	<body>
+		<p data-i18n="">Choose a language. This will be used for the installer as well as the initial locale value in the site configuration.</p>
+		<form accept-charset="utf-8" action="imgboard.php?install&step=set-language" method="post">
+			<div class="installer-form">
+				<div class="installer-form-row">
+					<label for="default_language" class="installer-form-label" data-i18n="">Language</label>
+					<select id="default-language" class="installer-form-input" name="default_language">
+{{# languages }}
+						<option value="{{ value }}">{{ label }}</option>
+{{/ languages }}
+					</select>
+				</div>
+				<div>
+					<input class="installer-form-input" type="submit" value="Submit" data-i18n-attributes="value">
+				</div>
+			</div>
+		</form>
+	</body>
+</html>
