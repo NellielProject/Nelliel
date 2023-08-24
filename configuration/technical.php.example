@@ -1,0 +1,35 @@
+<?php
+defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+//
+// Example file for technical configuration.
+// NOTE: These are low-level settings not configurable from the installer.
+// If you want to manually configure these settings before installing, copy this file to 'technical.php' and edit it.
+//
+
+// Only allow sessions over a secure (SSL) connection. Do not enable if SSL is not set up yet.
+$technical_config['secure_session_only'] = false;
+
+// Permission for directories. Must be in octal format.
+$technical_config['directory_perm'] = '0755';
+
+// Permission for files. Must be in octal format.
+$technical_config['file_perm'] = '0644';
+
+// Base directory for temporary files. Leave blank to use system default.
+$technical_config['base_temp_directory'] = '';
+
+// Enable the plugin API.
+$technical_config['enable_plugins'] = true;
+
+// Enable the JSON API.
+$technical_config['enable_json_api'] = true;
+
+// Use caching for Mustache templates.
+$technical_config['use_mustache_cache'] = true;
+
+// Use internal file cache for commonly accessed settings and data..
+$technical_config['use_file_cache'] = true;
+
+// Stores some parsing and rendering data so it doesn't have to be processed as often.
+$technical_config['use_render_cache'] = true;
