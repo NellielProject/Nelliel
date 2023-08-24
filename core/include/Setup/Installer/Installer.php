@@ -151,6 +151,12 @@ class Installer
         $install_id = base64_encode(random_bytes(33));
 
         if ($generate_files->peppers(false)) {
+            $peppers = array();
+            include NEL_GENERATED_FILES_PATH . 'peppers.php';
+            define('NEL_TRIPCODE_PEPPER', $peppers['tripcode_pepper']);
+            define('NEL_IP_ADDRESS_PEPPER', $peppers['ip_address_pepper']);
+            define('NEL_POSTER_ID_PEPPER', $peppers['poster_id_pepper']);
+            define('NEL_POST_PASSWORD_PEPPER', $peppers['post_password_pepper']);
             echo __('Peppers file has been created.'), '<br>';
         } else {
             echo __('Peppers file already present.'), '<br>';
@@ -205,12 +211,16 @@ class Installer
             <div class="installer-form-row">
                 <label for="register_super_sekrit" class="installer-form-label">' . __('Password:') .
                 '</label>
-                <input id="register_super_sekrit" class="installer-form-input" type="password" name="register_super_sekrit" maxlength="255">
+                <input id="register_super_sekrit" class="installer-form-input" type="password" name="register_super_sekrit" maxlength="' .
+                nel_crypt_config()->accountPasswordOptions()['max_length'] .
+                '">
             </div>
             <div class="installer-form-row">
                 <label for="register_super_sekrit_confirm" class="installer-form-label">' . __('Confirm password:') .
                 '</label>
-                <input id="register_super_sekrit_confirm" class="installer-form-input" type="password" name="register_super_sekrit_confirm" maxlength="255">
+                <input id="register_super_sekrit_confirm" class="installer-form-input" type="password" name="register_super_sekrit_confirm" maxlength="' .
+                nel_crypt_config()->accountPasswordOptions()['max_length'] .
+                '">
             </div>
             <div class="installer-form-row">
                 <input class="installer-form-input" type="submit" value="' . __('Submit') .

@@ -60,6 +60,16 @@ class Register
             nel_derp(211, _gettext('No password provided.'), 401);
         }
 
+        if (utf8_strlen($register_username) > 50) {
+            nel_derp(216, sprintf(_gettext('Username is too long. Maximum %d characters.'), 50), 401);
+        }
+
+        if (utf8_strlen($register_password) > nel_crypt_config()->configValue('account_password_max_length')) {
+            nel_derp(217,
+                sprintf(_gettext('Password is too long. Maximum %d characters.'),
+                    nel_crypt_config()->configValue('account_password_max_length')), 401);
+        }
+
         if ($this->authorization->userExists($register_username)) {
             nel_derp(212, _gettext('User already exists.'));
         }

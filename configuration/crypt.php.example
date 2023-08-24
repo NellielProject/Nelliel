@@ -28,6 +28,9 @@ $crypt_config['account_password_argon2_time_cost'] = 2;
 // PHP default threads is 2; Nelliel default is 2.
 $crypt_config['account_password_argon2_threads'] = 2;
 
+// Maximum characters in account passwords. Only for preventing DoS attacks for xbox hueg strings.
+$crypt_config['account_password_max_length'] = 256;
+
 // Post passwords
 
 // Use strong hashing for post passwords. When disabled Bcrypt with a cost of 4 is used.
@@ -39,6 +42,9 @@ $crypt_config['post_password_strong_algorithm'] = 'BCRYPT';
 
 // Bcrypt cost for post passwords.
 $crypt_config['post_password_strong_bcrypt_cost'] = 8;
+
+// Maximum characters in post passwords. Only for preventing DoS attacks for xbox hueg strings.
+$crypt_config['post_password_max_length'] = 256;
 
 // IP addresses
 

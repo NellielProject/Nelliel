@@ -43,6 +43,7 @@ class CryptConfig
             }
 
             $this->account_password_options['cost'] = intval($raw_config['account_password_bcrypt_cost'] ?? 12);
+            $this->account_password_options['max_length'] = intval($raw_config['account_password_max_length'] ?? 256);
         }
 
         if ($raw_config['account_password_algorithm'] === 'ARGON2') {
@@ -58,6 +59,7 @@ class CryptConfig
                 $raw_config['account_password_argon2_memory_cost'] ?? 1024);
             $this->account_password_options['time_cost'] = intval($raw_config['account_password_argon2_time_cost'] ?? 2);
             $this->account_password_options['threads'] = intval($raw_config['account_password_argon2_threads'] ?? 2);
+            $this->account_password_options['max_length'] = intval($raw_config['account_password_max_length'] ?? 256);
         }
 
         if ($raw_config['post_password_strong_algorithm'] === 'BCRYPT') {
@@ -77,6 +79,7 @@ class CryptConfig
             }
 
             $this->post_password_options['pepper'] = strval(NEL_POST_PASSWORD_PEPPER);
+            $this->post_password_options['max_length'] = intval($raw_config['post_password_max_length'] ?? 256);
         }
 
         if ($raw_config['ip_strong_algorithm'] === 'BCRYPT') {
@@ -107,7 +110,7 @@ class CryptConfig
 
     public function configValue(string $key)
     {
-        return $this->config[$key] ?? null;
+        return $this->current_config[$key] ?? null;
     }
 
     public function accountPasswordAlgorithm()

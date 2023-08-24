@@ -79,14 +79,16 @@ class ConfigMigrations
                 $prepend . "\n" . nel_config_var_export($updated_db_config, '$db_config') . $append, true);
 
             // Hashing
-            $updated_crypt_config['account_password_algorithm'] = $crypt_config['password_algorithm'];
-            $updated_crypt_config['account_password_bcrypt_cost'] = $crypt_config['password_bcrypt_cost'];
-            $updated_crypt_config['account_password_argon2_memory_cost'] = $crypt_config['password_argon2_memory_cost'];
-            $updated_crypt_config['account_password_argon2_time_cost'] = $crypt_config['password_argon2_time_cost'];
-            $updated_crypt_config['account_password_argon2_threads'] = $crypt_config['password_argon2_threads'];
+            $updated_crypt_config['account_password_algorithm'] = strval($crypt_config['password_algorithm'] ?? 'BCRYPT');
+            $updated_crypt_config['account_password_bcrypt_cost'] = intval($crypt_config['password_bcrypt_cost'] ?? 12);
+            $updated_crypt_config['account_password_argon2_memory_cost'] = intval($crypt_config['password_argon2_memory_cost'] ?? 1024);
+            $updated_crypt_config['account_password_argon2_time_cost'] = intval($crypt_config['password_argon2_time_cost'] ?? 2);
+            $updated_crypt_config['account_password_argon2_threads'] = intval($crypt_config['password_argon2_threads'] ?? 2);
+            $updated_crypt_config['account_password_max_length'] = 256;
             $updated_crypt_config['post_password_strong_hashing'] = false;
             $updated_crypt_config['post_password_strong_algorithm'] = 'BCRYPT';
             $updated_crypt_config['post_password_strong_bcrypt_cost'] = 8;
+            $updated_crypt_config['post_password_max_length'] = 256;
             $updated_crypt_config['ip_strong_hashing'] = false;
             $updated_crypt_config['ip_strong_algorithm'] = 'BCRYPT';
             $updated_crypt_config['ip_strong_bcrypt_cost'] = 8;

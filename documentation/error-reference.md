@@ -113,6 +113,8 @@ Error 212: User already exists. (Account/Register.php)
 Error 213: Passwords do not match. (Account/Register.php)  
 Error 214: Install ID doesn't match. (Account/Register.php)  
 Error 215: Registration disabled. (Account/Register.php)  
+Error 216: Username too long. (Account/Register.php) 
+Error 217: Password too long. (Account/Register.php) 
 
 Error 220: Secure session only. (Account/Session.php)  
 Error 221: Expired session. (Account/Session.php)  

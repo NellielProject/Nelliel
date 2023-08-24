@@ -65,7 +65,7 @@
 		{{# display_password_field }}
 		<label class="new-post-form-row">
 			<span class="new-post-form-label" data-i18n="">Password</span>
-			<input id="new-post-form-sekrit" class="new-post-form-input" data-jsevents="input" type="password" name="new_post[post_info][sekrit]" size="12" maxlength="16" value="" placeholder="{{ password_field_placeholder }}">&nbsp;&nbsp;
+			<input id="new-post-form-sekrit" class="new-post-form-input" data-jsevents="input" type="password" name="new_post[post_info][sekrit]" size="12" maxlength="{{ sekrit_max_length }}" value="" placeholder="{{ password_field_placeholder }}">&nbsp;&nbsp;
 			(<span data-i18n="">Used for deletion</span>)
 		</label>
 		{{/ display_password_field }}

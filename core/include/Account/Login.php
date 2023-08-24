@@ -61,12 +61,20 @@ class Login
             nel_derp(201, _gettext('No password provided.'), 401, $error_context);
         }
 
+        if (utf8_strlen($form_password) > nel_crypt_config()->configValue('account_password_max_length')) {
+            nel_derp(204,
+                sprintf(_gettext('Password is too long. Maximum %d characters.'),
+                    nel_crypt_config()->configValue('account_password_max_length')), 401, $error_context);
+        }
+
         $user = $this->authorization->getUser($form_username);
         $valid_user = false;
         $valid_password = false;
 
         if ($user->exists()) {
-            $valid_password = nel_password_verify($form_password, $user->getData('password'));
+            if (utf8_strlen($form_password) <= nel_crypt_config()->configValue('account_password_max_length')) {
+                $valid_password = nel_password_verify($form_password, $user->getData('password'));
+            }
 
             if (empty($session_username)) {
                 $valid_user = true;

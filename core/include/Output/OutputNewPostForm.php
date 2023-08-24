@@ -102,6 +102,7 @@ class OutputNewPostForm extends Output
         $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
         $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
+        $this->render_data['sekrit_max_length'] = nel_crypt_config()->configValue('post_password_max_length');
 
         if ($this->site_domain->setting('enable_captchas') && $this->domain->setting('use_post_captcha')) {
             $this->render_data['use_new_post_captcha'] = true;

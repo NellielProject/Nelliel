@@ -81,7 +81,7 @@ class AuthUser extends AuthHandler
             $this->changed = false;
         }
 
-        if ($this->getData('username') !== $this->id()) {
+        if (!nel_true_empty($this->getData('username')) && $this->getData('username') !== $this->id()) {
             $this->auth_id = $this->getData('username');
         }
 
@@ -129,8 +129,9 @@ class AuthUser extends AuthHandler
 
     public function updatePassword(string $new_password): void
     {
-        $this->changeData('password', nel_password_hash($new_password, nel_crypt_config()->accountPasswordAlgorithm(),
-            nel_crypt_config()->accountPasswordOptions()));
+        $this->changeData('password',
+            nel_password_hash($new_password, nel_crypt_config()->accountPasswordAlgorithm(),
+                nel_crypt_config()->accountPasswordOptions()));
     }
 
     public function getDomainRole(Domain $domain): AuthRole

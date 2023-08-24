@@ -32,6 +32,7 @@ class OutputLoginPage extends Output
             $this->render_data['captchas'] = $output_native_captchas->render(['area' => 'user-login'], false);
         }
         $this->render_data['user_registration_enabled'] = $this->site_domain->setting('allow_user_registration');
+        $this->render_data['super_sekrit_max_length'] = nel_crypt_config()->configValue('account_password_max_length');
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->general([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

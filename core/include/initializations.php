@@ -11,6 +11,17 @@ use Nelliel\Utility\FileHandler;
 Mustache_Autoloader::register();
 
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
+
+if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
+    $peppers = array();
+    include_once NEL_GENERATED_FILES_PATH . 'peppers.php';
+    define('NEL_TRIPCODE_PEPPER', $peppers['tripcode_pepper']);
+    define('NEL_IP_ADDRESS_PEPPER', $peppers['ip_address_pepper']);
+    define('NEL_POSTER_ID_PEPPER', $peppers['poster_id_pepper']);
+    define('NEL_POST_PASSWORD_PEPPER', $peppers['post_password_pepper']);
+    unset($peppers);
+}
+
 $file_handler = new FileHandler();
 $translator = new Translator($file_handler);
 $installer = new Installer($file_handler, $translator);
@@ -24,16 +35,6 @@ if (!$installer->checkInstallDone()) {
 }
 
 unset($installer);
-
-if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
-    $peppers = array();
-    include_once NEL_GENERATED_FILES_PATH . 'peppers.php';
-    define('NEL_TRIPCODE_PEPPER', $peppers['tripcode_pepper']);
-    define('NEL_IP_ADDRESS_PEPPER', $peppers['ip_address_pepper']);
-    define('NEL_POSTER_ID_PEPPER', $peppers['poster_id_pepper']);
-    define('NEL_POST_PASSWORD_PEPPER', $peppers['post_password_pepper']);
-    unset($peppers);
-}
 
 $upgrade = new Upgrade($file_handler);
 

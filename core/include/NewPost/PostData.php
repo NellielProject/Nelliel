@@ -178,7 +178,8 @@ class PostData
         }
 
         if ($this->domain->setting('enable_password_field')) {
-            $post->changeData('password', $this->checkEntry($_POST['new_post']['post_info']['sekrit'] ?? '', 'string'));
+            $password = $this->checkEntry($_POST['new_post']['post_info']['sekrit'] ?? '', 'string');
+            $post->changeData('password', substr($password, 0, nel_crypt_config()->configValue('post_password_max_length')));
         }
 
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
