@@ -158,7 +158,7 @@ class AdminBoards extends Admin
             $this->database->executePrepared($prepared);
         }
 
-        $installer->createBoardTables($board_id, $db_prefix);
+        $installer->createBoardTables($this->database, nel_utilities()->sqlCompatibility(), $board_id, $db_prefix);
         $installer->createBoardDirectories($board_id);
         $domain = new DomainBoard($board_id, $this->database);
         $regen = new Regen();

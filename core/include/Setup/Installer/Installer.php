@@ -66,11 +66,11 @@ use Nelliel\Tables\TableVersions;
 use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Utility\SQLCompatibility;
+use Nelliel\Database\NellielPDO;
 
 class Installer
 {
-    private $database;
-    private $sql_compatibility;
     private $file_handler;
     private $translator;
     private $render_core;
@@ -129,8 +129,7 @@ class Installer
         $crypt_setup = new CryptSetup($this->file_handler, $this->translator);
         $crypt_setup->setup($step);
 
-        $this->database = nel_database('core');
-        $this->sql_compatibility = nel_utilities()->sqlCompatibility();
+        $database = nel_database('core');
 
         echo '
 <!DOCTYPE html>
@@ -144,7 +143,7 @@ class Installer
 	<body>
 ';
 
-        echo sprintf(__('Database type chosen is: %s'), $this->database->config()['sqltype']) . '<br>';
+        echo sprintf(__('Database type chosen is: %s'), $database->config()['sqltype']) . '<br>';
         echo __('No database problems detected.'), '<br>';
 
         $generate_files = new GenerateFiles($this->file_handler);
@@ -162,18 +161,18 @@ class Installer
             echo __('Peppers file already present.'), '<br>';
         }
 
-        $this->createCoreTables();
+        $this->createCoreTables($database, nel_utilities()->sqlCompatibility());
         $this->createCoreDirectories();
         $this->installCoreTemplates();
         $this->installCoreStyles();
         $this->installCoreImageSets();
 
-        $prepared = $this->database->prepare(
+        $prepared = $database->prepare(
             'UPDATE "' . NEL_SITE_CONFIG_TABLE . '" SET "setting_value" = ? WHERE "setting_name" = \'locale\'');
         $prepared->bindValue(1, $this->installer_variables['default_language'], PDO::PARAM_STR);
-        $this->database->executePrepared($prepared);
+        $database->executePrepared($prepared);
 
-        $site_domain = new DomainSite($this->database);
+        $site_domain = new DomainSite($database);
         $regen = new Regen();
         $site_domain->regenCache();
         $regen->news($site_domain);
@@ -285,126 +284,126 @@ class Installer
         return file_exists(NEL_GENERATED_FILES_PATH . 'install_done.php');
     }
 
-    public function createCoreTables()
+    public function createCoreTables(NellielPDO $database, SQLCompatibility $sql_compatibility): void
     {
         // Versions is first as all table creation relies on it
-        $versions_table = new TableVersions($this->database, $this->sql_compatibility);
+        $versions_table = new TableVersions($database, $sql_compatibility);
         $versions_table->createTable();
 
         // Domain registry is second as many tables rely on it
-        $domain_registry_table = new TableDomainRegistry($this->database, $this->sql_compatibility);
+        $domain_registry_table = new TableDomainRegistry($database, $sql_compatibility);
         $domain_registry_table->createTable();
 
         // The following tables rely on the domain registry table
-        $board_data_table = new TableBoardData($this->database, $this->sql_compatibility);
+        $board_data_table = new TableBoardData($database, $sql_compatibility);
         $board_data_table->createTable();
-        $file_filters_table = new TableFileFilters($this->database, $this->sql_compatibility);
+        $file_filters_table = new TableFileFilters($database, $sql_compatibility);
         $file_filters_table->createTable();
-        $overboard_table = new TableOverboard($this->database, $this->sql_compatibility);
+        $overboard_table = new TableOverboard($database, $sql_compatibility);
         $overboard_table->createTable();
-        $cites_table = new TableCites($this->database, $this->sql_compatibility);
+        $cites_table = new TableCites($database, $sql_compatibility);
         $cites_table->createTable();
-        $wordfilters_table = new TableWordfilters($this->database, $this->sql_compatibility);
+        $wordfilters_table = new TableWordfilters($database, $sql_compatibility);
         $wordfilters_table->createTable();
-        $captcha_table = new TableCaptcha($this->database, $this->sql_compatibility);
+        $captcha_table = new TableCaptcha($database, $sql_compatibility);
         $captcha_table->createTable();
-        $board_configs_table = new TableBoardConfigs($this->database, $this->sql_compatibility);
+        $board_configs_table = new TableBoardConfigs($database, $sql_compatibility);
         $board_configs_table->createTable();
-        $pages_table = new TablePages($this->database, $this->sql_compatibility);
+        $pages_table = new TablePages($database, $sql_compatibility);
         $pages_table->createTable();
-        $cache_table = new TableCache($this->database, $this->sql_compatibility);
+        $cache_table = new TableCache($database, $sql_compatibility);
         $cache_table->createTable();
-        $r9k_content_table = new TableR9KContent($this->database, $this->sql_compatibility);
+        $r9k_content_table = new TableR9KContent($database, $sql_compatibility);
         $r9k_content_table->createTable();
-        $r9k_mutes_table = new TableR9KMutes($this->database, $this->sql_compatibility);
+        $r9k_mutes_table = new TableR9KMutes($database, $sql_compatibility);
         $r9k_mutes_table->createTable();
-        $statistics_table = new TableStatistics($this->database, $this->sql_compatibility);
+        $statistics_table = new TableStatistics($database, $sql_compatibility);
         $statistics_table->createTable();
-        $scripts_table = new TableScripts($this->database, $this->sql_compatibility);
+        $scripts_table = new TableScripts($database, $sql_compatibility);
         $scripts_table->createTable();
-        $global_recents_table = new TableGlobalRecents($this->database, $this->sql_compatibility);
+        $global_recents_table = new TableGlobalRecents($database, $sql_compatibility);
         $global_recents_table->createTable();
 
         // The following tables rely on the settings table
-        $settings_table = new TableSettings($this->database, $this->sql_compatibility);
+        $settings_table = new TableSettings($database, $sql_compatibility);
         $settings_table->createTable();
-        $setting_options_table = new TableSettingOptions($this->database, $this->sql_compatibility);
+        $setting_options_table = new TableSettingOptions($database, $sql_compatibility);
         $setting_options_table->createTable();
-        $board_defaults_table = new TableBoardDefaults($this->database, $this->sql_compatibility);
+        $board_defaults_table = new TableBoardDefaults($database, $sql_compatibility);
         $board_defaults_table->createTable();
-        $site_config_table = new TableSiteConfig($this->database, $this->sql_compatibility);
+        $site_config_table = new TableSiteConfig($database, $sql_compatibility);
         $site_config_table->createTable();
 
         // The following tables rely on the filetype categories table
-        $filetype_categories_table = new TableFiletypeCategories($this->database, $this->sql_compatibility);
+        $filetype_categories_table = new TableFiletypeCategories($database, $sql_compatibility);
         $filetype_categories_table->createTable();
-        $filetypes_table = new TableFiletypes($this->database, $this->sql_compatibility);
+        $filetypes_table = new TableFiletypes($database, $sql_compatibility);
         $filetypes_table->createTable();
 
         // The following tables rely on the roles and permissions tables
-        $roles_table = new TableRoles($this->database, $this->sql_compatibility);
+        $roles_table = new TableRoles($database, $sql_compatibility);
         $roles_table->createTable();
-        $permissions_table = new TablePermissions($this->database, $this->sql_compatibility);
+        $permissions_table = new TablePermissions($database, $sql_compatibility);
         $permissions_table->createTable();
-        $role_permissions_table = new TableRolePermissions($this->database, $this->sql_compatibility);
+        $role_permissions_table = new TableRolePermissions($database, $sql_compatibility);
         $role_permissions_table->createTable();
 
         // The following tables rely on the users table
-        $users_table = new TableUsers($this->database, $this->sql_compatibility);
+        $users_table = new TableUsers($database, $sql_compatibility);
         $users_table->createTable();
-        $ip_notes_table = new TableIPNotes($this->database, $this->sql_compatibility);
+        $ip_notes_table = new TableIPNotes($database, $sql_compatibility);
         $ip_notes_table->createTable();
-        $news_table = new TableNews($this->database, $this->sql_compatibility);
+        $news_table = new TableNews($database, $sql_compatibility);
         $news_table->createTable();
-        $private_messages_table = new TablePrivateMessages($this->database, $this->sql_compatibility);
+        $private_messages_table = new TablePrivateMessages($database, $sql_compatibility);
         $private_messages_table->createTable();
-        $noticeboard_table = new TableNoticeboard($this->database, $this->sql_compatibility);
+        $noticeboard_table = new TableNoticeboard($database, $sql_compatibility);
         $noticeboard_table->createTable();
 
         // The following tables rely on ip info tables
-        $ip_info_table = new TableIPInfo($this->database, $this->sql_compatibility);
+        $ip_info_table = new TableIPInfo($database, $sql_compatibility);
         $ip_info_table->createTable();
-        $reports_table = new TableReports($this->database, $this->sql_compatibility);
+        $reports_table = new TableReports($database, $sql_compatibility);
         $reports_table->createTable();
-        $system_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $system_logs_table = new TableLogs($database, $sql_compatibility);
         $system_logs_table->tableName(NEL_SYSTEM_LOGS_TABLE);
         $system_logs_table->createTable();
-        $public_logs_table = new TableLogs($this->database, $this->sql_compatibility);
+        $public_logs_table = new TableLogs($database, $sql_compatibility);
         $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
         $public_logs_table->createTable();
 
         // The following tables rely on the users and roles tables
-        $user_roles_table = new TableUserRoles($this->database, $this->sql_compatibility);
+        $user_roles_table = new TableUserRoles($database, $sql_compatibility);
         $user_roles_table->createTable();
 
         // The following tables rely on the users and bans table
-        $bans_table = new TableBans($this->database, $this->sql_compatibility);
+        $bans_table = new TableBans($database, $sql_compatibility);
         $bans_table->createTable();
-        $ban_appeals_table = new TableBanAppeals($this->database, $this->sql_compatibility);
+        $ban_appeals_table = new TableBanAppeals($database, $sql_compatibility);
         $ban_appeals_table->createTable();
 
         // The following tables are fully independent
-        $image_sets_table = new TableImageSets($this->database, $this->sql_compatibility);
+        $image_sets_table = new TableImageSets($database, $sql_compatibility);
         $image_sets_table->createTable();
-        $styles_table = new TableStyles($this->database, $this->sql_compatibility);
+        $styles_table = new TableStyles($database, $sql_compatibility);
         $styles_table->createTable();
-        $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
+        $embeds_table = new TableEmbeds($database, $sql_compatibility);
         $embeds_table->createTable();
-        $rate_limit_table = new TableRateLimit($this->database, $this->sql_compatibility);
+        $rate_limit_table = new TableRateLimit($database, $sql_compatibility);
         $rate_limit_table->createTable();
-        $templates_table = new TableTemplates($this->database, $this->sql_compatibility);
+        $templates_table = new TableTemplates($database, $sql_compatibility);
         $templates_table->createTable();
-        $plugins_table = new TablePlugins($this->database, $this->sql_compatibility);
+        $plugins_table = new TablePlugins($database, $sql_compatibility);
         $plugins_table->createTable();
-        $blotter_table = new TableBlotter($this->database, $this->sql_compatibility);
+        $blotter_table = new TableBlotter($database, $sql_compatibility);
         $blotter_table->createTable();
-        $embeds_table = new TableEmbeds($this->database, $this->sql_compatibility);
+        $embeds_table = new TableEmbeds($database, $sql_compatibility);
         $embeds_table->createTable();
-        $content_ops_table = new TableContentOps($this->database, $this->sql_compatibility);
+        $content_ops_table = new TableContentOps($database, $sql_compatibility);
         $content_ops_table->createTable();
-        $capcodes_table = new TableCapcodes($this->database, $this->sql_compatibility);
+        $capcodes_table = new TableCapcodes($database, $sql_compatibility);
         $capcodes_table->createTable();
-        $markup_table = new TableMarkup($this->database, $this->sql_compatibility);
+        $markup_table = new TableMarkup($database, $sql_compatibility);
         $markup_table->createTable();
 
         echo __('Core database tables created.'), '<br>';
@@ -426,22 +425,23 @@ class Installer
         echo __('Core directories created.'), '<br>';
     }
 
-    public function createBoardTables(string $board_id, string $db_prefix)
+    public function createBoardTables(NellielPDO $database, SQLCompatibility $sql_compatibility, string $board_id,
+        string $db_prefix)
     {
         $domain = new DomainBoard($board_id, nel_database('core'));
 
-        $archives_table = new TableThreadArchives($this->database, $this->sql_compatibility);
+        $archives_table = new TableThreadArchives($database, $sql_compatibility);
         $archives_table->tableName($domain->reference('archives_table'));
         $archives_table->createTable();
 
         // NOTE: Tables must be created in order of threads -> posts -> uploads
-        $threads_table = new TableThreads($this->database, $this->sql_compatibility);
+        $threads_table = new TableThreads($database, $sql_compatibility);
         $threads_table->tableName($domain->reference('threads_table'));
         $threads_table->createTable();
-        $posts_table = new TablePosts($this->database, $this->sql_compatibility);
+        $posts_table = new TablePosts($database, $sql_compatibility);
         $posts_table->tableName($domain->reference('posts_table'));
         $posts_table->createTable(['threads_table' => $domain->reference('threads_table')]);
-        $uploads_table = new TableUploads($this->database, $this->sql_compatibility);
+        $uploads_table = new TableUploads($database, $sql_compatibility);
         $uploads_table->tableName($domain->reference('uploads_table'));
         $uploads_table->createTable(
             ['threads_table' => $domain->reference('threads_table'), 'posts_table' => $domain->reference('posts_table')]);
@@ -461,7 +461,7 @@ class Installer
 
     public function installCoreTemplates($overwrite = false): void
     {
-        $front_end_data = new FrontEndData($this->database);
+        $front_end_data = new FrontEndData(nel_database('core'));
         $template_inis = $front_end_data->getTemplateInis();
 
         foreach ($template_inis as $ini) {
@@ -479,7 +479,7 @@ class Installer
 
     public function installCoreStyles(bool $overwrite = false): void
     {
-        $front_end_data = new FrontEndData($this->database);
+        $front_end_data = new FrontEndData(nel_database('core'));
         $style_inis = $front_end_data->getStyleInis();
 
         foreach ($style_inis as $ini) {
@@ -497,7 +497,7 @@ class Installer
 
     public function installCoreImageSets(bool $overwrite = false): void
     {
-        $front_end_data = new FrontEndData($this->database);
+        $front_end_data = new FrontEndData(nel_database('core'));
         $image_set_inis = $front_end_data->getImageSetInis();
 
         foreach ($image_set_inis as $ini) {
