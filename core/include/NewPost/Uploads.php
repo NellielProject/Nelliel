@@ -250,24 +250,24 @@ class Uploads
             return;
         }
 
-        $is_banned = $snacks->fileHashIsBanned($md5, 'md5');
+        $is_banned = $snacks->fileHashIsBanned($md5);
 
         if (!$is_banned) {
             $sha1 = hash_file('sha1', $file);
             $upload->changeData('sha1', $sha1);
-            $is_banned = $snacks->fileHashIsBanned($sha1, 'sha1');
+            $is_banned = $snacks->fileHashIsBanned($sha1);
         }
 
         if (!$is_banned && $this->domain->setting('generate_file_sha256')) {
             $sha256 = hash_file('sha256', $file);
             $upload->changeData('sha256', $sha256);
-            $is_banned = $snacks->fileHashIsBanned($sha256, 'sha256');
+            $is_banned = $snacks->fileHashIsBanned($sha256);
         }
 
         if (!$is_banned && $this->domain->setting('generate_file_sha512')) {
             $sha512 = hash_file('sha512', $file);
             $upload->changeData('sha512', $sha512);
-            $is_banned = $snacks->fileHashIsBanned($sha512, 'sha512');
+            $is_banned = $snacks->fileHashIsBanned($sha512);
         }
 
         if ($is_banned) {

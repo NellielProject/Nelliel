@@ -34,28 +34,14 @@ class Snacks
     /**
      * Check if the provided file hash is banned.
      */
-    public function fileHashIsBanned(string $file_hash, string $hash_type): bool
+    public function fileHashIsBanned(string $file_hash): bool
     {
-        if (empty($this->file_filters[$this->domain->id()])) {
-            $loaded = false;
+        $prepared = $this->database->prepare(
+            'SELECT 1 FROM "nelliel_file_filters" WHERE "file_hash" = ? AND (board_id" = ? OR "board_id" = ?)');
+        $hash_found = $this->database->executePreparedFetch($prepared, [$file_hash, $this->domain->id(), Domain::GLOBAL],
+            PDO::FETCH_COLUMN);
 
-            if (!$loaded) {
-                $prepared = $this->database->prepare(
-                    'SELECT "hash_type", "file_hash" FROM "nelliel_file_filters" WHERE "board_id" = ? OR "board_id" = ?');
-                $filters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id(), Domain::GLOBAL],
-                    PDO::FETCH_ASSOC);
-
-                foreach ($filters as $filter) {
-                    $this->file_filters[$this->domain->id()][$filter['hash_type']][] = $filter['file_hash'];
-                }
-            }
-        }
-
-        if (!isset($this->file_filters[$this->domain->id()][$hash_type])) {
-            return false;
-        }
-
-        return in_array($file_hash, $this->file_filters[$this->domain->id()][$hash_type]);
+        return $hash_found !== false;
     }
 
     /**
