@@ -120,7 +120,7 @@ class AdminBoards extends Admin
         }
 
         $board_id = $this->generateBoardID($board_uri_lower);
-        $db_prefix = $this->generateDBPrefix($board_uri_lower);
+        $db_prefix = $this->generateDBPrefix($board_id);
 
         if ($board_id === '' || $db_prefix === '') {
             nel_derp(241,
@@ -276,13 +276,21 @@ class AdminBoards extends Admin
 
     private function generateBoardID(string $board_uri): string
     {
-        $test_id = $board_uri;
+        $lower_uri = utf8_strtolower($board_uri);
+        $first = preg_replace('/[^[:alpha:]_]/', '', utf8_substr($lower_uri, 0, 1));
+        $last = preg_replace('/[^[:alnum:]_]/', '', utf8_substr($lower_uri, 1));
+
+        if ($last === '') {
+            $last = nel_random_alphanumeric(8);
+        }
+
+        $test_id = $first . $last;
         $base_id = utf8_substr($test_id, 0, 45);
         $final_id = '';
 
         for ($i = 0; $i <= 20; $i ++) {
             $prepared = $this->database->prepare('SELECT 1 FROM "' . $this->data_table . '" WHERE "board_id" = ?');
-            $result = $this->database->executePreparedFetch($prepared, [utf8_strtolower($test_id)], PDO::FETCH_COLUMN);
+            $result = $this->database->executePreparedFetch($prepared, [$test_id], PDO::FETCH_COLUMN);
 
             if (!$result) {
                 $final_id = $test_id;
@@ -297,23 +305,25 @@ class AdminBoards extends Admin
 
     // While most engines can handle unicode, there is potential for issues
     // We also have to account for table name max lengths (especially PostgreSQL's tiny 63 byte limit)
-    private function generateDBPrefix(string $board_uri): string
+    private function generateDBPrefix(string $board_id): string
     {
-        $ascii_prefix = preg_replace('/[^a-zA-Z0-9_]/', '', $board_uri);
+        $lower_id = utf8_strtolower($board_id);
+        $ascii_prefix = preg_replace('/[^[:alnum:]_]/', '', $lower_id);
         $final_prefix = '';
 
-        for ($i = 0; $i <= 10; $i ++) {
-            if (utf8_strlen($ascii_prefix) <= 0) {
-                $test_prefix = '_' . nel_random_alphanumeric(8);
-            } else {
-                $truncated_prefix = utf8_substr($ascii_prefix, 0, 18);
-                $test_prefix = '_' . utf8_strtolower($truncated_prefix);
-            }
+        if ($ascii_prefix === '') {
+            $test_prefix = nel_random_alphanumeric(8);
+        } else {
+            $test_prefix = utf8_substr($ascii_prefix, 0, 18);
+        }
 
+        for ($i = 0; $i <= 10; $i ++) {
             $prepared = $this->database->prepare('SELECT 1 FROM "' . $this->data_table . '" WHERE "db_prefix" = ?');
             $result = $this->database->executePreparedFetch($prepared, [$test_prefix], PDO::FETCH_COLUMN);
 
-            if (!$result) {
+            if ($result) {
+                $test_prefix = utf8_substr($test_prefix, -2) . nel_random_alphanumeric(2);
+            } else {
                 $final_prefix = $test_prefix;
                 break;
             }
