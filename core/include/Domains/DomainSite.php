@@ -40,6 +40,7 @@ class DomainSite extends Domain implements NellielCacheInterface
     {
         $new_reference = array();
         $new_reference['base_path'] = NEL_PUBLIC_PATH;
+        $new_reference['board_uri'] = Domain::SITE;
         $new_reference['banners_directory'] = $this->domain_id;
         $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_directory'] . '/';
         $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_directory']) .
@@ -70,6 +71,17 @@ class DomainSite extends Domain implements NellielCacheInterface
         }
 
         return $settings;
+    }
+
+    public function uri(bool $formatted = false): string
+    {
+        $uri = 'site';
+
+        if ($formatted) {
+            $uri = __('Site');
+        }
+
+        return $uri;
     }
 
     public function updateStatistics(): void

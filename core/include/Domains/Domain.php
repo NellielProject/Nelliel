@@ -44,6 +44,8 @@ abstract class Domain implements NellielCacheInterface
 
     public abstract function updateStatistics(): void;
 
+    public abstract function uri(bool $formatted = false): string;
+
     protected function utilitySetup()
     {
         $this->front_end_data = new FrontEndData($this->database);
@@ -152,7 +154,21 @@ abstract class Domain implements NellielCacheInterface
         } else if ($id === Domain::GLOBAL) {
             return new DomainGlobal($database);
         } else {
-            return new DomainBoard($id, $database);
+            $board_domain = new DomainBoard($id, $database);
+
+            // Check if we were passed a URI
+            if (!$board_domain->exists()) {
+                $prepared = $database->prepare(
+                    'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_uri" = ?');
+                $prepared->bindValue(1, $id, PDO::PARAM_STR);
+                $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+                if ($result !== false) {
+                    return new DomainBoard($result, $database);
+                }
+            }
+
+            return $board_domain;
         }
     }
 

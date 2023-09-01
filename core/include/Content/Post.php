@@ -460,7 +460,7 @@ class Post
     public function getURL(bool $dynamic): string
     {
         $parent = $this->getParent();
-        $thread_url = $parent->getURL($dynamic);
+        $thread_url = $parent->getURL($dynamic, false, '');
         return $thread_url . '#t' . $parent->contentID()->threadID() . 'p' . $this->content_id->postID();
     }
 

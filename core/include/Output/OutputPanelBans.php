@@ -10,6 +10,7 @@ use Nelliel\Bans\BanHammer;
 use Nelliel\Bans\BansAccess;
 use Nelliel\Domains\Domain;
 use PDO;
+use Nelliel\Domains\DomainBoard;
 
 class OutputPanelBans extends Output
 {
@@ -64,11 +65,8 @@ class OutputPanelBans extends Output
                     break;
             }
 
-            $ban_data['board_id'] = $ban_hammer->getData('board_id');
-
-            if ($ban_data['board_id'] === Domain::GLOBAL) {
-                $ban_data['board_id'] = 'Global';
-            }
+            $ban_domain = new DomainBoard($ban_hammer->getData('board_id'), $this->database);
+            $ban_data['board_uri'] = $ban_domain->uri(true);
 
             $ban_data['reason'] = $ban_hammer->getData('reason');
             $ban_data['seen'] = $ban_hammer->getData('seen');

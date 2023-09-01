@@ -375,13 +375,14 @@ class OutputIndex extends Output
 
         if ($gen_data['abbreviate']) {
             if ($this->session->inModmode($this->domain)) {
-                $this->render_data['content_links_expand_thread']['url'] = $thread->getURL(!$this->write_mode,
+                $this->render_data['content_links_expand_thread']['url'] = $thread->getURL(!$this->write_mode, false,
                     'expand&modmode');
-                $this->render_data['content_links_expand_thread']['alt_url'] = $thread->getURL(!$this->write_mode,
+                $this->render_data['content_links_expand_thread']['alt_url'] = $thread->getURL(!$this->write_mode, false,
                     'collapse&modmode');
             } else {
-                $this->render_data['content_links_expand_thread']['url'] = $thread->getURL(!$this->write_mode, 'expand');
-                $this->render_data['content_links_expand_thread']['alt_url'] = $thread->getURL(!$this->write_mode,
+                $this->render_data['content_links_expand_thread']['url'] = $thread->getURL(!$this->write_mode, false,
+                    'expand');
+                $this->render_data['content_links_expand_thread']['alt_url'] = $thread->getURL(!$this->write_mode, false,
                     'collapse');
             }
 
@@ -391,7 +392,7 @@ class OutputIndex extends Output
         }
 
         if ($this->session->inModmode($this->domain)) {
-            $this->render_data['content_links_reply']['url'] = $thread->getURL(!$this->write_mode, 'modmode');
+            $this->render_data['content_links_reply']['url'] = $thread->getURL(!$this->write_mode, false, 'modmode');
         } else {
             $this->render_data['content_links_reply']['url'] = $thread->getURL(!$this->write_mode);
         }

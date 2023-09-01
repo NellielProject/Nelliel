@@ -38,7 +38,7 @@ class DomainGlobal extends Domain implements NellielCacheInterface
 
     protected function loadReferences(): void
     {
-        ;
+        $this->references['board_uri'] = Domain::GLOBAL;
     }
 
     protected function loadSettingsFromDatabase(): array
@@ -55,6 +55,17 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         }
 
         return $settings;
+    }
+
+    public function uri(bool $formatted = false): string
+    {
+        $uri = 'global';
+
+        if ($formatted) {
+            $uri = __('Global');
+        }
+
+        return $uri;
     }
 
     public function updateStatistics(): void

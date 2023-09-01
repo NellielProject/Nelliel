@@ -8,7 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\Domains\DomainBoard;
 
 class OutputPanelReports extends Output
 {
@@ -46,15 +45,16 @@ class OutputPanelReports extends Output
 
         foreach ($report_list as $report_info) {
             if (!isset($domains[$report_info['board_id']])) {
-                $domains[$report_info['board_id']] = new DomainBoard($report_info['board_id'], $this->database);
+                $domains[$report_info['board_id']] = Domain::getDomainFromID($report_info['board_id'], $this->database);
             }
+
+            $report_domain = $domains[$report_info['board_id']];
 
             $report_data = array();
             $report_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $current_domain = $domains[$report_info['board_id']];
             $content_id = new ContentID($report_info['content_id']);
-            $content = $content_id->getInstanceFromID($current_domain);
+            $content = $content_id->getInstanceFromID($report_domain);
 
             if ($content_id->isUpload()) {
                 $report_data['content_url'] = $content->getParent()->getURL(true);
@@ -64,7 +64,7 @@ class OutputPanelReports extends Output
             }
 
             $report_data['report_id'] = $report_info['report_id'];
-            $report_data['board_id'] = $report_info['board_id'];
+            $report_data['board_uri'] = $report_domain->uri(true);
             $report_data['content_id'] = $report_info['content_id'];
             $report_data['reason'] = $report_info['reason'];
             $report_data['reporter_ip'] = nel_convert_ip_from_storage($report_info['reporter_ip']);

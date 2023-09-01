@@ -6,7 +6,6 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainBoard;
 use PDO;
 
 class OutputPanelManageBoards extends Output
@@ -37,7 +36,7 @@ class OutputPanelManageBoards extends Output
             $board_data = array();
             $board_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $board_data['board_uri'] = $domain->reference('board_uri');
+            $board_data['board_uri'] = $domain->uri();
             $board_data['board_url'] = $domain->reference('board_web_path');
             $board_data['board_id'] = $domain->id();
             $board_data['db_prefix'] = $domain->reference('db_prefix');

@@ -117,6 +117,17 @@ class DomainBoard extends Domain implements NellielCacheInterface
         return $settings;
     }
 
+    public function uri(bool $formatted = false): string
+    {
+        $uri = $this->reference('board_uri');
+
+        if ($formatted) {
+            $uri = sprintf(nel_site_domain()->setting('uri_display_format'), $uri);
+        }
+
+        return $uri;
+    }
+
     public function updateStatistics(): void
     {
         $limit = time() - nel_site_domain()->setting('min_time_between_board_stat_updates');

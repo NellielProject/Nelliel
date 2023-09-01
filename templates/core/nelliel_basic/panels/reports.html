@@ -3,7 +3,7 @@
 	<thead>
 		<tr>
 			<th scope="col" data-i18n="">Report ID</th>
-			<th scope="col" data-i18n="">Board ID</th>
+			<th scope="col" data-i18n="">Board</th>
 			<th scope="col" data-i18n="">Content ID</th>
 			<th scope="col" data-i18n="">Reason</th>
 			<th scope="col" data-i18n="">Reporter IP</th>
@@ -14,7 +14,7 @@
 {{# reports_list }}
 		<tr class="{{ bgclass }}">
 			<td>{{ report_id }}</td>
-			<td>{{ board_id }}</td>
+			<td>{{ board_uri }}</td>
 			<td>
 				<a href="{{ content_url }}">{{ content_id }}</a>
 	{{# file_url }}

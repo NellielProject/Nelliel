@@ -93,7 +93,7 @@ class OutputPanelThreads extends Output
                 $this->domain->setting('post_time_format'));
             $thread_info['subject'] = $op_post->data('subject');
             $thread_info['thread_url'] = $thread->getURL(
-                $this->session->user()->checkPermission($this->domain, 'perm_mod_mode'));
+                $this->session->user()->checkPermission($this->domain, 'perm_mod_mode', false));
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
                 $thread_info['op_ip'] = $op_post->data('ip_address');

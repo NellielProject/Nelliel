@@ -44,10 +44,11 @@ class OutputPanelWordfilters extends Output
 
         foreach ($wordfilters as $wordfilter) {
             $wordfilter_data = array();
+            $filter_domain = Domain::getDomainFromID($wordfilter['board_id'], $this->database);
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $wordfilter_data['bgclass'] = $bgclass;
             $wordfilter_data['filter_id'] = $wordfilter['filter_id'];
-            $wordfilter_data['board_id'] = $wordfilter['board_id'];
+            $wordfilter_data['board_uri'] = $filter_domain->uri(true);
             $wordfilter_data['text_match'] = $wordfilter['text_match'];
             $wordfilter_data['replacement'] = $wordfilter['replacement'];
             $wordfilter_data['edit_url'] = nel_build_router_url(
@@ -107,8 +108,9 @@ class OutputPanelWordfilters extends Output
             $wordfilter_data = $this->database->executePreparedFetch($prepared, [$filter_id], PDO::FETCH_ASSOC);
 
             if ($wordfilter_data !== false) {
+                $filter_domain = Domain::getDomainFromID($wordfilter_data['board_id'], $this->database);
                 $this->render_data['filter_id'] = $wordfilter_data['filter_id'];
-                $this->render_data['board_id'] = $wordfilter_data['board_id'];
+                $this->render_data['board_uri'] = $filter_domain->uri(true);
                 $this->render_data['text_match'] = $wordfilter_data['text_match'];
                 $this->render_data['replacement'] = $wordfilter_data['replacement'];
                 $this->render_data['is_regex_checked'] = $wordfilter_data['is_regex'] == 1 ? 'checked' : '';

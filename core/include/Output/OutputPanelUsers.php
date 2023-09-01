@@ -95,22 +95,22 @@ class OutputPanelUsers extends Output
         } else {
             $this->render_data['is_site_owner'] = false;
             $domain_list = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
-                PDO::FETCH_ASSOC);
-            array_unshift($domain_list, ['board_id' => Domain::GLOBAL]);
-            array_unshift($domain_list, ['board_id' => Domain::SITE]);
+                PDO::FETCH_COLUMN);
+            array_unshift($domain_list, Domain::GLOBAL);
+            array_unshift($domain_list, Domain::SITE);
             $query = 'SELECT "role_id", "role_title", "role_level" FROM "' . NEL_ROLES_TABLE .
                 '" ORDER BY "role_level" ASC';
             $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
-            foreach ($domain_list as $domain) {
+            foreach ($domain_list as $domain_id) {
+                $domain = Domain::getDomainFromID($domain_id, $this->database);
                 $domain_role_data = array();
-                $domain_role_data['domain'] = $domain['board_id'];
-                $domain_role_data['domain_name'] = $domain['board_id'];
-                $domain_role_data['select_name'] = 'domain_role_' . $domain['board_id'];
-                $domain_role_data['select_id'] = 'domain_role_' . $domain['board_id'];
+                $domain_role_data['domain'] = $domain->id();
+                $domain_role_data['select_name'] = 'domain_role_' . $domain->id();
+                $domain_role_data['select_id'] = 'domain_role_' . $domain->id();
                 $prepared = $this->database->prepare(
                     'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
-                $role_id = $this->database->executePreparedFetch($prepared, [$username, $domain['board_id']],
+                $role_id = $this->database->executePreparedFetch($prepared, [$username, $domain->id()],
                     PDO::FETCH_COLUMN);
 
                 foreach ($roles as $role) {
@@ -125,13 +125,14 @@ class OutputPanelUsers extends Output
                     $domain_role_data['roles']['options'][] = $role_options;
                 }
 
-                if ($domain['board_id'] === Domain::SITE) {
+                if ($domain->id() === Domain::SITE) {
                     $domain_role_data['domain_name'] = _gettext('Site');
                     $this->render_data['special_domain_roles'][] = $domain_role_data;
-                } else if ($domain['board_id'] === Domain::GLOBAL) {
+                } else if ($domain->id() === Domain::GLOBAL) {
                     $domain_role_data['domain_name'] = _gettext('Global');
                     $this->render_data['special_domain_roles'][] = $domain_role_data;
                 } else {
+                    $domain_role_data['domain_name'] = $domain->uri();
                     $this->render_data['domain_roles'][] = $domain_role_data;
                 }
             }

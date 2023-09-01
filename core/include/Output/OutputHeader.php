@@ -40,7 +40,6 @@ class OutputHeader extends Output
     public function board(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $uri = $parameters['uri'] ?? $this->domain->reference('board_directory');
         $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
@@ -50,8 +49,8 @@ class OutputHeader extends Output
         $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
         $this->render_data['board_navigation'] = $output_navigation->boardLinks([], true);
         $this->render_data['use_board_header'] = true;
-        $this->render_data['board_uri'] = '/' . $uri . '/';
-        $this->render_data['name'] = '/' . $uri . '/';
+        $this->render_data['board_uri'] = $this->domain->uri(true);
+        $this->render_data['name'] = $this->domain->uri(true);
 
         $board_name = $this->domain->setting('name');
 
@@ -81,7 +80,7 @@ class OutputHeader extends Output
         } else if ($this->domain->id() === Domain::GLOBAL) {
             $this->render_data['area'] = $parameters['area'] ?? _gettext('Global Board Management');
         } else {
-            $this->render_data['board_id'] = $this->domain->id();
+            $this->render_data['board_uri'] = $this->domain->uri(true);
             $this->render_data['area'] = $parameters['area'] ?? _gettext('Board Management');
         }
 

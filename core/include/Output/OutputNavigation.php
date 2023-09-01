@@ -30,7 +30,7 @@ class OutputNavigation extends Output
             $board_info = array();
             $board_info['board_url'] = $board->reference('board_web_path');
             $board_info['name'] = $board->setting('name');
-            $board_info['board_uri'] = $board->reference('board_uri');
+            $board_info['board_uri'] = $board->uri();
             $board_info['end'] = $i === $end;
             $render_data['boards'][] = $board_info;
         }
