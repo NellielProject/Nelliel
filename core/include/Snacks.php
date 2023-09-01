@@ -37,7 +37,7 @@ class Snacks
     public function fileHashIsBanned(string $file_hash): bool
     {
         $prepared = $this->database->prepare(
-            'SELECT 1 FROM "nelliel_file_filters" WHERE "file_hash" = ? AND (board_id" = ? OR "board_id" = ?)');
+            'SELECT 1 FROM "nelliel_file_filters" WHERE "file_hash" = ? AND ("board_id" = ? OR "board_id" = ?)');
         $hash_found = $this->database->executePreparedFetch($prepared, [$file_hash, $this->domain->id(), Domain::GLOBAL],
             PDO::FETCH_COLUMN);
 

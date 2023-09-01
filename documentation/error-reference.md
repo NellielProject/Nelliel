@@ -135,14 +135,15 @@ Error 245: Board URI too long. (Admin/AdminBoards.php)
 Error 246: Empty subdirectory name. (Admin/AdminBoards.php)  
 Error 247: Subdirectory name too long. (Admin/AdminBoards.php)  
 Error 248: Invalid directory characters. (Admin/AdminBoards.php)  
-
-Error 250: Maximum static pages. (Admin/AdminPages.php)  
+Error 249: Problematic URI. (Admin/AdminBoards.php)  
 
 Error 260: Thread not exist. (Admin/AdminThreads.php)  
 Error 261: Post not exist. (Admin/AdminThreads.php)  
 Error 262: Can't move replies. (Admin/AdminThreads.php)  
 Error 263: Can't move uploads. (Admin/AdminThreads.php)  
 Error 264: Invalid target thread. (Admin/AdminThreads.php) 
+
+Error 270: Maximum static pages. (Admin/AdminPages.php)  
 
 Error 300: Default permission error. (Admin/Admin.php)  
 

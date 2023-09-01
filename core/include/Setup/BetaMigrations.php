@@ -155,8 +155,7 @@ class BetaMigrations
                     'ui_mod_unlock' => 'mod_links_unlock', 'ui_mod_sticky' => 'mod_links_sticky',
                     'ui_mod_unsticky' => 'mod_links_unsticky', 'ui_mod_permasage' => 'mod_links_permasage',
                     'ui_mod_unpermasage' => 'mod_links_unpermasage', 'ui_mod_cyclic' => 'mod_links_cyclic',
-                    'ui_mod_non_cyclic' => 'mod_links_non_cyclic',
-                    'ui_mod_edit_post' => 'mod_links_edit'];
+                    'ui_mod_non_cyclic' => 'mod_links_non_cyclic', 'ui_mod_edit_post' => 'mod_links_edit'];
                 $this->renameBoardSettings($rename_board_settings);
 
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
@@ -503,8 +502,7 @@ class BetaMigrations
                     'display_allowed_embeds' => 'show_allowed_embeds',
                     'display_form_max_filesize' => 'show_form_max_filesize',
                     'display_thumbnailed_message' => 'show_thumbnailed_message',
-                    'display_video_preview' => 'show_video_preview',
-                    'date_format' => 'post_time_format'];
+                    'display_video_preview' => 'show_video_preview', 'date_format' => 'post_time_format'];
                 $this->renameBoardSettings($rename_board_settings);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
@@ -1144,11 +1142,13 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         'ALTER TABLE "' . $prefix . '_threads' . '" ADD COLUMN salt VARCHAR(255) NOT NULL DEFAULT \'\'');
                 }
 
-                $thread_ids = nel_database('core')->executeFetchAll('SELECT "thread_id" FROM "' . $prefix . '_threads"', PDO::FETCH_COLUMN);
+                $thread_ids = nel_database('core')->executeFetchAll('SELECT "thread_id" FROM "' . $prefix . '_threads"',
+                    PDO::FETCH_COLUMN);
 
-                foreach($thread_ids as $thread_id) {
+                foreach ($thread_ids as $thread_id) {
                     $salt = base64_encode(random_bytes(33));
-                    $prepared = nel_database('core')->prepare('UPDATE "' . $prefix . '_threads" SET "salt" = ? WHERE "thread_id" = ?');
+                    $prepared = nel_database('core')->prepare(
+                        'UPDATE "' . $prefix . '_threads" SET "salt" = ? WHERE "thread_id" = ?');
                     $prepared->bindValue(1, $salt, PDO::PARAM_STR);
                     $prepared->bindValue(2, $thread_id, PDO::PARAM_INT);
                     nel_database('core')->executePrepared($prepared);
@@ -1708,8 +1708,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 // Update markup table
 
                 // Fixes bug with reserved words; exclude MySQL and MariaDB because it wouldn't have been able to complete installation
-                if ($core_sqltype !== 'MYSQL' && $core_sqltype !== 'MARIADB' &&
-                    nel_database('core')->columnExists('nelliel_markup', 'match')) {
+                if (nel_database('core')->columnExists('nelliel_markup', 'match')) {
                     nel_database('core')->exec('ALTER TABLE "nelliel_markup" RENAME TO nelliel_markup_old');
 
                     $markup_table = new TableMarkup(nel_database('core'), nel_utilities()->sqlCompatibility());
@@ -1735,6 +1734,47 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                     echo ' - ' . __('Markup table updated.') . '<br>';
                 }
+
+                // Update domain registry table
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_domain_registry" ADD COLUMN uri VARCHAR(255) DEFAULT NULL');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_domain_registry" ADD COLUMN display_uri VARCHAR(255) DEFAULT NULL');
+
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "nelliel_domain_registry" ADD CONSTRAINT uc_domain_uri UNIQUE (uri)');
+                } else {
+                    nel_database('core')->exec('UPDATE "nelliel_filetypes" SET "mime" = \'\'');
+                }
+
+                $boards = nel_database('core')->executeFetchAll(
+                    'SELECT "board_uri", "board_id" FROM "nelliel_board_data"', PDO::FETCH_ASSOC);
+                $uri_transfer = nel_database('core')->prepare(
+                    'UPDATE "nelliel_domain_registry" SET "uri" = ? WHERE "domain_id" = ?');
+
+                foreach ($boards as $board) {
+                    $uri_transfer->bindValue(1, $board['board_uri'], PDO::PARAM_STR);
+                    $uri_transfer->bindValue(2, $board['board_id'], PDO::PARAM_STR);
+                    nel_database('core')->executePrepared($uri_transfer);
+                }
+
+                // Fix an old defaults insert bug
+                $uri_transfer = nel_database('core')->exec(
+                    'UPDATE "nelliel_domain_registry" SET "notes" = \'System domain. NEVER DELETE!\' WHERE "domain_id" = \'site\'');
+                $uri_transfer = nel_database('core')->exec(
+                    'UPDATE "nelliel_domain_registry" SET "notes" = \'System domain. NEVER DELETE!\' WHERE "domain_id" = \'global\'');
+
+                echo ' - ' . __('Domain registry table updated.') . '<br>';
+
+                // Update board data table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_board_data" DROP COLUMN "board_uri"');
+                } else {
+                    nel_database('core')->exec('UPDATE "nelliel_board_daya" SET "board_uri" = \'\'');
+                }
+
+                echo ' - ' . __('Board data table updated.') . '<br>';
 
                 $migration_count ++;
         }

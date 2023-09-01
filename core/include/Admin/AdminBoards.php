@@ -21,7 +21,7 @@ class AdminBoards extends Admin
 {
     private $site_domain;
     private $remove_confirmed = false;
-    private $static_reserved_uris = [Domain::SITE, Domain::GLOBAL, NEL_ASSETS_DIR, 'overboard', 'sfw_overboard'];
+    private $reserved_uris = [Domain::SITE, Domain::GLOBAL, NEL_ASSETS_DIR, 'overboard', 'sfw_overboard'];
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
@@ -59,6 +59,10 @@ class AdminBoards extends Admin
             }
         }
 
+        if (preg_match('/\.php$|\.html?$|\.xml$|[[:cntrl:]]/i', $board_uri) === 1) {
+            nel_derp(249, _gettext('Board URI is problematic.'));
+        }
+
         $uri_max = 255;
 
         if (utf8_strlen($board_uri) > $uri_max) {
@@ -69,11 +73,9 @@ class AdminBoards extends Admin
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
-        $board_uris = $this->database->executeFetchAll('SELECT "board_uri" FROM "' . $this->data_table . '"',
-            PDO::FETCH_COLUMN);
-        $uri_exists = in_array($board_uri_lower, array_map('strtolower', $board_uris));
+        $test_domain = Domain::getDomainFromID($board_uri, $this->database);
 
-        if ($uri_exists) {
+        if ($test_domain->exists()) {
             nel_derp(240, sprintf(_gettext('There is already a board with the URI %s.'), $board_uri));
         }
 
@@ -121,26 +123,31 @@ class AdminBoards extends Admin
 
         $board_id = $this->generateBoardID($board_uri_lower);
         $db_prefix = $this->generateDBPrefix($board_id);
+        $notes = '';
 
         if ($board_id === '' || $db_prefix === '') {
             nel_derp(241,
                 sprintf(_gettext('Had trouble registering the board URI %s. May want to change it.'), $board_uri));
         }
 
-        $prepared = $this->database->prepare('INSERT INTO "' . NEL_DOMAIN_REGISTRY_TABLE . '" ("domain_id") VALUES (?)');
+        $prepared = $this->database->prepare(
+            'INSERT INTO "' . NEL_DOMAIN_REGISTRY_TABLE .
+            '" ("domain_id", "uri", "display_uri", "notes") VALUES (?, ?, ?, ?)');
         $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
+        $prepared->bindValue(2, $board_uri_lower, PDO::PARAM_STR);
+        $prepared->bindValue(3, $board_uri, PDO::PARAM_STR);
+        $prepared->bindValue(4, $notes, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
 
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table .
-            '" ("board_id", "db_prefix", "board_uri", "source_directory", "preview_directory", "page_directory", "archive_directory") VALUES (?, ?, ?, ?, ?, ?, ?)');
+            '" ("board_id", "db_prefix", "source_directory", "preview_directory", "page_directory", "archive_directory") VALUES (?, ?, ?, ?, ?, ?)');
         $prepared->bindValue(1, $board_id, PDO::PARAM_STR);
         $prepared->bindValue(2, $db_prefix, PDO::PARAM_STR);
-        $prepared->bindValue(3, $board_uri, PDO::PARAM_STR);
-        $prepared->bindValue(4, $final_subdirectories['source'], PDO::PARAM_STR);
-        $prepared->bindValue(5, $final_subdirectories['preview'], PDO::PARAM_STR);
-        $prepared->bindValue(6, $final_subdirectories['page'], PDO::PARAM_STR);
-        $prepared->bindValue(7, $final_subdirectories['archive'], PDO::PARAM_STR);
+        $prepared->bindValue(3, $final_subdirectories['source'], PDO::PARAM_STR);
+        $prepared->bindValue(4, $final_subdirectories['preview'], PDO::PARAM_STR);
+        $prepared->bindValue(5, $final_subdirectories['page'], PDO::PARAM_STR);
+        $prepared->bindValue(6, $final_subdirectories['archive'], PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
 
         $installer = new Installer(nel_utilities()->fileHandler(), new Translator(nel_utilities()->fileHandler()));
@@ -284,8 +291,9 @@ class AdminBoards extends Admin
             $last = nel_random_alphanumeric(8);
         }
 
-        $test_id = $first . $last;
-        $base_id = utf8_substr($test_id, 0, 45);
+        $base_id = utf8_substr($first . $last, 0, 40);
+        $suffix = nel_random_alphanumeric(4);
+        $test_id = $base_id . '_' . $suffix;
         $final_id = '';
 
         for ($i = 0; $i <= 20; $i ++) {
@@ -297,7 +305,8 @@ class AdminBoards extends Admin
                 break;
             }
 
-            $test_id = $base_id . '_' . nel_random_alphanumeric(4);
+            $suffix = nel_random_alphanumeric(4);
+            $test_id = $base_id . '_' . $suffix;
         }
 
         return $final_id;
@@ -324,7 +333,7 @@ class AdminBoards extends Admin
             if ($result) {
                 $test_prefix = utf8_substr($test_prefix, -2) . nel_random_alphanumeric(2);
             } else {
-                $final_prefix = $test_prefix;
+                $final_prefix = '_' . $test_prefix;
                 break;
             }
         }
@@ -335,7 +344,7 @@ class AdminBoards extends Admin
     public function isReservedURI(string $uri): bool
     {
         $uri_lower = utf8_strtolower($uri);
-        $static_found = in_array($uri_lower, array_map('utf8_strtolower', $this->static_reserved_uris));
+        $static_found = in_array($uri_lower, array_map('utf8_strtolower', $this->reserved_uris));
         $dynamic_reserved_uris = [$this->site_domain->setting('overboard_uri'),
             $this->site_domain->setting('sfw_overboard_uri')];
         $dynamic_found = in_array($uri_lower, array_map('utf8_strtolower', $dynamic_reserved_uris));

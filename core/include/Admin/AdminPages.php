@@ -150,7 +150,7 @@ class AdminPages extends Admin
             $page_count = $this->domain->database()->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
             if ($page_count >= nel_site_domain()->setting('max_board_pages')) {
-                nel_derp(250, _gettext('The maximum number of static pages for this board has been reached.'));
+                nel_derp(270, _gettext('The maximum number of static pages for this board has been reached.'));
             }
         }
     }

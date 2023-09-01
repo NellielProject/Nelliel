@@ -14,10 +14,7 @@ class DomainSite extends Domain implements NellielCacheInterface
 
     public function __construct(NellielPDO $database)
     {
-        $this->domain_id = Domain::SITE;
-        $this->database = $database;
-        $this->utilitySetup();
-        $this->locale();
+        parent::__construct(Domain::SITE, $database);
         $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))->getPath());
     }
 
@@ -73,9 +70,9 @@ class DomainSite extends Domain implements NellielCacheInterface
         return $settings;
     }
 
-    public function uri(bool $formatted = false): string
+    public function uri(bool $display = false, bool $formatted = false): string
     {
-        $uri = 'site';
+        $uri = ($display) ? $this->display_uri : $this->uri;
 
         if ($formatted) {
             $uri = __('Site');
@@ -99,10 +96,5 @@ class DomainSite extends Domain implements NellielCacheInterface
         if (NEL_USE_FILE_CACHE) {
             $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . 'domains/' . $this->domain_id);
         }
-    }
-
-    public function exists(): bool
-    {
-        return true;
     }
 }
