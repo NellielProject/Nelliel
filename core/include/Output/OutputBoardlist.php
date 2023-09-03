@@ -71,8 +71,14 @@ class OutputBoardlist extends Output
                 continue;
             }
 
-            $board_data['board_url'] = nel_build_router_url([$board['board_id'], 'main-panel']);
-            $board_data['board_uri'] = sprintf($this->site_domain->setting('uri_display_format'), $board['board_uri']);
+            $board_domain = Domain::getDomainFromID($board['board_id'], $this->database);
+
+            if(!$board_domain->exists()) {
+                continue;
+            }
+
+            $board_data['board_url'] = nel_build_router_url([$board_domain->uri(), 'main-panel']);
+            $board_data['board_uri'] = $board_domain->uri(true, true);
             $global_level_lower = $authorization->roleLevelCheck(
                 $user_roles_list[$board['board_id']]['role_title'] ?? '', $global_role_id);
 
