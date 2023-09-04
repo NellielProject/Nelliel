@@ -89,19 +89,19 @@ class FileHandler
 
     public function copyFile(string $file, string $destination, bool $create_directories = false,
         $dir_chmod = NEL_DIRECTORY_PERM): bool
-        {
-            clearstatcache();
-            $success = file_exists($file);
+    {
+        clearstatcache();
+        $success = file_exists($file);
 
-            if ($success && !file_exists($destination) && $create_directories) {
-                $success = $this->createDirectory(dirname($destination), $dir_chmod, true);
-            }
+        if ($success && !file_exists($destination) && $create_directories) {
+            $success = $this->createDirectory(dirname($destination), $dir_chmod, true);
+        }
 
-            if ($success) {
-                $success = copy($file, $destination);
-            }
+        if ($success) {
+            $success = copy($file, $destination);
+        }
 
-            return $success;
+        return $success;
     }
 
     public function moveFile(string $file, string $destination, bool $create_directories = false,
@@ -215,5 +215,19 @@ class FileHandler
     public function umaskOffset($perm)
     {
         return octdec($perm) + umask();
+    }
+
+    public function isCriticalPath(string $path): bool
+    {
+        $real_path = realpath($path);
+
+        return $real_path === NEL_BASE_PATH && $real_path === NEL_CORE_PATH && $real_path === NEL_INCLUDE_PATH &&
+            $real_path === NEL_LIBRARY_PATH && $real_path === NEL_PUBLIC_PATH && $real_path === NEL_ASSETS_FILES_PATH &&
+            $real_path === NEL_CONFIG_FILES_PATH && $real_path === NEL_TEMPLATES_FILES_PATH &&
+            $real_path === NEL_PLUGINS_FILES_PATH && $real_path === NEL_LANGUAGES_FILES_PATH &&
+            $real_path === NEL_LOCALE_FILES_PATH && $real_path === NEL_STYLES_FILES_PATH &&
+            $real_path === NEL_IMAGE_SETS_FILES_PATH && $real_path === NEL_BANNERS_FILES_PATH &&
+            $real_path === NEL_WAT_FILES_PATH && $real_path === NEL_GENERAL_FILES_PATH &&
+            $real_path === NEL_SCRIPTS_FILES_PATH;
     }
 }
