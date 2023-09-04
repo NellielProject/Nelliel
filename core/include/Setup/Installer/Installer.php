@@ -96,13 +96,14 @@ class Installer
             $this->output('install_key', $render_data);
         }
 
-        if (file_exists(NEL_GENERATED_FILES_PATH . 'installer_variables.php')) {
-            $installer_variables = array();
-            include NEL_GENERATED_FILES_PATH . 'installer_variables.php';
-            $this->installer_variables = $installer_variables;
-        } else {
+        if (!file_exists(NEL_GENERATED_FILES_PATH . 'installer_variables.php')) {
             $this->writeVariables();
         }
+
+        $installer_variables = array();
+        opcache_invalidate(NEL_GENERATED_FILES_PATH . 'installer_variables.php');
+        include NEL_GENERATED_FILES_PATH . 'installer_variables.php';
+        $this->installer_variables = $installer_variables;
 
         if ($step === 'verify-install-key') {
             $this->installKeyCheck();
