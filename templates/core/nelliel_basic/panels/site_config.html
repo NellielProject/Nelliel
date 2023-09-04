@@ -321,6 +321,18 @@
 	{{# use_native_captcha }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_native_captcha }}
+	{{# captcha_characters }}
+			{{> panels/pieces/settings/text }}
+	{{/ captcha_characters }}
+	{{# captcha_max_character_rotation }}
+			{{> panels/pieces/settings/number }}
+	{{/ captcha_max_character_rotation }}
+	{{# captcha_max_lines }}
+			{{> panels/pieces/settings/number }}
+	{{/ captcha_max_lines }}
+	{{# captcha_max_arcs }}
+			{{> panels/pieces/settings/number }}
+	{{/ captcha_max_arcs }}
 	{{# captcha_width }}
 			{{> panels/pieces/settings/number }}
 	{{/ captcha_width }}

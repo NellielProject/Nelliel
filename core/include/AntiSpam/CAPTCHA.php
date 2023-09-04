@@ -67,7 +67,8 @@ class CAPTCHA
         // Pretty basic CAPTCHA
         // We'll leave making a better one to someone who really knows the stuff
         $captcha_text = '';
-        $character_set = 'bcdfghjkmnpqrstvwxyz23456789';
+        // $character_set = $this->site_domain->setting('captcha_characters');
+        $character_set = 'bcdfghjkmnop1234567890';
         $set_array = utf8_split($character_set);
         $characters_limit = $this->site_domain->setting('captcha_character_count');
         $selected_indexes = array_rand($set_array, $characters_limit);
@@ -105,6 +106,8 @@ class CAPTCHA
         $x_margin = $image_width - $text_box[4];
         $y_margin = $image_height - $text_box[5];
         $character_spacing = ($x_margin / ($character_count + 2));
+        $max_lines = $this->site_domain->setting('captcha_max_lines');
+        $max_arcs = $this->site_domain->setting('captcha_max_arcs');
 
         $captcha_image = imagecreatetruecolor($image_width, $image_height);
         $background_color = imagecolorallocate($captcha_image, 230, 230, 230);
@@ -116,10 +119,34 @@ class CAPTCHA
         $line_colors[] = imagecolorallocate($captcha_image, 190, 150, 125);
         $line_colors_size = count($line_colors);
 
-        for ($i = 0; $i < 8; $i ++) {
+        // Generate lines
+        for ($i = 0; $i < 6; $i ++) {
+            $x_start = 0;
+            $y_start = rand(0, $image_height);
+            $x_end = $image_width;
+            $y_end = rand(0, $image_height);
+            $line_color = $line_colors[rand(0, $line_colors_size - 1)];
+            imagesetthickness($captcha_image, rand(2, 5));
+            imageline($captcha_image, $x_start, $y_start, $x_end, $y_end, $line_color);
+        }
+
+        // Generate arcs
+        for ($i = 0; $i < 6; $i ++) {
+            $x_center = rand(0, $image_width);
+            $y_center = rand(0, $image_height);
+            $width = rand(0, $image_width);
+            $height = rand(0, $image_height);
+            $start_angle = rand(0, 250);
+            $end_angle = rand(0, 250);
+
+            if (rand(0, 1) === 1) {
+                $start_angle *= -1;
+                $end_angle *= -1;
+            }
+
             $line_color = $line_colors[rand(0, $line_colors_size - 1)];
             imagesetthickness($captcha_image, rand(1, 5));
-            imageline($captcha_image, 0, rand(0, $image_height), $image_width, rand(0, $image_height), $line_color);
+            imagearc($captcha_image, $x_center, $y_center, $width, $height, $start_angle, $end_angle, $line_color);
         }
 
         $x = $x_margin - ($character_spacing * $character_count);
@@ -132,11 +159,12 @@ class CAPTCHA
         $text_colors_size = count($text_colors);
 
         $characters_array = utf8_split($captcha_text);
+        $max_rotation = $this->site_domain->setting('captcha_max_character_rotation');
 
         foreach ($characters_array as $character) {
             $box = imageftbbox($font_size, 0, $font_file, $character);
             $size = $font_size - rand(0, intval($font_size * 0.35));
-            $angle = rand(0, 50) - 25;
+            $angle = rand(-$max_rotation, $max_rotation);
             $color = $text_colors[rand(0, $text_colors_size - 1)];
             imagefttext($captcha_image, $size, $angle, intval($x), intval($y + rand(0, 5)), $color, $font_file,
                 $character);

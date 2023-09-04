@@ -1329,11 +1329,24 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'integer', 'max_recent_posts', '100',
                         'Maximum number of recent posts from all boards combined.', '{"type":"number"}']);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'captcha_characters', 'bcdfghjkmnpqrstvwxyz23456789',
+                        'Characters to use in the CAPTCHA. Stick to alphanumeric for best results.', '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'integer', 'captcha_max_lines', '6',
+                        'Maximum lines to generate. O disables lines.', '{"type":"number"}']);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'integer', 'captcha_max_arcs', '6',
+                        'Maximum arcs to generate. O disables arcs.', '{"type":"number"}']);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'integer', 'captcha_max_character_rotation', '40',
+                        'Maximum angle characters can be rotated.', '{"type":"number"}']);
 
                 $new_site_settings = ['show_blotter', 'error_message_header', 'ipv6_identification_cidr',
                     'ipv4_small_subnet_cidr', 'ipv4_large_subnet_cidr', 'ipv6_small_subnet_cidr',
                     'ipv6_large_subnet_cidr', 'show_error_images', 'error_image_set', 'error_image_max_size',
-                    'max_recent_posts'];
+                    'max_recent_posts', 'captcha_characters', 'captcha_max_lines', 'captcha_max_arcs',
+                    'captcha_max_character_rotation'];
                 $this->updateSiteConfig($new_site_settings);
 
                 $removed_site_settings = ['post_password_algorithm'];

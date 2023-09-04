@@ -161,6 +161,10 @@ class TableSettings extends Table
         // CAPTCHA
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'enable_captchas', '1', 'Enable CAPTCHAs. All enabled CAPTCHA implementations will be used.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_native_captcha', '1', 'Use Nelliel\'s native CAPTCHA.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'captcha_characters', 'bcdfghjkmnpqrstvwxyz23456789', 'Characters to use in the CAPTCHA. Stick to alphanumeric for best results.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_max_lines', '6', 'Maximum lines to generate. O disables lines.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_max_character_rotation', '40', 'Maximum angle characters can be rotated.', '{"type":"number"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_max_arcs', '6', 'Maximum arcs to generate. O disables arcs.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_width', '250', 'Width of CAPTCHA image.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_height', '80', 'Height of CAPTCHA image.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'captcha_character_count', '5', 'Number of characters in CAPTCHA.', '{"type":"number"}']);
