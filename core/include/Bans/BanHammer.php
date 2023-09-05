@@ -232,20 +232,20 @@ class BanHammer
 
         $prepared->bindValue(1, $this->ban_data['board_id'], PDO::PARAM_STR);
         $prepared->bindValue(2, $this->ban_data['ban_type'], PDO::PARAM_INT);
-        $prepared->bindValue(3, $this->ban_data['creator'], PDO::PARAM_STR);
+        $prepared->bindValue(3, $this->ban_data['creator'] ?? null, PDO::PARAM_STR);
         $prepared->bindValue(4, nel_prepare_ip_for_storage($this->ban_data['ip_address'] ?? null, $unhashed_check),
             PDO::PARAM_LOB);
-        $prepared->bindValue(5, $this->ban_data['hashed_ip_address'], PDO::PARAM_STR);
-        $prepared->bindValue(6, $this->ban_data['hashed_subnet'], PDO::PARAM_STR);
+        $prepared->bindValue(5, $this->ban_data['hashed_ip_address'] ?? null, PDO::PARAM_STR);
+        $prepared->bindValue(6, $this->ban_data['hashed_subnet'] ?? null, PDO::PARAM_STR);
         $prepared->bindValue(7, nel_prepare_ip_for_storage($this->ban_data['range_start'] ?? null, $unhashed_check),
             PDO::PARAM_LOB);
         $prepared->bindValue(8, nel_prepare_ip_for_storage($this->ban_data['range_end'] ?? null, $unhashed_check),
             PDO::PARAM_LOB);
-        $prepared->bindValue(9, $this->ban_data['reason'], PDO::PARAM_STR);
+        $prepared->bindValue(9, $this->ban_data['reason'] ?? __('Because reasons.'), PDO::PARAM_STR);
         $prepared->bindValue(10, $this->ban_data['start_time'], PDO::PARAM_INT);
         $prepared->bindValue(11, $this->ban_data['length'], PDO::PARAM_INT);
-        $prepared->bindValue(12, $this->ban_data['seen'], PDO::PARAM_INT);
-        $prepared->bindValue(13, $this->ban_data['appeal_allowed'], PDO::PARAM_INT);
+        $prepared->bindValue(12, $this->ban_data['seen'] ?? 0, PDO::PARAM_INT);
+        $prepared->bindValue(13, $this->ban_data['appeal_allowed'] ?? 0, PDO::PARAM_INT);
         $this->database->executePrepared($prepared);
 
         if ($this->appealPending()) {
