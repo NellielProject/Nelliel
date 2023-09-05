@@ -14,12 +14,12 @@ use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\AntiSpam\CAPTCHA;
 use Nelliel\Auth\Authorization;
+use Nelliel\Checkpoints\Checkpoint;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainSite;
-use Nelliel\IfThens\IfThen;
 use PDO;
 
 class NewPost
@@ -95,9 +95,9 @@ class NewPost
                     nel_crypt_config()->postPasswordOptions()));
         }
 
-        // Process if-thens for new post here
-        $if_then = new IfThen(new ConditionsPost($post, $uploads), new ActionsPost($post, $uploads));
-        $if_then->process('new_post');
+        // Checkpoint for new post
+        $checkpoint = new Checkpoint(new ConditionsPost($post, $uploads), new ActionsPost($post, $uploads));
+        $checkpoint->process('new_post');
 
         $post->reserveDatabaseRow();
         $thread_id = ($post->data('op')) ? $post->contentID()->postID() : $post->data('parent_thread');

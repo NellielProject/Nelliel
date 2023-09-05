@@ -117,8 +117,8 @@ class Installer
             copy(NEL_CONFIG_FILES_PATH . 'dnsbl.php.example', NEL_CONFIG_FILES_PATH . 'dnsbl.php');
         }
 
-        if (!file_exists(NEL_CONFIG_FILES_PATH . 'if_thens.php')) {
-            copy(NEL_CONFIG_FILES_PATH . 'if_thens.php.example', NEL_CONFIG_FILES_PATH . 'if_thens.php');
+        if (!file_exists(NEL_CONFIG_FILES_PATH . 'checkpoints.php')) {
+            copy(NEL_CONFIG_FILES_PATH . 'checkpoints.php.example', NEL_CONFIG_FILES_PATH . 'checkpoints.php');
         }
 
         $environment_check = new EnvironmentCheck($this->translator);
