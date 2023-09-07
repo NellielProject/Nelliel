@@ -43,7 +43,7 @@ class TableR9KMutes extends Table
             mute_time       BIGINT NOT NULL,
             moar            TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (mute_id),
-            CONSTRAINT fk_r9k_posts__domain_registry
+            CONSTRAINT fk_r9k_mutes__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE

@@ -27,8 +27,8 @@ class Markup
         if (is_null($this->markup_data)) {
             $markup_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_MARKUP_TABLE . '"', PDO::FETCH_ASSOC);
             foreach ($markup_list as $markup) {
-                $this->markup_data[$markup['type']][$markup['label']] = ['match' => $markup['match'],
-                    'replace' => $markup['replace']];
+                $this->markup_data[$markup['type']][$markup['label']] = ['match_regex' => $markup['match_regex'],
+                    'replacement' => $markup['replacement']];
             }
         }
 
@@ -65,7 +65,7 @@ class Markup
         $modified_blocks = array();
 
         foreach ($markup_data as $data) {
-            $blocks = preg_split($data['match'], $modified_text);
+            $blocks = preg_split($data['match_regex'], $modified_text);
 
             // If error or only one block, there's no block markup left to parse
             if (!is_array($blocks) || count($blocks) === 1) {
@@ -79,7 +79,7 @@ class Markup
 
                 // Even numbered blocks will be regex matches
                 if ($i % 2 === 0) {
-                    $modified = preg_replace('/^(.*)$/us', $data['replace'], $block);
+                    $modified = preg_replace('/^(.*)$/us', $data['replacement'], $block);
                 } else {
                     $modified = $this->parseBlocks($block, $markup_data, true);
                 }
@@ -120,7 +120,7 @@ class Markup
 
         foreach ($lines as $line) {
             foreach ($markup_data as $data) {
-                $line = preg_replace($data['match'], $data['replace'], $line);
+                $line = preg_replace($data['match_regex'], $data['replacement'], $line);
             }
 
             $modified_lines[] = $line;
@@ -139,7 +139,7 @@ class Markup
         $modified_text = $text;
 
         foreach ($markup_data as $data) {
-            $modified_text = preg_replace($data['match'], $data['replace'], $modified_text);
+            $modified_text = preg_replace($data['match_regex'], $data['replacement'], $modified_text);
         }
 
         return $modified_text;
@@ -157,7 +157,7 @@ class Markup
         foreach ($markup_data as $data) {
             do {
                 $compare = $modified_text;
-                $modified_text = preg_replace($data['match'], $data['replace'], $modified_text);
+                $modified_text = preg_replace($data['match_regex'], $data['replacement'], $modified_text);
             } while ($compare !== $modified_text);
         }
 

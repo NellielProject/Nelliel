@@ -65,11 +65,11 @@ class TableLogs extends Table
             visitor_id          VARCHAR(128) DEFAULT NULL,
             moar                TEXT DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (log_id),
-            CONSTRAINT fk_logs__domain_registry
+            CONSTRAINT fk_' . $this->table_name . '__domain_registry
             FOREIGN KEY (domain_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE
             ON DELETE CASCADE,
-            CONSTRAINT fk_logs__users
+            CONSTRAINT fk_' . $this->table_name . '__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
             ON UPDATE CASCADE
             ON DELETE SET NULL

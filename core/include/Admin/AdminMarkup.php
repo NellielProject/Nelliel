@@ -39,13 +39,13 @@ class AdminMarkup extends Admin
         $this->verifyPermissions($this->domain, 'perm_markup_manage');
         $label = $_POST['label'] ?? '';
         $type = $_POST['type'] ?? '';
-        $match = $_POST['match'] ?? '';
-        $replace = $_POST['replace'] ?? '';
+        $match = $_POST['match_regex'] ?? '';
+        $replace = $_POST['replacement'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
         $notes = $_POST['notes'] ?? '';
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->data_table .
-            '" ("label", "type", "match", "replace", "enabled", "notes") VALUES (?, ?, ?, ?, ?)');
+            '" ("label", "type", "match_regex", "replacement", "enabled", "notes") VALUES (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$label, $type, $match, $replace, $enabled, $notes]);
         $this->panel();
     }
@@ -62,14 +62,14 @@ class AdminMarkup extends Admin
         $this->verifyPermissions($this->domain, 'perm_markup_manage');
         $label = $_POST['label'] ?? '';
         $type = $_POST['type'] ?? '';
-        $match = $_POST['match'] ?? '';
-        $replace = $_POST['replace'] ?? '';
+        $match = $_POST['match_regex'] ?? '';
+        $replace = $_POST['replacement'] ?? '';
         $enabled = $_POST['enabled'] ?? 0;
         $notes = $_POST['notes'] ?? '';
 
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table .
-            '" SET "label" = ?, "type" = ?, "match" = ?, "replace" = ?, "enabled" = ?, "notes" = ? WHERE "markup_id" = ?');
+            '" SET "label" = ?, "type" = ?, "match_regex" = ?, "replacement" = ?, "enabled" = ?, "notes" = ? WHERE "markup_id" = ?');
         $this->database->executePrepared($prepared, [$label, $type, $match, $replace, $enabled, $notes, $markup_id]);
         $this->panel();
     }
