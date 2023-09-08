@@ -311,7 +311,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'only_active_embed_duplicates', '1', 'Only check for duplicate embeds in active threads (excludes the old thread buffer).', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'limit_thread_uploads', '1', 'Limit the number of uploads in a thread.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_thread_uploads', '1000', 'Maximum number of uploads in a thread.', '{"type":"number"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize', '5242880', 'Maximum size of each file uploaded. (bytes)', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize', '5242880', 'Maximum size of each file uploaded. Overrides category and format limits if they are higher. (bytes)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_filesize_all_files', '5242880', 'Maximum total size of all files uploaded in one post. (bytes)', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_image_width', '8000', 'Maximum width of images (if detectable).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_image_height', '8000', 'Maximum height of images (if detectable).', '{"type":"number"}']);
@@ -323,7 +323,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'preferred_filename', 'timestamp', 'Preferred filename for uploads. If original filename is chosen, the filename will still go through some basicfiltering to avoid problems. If the preferred option is not available the name will default to timestamp.', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'keep_deleted_upload_entry', '1', 'When deleting an upload, remove it and any previews but retain the database entry instead of removing it entirely.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'store_exif_data', '1', 'Store EXIF data from images (if present).', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'enabled_filetypes', '{"graphics": {"enabled": true, "formats": ["jpeg", "gif", "png", "bmp", "webp"]}, "video": {"enabled": true, "formats": ["mpeg4", "webm"]}}', 'Which filetypes are enabled for uploading.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'enabled_filetypes', '{"graphics": {"enabled": true, "max_size": 5242880, "formats": ["jpeg", "gif", "png", "bmp", "webp"]}, "video": {"enabled": true, "max_size": 5242880, "formats": ["mpeg4", "webm"]}}', 'Which filetypes are enabled for uploading.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'file_deduplication', '0', 'If an uploaded file already exists, it will be referenced instead of processing the duplicate.', '{"type":"checkbox"}']);
 
         // Other New Post

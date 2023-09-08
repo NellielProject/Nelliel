@@ -58,8 +58,8 @@ class OutputPanelBoardConfig extends Output
             $category_output = array();
             $category_output['item_label'] = _gettext($category_data['label'] ?? '');
             $category_output['category_select']['name'] = $category_data['category'];
-            $category_output['category_select']['input_name'] = 'enabled_filetypes[' . $category_data['category'] .
-                '][enabled]';
+            $category_output['category_select']['input_name'] = 'enabled_filetypes[' . $category_data['category'] . ']';
+            $category_output['category_max_size'] = intval($enabled_array[$category_data['category']]['max_size']);
 
             if (isset($enabled_array[$category_data['category']]) &&
                 $enabled_array[$category_data['category']]['enabled']) {

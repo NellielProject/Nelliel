@@ -1165,11 +1165,15 @@
 		<div class="display-row">
 			<span class="display-cell">
 				<br>
-				<input type="hidden" name="{{ input_name }}[default]" value="0">
-				<label>
-				<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
-				<span class="bold">{{ item_label }}</span>
-				</label>
+				<input type="hidden" name="{{ input_name }}[enabled][default]" value="0">
+				<label for="{{ input_name }}[enabled]" class="bold">{{ item_label }}</label>
+				<input id="{{ input_name }}[enabled]" type="checkbox" name="{{ input_name }}[enabled][value]" value="1" {{ checked }} {{ disabled }}>
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<label for="{{ input_name }}[max_size]" data-i18n="">Max file size. 0 to disable. (bytes)</label>
+				<input id="{{ input_name }}[max_size]" type="number" name="{{ input_name }}[max_size]" value="{{ category_max_size }}">
 			</span>
 		</div>
 			{{/ category_select }}
@@ -1177,9 +1181,9 @@
 		<div class="display-row">
 				{{# entry }}
 			<span class="display-cell">
-				<input type="hidden" name="{{ input_name }}[default]" value="0">
+				<input type="hidden" name="{{ input_name }}[enabled][default]" value="0">
 				<label>
-				<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
+				<input type="checkbox" name="{{ input_name }}[enabled][value]" value="1" {{ checked }} {{ disabled }}>
 				<span>{{ item_label }}</span>
 				</label>
 			</span>

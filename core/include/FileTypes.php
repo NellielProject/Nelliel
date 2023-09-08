@@ -111,7 +111,8 @@ class FileTypes
                 }
 
                 $formats = $data['formats'] ?? array();
-                self::$settings[$domain->id()]['enabled_categories'][$category] = ['formats' => $formats ?? array()];
+                self::$settings[$domain->id()]['enabled_categories'][$category] = ['formats' => $formats,
+                    'max_size' => intval($data['max_size'])];
 
                 foreach ($formats as $format) {
                     self::$settings[$domain->id()]['enabled_formats'][] = $format;
@@ -128,6 +129,11 @@ class FileTypes
     public function formatIsEnabled(Domain $domain, string $format): bool
     {
         return in_array($format, $this->enabledFormats($domain));
+    }
+
+    public function categorySetting(Domain $domain, string $category, string $key)
+    {
+        return self::$settings[$domain->id()]['enabled_categories'][$category][$key];
     }
 
     public function getFileFormat(string $extension, string $file): string

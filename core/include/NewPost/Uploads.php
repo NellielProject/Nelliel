@@ -360,6 +360,13 @@ class Uploads
             nel_derp(23, _gettext('Detected file format does not match extension. Possible Hax.'));
         }
 
+        $category_max_size = intval(
+            $filetypes->categorySetting($upload->domain(), $format_data['category'], 'max_size'));
+
+        if ($category_max_size > 0 && $upload->data('filesize') > $category_max_size) {
+            nel_derp(58, _gettext('File is larger than allowed for that type.'));
+        }
+
         $upload->changeData('category', $format_data['category']);
         $upload->changeData('format', $format_data['format']);
         $upload->changeData('mime', $filetypes->getFormatMime($file_format));
