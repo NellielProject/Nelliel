@@ -133,7 +133,7 @@ class FileTypes
 
     public function categorySetting(Domain $domain, string $category, string $key)
     {
-        return self::$settings[$domain->id()]['enabled_categories'][$category][$key];
+        return self::$settings[$domain->id()]['enabled_categories'][$category][$key] ?? null;
     }
 
     public function getFileFormat(string $extension, string $file): string

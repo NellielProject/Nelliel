@@ -1341,7 +1341,6 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'integer', 'captcha_max_character_rotation', '40',
                         'Maximum angle characters can be rotated.', '{"type":"number"}']);
-
                 $new_site_settings = ['show_blotter', 'error_message_header', 'ipv6_identification_cidr',
                     'ipv4_small_subnet_cidr', 'ipv4_large_subnet_cidr', 'ipv6_small_subnet_cidr',
                     'ipv6_large_subnet_cidr', 'show_error_images', 'error_image_set', 'error_image_max_size',
@@ -1372,9 +1371,12 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'boolean', 'preview_lazy_loading', '0', 'Use lazy loading for preview images.',
                         '{"type":"checkbox"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'boolean', 'show_file_category_max_sizes', '1',
+                        'Show the category maximum filesizes (if lower than general max).', '{"type":"checkbox"}']);
 
                 $new_board_settings = ['allow_dice_rolls', 'max_dice', 'max_dice_sides', 'list_all_dice_rolls',
-                    'preview_lazy_loading'];
+                    'preview_lazy_loading', 'show_file_category_max_sizes'];
                 $this->updateBoardConfigs($new_board_settings);
 
                 // Update descriptions and defaults
