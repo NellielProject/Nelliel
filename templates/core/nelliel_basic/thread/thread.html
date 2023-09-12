@@ -18,6 +18,11 @@
 {{# overboard }}
 		{{> thread/pieces/posted_in }}
 {{/ overboard }}
+{{# in_modmode }}
+		<div class="modmode-header">
+			{{> thread/pieces/thread_modmode }}
+		</div>
+{{/ in_modmode }}
 {{# op_post }}
 		{{> thread/post }}
 {{/ op_post }}
