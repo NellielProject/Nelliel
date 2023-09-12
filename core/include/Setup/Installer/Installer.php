@@ -6,6 +6,7 @@ namespace Nelliel\Setup\Installer;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Regen;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
@@ -63,11 +64,11 @@ use Nelliel\Tables\TableUploads;
 use Nelliel\Tables\TableUserRoles;
 use Nelliel\Tables\TableUsers;
 use Nelliel\Tables\TableVersions;
+use Nelliel\Tables\TableVisitorInfo;
 use Nelliel\Tables\TableWordFilters;
 use Nelliel\Utility\FileHandler;
-use PDO;
 use Nelliel\Utility\SQLCompatibility;
-use Nelliel\Database\NellielPDO;
+use PDO;
 
 class Installer
 {
@@ -361,9 +362,11 @@ class Installer
         $noticeboard_table = new TableNoticeboard($database, $sql_compatibility);
         $noticeboard_table->createTable();
 
-        // The following tables rely on ip info tables
+        // The following tables rely on ip info and visitor id tables
         $ip_info_table = new TableIPInfo($database, $sql_compatibility);
         $ip_info_table->createTable();
+        $visitor_info_table = new TableVisitorInfo($database, $sql_compatibility);
+        $visitor_info_table->createTable();
         $reports_table = new TableReports($database, $sql_compatibility);
         $reports_table->createTable();
         $system_logs_table = new TableLogs($database, $sql_compatibility);

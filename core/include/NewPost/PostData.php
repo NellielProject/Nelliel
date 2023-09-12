@@ -6,15 +6,16 @@ namespace Nelliel\NewPost;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Cites;
+use Nelliel\Dice;
+use Nelliel\FGSFDS;
+use Nelliel\IPInfo;
+use Nelliel\ROBOT9000;
+use Nelliel\VisitorInfo;
 use Nelliel\Wordfilters;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;
-use Nelliel\ROBOT9000;
-use Nelliel\Dice;
-use Nelliel\FGSFDS;
-use Nelliel\IPInfo;
 
 class PostData
 {
@@ -44,7 +45,9 @@ class PostData
         $ip_info = new IPInfo(nel_request_ip_address());
         $post->changeData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
         $post->changeData('ip_address', nel_prepare_ip_for_storage($ip_info->getInfo('ip_address')));
-        $post->changeData('visitor_id', nel_visitor_id(), false);
+        $visitor_info = new VisitorInfo(nel_visitor_id());
+        $visitor_info->updateLastActivity(time());
+        $post->changeData('visitor_id', $visitor_info->getInfo('visitor_id'), false);
 
         $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'] ?? '', 'string');
         $name = $this->fieldLengthCheck('name', $name);
@@ -179,7 +182,8 @@ class PostData
 
         if ($this->domain->setting('enable_password_field')) {
             $password = $this->checkEntry($_POST['new_post']['post_info']['sekrit'] ?? '', 'string');
-            $post->changeData('password', substr($password, 0, nel_crypt_config()->configValue('post_password_max_length')));
+            $post->changeData('password',
+                substr($password, 0, nel_crypt_config()->configValue('post_password_max_length')));
         }
 
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));

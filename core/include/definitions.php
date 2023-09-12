@@ -11,6 +11,7 @@ define('NEL_LIBRARY_PATH', NEL_CORE_PATH . 'libraries/'); // Provided libraries 
 define('NEL_VENDOR_PATH', NEL_BASE_PATH . 'vendor/'); // Composer vendor path
 
 define('OVER_9000', 9001);
+define('NEL_VISITOR_ID_VERSION', 1);
 define('NEL_HELLIPSIS', '…');
 define('NEL_ASSETS_DIR', 'assets');
 define('NEL_STYLES_DIR', 'styles');
@@ -75,6 +76,7 @@ define('NEL_TEMPLATES_TABLE', 'nelliel_templates');
 define('NEL_USER_ROLES_TABLE', 'nelliel_user_roles');
 define('NEL_USERS_TABLE', 'nelliel_users');
 define('NEL_VERSIONS_TABLE', 'nelliel_version');
+define('NEL_VISITOR_INFO_TABLE', 'nelliel_visitor_info');
 define('NEL_WORDFILTERS_TABLE', 'nelliel_wordfilters');
 
 define('NEL_ASSETS_FILES_PATH', NEL_PUBLIC_PATH . NEL_ASSETS_DIR . '/');

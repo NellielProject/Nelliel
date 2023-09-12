@@ -30,6 +30,7 @@ use Nelliel\Tables\TableThreads;
 use Nelliel\Tables\TableUploads;
 use Nelliel\Utility\FileHandler;
 use PDO;
+use Nelliel\Tables\TableVisitorInfo;
 
 class BetaMigrations
 {
@@ -1486,6 +1487,12 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Added IP info table.') . '<br>';
 
+                // Add visitor info table
+                $visitor_info_table = new TableVisitorInfo(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $visitor_info_table->createTable();
+
+                echo ' - ' . __('Added visitor info table.') . '<br>';
+
                 // Update thread, post and upload tables
                 $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
                     PDO::FETCH_COLUMN);
@@ -1528,6 +1535,18 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                             $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
                             $ip_transfer->bindValue(2, $ip['ip_address']);
                             nel_database('core')->executePrepared($ip_transfer);
+                        }
+                    }
+
+                    $ids = nel_database('core')->executeFetchAll('SELECT "visitor_id" FROM "' . $prefix . '_posts_old"',
+                        PDO::FETCH_ASSOC);
+                    $id_transfer = nel_database('core')->prepare(
+                        'INSERT INTO "nelliel_visitor_info" ("visitor_id") VALUES (?)');
+
+                    foreach ($ids as $id) {
+                        if (!nel_database('core')->rowExists('nelliel_visitor_info', ['visitor_id'], [$id])) {
+                            $ip_transfer->bindValue(1, $id);
+                            nel_database('core')->executePrepared($id_transfer);
                         }
                     }
 
@@ -1591,6 +1610,18 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     }
                 }
 
+                $ids = nel_database('core')->executeFetchAll('SELECT "visitor_id" FROM "nelliel_bans_old"',
+                    PDO::FETCH_ASSOC);
+                $id_transfer = nel_database('core')->prepare(
+                    'INSERT INTO "nelliel_visitor_info" ("visitor_id") VALUES (?)');
+
+                foreach ($ids as $id) {
+                    if (!nel_database('core')->rowExists('nelliel_visitor_info', ['visitor_id'], [$id])) {
+                        $ip_transfer->bindValue(1, $id);
+                        nel_database('core')->executePrepared($id_transfer);
+                    }
+                }
+
                 nel_database('core')->exec('INSERT INTO "nelliel_bans" SELECT * FROM "nelliel_bans_old"');
 
                 if ($appeals_exist) {
@@ -1637,6 +1668,21 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     }
                 }
 
+                $system_ids = nel_database('core')->executeFetchAll(
+                    'SELECT "visitor_id" FROM "nelliel_system_logs_old"', PDO::FETCH_ASSOC);
+                $public_ids = nel_database('core')->executeFetchAll(
+                    'SELECT "visitor_id", FROM "nelliel_public_logs_old"', PDO::FETCH_ASSOC);
+                $ids = array_merge($system_ids, $public_ids);
+                $id_transfer = nel_database('core')->prepare(
+                    'INSERT INTO "nelliel_visitor_info" ("visitor_id") VALUES (?)');
+
+                foreach ($ids as $id) {
+                    if (!nel_database('core')->rowExists('nelliel_visitor_info', ['visitor_id'], [$id])) {
+                        $ip_transfer->bindValue(1, $id);
+                        nel_database('core')->executePrepared($id_transfer);
+                    }
+                }
+
                 nel_database('core')->exec(
                     'INSERT INTO "nelliel_system_logs"
                     SELECT "log_id", "level", "event", "message", "message_values", "time", "domain_id", "username", "hashed_ip_address", "ip_address", "visitor_id", "moar"
@@ -1667,6 +1713,18 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
                         $ip_transfer->bindValue(2, nel_prepare_ip_for_storage($ip['ip_address']));
                         nel_database('core')->executePrepared($ip_transfer);
+                    }
+                }
+
+                $ids = nel_database('core')->executeFetchAll('SELECT "visitor_id" FROM "nelliel_reports_old"',
+                    PDO::FETCH_ASSOC);
+                $id_transfer = nel_database('core')->prepare(
+                    'INSERT INTO "nelliel_visitor_info" ("visitor_id") VALUES (?)');
+
+                foreach ($ids as $id) {
+                    if (!nel_database('core')->rowExists('nelliel_visitor_info', ['visitor_id'], [$id])) {
+                        $ip_transfer->bindValue(1, $id);
+                        nel_database('core')->executePrepared($id_transfer);
                     }
                 }
 

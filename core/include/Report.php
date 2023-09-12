@@ -5,10 +5,10 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\AntiSpam\CAPTCHA;
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\AntiSpam\CAPTCHA;
 
 class Report
 {
@@ -42,7 +42,8 @@ class Report
                     $report_data['reason'] = $_POST['report_reason'] ?? null;
                     $ip_info = new IPInfo(nel_request_ip_address());
                     $report_data['hashed_reporter_ip'] = $ip_info->getInfo('hashed_ip_address');
-                    $report_data['visitor_id'] = nel_visitor_id();
+                    $visitor_info = new VisitorInfo(nel_visitor_id());
+                    $report_data['visitor_id'] = $visitor_info->getInfo('visitor_id');
                     $reports[] = $report_data;
                 }
             }

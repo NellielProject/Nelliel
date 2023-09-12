@@ -142,13 +142,18 @@ function nel_logger(string $channel): Logger
     return $loggers[$channel];
 }
 
-function nel_visitor_id(bool $regenerate = false): string
+function nel_visitor_id(bool $regenerate = false, int $version = NEL_VISITOR_ID_VERSION): string
 {
     static $visitor_id;
 
     if ($regenerate) {
-        $visitor_id = base64_encode(hash('sha256', (random_bytes(16)), true));
-        $visitor_id = 'v-id->' . utf8_substr($visitor_id, 0, 32);
+        switch($version) {
+            case 1:
+                $visitor_id = base64_encode(hash('sha256', (random_bytes(16)), true));
+                $visitor_id = 'vid1>' . utf8_substr($visitor_id, 0, 24);
+                break;
+        }
+
         setcookie('visitor-id', $visitor_id, time() + nel_site_domain()->setting('visitor_id_lifespan'),
             NEL_BASE_WEB_PATH . '; samesite=strict', '', false, true);
     }

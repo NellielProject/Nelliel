@@ -88,6 +88,10 @@ class TableBans extends Table
             CONSTRAINT fk_bans__ip_info
             FOREIGN KEY (hashed_ip_address) REFERENCES ' . NEL_IP_INFO_TABLE . ' (hashed_ip_address)
             ON UPDATE CASCADE
+            ON DELETE SET NULL,
+            CONSTRAINT fk_bans__visitor_info
+            FOREIGN KEY (visitor_id) REFERENCES ' . NEL_VISITOR_INFO_TABLE . ' (visitor_id)
+            ON UPDATE CASCADE
             ON DELETE SET NULL
         ) ' . $options . ';';
 
