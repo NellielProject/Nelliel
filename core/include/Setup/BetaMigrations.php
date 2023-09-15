@@ -1375,10 +1375,39 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'boolean', 'show_file_category_max_sizes', '1',
                         'Show the category maximum filesizes (if lower than general max).', '{"type":"checkbox"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'name_field_label', 'Name', 'Name field label.', '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'email_field_label', 'E-mail', 'Email field label.',
+                        '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'subject_field_label', 'Subject', 'Subject field label.',
+                        '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'comment_field_label', 'Comment', 'Comment field label.',
+                        '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'password_field_label', 'Password', 'Password field label.',
+                        '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'files_form_label', 'Files', 'Files form label.', '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'embeds_form_label', 'Embed URLs', 'Embeds form label.',
+                        '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'flags_form_label', 'Flags', 'Flags form label.', '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'captcha_form_label', 'CAPTCHA', 'CAPTCHA form label.',
+                        '{"type":"text"}']);
 
                 $new_board_settings = ['allow_dice_rolls', 'max_dice', 'max_dice_sides', 'list_all_dice_rolls',
-                    'preview_lazy_loading', 'show_file_category_max_sizes'];
+                    'preview_lazy_loading', 'show_file_category_max_sizes', 'name_field_label', 'email_field_label',
+                    'subject_field_label', 'comment_field_label', 'password_field_label', 'files_form_label',
+                    'embeds_form_label', 'flags_form_label', 'captcha_form_label'];
                 $this->updateBoardConfigs($new_board_settings);
+
+                $rename_board_settings = ['fgsfds_name' => 'fgsfds_field_label'];
+                $this->renameBoardSettings($rename_board_settings);
 
                 // Update descriptions and defaults
 

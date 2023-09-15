@@ -53,12 +53,22 @@ class OutputNewPostForm extends Output
             $this->render_data['require_comment'] = $this->domain->setting('require_reply_comment') ? 'required' : '';
         }
 
+        $this->render_data['name_field_label'] = $this->domain->setting('name_field_label');
         $this->render_data['name_field_placeholder'] = $this->domain->setting('name_field_placeholder');
+        $this->render_data['email_field_label'] = $this->domain->setting('email_field_label');
         $this->render_data['email_field_placeholder'] = $this->domain->setting('email_field_placeholder');
+        $this->render_data['subject_field_label'] = $this->domain->setting('subject_field_label');
         $this->render_data['subject_field_placeholder'] = $this->domain->setting('subject_field_placeholder');
+        $this->render_data['comment_field_label'] = $this->domain->setting('comment_field_label');
         $this->render_data['comment_field_placeholder'] = $this->domain->setting('comment_field_placeholder');
+        $this->render_data['fgsfds_field_label'] = $this->domain->setting('fgsfds_field_label');
         $this->render_data['fgsfds_field_placeholder'] = $this->domain->setting('fgsfds_field_placeholder');
+        $this->render_data['password_field_label'] = $this->domain->setting('password_field_label');
         $this->render_data['password_field_placeholder'] = $this->domain->setting('password_field_placeholder');
+        $this->render_data['files_form_label'] = $this->domain->setting('files_form_label');
+        $this->render_data['embeds_form_label'] = $this->domain->setting('embeds_form_label');
+        $this->render_data['flags_form_label'] = $this->domain->setting('flags_form_label');
+        $this->render_data['captcha_form_label'] = $this->domain->setting('captcha_form_label');
 
         $this->render_data['flags']['no_markup'] = $this->domain->setting('allow_no_markup');
 
@@ -105,7 +115,6 @@ class OutputNewPostForm extends Output
         $this->render_data['embed_max_message'] = sprintf(_gettext('Maximum embeds: %d'), $max_embeds);
         $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
-        $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
         $this->render_data['sekrit_max_length'] = nel_crypt_config()->configValue('post_password_max_length');
 
         if ($this->site_domain->setting('enable_captchas') && $this->domain->setting('use_post_captcha')) {
