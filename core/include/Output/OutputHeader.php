@@ -27,7 +27,12 @@ class OutputHeader extends Output
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['styles'] = $output_menu->styles([], true);
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
-        $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
+        $this->render_data['site_navigation']['link_data'] = $output_navigation->siteLinks();
+
+        if ($this->render_data['session_active']) {
+            $this->render_data['account_navigation']['link_data'] = $output_navigation->accountLinks();
+        }
+
         $this->render_data['use_general_header'] = true;
         $this->render_data['name'] = ($this->domain->setting('show_name')) ? $this->domain->setting('name') : '';
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
@@ -46,8 +51,13 @@ class OutputHeader extends Output
         $this->render_data['show_top_styles'] = $this->domain->setting('show_top_styles');
         $this->render_data['show_bottom_styles'] = $this->domain->setting('show_bottom_styles');
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
-        $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
-        $this->render_data['board_navigation'] = $output_navigation->boardLinks([], true);
+        $this->render_data['site_navigation']['link_data'] = $output_navigation->siteLinks();
+        $this->render_data['board_navigation'] = $output_navigation->boardLinks();
+
+        if ($this->render_data['session_active']) {
+            $this->render_data['account_navigation']['link_data'] = $output_navigation->accountLinks();
+        }
+
         $this->render_data['use_board_header'] = true;
         $this->render_data['board_uri'] = $this->domain->uri(true);
         $this->render_data['name'] = $this->domain->uri(true);
@@ -76,19 +86,23 @@ class OutputHeader extends Output
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
 
         if ($this->domain->id() === Domain::SITE) {
-            $this->render_data['area'] = $parameters['area'] ?? _gettext('Site Management');
+            $this->render_data['area'] = $parameters['area'] ?? __('Site Management');
         } else if ($this->domain->id() === Domain::GLOBAL) {
-            $this->render_data['area'] = $parameters['area'] ?? _gettext('Global Board Management');
+            $this->render_data['area'] = $parameters['area'] ?? __('Global Board Management');
         } else {
             $this->render_data['board_uri'] = $this->domain->uri(true);
-            $this->render_data['area'] = $parameters['area'] ?? _gettext('Board Management');
+            $this->render_data['area'] = $parameters['area'] ?? __('Board Management');
         }
 
         $this->render_data['styles'] = $output_menu->styles([], true);
         $this->render_data['show_top_styles'] = $this->domain->setting('show_top_styles');
         $this->render_data['show_bottom_styles'] = $this->domain->setting('show_bottom_styles');
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
-        $this->render_data['site_navigation'] = $output_navigation->siteLinks([], true);
+        $this->render_data['site_navigation']['link_data'] = $output_navigation->siteLinks();
+
+        if ($this->render_data['session_active']) {
+            $this->render_data['account_navigation']['link_data'] = $output_navigation->accountLinks();
+        }
         $output = $this->output('headers/manage', $data_only, true, $this->render_data);
         return $output;
     }

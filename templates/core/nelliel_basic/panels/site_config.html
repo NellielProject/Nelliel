@@ -23,6 +23,12 @@
 	<div>
 		<a href="#section-overboard" data-i18n="">Overboard</a>
 	</div>
+	<div>
+		<a href="#section-site-navigation-links" data-i18n="">Site Navigation Links</a>
+	</div>
+	<div>
+		<a href="#section-account-navigation-links" data-i18n="">Account Navigation Links</a>
+	</div>
 </div>
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 {{# settings_data }}
@@ -398,6 +404,61 @@
 	{{# sfw_overboard_thread_replies }}
 			{{> panels/pieces/settings/number }}
 	{{/ sfw_overboard_thread_replies }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th id="section-site-navigation-links" colspan="3" data-i18n="">Site Navigation Links</th>
+			</tr>
+	{{# site_nav_links_left_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_left_bracket }}
+	{{# site_nav_links_right_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_right_bracket }}
+	{{# site_nav_links_home }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_home }}
+	{{# site_nav_links_news }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_news }}
+	{{# site_nav_links_faq }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_faq }}
+	{{# site_nav_links_about_nelliel }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_about_nelliel }}
+	{{# site_nav_links_blank_page }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_blank_page }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th id="section-account-navigation-links" colspan="3" data-i18n="">Account Navigation Links</th>
+			</tr>
+	{{# account_nav_links_left_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_left_bracket }}
+	{{# account_nav_links_right_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_right_bracket }}
+	{{# account_nav_links_account }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_account }}
+	{{# account_nav_links_site_panel }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_site_panel }}
+	{{# account_nav_links_global_panel }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_global_panel }}
+	{{# account_nav_links_board_panel }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_board_panel }}
+	{{# account_nav_links_board_list }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_board_list }}
+	{{# account_nav_links_logout }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_logout }}
 		</tbody>
 	</table>
 	<div class="table-button">

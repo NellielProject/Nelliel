@@ -84,8 +84,14 @@ td {
 }
 
 .site-navigation {
-	clear: right;
-	float: right;
+	clear: var(--site_navigation-align, right);
+	float: var(--site_navigation-align, right);
+	padding: 0.1em;
+}
+
+.account-navigation {
+	clear: var(--account_navigation-align, right);
+	float: var(--account_navigation-align, right);
 	padding: 0.1em;
 }
 

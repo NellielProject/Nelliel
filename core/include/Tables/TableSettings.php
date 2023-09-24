@@ -136,6 +136,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'error_image_set', 'images-nelliel-basic', 'Error page image set.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'error_image_max_size', '350', 'Maximum dimensions for error page images.', '{"type":"number"}']);
 
+
         // Uploads
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', 'GD', 'Preferred graphics handler', '{"type":"select"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'imagemagick_args', '%s -auto-orient -thumbnail %dx%d -quality %d %s', 'Arguments given to ImageMagick for creating still image previews.', '{"type":"text"}']);
@@ -187,6 +188,25 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'sfw_overboard_catalog', '0', 'Enable catalog view for the SFW overboard.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_threads', '20', 'Maximum threads on the SFW overboard.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_thread_replies', '5', 'How many replies to a thread should be displayed on the SFW overboard.', '{"type":"number"}']);
+
+        // Site Menu Links
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_left_bracket', '[', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_right_bracket', ']', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_home', 'Home', 'Home', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_news', 'News', 'News', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_faq', 'FAQ', 'FAQ', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_about_nelliel', 'About Nelliel', 'About Nelliel', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_blank_page', 'Blank Page', 'Blank Page', '{"type":"text"}']);
+
+        // Account Menu Links
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_left_bracket', '[', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_right_bracket', ']', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_account', 'Account', 'Account', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_site_panel', 'Site Panel', 'Site Panel', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_global_panel', 'Global Panel', 'Global Panel', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_board_panel', 'Board Panel', 'Global Panel', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_board_list', 'Board List', 'Board List', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_logout', 'Logout', 'Logout', '{"type":"text"}']);
 
         // Board
         // General

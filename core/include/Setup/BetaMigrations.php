@@ -24,13 +24,14 @@ use Nelliel\Tables\TableR9KContent;
 use Nelliel\Tables\TableR9KMutes;
 use Nelliel\Tables\TableReports;
 use Nelliel\Tables\TableScripts;
+use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Tables\TableStatistics;
 use Nelliel\Tables\TableThreads;
 use Nelliel\Tables\TableUploads;
+use Nelliel\Tables\TableVisitorInfo;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TableVisitorInfo;
 
 class BetaMigrations
 {
@@ -1297,6 +1298,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 // Update site settings
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $setting_options_table = new TableSettingOptions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'boolean', 'show_blotter', '1', 'Show the short list of blotter entries.',
                         '{"type":"checkbox"}']);
@@ -1342,11 +1345,71 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'integer', 'captcha_max_character_rotation', '40',
                         'Maximum angle characters can be rotated.', '{"type":"number"}']);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'site_nav_links_left_bracket', '[',
+                        'Bracket on the left side of site menu links.', '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_left_bracket', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'site_nav_links_right_bracket', ']',
+                        'Bracket on the left side of site menu links.', '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_right_bracket', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'site_nav_links_home', 'Home', 'Home', '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_home', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'site_nav_links_news', 'News', 'News', '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_news', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'site_nav_links_faq', 'FAQ', 'FAQ', '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_faq', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'site_nav_links_about_nelliel', 'About Nelliel', 'About Nelliel',
+                        '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_about_nelliel', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'site_nav_links_blank_page', 'Blank Page', 'Blank Page',
+                        '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_blank_page', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'account_nav_links_left_bracket', '[',
+                        'Bracket on the left side of site menu links.', '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_left_bracket', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'account_nav_links_right_bracket', ']',
+                        'Bracket on the left side of site menu links.', '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_right_bracket', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'account_nav_links_account', 'Account', 'Account', '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_account', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'account_nav_links_site_panel', 'Site Panel', 'Site Panel',
+                        '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_site_panel', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'account_nav_links_global_panel', 'Global Panel', 'Global Panel',
+                        '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_global_panel', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'account_nav_links_board_panel', 'Board Panel', 'Global Panel',
+                        '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_board_panel', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'account_nav_links_board_list', 'Board List', 'Board List',
+                        '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_board_list', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'account_nav_links_logout', 'Logout', 'Logout', '{"type":"text"}']);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_logout', '', 1]);
+
                 $new_site_settings = ['show_blotter', 'error_message_header', 'ipv6_identification_cidr',
                     'ipv4_small_subnet_cidr', 'ipv4_large_subnet_cidr', 'ipv6_small_subnet_cidr',
                     'ipv6_large_subnet_cidr', 'show_error_images', 'error_image_set', 'error_image_max_size',
                     'max_recent_posts', 'captcha_characters', 'captcha_max_lines', 'captcha_max_arcs',
-                    'captcha_max_character_rotation'];
+                    'captcha_max_character_rotation', 'site_nav_links_left_bracket', 'site_nav_links_right_bracket',
+                    'site_nav_links_home', 'site_nav_links_news', 'site_nav_links_faq', 'site_nav_links_about_nelliel',
+                    'site_nav_links_blank_page', 'account_nav_links_left_bracket', 'account_nav_links_right_bracket',
+                    'account_nav_links_account', 'account_nav_links_site_panel', 'account_nav_links_global_panel',
+                    'account_nav_links_board_panel', 'account_nav_links_board_list', 'account_nav_links_logout'];
                 $this->updateSiteConfig($new_site_settings);
 
                 $removed_site_settings = ['post_password_algorithm'];
