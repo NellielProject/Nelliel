@@ -1094,6 +1094,9 @@
 			<tr>
 				<th id="section-moderator-links" colspan="5" data-i18n="">Moderator Links</th>
 			</tr>
+	{{# translate_mod_links }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ translate_mod_links }}
 	{{# mod_links_left_bracket }}
 			{{> panels/pieces/settings/text }}
 	{{/ mod_links_left_bracket }}
@@ -1147,6 +1150,9 @@
 			<tr>
 				<th id="section-content-links" colspan="5" data-i18n="">Content Links</th>
 			</tr>
+	{{# translate_content_links }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ translate_content_links }}
 	{{# content_links_left_bracket }}
 			{{> panels/pieces/settings/text }}
 	{{/ content_links_left_bracket }}

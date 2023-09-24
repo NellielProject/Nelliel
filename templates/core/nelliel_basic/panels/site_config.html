@@ -409,6 +409,9 @@
 			<tr>
 				<th id="section-site-navigation-links" colspan="3" data-i18n="">Site Navigation Links</th>
 			</tr>
+	{{# translate_site_nav_links }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ translate_site_nav_links }}
 	{{# site_nav_links_left_bracket }}
 			{{> panels/pieces/settings/text }}
 	{{/ site_nav_links_left_bracket }}
@@ -435,6 +438,9 @@
 			<tr>
 				<th id="section-account-navigation-links" colspan="3" data-i18n="">Account Navigation Links</th>
 			</tr>
+	{{# translate_account_nav_links }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ translate_account_nav_links }}
 	{{# account_nav_links_left_bracket }}
 			{{> panels/pieces/settings/text }}
 	{{/ account_nav_links_left_bracket }}

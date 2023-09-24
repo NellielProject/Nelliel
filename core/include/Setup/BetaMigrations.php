@@ -1400,6 +1400,12 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'account_nav_links_logout', 'Logout', 'Logout', '{"type":"text"}']);
                 $setting_options_table->insertDefaultRow(['site', 'account_nav_links_logout', '', 1]);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'boolean', 'translate_site_nav_links', '1',
+                        'Translate site navigation text when possible.', '{"type":"checkbox"}']);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'boolean', 'translate_account_nav_links', '1',
+                        'Translate account navigation text when possible.', '{"type":"checkbox"}']);
 
                 $new_site_settings = ['show_blotter', 'error_message_header', 'ipv6_identification_cidr',
                     'ipv4_small_subnet_cidr', 'ipv4_large_subnet_cidr', 'ipv6_small_subnet_cidr',
@@ -1409,7 +1415,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     'site_nav_links_home', 'site_nav_links_news', 'site_nav_links_faq', 'site_nav_links_about_nelliel',
                     'site_nav_links_blank_page', 'account_nav_links_left_bracket', 'account_nav_links_right_bracket',
                     'account_nav_links_account', 'account_nav_links_site_panel', 'account_nav_links_global_panel',
-                    'account_nav_links_board_panel', 'account_nav_links_board_list', 'account_nav_links_logout'];
+                    'account_nav_links_board_panel', 'account_nav_links_board_list', 'account_nav_links_logout',
+                    'translate_site_nav_links', 'translate_account_nav_links'];
                 $this->updateSiteConfig($new_site_settings);
 
                 $removed_site_settings = ['post_password_algorithm'];
@@ -1462,11 +1469,18 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'string', 'captcha_form_label', 'CAPTCHA', 'CAPTCHA form label.',
                         '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'boolean', 'translate_mod_links', '1',
+                        'Translate moderator link text when possible.', '{"type":"checkbox"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'boolean', 'translate_content_links', '1',
+                        'Translate content link text when possible.', '{"type":"checkbox"}']);
 
                 $new_board_settings = ['allow_dice_rolls', 'max_dice', 'max_dice_sides', 'list_all_dice_rolls',
                     'preview_lazy_loading', 'show_file_category_max_sizes', 'name_field_label', 'email_field_label',
                     'subject_field_label', 'comment_field_label', 'password_field_label', 'files_form_label',
-                    'embeds_form_label', 'flags_form_label', 'captcha_form_label'];
+                    'embeds_form_label', 'flags_form_label', 'captcha_form_label', 'translate_mod_links',
+                    'translate_content_links'];
                 $this->updateBoardConfigs($new_board_settings);
 
                 $rename_board_settings = ['fgsfds_name' => 'fgsfds_field_label'];

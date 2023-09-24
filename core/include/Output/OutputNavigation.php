@@ -41,37 +41,44 @@ class OutputNavigation extends Output
     public function accountLinks(): array
     {
         $this->renderSetup();
-        $left_bracket = $this->getUISetting($this->site_domain, 'site_nav_links_left_bracket');
-        $right_bracket = $this->getUISetting($this->site_domain, 'site_nav_links_right_bracket');
-        $this->render_data['account_nav_links_account']['text'] = $this->getUISetting($this->site_domain,
-            'account_nav_links_account');
+        $domain = $this->site_domain;
+        $do_translation = $domain->setting('translate_account_nav_links');
+
+        $translate = function (string $setting) use ($domain, $do_translation) {
+            $value = $domain->setting($setting) ?? '';
+
+            if ($do_translation && $value !== '') {
+                $value = __($value);
+            }
+
+            return $value;
+        };
+
+        $left_bracket = $translate('account_nav_links_left_bracket');
+        $right_bracket = $translate('account_nav_links_right_bracket');
+        $this->render_data['account_nav_links_account']['text'] = $translate('account_nav_links_account');
         $this->render_data['account_nav_links_account']['url'] = nel_build_router_url([Domain::SITE, 'account']);
         $this->render_data['account_nav_links_account']['left_bracket'] = $left_bracket;
         $this->render_data['account_nav_links_account']['right_bracket'] = $right_bracket;
-        $this->render_data['account_nav_links_site_panel']['text'] = $this->getUISetting($this->site_domain,
-            'account_nav_links_site_panel');
+        $this->render_data['account_nav_links_site_panel']['text'] = $translate('account_nav_links_site_panel');
         $this->render_data['account_nav_links_site_panel']['url'] = nel_build_router_url([Domain::SITE, 'main-panel']);
         $this->render_data['account_nav_links_site_panel']['left_bracket'] = $left_bracket;
         $this->render_data['account_nav_links_site_panel']['right_bracket'] = $right_bracket;
-        $this->render_data['account_nav_links_global_panel']['text'] = $this->getUISetting($this->site_domain,
-            'account_nav_links_global_panel');
+        $this->render_data['account_nav_links_global_panel']['text'] = $translate('account_nav_links_global_panel');
         $this->render_data['account_nav_links_global_panel']['url'] = nel_build_router_url(
             [Domain::GLOBAL, 'main-panel']);
         $this->render_data['account_nav_links_global_panel']['left_bracket'] = $left_bracket;
         $this->render_data['account_nav_links_global_panel']['right_bracket'] = $right_bracket;
-        $this->render_data['account_nav_links_board_panel']['text'] = $this->getUISetting($this->site_domain,
-            'account_nav_links_board_panel');
+        $this->render_data['account_nav_links_board_panel']['text'] = $translate('account_nav_links_board_panel');
         $this->render_data['account_nav_links_board_panel']['url'] = nel_build_router_url(
             [$this->domain->id(), 'main-panel']);
         $this->render_data['account_nav_links_board_panel']['left_bracket'] = $left_bracket;
         $this->render_data['account_nav_links_board_panel']['right_bracket'] = $right_bracket;
-        $this->render_data['account_nav_links_board_list']['text'] = $this->getUISetting($this->site_domain,
-            'account_nav_links_board_list');
+        $this->render_data['account_nav_links_board_list']['text'] = $translate('account_nav_links_board_list');
         $this->render_data['account_nav_links_board_list']['url'] = nel_build_router_url([Domain::SITE, 'boardlist']);
         $this->render_data['account_nav_links_board_list']['left_bracket'] = $left_bracket;
         $this->render_data['account_nav_links_board_list']['right_bracket'] = $right_bracket;
-        $this->render_data['account_nav_links_logout']['text'] = $this->getUISetting($this->site_domain,
-            'account_nav_links_logout');
+        $this->render_data['account_nav_links_logout']['text'] = $translate('account_nav_links_logout');
         $this->render_data['account_nav_links_logout']['url'] = nel_build_router_url(
             [Domain::SITE, 'account', 'logout']);
         $this->render_data['account_nav_links_logout']['left_bracket'] = $left_bracket;
@@ -96,31 +103,40 @@ class OutputNavigation extends Output
     public function siteLinks(): array
     {
         $this->renderSetup();
-        $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
-        $left_bracket = $this->getUISetting($this->site_domain, 'site_nav_links_left_bracket');
-        $right_bracket = $this->getUISetting($this->site_domain, 'site_nav_links_right_bracket');
+        $domain = $this->site_domain;
+        $do_translation = $domain->setting('translate_account_nav_links');
 
-        $this->render_data['site_nav_links_home']['text'] = $this->getUISetting($this->site_domain,
-            'site_nav_links_home');
+        $translate = function (string $setting) use ($domain, $do_translation) {
+            $value = $domain->setting($setting) ?? '';
+
+            if ($do_translation && $value !== '') {
+                $value = __($value);
+            }
+
+            return $value;
+        };
+
+        $this->render_data['session_active'] = $this->session->isActive() && !$this->write_mode;
+        $left_bracket = $translate('site_nav_links_left_bracket');
+        $right_bracket = $translate('site_nav_links_right_bracket');
+
+        $this->render_data['site_nav_links_home']['text'] = $translate('site_nav_links_home');
         $this->render_data['site_nav_links_home']['url'] = $this->site_domain->reference('home_page');
         $this->render_data['site_nav_links_home']['left_bracket'] = $left_bracket;
         $this->render_data['site_nav_links_home']['right_bracket'] = $right_bracket;
-        $this->render_data['site_nav_links_news']['text'] = $this->getUISetting($this->site_domain,
-            'site_nav_links_news');
+        $this->render_data['site_nav_links_news']['text'] = $translate('site_nav_links_news');
         $this->render_data['site_nav_links_news']['url'] = NEL_BASE_WEB_PATH . 'news.html';
         $this->render_data['site_nav_links_news']['left_bracket'] = $left_bracket;
         $this->render_data['site_nav_links_news']['right_bracket'] = $right_bracket;
-        $this->render_data['site_nav_links_faq']['text'] = $this->getUISetting($this->site_domain, 'site_nav_links_faq');
+        $this->render_data['site_nav_links_faq']['text'] = $translate('site_nav_links_faq');
         $this->render_data['site_nav_links_faq']['url'] = NEL_BASE_WEB_PATH . 'faq.html';
         $this->render_data['site_nav_links_faq']['left_bracket'] = $left_bracket;
         $this->render_data['site_nav_links_faq']['right_bracket'] = $right_bracket;
-        $this->render_data['site_nav_links_about_nelliel']['text'] = $this->getUISetting($this->site_domain,
-            'site_nav_links_about_nelliel');
+        $this->render_data['site_nav_links_about_nelliel']['text'] = $translate('site_nav_links_about_nelliel');
         $this->render_data['site_nav_links_about_nelliel']['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'about_nelliel';
         $this->render_data['site_nav_links_about_nelliel']['left_bracket'] = $left_bracket;
         $this->render_data['site_nav_links_about_nelliel']['right_bracket'] = $right_bracket;
-        $this->render_data['site_nav_links_blank_page']['text'] = $this->getUISetting($this->site_domain,
-            'site_nav_links_blank_page');
+        $this->render_data['site_nav_links_blank_page']['text'] = $translate('site_nav_links_blank_page');
         $this->render_data['site_nav_links_blank_page']['url'] = NEL_MAIN_SCRIPT_QUERY_WEB_PATH . 'blank';
         $this->render_data['site_nav_links_blank_page']['left_bracket'] = $left_bracket;
         $this->render_data['site_nav_links_blank_page']['right_bracket'] = $right_bracket;
