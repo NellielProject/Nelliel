@@ -41,7 +41,6 @@ class AdminFileFilters extends Admin
         $board_id = $_POST['board_id'] ?? Domain::GLOBAL;
         $domain = Domain::getDomainFromID($board_id, $this->database);
         $this->verifyPermissions($domain, 'perm_manage_file_filters');
-        $type = $_POST['hash_type'];
         $notes = $_POST['notes'];
         $enabled = 1;
         $output_filter = new Filter();
@@ -50,8 +49,8 @@ class AdminFileFilters extends Admin
         foreach ($hashes as $hash) {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . $this->data_table .
-                '" ("hash_type", "file_hash", "notes", "board_id", "enabled") VALUES (?, ?, ?, ?, ?)');
-            $this->database->executePrepared($prepared, [$type, $hash, $notes, $domain->id(), $enabled]);
+                '" ("file_hash", "notes", "board_id", "enabled") VALUES (?, ?, ?, ?)');
+            $this->database->executePrepared($prepared, [$hash, $notes, $domain->id(), $enabled]);
         }
 
         $this->panel();
@@ -67,7 +66,6 @@ class AdminFileFilters extends Admin
     public function update(string $filter_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_manage_file_filters');
-        $hash_type = $_POST['hash_type'] ?? '';
         $file_hash = $_POST['file_hash'] ?? '';
         $notes = $_POST['notes'] ?? '';
         $board_id = $_POST['board_id'] ?? '';
@@ -75,8 +73,8 @@ class AdminFileFilters extends Admin
 
         $prepared = $this->database->prepare(
             'UPDATE "' . $this->data_table .
-            '" SET "hash_type" = ?, "file_hash" = ?, "notes" = ?, "board_id" = ?, "enabled" = ? WHERE "filter_id" = ?');
-        $this->database->executePrepared($prepared, [$hash_type, $file_hash, $notes, $board_id, $enabled, $filter_id]);
+            '" SET "file_hash" = ?, "notes" = ?, "board_id" = ?, "enabled" = ? WHERE "filter_id" = ?');
+        $this->database->executePrepared($prepared, [$file_hash, $notes, $board_id, $enabled, $filter_id]);
         $this->panel();
     }
 

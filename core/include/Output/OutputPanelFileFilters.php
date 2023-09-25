@@ -49,7 +49,6 @@ class OutputPanelFileFilters extends Output
             $filter_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $filter_data['filter_id'] = $filter['filter_id'];
-            $filter_data['hash_type'] = $filter['hash_type'];
             $filter_data['file_hash'] = $filter['file_hash'];
             $filter_data['notes'] = $filter['notes'];
             $filter_data['board_uri'] = $filter_domain->uri(true);
@@ -109,7 +108,6 @@ class OutputPanelFileFilters extends Output
             $this->render_data['form_action'] = nel_build_router_url(
                 [$this->domain->id(), 'file-filters', $filter_data['filter_id'], 'modify']);
 
-            $this->render_data['hash_type'] = $filter_data['hash_type'];
             $this->render_data['file_hash'] = $filter_data['file_hash'];
             $this->render_data['notes'] = $filter_data['notes'];
             $this->render_data['board_id'] = $filter_data['board_id'];

@@ -1,10 +1,6 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="hash_type" class="display-cell" data-i18n="">Hash type (md5, sha1, sha256, sha512)</label>
-			<input id="hash_type" class="display-cell" type="text" name="hash_type" size="30" value="{{ hash_type }}">
-		</div>
-		<div class="display-row">
 			<label for="file_hash" class="display-cell" data-i18n="">File hash</label>
 			<textarea id="file_hash" class="display-cell" name="file_hash" cols="64" rows="3">{{ file_hash }}</textarea>
 		</div>

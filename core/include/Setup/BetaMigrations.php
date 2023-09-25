@@ -1955,6 +1955,15 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Board data table updated.') . '<br>';
 
+                // Update file filters table
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_file_filters" DROP COLUMN "hash_type"');
+                } else {
+                    nel_database('core')->exec('UPDATE "nelliel_file_filters" SET "hash_type" = \'\'');
+                }
+
+                echo ' - ' . __('File filters table updated.') . '<br>';
+
                 $migration_count ++;
         }
 

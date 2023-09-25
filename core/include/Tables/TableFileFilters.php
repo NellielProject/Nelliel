@@ -19,7 +19,6 @@ class TableFileFilters extends Table
         $this->table_name = NEL_FILE_FILTERS_TABLE;
         $this->column_types = [
             'filter_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'hash_type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'file_hash' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
@@ -27,7 +26,6 @@ class TableFileFilters extends Table
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'filter_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
-            'hash_type' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'file_hash' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'board_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -43,7 +41,6 @@ class TableFileFilters extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             filter_id   ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            hash_type   VARCHAR(50) NOT NULL,
             file_hash   VARCHAR(128) NOT NULL,
             notes       TEXT DEFAULT NULL,
             board_id    VARCHAR(50) NOT NULL,
