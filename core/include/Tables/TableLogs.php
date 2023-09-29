@@ -60,9 +60,9 @@ class TableLogs extends Table
             time                BIGINT NOT NULL,
             domain_id           VARCHAR(50) NOT NULL,
             username            VARCHAR(50) DEFAULT NULL,
-            hashed_ip_address   VARCHAR(255) DEFAULT NULL,
+            hashed_ip_address   VARCHAR(128) DEFAULT NULL,
             ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
-            visitor_id          VARCHAR(255) DEFAULT NULL,
+            visitor_id          VARCHAR(128) DEFAULT NULL,
             moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (log_id),
             CONSTRAINT fk_' . $this->table_name . '__domain_registry

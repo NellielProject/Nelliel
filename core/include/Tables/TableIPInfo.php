@@ -43,10 +43,10 @@ class TableIPInfo extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             info_id             ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            hashed_ip_address   VARCHAR(255) NOT NULL,
+            hashed_ip_address   VARCHAR(128) NOT NULL,
             ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
-            hashed_small_subnet VARCHAR(255) DEFAULT NULL,
-            hashed_large_subnet VARCHAR(255) DEFAULT NULL,
+            hashed_small_subnet VARCHAR(128) DEFAULT NULL,
+            hashed_large_subnet VARCHAR(128) DEFAULT NULL,
             last_activity       BIGINT NOT NULL DEFAULT 0,
             moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (info_id),
