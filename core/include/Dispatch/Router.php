@@ -137,6 +137,7 @@ class Router
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchNoticeboard';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:view}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:modify}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                     });

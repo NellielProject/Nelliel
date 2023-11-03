@@ -10,6 +10,7 @@ use Nelliel\Admin\AdminNoticeboard;
 use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelNoticeboard;
 
 class DispatchNoticeboard extends Dispatch
 {
@@ -23,27 +24,32 @@ class DispatchNoticeboard extends Dispatch
 
     public function dispatch(array $inputs): void
     {
-        $blotter = new AdminNoticeboard($this->authorization, $this->domain, $this->session);
+        $noticeboard = new AdminNoticeboard($this->authorization, $this->domain, $this->session);
 
         switch ($inputs['section']) {
+            case 'view':
+                $output_noticeboard = new OutputPanelNoticeboard($this->domain, false);
+                $output_noticeboard->viewNotice(['notice_id' => $inputs['id']], false);
+                break;
+
             case 'new':
                 if ($inputs['method'] === 'GET') {
-                    $blotter->creator();
+                    $noticeboard->creator();
                 }
 
                 if ($inputs['method'] === 'POST') {
-                    $blotter->add();
+                    $noticeboard->add();
                 }
 
                 break;
 
             case 'delete':
-                $blotter->delete($inputs['id']);
+                $noticeboard->delete($inputs['id']);
                 break;
 
             default:
                 if ($inputs['method'] === 'GET') {
-                    $blotter->panel();
+                    $noticeboard->panel();
                 }
         }
     }
