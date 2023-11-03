@@ -1475,12 +1475,19 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'boolean', 'translate_content_links', '1',
                         'Translate content link text when possible.', '{"type":"checkbox"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'integer', 'delete_post_renzoku', '0',
+                        'Cooldown after posting before user can delete their post (seconds).', '{"type":"number"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'integer', 'delete_post_time_limit', '0',
+                        'Maximum time until user can no longer delete their post (seconds). 0 to disable.',
+                        '{"type":"number"}']);
 
                 $new_board_settings = ['allow_dice_rolls', 'max_dice', 'max_dice_sides', 'list_all_dice_rolls',
                     'preview_lazy_loading', 'show_file_category_max_sizes', 'name_field_label', 'email_field_label',
                     'subject_field_label', 'comment_field_label', 'password_field_label', 'files_form_label',
                     'embeds_form_label', 'flags_form_label', 'captcha_form_label', 'translate_mod_links',
-                    'translate_content_links'];
+                    'translate_content_links', 'delete_post_renzoku', 'delete_post_time_limit'];
                 $this->updateBoardConfigs($new_board_settings);
 
                 $rename_board_settings = ['fgsfds_name' => 'fgsfds_field_label'];

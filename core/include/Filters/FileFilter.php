@@ -54,7 +54,6 @@ class FileFilter
         $prepared->bindValue(':filter_action', $this->getData('filter_action'), PDO::PARAM_STR);
         $prepared->bindValue(':notes', $this->getData('notes'), PDO::PARAM_STR);
         $prepared->bindValue(':enabled', $this->getData('enabled'), PDO::PARAM_STR);
-        var_dump($this->getData('board_id'));
         $this->database->executePrepared($prepared);
     }
 

@@ -223,7 +223,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'exclude_from_overboards', '0', 'Exclude threads on this board from the overboards.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'user_delete_own', '1', 'Let users delete own posts and content.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_op_thread_moderation', '0', 'Let OP delete posts and uploads within their thread.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'delete_post_renzoku', '0', 'Cooldown after posting before user can delete their post.', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'delete_post_renzoku', '0', 'Cooldown after posting before user can delete their post (seconds).', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'delete_post_time_limit', '0', 'Maximum time until user can no longer delete their post (seconds). 0 to disable.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'safety_level', 'SFW', 'General safety level of content on this board.', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_content_disclaimer', '', 'Disclaimer added to the bottom of posts on this board.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'board_footer_text', '', 'Additional text to put in the footer for this board.', '{"type":"textarea"}']);

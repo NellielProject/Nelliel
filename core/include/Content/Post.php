@@ -141,8 +141,14 @@ class Post
 
             if (!$bypass && $delete_post_renzoku > 0 && time() - $this->content_data['post_time'] < $delete_post_renzoku) {
                 nel_derp(64,
-                    sprintf(_gettext('You must wait %d seconds after making a post before it can be deleted.'),
+                    sprintf(__('You must wait at least %d seconds after making a post before it can be deleted.'),
                         $delete_post_renzoku));
+            }
+
+            $delete_post_time_limit = $this->domain->setting('delete_post_time_limit');
+
+            if (!$bypass && $delete_post_time_limit > 0 && time() - $this->content_data['post_time'] > $delete_post_time_limit) {
+                nel_derp(68, __('You waited too long and can no longer delete this post.'));
             }
         }
 

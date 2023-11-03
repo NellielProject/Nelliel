@@ -70,6 +70,7 @@ Error 64: Delete cooldown. (Content/Post.php)
 Error 65: Replies threshold. (Content/Thread.php)  
 Error 66: Age threshold. (Content/Thread.php)  
 Error 67: Invalid embed URL. (Content/Upload.php)  
+Error 68: Delete time limit. (Content/Post.php)  
 
 Error 70: CAPTCHA failed. (CAPTCHA.php)  
 Error 72: Requesting CAPTCHAs too fast. (CAPTCHA.php)  
