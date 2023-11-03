@@ -94,6 +94,23 @@ class OutputMenu extends Output
         return $render_data;
     }
 
+    public function wordfilterActions(string $selected): array
+    {
+        $actions = array();
+        $actions['select_name'] = 'filter_action';
+        $actions['options'][] = $this->createSelectOption(__('Replace'), 'replace', $selected);
+        $actions['options'][] = $this->createSelectOption(__('Reject'), 'reject', $selected);
+        return $actions;
+    }
+
+    public function fileFilterActions(string $selected): array
+    {
+        $actions = array();
+        $actions['select_name'] = 'filter_action';
+        $actions['options'][] = $this->createSelectOption(__('Reject'), 'reject', $selected);
+        return $actions;
+    }
+
     public function fgsfds(array $parameters, bool $data_only)
     {
         $this->renderSetup();
@@ -108,13 +125,14 @@ class OutputMenu extends Output
     public function boards(string $name, string $selected, bool $data_only): array
     {
         $board_data = $this->database->executeFetchAll(
-            'SELECT "board_id", "board_uri" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+            'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
         $boards = array();
         $boards['select_name'] = $name;
         $boards['options'] = $this->createSelectOption('', '', $selected);
 
         foreach ($board_data as $board) {
-            $boards['options'] = $this->createSelectOption($board['board_uri'], $board['board_id'], $selected);
+            $domain = Domain::getDomainFromID($board, $this->database);
+            $boards['options'] = $this->createSelectOption($domain->uri(), $domain->uri(), $selected);
         }
 
         return $boards;

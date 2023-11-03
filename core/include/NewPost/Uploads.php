@@ -16,6 +16,7 @@ use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 use PDO;
 use SplFileInfo;
+use Nelliel\Filters\Filters;
 
 class Uploads
 {
@@ -240,38 +241,37 @@ class Uploads
 
     private function checkHashes(Upload $upload): void
     {
-        $snacks = new Snacks($this->domain, new BansAccess($this->database));
-        $is_banned = false;
         $file = $upload->data('tmp_name');
-        $md5 = hash_file('md5', $file);
-        $upload->changeData('md5', $md5);
+        $md5 = md5_file($file);
+        $sha1 = sha1_file($file);
 
-        if ($md5 === false) {
+        if ($md5 === false || $sha1 === false) {
             return;
         }
 
-        $is_banned = $snacks->fileHashIsBanned($md5);
+        $upload->changeData('md5', $md5);
+        $upload->changeData('sha1', $sha1);
 
-        if (!$is_banned) {
-            $sha1 = hash_file('sha1', $file);
-            $upload->changeData('sha1', $sha1);
-            $is_banned = $snacks->fileHashIsBanned($sha1);
-        }
+        $filters = new Filters($this->database);
+        $filters->applyFileFilters($md5, [$this->domain->id(), Domain::GLOBAL]);
+        $filters->applyFileFilters($sha1, [$this->domain->id(), Domain::GLOBAL]);
 
-        if (!$is_banned && $this->domain->setting('generate_file_sha256')) {
+        if ($this->domain->setting('generate_file_sha256')) {
             $sha256 = hash_file('sha256', $file);
-            $upload->changeData('sha256', $sha256);
-            $is_banned = $snacks->fileHashIsBanned($sha256);
+
+            if ($sha256 !== false) {
+                $upload->changeData('sha256', $sha256);
+                $filters->applyFileFilters($sha256, [$this->domain->id(), Domain::GLOBAL]);
+            }
         }
 
-        if (!$is_banned && $this->domain->setting('generate_file_sha512')) {
+        if ($this->domain->setting('generate_file_sha512')) {
             $sha512 = hash_file('sha512', $file);
-            $upload->changeData('sha512', $sha512);
-            $is_banned = $snacks->fileHashIsBanned($sha512);
-        }
 
-        if ($is_banned) {
-            nel_derp(24, _gettext('That file is banned.'));
+            if ($sha512 !== false) {
+                $upload->changeData('sha512', $sha512);
+                $filters->applyFileFilters($sha512, [$this->domain->id(), Domain::GLOBAL]);
+            }
         }
     }
 

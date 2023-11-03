@@ -115,8 +115,8 @@ class OutputPanelUsers extends Output
 
                 foreach ($roles as $role) {
                     $role_options = array();
-                    $role_options['option_id'] = $role['role_id'];
-                    $role_options['option_name'] = $role['role_title'];
+                    $role_options['option_value'] = $role['role_id'];
+                    $role_options['option_label'] = $role['role_title'];
 
                     if ($role['role_id'] === $role_id) {
                         $role_options['option_selected'] = 'selected';

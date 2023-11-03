@@ -1950,10 +1950,25 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
                     nel_database('core')->exec('ALTER TABLE "nelliel_board_data" DROP COLUMN "board_uri"');
                 } else {
-                    nel_database('core')->exec('UPDATE "nelliel_board_daya" SET "board_uri" = \'\'');
+                    nel_database('core')->exec('UPDATE "nelliel_board_data" SET "board_uri" = \'\'');
                 }
 
                 echo ' - ' . __('Board data table updated.') . '<br>';
+
+                // Update file filter and wordfilter tables
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_file_filters" ADD COLUMN filter_action VARCHAR(255) DEFAULT NULL');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_wordfilters" ADD COLUMN filter_action VARCHAR(255) DEFAULT NULL');
+                nel_database('core')->exec('ALTER TABLE "nelliel_wordfilters" ADD COLUMN notes TEXT DEFAULT NULL');
+
+                if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB' || $core_sqltype === 'POSTGRESQL') {
+                    nel_database('core')->exec('ALTER TABLE "nelliel_wordfilters" DROP COLUMN "is_regex"');
+                } else {
+                    nel_database('core')->exec('UPDATE "nelliel_wordfilters" SET "is_regex" = 0');
+                }
+
+                echo ' - ' . __('File filter and wordfilter tables updated.') . '<br>';
 
                 $migration_count ++;
         }

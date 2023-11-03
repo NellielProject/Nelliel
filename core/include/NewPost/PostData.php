@@ -11,11 +11,11 @@ use Nelliel\FGSFDS;
 use Nelliel\IPInfo;
 use Nelliel\ROBOT9000;
 use Nelliel\VisitorInfo;
-use Nelliel\Wordfilters;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;
+use Nelliel\Filters\Filters;
 
 class PostData
 {
@@ -165,7 +165,7 @@ class PostData
             $original_comment = $_POST['new_post']['post_info']['wordswordswords'] ?? '';
             $comment = $this->checkEntry($original_comment, 'string');
             $post->changeData('original_comment', $comment);
-            $post->changeData('comment', $this->fieldLengthCheck('comment', $comment));
+            $post->changeData('comment', $this->fieldLengthCheck('comment', $comment), false);
         }
 
         if (nel_true_empty($post->data('comment')) && $require_comment) {
@@ -189,8 +189,9 @@ class PostData
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
 
         if (!nel_true_empty($post->data('comment'))) {
-            $wordfilters = new Wordfilters($this->domain->database());
-            $post->changeData('comment', $wordfilters->apply($post->data('comment'), $this->domain));
+            $filters = new Filters($this->domain->database());
+            $post->changeData('comment',
+                $filters->applyWordfilters($post->data('comment'), [$this->domain->id(), Domain::GLOBAL]), false);
             $cites = new Cites($this->domain->database());
             $cite_list = $cites->getCitesFromText($post->data('comment'), false);
 

@@ -39,25 +39,25 @@ class DispatchFileFilters extends Dispatch
 
             case 'modify':
                 if ($inputs['method'] === 'GET') {
-                    $file_filters->editor($inputs['id']);
+                    $file_filters->editor((int) $inputs['id']);
                 }
 
                 if ($inputs['method'] === 'POST') {
-                    $file_filters->update($inputs['id']);
+                    $file_filters->update((int) $inputs['id']);
                 }
 
                 break;
 
             case 'delete':
-                $file_filters->delete($inputs['id']);
+                $file_filters->delete((int) $inputs['id']);
                 break;
 
             case 'enable':
-                $file_filters->enable($inputs['id']);
+                $file_filters->enable((int) $inputs['id']);
                 break;
 
             case 'disable':
-                $file_filters->disable($inputs['id']);
+                $file_filters->disable((int) $inputs['id']);
                 break;
 
             default:

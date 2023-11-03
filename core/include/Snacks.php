@@ -11,7 +11,6 @@ use Nelliel\Bans\BanHammer;
 use Nelliel\Bans\BansAccess;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputBanPage;
-use PDO;
 
 class Snacks
 {
@@ -29,19 +28,6 @@ class Snacks
         $this->bans_access = $bans_access;
         $this->ip_address = nel_request_ip_address();
         $this->hashed_ip_address = nel_request_ip_address(true);
-    }
-
-    /**
-     * Check if the provided file hash is banned.
-     */
-    public function fileHashIsBanned(string $file_hash): bool
-    {
-        $prepared = $this->database->prepare(
-            'SELECT 1 FROM "nelliel_file_filters" WHERE "file_hash" = ? AND ("board_id" = ? OR "board_id" = ?)');
-        $hash_found = $this->database->executePreparedFetch($prepared, [$file_hash, $this->domain->id(), Domain::GLOBAL],
-            PDO::FETCH_COLUMN);
-
-        return $hash_found !== false;
     }
 
     /**

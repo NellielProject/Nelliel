@@ -39,25 +39,25 @@ class DispatchWordfilters extends Dispatch
 
             case 'modify':
                 if ($inputs['method'] === 'GET') {
-                    $wordfilters->editor($inputs['id']);
+                    $wordfilters->editor((int) $inputs['id']);
                 }
 
                 if ($inputs['method'] === 'POST') {
-                    $wordfilters->update($inputs['id']);
+                    $wordfilters->update((int) $inputs['id']);
                 }
 
                 break;
 
             case 'delete':
-                $wordfilters->delete($inputs['id']);
+                $wordfilters->delete((int) $inputs['id']);
                 break;
 
             case 'enable':
-                $wordfilters->enable($inputs['id']);
+                $wordfilters->enable((int) $inputs['id']);
                 break;
 
             case 'disable':
-                $wordfilters->disable($inputs['id']);
+                $wordfilters->disable((int) $inputs['id']);
                 break;
 
             default:

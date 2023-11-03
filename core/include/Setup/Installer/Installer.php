@@ -65,7 +65,7 @@ use Nelliel\Tables\TableUserRoles;
 use Nelliel\Tables\TableUsers;
 use Nelliel\Tables\TableVersions;
 use Nelliel\Tables\TableVisitorInfo;
-use Nelliel\Tables\TableWordFilters;
+use Nelliel\Tables\TableWordfilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;

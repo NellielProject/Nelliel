@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
+use Nelliel\Filters\Wordfilter;
 use Nelliel\Output\OutputPanelWordfilters;
 
 class AdminWordfilters extends Admin
@@ -37,76 +38,70 @@ class AdminWordfilters extends Admin
 
     public function add(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_manage_wordfilters');
-
-        if (is_null($_POST['board_id']) || $_POST['board_id'] === '') {
-            $board_id = Domain::GLOBAL;
-        } else {
-            $board_id = $_POST['board_id'];
-        }
-
+        $board_id = $_POST['board_id'] ?? $this->domain->id();
         $domain = Domain::getDomainFromID($board_id, $this->database);
-        $text_match = $_POST['text_match'] ?? '';
-        $replacement = $_POST['replacement'] ?? '';
-        $is_regex = $_POST['is_regex'] ?? 0;
-        $enabled = $_POST['enabled'] ?? 0;
-        $prepared = $this->database->prepare(
-            'INSERT INTO "' . $this->data_table .
-            '" ("board_id", "text_match", "replacement", "is_regex", "enabled") VALUES (?, ?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$domain->id(), $text_match, $replacement, $is_regex, $enabled]);
+        $this->verifyPermissions($domain, 'perm_manage_wordfilters');
+        $wordfilter = new Wordfilter($this->database, 0);
+        $wordfilter->changeData('board_id', $board_id);
+        $wordfilter->changeData('text_match', $_POST['text_match'] ?? '');
+        $wordfilter->changeData('replacement', $_POST['replacement'] ?? '');
+        $wordfilter->changeData('filter_action', $_POST['filter_action'] ?? null);
+        $wordfilter->changeData('notes', $_POST['notes'] ?? null);
+        $wordfilter->changeData('enabled', $_POST['enabled'] ?? 0);
+        $wordfilter->update();
         $this->panel();
     }
 
-    public function editor(string $filter_id): void
+    public function editor(int $filter_id): void
     {
-        $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_manage_wordfilters');
+        $wordfilter = new Wordfilter($this->database, $filter_id);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $this->verifyPermissions($domain, 'perm_manage_wordfilters');
         $output_panel = new OutputPanelWordfilters($this->domain, false);
         $output_panel->edit(['editing' => true, 'filter_id' => $filter_id], false);
     }
 
-    public function update(string $filter_id): void
+    public function update(int $filter_id): void
     {
-        $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_manage_wordfilters');
-        $text_match = $_POST['text_match'] ?? '';
-        $replacement = $_POST['replacement'] ?? '';
-        $is_regex = $_POST['is_regex'] ?? 0;
-        $enabled = $_POST['enabled'] ?? 0;
-        $prepared = $this->database->prepare(
-            'UPDATE "' . $this->data_table .
-            '" SET "board_id" = ?, "text_match" = ?, "replacement" = ? , "is_regex" = ?, "enabled" = ? WHERE "filter_id" = ?');
-        $this->database->executePrepared($prepared,
-            [$entry_domain->id(), $text_match, $replacement, $is_regex, $enabled, $filter_id]);
+        $wordfilter = new Wordfilter($this->database, $filter_id);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $this->verifyPermissions($domain, 'perm_manage_wordfilters');
+        $wordfilter->changeData('board_id', $_POST['board_id'] ?? $wordfilter->getData('board_id'));
+        $wordfilter->changeData('text_match', $_POST['text_match'] ?? $wordfilter->getData('text_match'));
+        $wordfilter->changeData('replacement', $_POST['replacement'] ?? $wordfilter->getData('replacement'));
+        $wordfilter->changeData('filter_action', $_POST['filter_action'] ?? $wordfilter->getData('filter_action'));
+        $wordfilter->changeData('notes', $_POST['notes'] ?? $wordfilter->getData('notes'));
+        $wordfilter->changeData('enabled', $_POST['enabled'] ?? $wordfilter->getData('enabled'));
+        $wordfilter->update();
         $this->panel();
     }
 
-    public function delete(string $filter_id): void
+    public function delete(int $filter_id): void
     {
-        $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_manage_wordfilters');
-        $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "filter_id" = ?');
-        $this->database->executePrepared($prepared, [$filter_id]);
+        $wordfilter = new Wordfilter($this->database, $filter_id);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $this->verifyPermissions($domain, 'perm_manage_wordfilters');
+        $wordfilter->delete();
         $this->panel();
     }
 
-    public function enable(string $filter_id)
+    public function enable(int $filter_id)
     {
-        $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_manage_wordfilters');
-        $prepared = $this->database->prepare(
-            'UPDATE "' . $this->data_table . '" SET "enabled" = 1 WHERE "filter_id" = ?');
-        $this->database->executePrepared($prepared, [$filter_id]);
+        $wordfilter = new Wordfilter($this->database, $filter_id);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $this->verifyPermissions($domain, 'perm_manage_wordfilters');
+        $wordfilter->changeData('enabled', 1);
+        $wordfilter->update();
         $this->panel();
     }
 
-    public function disable(string $filter_id)
+    public function disable(int $filter_id)
     {
-        $entry_domain = $this->getEntryDomain($filter_id);
-        $this->verifyPermissions($entry_domain, 'perm_manage_wordfilters');
-        $prepared = $this->database->prepare(
-            'UPDATE "' . $this->data_table . '" SET "enabled" = 0 WHERE "filter_id" = ?');
-        $this->database->executePrepared($prepared, [$filter_id]);
+        $wordfilter = new Wordfilter($this->database, $filter_id);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $this->verifyPermissions($domain, 'perm_manage_wordfilters');
+        $wordfilter->changeData('enabled', 0);
+        $wordfilter->update();
         $this->panel();
     }
 

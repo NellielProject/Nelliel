@@ -60,6 +60,7 @@ Error 55: R9K unoriginal and muted. (NewPost/PostData.php)
 Error 56: Uploads disabled. (NewPost/Uploads.php)  
 Error 57: Upload flood. (NewPost/NewPost.php)  
 Error 58: File too big for category. (NewPost/Uploads.php)  
+Error 59: Rejected by wordfilter. (Wordfilters.php)  
 
 Error 60: Password does not match post. (Content/Post.php)  
 Error 61: Board locked, can't remove file. (Content/Upload.php)  

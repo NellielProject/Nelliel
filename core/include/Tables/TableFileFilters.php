@@ -21,6 +21,7 @@ class TableFileFilters extends Table
             'filter_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'hash_type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'file_hash' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'filter_action' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
@@ -29,6 +30,7 @@ class TableFileFilters extends Table
             'filter_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'hash_type' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'file_hash' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'filter_action' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'board_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -42,13 +44,14 @@ class TableFileFilters extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
-            filter_id   ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            hash_type   VARCHAR(50) NOT NULL,
-            file_hash   VARCHAR(128) NOT NULL,
-            notes       TEXT DEFAULT NULL,
-            board_id    VARCHAR(50) NOT NULL,
-            enabled     SMALLINT NOT NULL DEFAULT 0,
-            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
+            filter_id       ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
+            board_id        VARCHAR(50) NOT NULL,
+            hash_type       VARCHAR(50) DEFAULT NULL,
+            file_hash       VARCHAR(128) NOT NULL,
+            filter_action   VARCHAR(255) DEFAULT NULL,
+            notes           TEXT DEFAULT NULL,
+            enabled         SMALLINT NOT NULL DEFAULT 0,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (filter_id),
             CONSTRAINT fk_file_filters__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
