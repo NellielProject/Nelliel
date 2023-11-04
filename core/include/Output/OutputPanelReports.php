@@ -69,7 +69,7 @@ class OutputPanelReports extends Output
             $report_data['reason'] = $report_info['reason'];
             $report_data['reporter_ip'] = nel_convert_ip_from_storage($report_info['reporter_ip']);
             $report_data['dismiss_url'] = nel_build_router_url(
-                [$this->domain->id(), 'reports', $report_info['report_id'], 'dismiss']);
+                [$this->domain->uri(), 'reports', $report_info['report_id'], 'dismiss']);
             $this->render_data['reports_list'][] = $report_data;
         }
 

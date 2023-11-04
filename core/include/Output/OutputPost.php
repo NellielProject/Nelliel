@@ -270,43 +270,43 @@ class OutputPost extends Output
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_manage_bans')) {
                 $this->render_data['mod_links_ban']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban']);
                 $options['post_modmode_options'][] = $this->render_data['mod_links_ban'];
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
                 $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete']);
                 $options['post_modmode_options'][] = $this->render_data['mod_links_delete'];
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_delete_by_ip')) {
                 $this->render_data['mod_links_delete_by_ip']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete-by-ip']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete-by-ip']);
                 $this->render_data['post_modmode_options'][] = $this->render_data['mod_links_delete_by_ip'];
 
                 $this->render_data['mod_links_global_delete_by_ip']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'global-delete-by-ip']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'global-delete-by-ip']);
                 $options['post_modmode_options'][] = $this->render_data['mod_links_global_delete_by_ip'];
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_manage_bans') &&
                 $this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
                     $this->render_data['mod_links_ban_and_delete']['url'] = nel_build_router_url(
-                        [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban-delete']);
+                        [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban-delete']);
                     $options['post_modmode_options'][] = $this->render_data['mod_links_ban_and_delete'];
                 }
 
                 if ($this->session->user()->checkPermission($this->domain, 'perm_edit_posts')) {
                     $this->render_data['mod_links_edit']['url'] = nel_build_router_url(
-                        [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
+                        [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
                     $options['post_modmode_options'][] = $this->render_data['mod_links_edit'];
                 }
 
                 if (!$thread->data('shadow')) {
                     if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
                         $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                            [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'move']);
+                            [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'move']);
                         $options['post_modmode_options'][] = $this->render_data['mod_links_move'];
                     }
                 }

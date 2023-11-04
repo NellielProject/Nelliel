@@ -43,7 +43,7 @@ class OutputDerp extends Output
                 $this->render_data['return_link_url'] = $this->domain->reference('home_page');
             } else {
                 if ($this->session->inModmode($this->domain)) {
-                    $this->render_data['return_link_url'] = nel_build_router_url([$this->domain->id()], true, 'modmode');
+                    $this->render_data['return_link_url'] = nel_build_router_url([$this->domain->uri()], true, 'modmode');
                 } else {
                     $this->render_data['return_link_url'] = NEL_BASE_WEB_PATH .
                         $this->domain->reference('board_directory');

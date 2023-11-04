@@ -37,9 +37,9 @@ class OutputThread extends Output
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->render_data['in_modmode']) {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads'], false, 'modmode');
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'threads'], false, 'modmode');
         } else {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads']);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'threads']);
         }
 
         $posts = $thread->getPosts();
@@ -74,7 +74,7 @@ class OutputThread extends Output
                 $manage_headers['header'] = _gettext('Moderator Mode');
                 $manage_headers['sub_header'] = _gettext('View Thread');
                 $this->render_data['header'] = $output_header->board(['manage_headers' => $manage_headers], true);
-                $return_url = nel_build_router_url([$this->domain->id()], true, 'modmode');
+                $return_url = nel_build_router_url([$this->domain->uri()], true, 'modmode');
             } else {
                 $this->render_data['header'] = $output_header->board([], true);
                 $return_url = $this->domain->reference('board_web_path') . NEL_MAIN_INDEX . NEL_PAGE_EXT;
@@ -242,30 +242,30 @@ class OutputThread extends Output
 
         if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
             $this->render_data['mod_links_lock']['url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'lock']);
+                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'lock']);
             $this->render_data['mod_links_unlock']['url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unlock']);
+                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unlock']);
             $lock_id = $thread->data('locked') ? 'mod_links_unlock' : 'mod_links_lock';
             $options['thread_modmode_options'][] = $this->render_data[$lock_id];
 
             $this->render_data['mod_links_sticky']['url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sticky']);
+                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sticky']);
             $this->render_data['mod_links_unsticky']['url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsticky']);
+                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsticky']);
             $sticky_id = $thread->data('sticky') ? 'mod_links_unsticky' : 'mod_links_sticky';
             $options['thread_modmode_options'][] = $this->render_data[$sticky_id];
 
             $this->render_data['mod_links_permasage']['url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sage']);
+                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sage']);
             $this->render_data['mod_links_unpermasage']['url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsage']);
+                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsage']);
             $permasage_id = $thread->data('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
             $options['thread_modmode_options'][] = $this->render_data[$permasage_id];
 
             $this->render_data['mod_links_cyclic']['url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'cyclic']);
+                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'cyclic']);
             $this->render_data['mod_links_non_cyclic']['url'] = nel_build_router_url(
-                [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'non-cyclic']);
+                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'non-cyclic']);
             $cyclic_id = $thread->data('cyclic') ? 'mod_links_non_cyclic' : 'mod_links_cyclic';
             $options['thread_modmode_options'][] = $this->render_data[$cyclic_id];
         }
@@ -273,13 +273,13 @@ class OutputThread extends Output
         if (!$thread->data('shadow')) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
                 $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
                 $options['thread_modmode_options'][] = $this->render_data['mod_links_move'];
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_merge_threads')) {
                 $this->render_data['mod_links_merge']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'merge']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'merge']);
                 $options['thread_modmode_options'][] = $this->render_data['mod_links_merge'];
             }
         }

@@ -29,7 +29,7 @@ class OutputPanelPermissions extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $permissions = $this->database->executeFetchAll(
             'SELECT * FROM "' . NEL_PERMISSIONS_TABLE . '" ORDER BY "permission" ASC', PDO::FETCH_ASSOC);
-        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'permissions', 'new']);
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'permissions', 'new']);
         $bgclass = 'row1';
 
         foreach ($permissions as $permission) {
@@ -39,7 +39,7 @@ class OutputPanelPermissions extends Output
             $permission_data['permission'] = $permission['permission'];
             $permission_data['description'] = _gettext($permission['description']);
             $permission_data['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'permissions', $permission['permission'], 'delete']);
+                [$this->domain->uri(), 'permissions', $permission['permission'], 'delete']);
             $this->render_data['permission_list'][] = $permission_data;
         }
 

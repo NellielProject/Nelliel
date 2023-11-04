@@ -277,9 +277,9 @@ class AdminBoards extends Admin
             'Doing this will wipe out all posts, files, archives and settings for this board. All the things get shoved into /dev/null. There is no undo or recovery.');
         $messages[] = __('Are you absolutely sure?');
         $no_info['text'] = __('NOPE. Get me out of here!');
-        $no_info['url'] = nel_build_router_url([$this->domain->id(), 'manage-boards']);
+        $no_info['url'] = nel_build_router_url([$this->domain->uri(), 'manage-boards']);
         $yes_info['text'] = __('Delete the board');
-        $yes_info['url'] = nel_build_router_url([$this->domain->id(), 'manage-boards', $board_id, 'delete']);
+        $yes_info['url'] = nel_build_router_url([$this->domain->uri(), 'manage-boards', $board_id, 'delete']);
         $output_interstitial = new OutputInterstitial($this->domain, false);
         echo $output_interstitial->confirm([], false, $messages, $yes_info, $no_info);
     }

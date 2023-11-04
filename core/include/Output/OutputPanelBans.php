@@ -34,7 +34,7 @@ class OutputPanelBans extends Output
         $this->render_data['can_add'] = $this->session->user()->checkPermission($this->domain, 'perm_add_bans');
         $bans_access = new BansAccess($this->database);
         $ban_list = $bans_access->getBans($this->domain->id());
-        $this->render_data['new_ban_url'] = nel_build_router_url([$this->domain->id(), 'bans', 'new']);
+        $this->render_data['new_ban_url'] = nel_build_router_url([$this->domain->uri(), 'bans', 'new']);
         $bgclass = 'row1';
 
         foreach ($ban_list as $ban_hammer) {
@@ -76,9 +76,9 @@ class OutputPanelBans extends Output
             $ban_data['can_modify'] = $this->session->user()->checkPermission($this->domain, 'perm_modify_bans');
             $ban_data['can_delete'] = $this->session->user()->checkPermission($this->domain, 'perm_delete_bans');
             $ban_data['modify_url'] = nel_build_router_url(
-                [$this->domain->id(), 'bans', $ban_hammer->getData('ban_id'), 'modify']);
+                [$this->domain->uri(), 'bans', $ban_hammer->getData('ban_id'), 'modify']);
             $ban_data['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'bans', $ban_hammer->getData('ban_id'), 'delete']);
+                [$this->domain->uri(), 'bans', $ban_hammer->getData('ban_id'), 'delete']);
             $ban_data['appealed'] = ($ban_hammer->appealCount() > 0) ? __('Yes') : __('No');
 
             $this->render_data['ban_list'][] = $ban_data;
@@ -148,10 +148,10 @@ class OutputPanelBans extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
         if ($this->domain->id() !== Domain::SITE) {
-            $this->render_data['ban_board'] = $this->domain->id();
+            $this->render_data['ban_board'] = $this->domain->uri();
         }
 
-        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'bans', 'new']);
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'bans', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -170,7 +170,7 @@ class OutputPanelBans extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'bans', $ban_id, 'modify']);
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'bans', $ban_id, 'modify']);
         $ban_hammer = new BanHammer($this->database, $ban_id);
         $ban_type = $ban_hammer->getData('ban_type');
 

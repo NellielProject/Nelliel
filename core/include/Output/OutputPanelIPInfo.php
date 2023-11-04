@@ -45,7 +45,7 @@ class OutputPanelIPInfo extends Output
         $this->render_data['can_delete_notes'] = $this->session->user()->checkPermission($this->domain,
             'delete_ip_notes');
         $this->render_data['notes_form_action'] = nel_build_router_url(
-            [$this->domain->id(), 'ip-info', $access_id, 'add-note']);
+            [$this->domain->uri(), 'ip-info', $access_id, 'add-note']);
         $bgclass = 'row1';
         $this->render_data['ip_notes_list'] = array();
 
@@ -64,7 +64,7 @@ class OutputPanelIPInfo extends Output
             $note_data['time'] = $ip_note->getData('time');
             $note_data['note'] = $ip_note->getData('notes');
             $note_data['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'ip-info', $access_id, 'delete-note', $ip_note->getData('note_id')]);
+                [$this->domain->uri(), 'ip-info', $access_id, 'delete-note', $ip_note->getData('note_id')]);
             $this->render_data['notes_list'][] = $note_data;
         }
 

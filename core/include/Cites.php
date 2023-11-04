@@ -244,11 +244,11 @@ class Cites
 
             // Regular cite referencing a post outside the thread (still on the original board)
             $mark = utf8_substr($matches[0], 0, 1) === '>' ? '>' : '&gt;';
-            return $matches[1] . $mark . '/' . $old_domain->id() . '/' . $matches[2];
+            return $matches[1] . $mark . '/' . $old_domain->uri() . '/' . $matches[2];
         };
 
         $moved_post->changeData('comment',
-            preg_replace_callback('/(>>|&gt;&gt;)(\d+)|(>>>|&gt;&gt;&gt;)\/(' . $old_domain->id() . ')\/(\d*)/u',
+            preg_replace_callback('/(>>|&gt;&gt;)(\d+)|(>>>|&gt;&gt;&gt;)\/(' . $old_domain->uri() . ')\/(\d*)/u',
                 $cite_change_callback, $moved_post->data('comment')));
         $moved_post->writeToDatabase();
         $this->updateCachesForPost($moved_post);

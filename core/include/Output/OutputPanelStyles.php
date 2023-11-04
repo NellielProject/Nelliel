@@ -44,18 +44,18 @@ class OutputPanelStyles extends Output
 
             if ($style_data['enabled'] == 1) {
                 $style_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'styles', $style->id(), 'disable']);
+                    [$this->domain->uri(), 'styles', $style->id(), 'disable']);
                 $style_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($style_data['enabled'] == 0) {
                 $style_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'styles', $style->id(), 'enable']);
+                    [$this->domain->uri(), 'styles', $style->id(), 'enable']);
                 $style_data['enable_disable_text'] = _gettext('Enable');
             }
 
             $style_data['uninstall_url'] = nel_build_router_url(
-                [$this->domain->id(), 'styles', $style->id(), 'uninstall']);
+                [$this->domain->uri(), 'styles', $style->id(), 'uninstall']);
             $this->render_data['installed_list'][] = $style_data;
         }
 
@@ -70,7 +70,7 @@ class OutputPanelStyles extends Output
             $style_data['name'] = $style['info']['name'];
             $style_data['is_installed'] = in_array($style['info']['id'], $installed_ids);
             $style_data['install_url'] = nel_build_router_url(
-                [$this->domain->id(), 'styles', $style['info']['id'], 'install']);
+                [$this->domain->uri(), 'styles', $style['info']['id'], 'install']);
             $this->render_data['available_list'][] = $style_data;
         }
 

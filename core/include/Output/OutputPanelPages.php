@@ -29,7 +29,7 @@ class OutputPanelPages extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PAGES_TABLE . '" WHERE "domain_id" = ?');
         $pages = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
-        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'pages', 'new']);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->uri(), 'pages', 'new']);
         $bgclass = 'row1';
 
         foreach ($pages as $page) {
@@ -38,8 +38,8 @@ class OutputPanelPages extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $page_data['uri'] = $page['uri'];
             $page_data['title'] = $page['title'];
-            $page_data['edit_url'] = nel_build_router_url([$this->domain->id(), 'pages', $page['page_id'], 'modify']);
-            $page_data['delete_url'] = nel_build_router_url([$this->domain->id(), 'pages', $page['page_id'], 'delete']);
+            $page_data['edit_url'] = nel_build_router_url([$this->domain->uri(), 'pages', $page['page_id'], 'modify']);
+            $page_data['delete_url'] = nel_build_router_url([$this->domain->uri(), 'pages', $page['page_id'], 'delete']);
             $this->render_data['pages_list'][] = $page_data;
         }
 
@@ -71,7 +71,7 @@ class OutputPanelPages extends Output
 
         if ($editing) {
             $page_id = $parameters['page_id'] ?? 0;
-            $form_action = nel_build_router_url([$this->domain->id(), 'pages', $page_id, 'modify']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'pages', $page_id, 'modify']);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PAGES_TABLE . '" WHERE "page_id" = ?');
             $page_data = $this->database->executePreparedFetch($prepared, [$page_id], PDO::FETCH_ASSOC);
 
@@ -83,7 +83,7 @@ class OutputPanelPages extends Output
             }
         } else {
             $this->render_data['new_page'] = true;
-            $form_action = nel_build_router_url([$this->domain->id(), 'pages', 'new']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'pages', 'new']);
         }
 
         $menu = new OutputMenu($this->domain, $this->write_mode);

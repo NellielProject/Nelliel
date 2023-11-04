@@ -75,18 +75,18 @@ class OutputFooter extends Output
         if ($site_banners_available &&
             (!$is_board_domain || $this->site_domain->setting('show_bottom_banners_on_boards'))) {
             $this->render_data['site_banner_url'] = nel_build_router_url(
-                [$this->site_domain->id(), 'banners', 'random']);
+                [$this->site_domain->uri(), 'banners', 'random']);
             $this->render_data['show_site_bottom_banner'] = $this->site_domain->setting('show_bottom_banners');
             $this->render_data['site_banner_url'] = nel_build_router_url(
-                [$this->site_domain->id(), 'banners', 'random']);
+                [$this->site_domain->uri(), 'banners', 'random']);
             $this->render_data['site_banner_display_width'] = $this->site_domain->setting('banner_display_width');
             $this->render_data['site_banner_display_height'] = $this->site_domain->setting('banner_display_height');
         }
 
         if ($is_board_domain && $board_banners_available) {
-            $this->render_data['board_banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
+            $this->render_data['board_banner_url'] = nel_build_router_url([$this->domain->uri(), 'banners', 'random']);
             $this->render_data['show_board_bottom_banner'] = $this->domain->setting('show_bottom_banners');
-            $this->render_data['board_banner_url'] = nel_build_router_url([$this->domain->id(), 'banners', 'random']);
+            $this->render_data['board_banner_url'] = nel_build_router_url([$this->domain->uri(), 'banners', 'random']);
             $this->render_data['board_banner_display_width'] = $this->site_domain->setting('banner_display_width');
             $this->render_data['board_banner_display_height'] = $this->site_domain->setting('banner_display_height');
         }

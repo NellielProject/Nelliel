@@ -73,14 +73,14 @@ class OutputNewPostForm extends Output
         $this->render_data['flags']['no_markup'] = $this->domain->setting('allow_no_markup');
 
         if ($this->render_data['in_modmode']) {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post'], false,
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'new-post'], false,
                 'modmode');
             $this->render_data['flags']['post_as_staff'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_as_staff');
             $this->render_data['flags']['raw_html'] = $this->session->user()->checkPermission($this->domain,
                 'perm_raw_html');
         } else {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post']);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'new-post']);
         }
 
         if (!$response_to) {

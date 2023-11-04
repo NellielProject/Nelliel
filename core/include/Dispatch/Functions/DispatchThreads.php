@@ -37,7 +37,7 @@ class DispatchThreads extends Dispatch
             $report->submit();
 
             if ($this->session->inModmode($this->domain)) {
-                $url = nel_build_router_url([$this->domain->id()], true, 'modmode');
+                $url = nel_build_router_url([$this->domain->uri()], true, 'modmode');
             } else {
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }
@@ -54,7 +54,7 @@ class DispatchThreads extends Dispatch
             $thread_handler->processContentDeletes();
 
             if ($this->session->inModmode($this->domain)) {
-                $url = nel_build_router_url([$this->domain->id()], true, 'modmode');
+                $url = nel_build_router_url([$this->domain->uri()], true, 'modmode');
             } else {
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }

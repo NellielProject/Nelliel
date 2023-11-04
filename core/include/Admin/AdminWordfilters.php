@@ -38,11 +38,11 @@ class AdminWordfilters extends Admin
 
     public function add(): void
     {
-        $board_id = $_POST['board_id'] ?? $this->domain->id();
+        $board_id = $_POST['board_id'] ?? $this->domain->uri();
         $domain = Domain::getDomainFromID($board_id, $this->database);
         $this->verifyPermissions($domain, 'perm_manage_wordfilters');
         $wordfilter = new Wordfilter($this->database, 0);
-        $wordfilter->changeData('board_id', $board_id);
+        $wordfilter->changeData('board_id', $domain->id());
         $wordfilter->changeData('text_match', $_POST['text_match'] ?? '');
         $wordfilter->changeData('replacement', $_POST['replacement'] ?? '');
         $wordfilter->changeData('filter_action', $_POST['filter_action'] ?? null);

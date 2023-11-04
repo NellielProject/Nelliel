@@ -39,7 +39,7 @@ class AdminFileFilters extends Admin
 
     public function add(): void
     {
-        $board_id = $_POST['board_id'] ?? $this->domain->id();
+        $board_id = $_POST['board_id'] ?? $this->domain->uri();
         $domain = Domain::getDomainFromID($board_id, $this->database);
         $this->verifyPermissions($domain, 'perm_manage_file_filters');
         $output_filter = new Filter();
@@ -50,7 +50,7 @@ class AdminFileFilters extends Admin
 
         foreach ($hashes as $hash) {
             $file_filter = new FileFilter($this->database, 0);
-            $file_filter->changeData('board_id', $board_id);
+            $file_filter->changeData('board_id', $domain->id());
             $file_filter->changeData('file_hash', $hash);
             $file_filter->changeData('filter_action', $filter_action);
             $file_filter->changeData('notes', $notes);

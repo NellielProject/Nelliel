@@ -71,7 +71,7 @@ class OutputNavigation extends Output
         $this->render_data['account_nav_links_global_panel']['right_bracket'] = $right_bracket;
         $this->render_data['account_nav_links_board_panel']['text'] = $translate('account_nav_links_board_panel');
         $this->render_data['account_nav_links_board_panel']['url'] = nel_build_router_url(
-            [$this->domain->id(), 'main-panel']);
+            [$this->domain->uri(), 'main-panel']);
         $this->render_data['account_nav_links_board_panel']['left_bracket'] = $left_bracket;
         $this->render_data['account_nav_links_board_panel']['right_bracket'] = $right_bracket;
         $this->render_data['account_nav_links_board_list']['text'] = $translate('account_nav_links_board_list');
@@ -177,16 +177,16 @@ class OutputNavigation extends Output
         $render_data = array();
 
         if (!$this->write_mode) {
-            $render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog'], true);
-            $render_data['index_url'] = nel_build_router_url([$this->domain->id(), 'index'], true);
+            $render_data['catalog_url'] = nel_build_router_url([$this->domain->uri(), 'catalog'], true);
+            $render_data['index_url'] = nel_build_router_url([$this->domain->uri(), 'index'], true);
         }
 
         if ($in_modmode) {
-            $render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads'], false, 'modmode');
-            $render_data['catalog_url'] = nel_build_router_url([$this->domain->id(), 'catalog'], true, 'modmode');
-            $render_data['index_url'] = nel_build_router_url([$this->domain->id()], true, 'modmode');
+            $render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'threads'], false, 'modmode');
+            $render_data['catalog_url'] = nel_build_router_url([$this->domain->uri(), 'catalog'], true, 'modmode');
+            $render_data['index_url'] = nel_build_router_url([$this->domain->uri()], true, 'modmode');
         } else {
-            $render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'threads']);
+            $render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'threads']);
             $render_data['catalog_url'] = 'catalog.html';
             $render_data['index_url'] = 'index.html';
         }

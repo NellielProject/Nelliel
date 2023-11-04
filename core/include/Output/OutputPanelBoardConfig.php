@@ -40,7 +40,7 @@ class OutputPanelBoardConfig extends Output
         } else {
             $table_name = $this->domain->reference('config_table');
             $parameters['panel'] = $parameters['panel'] ?? _gettext('Board Config');
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'config', 'update']);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'config', 'update']);
             $prepared = $this->database->prepare(
                 'SELECT "setting_name","setting_value" FROM "' . $table_name .
                 '" WHERE "setting_name" = ? AND "board_id" = ?');

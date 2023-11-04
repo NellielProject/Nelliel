@@ -61,7 +61,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['preview_directory'] = $board_data['preview_directory'];
         $new_reference['page_directory'] = $board_data['page_directory'];
         $new_reference['archive_directory'] = $board_data['archive_directory'];
-        $new_reference['banners_directory'] = $this->domain_id;
+        $new_reference['banners_directory'] = $this->uri;
         $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_directory'] . '/';
         $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_directory']) .
             '/';

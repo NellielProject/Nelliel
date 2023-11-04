@@ -96,9 +96,9 @@ class OutputPanelLogs extends Output
         }
 
         $page_count = (int) ceil($log_count / $entries);
-        $page_url = nel_build_router_url([$this->domain->id(), 'logs'], true) . '%d';
-        $previous_url = ($page > 1) ? nel_build_router_url([$this->domain->id(), 'logs'], true) . '%d' : null;
-        $next_url = nel_build_router_url([$this->domain->id(), 'logs'], true) . '%d';
+        $page_url = nel_build_router_url([$this->domain->uri(), 'logs'], true) . '%d';
+        $previous_url = ($page > 1) ? nel_build_router_url([$this->domain->uri(), 'logs'], true) . '%d' : null;
+        $next_url = nel_build_router_url([$this->domain->uri(), 'logs'], true) . '%d';
         $pagination = new Pagination();
         $pagination->setPrevious(__('Previous'), $previous_url);
         $pagination->setNext(__('Next'), $next_url);
@@ -106,9 +106,9 @@ class OutputPanelLogs extends Output
         $pagination->setFirst('%d', $page_url);
         $pagination->setLast('%d', $page_url);
         $this->render_data['pagination'] = $pagination->generateNumerical(1, $page_count, $page);
-        $this->render_data['system_logs_url'] = nel_build_router_url([$this->domain->id(), 'logs', 'system']);
-        $this->render_data['public_logs_url'] = nel_build_router_url([$this->domain->id(), 'logs', 'public']);
-        $this->render_data['combined_logs_url'] = nel_build_router_url([$this->domain->id(), 'logs', 'combined']);
+        $this->render_data['system_logs_url'] = nel_build_router_url([$this->domain->uri(), 'logs', 'system']);
+        $this->render_data['public_logs_url'] = nel_build_router_url([$this->domain->uri(), 'logs', 'public']);
+        $this->render_data['combined_logs_url'] = nel_build_router_url([$this->domain->uri(), 'logs', 'combined']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

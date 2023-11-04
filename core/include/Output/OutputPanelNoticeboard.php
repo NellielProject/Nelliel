@@ -30,7 +30,7 @@ class OutputPanelNoticeboard extends Output
         $notices = $this->database->executeFetchAll('SELECT * FROM "' . NEL_NOTICEBOARD_TABLE . '" ORDER BY "time" ASC',
             PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'noticeboard', 'new']);
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'noticeboard', 'new']);
         $this->render_data['can_post'] = $this->session->user()->checkPermission($this->domain, 'perm_noticeboard_post');
         $this->render_data['can_delete'] = $this->session->user()->checkPermission($this->domain,
             'perm_noticeboard_delete');
@@ -45,7 +45,7 @@ class OutputPanelNoticeboard extends Output
             $notice_info['time'] = $this->domain->domainDateTime(intval($notice['time']))->format(
                 $this->site_domain->setting('control_panel_list_time_format'));
             $notice_info['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'noticeboard', $notice['notice_id'], 'delete']);
+                [$this->domain->uri(), 'noticeboard', $notice['notice_id'], 'delete']);
             $this->render_data['notices'][] = $notice_info;
         }
 

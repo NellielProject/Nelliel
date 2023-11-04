@@ -33,21 +33,21 @@ class OutputFile extends Output
         if ($this->session->inModmode($this->domain)) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
                 $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'delete']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'delete']);
                 $this->render_data['file_modmode_options'][] = $this->render_data['mod_links_delete'];
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
                 $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'move']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'move']);
                 $this->render_data['file_modmode_options'][] = $this->render_data['mod_links_move'];
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
                 $this->render_data['mod_links_spoiler']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'spoiler']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'spoiler']);
                 $this->render_data['mod_links_unspoiler']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'unspoiler']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'unspoiler']);
                 $spoiler_id = $file->data('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
                 $this->render_data['file_modmode_options'][] = $this->render_data[$spoiler_id];
             }
