@@ -1,19 +1,19 @@
 # Nelliel Imageboard
 ## About
-A relatively lightweight, expandable [Futallaby](https://www.1chan.net/futallaby/)-style imageboard.
+A relatively lightweight [Futallaby](https://www.1chan.net/futallaby/)-style imageboard. Focuses on providing modern features and customization while preserving the old school imageboard feel.
 
 **IMPORTANT: Nelliel is in a beta stage of development and still has bugs and incomplete features.**
 
 ## Notable Features
  - [Plugin API](documentation/plugins/plugin-api.md)
  - [JSON API](documentation/json-api/api.md)
- - Customizable filetype checks with 84 formats included by default
- - Over 400 settings
- - Web-based control panels for most configuration and functions
+ - Custom filetype checks with 84 formats included by default
+ - Extensive customization built-in
+ - Web-based controls for most configuration and functions
  - Flexible role and permission system
 
 ## Minimum Requirements
-These are only the bare minimum requirements for Nelliel to function. Even if an earlier version somehow works, you will not receive any support. **It is strongly recommended to use the latest software versions available.**
+These are the bare minimum requirements for Nelliel to function. Earlier versions will not receive any support. **It is strongly recommended to use the latest software versions available.**
 
 Required:
 - [PHP](https://www.php.net/) 7.2+
@@ -26,10 +26,10 @@ Required:
 - [PHP libxml](https://www.php.net/manual/en/book.libxml.php)
 - [PHP session](https://www.php.net/manual/en/book.session.php)
 
-These requirements are intentionally well behind the leading edge and should be widely available. The PHP extensions required are usually included and enabled with a standard install; if not, they are almost always available in official repositories. If for some reason even the minimum cannot be provided, find a new host. Srsly.
+These requirements are intentionally well behind the leading edge and should be widely available. The PHP extensions required are usually installed by default or will be available in official repositories. If for some reason even the minimum cannot be provided, find a new host. Srsly.
 
 ## Optional Requirements
-These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not required and the software will work without them:
+These are optional things that Nelliel or one of its libraries can utilize for extra features or performance increases. They are not required and the software will work fine without them:
 - [ImageMagick](https://imagemagick.org/) or [GraphicsMagick](http://www.graphicsmagick.org/)
 - [Imagick](https://www.php.net/manual/en/book.imagick.php) or [Gmagick](https://www.php.net/manual/en/book.gmagick.php) ([PECL](https://pecl.php.net/) extensions)
 - [mbstring](https://www.php.net/manual/en/book.mbstring.php)
