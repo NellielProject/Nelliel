@@ -141,6 +141,13 @@ class OutputNavigation extends Output
         $this->render_data['site_nav_links_blank_page']['left_bracket'] = $left_bracket;
         $this->render_data['site_nav_links_blank_page']['right_bracket'] = $right_bracket;
 
+        if (!$this->render_data['session_active']) {
+            $this->render_data['site_nav_links_account']['text'] = $translate('account_nav_links_account');
+            $this->render_data['site_nav_links_account']['url'] = nel_build_router_url([Domain::SITE, 'account']);
+            $this->render_data['site_nav_links_account']['left_bracket'] = $left_bracket;
+            $this->render_data['site_nav_links_account']['right_bracket'] = $right_bracket;
+        }
+
         $link_data = array();
         $link_data[] = $this->render_data['site_nav_links_home'];
         $link_data[] = $this->render_data['site_nav_links_news'];
@@ -167,6 +174,11 @@ class OutputNavigation extends Output
 
         $link_data[] = $this->render_data['site_nav_links_about_nelliel'];
         $link_data[] = $this->render_data['site_nav_links_blank_page'];
+
+        if (!$this->render_data['session_active']) {
+            $link_data[] = $this->render_data['site_nav_links_account'];
+        }
+
         return $link_data;
     }
 
