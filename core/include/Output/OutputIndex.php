@@ -7,11 +7,11 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\API\JSON\CatalogJSON;
 use Nelliel\API\JSON\IndexJSON;
+use Nelliel\API\JSON\ThreadlistJSON;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\DomainBoard;
 use PDO;
-use Nelliel\API\JSON\ThreadlistJSON;
 
 class OutputIndex extends Output
 {
@@ -46,7 +46,7 @@ class OutputIndex extends Output
 
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['page_navigation'] = $output_navigation->boardPages(
-            ['in_modmode' => $this->render_data['in_modmode']], $data_only);
+            ['in_modmode' => $this->render_data['in_modmode'], 'display' => 'index'], $data_only);
 
         $threads = $this->domain->activeThreads(true);
         $thread_count = count($threads);

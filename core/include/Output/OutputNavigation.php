@@ -186,6 +186,7 @@ class OutputNavigation extends Output
     {
         $this->renderSetup();
         $in_modmode = $parameters['in_modmode'] ?? false;
+        $display_type = $parameters['display'] ?? 'index';
         $render_data = array();
 
         if (!$this->write_mode) {
@@ -203,9 +204,9 @@ class OutputNavigation extends Output
             $render_data['index_url'] = 'index.html';
         }
 
-        $render_data['show_catalog_link'] = $this->domain->setting('enable_catalog') &&
+        $render_data['show_catalog_link'] = $display_type === 'index' && $this->domain->setting('enable_catalog') &&
             $this->domain->setting('show_catalog_link');
-        $render_data['show_index_link'] = $this->domain->setting('enable_index') &&
+        $render_data['show_index_link'] = $display_type === 'catalog' && $this->domain->setting('enable_index') &&
             $this->domain->setting('show_index_link');
 
         return $render_data;
