@@ -71,7 +71,7 @@ td {
 	padding: 0.3em;
 }
 
-/* Top navigation */
+/* Navigation */
 .boards-navigation {
 	text-align: var(--boards-navigation-align, center);
 	margin: 0.1em;
@@ -93,6 +93,10 @@ td {
 	clear: var(--account_navigation-align, right);
 	float: var(--account_navigation-align, right);
 	padding: 0.1em;
+}
+
+.page-navigation {
+	clear: both;
 }
 
 /* Header */
@@ -540,6 +544,7 @@ td {
 .op.subject {
 	color: var(--op-post-subject-color, var(--post-subject-color));
 	font-weight: bold;
+	font-size: 1.1rem;
 }
 
 .op.post-comments {
@@ -577,6 +582,7 @@ td {
 .reply.subject {
 	color: var(--reply-post-subject-color, var(--post-subject-color));
 	font-weight: bold;
+	font-size: 1.1rem;
 }
 
 .reply.post-comments {
