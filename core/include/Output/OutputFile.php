@@ -147,12 +147,21 @@ class OutputFile extends Output
         $this->render_data['file_options'][] = $this->render_data['content_links_show_upload_meta'];
 
         if ($file->data('deleted') && $this->domain->setting('display_deleted_placeholder')) {
-            $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_file');
+            if (nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
+                $this->render_data['deleted_url'] = $this->domain->setting('image_deleted_file');
+            } else {
+                $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_file');
+            }
+
             $preview_type = 'image';
         }
 
         if (is_null($preview_type) && $file->data('spoiler')) {
-            $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_spoiler_cover');
+            if (nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
+                $this->render_data['preview_url'] = $this->domain->setting('image_spoiler_cover');
+            } else {
+                $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_spoiler_cover');
+            }
 
             if (!nel_true_empty($this->domain->setting('spoiler_display_name'))) {
                 $this->render_data['display_filename'] = $this->domain->setting('spoiler_display_name');

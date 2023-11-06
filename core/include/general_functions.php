@@ -285,13 +285,13 @@ function nel_config_var_export(array $array, string $prefix = '')
             $keys = array_keys($value);
             $values_array = '';
 
-            foreach($keys as $index) {
-                if(is_int($index) && !is_array($value[$index])) {
+            foreach ($keys as $index) {
+                if (is_int($index) && !is_array($value[$index])) {
                     $values_array .= $value[$index] . ', ';
                 }
             }
 
-            if(empty($values_array)) {
+            if (empty($values_array)) {
                 $line = nel_config_var_export($value, $prefix);
                 $config_output .= $line;
             } else {
@@ -306,11 +306,15 @@ function nel_config_var_export(array $array, string $prefix = '')
         } else if (is_bool($value)) {
             $boolval = ($value === false) ? 'false' : 'true';
             $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = ' . $boolval . ';';
-        }
-        else {
+        } else {
             $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = ' . $value . ';';
         }
     }
 
     return $config_output;
+}
+
+function nel_is_absolute_url(string $url): bool
+{
+    return preg_match('/^(?:.+:)?\/\//u', $url) === 1;
 }
