@@ -62,6 +62,10 @@ class AdminBoardConfig extends Admin
                 $filetypes_array = array();
 
                 foreach ($new_value as $category => $entries) {
+                    if ($category === 'lock' || $category === 'force_update') {
+                        continue;
+                    }
+
                     $filetypes_array[$category]['enabled'] = nel_form_input_default($entries['enabled']) === '1';
                     $filetypes_array[$category]['max_size'] = intval($entries['max_size']);
                     $formats = $entries['formats'] ?? array();

@@ -71,14 +71,12 @@ class AdminBoardDefaults extends Admin
                         continue;
                     }
 
-                    $category_enabled = nel_form_input_default($entries['enabled']) === '1';
-                    $filetypes_array[$category]['enabled'] = $category_enabled;
+                    $filetypes_array[$category]['enabled'] = nel_form_input_default($entries['enabled']) === '1';
+                    $filetypes_array[$category]['max_size'] = intval($entries['max_size']);
                     $formats = $entries['formats'] ?? array();
 
-                    foreach ($formats as $format => $enabled) {
-                        $format_enabled = nel_form_input_default($enabled) === '1';
-
-                        if ($format_enabled) {
+                    foreach ($formats as $format => $entries) {
+                        if (nel_form_input_default($entries['enabled']) === '1') {
                             $filetypes_array[$category]['formats'][] = $format;
                         }
                     }
