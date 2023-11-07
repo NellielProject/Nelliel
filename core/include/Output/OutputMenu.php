@@ -70,7 +70,7 @@ class OutputMenu extends Output
         $this->renderSetup();
         $styles = $this->domain->frontEndData()->getAllStyles(true);
         $render_data = array();
-        $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
+        $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '', true);
         $default_style = $this->domain->setting('default_style');
 
         foreach ($styles as $style) {
@@ -114,11 +114,12 @@ class OutputMenu extends Output
     public function fgsfds(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $selected = '';
         $options = array();
-        $options[] = $this->createSelectOption(__(''), '');
-        $options[] = $this->createSelectOption(__('noko'), 'noko');
-        $options[] = $this->createSelectOption(__('sage'), 'sage');
-        $options[] = $this->createSelectOption(__('noko + sage'), 'noko sage');
+        $options[] = $this->createSelectOption(__(''), '', $selected);
+        $options[] = $this->createSelectOption(__('noko'), 'noko', $selected);
+        $options[] = $this->createSelectOption(__('sage'), 'sage', $selected);
+        $options[] = $this->createSelectOption(__('noko + sage'), 'noko sage', $selected);
         return $options;
     }
 

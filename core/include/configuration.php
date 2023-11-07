@@ -7,7 +7,7 @@ use Nelliel\Utility\FileHandler;
 
 $technical_config = array();
 
-if (isset($_GET['install']) && !file_exists(NEL_CONFIG_FILES_PATH . 'technical.php')) {
+if ((isset($_GET['install']) || isset($_GET['upgrade'])) && !file_exists(NEL_CONFIG_FILES_PATH . 'technical.php')) {
     copy(NEL_CONFIG_FILES_PATH . 'technical.php.example', NEL_CONFIG_FILES_PATH . 'technical.php');
 }
 

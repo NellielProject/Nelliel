@@ -1493,7 +1493,33 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $rename_board_settings = ['fgsfds_name' => 'fgsfds_field_label'];
                 $this->renameBoardSettings($rename_board_settings);
 
-                // Update descriptions and defaults
+                $boards = nel_database('core')->executeFetchAll(
+                    'SELECT "board_uri", "board_id" FROM "nelliel_board_data"', PDO::FETCH_ASSOC);
+
+                foreach ($boards as $board) {
+                    $prepared = nel_database('core')->prepare(
+                        'SELECT "setting_value" FROM "nelliel_board_configs" WHERE "board_id" = ? AND "setting_name" = \'enabled_filetypes\'');
+                    $prepared->bindValue(1, $board['board_id']);
+                    $old_enabled_filetypes = nel_database('core')->executePreparedFetch($prepared, null,
+                        PDO::FETCH_COLUMN);
+                    $new_enabled_filetypes = utf8_str_replace('"formats":', '"max_size": 0, "formats":',
+                        $old_enabled_filetypes);
+                    $prepared = nel_database('core')->prepare(
+                        'UPDATE "nelliel_board_configs" SET "setting_value" = ? WHERE "board_id" = ? AND "setting_name" = \'enabled_filetypes\'');
+                    $prepared->bindValue(1, $new_enabled_filetypes);
+                    $prepared->bindValue(2, $board['board_id']);
+                    nel_database('core')->executePrepared($prepared);
+                }
+
+                $old_enabled_filetypes = nel_database('core')->executeFetch(
+                    'SELECT "setting_value" FROM "nelliel_board_defaults" WHERE "setting_name" = \'enabled_filetypes\'',
+                    PDO::FETCH_COLUMN);
+                $new_enabled_filetypes = utf8_str_replace('"formats":', '"max_size": 0, "formats":',
+                    $old_enabled_filetypes);
+                $prepared = nel_database('core')->prepare(
+                    'UPDATE "nelliel_board_defaults" SET "setting_value" = ? WHERE "setting_name" = \'enabled_filetypes\'');
+                $prepared->bindValue(1, $new_enabled_filetypes);
+                nel_database('core')->executePrepared($prepared);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
 
@@ -1657,8 +1683,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         'INSERT INTO "nelliel_visitor_info" ("visitor_id") VALUES (?)');
 
                     foreach ($ids as $id) {
-                        if (!nel_database('core')->rowExists('nelliel_visitor_info', ['visitor_id'], [$id])) {
-                            $ip_transfer->bindValue(1, $id);
+                        if (!nel_database('core')->rowExists('nelliel_visitor_info', ['visitor_id'],
+                            [$id['visitor_id']])) {
+                            $id_transfer->bindValue(1, $id['visitor_id']);
                             nel_database('core')->executePrepared($id_transfer);
                         }
                     }
@@ -1784,14 +1811,14 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $system_ids = nel_database('core')->executeFetchAll(
                     'SELECT "visitor_id" FROM "nelliel_system_logs_old"', PDO::FETCH_ASSOC);
                 $public_ids = nel_database('core')->executeFetchAll(
-                    'SELECT "visitor_id", FROM "nelliel_public_logs_old"', PDO::FETCH_ASSOC);
+                    'SELECT "visitor_id" FROM "nelliel_public_logs_old"', PDO::FETCH_ASSOC);
                 $ids = array_merge($system_ids, $public_ids);
                 $id_transfer = nel_database('core')->prepare(
                     'INSERT INTO "nelliel_visitor_info" ("visitor_id") VALUES (?)');
 
                 foreach ($ids as $id) {
-                    if (!nel_database('core')->rowExists('nelliel_visitor_info', ['visitor_id'], [$id])) {
-                        $ip_transfer->bindValue(1, $id);
+                    if (!nel_database('core')->rowExists('nelliel_visitor_info', ['visitor_id'], [$id['visitor_id']])) {
+                        $id_transfer->bindValue(1, $id['visitor_id']);
                         nel_database('core')->executePrepared($id_transfer);
                     }
                 }
@@ -1851,7 +1878,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 // Update permissions and role permissions tables
                 $permissions = ['perm_bans_view' => 'perm_view_bans', 'perm_bans_add' => 'perm_add_bans',
                     'perm_bans_modify' => 'perm_modify_bans', 'perm_bans_delete' => 'perm_delete_bans'];
-                $permission_update = nel_database('core')->prepare(
+                nel_database('core')->prepare(
                     'UPDATE "nelliel_permissions" SET "permission" = :new WHERE "permission" = :old');
                 $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $permissions_table->insertDefaults();
@@ -1946,9 +1973,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 }
 
                 // Fix an old defaults insert bug
-                $uri_transfer = nel_database('core')->exec(
+                nel_database('core')->exec(
                     'UPDATE "nelliel_domain_registry" SET "notes" = \'System domain. NEVER DELETE!\' WHERE "domain_id" = \'site\'');
-                $uri_transfer = nel_database('core')->exec(
+                nel_database('core')->exec(
                     'UPDATE "nelliel_domain_registry" SET "notes" = \'System domain. NEVER DELETE!\' WHERE "domain_id" = \'global\'');
 
                 echo ' - ' . __('Domain registry table updated.') . '<br>';
