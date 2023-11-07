@@ -1964,19 +1964,20 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $boards = nel_database('core')->executeFetchAll(
                     'SELECT "board_uri", "board_id" FROM "nelliel_board_data"', PDO::FETCH_ASSOC);
                 $uri_transfer = nel_database('core')->prepare(
-                    'UPDATE "nelliel_domain_registry" SET "uri" = ? WHERE "domain_id" = ?');
+                    'UPDATE "nelliel_domain_registry" SET "uri" = ?, "display_uri" = ? WHERE "domain_id" = ?');
 
                 foreach ($boards as $board) {
-                    $uri_transfer->bindValue(1, $board['board_uri'], PDO::PARAM_STR);
-                    $uri_transfer->bindValue(2, $board['board_id'], PDO::PARAM_STR);
+                    $uri_transfer->bindValue(1, utf8_strtolower($board['board_uri']), PDO::PARAM_STR);
+                    $uri_transfer->bindValue(2, $board['board_uri'], PDO::PARAM_STR);
+                    $uri_transfer->bindValue(3, $board['board_id'], PDO::PARAM_STR);
                     nel_database('core')->executePrepared($uri_transfer);
                 }
 
                 // Fix an old defaults insert bug
                 nel_database('core')->exec(
-                    'UPDATE "nelliel_domain_registry" SET "notes" = \'System domain. NEVER DELETE!\' WHERE "domain_id" = \'site\'');
+                    'UPDATE "nelliel_domain_registry" SET "uri" = \'site\', "display_uri" = \'Site\', "notes" = \'System domain. NEVER DELETE!\' WHERE "domain_id" = \'site\'');
                 nel_database('core')->exec(
-                    'UPDATE "nelliel_domain_registry" SET "notes" = \'System domain. NEVER DELETE!\' WHERE "domain_id" = \'global\'');
+                    'UPDATE "nelliel_domain_registry" SET "uri" = \'global\', "display_uri" = \'Global\', "notes" = \'System domain. NEVER DELETE!\' WHERE "domain_id" = \'global\'');
 
                 echo ' - ' . __('Domain registry table updated.') . '<br>';
 
