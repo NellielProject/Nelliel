@@ -38,7 +38,7 @@ class OutputHead extends Output
         $this->render_data['show_favicon'] = $this->domain->setting('show_favicon') &&
             !nel_true_empty($this->domain->setting('favicon'));
 
-        if (nel_is_absolute_url($this->domain->setting('favicon'))) {
+        if (nel_is_absolute_url($this->domain->setting('favicon') ?? '')) {
             $this->render_data['favicon_url'] = $this->domain->setting('favicon');
         } else {
             $this->render_data['favicon_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('favicon');

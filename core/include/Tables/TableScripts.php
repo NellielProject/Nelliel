@@ -61,7 +61,8 @@ class TableScripts extends Table
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['Nelliel Main', 'core/nel.js', 0, 1, 'Main script for Nelliel']);
-        $this->insertDefaultRow(['Nelliel UI', 'core/ui.js', 0, 1, 'Handles UI interactions']);
+        $this->insertDefaultRow(['Nelliel Main', 'core/nelliel.js', 0, 1, 'Main script for Nelliel.']);
+        $this->insertDefaultRow(['Nelliel Functions', 'core/functions.js', 0, 1, 'Has various core functions.']);
+        $this->insertDefaultRow(['Nelliel UI', 'core/ui.js', 0, 1, 'Handles UI interactions.']);
     }
 }

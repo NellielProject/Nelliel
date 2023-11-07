@@ -493,3 +493,37 @@ nelliel.ui.addBoundingClientRectProperties = function(bounding_rect) {
 	bounding_rect.x = bounding_rect.x || bounding_rect.left + (bounding_rect.width / 2);
 	bounding_rect.y = bounding_rect.y || bounding_rect.top + (bounding_rect.height / 2);
 }
+
+
+nelliel.ui.reloadCAPTCHA = function(event_target, command) {
+	var regen_url = event_target.getAttribute("data-url");
+	var request = new XMLHttpRequest();
+	request.open('GET', regen_url);
+	request.onreadystatechange = function() {
+		if (request.readyState == 4) {
+			var captchas = document.getElementsByClassName("captcha-image", document);
+			var captcha_count = captchas.length;
+
+			for (i = 0; i < captcha_count; i++) {
+				var original_url = captchas[i].getAttribute("src");
+
+				if (original_url.includes("&time=")) {
+					var new_image_url = captchas[i].getAttribute("src").replace(/&time=[0-9]*/, "&time=" + Date.now());
+				} else {
+					var new_image_url = captchas[i].getAttribute("src") + "&time=" + Date.now();
+				}
+
+				captchas[i].setAttribute("src", new_image_url);
+			}
+		}
+	};
+
+	request.send();
+}
+
+nelliel.ui.showNextFileInput = function(element) {
+	var file_num = element.id.replace("up-file-", "");
+	file_num++;
+	var next_file = document.getElementById("form-file-" + file_num);
+	next_file.className = next_file.className.replace(/\bhidden\b/g, "");
+}

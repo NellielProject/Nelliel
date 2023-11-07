@@ -1977,6 +1977,17 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('File filter and wordfilter tables updated.') . '<br>';
 
+                // Update scripts table
+                $scripts_table = new TableScripts(nel_database('core'), nel_utilities()->sqlCompatibility());
+                nel_database('core')->exec(
+                    'DELETE FROM "nelliel_scripts" WHERE "label" = \'Nelliel Main\' AND "location" = \'core/nel.js\'');
+
+                $scripts_table->insertDefaultRow(['Nelliel Main', 'core/nelliel.js', 0, 1, 'Main script for Nelliel.']);
+                $scripts_table->insertDefaultRow(
+                    ['Nelliel Functions', 'core/functions.js', 0, 1, 'Has various core functions.']);
+
+                echo ' - ' . __('Scripts table updated.') . '<br>';
+
                 $migration_count ++;
         }
 
