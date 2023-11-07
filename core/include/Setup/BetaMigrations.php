@@ -2008,9 +2008,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 // Update scripts table
                 $scripts_table = new TableScripts(nel_database('core'), nel_utilities()->sqlCompatibility());
                 nel_database('core')->exec(
-                    'DELETE FROM "nelliel_scripts" WHERE "label" = \'Nelliel Main\' AND "location" = \'core/nel.js\'');
-
-                $scripts_table->insertDefaultRow(['Nelliel Main', 'core/nelliel.js', 0, 1, 'Main script for Nelliel.']);
+                    'UPDATE "nelliel_scripts" SET "location" = \'core/nelliel.js\' WHERE "label" = \'Nelliel Main\' AND "location" = \'core/nel.js\'');
+                nel_database('core')->exec(
+                    'DELETE FROM "nelliel_scripts" WHERE "label" = \'Nelliel Functions\' AND "location" = \'core/functions.js\''); // Quick and easy fix
                 $scripts_table->insertDefaultRow(
                     ['Nelliel Functions', 'core/functions.js', 0, 1, 'Has various core functions.']);
 
