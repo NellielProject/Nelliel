@@ -32,6 +32,10 @@
 			<label for="new-post-form-files" class="new-post-form-label">{{ files_form_label }}</label>
 			<span>{{ file_max_message }}</span>
 			<br>
+			{{# file_required }}
+			<span data-i18n="">At least one file is required.</span>
+			<br>
+			{{/ file_required }}
 			{{# allowed_files }}
 			<input id="new-post-form-files" class="new-post-form-input" type="file" name="upload_files[]">
 			<br>
@@ -50,6 +54,10 @@
 			<span class="new-post-form-label">{{ embeds_form_label }}</span>
 			<span>{{ embed_max_message }}</span>
 			<br>
+			{{# embed_required }}
+			<span data-i18n="">At least one embed is required.</span>
+			<br>
+			{{/ embed_required }}
 			{{# allowed_embeds }}
 			<input class="new-post-form-input" type="text" name="embed_urls[]" size="30">
 			<br>
@@ -106,12 +114,6 @@
 			<input type="reset" value="Clear form" data-i18n-attributes="value">
 		</div>
 	</div>
-	{{# file_required }}
-	<div class="text-center" data-i18n="">At least one file is required.</div>
-	{{/ file_required }}
-	{{# embed_required }}
-	<div class="text-center" data-i18n="">At least one embed is required.</div>
-	{{/ embed_required }}
 	<ul class="posting-rules-list">
 	{{# posting_rules_items }}
 		<li class="posting-rules-item">{{ rules_text }}</li>
