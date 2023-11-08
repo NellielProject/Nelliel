@@ -719,8 +719,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     'allow_moving_replies', 'allow_moving_uploads', 'mod_links_spoiler', 'mod_links_unspoiler'];
                 $this->updateBoardConfigs($new_board_settings);
 
-                $rename_board_settings = ['mod_links_delimiter_left' => 'mod_links_left_bracket',
-                    'mod_links_delimiter_right' => 'mod_links_right_bracket', 'mod_links_edit_post' => 'mod_links_edit'];
+                $rename_board_settings = ['ui_mod_delimiter_left' => 'mod_links_left_bracket',
+                    'ui_mod_delimiter_right' => 'mod_links_right_bracket'];
                 $this->renameBoardSettings($rename_board_settings);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
@@ -958,12 +958,13 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     'catalog_tile_height', 'catalog_show_multiple_uploads', 'catalog_first_preview_full_size',
                     'first_preview_own_row', 'catalog_max_multi_preview_display_width',
                     'catalog_max_multi_preview_display_height', 'catalog_max_uploads_row', 'show_index_link',
-                    'catalog_nav_top', 'catalog_nav_bottom', 'content_links_reply', 'content_links_show_thread',
-                    'content_links_hide_thread', 'content_links_show_post', 'content_links_hide_post',
-                    'content_links_show_file', 'content_links_hide_file', 'content_links_show_embed',
-                    'content_links_hide_embed', 'content_links_show_upload', 'content_links_hide_upload',
-                    'content_links_cite_post', 'content_links_download_file', 'content_links_first_posts',
-                    'content_links_last_posts', 'time_zone', 'content_links_expand_thread',
+                    'catalog_nav_top', 'catalog_nav_bottom', 'content_links_left_bracket', 'content_links_right_bracket',
+                    'content_links_reply', 'content_links_show_thread', 'content_links_hide_thread',
+                    'content_links_show_post', 'content_links_hide_post', 'content_links_show_file',
+                    'content_links_hide_file', 'content_links_show_embed', 'content_links_hide_embed',
+                    'content_links_show_upload_meta', 'content_links_hide_upload_meta', 'content_links_show_upload',
+                    'content_links_hide_upload', 'content_links_cite_post', 'content_links_download_file',
+                    'content_links_first_posts', 'content_links_last_posts', 'time_zone', 'content_links_expand_thread',
                     'content_links_collapse_thread', 'show_top_styles', 'show_bottom_styles', 'show_bottom_banners'];
                 $this->updateBoardConfigs($new_board_settings);
 
