@@ -1484,6 +1484,11 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         'Maximum time until user can no longer delete their post (seconds). 0 to disable.',
                         '{"type":"number"}']);
 
+                // Fix existing setting
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'boolean', 'limit_thread_uploads', '1',
+                        'Limit the number of uploads in a thread.', '{"type":"checkbox"}']);
+
                 $new_board_settings = ['allow_dice_rolls', 'max_dice', 'max_dice_sides', 'list_all_dice_rolls',
                     'preview_lazy_loading', 'show_file_category_max_sizes', 'name_field_label', 'email_field_label',
                     'subject_field_label', 'comment_field_label', 'password_field_label', 'files_form_label',
