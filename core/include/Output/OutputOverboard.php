@@ -23,7 +23,6 @@ class OutputOverboard extends Output
         $this->renderSetup();
         $this->setupTimer();
         $this->setBodyTemplate('index/index');
-        $this->render_data['page_language'] = $this->domain->locale();
         $sfw = $parameters['sfw'] ?? false;
         $overboard_id = $parameters['overboard_id'] ?? 'all';
         $this->render_data['show_catalog_link'] = $parameters['catalog'] ?? false;
@@ -81,8 +80,8 @@ class OutputOverboard extends Output
             $thread_input = array();
             $output_post = new OutputPost($thread_domain, $this->write_mode);
             $thread_input = array();
-            $thread_input['board_id'] = $thread->domain()->id();
-            $thread_input['board_url'] = NEL_BASE_WEB_PATH . $thread_domain->id() . '/';
+            $thread_input['board_uri'] = $thread->domain()->uri(true);
+            $thread_input['board_url'] = NEL_BASE_WEB_PATH . $thread->domain()->uri() . '/';
             $thread_input['board_safety'] = $thread_domain->setting('safety_level');
             $thread_input['thread_id'] = $thread->data('thread_id');
             $thread_input['thread_expand_id'] = 'thread-expand-' . $thread->contentID()->getIDString();

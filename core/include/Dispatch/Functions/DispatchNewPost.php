@@ -5,7 +5,7 @@ namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\BansAccess;
+use Nelliel\Bans\BansAccess;
 use Nelliel\DNSBL;
 use Nelliel\FGSFDS;
 use Nelliel\Snacks;
@@ -27,7 +27,7 @@ class DispatchNewPost extends Dispatch
     public function dispatch(array $inputs): void
     {
         $snacks = new Snacks($this->domain, new BansAccess(nel_database('core')));
-        $snacks->applyBan();
+        $snacks->applyBans();
         $dnsbl = new DNSBL(nel_database('core'));
         $dnsbl->checkIP(nel_request_ip_address());
 
@@ -43,7 +43,7 @@ class DispatchNewPost extends Dispatch
         if ($fgsfds->commandIsSet('noko') || $this->domain->setting('always_noko')) {
             if ($this->session->inModmode($this->domain)) {
                 $url = nel_build_router_url(
-                    [$this->domain->id(), $this->domain->reference('page_directory'),
+                    [$this->domain->uri(), $this->domain->reference('page_directory'),
                         $fgsfds->getCommandData('noko', 'topic'), $fgsfds->getCommandData('noko', 'topic')], false,
                     'modmode');
             } else {
@@ -54,7 +54,7 @@ class DispatchNewPost extends Dispatch
             }
         } else {
             if ($this->session->inModmode($this->domain)) {
-                $url = nel_build_router_url([$this->domain->id()], true, 'modmode');
+                $url = nel_build_router_url([$this->domain->uri()], true, 'modmode');
             } else {
                 $url = $this->domain->reference('board_directory') . '/' . NEL_MAIN_INDEX . NEL_PAGE_EXT;
             }

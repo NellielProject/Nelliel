@@ -20,10 +20,14 @@ class TableDomainRegistry extends Table
         $this->table_name = NEL_DOMAIN_REGISTRY_TABLE;
         $this->column_types = [
             'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'uri' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'display_uri' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'uri' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'display_uri' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
@@ -35,9 +39,12 @@ class TableDomainRegistry extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             domain_id   VARCHAR(50) NOT NULL,
+            uri         VARCHAR(255) DEFAULT NULL,
+            display_uri VARCHAR(255) DEFAULT NULL,
             notes       TEXT DEFAULT NULL,
-            moar        TEXT DEFAULT NULL,
-            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (domain_id)
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
+            CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (domain_id),
+            CONSTRAINT uc_domain_uri UNIQUE (uri)
         ) ' . $options . ';';
 
         return $schema;
@@ -49,7 +56,7 @@ class TableDomainRegistry extends Table
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow([Domain::SITE, hash('sha256', Domain::SITE), 'System domain. NEVER DELETE!']);
-        $this->insertDefaultRow([Domain::GLOBAL, hash('sha256', Domain::GLOBAL), 'System domain. NEVER DELETE!']);
+        $this->insertDefaultRow([Domain::SITE, 'site', 'Site', 'System domain. NEVER DELETE!']);
+        $this->insertDefaultRow([Domain::GLOBAL, 'global', 'Global', 'System domain. NEVER DELETE!']);
     }
 }

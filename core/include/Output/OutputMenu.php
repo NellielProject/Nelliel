@@ -23,15 +23,7 @@ class OutputMenu extends Output
         $options = array();
 
         foreach ($styles as $style) {
-            $option_data = array();
-            $option_data['option_value'] = $style->id();
-            $option_data['option_label'] = $style->info('name');
-
-            if ($option_data['option_value'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
+            $options[] = $this->createSelectOption($style->info('name'), $style->id(), $selected);
         }
 
         return $options;
@@ -43,15 +35,7 @@ class OutputMenu extends Output
         $options = array();
 
         foreach ($sets as $set) {
-            $option_data = array();
-            $option_data['option_value'] = $set->id();
-            $option_data['option_label'] = $set->info('name');
-
-            if ($option_data['option_value'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
+            $options[] = $this->createSelectOption($set->info('name'), $set->id(), $selected);
         }
 
         return $options;
@@ -63,15 +47,7 @@ class OutputMenu extends Output
         $options = array();
 
         foreach ($templates as $template) {
-            $option_data = array();
-            $option_data['option_value'] = $template->id();
-            $option_data['option_label'] = $template->info('name');
-
-            if ($option_data['option_value'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
+            $options[] = $this->createSelectOption($template->info('name'), $template->id(), $selected);
         }
 
         return $options;
@@ -83,15 +59,7 @@ class OutputMenu extends Output
         $options = array();
 
         foreach ($timezones as $timezone) {
-            $option_data = array();
-            $option_data['option_value'] = $timezone;
-            $option_data['option_label'] = $timezone;
-
-            if ($option_data['option_value'] === $selected) {
-                $option_data['option_selected'] = 'selected';
-            }
-
-            $options[] = $option_data;
+            $options[] = $this->createSelectOption($timezone, $timezone, $selected);
         }
 
         return $options;
@@ -102,9 +70,8 @@ class OutputMenu extends Output
         $this->renderSetup();
         $styles = $this->domain->frontEndData()->getAllStyles(true);
         $render_data = array();
-        $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '');
-        $default_style = $this->domain->id() === Domain::GLOBAL ? nel_site_domain()->setting('default_style') : $this->domain->setting(
-            'default_style'); // TODO: Better solution
+        $enabled_styles = json_decode($this->domain->setting('enabled_styles') ?? '', true);
+        $default_style = $this->domain->setting('default_style');
 
         foreach ($styles as $style) {
             if ($this->domain->id() !== Domain::SITE && $this->domain->id() !== Domain::GLOBAL &&
@@ -127,52 +94,84 @@ class OutputMenu extends Output
         return $render_data;
     }
 
+    public function wordfilterActions(string $selected): array
+    {
+        $actions = array();
+        $actions['select_name'] = 'filter_action';
+        $actions['options'][] = $this->createSelectOption(__('Replace'), 'replace', $selected);
+        $actions['options'][] = $this->createSelectOption(__('Reject'), 'reject', $selected);
+        return $actions;
+    }
+
+    public function fileFilterActions(string $selected): array
+    {
+        $actions = array();
+        $actions['select_name'] = 'filter_action';
+        $actions['options'][] = $this->createSelectOption(__('Reject'), 'reject', $selected);
+        return $actions;
+    }
+
     public function fgsfds(array $parameters, bool $data_only)
     {
         $this->renderSetup();
+        $selected = '';
         $options = array();
-        $option_none = array();
-        $option_none['option_label'] = '';
-        $option_none['option_value'] = '';
-        $options[] = $option_none;
-        $option_noko = array();
-        $option_noko['option_label'] = 'noko';
-        $option_noko['option_value'] = 'noko';
-        $options[] = $option_noko;
-        $option_sage = array();
-        $option_sage['option_label'] = 'sage';
-        $option_sage['option_value'] = 'sage';
-        $options[] = $option_sage;
-        $option_noko_sage = array();
-        $option_noko_sage['option_label'] = 'noko + sage';
-        $option_noko_sage['option_value'] = 'noko sage';
-        $options[] = $option_noko_sage;
+        $options[] = $this->createSelectOption(__(''), '', $selected);
+        $options[] = $this->createSelectOption(__('noko'), 'noko', $selected);
+        $options[] = $this->createSelectOption(__('sage'), 'sage', $selected);
+        $options[] = $this->createSelectOption(__('noko + sage'), 'noko sage', $selected);
         return $options;
     }
 
     public function boards(string $name, string $selected, bool $data_only): array
     {
         $board_data = $this->database->executeFetchAll(
-            'SELECT "board_id", "board_uri" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_ASSOC);
+            'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
         $boards = array();
         $boards['select_name'] = $name;
-        $option_none = array();
-        $option_none['option_label'] = '';
-        $option_none['option_value'] = '';
-        $boards['options'][] = $option_none;
+        $boards['options'] = $this->createSelectOption('', '', $selected);
 
         foreach ($board_data as $board) {
-            $board_option = array();
-
-            if ($selected === $board['board_id']) {
-                $board_option['option_selected'] = 'selected';
-            }
-
-            $board_option['option_label'] = $board['board_uri'];
-            $board_option['option_value'] = $board['board_id'];
-            $boards['options'][] = $board_option;
+            $domain = Domain::getDomainFromID($board, $this->database);
+            $boards['options'] = $this->createSelectOption($domain->uri(), $domain->uri(), $selected);
         }
 
         return $boards;
+    }
+
+    public function markupOptions(string $selected, bool $html, bool $data_only): array
+    {
+        $this->renderSetup();
+        $markup_options = array();
+        $markup_options['select_name'] = 'markup_type';
+        $markup_options['options'][] = $this->createSelectOption(__('None'), 'none', $selected);
+
+        if ($html) {
+            $markup_options['options'][] = $this->createSelectOption(__('HTML'), 'html', $selected);
+        }
+
+        $markup_options['options'][] = $this->createSelectOption(__('Imageboard'), 'imageboard', $selected);
+        return $markup_options;
+    }
+
+    public function markupTypes(string $selected, bool $data_only): array
+    {
+        $this->renderSetup();
+        $markup_types = array();
+        $markup_types['select_name'] = 'type';
+        $markup_types['options'][] = $this->createSelectOption(__('Block'), 'block', $selected);
+        $markup_types['options'][] = $this->createSelectOption(__('Line'), 'line', $selected);
+        $markup_types['options'][] = $this->createSelectOption(__('Simple'), 'simple', $selected);
+        $markup_types['options'][] = $this->createSelectOption(__('Loop'), 'loop', $selected);
+        return $markup_types;
+    }
+
+    private function createSelectOption(string $label, string $value, string $selected): array
+    {
+        $option = array();
+        $option['option_label'] = $label;
+        $option['option_value'] = $value;
+        $option['option_selected'] = $selected === $value ? 'selected' : '';
+        return $option;
     }
 }

@@ -1,30 +1,5 @@
 <nav class="site-navigation">
-	<span class="text-button">[<a href="{{ home_url }}" target="_top" data-i18n="">Home</a>]</span>
-	<span class="text-button">[<a href="{{ news_url }}" data-i18n="">News</a>]</span>
-	<span class="text-button">[<a href="{{ faq_url }}" data-i18n="">FAQ</a>]</span>
-{{# overboard_active }}
-	<span class="text-button">[<a href="{{ overboard_url }}" data-i18n="">Overboard</a>]</span>
-{{/ overboard_active }}
-{{# sfw_overboard_active }}
-	<span class="text-button">[<a href="{{ sfw_overboard_url }}" data-i18n="">SFW Overboard</a>]</span>
-{{/ sfw_overboard_active }}
-	<span class="text-button">[<a href="{{ about_nelliel_url }}" data-i18n="">About Nelliel</a>]</span>
-	<span class="text-button">[<a href="{{ blank_page_url }}" data-i18n="">Blank Page</a>]</span>
-{{^ session_active }}
-	<span class="text-button">[<a href="{{ account_url }}" data-i18n="">Account</a>]</span>
-{{/ session_active }}
-
+{{# link_data }}
+	{{> pieces/bracketed_link }}
+{{/ link_data }}
 </nav>
-{{# session_active }}
-<nav class="site-navigation">
-	<span class="text-button">[<a href="{{ account_url }}" data-i18n="">Account</a>]</span>
-	<span class="text-button">[<a href="{{ site_panel_url }}" data-i18n="">Site Panel</a>]</span>
-	<span class="text-button">[<a href="{{ global_panel_url }}" data-i18n="">Global Panel</a>]</span>
-	<span class="text-button">[<a href="{{ boardlist_url }}" data-i18n="">Board List</a>]</span>
-	{{# board_area }}
-	<span class="text-button">[<a href="{{ board_panel_url }}" data-i18n="">Board Panel</a>]</span>
-	{{/ board_area }}
-	<span class="text-button">[<a href="{{ logout_url }}" data-i18n="">Logout</a>]</span>
-</nav>
-{{/ session_active }}
-

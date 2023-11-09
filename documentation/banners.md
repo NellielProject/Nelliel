@@ -4,4 +4,4 @@ Banners are images which can be displayed at the top and/or bottom of public pag
 ## Uploading
 To add site banners, put the files in `public/assets/banners/site`.
 
-To add board banners, put the files in `public/assets/banners/<board uri>`.
+To add board banners, put the files in `public/assets/banners/<board id>`.

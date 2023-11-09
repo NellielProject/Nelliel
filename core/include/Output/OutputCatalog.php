@@ -38,7 +38,7 @@ class OutputCatalog extends Output
         $this->render_data['header']['name'] = _gettext('Catalog of') . ' ' . $this->render_data['header']['name'];
         $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
         $this->render_data['page_navigation'] = $output_navigation->boardPages(
-            ['in_modmode' => $this->render_data['in_modmode']], $data_only);
+            ['in_modmode' => $this->render_data['in_modmode'], 'display' => 'catalog'], $data_only);
         $thread_count = 1;
 
         foreach ($this->domain->activeThreads(true) as $thread) {
@@ -48,10 +48,11 @@ class OutputCatalog extends Output
 
             $thread_data = array();
             $post = $thread->firstPost();
-            $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
 
             if ($this->session->inModmode($this->domain) && !$this->writeMode()) {
-                $thread_data['open_url'] .= '&modmode=true';
+                $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain), false, 'modmode');
+            } else {
+                $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
             }
 
             $thread_data['first_post_subject'] = $post->data('subject');

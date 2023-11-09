@@ -45,7 +45,7 @@ class TableNoticeboard extends Table
             time        BIGINT NOT NULL,
             subject     TEXT NOT NULL,
             message     TEXT NOT NULL,
-            moar        TEXT DEFAULT NULL,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (notice_id),
             CONSTRAINT fk_noticeboard__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)

@@ -5,11 +5,11 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Bans\BansAccess;
 use Nelliel\Domains\Domain;
 use DateInterval;
 use DateTime;
 use PDO;
-use Nelliel\BansAccess;
 
 class OutputBanPage extends Output
 {
@@ -29,8 +29,8 @@ class OutputBanPage extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
-        $this->render_data['ban_board'] = ($ban_hammer->getData('board_id') === Domain::GLOBAL) ? _gettext('All Boards') : $ban_hammer->getData(
-            'board_id');
+        $this->render_data['ban_board'] = $ban_hammer->getData('board_id');
+        $this->render_data['global'] = $ban_hammer->getData('board_id') === Domain::GLOBAL;
         $this->render_data['ban_time'] = $this->domain->domainDateTime(intval($ban_hammer->getData('start_time')))->format(
             $this->domain->setting('ban_page_time_format'));
         $this->render_data['ban_id'] = $ban_hammer->getData('ban_id');
@@ -100,7 +100,7 @@ class OutputBanPage extends Output
             } else if ($ban_hammer->getData('length') < $this->domain->setting('min_time_before_ban_appeal') ||
                 time() - $ban_hammer->getData('start_time') < $this->domain->setting('min_time_before_ban_appeal')) {
                 $this->render_data['min_time_not_met'] = true;
-            } else if ($ban_hammer->getData('ip_type') == BansAccess::RANGE &&
+            } else if ($ban_hammer->getData('ban_type') == BansAccess::RANGE &&
                 !$this->domain->setting('allow_ip_range_ban_appeals')) {
                 $this->render_data['no_ip_range'] = true;
             } else {

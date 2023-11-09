@@ -3,12 +3,10 @@ declare(strict_types = 1);
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Domains\DomainSite;
-
 // TODO: Remove when minimum moves to PHP 7.4
 if (!function_exists('hash_equals')) {
 
-    function hash_equals(string $known_string, string $user_string)
+    function hash_equals(string $known_string, string $user_string): bool
     {
         if (strlen($known_string) != utf8_strlen($user_string)) {
             return false;
@@ -25,79 +23,86 @@ if (!function_exists('hash_equals')) {
     }
 }
 
-function nel_set_password_algorithm(string $algorithm): void
+function nel_password_hash(string $password, string $algorithm, array $options = array(), bool $new_hash = false)
 {
-    if (defined('NEL_PASSWORD_ALGORITHM')) {
-        return;
+    static $hashes = array();
+
+    if (isset($options['pepper'])) {
+        $password = nel_prehash($password, $options['pepper'], 'sha256');
     }
 
-    if ($algorithm === 'ARGON2') {
-        if (defined('PASSWORD_ARGON2ID')) {
-            define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2ID);
-            return;
-        } else if (defined('PASSWORD_ARGON2I')) {
-            define('NEL_PASSWORD_ALGORITHM', PASSWORD_ARGON2I);
-            return;
-        }
+    if (!$new_hash && array_key_exists($password, $hashes)) {
+        return $hashes[$password];
     }
 
-    if (!defined('NEL_PASSWORD_ALGORITHM') || $algorithm === 'BCRYPT') {
-        if (defined('PASSWORD_BCRYPT')) {
-            define('NEL_PASSWORD_ALGORITHM', PASSWORD_BCRYPT);
-            return;
-        }
+    $hash = password_hash($password, $algorithm, $options);
+
+    if ($hash !== false) {
+        $hashes[$password] = $hash;
     }
 
-    if (defined('PASSWORD_DEFAULT')) {
-        define('NEL_PASSWORD_ALGORITHM', PASSWORD_DEFAULT);
-    } else {
-        nel_derp(101, _gettext("No acceptable password hashing algorithm has been found. We can't function like this."));
-    }
+    return $hash;
 }
 
-function nel_password_hash(string $password, int $algorithm, array $options = array())
+function nel_password_verify(string $password, string $hash, string $pepper = null, bool $new_pass = false): bool
 {
-    switch ($algorithm) {
-        case PASSWORD_BCRYPT:
-            $options['cost'] = $options['cost'] ?? NEL_PASSWORD_BCRYPT_COST;
-            return password_hash($password, $algorithm, $options);
+    static $passwords = array();
 
-        case PASSWORD_ARGON2I:
-        case PASSWORD_ARGON2ID:
-            $options['memory_cost'] = $options['memory_cost'] ?? NEL_PASSWORD_ARGON2_MEMORY_COST;
-            $options['time_cost'] = $options['time_cost'] ?? NEL_PASSWORD_ARGON2_TIME_COST;
-            $options['threads'] = $options['threads'] ?? NEL_PASSWORD_ARGON2_THREADS;
-            return password_hash($password, $algorithm, $options);
-
-        default:
-            return false;
+    if (!is_null($pepper)) {
+        $password = nel_prehash($password, $pepper, 'sha256');
     }
-}
 
-function nel_password_verify(string $password, string $hash): bool
-{
+    if (!$new_pass && array_key_exists($hash, $passwords) && hash_equals($passwords[$hash], $password)) {
+        return true;
+    }
+
+    if ($new_pass || !isset($passwords[$hash])) {
+        $passwords[$hash] = $password;
+    }
+
     return password_verify($password, $hash);
 }
 
-function nel_password_needs_rehash(string $password, int $algorithm, array $options = array()): bool
+function nel_password_needs_rehash(string $password, string $algorithm, array $options = array()): bool
 {
-    $site_domain = new DomainSite(nel_database('core'));
-
-    if (!$site_domain->setting('do_password_rehash')) {
+    if (!nel_site_domain()->setting('do_password_rehash')) {
         return false;
     }
 
     return password_needs_rehash($password, $algorithm);
 }
 
-function nel_ip_hash(string $ip_address)
+function nel_ip_hash(string $ip_address, bool $new_hash = false): string
 {
-    $hashed_ip = hash_hmac('sha256', $ip_address, NEL_IP_ADDRESS_PEPPER);
-    return utf8_substr($hashed_ip, 0, 32);
+    static $hashes = array();
+
+    if (!$new_hash && array_key_exists($ip_address, $hashes)) {
+        return $hashes[$ip_address];
+    }
+
+    if (!nel_crypt_config()->IPHashOptions()['strong_hashing']) {
+        return nel_prehash($ip_address, nel_crypt_config()->IPHashOptions()['pepper'], 'sha256');
+    }
+
+    // Bcrypt provides salting that can compensate for the small IPv4 space but we can't compare IP hashes when salted in the normal manner.
+    // So for this specific case we pass a constant value for the salt, then keep only the output hash so it functions as a pepper.
+    // Based on NPFChan
+
+    $pepper = nel_crypt_config()->IPHashOptions()['pepper'];
+
+    if (nel_crypt_config()->IPHashOptions()['ip_strong_algorithm'] === PASSWORD_BCRYPT) {
+        $pepper = preg_replace('/[^\$\.\/0-9A-Za-z]/', '/', $pepper);
+    }
+
+    $full_hash = crypt($ip_address, '$2y$' . nel_crypt_config()->IPHashOptions()['cost'] . '$' . $pepper . '$');
+    $modified_hash = preg_replace('/[.\/]/', '_', $full_hash);
+    $hashes[$ip_address] = utf8_substr($modified_hash, -31);
+
+    return $hashes[$ip_address];
 }
 
-function nel_post_password_hash(string $password): string
+function nel_prehash(string $string, string $pepper, string $algorithm = 'sha256'): string
 {
-    $hashed_password = hash_hmac('sha256', $password, NEL_POST_PASSWORD_PEPPER);
-    return $hashed_password;
+    $hmac = hash_hmac($algorithm, $string, $pepper, true);
+    return base64_encode($hmac);
 }

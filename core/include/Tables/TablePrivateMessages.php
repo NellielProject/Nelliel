@@ -48,7 +48,7 @@ class TablePrivateMessages extends Table
             message         TEXT NOT NULL,
             time_sent       BIGINT NOT NULL,
             message_read    SMALLINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (message_id),
             CONSTRAINT fk_private_messages__users
             FOREIGN KEY (sender) REFERENCES ' . NEL_USERS_TABLE . ' (username)

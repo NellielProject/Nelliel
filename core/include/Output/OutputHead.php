@@ -35,8 +35,15 @@ class OutputHead extends Output
             nelliel.setup.doImportantStuff();});';
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
         $this->render_data['stylesheets'] = $output_menu->styles([], true);
-        $this->render_data['show_favicon'] = $this->domain->setting('show_favicon');
-        $this->render_data['favicon_url'] = $this->domain->setting('favicon') ?? '';
+        $this->render_data['show_favicon'] = $this->domain->setting('show_favicon') &&
+            !nel_true_empty($this->domain->setting('favicon'));
+
+        if (nel_is_absolute_url($this->domain->setting('favicon') ?? '')) {
+            $this->render_data['favicon_url'] = $this->domain->setting('favicon');
+        } else {
+            $this->render_data['favicon_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('favicon');
+        }
+
         $this->render_data['page_title'] = $page_title;
         return $this->output('head', $data_only, true, $this->render_data);
     }

@@ -20,8 +20,8 @@ class OutputCAPTCHA extends Output
         $this->renderSetup();
         $this->setupTimer();
         $area = $parameters['area'];
-        $this->render_data['captcha_gen_url'] = nel_build_router_url([$this->domain->id(), 'captcha', 'get']);
-        $this->render_data['captcha_regen_url'] = nel_build_router_url([$this->domain->id(), 'captcha', 'regenerate']);
+        $this->render_data['captcha_gen_url'] = nel_build_router_url([$this->domain->uri(), 'captcha', 'get']);
+        $this->render_data['captcha_regen_url'] = nel_build_router_url([$this->domain->uri(), 'captcha', 'regenerate']);
         $captchas = array();
 
         if ($this->site_domain->setting('use_native_captcha')) {

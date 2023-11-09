@@ -6,12 +6,12 @@
 	{{/ video_preview }}
 	{{# image_preview }}
 	<a href="{{ file_url }}" target="_blank" class="preview-link">
-	<img id="preview-{{ file_content_id }}" src="{{ preview_url }}" width="{{ preview_width }}" height="{{ preview_height }}" data-command="inline-expand" data-alt-dims="{{ other_dims }}" data-alt-src="{{ other_loc }}" data-alt-tag="{{ alt_tag }}">
+	<img id="preview-{{ file_content_id }}" src="{{ preview_url }}" alt="{{ preview_alt_text }}" width="{{ preview_width }}" height="{{ preview_height }}" data-command="inline-expand" data-alt-dims="{{ other_dims }}" data-alt-src="{{ other_loc }}" data-alt-tag="{{ alt_tag }}" loading="{{ preview_loading }}">
 	</a>
 	{{/ image_preview }}
 	{{# unsized_image_preview }}
 	<a href="{{ file_url }}" target="_blank" class="preview-link">
-	<img id="preview-{{ file_content_id }}" src="{{ preview_url }}" data-command="inline-expand" data-alt-dims="{{ other_dims }}" data-alt-src="{{ other_loc }}" data-alt-tag="{{ alt_tag }}" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;">
+	<img id="preview-{{ file_content_id }}" src="{{ preview_url }}" alt="{{ preview_alt_text }}" data-command="inline-expand" data-alt-dims="{{ other_dims }}" data-alt-src="{{ other_loc }}" data-alt-tag="{{ alt_tag }}" style="max-width:{{ max_width }}px; max-height:{{ max_height }}px;" loading="{{ preview_loading }}">
 	</a>
 	{{/ unsized_image_preview }}
 </div>

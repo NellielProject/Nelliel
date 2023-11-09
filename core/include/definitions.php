@@ -5,10 +5,13 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 // Everything in this file should a hard-coded constant
 
+define('NEL_DEFAULT_LOCALE', 'en_US');
+
 define('NEL_LIBRARY_PATH', NEL_CORE_PATH . 'libraries/'); // Provided libraries path
 define('NEL_VENDOR_PATH', NEL_BASE_PATH . 'vendor/'); // Composer vendor path
 
 define('OVER_9000', 9001);
+define('NEL_VISITOR_ID_VERSION', 1);
 define('NEL_HELLIPSIS', '…');
 define('NEL_ASSETS_DIR', 'assets');
 define('NEL_STYLES_DIR', 'styles');
@@ -43,26 +46,28 @@ define('NEL_EMBEDS_TABLE', 'nelliel_embeds');
 define('NEL_FILE_FILTERS_TABLE', 'nelliel_file_filters');
 define('NEL_FILETYPES_TABLE', 'nelliel_filetypes');
 define('NEL_FILETYPE_CATEGORIES_TABLE', 'nelliel_filetype_categories');
+define('NEL_GLOBAL_RECENTS_TABLE', 'nelliel_global_recents');
 define('NEL_IMAGE_SETS_TABLE', 'nelliel_image_sets');
+define('NEL_IP_INFO_TABLE', 'nelliel_ip_info');
 define('NEL_IP_NOTES_TABLE', 'nelliel_ip_notes');
 define('NEL_MARKUP_TABLE', 'nelliel_markup');
 define('NEL_NEWS_TABLE', 'nelliel_news');
 define('NEL_NOTICEBOARD_TABLE', 'nelliel_noticeboard');
+define('NEL_OVERBOARD_TABLE', 'nelliel_overboard');
 define('NEL_PAGES_TABLE', 'nelliel_pages');
 define('NEL_PERMISSIONS_TABLE', 'nelliel_permissions');
 define('NEL_PLUGINS_TABLE', 'nelliel_plugins');
 define('NEL_PRIVATE_MESSAGES_TABLE', 'nelliel_private_messages');
 define('NEL_PUBLIC_LOGS_TABLE', 'nelliel_public_logs');
-define('NEL_OVERBOARD_TABLE', 'nelliel_overboard');
-define('NEL_R9K_MUTES_TABLE', 'nelliel_r9k_mutes');
 define('NEL_R9K_CONTENT_TABLE', 'nelliel_r9k_content');
+define('NEL_R9K_MUTES_TABLE', 'nelliel_r9k_mutes');
 define('NEL_RATE_LIMIT_TABLE', 'nelliel_rate_limit');
 define('NEL_REPORTS_TABLE', 'nelliel_reports');
 define('NEL_ROLE_PERMISSIONS_TABLE', 'nelliel_role_permissions');
 define('NEL_ROLES_TABLE', 'nelliel_roles');
 define('NEL_SCRIPTS_TABLE', 'nelliel_scripts');
-define('NEL_SETTINGS_TABLE', 'nelliel_settings');
 define('NEL_SETTING_OPTIONS_TABLE', 'nelliel_setting_options');
+define('NEL_SETTINGS_TABLE', 'nelliel_settings');
 define('NEL_SITE_CONFIG_TABLE', 'nelliel_site_config');
 define('NEL_STATISTICS_TABLE', 'nelliel_statistics');
 define('NEL_STYLES_TABLE', 'nelliel_styles');
@@ -71,6 +76,7 @@ define('NEL_TEMPLATES_TABLE', 'nelliel_templates');
 define('NEL_USER_ROLES_TABLE', 'nelliel_user_roles');
 define('NEL_USERS_TABLE', 'nelliel_users');
 define('NEL_VERSIONS_TABLE', 'nelliel_version');
+define('NEL_VISITOR_INFO_TABLE', 'nelliel_visitor_info');
 define('NEL_WORDFILTERS_TABLE', 'nelliel_wordfilters');
 
 define('NEL_ASSETS_FILES_PATH', NEL_PUBLIC_PATH . NEL_ASSETS_DIR . '/');

@@ -8,9 +8,16 @@
 {{# site_navigation }}
 	{{> navigation/site_links }}
 {{/ site_navigation }}
+{{# account_navigation }}
+	{{> navigation/account_links }}
+{{/ account_navigation }}
 {{> pieces/top_banners }}
-<h1 class="header-name">{{ name }}</h1>
-<h2 class="header-description">{{ description }}</h2>
+{{# name }}
+<h1 class="header-name">{{{ name }}}</h1>
+{{/ name }}
+{{# description }}
+<h2 class="header-description">{{{ description }}}</h2>
+{{/ description }}
 </header>
 {{^ overboard }}
 <hr class="clear">

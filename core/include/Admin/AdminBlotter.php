@@ -73,7 +73,7 @@ class AdminBlotter extends Admin
 
         switch ($perm) {
             case 'perm_manage_blotter':
-                nel_derp(315, _gettext('You do not have permission to manage blotter entries.'));
+                nel_derp(315, _gettext('You do not have permission to manage blotter entries.'), 403);
 
             default:
                 $this->defaultPermissionError();

@@ -29,8 +29,8 @@ class TablePosts extends Table
             'email' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'subject' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'comment' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
             'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
             'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'post_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'post_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
@@ -57,8 +57,8 @@ class TablePosts extends Table
             'email' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'subject' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'comment' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'post_time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'post_time_milli' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -93,9 +93,9 @@ class TablePosts extends Table
             email               VARCHAR(255) DEFAULT NULL,
             subject             VARCHAR(255) DEFAULT NULL,
             comment             ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
+            hashed_ip_address   VARCHAR(128) DEFAULT NULL,
             ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
-            hashed_ip_address   VARCHAR(128) NOT NULL,
-            visitor_id          VARCHAR(128) NOT NULL,
+            visitor_id          VARCHAR(128) DEFAULT NULL,
             post_time           BIGINT NOT NULL,
             post_time_milli     SMALLINT NOT NULL,
             total_uploads       SMALLINT NOT NULL DEFAULT 0,
@@ -108,7 +108,7 @@ class TablePosts extends Table
             mod_comment         TEXT DEFAULT NULL,
             regen_cache         SMALLINT NOT NULL DEFAULT 0,
             cache               ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (post_number),
             CONSTRAINT fk_' . $this->table_name . '__threads
             FOREIGN KEY (parent_thread) REFERENCES ' . $other_tables['threads_table'] . ' (thread_id)
@@ -116,6 +116,14 @@ class TablePosts extends Table
             ON DELETE CASCADE,
             CONSTRAINT fk_' . $this->table_name . '__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
+            CONSTRAINT fk_' . $this->table_name . '__ip_info
+            FOREIGN KEY (hashed_ip_address) REFERENCES ' . NEL_IP_INFO_TABLE . ' (hashed_ip_address)
+            ON UPDATE CASCADE
+            ON DELETE SET NULL,
+            CONSTRAINT fk_' . $this->table_name . '__visitor_info
+            FOREIGN KEY (visitor_id) REFERENCES ' . NEL_VISITOR_INFO_TABLE . ' (visitor_id)
             ON UPDATE CASCADE
             ON DELETE SET NULL
         ) ' . $options . ';';

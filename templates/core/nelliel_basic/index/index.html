@@ -11,4 +11,12 @@
 	{{> navigation/board_pages }}
 {{/ index_navigation_top }}
 <hr class="clear">
+<form class="content-page" accept-charset="utf-8" action="{{ form_action }}" method="post">
 	{{> index/threads }}
+{{# index_navigation_bottom }}
+	{{> navigation/board_pages }}
+{{/ index_navigation_bottom }}
+{{# footer_form }}
+	{{> thread/footer_form }}
+{{/ footer_form }}
+</form>

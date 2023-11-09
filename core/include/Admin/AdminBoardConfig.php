@@ -35,6 +35,7 @@ class AdminBoardConfig extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_modify_board_config');
         $lock_override = $this->session_user->checkPermission($this->domain, 'perm_manage_board_config_override');
+        $user_can_raw_html = $this->session_user->checkPermission($this->domain, 'perm_raw_html');
         $prepared = $this->database->prepare(
             'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
                 LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
@@ -50,26 +51,30 @@ class AdminBoardConfig extends Admin
 
         foreach ($board_settings as $setting) {
             $setting_name = $setting['setting_name'];
+            $store_raw = (bool) nel_form_input_default($_POST[$setting_name]['store_raw'] ?? array());
+            $status_change = false;
 
             if (!isset($_POST[$setting_name])) {
                 continue;
             }
 
-            $old_value = $setting['setting_value'];
+            $old_value = nel_typecast($setting['setting_value'], $setting['data_type']);
             $new_value = $_POST[$setting_name];
 
             if ($setting_name === 'enabled_filetypes') {
                 $filetypes_array = array();
 
                 foreach ($new_value as $category => $entries) {
-                    $category_enabled = nel_form_input_default($entries['enabled']) === '1';
-                    $filetypes_array[$category]['enabled'] = $category_enabled;
+                    if ($category === 'lock' || $category === 'force_update') {
+                        continue;
+                    }
+
+                    $filetypes_array[$category]['enabled'] = nel_form_input_default($entries['enabled']) === '1';
+                    $filetypes_array[$category]['max_size'] = intval($entries['max_size']);
                     $formats = $entries['formats'] ?? array();
 
-                    foreach ($formats as $format => $enabled) {
-                        $format_enabled = nel_form_input_default($enabled) === '1';
-
-                        if ($format_enabled) {
+                    foreach ($formats as $format => $entries) {
+                        if (nel_form_input_default($entries['enabled']) === '1') {
                             $filetypes_array[$category]['formats'][] = $format;
                         }
                     }
@@ -101,20 +106,27 @@ class AdminBoardConfig extends Admin
 
                 $new_value = json_encode($content_ops_array);
             } else {
-                if (is_array($new_value)) {
-                    $new_value = nel_form_input_default($new_value);
+                $new_value = nel_form_input_default($new_value);
+                $new_value = nel_typecast($new_value, $setting['data_type']);
+                $value_change = $old_value != $new_value;
+
+                if (!$user_can_raw_html) {
+                    $store_raw = (bool) $setting['stored_raw'];
                 }
 
-                $new_value = nel_typecast($new_value, $setting_name);
-
-                if (is_string($new_value) && !$this->session_user->checkPermission($this->domain, 'perm_raw_html') &&
-                    ($setting['raw_output'] ?? false)) {
-                    $new_value = htmlspecialchars($new_value, ENT_QUOTES, 'UTF-8');
+                if ((bool) $setting['stored_raw'] !== $store_raw) {
+                    $status_change = true;
                 }
             }
 
-            if ($old_value != $new_value) {
-                $this->updateSetting($this->domain, $setting_name, $new_value, $lock_override);
+            if ($value_change || $status_change) {
+                if (is_string($new_value)) {
+                    if (!$store_raw || !$user_can_raw_html || !($setting['raw_output'] ?? false)) {
+                        $new_value = htmlspecialchars($new_value, ENT_QUOTES, 'UTF-8');
+                    }
+                }
+
+                $this->updateSetting($this->domain, $setting_name, $new_value, $lock_override, (int) $store_raw);
                 $changes ++;
             }
         }
@@ -138,7 +150,7 @@ class AdminBoardConfig extends Admin
 
         switch ($perm) {
             case 'perm_modify_board_config':
-                nel_derp(310, _gettext('You are not allowed to modify the board configuration.'));
+                nel_derp(310, _gettext('You are not allowed to modify the board configuration.'), 403);
                 break;
 
             default:
@@ -146,19 +158,22 @@ class AdminBoardConfig extends Admin
         }
     }
 
-    private function updateSetting(Domain $domain, $config_name, $setting, $lock_override)
+    private function updateSetting(Domain $domain, $config_name, $setting, bool $lock_override, int $store_raw)
     {
-        // TODO: Bind to string instead of cast
         if ($lock_override) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . $domain->reference('config_table') .
-                '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ?');
-            $this->database->executePrepared($prepared, [(string) $setting, $config_name, $domain->id()]);
+                '" SET "setting_value" = ?, "stored_raw" = ? WHERE "setting_name" = ? AND "board_id" = ?');
         } else {
             $prepared = $this->database->prepare(
                 'UPDATE "' . $domain->reference('config_table') .
-                '" SET "setting_value" = ? WHERE "setting_name" = ? AND "board_id" = ? AND "edit_lock" = 0');
-            $this->database->executePrepared($prepared, [(string) $setting, $config_name, $domain->id()]);
+                '" SET "setting_value" = ?, "stored_raw" = ? WHERE "setting_name" = ? AND "board_id" = ? AND "edit_lock" = 0');
         }
+
+        $prepared->bindValue(1, $setting, PDO::PARAM_STR);
+        $prepared->bindValue(2, $store_raw, PDO::PARAM_INT);
+        $prepared->bindValue(3, $config_name, PDO::PARAM_STR);
+        $prepared->bindValue(4, $domain->id(), PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
     }
 }

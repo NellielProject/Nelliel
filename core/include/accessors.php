@@ -3,7 +3,11 @@ declare(strict_types = 1);
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use IPTools\IP;
+use IPTools\Network;
 use Monolog\Logger;
+use Nelliel\CryptConfig;
+use Nelliel\DatabaseConfig;
 use Nelliel\API\Plugin\PluginAPI;
 use Nelliel\Account\Session;
 use Nelliel\Database\DatabaseConnector;
@@ -19,7 +23,7 @@ function nel_database(string $database_key): NellielPDO
     static $database_connections = array();
 
     if (!array_key_exists($database_key, $database_connections)) {
-        $new_connector = new DatabaseConnector();
+        $new_connector = new DatabaseConnector(new DatabaseConfig());
         $database_connections[$database_key] = $new_connector->getConnection($database_key);
     }
 
@@ -59,24 +63,47 @@ function nel_global_domain(bool $renew = false): DomainGlobal
     return $global_domain;
 }
 
-function nel_request_ip_address(bool $hashed = false): string
+function nel_request_ip_address(bool $hashed = false, bool $single_ip = false): string
 {
-    static $ip_address;
+    static $single_ip_address;
+    static $effective_ip_address;
     static $hashed_ip_address;
+
+    if (!isset($single_ip_address)) {
+        $single_ip_address = $_SERVER['REMOTE_ADDR'];
+    }
+
+    if (!isset($effective_ip_address)) {
+        $effective_ip_address = nel_effective_ip($single_ip_address);
+    }
+
+    if ($single_ip) {
+        return $single_ip_address;
+    }
 
     if ($hashed) {
         if (!isset($hashed_ip_address)) {
-            $hashed_ip_address = nel_ip_hash($_SERVER['REMOTE_ADDR']);
+            $hashed_ip_address = nel_ip_hash($effective_ip_address);
         }
 
         return $hashed_ip_address;
-    } else {
-        if (!isset($ip_address)) {
-            $ip_address = $_SERVER['REMOTE_ADDR'];
-        }
-
-        return $ip_address;
     }
+
+    return $effective_ip_address;
+}
+
+function nel_effective_ip(string $ip_address): string
+{
+    $ip = new IP($ip_address);
+
+    if ($ip->getVersion() === IP::IP_V6) {
+        $effective_ip_address = Network::parse(
+            $ip_address . '/' . nel_site_domain()->setting('ipv6_identification_cidr'))->getCIDR();
+    } else {
+        $effective_ip_address = $ip_address;
+    }
+
+    return $effective_ip_address;
 }
 
 function nel_utilities(): Utilities
@@ -115,12 +142,18 @@ function nel_logger(string $channel): Logger
     return $loggers[$channel];
 }
 
-function nel_visitor_id(bool $regenerate = false): string
+function nel_visitor_id(bool $regenerate = false, int $version = NEL_VISITOR_ID_VERSION): string
 {
     static $visitor_id;
 
     if ($regenerate) {
-        $visitor_id = hash('sha256', (random_bytes(16)));
+        switch($version) {
+            case 1:
+                $visitor_id = base64_encode(hash('sha256', (random_bytes(16)), true));
+                $visitor_id = 'vid1>' . utf8_substr($visitor_id, 0, 24);
+                break;
+        }
+
         setcookie('visitor-id', $visitor_id, time() + nel_site_domain()->setting('visitor_id_lifespan'),
             NEL_BASE_WEB_PATH . '; samesite=strict', '', false, true);
     }
@@ -130,4 +163,15 @@ function nel_visitor_id(bool $regenerate = false): string
     }
 
     return $visitor_id;
+}
+
+function nel_crypt_config(bool $reload = false): CryptConfig
+{
+    static $crypt_config;
+
+    if (!isset($crypt_config) || $reload) {
+        $crypt_config = new CryptConfig();
+    }
+
+    return $crypt_config;
 }

@@ -14,10 +14,7 @@ class DomainSite extends Domain implements NellielCacheInterface
 
     public function __construct(NellielPDO $database)
     {
-        $this->domain_id = Domain::SITE;
-        $this->database = $database;
-        $this->utilitySetup();
-        $this->locale();
+        parent::__construct(Domain::SITE, $database);
         $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))->getPath());
     }
 
@@ -33,12 +30,14 @@ class DomainSite extends Domain implements NellielCacheInterface
         }
 
         $this->settings = $settings;
+        $this->updateLocale($this->setting('locale'));
     }
 
     protected function loadReferences(): void
     {
         $new_reference = array();
         $new_reference['base_path'] = NEL_PUBLIC_PATH;
+        $new_reference['board_uri'] = Domain::SITE;
         $new_reference['banners_directory'] = $this->domain_id;
         $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_directory'] . '/';
         $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_directory']) .
@@ -71,6 +70,17 @@ class DomainSite extends Domain implements NellielCacheInterface
         return $settings;
     }
 
+    public function uri(bool $display = false, bool $formatted = false): string
+    {
+        $uri = ($display) ? $this->display_uri : $this->uri;
+
+        if ($formatted) {
+            $uri = __('Site');
+        }
+
+        return $uri;
+    }
+
     public function updateStatistics(): void
     {}
 
@@ -84,7 +94,7 @@ class DomainSite extends Domain implements NellielCacheInterface
     public function deleteCache()
     {
         if (NEL_USE_FILE_CACHE) {
-            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . $this->domain_id);
+            $this->file_handler->eraserGun(NEL_CACHE_FILES_PATH . 'domains/' . $this->domain_id);
         }
     }
 }

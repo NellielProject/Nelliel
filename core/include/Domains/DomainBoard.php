@@ -20,10 +20,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function __construct(string $domain_id, NellielPDO $database)
     {
-        $this->domain_id = utf8_strtolower($domain_id);
-        $this->database = $database;
-        $this->utilitySetup();
-        $this->locale();
+        parent::__construct($domain_id, $database);
 
         if ($this->exists()) {
             $this->templatePath($this->front_end_data->getTemplate($this->setting('template_id'))->getPath());
@@ -42,6 +39,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         }
 
         $this->settings = $settings;
+        $this->updateLocale($this->setting('locale'));
     }
 
     protected function loadReferences(): void
@@ -49,12 +47,11 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
         $new_reference = array();
-        $board_path = NEL_PUBLIC_PATH . $board_data['board_uri'] . '/';
-        $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($board_data['board_uri']) . '/';
-        $new_reference['board_directory'] = $board_data['board_uri'];
-        $new_reference['board_uri'] = $board_data['board_uri'];
-        $new_reference['formatted_board_uri'] = sprintf(nel_site_domain()->setting('uri_display_format'),
-            $board_data['board_uri']);
+        $board_path = NEL_PUBLIC_PATH . $this->uri . '/';
+        $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($this->uri) . '/';
+        $new_reference['board_directory'] = $this->uri;
+        $new_reference['board_uri'] = $this->uri;
+        $new_reference['formatted_board_uri'] = sprintf(nel_site_domain()->setting('uri_display_format'), $this->uri);
         $title = $new_reference['board_uri'];
         $title .= (!nel_true_empty($this->setting('name')) ? ' - ' . $this->setting('name') : '');
         $new_reference['title'] = $title;
@@ -64,7 +61,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $new_reference['preview_directory'] = $board_data['preview_directory'];
         $new_reference['page_directory'] = $board_data['page_directory'];
         $new_reference['archive_directory'] = $board_data['archive_directory'];
-        $new_reference['banners_directory'] = $this->domain_id;
+        $new_reference['banners_directory'] = $this->uri;
         $new_reference['banners_path'] = NEL_BANNERS_FILES_PATH . $new_reference['banners_directory'] . '/';
         $new_reference['banners_web_path'] = NEL_BANNERS_WEB_PATH . rawurlencode($new_reference['banners_directory']) .
             '/';
@@ -116,6 +113,17 @@ class DomainBoard extends Domain implements NellielCacheInterface
         return $settings;
     }
 
+    public function uri(bool $display = false, bool $formatted = false): string
+    {
+        $uri = ($display) ? $this->display_uri : $this->uri;
+
+        if ($formatted) {
+            $uri = sprintf(nel_site_domain()->setting('uri_display_format'), $uri);
+        }
+
+        return $uri;
+    }
+
     public function updateStatistics(): void
     {
         $limit = time() - nel_site_domain()->setting('min_time_between_board_stat_updates');
@@ -154,13 +162,6 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $this->statistics->update($this, 'last_update', time());
     }
 
-    public function exists()
-    {
-        $prepared = $this->database->prepare('SELECT 1 FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
-        $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_COLUMN);
-        return !empty($board_data);
-    }
-
     public function regenCache()
     {
         if (NEL_USE_FILE_CACHE) {
@@ -194,6 +195,24 @@ class DomainBoard extends Domain implements NellielCacheInterface
         }
 
         return $active_threads;
+    }
+
+    public function recentPosts(int $limit): array
+    {
+        $recent_posts = array();
+
+        $prepared = $this->database->prepare(
+            'SELECT "post_number", "parent_thread" FROM "' . $this->reference('posts_table') .
+            '" ORDER BY "post_time" DESC, "post_time_milli" DESC LIMIT ?');
+        $post_list = $this->database->executePreparedFetchAll($prepared, [$limit], PDO::FETCH_ASSOC);
+
+        foreach ($post_list as $post) {
+            $content_id = new ContentID(
+                ContentID::createIDString(intval($post['parent_thread']), intval($post['post_number'])));
+            $recent_posts[] = $content_id->getInstanceFromID($this);
+        }
+
+        return $recent_posts;
     }
 
     public function getThread(int $thread_id): Thread

@@ -1,8 +1,16 @@
 <h1>You are banned!</h1>
 <div class="ban-page">
+{{# global }}
+	<p class="ban-paragraph">
+		<span data-i18n="">You have been globally banned from all boards due to:</span>
+	</p>
+{{/ global }}
+{{^ global }}
 	<p class="ban-paragraph">
 		You have been banned from <b>{{ ban_board }}</b> due to:
 	</p>
+{{/ global }}
+
 	<p class="ban-paragraph">
 		<b>{{ ban_reason }}</b>
 	</p>
@@ -10,11 +18,11 @@
 		This ban was set on <b>{{ ban_time }}</b>{{# creator }} by {{ creator }}<b>{{/ creator }}</b>. It will expire on <b>{{ ban_expiration }}</b> which is <b>{{ ban_length }}</b> from now.
 	</p>
 	<p class="ban-paragraph">
-		<span data-i18n="">The IP detected is</span> {{ ban_ip }}
+		<span data-i18n="">Your ip is</span> {{ ban_ip }}
 	</p>
 {{# extra_text }}
 	<p class="ban-paragraph">
-		{{ extra_text }}
+		{{{ extra_text }}}
 	</p>
 {{/ extra_text }}
 {{# appeal_allowed }}
@@ -32,9 +40,6 @@
 {{# not_this_ban }}
 	<p class="ban-paragraph" data-i18n="">You are not allowed to appeal this ban.</p>
 {{/ not_this_ban }}
-{{# max_appeals }}
-	<p class="ban-paragraph" data-i18n="">This ban has reached the maxmimum number of appeals.</p>
-{{/ max_appeals }}
 {{# no_ip_range }}
 	<p class="ban-paragraph" data-i18n="">This is part of a range ban. You cannot appeal it.</p>
 {{/ no_ip_range }}
@@ -47,17 +52,20 @@
 	{{/ pending }}
 	{{# previous_responded }}
 		{{# previous_denied }}
-	<p class="ban-paragraph" data-i18n="">Your last appeal was reviewed and denied.</p>
+	<p class="ban-paragraph" data-i18n="">The previous appeal was reviewed and denied.</p>
 		{{/ previous_denied }}
 		{{# previous_modified }}
-	<p class="ban-paragraph" data-i18n="">Your last appeal has been reviewed and the ban has been altered.</p>
+	<p class="ban-paragraph" data-i18n="">The previous appeal has been reviewed and the ban has been altered.</p>
 		{{/ previous_modified }}
 		{{# show_response }}
 	<p class="ban-paragraph">
-		<span class="label" data-i18n="">This is the response to your last appeal:</span>
+		<span class="label" data-i18n="">This is the response to the previous appeal:</span>
 		<b>{{ previous_response }}</b>
 	</p>
 		{{/ show_response }}
 	{{/ previous_responded }}
+	{{# max_appeals }}
+	<p class="ban-paragraph" data-i18n="">This ban has reached the maxmimum number of appeals.</p>
+	{{/ max_appeals }}
 {{/ appealed }}
 </div>

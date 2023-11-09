@@ -7,6 +7,8 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\ArchiveAndPrune;
 use Nelliel\Cites;
+use Nelliel\CryptConfig;
+use Nelliel\GlobalRecents;
 use Nelliel\Moar;
 use Nelliel\API\JSON\PostJSON;
 use Nelliel\Account\Session;
@@ -29,6 +31,8 @@ class Post
     protected $parent = null;
     protected $json;
     protected $sql_helpers;
+    protected $global_recents;
+    protected $crypt_config;
 
     function __construct(ContentID $content_id, Domain $domain, bool $load = true)
     {
@@ -41,6 +45,8 @@ class Post
         $this->main_table->tableName($domain->reference('posts_table'));
         $this->json = new PostJSON($this);
         $this->sql_helpers = nel_utilities()->sqlHelpers();
+        $this->global_recents = new GlobalRecents($this->database);
+        $this->crypt_config = new CryptConfig();
 
         if ($load) {
             $this->loadFromDatabase(true);
@@ -68,7 +74,6 @@ class Post
             return true;
         }
 
-        $result['ip_address'] = nel_convert_ip_from_storage($result['ip_address']);
         $column_types = $this->main_table->columnTypes();
 
         foreach ($result as $name => $value) {
@@ -87,7 +92,6 @@ class Post
         }
 
         $filtered_data = $this->main_table->filterColumns($this->content_data);
-        $filtered_data['ip_address'] = nel_prepare_ip_for_storage($this->data('ip_address'));
         $filtered_data['moar'] = $this->getMoar()->getJSON();
         $pdo_types = $this->main_table->getPDOTypes($filtered_data);
         $column_list = array_keys($filtered_data);
@@ -137,8 +141,14 @@ class Post
 
             if (!$bypass && $delete_post_renzoku > 0 && time() - $this->content_data['post_time'] < $delete_post_renzoku) {
                 nel_derp(64,
-                    sprintf(_gettext('You must wait %d seconds after making a post before it can be deleted.'),
+                    sprintf(__('You must wait at least %d seconds after making a post before it can be deleted.'),
                         $delete_post_renzoku));
+            }
+
+            $delete_post_time_limit = $this->domain->setting('delete_post_time_limit');
+
+            if (!$bypass && $delete_post_time_limit > 0 && time() - $this->content_data['post_time'] > $delete_post_time_limit) {
+                nel_derp(68, __('You waited too long and can no longer delete this post.'));
             }
         }
 
@@ -155,6 +165,7 @@ class Post
 
         $this->deleteFromDatabase($parent_delete);
         $this->deleteFromDisk($parent_delete);
+        $this->global_recents->removePost($this);
         $this->domain->updateStatistics();
 
         if (!$parent_delete) {
@@ -225,12 +236,13 @@ class Post
 
         if (!$flag && $this->domain->setting('user_delete_own')) {
             if (!nel_true_empty($this->data('password'))) {
-                $flag = hash_equals($this->content_data['password'], nel_post_password_hash($update_sekrit));
+                $flag = nel_password_verify($update_sekrit, $this->content_data['password'],
+                    $this->crypt_config->postPasswordOptions()['pepper']);
             }
 
             if (!$flag && $this->domain->setting('allow_op_thread_moderation')) {
-                $flag = hash_equals($this->getParent()->firstPost()->data('password'),
-                    nel_post_password_hash($update_sekrit));
+                $flag = nel_password_verify($update_sekrit, $this->getParent()->firstPost()->data('password'),
+                    $this->crypt_config->postPasswordOptions()['pepper']);
             }
         }
 
@@ -454,7 +466,7 @@ class Post
     public function getURL(bool $dynamic): string
     {
         $parent = $this->getParent();
-        $thread_url = $parent->getURL($dynamic);
+        $thread_url = $parent->getURL($dynamic, false, '');
         return $thread_url . '#t' . $parent->contentID()->threadID() . 'p' . $this->content_id->postID();
     }
 

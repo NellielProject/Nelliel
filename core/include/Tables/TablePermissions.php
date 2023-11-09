@@ -35,7 +35,7 @@ class TablePermissions extends Table
         CREATE TABLE ' . $this->table_name . ' (
             permission      VARCHAR(50) NOT NULL,
             description     TEXT NOT NULL,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (permission)
         ) ' . $options . ';';
 
@@ -48,10 +48,11 @@ class TablePermissions extends Table
 
     public function insertDefaults()
     {
-        $this->insertDefaultRow(['perm_bans_view', 'View existing bans.']);
-        $this->insertDefaultRow(['perm_bans_add', 'Add new bans.']);
-        $this->insertDefaultRow(['perm_bans_modify', 'Modify existing bans.']);
-        $this->insertDefaultRow(['perm_bans_delete', 'Delete existing bans.']);
+        $this->insertDefaultRow(['perm_view_bans', 'View existing bans.']);
+        $this->insertDefaultRow(['perm_add_bans', 'Add new bans.']);
+        $this->insertDefaultRow(['perm_add_range_bans', 'Add new range or subnet bans.']);
+        $this->insertDefaultRow(['perm_modify_bans', 'Modify existing bans.']);
+        $this->insertDefaultRow(['perm_delete_bans', 'Delete existing bans.']);
         $this->insertDefaultRow(['perm_manage_blotter', 'Manage blotter entries.']);
         $this->insertDefaultRow(['perm_boards_view', 'View full list of boards.']);
         $this->insertDefaultRow(['perm_boards_add', 'Add new boards.']);
@@ -65,9 +66,9 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_manage_filetypes', 'Manage filetypes.']);
         $this->insertDefaultRow(['perm_manage_file_filters', 'Manage file filters.']);
         $this->insertDefaultRow(['perm_manage_image_sets', 'Manage image sets.']);
-        $this->insertDefaultRow(['perm_ip_notes_view', 'View IP notes.']);
-        $this->insertDefaultRow(['perm_ip_notes_add', 'Add new IP notes.']);
-        $this->insertDefaultRow(['perm_ip_notes_delete', 'Delete IP notes.']);
+        $this->insertDefaultRow(['perm_view_ip_info', 'View info for an IP.']);
+        $this->insertDefaultRow(['perm_add_ip_notes', 'Add new IP notes.']);
+        $this->insertDefaultRow(['perm_delete_ip_notes', 'Delete IP notes.']);
         $this->insertDefaultRow(['perm_view_public_logs', 'View full logs.']);
         $this->insertDefaultRow(['perm_view_system_logs', 'View system logs.']);
         $this->insertDefaultRow(['perm_manage_markup', 'Manage markup entries.']);
@@ -77,7 +78,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_noticeboard_delete', 'Delete posts on the staff noticeboard.']);
         $this->insertDefaultRow(['perm_manage_pages', 'Manage static pages.']);
         $this->insertDefaultRow(['perm_manage_permissions', 'Manage permissions.']);
-        $this->insertDefaultRow(['perm_manage_plugins', 'Manage static pages.']);
+        $this->insertDefaultRow(['perm_manage_plugins', 'Manage plugins.']);
         $this->insertDefaultRow(['perm_view_reports', 'View reports.']);
         $this->insertDefaultRow(['perm_dismiss_reports', 'Manage reports.']);
         $this->insertDefaultRow(['perm_view_roles', 'View roles.']);

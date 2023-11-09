@@ -44,17 +44,17 @@ class OutputPanelTemplates extends Output
 
             if ($template_data['enabled'] == 1) {
                 $template_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'templates', $template->id(), 'disable']);
+                    [$this->domain->uri(), 'templates', $template->id(), 'disable']);
                 $template_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($template_data['enabled'] == 0) {
                 $template_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'templates', $template->id(), 'enable']);
+                    [$this->domain->uri(), 'templates', $template->id(), 'enable']);
                 $template_data['enable_disable_text'] = _gettext('Enable');
             }
             $template_data['uninstall_url'] = nel_build_router_url(
-                [$this->domain->id(), 'templates', $template->id(), 'uninstall']);
+                [$this->domain->uri(), 'templates', $template->id(), 'uninstall']);
             $this->render_data['installed_list'][] = $template_data;
         }
 
@@ -71,7 +71,7 @@ class OutputPanelTemplates extends Output
             $template_data['output'] = $template['info']['output_type'];
             $template_data['is_installed'] = in_array($template['info']['id'], $installed_ids);
             $template_data['install_url'] = nel_build_router_url(
-                [$this->domain->id(), 'templates', $template['info']['id'], 'install']);
+                [$this->domain->uri(), 'templates', $template['info']['id'], 'install']);
             $this->render_data['available_list'][] = $template_data;
         }
 

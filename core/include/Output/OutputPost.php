@@ -61,6 +61,12 @@ class OutputPost extends Output
         }
 
         $this->render_data['post_anchor_id'] = 't' . $post->contentID()->threadID() . 'p' . $post->contentID()->postID();
+
+        if ($this->session->inModmode($this->domain) && !$this->write_mode) {
+            $modmode_options = $this->modmodeHeaders($thread, $post);
+            $this->render_data['post_modmode_options'] = $modmode_options['post_modmode_options'] ?? array();
+        }
+
         $this->postHeaders($response, $thread, $post, $gen_data, $in_thread_number);
 
         if ($post->data('total_uploads') > 0) {
@@ -80,8 +86,8 @@ class OutputPost extends Output
                 $file_data = array();
 
                 if (nel_true_empty($upload->data('embed_url'))) {
-                    $file_data = $output_file_info->render($upload, $post,
-                        ['multiple' => $post->data('file_count') > 1], true);
+                    $file_data = $output_file_info->render($upload, $post, [
+                        'multiple' => $post->data('file_count') > 1], true);
                 } else {
                     $file_data = $output_embed_info->render($upload, $post,
                         ['multiple' => $post->data('file_count') > 1], true);
@@ -119,7 +125,7 @@ class OutputPost extends Output
             $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
             $cite_text = '>>>/' . $thread->getMoar()->get('shadow_board_id') . '/' .
                 $thread->getMoar()->get('shadow_thread_id');
-            $shadow_cite = $markup->parseCites($cite_text, $post, $dynamic_urls);
+            $shadow_cite = $markup->parseCites($cite_text, $post->domain(), $dynamic_urls);
             $this->render_data['is_shadow'] = true;
             $shadow_type = $thread->getMoar()->get('shadow_type');
             $shadow_message = '';
@@ -244,6 +250,70 @@ class OutputPost extends Output
         return $header_data;
     }
 
+    private function modmodeHeaders(Thread $thread, Post $post): array
+    {
+        $options = array();
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
+            !empty($post->data('ip_address'))) {
+                $ip = nel_convert_ip_from_storage($post->data('ip_address'));
+            } else {
+                if (!empty($post->data('hashed_ip_address'))) {
+                    $ip = $post->data('hashed_ip_address');
+                } else {
+                    $ip = $post->data('visitor_id');
+                }
+            }
+
+            $this->render_data['mod_ip_address'] = $ip;
+            $this->render_data['in_modmode'] = true;
+
+            if ($this->session->user()->checkPermission($this->domain, 'perm_manage_bans')) {
+                $this->render_data['mod_links_ban']['url'] = nel_build_router_url(
+                    [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban']);
+                $options['post_modmode_options'][] = $this->render_data['mod_links_ban'];
+            }
+
+            if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
+                $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
+                    [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete']);
+                $options['post_modmode_options'][] = $this->render_data['mod_links_delete'];
+            }
+
+            if ($this->session->user()->checkPermission($this->domain, 'perm_delete_by_ip')) {
+                $this->render_data['mod_links_delete_by_ip']['url'] = nel_build_router_url(
+                    [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete-by-ip']);
+                $this->render_data['post_modmode_options'][] = $this->render_data['mod_links_delete_by_ip'];
+
+                $this->render_data['mod_links_global_delete_by_ip']['url'] = nel_build_router_url(
+                    [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'global-delete-by-ip']);
+                $options['post_modmode_options'][] = $this->render_data['mod_links_global_delete_by_ip'];
+            }
+
+            if ($this->session->user()->checkPermission($this->domain, 'perm_manage_bans') &&
+                $this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
+                    $this->render_data['mod_links_ban_and_delete']['url'] = nel_build_router_url(
+                        [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban-delete']);
+                    $options['post_modmode_options'][] = $this->render_data['mod_links_ban_and_delete'];
+                }
+
+                if ($this->session->user()->checkPermission($this->domain, 'perm_edit_posts')) {
+                    $this->render_data['mod_links_edit']['url'] = nel_build_router_url(
+                        [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
+                    $options['post_modmode_options'][] = $this->render_data['mod_links_edit'];
+                }
+
+                if (!$thread->data('shadow')) {
+                    if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
+                        $this->render_data['mod_links_move']['url'] = nel_build_router_url(
+                            [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'move']);
+                        $options['post_modmode_options'][] = $this->render_data['mod_links_move'];
+                    }
+                }
+
+                return $options;
+    }
+
     private function postComments(Post $post, array $gen_data, Thread $thread)
     {
         $comment_data = array();
@@ -294,7 +364,6 @@ class OutputPost extends Output
     {
         $cites = new Cites($this->database);
         $cite_list = $cites->getForPost($post);
-        $post_content_id = $post->contentID();
         $backlinks = array();
 
         foreach ($cite_list['sources'] as $cite) {
@@ -306,7 +375,7 @@ class OutputPost extends Output
                 $backlink_data['backlink_text'] = '>>>/' . $cite['source_board'] . '/' . $cite['source_post'];
             }
 
-            $cite_data = $cites->getCiteData($backlink_data['backlink_text'], $this->domain, $post_content_id);
+            $cite_data = $cites->getCiteData($backlink_data['backlink_text'], $this->domain);
             $cite_url = '';
 
             if ($cite_data['exists']) {

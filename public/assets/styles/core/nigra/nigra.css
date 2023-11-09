@@ -61,6 +61,8 @@
 	--news-paragraph-color: inherit;
 	--thread-status-icon-color: invert(60%) sepia(50%) saturate(2796%) hue-rotate(11deg) brightness(107%) contrast(94%);
 	--boards-navigation-align: center;
+	--site-navigation-align: right;
+	--account-navigation-align: right;
 	--ban-page-background: #2A2A2A;
 	--ban-paragraph-color: inherit;
 }

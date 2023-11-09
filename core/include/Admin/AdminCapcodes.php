@@ -82,7 +82,7 @@ class AdminCapcodes extends Admin
 
         switch ($perm) {
             case 'perm_capcodes_manage':
-                nel_derp(425, _gettext('You are not allowed to manage capcodes.'));
+                nel_derp(425, _gettext('You are not allowed to manage capcodes.'), 403);
                 break;
 
             default:

@@ -40,7 +40,7 @@ class TableCache extends Table
             cache_key       VARCHAR(50) NOT NULL,
             cache_data      ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             regen           SMALLINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (domain_id, cache_key),
             CONSTRAINT fk_cache__domain_registry
             FOREIGN KEY (domain_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

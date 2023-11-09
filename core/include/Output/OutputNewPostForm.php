@@ -53,37 +53,51 @@ class OutputNewPostForm extends Output
             $this->render_data['require_comment'] = $this->domain->setting('require_reply_comment') ? 'required' : '';
         }
 
+        $this->render_data['name_field_label'] = $this->domain->setting('name_field_label');
         $this->render_data['name_field_placeholder'] = $this->domain->setting('name_field_placeholder');
+        $this->render_data['email_field_label'] = $this->domain->setting('email_field_label');
         $this->render_data['email_field_placeholder'] = $this->domain->setting('email_field_placeholder');
+        $this->render_data['subject_field_label'] = $this->domain->setting('subject_field_label');
         $this->render_data['subject_field_placeholder'] = $this->domain->setting('subject_field_placeholder');
+        $this->render_data['comment_field_label'] = $this->domain->setting('comment_field_label');
         $this->render_data['comment_field_placeholder'] = $this->domain->setting('comment_field_placeholder');
+        $this->render_data['fgsfds_field_label'] = $this->domain->setting('fgsfds_field_label');
         $this->render_data['fgsfds_field_placeholder'] = $this->domain->setting('fgsfds_field_placeholder');
+        $this->render_data['password_field_label'] = $this->domain->setting('password_field_label');
         $this->render_data['password_field_placeholder'] = $this->domain->setting('password_field_placeholder');
+        $this->render_data['files_form_label'] = $this->domain->setting('files_form_label');
+        $this->render_data['embeds_form_label'] = $this->domain->setting('embeds_form_label');
+        $this->render_data['flags_form_label'] = $this->domain->setting('flags_form_label');
+        $this->render_data['captcha_form_label'] = $this->domain->setting('captcha_form_label');
 
         $this->render_data['flags']['no_markup'] = $this->domain->setting('allow_no_markup');
 
         if ($this->render_data['in_modmode']) {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post'], false,
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'new-post'], false,
                 'modmode');
             $this->render_data['flags']['post_as_staff'] = $this->session->user()->checkPermission($this->domain,
                 'perm_post_as_staff');
             $this->render_data['flags']['raw_html'] = $this->session->user()->checkPermission($this->domain,
                 'perm_raw_html');
         } else {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'new-post']);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'new-post']);
         }
 
         if (!$response_to) {
-            $this->render_data['allow_files'] = $this->domain->setting('allow_op_files') && $this->domain->setting('max_op_files') > 0 && $this->domain->setting('max_op_total_uploads') > 0;
+            $this->render_data['allow_files'] = $this->domain->setting('allow_op_files') &&
+                $this->domain->setting('max_op_files') > 0 && $this->domain->setting('max_op_total_uploads') > 0;
             $this->render_data['file_required'] = $this->domain->setting('require_op_file');
-            $this->render_data['allow_embeds'] = $this->domain->setting('allow_op_embeds') && $this->domain->setting('max_reply_files') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_op_embeds') &&
+                $this->domain->setting('max_reply_files') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
             $this->render_data['embed_required'] = $this->domain->setting('require_op_embed');
             $max_files = intval($this->domain->setting('max_op_files'));
             $max_embeds = intval($this->domain->setting('max_op_embeds'));
         } else {
-            $this->render_data['allow_files'] = $this->domain->setting('allow_reply_files') && $this->domain->setting('max_reply_files') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
+            $this->render_data['allow_files'] = $this->domain->setting('allow_reply_files') &&
+                $this->domain->setting('max_reply_files') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
             $this->render_data['file_required'] = $this->domain->setting('require_reply_file');
-            $this->render_data['allow_embeds'] = $this->domain->setting('allow_reply_embeds') && $this->domain->setting('max_reply_embeds') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
+            $this->render_data['allow_embeds'] = $this->domain->setting('allow_reply_embeds') &&
+                $this->domain->setting('max_reply_embeds') > 0 && $this->domain->setting('max_reply_total_uploads') > 0;
             $this->render_data['embed_required'] = $this->domain->setting('require_reply_embed');
             $max_files = intval($this->domain->setting('max_reply_files'));
             $max_embeds = intval($this->domain->setting('max_reply_embeds'));
@@ -101,12 +115,13 @@ class OutputNewPostForm extends Output
         $this->render_data['embed_max_message'] = sprintf(_gettext('Maximum embeds: %d'), $max_embeds);
         $this->render_data['embed_replaces'] = $this->domain->setting('embed_replaces_file');
         $this->render_data['spoilers_enabled'] = $this->domain->setting('enable_spoilers');
-        $this->render_data['fgsfds_name'] = $this->domain->setting('fgsfds_name');
+        $this->render_data['sekrit_max_length'] = nel_crypt_config()->configValue('post_password_max_length');
 
         if ($this->site_domain->setting('enable_captchas') && $this->domain->setting('use_post_captcha')) {
             $this->render_data['use_new_post_captcha'] = true;
             $output_native_captchas = new OutputCAPTCHA($this->domain, $this->write_mode);
-            $this->render_data['post_form_captchas'] = $output_native_captchas->render(['area' => 'new-post-form'], false);
+            $this->render_data['post_form_captchas'] = $output_native_captchas->render(['area' => 'new-post-form'],
+                false);
         }
 
         $this->render_data['new_post_submit'] = ($response_to) ? _gettext('Reply') : _gettext('New thread');
@@ -121,7 +136,19 @@ class OutputNewPostForm extends Output
 
         if ($this->domain->setting('show_allowed_filetypes') && $this->render_data['allow_files']) {
             foreach ($filetypes->enabledCategories($this->domain) as $category) {
-                $supported_types = sprintf(__('Supported %s file types:'), $category) . ' ';
+                $max_size = intval($filetypes->categorySetting($this->domain, $category, 'max_size'));
+
+                if ($this->domain->setting('show_file_category_max_sizes')) {
+                    if ($max_size <= 0 || $max_size > $this->domain->setting('max_filesize')) {
+                        $max_size = $this->domain->setting('max_filesize');
+                    }
+
+                    $supported_types = sprintf(__('Supported %s file types (Maximum %s):'), $category,
+                        $this->formatFilesize($max_size)) . ' ';
+                } else {
+                    $supported_types = sprintf(__('Supported %s file types:'), $category) . ' ';
+                }
+
                 $supported = '';
                 $joiner = '';
 
@@ -180,14 +207,8 @@ class OutputNewPostForm extends Output
         }
 
         if ($this->domain->setting('show_form_max_filesize') && $this->render_data['allow_files']) {
-            $units = $this->domain->setting('scale_new_post_filesize_units') ? null : $this->domain->setting(
-                'filesize_unit_prefix');
-            $formatted_max_filesize = nel_size_format((int) $this->domain->setting('max_filesize'),
-                $this->domain->setting('display_iec_filesize_units'),
-                $this->domain->setting('binary_filesize_conversion'), $this->domain->setting('filesize_precision'),
-                $units);
             $this->render_data['posting_rules_items'][]['rules_text'] = sprintf(
-                _gettext('Maximum file size allowed is %s'), $formatted_max_filesize);
+                _gettext('Maximum file size allowed is %s'), $this->formatFilesize($this->domain->setting('max_filesize')));
         }
 
         if ($this->domain->setting('show_thumbnailed_message') && $this->render_data['allow_files']) {
@@ -195,5 +216,14 @@ class OutputNewPostForm extends Output
                 _gettext('Images greater than %d x %d pixels will be thumbnailed.'),
                 $this->domain->setting('max_preview_width'), $this->domain->setting('max_preview_height'));
         }
+    }
+
+    private function formatFilesize(int $filesize): string
+    {
+        $units = $this->domain->setting('scale_new_post_filesize_units') ? null : $this->domain->setting(
+            'filesize_unit_prefix');
+        $formatted_max_filesize = nel_size_format($filesize, $this->domain->setting('display_iec_filesize_units'),
+            $this->domain->setting('binary_filesize_conversion'), $this->domain->setting('filesize_precision'), $units);
+        return $formatted_max_filesize;
     }
 }

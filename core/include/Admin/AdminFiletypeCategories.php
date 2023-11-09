@@ -80,7 +80,7 @@ class AdminFiletypeCategories extends Admin
 
         switch ($perm) {
             case 'perm_manage_filetypes':
-                nel_derp(345, _gettext('You are not allowed to manage filetypes.'));
+                nel_derp(345, _gettext('You are not allowed to manage filetypes.'), 403);
                 break;
 
             default:

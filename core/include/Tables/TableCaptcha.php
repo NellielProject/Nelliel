@@ -47,7 +47,7 @@ class TableCaptcha extends Table
             time_created    BIGINT NOT NULL,
             seen            SMALLINT DEFAULT 0,
             solved          SMALLINT DEFAULT 0,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (captcha_key),
             CONSTRAINT fk_captcha__domain_registry
             FOREIGN KEY (domain_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

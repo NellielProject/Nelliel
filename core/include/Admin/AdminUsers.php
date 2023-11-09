@@ -67,7 +67,9 @@ class AdminUsers extends Admin
 
             if ($key === 'user_password') {
                 if (!empty($value)) {
-                    $update_user->changeData('password', nel_password_hash($value, NEL_PASSWORD_ALGORITHM));
+                    $update_user->changeData('password',
+                        nel_password_hash($value, nel_crypt_config()->accountPasswordAlgorithm(),
+                            nel_crypt_config()->accountPasswordOptions()));
                 }
 
                 continue;
@@ -95,11 +97,11 @@ class AdminUsers extends Admin
 
         switch ($perm) {
             case 'perm_view_users':
-                nel_derp(395, _gettext('You are not allowed to view users.'));
+                nel_derp(395, _gettext('You are not allowed to view users.'), 403);
                 break;
 
             case 'perm_manage_users':
-                nel_derp(396, _gettext('You are not allowed to manage users.'));
+                nel_derp(396, _gettext('You are not allowed to manage users.'), 403);
                 break;
 
             default:

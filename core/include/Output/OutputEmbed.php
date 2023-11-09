@@ -39,13 +39,13 @@ class OutputEmbed extends Output
         if ($this->session->inModmode($this->domain)) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
                 $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'delete']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'delete']);
                 $this->render_data['embed_modmode_options'][] = $this->render_data['mod_links_delete'];
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
                 $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'move']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'move']);
                 $this->render_data['embed_modmode_options'][] = $this->render_data['mod_links_move'];
             }
         }
@@ -78,7 +78,11 @@ class OutputEmbed extends Output
         $this->render_data['embed_options'][] = $this->render_data['content_links_hide_embed'];
 
         if ($embed->data('deleted')) {
-            $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_embed');
+            if(nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
+                $this->render_data['deleted_url'] = $this->domain->setting('image_deleted_embed');
+            } else {
+                $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_embed');
+            }
         }
 
         $output = $this->output('thread/file_info', $data_only, true, $this->render_data);

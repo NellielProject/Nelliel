@@ -14,10 +14,7 @@ class DomainGlobal extends Domain implements NellielCacheInterface
 
     public function __construct(NellielPDO $database)
     {
-        $this->domain_id = Domain::GLOBAL;
-        $this->database = $database;
-        $this->utilitySetup();
-        $this->locale();
+        parent::__construct(Domain::GLOBAL, $database);
         $this->templatePath($this->front_end_data->getTemplate(nel_site_domain()->setting('template_id'))->getPath());
     }
 
@@ -33,11 +30,12 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         }
 
         $this->settings = $settings;
+        $this->updateLocale($this->setting('locale'));
     }
 
     protected function loadReferences(): void
     {
-        ;
+        $this->references['board_uri'] = Domain::GLOBAL;
     }
 
     protected function loadSettingsFromDatabase(): array
@@ -56,13 +54,19 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         return $settings;
     }
 
+    public function uri(bool $display = false, bool $formatted = false): string
+    {
+        $uri = ($display) ? $this->display_uri : $this->uri;
+
+        if ($formatted) {
+            $uri = __('Global');
+        }
+
+        return $uri;
+    }
+
     public function updateStatistics(): void
     {}
-
-    public function exists()
-    {
-        true;
-    }
 
     public function regenCache()
     {

@@ -34,7 +34,7 @@ All schemas and queries should follow SQL standards or widely used alternatives.
 Any core functions and features must target the software versions listed below in addition to maintaining compatibility with all later versions. If forward compatibility is not possible then an updated target version may be considered.
 
 ### Target Versions
-PHP: 7.2  
+PHP: 7.4  
 MySQL: 5.7  
 MariaDB: 10.2  
 PostgreSQL: 10  
@@ -51,6 +51,12 @@ After the 1.0 Release, Nelliel versioning will follow Major.Minor.Patch under th
 
 When the version changes, the constant `NELLIEL_VERSION` in file `imgboard.php` must be updated. A git tag must be created upon Major or Minor changes, or when a formal release is created.
 
+## Branches
+Two primary Git branches are used:
+
+ - `master` is the core stable branch. Aside from more critical patches it should only be updated on release versions or when stable checkpoints are achieved.
+ - `dev-general	` is the core development branch. All development work should be performed on this branch.
+
 ## Error Codes
 Nelliel returns a numeric error id along with an error message. This keeps the benefit of a descriptive message for the user while making it easier to track where in the code the problem occurs. These are the designated ranges:
  - 0: Unknown or nonspecific error.
@@ -60,7 +66,7 @@ Nelliel returns a numeric error id along with an error message. This keeps the b
  - 600-999: Reserved.
  - 1000: Plugin-generated error.
  
- All error codes in core must be listed in `error-reference.md`.
+ All error codes in core must be listed in [error-reference.md](../error-reference.md).
  
 ## Server-side vs Client-side
 As much functionality and rendering as possible should be implemented server-side. Client-side scripting should only be used for niceties or features that cannot be done fully server-side. All primary functions for posting and moderation must continue to work even if a user has disabled scripts. 
@@ -71,7 +77,7 @@ Most functionality can be put in the core code base. However anything that is:
  - subject to regular changes in implementation
  - reliant on third-party services
  
- should be strongly considered for implementation via plugin instead of added directly to core. This simplifies maintenance and avoids bloating the code base over time.
+should be strongly considered for implementation via plugin instead of added directly to core. This simplifies maintenance and avoids bloating the code base over time.
 
 ## AI Code 	Generation
 Current code generation AI (e.g. GitHub Copilot) raises issues with copyright and open source licenses with no practical method of vetting the original context. Until these tools become better actors or the mentioned concerns are reasonably settled, code from broad-sourced generators is prohibited.

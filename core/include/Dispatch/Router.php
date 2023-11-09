@@ -137,6 +137,7 @@ class Router
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchNoticeboard';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:view}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:modify}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                     });
@@ -340,6 +341,15 @@ class Router
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:modify}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:enable|disable}', $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:ip-info}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchIPInfo';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{ip:[^\/]+}/{section:view}', $dispatch_class);
+                        $r->addRoute(['POST'], '/{ip:[^\/]+}/{section:add-note}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{ip:[^\/]+}/{section:delete-note}/{note-id:\d+}', $dispatch_class);
                     });
 
                 // For now this is ALWAYS last

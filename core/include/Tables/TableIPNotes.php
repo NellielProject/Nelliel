@@ -20,7 +20,6 @@ class TableIPNotes extends Table
         $this->columns_data = [
             'note_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
@@ -28,7 +27,6 @@ class TableIPNotes extends Table
         $this->columns_data = [
             'note_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -44,11 +42,10 @@ class TableIPNotes extends Table
         CREATE TABLE ' . $this->table_name . ' (
             note_id             ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
             username            VARCHAR(50) DEFAULT NULL,
-            ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
             hashed_ip_address   VARCHAR(128) NOT NULL,
             time                BIGINT NOT NULL,
             notes               TEXT NOT NULL,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (note_id),
             CONSTRAINT fk_ip_notes__users
             FOREIGN KEY (username) REFERENCES ' . NEL_USERS_TABLE . ' (username)

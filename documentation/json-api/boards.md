@@ -1,5 +1,5 @@
 # Boards
-Contains a list of boards
+Contains a list of boards.
 
 ## Structure
 

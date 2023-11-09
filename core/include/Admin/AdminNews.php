@@ -80,7 +80,7 @@ class AdminNews extends Admin
 
         switch ($perm) {
             case 'perm_manage_news':
-                nel_derp(360, _gettext('You are not allowed to manage news entries.'));
+                nel_derp(360, _gettext('You are not allowed to manage news entries.'), 403);
                 break;
 
             default:

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	{{> pieces/head }}
+	<body>
+		<p data-i18n="">Enter configuration values for this SQLite database.</p>
+		<form accept-charset="utf-8" action="imgboard.php?install&step=complete-database-config" method="post">
+			<div class="installer-form">
+				<input type="hidden" name="database_type" value="SQLITE">
+				<div class="installer-form-row">
+					<label for="file_name" class="installer-form-label" data-i18n="">File name</label>
+					<input id="file_name" class="installer-form-input" type="text" name="file_name" value="nelliel.sqlite">
+				</div>
+				<div class="installer-form-row">
+					<label for="timeout" class="installer-form-label" data-i18n="">Timeout</label>
+					<input id="timeout" class="installer-form-input" type="number" name="timeout" min="0" value="30">
+				</div>
+				<div class="installer-form-row">
+					<label for="path" class="installer-form-label" data-i18n="">Path</label>
+					<input id="path" class="installer-form-input" type="text" name="path" value="">
+				</div>
+				<div class="installer-form-row">
+					<label for="encoding" class="installer-form-label" data-i18n="">Encoding</label>
+					<input id="encoding" class="installer-form-input" type="text" name="encoding" value="UTF-8">
+				</div>
+				<div class="installer-form-row">
+					<input class="installer-form-input" type="submit" value="Submit" data-i18n-attributes="value">
+				</div>
+			</div>
+		</form>
+	</body>
+</html>

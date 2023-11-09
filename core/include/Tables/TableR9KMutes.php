@@ -41,7 +41,7 @@ class TableR9KMutes extends Table
             board_id        VARCHAR(50) NOT NULL,
             poster_hash     VARCHAR(128) NOT NULL,
             mute_time       BIGINT NOT NULL,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (mute_id),
             CONSTRAINT fk_r9k_mutes__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

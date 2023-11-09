@@ -9,13 +9,15 @@ use Nelliel\Cites;
 use Nelliel\Content\Post;
 use Nelliel\Database\NellielPDO;
 use PDO;
+use Nelliel\Domains\Domain;
 
 class Markup
 {
     private $database;
-    private $post;
-    private $dynamic_urls;
+    private $domain;
+    private $dynamic_urls = false;
     private $markup_data;
+    private $protocols = '';
 
     function __construct(NellielPDO $database)
     {
@@ -27,18 +29,29 @@ class Markup
         if (is_null($this->markup_data)) {
             $markup_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_MARKUP_TABLE . '"', PDO::FETCH_ASSOC);
             foreach ($markup_list as $markup) {
-                $this->markup_data[$markup['type']][$markup['label']] = ['match_regex' => $markup['match_regex'],
-                    'replacement' => $markup['replacement']];
+                $this->markup_data[$markup['type']][$markup['label']] = ['match' => $markup['match_regex'],
+                    'replace' => $markup['replacement']];
             }
         }
 
         return $this->markup_data[$type] ?? array();
     }
 
-    public function parsePostComments(string $text, Post $post, bool $dynamic_urls): string
+    public function parseText(string $text, Domain $source_domain = null, bool $dynamic_urls = false): string
     {
-        $this->post = $post;
+        $this->domain = $source_domain;
         $this->dynamic_urls = $dynamic_urls;
+        $this->protocols = (!is_null($source_domain)) ? $source_domain->setting('url_protocols') ?? '' : '';
+        $modified_text = $text;
+        $modified_text = $this->parseBlocks($modified_text);
+        return $modified_text;
+    }
+
+    public function parsePostComments(string $text, Post $post, bool $dynamic_urls = false): string
+    {
+        $this->domain = $post->domain();
+        $this->dynamic_urls = $dynamic_urls;
+        $this->protocols = $post->domain()->setting('url_protocols') ?? '';
         $modified_text = $text;
         $modified_text = $this->parseBlocks($modified_text);
         return $modified_text;
@@ -49,23 +62,25 @@ class Markup
         $modified_text = $text;
         $modified_text = $this->parseSimple($modified_text);
         $modified_text = $this->parseLoops($modified_text);
-        $modified_text = $this->parseURLs($modified_text);
-        $modified_text = $this->parseCites($modified_text);
+        $modified_text = $this->parseURLs($modified_text, $this->protocols);
+        $modified_text = $this->parseCites($modified_text, $this->domain, $this->dynamic_urls);
         return $modified_text;
     }
 
     public function parseBlocks(string $text, array $markup_data = array(), $recursive_call = false): string
     {
         if (empty($markup_data)) {
-            $markup_data = $this->getMarkupData('block');
+            $block_markup = $this->getMarkupData('block');
+        } else {
+            $block_markup = $markup_data['block'];
         }
 
-        $markup_data = nel_plugins()->processHook('nel-inb4-markup-blocks', [$text], $markup_data);
+        $block_markup = nel_plugins()->processHook('nel-inb4-markup-blocks', [$text], $block_markup);
         $modified_text = $text;
         $modified_blocks = array();
 
-        foreach ($markup_data as $data) {
-            $blocks = preg_split($data['match_regex'], $modified_text);
+        foreach ($block_markup as $data) {
+            $blocks = preg_split($data['match'], $modified_text);
 
             // If error or only one block, there's no block markup left to parse
             if (!is_array($blocks) || count($blocks) === 1) {
@@ -79,9 +94,9 @@ class Markup
 
                 // Even numbered blocks will be regex matches
                 if ($i % 2 === 0) {
-                    $modified = preg_replace('/^(.*)$/us', $data['replacement'], $block);
+                    $modified = preg_replace('/^(.*)$/us', $data['replace'], $block);
                 } else {
-                    $modified = $this->parseBlocks($block, $markup_data, true);
+                    $modified = $this->parseBlocks($block, $block_markup, true);
                 }
 
                 $modified_blocks[] = $modified;
@@ -106,11 +121,13 @@ class Markup
     public function parseLines(string $text, array $markup_data = array()): string
     {
         if (empty($markup_data)) {
-            $markup_data = $this->getMarkupData('line');
+            $line_markup = $this->getMarkupData('line');
+        } else {
+            $line_markup = $markup_data['line'];
         }
 
         $lines = explode("\n", $text);
-        $markup_data = nel_plugins()->processHook('nel-inb4-markup-lines', [$lines], $markup_data);
+        $line_markup = nel_plugins()->processHook('nel-inb4-markup-lines', [$lines], $line_markup);
 
         if (!is_array($lines)) {
             return $text;
@@ -119,27 +136,29 @@ class Markup
         $modified_lines = array();
 
         foreach ($lines as $line) {
-            foreach ($markup_data as $data) {
-                $line = preg_replace($data['match_regex'], $data['replacement'], $line);
+            foreach ($line_markup as $data) {
+                $line = preg_replace($data['match'], $data['replace'], $line);
             }
 
             $modified_lines[] = $line;
         }
 
-        return implode("\n", $modified_lines);
+        return implode('', $modified_lines);
     }
 
     public function parseSimple(string $text, array $markup_data = array()): string
     {
         if (empty($markup_data)) {
-            $markup_data = $this->getMarkupData('simple');
+            $simple_markup = $this->getMarkupData('simple');
+        } else {
+            $simple_markup = $markup_data['simple'];
         }
 
-        $markup_data = nel_plugins()->processHook('nel-inb4-markup-simple', [$text], $markup_data);
+        $simple_markup = nel_plugins()->processHook('nel-inb4-markup-simple', [$text], $simple_markup);
         $modified_text = $text;
 
-        foreach ($markup_data as $data) {
-            $modified_text = preg_replace($data['match_regex'], $data['replacement'], $modified_text);
+        foreach ($simple_markup as $data) {
+            $modified_text = preg_replace($data['match'], $data['replace'], $modified_text);
         }
 
         return $modified_text;
@@ -148,41 +167,35 @@ class Markup
     public function parseLoops(string $text, array $markup_data = array()): string
     {
         if (empty($markup_data)) {
-            $markup_data = $this->getMarkupData('loop');
+            $loop_markup = $this->getMarkupData('loop');
+        } else {
+            $loop_markup = $markup_data['loop'];
         }
 
-        $markup_data = nel_plugins()->processHook('nel-inb4-markup-loops', [$text], $markup_data);
+        $loop_markup = nel_plugins()->processHook('nel-inb4-markup-loops', [$text], $loop_markup);
         $modified_text = $text;
 
-        foreach ($markup_data as $data) {
+        foreach ($loop_markup as $data) {
             do {
                 $compare = $modified_text;
-                $modified_text = preg_replace($data['match_regex'], $data['replacement'], $modified_text);
+                $modified_text = preg_replace($data['match'], $data['replace'], $modified_text);
             } while ($compare !== $modified_text);
         }
 
         return $modified_text;
     }
 
-    public function parseCites(string $text, Post $post = null, bool $dynamic_urls = null): string
+    public function parseCites(string $text, Domain $source_domain = null, bool $dynamic_urls = false): string
     {
-        if (is_null($post)) {
-            $post = $this->post;
-        }
-
-        if (is_null($dynamic_urls)) {
-            $dynamic_urls = $this->dynamic_urls;
-        }
-
-        $cites = new Cites($post->domain()->database());
+        $cites = new Cites($this->database);
         $cite_regex = '/((?:>>|&gt;&gt;)\d+|(?:>>>|&gt;&gt;&gt;)\/[^\/]+\/\d*)/u';
 
-        $replace_callback = function ($matches) use ($cites, $post, $dynamic_urls) {
+        $replace_callback = function ($matches) use ($cites, $source_domain, $dynamic_urls) {
             if (!$cites->isCite($matches[0])) {
                 return $matches[0];
             }
 
-            $cite_data = $cites->getCiteData($matches[1], $post->domain(), $post->contentID());
+            $cite_data = $cites->getCiteData($matches[1], $source_domain);
 
             if ($cite_data['exists']) {
                 $cite_url = $cites->generateCiteURL($cite_data, $dynamic_urls);
@@ -203,12 +216,8 @@ class Markup
         return preg_replace_callback($cite_regex, $replace_callback, $text);
     }
 
-    public function parseURLs(string $text, string $protocols = null): string
+    public function parseURLs(string $text, string $protocols): string
     {
-        if (is_null($protocols)) {
-            $protocols = $this->post->domain()->setting('url_protocols');
-        }
-
         $url_regex = '/(' . $protocols . ')(:\/\/)[^\s]+/';
         $site_domain = nel_site_domain();
 

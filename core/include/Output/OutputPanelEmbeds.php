@@ -30,7 +30,7 @@ class OutputPanelEmbeds extends Output
         $embeds = $this->database->executeFetchAll('SELECT * FROM "' . NEL_EMBEDS_TABLE . '"',
             PDO::FETCH_ASSOC);
         $bgclass = 'row1';
-        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'embeds', 'new']);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->uri(), 'embeds', 'new']);
 
         foreach ($embeds as $embed) {
             $embed_data = array();
@@ -41,19 +41,19 @@ class OutputPanelEmbeds extends Output
             $embed_data['url'] = $embed['url'];
             $embed_data['enabled'] = $embed['enabled'];
             $embed_data['notes'] = $embed['notes'];
-            $embed_data['edit_url'] = nel_build_router_url([$this->domain->id(), 'embeds', $embed_data['embed_id'], 'modify']);
+            $embed_data['edit_url'] = nel_build_router_url([$this->domain->uri(), 'embeds', $embed_data['embed_id'], 'modify']);
 
             if ($embed_data['enabled'] == 1) {
-                $embed_data['enable_disable_url'] = nel_build_router_url([$this->domain->id(), 'embeds', $embed_data['embed_id'], 'disable']);
+                $embed_data['enable_disable_url'] = nel_build_router_url([$this->domain->uri(), 'embeds', $embed_data['embed_id'], 'disable']);
                 $embed_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($embed_data['enabled'] == 0) {
-                $embed_data['enable_disable_url'] = nel_build_router_url([$this->domain->id(), 'embeds', $embed_data['embed_id'], 'enable']);
+                $embed_data['enable_disable_url'] = nel_build_router_url([$this->domain->uri(), 'embeds', $embed_data['embed_id'], 'enable']);
                 $embed_data['enable_disable_text'] = _gettext('Enable');
             }
 
-            $embed_data['delete_url'] = nel_build_router_url([$this->domain->id(), 'embeds', $embed_data['embed_id'], 'delete']);
+            $embed_data['delete_url'] = nel_build_router_url([$this->domain->uri(), 'embeds', $embed_data['embed_id'], 'delete']);
             $this->render_data['embeds_list'][] = $embed_data;
         }
 
@@ -85,7 +85,7 @@ class OutputPanelEmbeds extends Output
 
         if ($editing) {
             $embed_id = $parameters['embed_id'] ?? 0;
-            $form_action = nel_build_router_url([$this->domain->id(), 'embeds', $embed_id, 'modify']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'embeds', $embed_id, 'modify']);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_EMBEDS_TABLE . '" WHERE "embed_id" = ?');
             $embed_data = $this->database->executePreparedFetch($prepared, [$embed_id], PDO::FETCH_ASSOC);
 
@@ -99,7 +99,7 @@ class OutputPanelEmbeds extends Output
             }
         } else {
             $this->render_data['new_embed'] = true;
-            $form_action = nel_build_router_url([$this->domain->id(), 'embeds', 'new']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'embeds', 'new']);
         }
 
         $this->render_data['form_action'] = $form_action;

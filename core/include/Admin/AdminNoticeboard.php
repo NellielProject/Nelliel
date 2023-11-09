@@ -74,15 +74,15 @@ class AdminNoticeboard extends Admin
 
         switch ($perm) {
             case 'perm_noticeboard_view':
-                nel_derp(430, _gettext('You are not allowed to manage the noticeboard'));
+                nel_derp(430, _gettext('You are not allowed to manage the noticeboard'), 403);
                 break;
 
             case 'perm_noticeboard_post':
-                nel_derp(431, _gettext('You are not allowed to post notices.'));
+                nel_derp(431, _gettext('You are not allowed to post notices.'), 403);
                 break;
 
             case 'perm_noticeboard_delete':
-                nel_derp(432, _gettext('You are not allowed to delete notices.'));
+                nel_derp(432, _gettext('You are not allowed to delete notices.'), 403);
                 break;
 
             default:

@@ -33,21 +33,21 @@ class OutputFile extends Output
         if ($this->session->inModmode($this->domain)) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
                 $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'delete']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'delete']);
                 $this->render_data['file_modmode_options'][] = $this->render_data['mod_links_delete'];
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
                 $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'move']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'move']);
                 $this->render_data['file_modmode_options'][] = $this->render_data['mod_links_move'];
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
                 $this->render_data['mod_links_spoiler']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'spoiler']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'spoiler']);
                 $this->render_data['mod_links_unspoiler']['url'] = nel_build_router_url(
-                    [$this->domain->id(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'unspoiler']);
+                    [$this->domain->uri(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'unspoiler']);
                 $spoiler_id = $file->data('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
                 $this->render_data['file_modmode_options'][] = $this->render_data[$spoiler_id];
             }
@@ -147,12 +147,21 @@ class OutputFile extends Output
         $this->render_data['file_options'][] = $this->render_data['content_links_show_upload_meta'];
 
         if ($file->data('deleted') && $this->domain->setting('display_deleted_placeholder')) {
-            $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_file');
+            if (nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
+                $this->render_data['deleted_url'] = $this->domain->setting('image_deleted_file');
+            } else {
+                $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_file');
+            }
+
             $preview_type = 'image';
         }
 
         if (is_null($preview_type) && $file->data('spoiler')) {
-            $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_spoiler_cover');
+            if (nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
+                $this->render_data['preview_url'] = $this->domain->setting('image_spoiler_cover');
+            } else {
+                $this->render_data['preview_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_spoiler_cover');
+            }
 
             if (!nel_true_empty($this->domain->setting('spoiler_display_name'))) {
                 $this->render_data['display_filename'] = $this->domain->setting('spoiler_display_name');
@@ -202,6 +211,8 @@ class OutputFile extends Output
                     $this->render_data['preview_url'] = $file->previewWebPath() . rawurlencode($preview_name);
                 }
 
+                $this->render_data['preview_alt_text'] = sprintf(__('Preview of %s'),
+                    $this->render_data['display_filename']);
                 $preview_type = 'image';
             } else if ($this->domain->setting('use_file_image')) {
                 $image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('filetype_image_set'));
@@ -218,6 +229,7 @@ class OutputFile extends Output
                 }
 
                 $this->render_data['preview_url'] = $web_path;
+                $this->render_data['preview_alt_text'] = sprintf(__('%s filetype image'), $format);
                 $preview_type = 'unsized_image';
             }
 

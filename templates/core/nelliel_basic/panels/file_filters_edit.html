@@ -1,8 +1,10 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="hash_type" class="display-cell" data-i18n="">Hash type (md5, sha1, sha256, sha512)</label>
-			<input id="hash_type" class="display-cell" type="text" name="hash_type" size="30" value="{{ hash_type }}">
+			<label for="board_id" class="display-cell" data-i18n="">Board</label>
+{{# boards_select }}
+			{{> menu/select }}
+{{/ boards_select }}
 		</div>
 		<div class="display-row">
 			<label for="file_hash" class="display-cell" data-i18n="">File hash</label>
@@ -13,10 +15,10 @@
 			<input id="notes" class="display-cell" type="text" name="notes" size="30" value="{{ notes}}">
 		</div>
 		<div class="display-row">
-			<label for="board_id" class="display-cell" data-i18n="">Board ID</label>
-{{# boards_select }}
-			{{> menu/select }}
-{{/ boards_select }}
+			<label for="filter_action" class="display-cell" data-i18n="">Action</label>
+{{# filter_actions }}
+			{{> panels/pieces/options_menu }}
+{{/ filter_actions }}
 		</div>
 		<div class="display-row">
 			<label for="enabled" class="display-cell" data-i18n="">Enabled</label>

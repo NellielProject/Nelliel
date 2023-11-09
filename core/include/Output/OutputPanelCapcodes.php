@@ -28,7 +28,7 @@ class OutputPanelCapcodes extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $capcodes = $this->database->executeFetchAll('SELECT * FROM "' . NEL_CAPCODES_TABLE . '"', PDO::FETCH_ASSOC);
-        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'capcodes', 'new']);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->uri(), 'capcodes', 'new']);
         $bgclass = 'row1';
 
         foreach ($capcodes as $capcode) {
@@ -40,22 +40,22 @@ class OutputPanelCapcodes extends Output
             $capcode_data['output'] = $capcode['output'];
             $capcode_data['enabled'] = $capcode['enabled'];
             $capcode_data['edit_url'] = nel_build_router_url(
-                [$this->domain->id(), 'capcodes', $capcode_data['capcode_id'], 'modify']);
+                [$this->domain->uri(), 'capcodes', $capcode_data['capcode_id'], 'modify']);
 
             if ($capcode_data['enabled'] == 1) {
                 $capcode_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'capcodes', $capcode_data['capcode_id'], 'disable']);
+                    [$this->domain->uri(), 'capcodes', $capcode_data['capcode_id'], 'disable']);
                 $capcode_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($capcode_data['enabled'] == 0) {
                 $capcode_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'capcodes', $capcode_data['capcode_id'], 'enable']);
+                    [$this->domain->uri(), 'capcodes', $capcode_data['capcode_id'], 'enable']);
                 $capcode_data['enable_disable_text'] = _gettext('Enable');
             }
 
             $capcode_data['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'capcodes', $capcode_data['capcode_id'], 'delete']);
+                [$this->domain->uri(), 'capcodes', $capcode_data['capcode_id'], 'delete']);
             $this->render_data['capcodes_list'][] = $capcode_data;
         }
 
@@ -87,7 +87,7 @@ class OutputPanelCapcodes extends Output
 
         if ($editing) {
             $capcode_id = $parameters['capcode_id'] ?? 0;
-            $form_action = nel_build_router_url([$this->domain->id(), 'capcodes', $capcode_id, 'modify']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'capcodes', $capcode_id, 'modify']);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode_id" = ?');
             $capcode_data = $this->database->executePreparedFetch($prepared, [$capcode_id], PDO::FETCH_ASSOC);
 
@@ -98,7 +98,7 @@ class OutputPanelCapcodes extends Output
                 $this->render_data['enabled'] = $capcode_data['enabled'] == 1 ? 'checked' : '';
             }
         } else {
-            $form_action = nel_build_router_url([$this->domain->id(), 'capcodes', 'new']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'capcodes', 'new']);
         }
 
         $this->render_data['form_action'] = $form_action;

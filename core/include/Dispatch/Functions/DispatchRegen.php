@@ -32,21 +32,21 @@ class DispatchRegen extends Dispatch
             case 'pages':
                 if ($this->domain->id() === Domain::SITE) {
                     if (!$user->checkPermission($this->domain, 'perm_regen_pages')) {
-                        nel_derp(500, __('You are not allowed to regenerate site pages.'));
+                        nel_derp(500, __('You are not allowed to regenerate site pages.'), 403);
                     }
 
                     $regen->sitePages($this->domain);
                     $forward = 'site';
                 } else if ($this->domain->id() === Domain::GLOBAL) {
                     if (!$user->checkPermission($this->domain, 'perm_regen_pages')) {
-                        nel_derp(502, __('You are not allowed to globally regenerate board pages.'));
+                        nel_derp(502, __('You are not allowed to globally regenerate board pages.'), 403);
                     }
 
                     $regen->allBoards(true, false);
                     $forward = 'global';
                 } else {
                     if (!$user->checkPermission($this->domain, 'perm_regen_pages')) {
-                        nel_derp(504, __('You are not allowed to regenerate pages on this board.'));
+                        nel_derp(504, __('You are not allowed to regenerate pages on this board.'), 403);
                     }
 
                     $regen->boardPages($this->domain);
@@ -58,21 +58,21 @@ class DispatchRegen extends Dispatch
             case 'cache':
                 if ($this->domain->id() === Domain::SITE) {
                     if (!$user->checkPermission($this->domain, 'perm_regen_cache')) {
-                        nel_derp(501, __('You are not allowed to regenerate site caches.'));
+                        nel_derp(501, __('You are not allowed to regenerate site caches.'), 403);
                     }
 
                     $this->domain->regenCache();
                     $forward = 'site';
                 } else if ($this->domain->id() === Domain::GLOBAL) {
                     if (!$user->checkPermission($this->domain, 'perm_regen_cache')) {
-                        nel_derp(503, __('You are not allowed to globally regenerate board caches.'));
+                        nel_derp(503, __('You are not allowed to globally regenerate board caches.'), 403);
                     }
 
                     $this->domain->regenCache();
                     $forward = 'global';
                 } else {
                     if (!$user->checkPermission($this->domain, 'perm_regen_cache')) {
-                        nel_derp(505, __('You are not allowed to regenerate caches on this board.'));
+                        nel_derp(505, __('You are not allowed to regenerate caches on this board.'), 403);
                     }
 
                     $this->domain->regenCache();
@@ -83,7 +83,7 @@ class DispatchRegen extends Dispatch
 
             case 'overboard':
                 if (!$user->checkPermission($this->domain, 'perm_regen_overboard')) {
-                    nel_derp(506, __('You are not allowed to regenerate overboard pages.'));
+                    nel_derp(506, __('You are not allowed to regenerate overboard pages.'), 403);
                 }
 
                 $regen->overboard($this->domain);

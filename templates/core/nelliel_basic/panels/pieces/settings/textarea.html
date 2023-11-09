@@ -1,12 +1,15 @@
 <tr>
+{{# show_lock_update }}
+	{{> panels/pieces/settings/lock_update }}
+{{/ show_lock_update }}
+{{# show_raw }}
+	{{> panels/pieces/settings/store_raw }}
+{{/ show_raw }}
 	{{> panels/pieces/settings/setting_name }}
 {{# input_attributes }}
 	<td>
 		<textarea id="{{ setting_name }}" class="display-cell" name="{{ setting_name }}[value]" {{ setting_disabled }}>{{ setting_value }}</textarea>
 	</td>
 {{/ input_attributes }}
-{{# show_lock_update }}
-	{{> panels/pieces/settings/lock_update }}
-{{/ show_lock_update }}
 	{{> panels/pieces/settings/setting_description }}
 </tr>

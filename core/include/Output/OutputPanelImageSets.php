@@ -43,18 +43,18 @@ class OutputPanelImageSets extends Output
 
             if ($set_data['enabled'] == 1) {
                 $set_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'image-sets', $image_set->id(), 'disable']);
+                    [$this->domain->uri(), 'image-sets', $image_set->id(), 'disable']);
                 $set_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($set_data['enabled'] == 0) {
                 $set_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'image-sets', $image_set->id(), 'enable']);
+                    [$this->domain->uri(), 'image-sets', $image_set->id(), 'enable']);
                 $set_data['enable_disable_text'] = _gettext('Enable');
             }
 
             $set_data['uninstall_url'] = nel_build_router_url(
-                [$this->domain->id(), 'image-sets', $image_set->id(), 'uninstall']);
+                [$this->domain->uri(), 'image-sets', $image_set->id(), 'uninstall']);
             $this->render_data['installed_list'][] = $set_data;
         }
 
@@ -69,7 +69,7 @@ class OutputPanelImageSets extends Output
             $set_data['name'] = $image_set['info']['name'];
             $set_data['is_installed'] = in_array($image_set['info']['id'], $installed_ids);
             $set_data['install_url'] = nel_build_router_url(
-                [$this->domain->id(), 'image-sets', $image_set['info']['id'], 'install']);
+                [$this->domain->uri(), 'image-sets', $image_set['info']['id'], 'install']);
             $this->render_data['available_list'][] = $set_data;
         }
 

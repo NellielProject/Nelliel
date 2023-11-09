@@ -47,13 +47,13 @@ class OutputPanelUsers extends Output
             }
 
             $user_data['edit_url'] = nel_build_router_url(
-                [$this->domain->id(), 'users', $user_info['username'], 'modify']);
+                [$this->domain->uri(), 'users', $user_info['username'], 'modify']);
             $user_data['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'users', $user_info['username'], 'delete']);
+                [$this->domain->uri(), 'users', $user_info['username'], 'delete']);
             $this->render_data['users_list'][] = $user_data;
         }
 
-        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'users', 'new']);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->uri(), 'users', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -81,12 +81,12 @@ class OutputPanelUsers extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
         if (empty($username)) {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'users', 'new']);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'users', 'new']);
         } else {
             $edit_user = $authorization->getUser($username);
             $this->render_data['username'] = $edit_user->getData('username');
             $this->render_data['form_action'] = nel_build_router_url(
-                [$this->domain->id(), 'users', $username, 'modify']);
+                [$this->domain->uri(), 'users', $username, 'modify']);
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 
@@ -95,28 +95,28 @@ class OutputPanelUsers extends Output
         } else {
             $this->render_data['is_site_owner'] = false;
             $domain_list = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
-                PDO::FETCH_ASSOC);
-            array_unshift($domain_list, ['board_id' => Domain::GLOBAL]);
-            array_unshift($domain_list, ['board_id' => Domain::SITE]);
+                PDO::FETCH_COLUMN);
+            array_unshift($domain_list, Domain::GLOBAL);
+            array_unshift($domain_list, Domain::SITE);
             $query = 'SELECT "role_id", "role_title", "role_level" FROM "' . NEL_ROLES_TABLE .
                 '" ORDER BY "role_level" ASC';
             $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
-            foreach ($domain_list as $domain) {
+            foreach ($domain_list as $domain_id) {
+                $domain = Domain::getDomainFromID($domain_id, $this->database);
                 $domain_role_data = array();
-                $domain_role_data['domain'] = $domain['board_id'];
-                $domain_role_data['domain_name'] = $domain['board_id'];
-                $domain_role_data['select_name'] = 'domain_role_' . $domain['board_id'];
-                $domain_role_data['select_id'] = 'domain_role_' . $domain['board_id'];
+                $domain_role_data['domain'] = $domain->uri();
+                $domain_role_data['select_name'] = 'domain_role_' . $domain->uri();
+                $domain_role_data['select_id'] = 'domain_role_' . $domain->uri();
                 $prepared = $this->database->prepare(
                     'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
-                $role_id = $this->database->executePreparedFetch($prepared, [$username, $domain['board_id']],
+                $role_id = $this->database->executePreparedFetch($prepared, [$username, $domain->uri()],
                     PDO::FETCH_COLUMN);
 
                 foreach ($roles as $role) {
                     $role_options = array();
-                    $role_options['option_id'] = $role['role_id'];
-                    $role_options['option_name'] = $role['role_title'];
+                    $role_options['option_value'] = $role['role_id'];
+                    $role_options['option_label'] = $role['role_title'];
 
                     if ($role['role_id'] === $role_id) {
                         $role_options['option_selected'] = 'selected';
@@ -125,13 +125,14 @@ class OutputPanelUsers extends Output
                     $domain_role_data['roles']['options'][] = $role_options;
                 }
 
-                if ($domain['board_id'] === Domain::SITE) {
+                if ($domain->id() === Domain::SITE) {
                     $domain_role_data['domain_name'] = _gettext('Site');
                     $this->render_data['special_domain_roles'][] = $domain_role_data;
-                } else if ($domain['board_id'] === Domain::GLOBAL) {
+                } else if ($domain->id() === Domain::GLOBAL) {
                     $domain_role_data['domain_name'] = _gettext('Global');
                     $this->render_data['special_domain_roles'][] = $domain_role_data;
                 } else {
+                    $domain_role_data['domain_name'] = $domain->uri();
                     $this->render_data['domain_roles'][] = $domain_role_data;
                 }
             }

@@ -66,18 +66,21 @@
 		<caption data-i18n="">Board configuration</caption>
 		<thead>
 			<tr>
-				<th scope="col" class="min-column-width" data-i18n="">Name</th>
+	{{# show_lock_update_column }}
+				<th scope="col" class="min-column-width" data-i18n="">Lock</th>
+				<th scope="col" class="min-column-width" data-i18n="">Force Update</th>
+	{{/ show_lock_update_column }}
+	{{# show_raw_column }}
+				<th scope="col" class="min-column-width" data-i18n="">Store Raw</th>
+	{{/ show_raw_column }}
+				<th scope="col" class="min-column-width" data-i18n="">Setting</th>
 				<th scope="col" class="min-column-width" data-i18n="">Value</th>
-	{{# show_lock_update }}
-				<th scope="col" data-i18n="">Lock</th>
-				<th scope="col" data-i18n="">Force Update</th>
-	{{/ show_lock_update }}
 				<th scope="col" data-i18n="">Description</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<th id="section-general" colspan="5" data-i18n="">General</th>
+				<th id="section-general" colspan="{{ colspan }}" data-i18n="">General</th>
 			</tr>
 	{{# name }}
 			{{> panels/pieces/settings/text }}
@@ -115,6 +118,9 @@
 	{{# delete_post_renzoku }}
 			{{> panels/pieces/settings/number }}
 	{{/ delete_post_renzoku }}
+	{{# delete_post_time_limit }}
+			{{> panels/pieces/settings/number }}
+	{{/ delete_post_time_limit }}
 	{{# safety_level }}
 			{{> panels/pieces/settings/select }}
 	{{/ safety_level }}
@@ -126,7 +132,13 @@
 	{{/ board_footer_text }}
 	{{# enabled_styles }}
 			<tr class="row1">
-			{{> panels/pieces/settings/setting_name }}
+		{{# show_lock_update }}
+				{{> panels/pieces/settings/lock_update }}
+		{{/ show_lock_update }}
+		{{# show_raw }}
+				{{> panels/pieces/settings/store_raw }}
+		{{/ show_raw }}
+				{{> panels/pieces/settings/setting_name }}
 				<td>
 		{{# styles }}
 			{{# entry }}
@@ -139,9 +151,6 @@
 			{{/ entry }}
 		{{/ styles }}
 				</td>
-		{{# show_lock_update }}
-				{{> panels/pieces/settings/lock_update }}
-		{{/ show_lock_update }}
 				{{> panels/pieces/settings/setting_description }}
 			</tr>
 	{{/ enabled_styles }}
@@ -172,7 +181,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-banners" colspan="3" data-i18n="">Banners</th>
+				<th id="section-banners" colspan="{{ colspan }}" data-i18n="">Banners</th>
 			</tr>
 	{{# show_top_banners }}
 		{{> panels/pieces/settings/checkbox }}
@@ -189,13 +198,13 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-bans" colspan="3" data-i18n="">Bans</th>
+				<th id="section-bans" colspan="{{ colspan }}" data-i18n="">Bans</th>
 			</tr>
 	{{# must_see_ban }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ must_see_ban }}
 	{{# ban_page_extra_text }}
-			{{> panels/pieces/settings/text }}
+			{{> panels/pieces/settings/textarea }}
 	{{/ ban_page_extra_text }}
 	{{# allow_ban_appeals }}
 			{{> panels/pieces/settings/checkbox }}
@@ -218,7 +227,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-r9k" colspan="3" data-i18n="">R9K</th>
+				<th id="section-r9k" colspan="{{ colspan }}" data-i18n="">R9K</th>
 			</tr>
 	{{# r9k_enable_board }}
 			{{> panels/pieces/settings/checkbox }}
@@ -247,7 +256,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-new-post-form" colspan="5" data-i18n="">New Post Form</th>
+				<th id="section-new-post-form" colspan="{{ colspan }}" data-i18n="">New Post Form</th>
 			</tr>
 	{{# enable_op_name_field }}
 			{{> panels/pieces/settings/checkbox }}
@@ -375,7 +384,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-uploads" colspan="5" data-i18n="">Uploads</th>
+				<th id="section-uploads" colspan="{{ colspan }}" data-i18n="">Uploads</th>
 			</tr>
 	{{# enable_uploads }}
 			{{> panels/pieces/settings/checkbox }}
@@ -493,13 +502,16 @@
 	{{/ store_exif_data }}
 	{{# enabled_filetypes }}
 		<tr class="row1">
+		{{# show_lock_update }}
+			{{> panels/pieces/settings/lock_update }}
+		{{/ show_lock_update }}
+		{{# show_raw }}
+			{{> panels/pieces/settings/store_raw }}
+		{{/ show_raw }}
 			{{> panels/pieces/settings/setting_name }}
 			<td>
 				<a href="#section-filetypes-selection" data-i18n="">Filetypes Selection</a>
 			</td>
-		{{# show_lock_update }}
-			{{> panels/pieces/settings/lock_update }}
-		{{/ show_lock_update }}
 			{{> panels/pieces/settings/setting_description }}
 		</tr>
 	{{/ enabled_filetypes }}
@@ -509,7 +521,7 @@
 		</tbody>
 		<tbody>
 		<tr>
-			<th id="section-other-new-post" colspan="5" data-i18n="">Other New Post</th>
+			<th id="section-other-new-post" colspan="{{ colspan }}" data-i18n="">Other New Post</th>
 		</tr>
 	{{# allow_sage }}
 			{{> panels/pieces/settings/checkbox }}
@@ -563,12 +575,12 @@
 			{{> panels/pieces/settings/checkbox }}
 	{{/ always_noko }}
 	{{# automatic_gets }}
-			{{> panels/pieces/settings/text }}
+			{{> panels/pieces/settings/textarea }}
 	{{/ automatic_gets }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-preview-generation" colspan="5" data-i18n="">Preview Generation</th>
+				<th id="section-preview-generation" colspan="{{ colspan }}" data-i18n="">Preview Generation</th>
 			</tr>
 	{{# create_static_preview }}
 			{{> panels/pieces/settings/checkbox }}
@@ -609,7 +621,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-threads" colspan="5" data-i18n="">Threads</th>
+				<th id="section-threads" colspan="{{ colspan }}" data-i18n="">Threads</th>
 			</tr>
 	{{# limit_post_count }}
 			{{> panels/pieces/settings/checkbox }}
@@ -656,7 +668,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-index-rendering" colspan="5" data-i18n="">Index Rendering</th>
+				<th id="section-index-rendering" colspan="{{ colspan }}" data-i18n="">Index Rendering</th>
 			</tr>
 	{{# enable_index }}
 			{{> panels/pieces/settings/checkbox }}
@@ -703,7 +715,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-catalog-rendering" colspan="5" data-i18n="">Catalog Rendering</th>
+				<th id="section-catalog-rendering" colspan="{{ colspan }}" data-i18n="">Catalog Rendering</th>
 			</tr>
 	{{# enable_catalog }}
 			{{> panels/pieces/settings/checkbox }}
@@ -750,7 +762,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-thread-rendering" colspan="5" data-i18n="">Thread Rendering</th>
+				<th id="section-thread-rendering" colspan="{{ colspan }}" data-i18n="">Thread Rendering</th>
 			</tr>
 	{{# subject_in_title }}
 			{{> panels/pieces/settings/checkbox }}
@@ -767,7 +779,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-post-rendering" colspan="5" data-i18n="">Post Rendering</th>
+				<th id="section-post-rendering" colspan="{{ colspan }}" data-i18n="">Post Rendering</th>
 			</tr>
 	{{# post_time_format }}
 			{{> panels/pieces/settings/text }}
@@ -835,7 +847,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-upload-rendering" colspan="5" data-i18n="">Upload Rendering</th>
+				<th id="section-upload-rendering" colspan="{{ colspan }}" data-i18n="">Upload Rendering</th>
 			</tr>
 	{{# show_static_preview }}
 			{{> panels/pieces/settings/checkbox }}
@@ -920,7 +932,13 @@
 	{{/ display_deleted_placeholder }}
 	{{# enabled_content_ops }}
 			<tr class="row1">
-			{{> panels/pieces/settings/setting_name }}
+		{{# show_lock_update }}
+				{{> panels/pieces/settings/lock_update }}
+		{{/ show_lock_update }}
+		{{# show_raw }}
+				{{> panels/pieces/settings/store_raw }}
+		{{/ show_raw }}
+				{{> panels/pieces/settings/setting_name }}
 				<td>
 		{{# content_ops }}
 			{{# entry }}
@@ -933,9 +951,6 @@
 			{{/ entry }}
 		{{/ content_ops }}
 				</td>
-		{{# show_lock_update }}
-				{{> panels/pieces/settings/lock_update }}
-		{{/ show_lock_update }}
 				{{> panels/pieces/settings/setting_description }}
 			</tr>
 	{{/ enabled_content_ops }}
@@ -951,14 +966,20 @@
 	{{# scale_upload_filesize_units }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ scale_upload_filesize_units }}
+	{{# preview_lazy_loading }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ preview_lazy_loading }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-new-post-form-rendering" colspan="5" data-i18n="">New Post Form Rendering</th>
+				<th id="section-new-post-form-rendering" colspan="{{ colspan }}" data-i18n="">New Post Form Rendering</th>
 			</tr>
 	{{# show_allowed_filetypes }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_allowed_filetypes }}
+	{{# show_file_category_max_sizes }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_file_category_max_sizes }}
 	{{# show_allowed_embeds }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ show_allowed_embeds }}
@@ -971,10 +992,58 @@
 	{{# scale_new_post_filesize_units }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ scale_new_post_filesize_units }}
+	{{# name_field_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ name_field_label }}
+	{{# name_field_placeholder }}
+			{{> panels/pieces/settings/text }}
+	{{/ name_field_placeholder }}
+	{{# email_field_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ email_field_label }}
+	{{# email_field_placeholder }}
+			{{> panels/pieces/settings/text }}
+	{{/ email_field_placeholder }}
+	{{# subject_field_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ subject_field_label }}
+	{{# subject_field_placeholder }}
+			{{> panels/pieces/settings/text }}
+	{{/ subject_field_placeholder }}
+	{{# comment_field_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ comment_field_label }}
+	{{# comment_field_placeholder }}
+			{{> panels/pieces/settings/text }}
+	{{/ comment_field_placeholder }}
+	{{# fgsfds_field_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ fgsfds_field_label }}
+	{{# fgsfds_field_placeholder }}
+			{{> panels/pieces/settings/text }}
+	{{/ fgsfds_field_placeholder }}
+	{{# password_field_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ password_field_label }}
+	{{# password_field_placeholder }}
+			{{> panels/pieces/settings/text }}
+	{{/ password_field_placeholder }}
+	{{# files_form_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ files_form_label }}
+	{{# embeds_form_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ embeds_form_label }}
+	{{# flags_form_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ flags_form_label }}
+	{{# captcha_form_label }}
+			{{> panels/pieces/settings/text }}
+	{{/ captcha_form_label }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-other-rendering" colspan="5" data-i18n="">Other Rendering</th>
+				<th id="section-other-rendering" colspan="{{ colspan }}" data-i18n="">Other Rendering</th>
 			</tr>
 	{{# template_id }}
 			{{> panels/pieces/settings/select }}
@@ -1018,7 +1087,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-anti-spam" colspan="5" data-i18n="">Anti-spam</th>
+				<th id="section-anti-spam" colspan="{{ colspan }}" data-i18n="">Anti-spam</th>
 			</tr>
 	{{# use_post_captcha }}
 			{{> panels/pieces/settings/checkbox }}
@@ -1038,8 +1107,11 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-moderator-links" colspan="5" data-i18n="">Moderator Links</th>
+				<th id="section-moderator-links" colspan="{{ colspan }}" data-i18n="">Moderator Links</th>
 			</tr>
+	{{# translate_mod_links }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ translate_mod_links }}
 	{{# mod_links_left_bracket }}
 			{{> panels/pieces/settings/text }}
 	{{/ mod_links_left_bracket }}
@@ -1091,8 +1163,11 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-content-links" colspan="5" data-i18n="">Content Links</th>
+				<th id="section-content-links" colspan="{{ colspan }}" data-i18n="">Content Links</th>
 			</tr>
+	{{# translate_content_links }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ translate_content_links }}
 	{{# content_links_left_bracket }}
 			{{> panels/pieces/settings/text }}
 	{{/ content_links_left_bracket }}
@@ -1162,11 +1237,15 @@
 		<div class="display-row">
 			<span class="display-cell">
 				<br>
-				<input type="hidden" name="{{ input_name }}[default]" value="0">
-				<label>
-				<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
-				<span class="bold">{{ item_label }}</span>
-				</label>
+				<input type="hidden" name="{{ input_name }}[enabled][default]" value="0">
+				<label for="{{ input_name }}[enabled]" class="bold">{{ item_label }}</label>
+				<input id="{{ input_name }}[enabled]" type="checkbox" name="{{ input_name }}[enabled][value]" value="1" {{ checked }} {{ disabled }}>
+			</span>
+		</div>
+		<div class="display-row">
+			<span class="display-cell">
+				<label for="{{ input_name }}[max_size]" data-i18n="">Max file size. 0 to disable. (bytes)</label>
+				<input id="{{ input_name }}[max_size]" type="number" name="{{ input_name }}[max_size]" value="{{ category_max_size }}">
 			</span>
 		</div>
 			{{/ category_select }}
@@ -1174,9 +1253,9 @@
 		<div class="display-row">
 				{{# entry }}
 			<span class="display-cell">
-				<input type="hidden" name="{{ input_name }}[default]" value="0">
+				<input type="hidden" name="{{ input_name }}[enabled][default]" value="0">
 				<label>
-				<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
+				<input type="checkbox" name="{{ input_name }}[enabled][value]" value="1" {{ checked }} {{ disabled }}>
 				<span>{{ item_label }}</span>
 				</label>
 			</span>

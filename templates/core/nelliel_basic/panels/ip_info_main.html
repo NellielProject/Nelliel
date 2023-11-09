@@ -1,0 +1,61 @@
+{{# has_data }}
+	{{# can_view_unhashed }}
+<div>
+	<span data-i18n="">IP:</span>
+	<span>{{ ip_address }}</span>
+</div>
+	{{/ can_view_unhashed }}
+<div>
+	<span data-i18n="">Hash:</span>
+	<span>{{ hashed_ip_address }}</span>
+</div>
+<div>
+	<span data-i18n="">Last activity:</span>
+	<span>{{ last_activity }}</span>
+</div>
+{{/ has_data }}
+{{^ has_data }}
+<p>
+	<span data-i18n="">No activity or info available for:</span> {{ access_id }}
+</p>
+{{/ has_data }}
+<hr>
+<table >
+	<caption>{{ access_id }}</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Username</th>
+			<th scope="col" data-i18n="">Time</th>
+			<th scope="col" data-i18n="">Notes</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# notes_list }}
+		<tr class="{{ bgclass }}">
+			<td>{{ username }}</td>
+			<td>{{ time }}</td>
+			<td>{{ note }}</td>
+			<td>
+	{{# can_delete_notes }}
+				<span class="text-button">[<a class="display-cell" href="{{ delete_url }}" data-i18n="">Delete</a>]</span>
+	{{/ can_delete_notes }}
+			</td>
+		</tr>
+{{/ notes_list }}
+	</tbody>
+</table>
+{{# can_add_notes }}
+<form accept-charset="utf-8" action="{{ notes_form_action }}" method="post">
+	<div class="display-table">
+		<div class="display-row">
+			<label for="notes" class="display-cell" data-i18n="">Notes</label>
+			<input id="notes" class="display-cell" type="text" name="notes" size="30" value="{{ notes }}">
+			<input type="hidden" name="ip_address" value="{{ access_id }}">
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Add Note" data-i18n-attributes="value">
+		</div>
+	</div>
+</form>
+{{/ can_add_notes }}

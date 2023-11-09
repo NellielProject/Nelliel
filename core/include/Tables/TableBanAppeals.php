@@ -24,7 +24,8 @@ class TableBanAppeals extends Table
             'appeal' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_STR],
             'response' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'pending' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
-            'denied' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT]];
+            'denied' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'appeal_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'ban_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -32,7 +33,8 @@ class TableBanAppeals extends Table
             'appeal' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'response' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'pending' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'denied' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
+            'denied' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 
@@ -49,6 +51,7 @@ class TableBanAppeals extends Table
             response    TEXT DEFAULT NULL,
             pending     SMALLINT NOT NULL DEFAULT 0,
             denied      SMALLINT NOT NULL DEFAULT 0,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (appeal_id),
             CONSTRAINT fk_ban_appeals__bans
             FOREIGN KEY (ban_id) REFERENCES ' . NEL_BANS_TABLE . ' (ban_id)

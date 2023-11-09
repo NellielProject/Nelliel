@@ -88,7 +88,7 @@ class AdminContentOps extends Admin
 
         switch ($perm) {
             case 'perm_manage_content_ops':
-                nel_derp(420, _gettext('You are not allowed to manage content ops.'));
+                nel_derp(420, _gettext('You are not allowed to manage content ops.'), 403);
                 break;
 
             default:

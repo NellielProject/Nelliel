@@ -18,6 +18,7 @@ class BoardJSON extends JSON
 
     protected function generate(): void
     {
+        $raw_data = array();
         $raw_data['board_uri'] = $this->board->reference('board_uri');
 
         if ($this->board->setting('show_name')) {

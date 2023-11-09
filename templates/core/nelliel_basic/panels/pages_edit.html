@@ -14,7 +14,13 @@
 			<textarea id="text" class="display-cell" name="text" cols="64" rows="3">{{ text }}</textarea>
 		</div>
 		<div class="display-row">
-			<input type="submit" value="Add Page" data-i18n-attributes="value">
+			<label for="markup_type" class="display-cell" data-i18n="">Markup</label>
+{{# markup_type_select }}
+				{{> menu/select }}
+{{/ markup_type_select }}
+		</div>
+		<div class="display-row">
+			<input type="submit" value="Update Page" data-i18n-attributes="value">
 		</div>
 	</div>
 </form>

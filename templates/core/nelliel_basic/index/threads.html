@@ -1,4 +1,3 @@
-<form class="content-page" accept-charset="utf-8" action="{{ form_action }}" method="post">
 {{# threads }}
 	<div id="{{ thread_corral_id }}" class="thread-corral" data-jsevents="click|mouseover|mouseout">
 	{{# overboard }}
@@ -7,9 +6,6 @@
 	{{# in_modmode }}
 		<div class="modmode-header">
 			{{> thread/pieces/thread_modmode }}
-		</div>
-		<div class="modmode-header">
-			{{> thread/pieces/post_modmode }}
 		</div>
 	{{/ in_modmode }}
 	{{# is_shadow }}
@@ -31,10 +27,3 @@
 	</div>
 	<hr class="clear">
 {{/ threads }}
-{{# index_navigation_bottom }}
-	{{> navigation/board_pages }}
-{{/ index_navigation_bottom }}
-{{# footer_form }}
-	{{> thread/footer_form }}
-{{/ footer_form }}
-</form>

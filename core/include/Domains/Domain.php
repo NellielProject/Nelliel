@@ -20,6 +20,9 @@ abstract class Domain implements NellielCacheInterface
     const SITE = 'site';
     const GLOBAL = 'global';
     protected $domain_id;
+    protected $uri;
+    protected $display_uri;
+    protected $notes;
     protected $settings;
     protected $references;
     protected $cache_handler;
@@ -33,6 +36,7 @@ abstract class Domain implements NellielCacheInterface
     protected $locale = NEL_DEFAULT_LOCALE;
     protected $language;
     protected $statistics;
+    protected $exists = false;
 
     protected abstract function loadSettings(): void;
 
@@ -42,17 +46,44 @@ abstract class Domain implements NellielCacheInterface
 
     public abstract function updateStatistics(): void;
 
-    protected function utilitySetup()
+    public abstract function uri(bool $display = false, bool $formatted = false): string;
+
+    function __construct(string $domain_id, NellielPDO $database)
+    {
+        $this->database = $database;
+        $this->loadDomainInfo($domain_id);
+        $this->utilitySetup();
+        $this->locale();
+    }
+
+    protected function loadDomainInfo(string $id): void
+    {
+        $id_lower = utf8_strtolower($id);
+        $prepared = $this->database->prepare(
+            'SELECT * FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ? OR "uri" = ?');
+        $info = $this->database->executePreparedFetch($prepared, [$id_lower, $id_lower], PDO::FETCH_ASSOC);
+
+        if (is_array($info)) {
+            $this->domain_id = $info['domain_id'] ?? '';
+            $this->uri = $info['uri'] ?? '';
+            $this->display_uri = $info['display_uri'] ?? '';
+            $this->notes = $info['notes'] ?? '';
+        }
+
+        $this->exists = isset($this->domain_id) && $this->domain_id !== '';
+    }
+
+    protected function utilitySetup(): void
     {
         $this->front_end_data = new FrontEndData($this->database);
         $this->file_handler = nel_utilities()->fileHandler();
         $this->cache_handler = nel_utilities()->cacheHandler();
-        $this->translator = new Translator($this);
+        $this->translator = new Translator($this->file_handler);
         $this->language = new Language();
         $this->statistics = new Statistics();
     }
 
-    public function database(NellielPDO $new_database = null)
+    public function database(NellielPDO $new_database = null): NellielPDO
     {
         if (!is_null($new_database)) {
             $this->database = $new_database;
@@ -61,9 +92,14 @@ abstract class Domain implements NellielCacheInterface
         return $this->database;
     }
 
-    public function id()
+    public function id(): string
     {
         return $this->domain_id;
+    }
+
+    public function exists(): bool
+    {
+        return $this->exists;
     }
 
     public function setting(string $setting = null)
@@ -96,7 +132,7 @@ abstract class Domain implements NellielCacheInterface
         return $this->references[$reference] ?? '';
     }
 
-    public function templatePath($new_path = null)
+    public function templatePath($new_path = null): string
     {
         if (!is_null($new_path)) {
             $this->template_path = $new_path;
@@ -105,7 +141,7 @@ abstract class Domain implements NellielCacheInterface
         return $this->template_path;
     }
 
-    public function translator()
+    public function translator(): Translator
     {
         return $this->translator;
     }
@@ -120,17 +156,17 @@ abstract class Domain implements NellielCacheInterface
         return $this->locale;
     }
 
-    public function updateLocale(string $locale)
+    public function updateLocale(string $locale): void
     {
         $this->locale = utf8_str_replace('-', '_', $locale);
     }
 
-    public function frontEndData()
+    public function frontEndData(): FrontEndData
     {
         return $this->front_end_data;
     }
 
-    protected function cacheSettings()
+    protected function cacheSettings(): void
     {
         $settings = $this->loadSettingsFromDatabase();
         $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
@@ -150,7 +186,21 @@ abstract class Domain implements NellielCacheInterface
         } else if ($id === Domain::GLOBAL) {
             return new DomainGlobal($database);
         } else {
-            return new DomainBoard($id, $database);
+            $board_domain = new DomainBoard($id, $database);
+
+            // Check if we were passed a URI
+            if (!$board_domain->exists()) {
+                $prepared = $database->prepare(
+                    'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_uri" = ?');
+                $prepared->bindValue(1, $id, PDO::PARAM_STR);
+                $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+                if ($result !== false) {
+                    return new DomainBoard($result, $database);
+                }
+            }
+
+            return $board_domain;
         }
     }
 

@@ -310,27 +310,27 @@ class AdminThreads extends Admin
 
         switch ($perm) {
             case 'perm_threads_access':
-                nel_derp(410, _gettext('You cannot access the threads control panel.'));
+                nel_derp(410, _gettext('You cannot access the threads control panel.'), 403);
                 break;
 
             case 'perm_modify_content_status':
-                nel_derp(411, _gettext('You are not allowed to change the status of threads or posts.'));
+                nel_derp(411, _gettext('You are not allowed to change the status of threads or posts.'), 403);
                 break;
 
             case 'perm_edit_posts':
-                nel_derp(412, _gettext('You are not allowed to edit posts.'));
+                nel_derp(412, _gettext('You are not allowed to edit posts.'), 403);
                 break;
 
             case 'perm_delete_by_ip':
-                nel_derp(413, _gettext('You are not allowed to delete content by IP.'));
+                nel_derp(413, _gettext('You are not allowed to delete content by IP.'), 403);
                 break;
 
             case 'perm_move_content':
-                nel_derp(414, _gettext('You are not allowed to move content on one or both of the selected boards.'));
+                nel_derp(414, _gettext('You are not allowed to move content on one or both of the selected boards.'), 403);
                 break;
 
             case 'perm_delete_content':
-                nel_derp(415, _gettext('You are not allowed to delete content.'));
+                nel_derp(415, _gettext('You are not allowed to delete content.'), 403);
                 break;
 
             default:

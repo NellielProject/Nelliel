@@ -45,12 +45,12 @@ class OutputPanelRoles extends Output
             $role_data['can_modify'] = $this->session->user()->isSiteOwner() ||
                 ($authorization->roleLevelCheck($user_role, $role['role_id']) &&
                 $this->session->user()->checkPermission($this->domain, 'perm_manage_roles'));
-            $role_data['edit_url'] = nel_build_router_url([$this->domain->id(), 'roles', $role['role_id'], 'modify']);
-            $role_data['delete_url'] = nel_build_router_url([$this->domain->id(), 'roles', $role['role_id'], 'delete']);
+            $role_data['edit_url'] = nel_build_router_url([$this->domain->uri(), 'roles', $role['role_id'], 'modify']);
+            $role_data['delete_url'] = nel_build_router_url([$this->domain->uri(), 'roles', $role['role_id'], 'delete']);
             $this->render_data['roles_list'][] = $role_data;
         }
 
-        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'roles', 'new']);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->uri(), 'roles', 'new']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -79,10 +79,10 @@ class OutputPanelRoles extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
         if ($role->empty()) {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'roles', 'new']);
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'roles', 'new']);
         } else {
             $this->render_data['form_action'] = nel_build_router_url(
-                [$this->domain->id(), 'roles', $role->id(), 'modify']);
+                [$this->domain->uri(), 'roles', $role->id(), 'modify']);
             $this->render_data['role_id'] = $role->getData('role_id');
             $this->render_data['role_level'] = $role->getData('role_level');
             $this->render_data['role_title'] = $role->getData('role_title');

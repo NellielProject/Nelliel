@@ -28,7 +28,7 @@ class OutputPanelMarkup extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $markups = $this->database->executeFetchAll('SELECT * FROM "' . NEL_MARKUP_TABLE . '"', PDO::FETCH_ASSOC);
-        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'markup', 'new']);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->uri(), 'markup', 'new']);
         $bgclass = 'row1';
 
         foreach ($markups as $markup) {
@@ -38,27 +38,27 @@ class OutputPanelMarkup extends Output
             $markup_data['markup_id'] = $markup['markup_id'];
             $markup_data['label'] = $markup['label'];
             $markup_data['type'] = $markup['type'];
-            $markup_data['match_regex'] = $markup['match_regex'];
-            $markup_data['replacement'] = $markup['replacement'];
+            $markup_data['match'] = $markup['match_regex'];
+            $markup_data['replace'] = $markup['replacement'];
             $markup_data['enabled'] = $markup['enabled'];
             $markup_data['notes'] = $markup['notes'];
             $markup_data['edit_url'] = nel_build_router_url(
-                [$this->domain->id(), 'markup', $markup_data['markup_id'], 'modify']);
+                [$this->domain->uri(), 'markup', $markup_data['markup_id'], 'modify']);
 
             if ($markup_data['enabled'] == 1) {
                 $markup_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'markup', $markup_data['markup_id'], 'disable']);
+                    [$this->domain->uri(), 'markup', $markup_data['markup_id'], 'disable']);
                 $markup_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($markup_data['enabled'] == 0) {
                 $markup_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'markup', $markup_data['markup_id'], 'enable']);
+                    [$this->domain->uri(), 'markup', $markup_data['markup_id'], 'enable']);
                 $markup_data['enable_disable_text'] = _gettext('Enable');
             }
 
             $markup_data['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'markup', $markup_data['markup_id'], 'delete']);
+                [$this->domain->uri(), 'markup', $markup_data['markup_id'], 'delete']);
             $this->render_data['markup_list'][] = $markup_data;
         }
 
@@ -90,7 +90,7 @@ class OutputPanelMarkup extends Output
 
         if ($editing) {
             $markup_id = $parameters['markup_id'] ?? 0;
-            $form_action = nel_build_router_url([$this->domain->id(), 'markup', $markup_id, 'modify']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'markup', $markup_id, 'modify']);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_MARKUP_TABLE . '" WHERE "markup_id" = ?');
             $markup_data = $this->database->executePreparedFetch($prepared, [$markup_id], PDO::FETCH_ASSOC);
 
@@ -98,15 +98,17 @@ class OutputPanelMarkup extends Output
                 $this->render_data['markup_id'] = $markup_data['markup_id'];
                 $this->render_data['label'] = $markup_data['label'];
                 $this->render_data['type'] = $markup_data['type'];
-                $this->render_data['match_regex'] = $markup_data['match_regex'];
-                $this->render_data['replacement'] = $markup_data['replacement'];
+                $this->render_data['match'] = $markup_data['match_regex'];
+                $this->render_data['replace'] = $markup_data['replacement'];
                 $this->render_data['enabled'] = $markup_data['enabled'] == 1 ? 'checked' : '';
                 $this->render_data['notes'] = $markup_data['notes'];
             }
         } else {
-            $form_action = nel_build_router_url([$this->domain->id(), 'markup', 'new']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'markup', 'new']);
         }
 
+        $menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['type_select'] = $menu->markupTypes($markup_data['type'] ?? '', $data_only);
         $this->render_data['form_action'] = $form_action;
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);

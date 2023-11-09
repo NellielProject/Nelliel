@@ -41,7 +41,7 @@ class TableSettingOptions extends Table
             setting_name        VARCHAR(50) NOT NULL,
             menu_data           ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             raw_output          SMALLINT NOT NULL DEFAULT 0,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (setting_category, setting_name),
             UNIQUE (setting_category, setting_name),
             CONSTRAINT fk_setting_options__settings
@@ -68,11 +68,30 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'static_preview_format', '{"JPEG": "jpg", "PNG": "png", "WebP": "webp", "GIF": "gif"}', 0]);
         $this->insertDefaultRow(['board', 'animated_preview_format', '{"GIF": "gif"}', 0]);
         $this->insertDefaultRow(['board', 'old_threads', '{"Nothing": "NOTHING", "Prune": "PRUNE", "Archive": "ARCHIVE"}', 0]);
+        $this->insertDefaultRow(['site', 'name', '', 1]);
         $this->insertDefaultRow(['site', 'description', '', 1]);
+        $this->insertDefaultRow(['site', 'global_announcement', '', 1]);
         $this->insertDefaultRow(['site', 'site_content_disclaimer', '', 1]);
         $this->insertDefaultRow(['site', 'site_footer_text', '', 1]);
+        $this->insertDefaultRow(['site', 'error_message_header', '', 1]);
+        $this->insertDefaultRow(['board', 'name', '', 1]);
         $this->insertDefaultRow(['board', 'description', '', 1]);
         $this->insertDefaultRow(['board', 'board_content_disclaimer', '', 1]);
+        $this->insertDefaultRow(['board', 'board_footer_text', '', 1]);
+        $this->insertDefaultRow(['board', 'shadow_message_moved', '', 1]);
+        $this->insertDefaultRow(['board', 'shadow_message_merged', '', 1]);
+        $this->insertDefaultRow(['board', 'ban_page_extra_text', '', 1]);
+        $this->insertDefaultRow(['board', 'post_backlinks_label', '', 1]);
+        $this->insertDefaultRow(['board', 'name_field_label', '', 1]);
+        $this->insertDefaultRow(['board', 'email_field_label', '', 1]);
+        $this->insertDefaultRow(['board', 'subject_field_label', '', 1]);
+        $this->insertDefaultRow(['board', 'comment_field_label', '', 1]);
+        $this->insertDefaultRow(['board', 'fgsfds_field_label', '', 1]);
+        $this->insertDefaultRow(['board', 'password_field_label', '', 1]);
+        $this->insertDefaultRow(['board', 'files_form_label', '', 1]);
+        $this->insertDefaultRow(['board', 'embeds_form_label', '', 1]);
+        $this->insertDefaultRow(['board', 'flags_form_label', '', 1]);
+        $this->insertDefaultRow(['board', 'captcha_form_label', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_left_bracket', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_right_bracket', '', 1]);
         $this->insertDefaultRow(['board', 'mod_links_ban', '', 1]);
@@ -96,6 +115,8 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'content_links_left_bracket', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_right_bracket', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_reply', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_expand_thread', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_collapse_thread', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_show_thread', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_hide_thread', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_show_post', '', 1]);
@@ -110,6 +131,21 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'content_links_download_file', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_first_posts', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_last_posts', '', 1]);
+        $this->insertDefaultRow(['site', 'site_nav_links_left_bracket', '', 1]);
+        $this->insertDefaultRow(['site', 'site_nav_links_right_bracket', '', 1]);
+        $this->insertDefaultRow(['site', 'site_nav_links_home', '', 1]);
+        $this->insertDefaultRow(['site', 'site_nav_links_news', '', 1]);
+        $this->insertDefaultRow(['site', 'site_nav_links_faq', '', 1]);
+        $this->insertDefaultRow(['site', 'site_nav_links_about_nelliel', '', 1]);
+        $this->insertDefaultRow(['site', 'site_nav_links_blank_page', '', 1]);
+        $this->insertDefaultRow(['site', 'account_nav_links_left_bracket', '', 1]);
+        $this->insertDefaultRow(['site', 'account_nav_links_right_bracket', '', 1]);
+        $this->insertDefaultRow(['site', 'account_nav_links_account', '', 1]);
+        $this->insertDefaultRow(['site', 'account_nav_links_site_panel', '', 1]);
+        $this->insertDefaultRow(['site', 'account_nav_links_global_panel', '', 1]);
+        $this->insertDefaultRow(['site', 'account_nav_links_board_panel', '', 1]);
+        $this->insertDefaultRow(['site', 'account_nav_links_board_list', '', 1]);
+        $this->insertDefaultRow(['site', 'account_nav_links_logout', '', 1]);
         $this->insertDefaultRow(['board', 'filesize_unit_prefix', '{"Bytes (B)": "B", "Kilobytes (KB)": "KB", "Kibibytes (KiB)": "KiB", "Megabytes (MB)": "MB", "Mebibytes (MiB)": "MiB", "Gigabytes (GB)": "GB", "Gibibytes (GiB)": "GiB", "Terabytes (TB)": "TB", "Tebibytes (TiB)": "TiB", "Petabytes (PB)": "PB", "Pebibytes (PiB)": "PiB", "Exabytes (EB)": "EB", "Exbibytes (EiB)": "EiB", "Zettabytes (ZB)": "ZB", "Zebibytes (ZiB)": "ZiB", "Yottabytes (YB)": "YB", "Yobibytes (YiB)": "YiB"}', 0]);
     }
 }

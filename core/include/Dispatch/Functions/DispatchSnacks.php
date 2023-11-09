@@ -5,10 +5,10 @@ namespace Nelliel\Dispatch\Functions;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\BansAccess;
 use Nelliel\Snacks;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Bans\BansAccess;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 

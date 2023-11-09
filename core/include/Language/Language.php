@@ -75,7 +75,7 @@ class Language
         int $default_category)
     {
         if (!$user->checkPermission($domain, 'perm_extract_gettext')) {
-            nel_derp(510, _gettext('You are not allowed to extract the gettext strings.'));
+            nel_derp(510, _gettext('You are not allowed to extract the gettext strings.'), 403);
         }
 
         $extractor = new LanguageExtractor($domain, self::$gettext);
@@ -91,6 +91,10 @@ class Language
                 $file_handler->writeFile($file, $output);
             }
         }
+    }
+
+    public function changeLanguage(string $locale): void {
+        self::$gettext->language(self::LC_MESSAGES, $locale);
     }
 
     public function accessGettext()

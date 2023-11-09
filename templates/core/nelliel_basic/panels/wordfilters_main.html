@@ -5,20 +5,20 @@
 	<caption data-i18n="">List of wordfilters</caption>
 	<thead>
 		<tr>
-			<th scope="col" data-i18n="">Board ID</th>
+			<th scope="col" data-i18n="">Board</th>
 			<th scope="col" data-i18n="">Match</th>
 			<th scope="col" data-i18n="">Replacement</th>
-			<th scope="col" data-i18n="">Regex</th>
+			<th scope="col" data-i18n="">Action</th>
 			<th scope="col" data-i18n="">Actions</th>
 		</tr>
 	</thead>
 	<tbody>
 {{# wordfilter_list }}
 		<tr class="{{ bgclass }}">
-			<td>{{ board_id }}</td>
+			<td>{{ board_uri }}</td>
 			<td>{{ text_match }}</td>
 			<td>{{ replacement }}</td>
-			<td>{{ is_regex }}</td>
+			<td>{{ filter_action }}</td>
 			<td>
 				<span class="text-button">[<a class="display-cell" href="{{ enable_disable_url }}">{{ enable_disable_text }}</a>]</span>
 				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}" data-i18n="">Edit</a>]</span>

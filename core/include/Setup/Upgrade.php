@@ -5,7 +5,9 @@ namespace Nelliel\Setup;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\DatabaseConfig;
 use Nelliel\Regen;
+use Nelliel\Database\DatabaseConnector;
 use Nelliel\Utility\FileHandler;
 use PDO;
 
@@ -14,6 +16,7 @@ class Upgrade
     private $file_handler;
     private $original = 'v0.0';
     private $installed = 'v0.0';
+    private $core_database_connection;
 
     function __construct(FileHandler $file_handler)
     {
@@ -59,12 +62,12 @@ class Upgrade
         }
 
         $form_password = $_POST['super_sekrit'] ?? '';
-        $prepared = nel_database('core')->prepare(
-            'SELECT * FROM "' . NEL_USERS_TABLE . '" WHERE "username" = :username AND "owner" = 1');
+        $prepared = $this->core_database_connection->prepare(
+            'SELECT * FROM "nelliel_users" WHERE "username" = :username AND "owner" = 1 LIMIT 1');
         $prepared->bindValue(':username', $username);
-        $user_data = nel_database('core')->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
+        $user_data = $this->core_database_connection->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
         return is_array($user_data) &&
-            nel_password_verify($form_password, $user_data['password'] ?? $user_data['user_password']);
+            password_verify($form_password, $user_data['password'] ?? $user_data['user_password']);
     }
 
     public function doUpgrades(): void
@@ -77,6 +80,15 @@ class Upgrade
         if (version_compare($this->installedVersion(), 'v0.9.25', '<')) {
             echo __('Versions older than v0.9.25 do not have an upgrade path.');
             return;
+        }
+
+        if (version_compare($this->installedVersion(), 'v0.9.31', '<')) {
+            $db_config = array();
+            include NEL_CONFIG_FILES_PATH . 'config.php';
+            $database_connector = new DatabaseConnector(new DatabaseConfig($db_config));
+            $this->core_database_connection = $database_connector->getConnection('core');
+        } else {
+            $this->core_database_connection = nel_database('core');
         }
 
         if (isset($_POST['upgrade_login'])) {
@@ -153,6 +165,8 @@ class Upgrade
     public function doMigrations(): int
     {
         $migration_count = 0;
+        $config_migrations = new ConfigMigrations($this->file_handler, $this);
+        $migration_count += $config_migrations->doMigrations();
         $beta_migrations = new BetaMigrations($this->file_handler, $this);
         $migration_count += $beta_migrations->doMigrations();
         return $migration_count;

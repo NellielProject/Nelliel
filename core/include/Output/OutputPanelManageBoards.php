@@ -6,7 +6,6 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainBoard;
 use PDO;
 
 class OutputPanelManageBoards extends Output
@@ -28,7 +27,7 @@ class OutputPanelManageBoards extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['form_action'] = nel_build_router_url([$this->domain->id(), 'manage-boards', 'new']);
+        $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'manage-boards', 'new']);
         $board_ids = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '"', PDO::FETCH_COLUMN);
         $bgclass = 'row1';
 
@@ -37,25 +36,25 @@ class OutputPanelManageBoards extends Output
             $board_data = array();
             $board_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $board_data['board_uri'] = $domain->reference('board_uri');
+            $board_data['board_uri'] = $domain->uri();
             $board_data['board_url'] = $domain->reference('board_web_path');
             $board_data['board_id'] = $domain->id();
             $board_data['db_prefix'] = $domain->reference('db_prefix');
 
             if (!$domain->reference('locked')) {
                 $board_data['lock_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'manage-boards', $domain->id(), 'lock']);
+                    [$this->domain->uri(), 'manage-boards', $domain->uri(), 'lock']);
                 $board_data['status'] = __('Active');
                 $board_data['lock_text'] = __('Lock Board');
             } else {
                 $board_data['lock_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'manage-boards', $domain->id(), 'unlock']);
+                    [$this->domain->uri(), 'manage-boards', $domain->uri(), 'unlock']);
                 $board_data['status'] = _gettext('Locked');
                 $board_data['lock_text'] = _gettext('Unlock Board');
             }
 
             $board_data['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'manage-boards', $domain->id(), 'delete']);
+                [$this->domain->uri(), 'manage-boards', $domain->uri(), 'delete']);
             $this->render_data['board_list'][] = $board_data;
         }
 

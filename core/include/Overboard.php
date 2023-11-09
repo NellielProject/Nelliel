@@ -66,11 +66,11 @@ class Overboard
     {
         $prepared = $this->database->prepare(
             'INSERT INTO "' . NEL_OVERBOARD_TABLE .
-            '" ("overboard_id", "thread_id", "bump_time", "bump_time_milli", "board_id", "sticky") VALUES
-                    (?, ?, ?, ?, ?, ?)');
+            '" ("overboard_id", "thread_id", "bump_time", "bump_time_milli", "board_id") VALUES
+                    (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
             [$overboard_id, $thread->contentID()->threadID(), $thread->data('bump_time'),
-                $thread->data('bump_time_milli'), $thread->domain()->id(), (int) $thread->data('sticky')]);
+                $thread->data('bump_time_milli'), $thread->domain()->id()]);
     }
 
     /**
@@ -80,9 +80,9 @@ class Overboard
     {
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_OVERBOARD_TABLE .
-            '" SET "bump_time" = ?, "bump_time_milli" = ?, "sticky" = ? WHERE "overboard_id" = ? AND "thread_id" = ? AND "board_id" = ?');
+            '" SET "bump_time" = ?, "bump_time_milli" = ? WHERE "overboard_id" = ? AND "thread_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared,
-            [$thread->data('bump_time'), $thread->data('bump_time_milli'), (int) $thread->data('sticky'), $overboard_id,
+            [$thread->data('bump_time'), $thread->data('bump_time_milli'), $overboard_id,
                 $thread->contentID()->threadID(), $thread->domain()->id()]);
     }
 
@@ -112,7 +112,7 @@ class Overboard
         $active_threads = array();
         $prepared = $this->database->prepare(
             'SELECT * FROM "' . NEL_OVERBOARD_TABLE .
-            '" WHERE "overboard_id" = ? ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC');
+            '" WHERE "overboard_id" = ? ORDER BY "bump_time" DESC, "bump_time_milli" DESC');
         $thread_list = $this->database->executePreparedFetchAll($prepared, [$overboard_id], PDO::FETCH_ASSOC);
 
         foreach ($thread_list as $thread_data) {
@@ -197,13 +197,15 @@ class Overboard
                 }
             }
         }
+
+        $this->prune();
     }
 
     private function canInclude(Thread $thread, string $overboard_id): bool
     {
         if ($overboard_id === 'all') {
-            if ($thread->domain()->setting('safety_level') === 'NSFL' && !nel_site_domain()->setting(
-                'nsfl_on_overboard')) {
+            if ($thread->domain()->setting('safety_level') === 'NSFL' &&
+                !nel_site_domain()->setting('nsfl_on_overboard')) {
                 return false;
             }
         }

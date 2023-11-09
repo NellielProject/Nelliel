@@ -20,13 +20,15 @@ class TableImageSets extends Table
         $this->columns_data = [
             'set_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'directory' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'psrsed_ini' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'enabled' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
+            'parsed_ini' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
+            'enabled' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
+            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->columns_data = [
             'set_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'directory' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'parsed_ini' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
+            'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
 
@@ -39,6 +41,7 @@ class TableImageSets extends Table
             directory   VARCHAR(255) NOT NULL,
             parsed_ini  TEXT NOT NULL,
             enabled     SMALLINT NOT NULL DEFAULT 0,
+            moar        ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (set_id)
         ) ' . $options . ';';
 

@@ -6,14 +6,16 @@ namespace Nelliel\NewPost;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Cites;
-use Nelliel\Wordfilters;
+use Nelliel\Dice;
+use Nelliel\FGSFDS;
+use Nelliel\IPInfo;
+use Nelliel\ROBOT9000;
+use Nelliel\VisitorInfo;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;
-use Nelliel\ROBOT9000;
-use Nelliel\Dice;
-use Nelliel\FGSFDS;
+use Nelliel\Filters\Filters;
 
 class PostData
 {
@@ -32,16 +34,20 @@ class PostData
     {
         if (!isset($_POST['new_post'])) {
             nel_derp(40,
-                "No POST data was received. The request may have been too big or server settings need to be adjusted.");
+                __(
+                    'No POST data was received. The request may have been too big or server settings need to be adjusted.'));
         }
 
         $post->changeData('parent_thread', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
         $post->contentID()->changeThreadID($post->data('parent_thread'));
         $post->changeData('op', $post->data('parent_thread') === 0);
         $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
-        $post->changeData('ip_address', nel_request_ip_address());
-        $post->changeData('hashed_ip_address', nel_request_ip_address(true));
-        $post->changeData('visitor_id', nel_visitor_id(), false);
+        $ip_info = new IPInfo(nel_request_ip_address());
+        $post->changeData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
+        $post->changeData('ip_address', nel_prepare_ip_for_storage($ip_info->getInfo('ip_address')));
+        $visitor_info = new VisitorInfo(nel_visitor_id());
+        $visitor_info->updateLastActivity(time());
+        $post->changeData('visitor_id', $visitor_info->getInfo('visitor_id'), false);
 
         $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'] ?? '', 'string');
         $name = $this->fieldLengthCheck('name', $name);
@@ -159,7 +165,7 @@ class PostData
             $original_comment = $_POST['new_post']['post_info']['wordswordswords'] ?? '';
             $comment = $this->checkEntry($original_comment, 'string');
             $post->changeData('original_comment', $comment);
-            $post->changeData('comment', $this->fieldLengthCheck('comment', $comment));
+            $post->changeData('comment', $this->fieldLengthCheck('comment', $comment), false);
         }
 
         if (nel_true_empty($post->data('comment')) && $require_comment) {
@@ -175,14 +181,17 @@ class PostData
         }
 
         if ($this->domain->setting('enable_password_field')) {
-            $post->changeData('password', $this->checkEntry($_POST['new_post']['post_info']['sekrit'] ?? '', 'string'));
+            $password = $this->checkEntry($_POST['new_post']['post_info']['sekrit'] ?? '', 'string');
+            $post->changeData('password',
+                substr($password, 0, nel_crypt_config()->configValue('post_password_max_length')));
         }
 
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
 
         if (!nel_true_empty($post->data('comment'))) {
-            $wordfilters = new Wordfilters($this->domain->database());
-            $post->changeData('comment', $wordfilters->apply($post->data('comment'), $this->domain));
+            $filters = new Filters($this->domain->database());
+            $post->changeData('comment',
+                $filters->applyWordfilters($post->data('comment'), [$this->domain->id(), Domain::GLOBAL]), false);
             $cites = new Cites($this->domain->database());
             $cite_list = $cites->getCitesFromText($post->data('comment'), false);
 

@@ -86,11 +86,11 @@ class AdminRoles extends Admin
 
         switch ($perm) {
             case 'perm_view_roles':
-                nel_derp(375, _gettext('You are not allowed to view roles.'));
+                nel_derp(375, _gettext('You are not allowed to view roles.'), 403);
                 break;
 
             case 'perm_manage_roles':
-                nel_derp(376, _gettext('You are not allowed to manage roles.'));
+                nel_derp(376, _gettext('You are not allowed to manage roles.'), 403);
                 break;
 
             default:

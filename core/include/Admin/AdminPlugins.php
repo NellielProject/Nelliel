@@ -64,7 +64,7 @@ class AdminPlugins extends Admin
 
         switch ($perm) {
             case 'perm_manage_plugins':
-                nel_derp(385, _gettext('You are not allowed to manage styles.'));
+                nel_derp(385, _gettext('You are not allowed to manage styles.'), 403);
                 break;
 
             default:

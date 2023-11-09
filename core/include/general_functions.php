@@ -6,6 +6,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Redirect;
 use Nelliel\Auth\Authorization;
 use ChrisUllyott\FileSize;
+use IPTools\IP;
 
 function nel_clean_exit()
 {
@@ -109,6 +110,10 @@ function nel_form_input_default(array $input)
 
 function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = true)
 {
+    if (is_null($ip_address)) {
+        return null;
+    }
+
     if ($unhashed_check && !nel_site_domain()->setting('store_unhashed_ip')) {
         return null;
     }
@@ -116,6 +121,11 @@ function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = 
     $packed_ip_address = @inet_pton($ip_address);
 
     if ($packed_ip_address === false) {
+        // Check if the error is simply due to the address already being packed
+        if (@inet_ntop($ip_address) !== false) {
+            return $ip_address;
+        }
+
         return null;
     }
 
@@ -238,4 +248,73 @@ function nel_size_format(int $bytes, bool $use_iec, bool $binary, int $precision
     }
 
     return $output;
+}
+
+function nel_is_unhashed_ip(string $ip): bool
+{
+    try {
+        new IP($ip);
+        return true;
+    } catch (Exception $e) {
+        return false;
+    }
+}
+
+function nel_strtotime(string $time): int
+{
+    $time = preg_replace('/(\d+)\s?ye?a?r?s?/', '$1years', $time);
+    $time = preg_replace('/(\d+)\s?mont?h?s?/', '$1months', $time);
+    $time = preg_replace('/(\d+)\s?we?e?k?s?/', '$1weeks', $time);
+    $time = preg_replace('/(\d+)\s?da?y?s?/', '$1days', $time);
+    $time = preg_replace('/(\d+)\s?ho?u?r?s?/', '$1hours', $time);
+    $time = preg_replace('/(\d+)\s?m[^o]i?n?u?t?e?s?/', '$1minutes', $time);
+    $time = preg_replace('/(\d+)\s?se?c?o?n?d?s/', '$1seconds', $time);
+
+    return intval(strtotime($time));
+}
+
+function nel_config_var_export(array $array, string $prefix = '')
+{
+    $config_output = '';
+
+    foreach ($array as $key => $value) {
+        if (is_int($key) && is_string($value)) {
+            $config_output .= "\n" . $value . ';';
+        } else if (is_array($value)) {
+            $prefix .= '[\'' . $key . '\']';
+            $keys = array_keys($value);
+            $values_array = '';
+
+            foreach ($keys as $index) {
+                if (is_int($index) && !is_array($value[$index])) {
+                    $values_array .= $value[$index] . ', ';
+                }
+            }
+
+            if (empty($values_array)) {
+                $line = nel_config_var_export($value, $prefix);
+                $config_output .= $line;
+            } else {
+                $config_output .= "\n" . $prefix . ' = [' . utf8_rtrim($values_array, ' ,') . '];';
+            }
+
+            $prefix = utf8_str_replace('[\'' . $key . '\']', '', $prefix);
+        } else if (is_string($value)) {
+            $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = \'' . $value . '\';';
+        } else if (is_null($value)) {
+            $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = null;';
+        } else if (is_bool($value)) {
+            $boolval = ($value === false) ? 'false' : 'true';
+            $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = ' . $boolval . ';';
+        } else {
+            $config_output .= "\n" . $prefix . '[\'' . $key . '\'] = ' . $value . ';';
+        }
+    }
+
+    return $config_output;
+}
+
+function nel_is_absolute_url(string $url): bool
+{
+    return preg_match('/^(?:.+:)?\/\//u', $url) === 1;
 }

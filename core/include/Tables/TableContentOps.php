@@ -48,7 +48,7 @@ class TableContentOps extends Table
             images_only     SMALLINT NOT NULL DEFAULT 0,
             enabled         SMALLINT NOT NULL DEFAULT 0,
             notes           TEXT DEFAULT NULL,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (op_id)
         ) ' . $options . ';';
 

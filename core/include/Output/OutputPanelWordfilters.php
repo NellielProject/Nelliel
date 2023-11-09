@@ -6,7 +6,8 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
-use PDO;
+use Nelliel\Filters\Filters;
+use Nelliel\Filters\Wordfilter;
 
 class OutputPanelWordfilters extends Output
 {
@@ -27,46 +28,37 @@ class OutputPanelWordfilters extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-
-        if ($this->domain->id() === Domain::SITE) {
-            $wordfilters = array();
-        } else if ($this->domain->id() === Domain::GLOBAL) {
-            $wordfilters = $this->database->executeFetchAll(
-                'SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" ORDER BY "filter_id" DESC', PDO::FETCH_ASSOC);
-        } else {
-            $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '" WHERE "board_id" = ?  ORDER BY "filter_id" DESC');
-            $wordfilters = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()], PDO::FETCH_ASSOC);
-        }
-
-        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'wordfilters', 'new']);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->uri(), 'wordfilters', 'new']);
         $bgclass = 'row1';
+        $filters = new Filters($this->database);
 
-        foreach ($wordfilters as $wordfilter) {
+        foreach ($filters->getWordfilters([$this->domain->uri()]) as $filter) {
             $wordfilter_data = array();
+            $filter_domain = Domain::getDomainFromID($filter->getData('board_id'), $this->database);
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $wordfilter_data['bgclass'] = $bgclass;
-            $wordfilter_data['filter_id'] = $wordfilter['filter_id'];
-            $wordfilter_data['board_id'] = $wordfilter['board_id'];
-            $wordfilter_data['text_match'] = $wordfilter['text_match'];
-            $wordfilter_data['replacement'] = $wordfilter['replacement'];
+            $wordfilter_data['filter_id'] = $filter->getData('filter_id');
+            $wordfilter_data['board_uri'] = $filter_domain->uri(true);
+            $wordfilter_data['text_match'] = $filter->getData('text_match');
+            $wordfilter_data['replacement'] = $filter->getData('replacement');
+            $wordfilter_data['filter_action'] = $filter->getData('filter_action');
             $wordfilter_data['edit_url'] = nel_build_router_url(
-                [$this->domain->id(), 'wordfilters', $wordfilter['filter_id'], 'modify']);
+                [$this->domain->uri(), 'wordfilters', $filter->getData('filter_id'), 'modify']);
 
-            if ($wordfilter['enabled'] == 1) {
+            if ($filter->getData('enabled') == 1) {
                 $wordfilter_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'wordfilters', $wordfilter['filter_id'], 'disable']);
+                    [$this->domain->uri(), 'wordfilters', $filter->getData('filter_id'), 'disable']);
                 $wordfilter_data['enable_disable_text'] = _gettext('Disable');
             }
 
-            if ($wordfilter['enabled'] == 0) {
+            if ($filter->getData('enabled') == 0) {
                 $wordfilter_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'wordfilters', $wordfilter['filter_id'], 'enable']);
+                    [$this->domain->uri(), 'wordfilters', $filter->getData('filter_id'), 'enable']);
                 $wordfilter_data['enable_disable_text'] = _gettext('Enable');
             }
 
             $wordfilter_data['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'wordfilters', $wordfilter['filter_id'], 'delete']);
+                [$this->domain->uri(), 'wordfilters', $filter->getData('filter_id'), 'delete']);
             $this->render_data['wordfilter_list'][] = $wordfilter_data;
         }
 
@@ -99,25 +91,26 @@ class OutputPanelWordfilters extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $form_action = '';
+        $filter_id = intval($parameters['filter_id'] ?? 0);
+        $filter = new Wordfilter($this->database, $filter_id);
+        $filter_domain = Domain::getDomainFromID($filter->getData('board_id') ?? $this->domain->id(), $this->database);
+        $this->render_data['board_uri'] = $filter_domain->uri(true);
 
         if ($editing) {
-            $filter_id = $parameters['filter_id'] ?? 0;
-            $form_action = nel_build_router_url([$this->domain->id(), 'wordfilters', $filter_id, 'modify']);
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" WHERE "filter_id" = ?');
-            $wordfilter_data = $this->database->executePreparedFetch($prepared, [$filter_id], PDO::FETCH_ASSOC);
-
-            if ($wordfilter_data !== false) {
-                $this->render_data['filter_id'] = $wordfilter_data['filter_id'];
-                $this->render_data['board_id'] = $wordfilter_data['board_id'];
-                $this->render_data['text_match'] = $wordfilter_data['text_match'];
-                $this->render_data['replacement'] = $wordfilter_data['replacement'];
-                $this->render_data['is_regex_checked'] = $wordfilter_data['is_regex'] == 1 ? 'checked' : '';
-                $this->render_data['enabled_checked'] = $wordfilter_data['enabled'] == 1 ? 'checked' : '';
-            }
+            $form_action = nel_build_router_url([$this->domain->uri(), 'wordfilters', $filter_id, 'modify']);
+            $this->render_data['filter_id'] = $filter->getData('filter_id');
+            $this->render_data['text_match'] = $filter->getData('text_match');
+            $this->render_data['replacement'] = $filter->getData('replacement');
+            $this->render_data['enabled_checked'] = $filter->getData('enabled') == 1 ? 'checked' : '';
         } else {
-            $form_action = nel_build_router_url([$this->domain->id(), 'wordfilters', 'new']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'wordfilters', 'new']);
+            $this->render_data['enabled_checked'] = 'checked';
         }
 
+        $output_menu = new OutputMenu($this->domain, $this->write_mode);
+        $this->render_data['boards_select'] = $output_menu->boards('board_id', $this->render_data['board_uri'], true);
+        $this->render_data['filter_actions'] = $output_menu->wordfilterActions(
+            $filter->getData('filter_action') ?? '');
         $this->render_data['form_action'] = $form_action;
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);

@@ -8,12 +8,6 @@ Documentation on the functions of the plugin API. For instructions on using plug
 ## API Access
 API methods can be accessed from an instance of `\Nelliel\API\Plugin\PluginAPI` or from the function `nel_plugins()` which provides a standard instance.
 
-## Installation
-1. Place the plugin's subdirectory in the `plugins` directory.
-2. Go to the `Plugins` control panel and check for the newly added plugin(s). Click `Install` next to each one you wish to install.
-
-The installation process will collect the contents of `nelliel-plugin.ini` and some additional data then save it to the database.
-
 ## Plugin Loading
 Near the beginning of Nelliel's execution the loading phase will occur for plugins. In this phase all entries of installed and enabled plugins are loaded from the database. This set of plugins is then cycled through one at a time:
 1. Version checks are done for each plugin.

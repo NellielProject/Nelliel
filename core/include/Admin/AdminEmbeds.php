@@ -88,7 +88,7 @@ class AdminEmbeds extends Admin
 
         switch ($perm) {
             case 'perm_manage_embeds':
-                nel_derp(405, _gettext('You are not allowed to manage embeds.'));
+                nel_derp(405, _gettext('You are not allowed to manage embeds.'), 403);
                 break;
 
             default:

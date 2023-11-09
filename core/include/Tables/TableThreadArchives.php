@@ -41,7 +41,7 @@ class TableThreadArchives extends Table
             thread_data     ' . $this->sql_compatibility->textType('LONGTEXT') . ',
             time_archived   BIGINT NOT NULL,
             permanent       SMALLINT NOT NULL DEFAULT 0,
-            moar            TEXT DEFAULT NULL,
+            moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (thread_id)
         ) ' . $options . ';';
 

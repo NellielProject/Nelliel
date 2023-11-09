@@ -42,31 +42,44 @@ class AdminSiteConfig extends Admin
                 ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE . '"."setting_name"
                 WHERE "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'site\'');
         $site_settings = $this->database->executePreparedFetchAll($prepared, [], PDO::FETCH_ASSOC);
+        $user_can_raw_html = $this->session_user->checkPermission($this->domain, 'perm_raw_html');
         $changes = 0;
 
         foreach ($site_settings as $setting) {
             $setting_name = $setting['setting_name'];
+            $store_raw = (bool) nel_form_input_default($_POST[$setting_name]['store_raw'] ?? array());
+            $status_change = false;
 
             if (!isset($_POST[$setting_name])) {
                 continue;
             }
 
-            $old_value = $setting['setting_value'];
+            $old_value = nel_typecast($setting['setting_value'], $setting['data_type']);
             $new_value = $_POST[$setting_name];
 
             if (is_array($new_value)) {
                 $new_value = nel_form_input_default($new_value);
             }
 
-            $new_value = nel_typecast($new_value, $setting_name);
+            $new_value = nel_typecast($new_value, $setting['data_type']);
+            $value_change = $old_value != $new_value;
 
-            if (is_string($new_value) && !$this->session_user->checkPermission($this->domain, 'perm_raw_html') &&
-                ($setting['raw_output'] ?? false)) {
-                $new_value = htmlspecialchars($new_value, ENT_QUOTES, 'UTF-8');
+            if (!$user_can_raw_html) {
+                $store_raw = (bool) $setting['stored_raw'];
             }
 
-            if ($old_value != $new_value) {
-                $this->updateSetting($setting_name, $new_value);
+            if ((bool) $setting['stored_raw'] !== $store_raw) {
+                $status_change = true;
+            }
+
+            if ($value_change || $status_change) {
+                if (is_string($new_value)) {
+                    if (!$store_raw || !$user_can_raw_html || !($setting['raw_output'] ?? false)) {
+                        $new_value = htmlspecialchars($new_value, ENT_QUOTES, 'UTF-8');
+                    }
+                }
+
+                $this->updateSetting($setting_name, $new_value, (int) $store_raw);
                 $changes ++;
             }
         }
@@ -84,12 +97,14 @@ class AdminSiteConfig extends Admin
         $this->panel();
     }
 
-    private function updateSetting($config_name, $setting)
+    private function updateSetting($config_name, $setting, int $stored_raw)
     {
-        // TODO: Bind to string instead of cast
         $prepared = $this->database->prepare(
-            'UPDATE "' . NEL_SITE_CONFIG_TABLE . '" SET "setting_value" = ? WHERE "setting_name" = ?');
-        $this->database->executePrepared($prepared, [(string) $setting, $config_name]);
+            'UPDATE "' . NEL_SITE_CONFIG_TABLE . '" SET "setting_value" = ?, "stored_raw" = ? WHERE "setting_name" = ?');
+        $prepared->bindValue(1, $setting, PDO::PARAM_STR);
+        $prepared->bindValue(2, $stored_raw, PDO::PARAM_INT);
+        $prepared->bindValue(3, $config_name, PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -100,7 +115,7 @@ class AdminSiteConfig extends Admin
 
         switch ($perm) {
             case 'perm_modify_site_config':
-                nel_derp(380, _gettext('You are not allowed to modify the site configuration.'));
+                nel_derp(380, _gettext('You are not allowed to modify the site configuration.'), 403);
                 break;
 
             default:

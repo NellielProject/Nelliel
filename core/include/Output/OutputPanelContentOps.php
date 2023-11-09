@@ -27,7 +27,7 @@ class OutputPanelContentOps extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['new_url'] = nel_build_router_url([$this->domain->id(), 'content-ops', 'new']);
+        $this->render_data['new_url'] = nel_build_router_url([$this->domain->uri(), 'content-ops', 'new']);
         $content_ops = $this->database->executeFetchAll('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '"',
             PDO::FETCH_ASSOC);
         $bgclass = 'row1';
@@ -43,22 +43,22 @@ class OutputPanelContentOps extends Output
             $content_op_data['enabled'] = $content_op['enabled'];
             $content_op_data['notes'] = $content_op['notes'];
             $content_op_data['edit_url'] = nel_build_router_url(
-                [$this->domain->id(), 'content-ops', $content_op_data['op_id'], 'modify']);
+                [$this->domain->uri(), 'content-ops', $content_op_data['op_id'], 'modify']);
 
             if ($content_op_data['enabled'] == 1) {
                 $content_op_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'content-ops', $content_op_data['op_id'], 'disable']);
+                    [$this->domain->uri(), 'content-ops', $content_op_data['op_id'], 'disable']);
                 $content_op_data['enable_disable_text'] = _gettext('Disable');
             }
 
             if ($content_op_data['enabled'] == 0) {
                 $content_op_data['enable_disable_url'] = nel_build_router_url(
-                    [$this->domain->id(), 'content-ops', $content_op_data['op_id'], 'enable']);
+                    [$this->domain->uri(), 'content-ops', $content_op_data['op_id'], 'enable']);
                 $content_op_data['enable_disable_text'] = _gettext('Enable');
             }
 
             $content_op_data['delete_url'] = nel_build_router_url(
-                [$this->domain->id(), 'content-ops', $content_op_data['op_id'], 'delete']);
+                [$this->domain->uri(), 'content-ops', $content_op_data['op_id'], 'delete']);
             $this->render_data['content_ops_list'][] = $content_op_data;
         }
 
@@ -90,7 +90,7 @@ class OutputPanelContentOps extends Output
 
         if ($editing) {
             $op_id = $parameters['op_id'] ?? '';
-            $form_action = nel_build_router_url([$this->domain->id(), 'content-ops', $op_id, 'modify']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'content-ops', $op_id, 'modify']);
             $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "op_id" = ?');
             $content_op_data = $this->database->executePreparedFetch($prepared, [$op_id], PDO::FETCH_ASSOC);
 
@@ -103,7 +103,7 @@ class OutputPanelContentOps extends Output
                 $this->render_data['notes'] = $content_op_data['notes'];
             }
         } else {
-            $form_action = nel_build_router_url([$this->domain->id(), 'content-ops', 'new']);
+            $form_action = nel_build_router_url([$this->domain->uri(), 'content-ops', 'new']);
         }
 
         $this->render_data['form_action'] = $form_action;

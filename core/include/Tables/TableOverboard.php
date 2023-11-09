@@ -23,7 +23,6 @@ class TableOverboard extends Table
             'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
             'bump_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
             'bump_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'sticky' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
             'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'overboard_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -31,7 +30,6 @@ class TableOverboard extends Table
             'board_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false, 'update' => false],
             'bump_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false, 'update' => false],
             'bump_time_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false, 'update' => false],
-            'sticky' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false, 'update' => false]];
         $this->schema_version = 1;
     }
@@ -46,8 +44,7 @@ class TableOverboard extends Table
             board_id            VARCHAR(50) NOT NULL,
             bump_time           BIGINT NOT NULL,
             bump_time_milli     SMALLINT NOT NULL,
-            sticky              SMALLINT NOT NULL DEFAULT 0,
-            moar                TEXT DEFAULT NULL,
+            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (overboard_id, thread_id, board_id),
             CONSTRAINT fk_overboard__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

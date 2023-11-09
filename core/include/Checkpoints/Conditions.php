@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Nelliel\IfThens;
+namespace Nelliel\Checkpoints;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 

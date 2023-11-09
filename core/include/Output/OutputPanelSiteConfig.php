@@ -27,23 +27,41 @@ class OutputPanelSiteConfig extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
+        $user_raw_html = $this->session->user()->checkPermission($this->domain, 'perm_raw_html');
         $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'config', 'update']);
+        $this->render_data['show_raw_column'] = $user_raw_html;
+        $colspan = 3;
+
+        if ($user_raw_html) {
+            $colspan ++;
+        }
+
         $site_settings = $this->database->query(
             'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
             LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
-            ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE . '"."setting_name"
+            ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE .
+            '"."setting_name"
             INNER JOIN "' . NEL_SITE_CONFIG_TABLE . '"
-            ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE .
-            '"."setting_name" WHERE "'.  NEL_SETTINGS_TABLE . '"."setting_category" = \'site\'')->fetchAll(PDO::FETCH_ASSOC);
+            ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SITE_CONFIG_TABLE . '"."setting_name" WHERE "' .
+            NEL_SETTINGS_TABLE . '"."setting_category" = \'site\'')->fetchAll(PDO::FETCH_ASSOC);
 
         foreach ($site_settings as $setting) {
             $setting_data = array();
             $setting_data['setting_name'] = $setting['setting_name'];
             $setting_data['setting_description'] = _gettext($setting['setting_description']);
+
             $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
+            $setting_data['store_raw'] = $setting['raw_output'] == 1;
+            $setting_data['show_raw'] = $user_raw_html;
 
             foreach ($input_attributes as $attribute => $value) {
                 $setting_data['input_attributes']['input_' . $attribute] = $value;
+            }
+
+            $setting_stored_raw = $setting['stored_raw'] == 1;
+
+            if ($setting_stored_raw) {
+                $setting_data['setting_stored_raw'] = 'checked';
             }
 
             if ($setting['data_type'] === 'boolean') {
@@ -89,6 +107,9 @@ class OutputPanelSiteConfig extends Output
             $this->render_data['settings_data']['default_style']['setting_value'] ?? '');
         $this->render_data['settings_data']['time_zone']['options'] = $output_menu->timezones(
             $this->render_data['settings_data']['time_zone']['setting_value'] ?? '');
+        $this->render_data['settings_data']['error_image_set']['options'] = $output_menu->configImageSets(
+            $this->render_data['settings_data']['error_image_set']['setting_value'] ?? '');
+        $this->render_data['colspan'] = $colspan;
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

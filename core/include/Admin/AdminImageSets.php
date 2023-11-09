@@ -63,7 +63,7 @@ class AdminImageSets extends Admin
 
         switch ($perm) {
             case 'perm_manage_image_sets':
-                nel_derp(350, _gettext('You are not allowed to manage image sets.'));
+                nel_derp(350, _gettext('You are not allowed to manage image sets.'), 403);
                 break;
 
             default:

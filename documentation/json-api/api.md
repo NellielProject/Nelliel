@@ -15,5 +15,8 @@ Note: All endpoints will have an [`api_info`](info.md) entry.
 ### [Index](index.md)
 **Location:** http(s)://`:site_url`/`:board_uri`/`:index page`.json
 
+### [Threadlist](threadlist.md)
+**Location:** http(s)://`:site_url`/`:board_uri`/threads.json
+
 ### [Thread](thread.md)
 **Location:** http(s)://`:site_url`/`:board_uri`/`:thread_directory`/`:thread_id`/`:thread_id`.json

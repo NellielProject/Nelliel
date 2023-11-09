@@ -46,7 +46,12 @@ class AdminPages extends Admin
         $page_info['uri'] = $_POST['uri'] ?? '';
         $page_info['title'] = $_POST['title'] ?? '';
         $page_info['text'] = $_POST['text'] ?? '';
-        $page_info['markup_type'] = 'html'; // TODO: Other types
+        $page_info['markup_type'] = $_POST['markup_type'] ?? 'none';
+
+        if ($page_info['markup_type'] === 'html' && $this->session_user->checkPermission($this->domain, 'perm_raw_html')) {
+            $page_info['markup_type'] === 'none';
+        }
+
         $query = 'INSERT INTO "' . $this->data_table .
             '" ("domain_id", "uri", "title", "text", "markup_type") VALUES (?, ?, ?, ?, ?)';
         $prepared = $this->database->prepare($query);
@@ -83,7 +88,12 @@ class AdminPages extends Admin
         $page_info['uri'] = $_POST['uri'] ?? '';
         $page_info['title'] = $_POST['title'] ?? '';
         $page_info['text'] = $_POST['text'] ?? '';
-        $page_info['markup_type'] = 'html';
+        $page_info['markup_type'] = $_POST['markup_type'] ?? 'none';
+
+        if ($page_info['markup_type'] === 'html' && $this->session_user->checkPermission($this->domain, 'perm_raw_html')) {
+            $page_info['markup_type'] === 'none';
+        }
+
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_PAGES_TABLE .
             '" SET "uri" = ?, "title" = ?, "text" = ?, "markup_type" = ? WHERE "page_id" = ?');
@@ -123,7 +133,7 @@ class AdminPages extends Admin
 
         switch ($perm) {
             case 'perm_manage_pages':
-                nel_derp(360, _gettext('You are not allowed to manage static pages.'));
+                nel_derp(360, _gettext('You are not allowed to manage static pages.'), 403);
                 break;
 
             default:
@@ -140,7 +150,7 @@ class AdminPages extends Admin
             $page_count = $this->domain->database()->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
             if ($page_count >= nel_site_domain()->setting('max_board_pages')) {
-                nel_derp(250, _gettext('The maximum number of static pages for this board has been reached.'));
+                nel_derp(270, _gettext('The maximum number of static pages for this board has been reached.'));
             }
         }
     }

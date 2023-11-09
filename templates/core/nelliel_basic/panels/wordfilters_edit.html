@@ -1,8 +1,10 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="board_id" class="display-cell" data-i18n="">Board ID</label>
-			<input id="board_id" class="display-cell" type="text" name="board_id" size="30" value="{{ board_id }}">
+			<label for="board_id" class="display-cell" data-i18n="">Board</label>
+{{# boards_select }}
+			{{> menu/select }}
+{{/ boards_select }}
 		</div>
 		<div class="display-row">
 			<label for="text_match" class="display-cell" data-i18n="">Match</label>
@@ -13,8 +15,10 @@
 			<textarea id="replacement" class="display-cell" name="replacement" cols="64" rows="3">{{ replacement }}</textarea>
 		</div>
 		<div class="display-row">
-			<label for="is_regex" class="display-cell" data-i18n="">Is regex</label>
-			<input id="is_regex" class="display-cell" type="checkbox" value="1" name="is_regex" {{ is_regex_checked }}>
+			<label for="filter_action" class="display-cell" data-i18n="">Action</label>
+{{# filter_actions }}
+			{{> menu/select }}
+{{/ filter_actions }}
 		</div>
 		<div class="display-row">
 			<label for="enabled" class="display-cell" data-i18n="">Enabled</label>

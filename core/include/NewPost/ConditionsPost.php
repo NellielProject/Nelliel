@@ -5,7 +5,7 @@ namespace Nelliel\NewPost;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\IfThens\Conditions;
+use Nelliel\Checkpoints\Conditions;
 use Nelliel\Content\Post;
 
 class ConditionsPost implements Conditions
@@ -24,22 +24,19 @@ class ConditionsPost implements Conditions
         $total_conditions = count($conditions);
         $conditions_met = 0;
 
-        foreach ($conditions as $key => $condition)
-        {
+        foreach ($conditions as $key => $condition) {
             $met = false;
 
-            switch ($key)
-            {
+            switch ($key) {
                 case 'function-post':
-                    if (is_callable($condition))
-                    {
+                    if (is_callable($condition)) {
                         $met = $condition($this->post, $this->files);
                     }
 
                     break;
 
-                case 'board_id':
-                    $met = $condition === $this->post->domain()->id();
+                case 'board_':
+                    $met = utf8_strtolower($condition) === utf8_strtolower($this->post->domain()->uri());
                     break;
 
                 case 'name':
@@ -78,42 +75,33 @@ class ConditionsPost implements Conditions
                     $met = preg_match($condition, $this->post->data('hashed_ip_address'));
                     break;
 
-                case 'post_time':
-                    $met = $condition === intval($this->post->data('post_time'));
-                    break;
-
-                case 'post_time_milli':
-                    $met = $condition === intval($this->post->data('post_time_milli'));
-                    break;
-
                 case 'has_uploads':
                     $met = $condition === $this->post->data('total_uploads') > 0;
                     break;
 
                 case 'total_uploads':
-                    $met = $condition === intval($this->post->data('total_uploads'));
+                    $met = $condition === $this->post->data('total_uploads');
                     break;
 
                 case 'file_count':
-                    $met = $condition === intval($this->post->data('file_count'));
+                    $met = $condition === $this->post->data('file_count');
                     break;
 
                 case 'embed_count':
-                    $met = $condition === intval($this->post->data('embed_count'));
+                    $met = $condition === $this->post->data('embed_count');
                     break;
 
                 case 'is_op':
-                    $met = $condition === boolval($this->post->data('op'));
+                    $met = $condition === $this->post->data('op');
                     break;
 
                 case 'is_saged':
-                    $met = $condition === boolval($this->post->data('sage'));
+                    $met = $condition === $this->post->data('sage');
                     break;
             }
 
             // If any condition is not met (including unhandled ones) we stop early
-            if (!$met)
-            {
+            if (!$met) {
                 break;
             }
 

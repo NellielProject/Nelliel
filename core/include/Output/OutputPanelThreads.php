@@ -67,33 +67,33 @@ class OutputPanelThreads extends Output
             $thread_info['thread_id'] = $content_id->threadID();
 
             if ($thread->data('sticky')) {
-                $thread_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                $thread_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                     '&actions=unsticky&content-id=' . $content_id->getIDString();
                 $thread_info['sticky_text'] = _gettext('Unsticky Thread');
             } else {
-                $thread_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                $thread_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                     '&actions=sticky&content-id=' . $content_id->getIDString();
                 $thread_info['sticky_text'] = _gettext('Sticky Thread');
             }
 
             if ($thread->data('locked')) {
-                $thread_info['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                $thread_info['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                     '&actions=unlock&content-id=' . $content_id->getIDString();
                 $thread_info['lock_text'] = _gettext('Unlock Thread');
             } else {
-                $thread_info['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+                $thread_info['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                     '&actions=lock&content-id=' . $content_id->getIDString();
                 $thread_info['lock_text'] = _gettext('Lock Thread');
             }
 
-            $thread_info['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+            $thread_info['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                 '&actions=delete&content-id=' . $content_id->getIDString();
             $thread_info['delete_text'] = _gettext('Delete Thread');
             $thread_info['last_update'] = $this->domain->domainDateTime(intval($thread->data('last_update')))->format(
                 $this->domain->setting('post_time_format'));
             $thread_info['subject'] = $op_post->data('subject');
             $thread_info['thread_url'] = $thread->getURL(
-                $this->session->user()->checkPermission($this->domain, 'perm_mod_mode'));
+                $this->session->user()->checkPermission($this->domain, 'perm_mod_mode', false));
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
                 $thread_info['op_ip'] = $op_post->data('ip_address');
@@ -136,10 +136,10 @@ class OutputPanelThreads extends Output
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
             $base_content_id = 'cid_' . $post['parent_thread'] . '_' . $post['post_number'] . '_0';
             $post_info['post_number'] = $post['post_number'];
-            $post_info['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+            $post_info['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                 '&actions=delete&content-id=' . $base_content_id;
             $post_info['delete_text'] = _gettext('Delete Post');
-            $post_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->id() .
+            $post_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                 '&actions=sticky&content-id=' . $base_content_id;
             $post_info['sticky_text'] = _gettext('Sticky Post');
             $post_info['parent_thread'] = $post['parent_thread'];
@@ -179,7 +179,7 @@ class OutputPanelThreads extends Output
         $this->render_data['wordswordswords_value'] = $post->data('comment');
         $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
         $this->render_data['form_action'] = nel_build_router_url(
-            [$this->domain->id(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
+            [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -199,15 +199,15 @@ class OutputPanelThreads extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
-        $this->render_data['current_board'] = $this->domain->id();
-        $this->render_data['boards_select'] = $output_menu->boards('destination_board', $this->domain->id(), true);
+        $this->render_data['current_board'] = $this->domain->uri();
+        $this->render_data['boards_select'] = $output_menu->boards('destination_board', $this->domain->uri(), true);
         $this->render_data['move_thread'] = $content_id->isThread();
         $this->render_data['move_post'] = $content_id->isPost();
         $this->render_data['move_upload'] = $content_id->isUpload();
         $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
         $this->render_data['allow_shadow_message'] = $this->domain->setting('allow_shadow_message');
         $this->render_data['form_action'] = nel_build_router_url(
-            [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'move']);
+            [$this->domain->uri(), 'moderation', 'modmode', $content_id->getIDString(), 'move']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);
@@ -227,12 +227,12 @@ class OutputPanelThreads extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $output_menu = new OutputMenu($this->domain, $this->write_mode);
-        $this->render_data['current_board'] = $this->domain->id();
-        $this->render_data['boards_select'] = $output_menu->boards('target_board', $this->domain->id(), true);
+        $this->render_data['current_board'] = $this->domain->uri();
+        $this->render_data['boards_select'] = $output_menu->boards('target_board', $this->domain->uri(), true);
         $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
         $this->render_data['allow_shadow_message'] = $this->domain->setting('allow_shadow_message');
         $this->render_data['form_action'] = nel_build_router_url(
-            [$this->domain->id(), 'moderation', 'modmode', $content_id->getIDString(), 'merge']);
+            [$this->domain->uri(), 'moderation', 'modmode', $content_id->getIDString(), 'merge']);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);
         $output = $this->output('basic_page', $data_only, true, $this->render_data);

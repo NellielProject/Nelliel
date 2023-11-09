@@ -64,6 +64,12 @@ class ContentOp
     public function load(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "op_id" = ?');
-        $this->data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
+        $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
+
+        if ($data === false) {
+            return;
+        }
+
+        $this->data = $data;
     }
 }

@@ -23,6 +23,12 @@
 	<div>
 		<a href="#section-overboard" data-i18n="">Overboard</a>
 	</div>
+	<div>
+		<a href="#section-site-navigation-links" data-i18n="">Site Navigation Links</a>
+	</div>
+	<div>
+		<a href="#section-account-navigation-links" data-i18n="">Account Navigation Links</a>
+	</div>
 </div>
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 {{# settings_data }}
@@ -30,6 +36,9 @@
 		<caption data-i18n="">Site configuration</caption>
 		<thead>
 			<tr>
+	{{# show_raw_column }}
+				<th scope="col" class="min-column-width" data-i18n="">Store Raw</th>
+	{{/ show_raw_column }}
 				<th scope="col" class="min-column-width" data-i18n="">Name</th>
 				<th scope="col" class="min-column-width" data-i18n="">Value</th>
 				<th scope="col" data-i18n="">Description</th>
@@ -37,7 +46,7 @@
 		</thead>
 		<tbody>
 			<tr>
-				<th id="section-general" colspan="3" data-i18n="">General</th>
+				<th id="section-general" colspan="{{ colspan }}" data-i18n="">General</th>
 			</tr>
 	{{# name }}
 			{{> panels/pieces/settings/text }}
@@ -106,7 +115,7 @@
 			{{> panels/pieces/settings/number }}
 	{{/ max_delete_items }}
 	{{# global_announcement }}
-			{{> panels/pieces/settings/text }}
+			{{> panels/pieces/settings/textarea }}
 	{{/ global_announcement }}
 	{{# uri_display_format }}
 			{{> panels/pieces/settings/text }}
@@ -135,10 +144,13 @@
 	{{# min_time_between_board_stat_updates }}
 			{{> panels/pieces/settings/number }}
 	{{/ min_time_between_board_stat_updates }}
+	{{# max_recent_posts }}
+			{{> panels/pieces/settings/number }}
+	{{/ max_recent_posts }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-banners" colspan="3" data-i18n="">Banners</th>
+				<th id="section-banners" colspan="{{ colspan }}" data-i18n="">Banners</th>
 			</tr>
 	{{# show_top_banners }}
 			{{> panels/pieces/settings/checkbox }}
@@ -161,7 +173,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-filenames-and-structure" colspan="3" data-i18n="">Filenames and Structure</th>
+				<th id="section-filenames-and-structure" colspan="{{ colspan }}" data-i18n="">Filenames and Structure</th>
 			</tr>
 	{{# index_filename_format }}
 			{{> panels/pieces/settings/text }}
@@ -184,7 +196,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-rendering" colspan="3" data-i18n="">Rendering</th>
+				<th id="section-rendering" colspan="{{ colspan }}" data-i18n="">Rendering</th>
 			</tr>
 	{{# base_image_set }}
 			{{> panels/pieces/settings/select }}
@@ -237,10 +249,19 @@
 	{{# error_message_header }}
 			{{> panels/pieces/settings/text }}
 	{{/ error_message_header }}
+	{{# show_error_images }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ show_error_images }}
+	{{# error_image_set }}
+			{{> panels/pieces/settings/select }}
+	{{/ error_image_set }}
+	{{# error_image_max_size }}
+			{{> panels/pieces/settings/number }}
+	{{/ error_image_max_size }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-uploads" colspan="3" data-i18n="">Uploads</th>
+				<th id="section-uploads" colspan="{{ colspan }}" data-i18n="">Uploads</th>
 			</tr>
 	{{# graphics_handler }}
 			{{> panels/pieces/settings/select }}
@@ -260,11 +281,8 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-hashing-and-security" colspan="3" data-i18n="">Hashing and Security</th>
+				<th id="section-hashing-and-security" colspan="{{ colspan }}" data-i18n="">Hashing and Security</th>
 			</tr>
-	{{# post_password_algorithm }}
-			{{> panels/pieces/settings/text }}
-	{{/ post_password_algorithm }}
 	{{# secure_tripcode_algorithm }}
 			{{> panels/pieces/settings/text }}
 	{{/ secure_tripcode_algorithm }}
@@ -284,12 +302,27 @@
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_dnsbl }}
 	{{# dnsbl_exceptions }}
-			{{> panels/pieces/settings/text }}
+			{{> panels/pieces/settings/textarea }}
 	{{/ dnsbl_exceptions }}
+	{{# ipv6_identification_cidr }}
+			{{> panels/pieces/settings/number }}
+	{{/ ipv6_identification_cidr }}
+	{{# ipv4_small_subnet_cidr }}
+			{{> panels/pieces/settings/number }}
+	{{/ ipv4_small_subnet_cidr }}
+	{{# ipv4_large_subnet_cidr }}
+			{{> panels/pieces/settings/number }}
+	{{/ ipv4_large_subnet_cidr }}
+	{{# ipv6_small_subnet_cidr }}
+			{{> panels/pieces/settings/number }}
+	{{/ ipv6_small_subnet_cidr }}
+	{{# ipv6_large_subnet_cidr }}
+			{{> panels/pieces/settings/number }}
+	{{/ ipv6_large_subnet_cidr }}
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-captcha" colspan="3" data-i18n="">CAPTCHA</th>
+				<th id="section-captcha" colspan="{{ colspan }}" data-i18n="">CAPTCHA</th>
 			</tr>
 	{{# enable_captchas }}
 			{{> panels/pieces/settings/checkbox }}
@@ -297,6 +330,18 @@
 	{{# use_native_captcha }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ use_native_captcha }}
+	{{# captcha_characters }}
+			{{> panels/pieces/settings/text }}
+	{{/ captcha_characters }}
+	{{# captcha_max_character_rotation }}
+			{{> panels/pieces/settings/number }}
+	{{/ captcha_max_character_rotation }}
+	{{# captcha_max_lines }}
+			{{> panels/pieces/settings/number }}
+	{{/ captcha_max_lines }}
+	{{# captcha_max_arcs }}
+			{{> panels/pieces/settings/number }}
+	{{/ captcha_max_arcs }}
 	{{# captcha_width }}
 			{{> panels/pieces/settings/number }}
 	{{/ captcha_width }}
@@ -321,7 +366,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-overboard" colspan="3" data-i18n="">Overboard</th>
+				<th id="section-overboard" colspan="{{ colspan }}" data-i18n="">Overboard</th>
 			</tr>
 	{{# overboard_active }}
 			{{> panels/pieces/settings/checkbox }}
@@ -362,6 +407,67 @@
 	{{# sfw_overboard_thread_replies }}
 			{{> panels/pieces/settings/number }}
 	{{/ sfw_overboard_thread_replies }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th id="section-site-navigation-links" colspan="{{ colspan }}" data-i18n="">Site Navigation Links</th>
+			</tr>
+	{{# translate_site_nav_links }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ translate_site_nav_links }}
+	{{# site_nav_links_left_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_left_bracket }}
+	{{# site_nav_links_right_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_right_bracket }}
+	{{# site_nav_links_home }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_home }}
+	{{# site_nav_links_news }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_news }}
+	{{# site_nav_links_faq }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_faq }}
+	{{# site_nav_links_about_nelliel }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_about_nelliel }}
+	{{# site_nav_links_blank_page }}
+			{{> panels/pieces/settings/text }}
+	{{/ site_nav_links_blank_page }}
+		</tbody>
+		<tbody>
+			<tr>
+				<th id="section-account-navigation-links" colspan="{{ colspan }}" data-i18n="">Account Navigation Links</th>
+			</tr>
+	{{# translate_account_nav_links }}
+			{{> panels/pieces/settings/checkbox }}
+	{{/ translate_account_nav_links }}
+	{{# account_nav_links_left_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_left_bracket }}
+	{{# account_nav_links_right_bracket }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_right_bracket }}
+	{{# account_nav_links_account }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_account }}
+	{{# account_nav_links_site_panel }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_site_panel }}
+	{{# account_nav_links_global_panel }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_global_panel }}
+	{{# account_nav_links_board_panel }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_board_panel }}
+	{{# account_nav_links_board_list }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_board_list }}
+	{{# account_nav_links_logout }}
+			{{> panels/pieces/settings/text }}
+	{{/ account_nav_links_logout }}
 		</tbody>
 	</table>
 	<div class="table-button">
