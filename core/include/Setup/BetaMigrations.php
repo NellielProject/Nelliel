@@ -63,6 +63,15 @@ class BetaMigrations
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_setting_options" ADD COLUMN raw_output SMALLINT NOT NULL DEFAULT 0');
 
+                $setting_options_table = new TableSettingOptions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $setting_options_table->insertDefaultRow(['site', 'description', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'site_content_disclaimer', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'site_footer_text', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'description', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'board_content_disclaimer', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'board_footer_text', '', 1]);
+
                 echo ' - ' . __('Setting options table updated.') . '<br>';
 
                 // Update filetypes table
@@ -1300,11 +1309,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 // Update site settings
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_site_config" ADD COLUMN stored_raw SMALLINT NOT NULL DEFAULT 0');
-
                 $setting_options_table = new TableSettingOptions(nel_database('core'),
                     nel_utilities()->sqlCompatibility());
-                $setting_options_table->insertDefaultRow(['board', 'content_links_expand_thread', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'content_links_collapse_thread', '', 1]);
 
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaultRow(
@@ -1431,6 +1437,10 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 nel_site_domain()->deleteCache();
                 nel_site_domain(true);
 
+                $setting_options_table->insertDefaultRow(['site', 'name', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'error_message_header', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'global_announcement', '', 1]);
+
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
                 // Update board settings
@@ -1537,6 +1547,28 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     'UPDATE "nelliel_board_defaults" SET "setting_value" = ? WHERE "setting_name" = \'enabled_filetypes\'');
                 $prepared->bindValue(1, $new_enabled_filetypes);
                 nel_database('core')->executePrepared($prepared);
+
+                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $setting_options_table = new TableSettingOptions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
+                $setting_options_table->insertDefaultRow(['board', 'name', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'board_footer_text', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'shadow_message_moved', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'shadow_message_merged', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'ban_page_extra_text', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'post_backlinks_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'name_field_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'email_field_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'subject_field_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'comment_field_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'fgsfds_field_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'password_field_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'files_form_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'embeds_form_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'flags_form_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'captcha_form_label', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'content_links_expand_thread', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'content_links_collapse_thread', '', 1]);
 
                 echo ' - ' . __('Board settings updated.') . '<br>';
 
