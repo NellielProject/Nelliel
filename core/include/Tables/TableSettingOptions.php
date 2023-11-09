@@ -96,6 +96,8 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'content_links_left_bracket', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_right_bracket', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_reply', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_expand_thread', '', 1]);
+        $this->insertDefaultRow(['board', 'content_links_collapse_thread', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_show_thread', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_hide_thread', '', 1]);
         $this->insertDefaultRow(['board', 'content_links_show_post', '', 1]);

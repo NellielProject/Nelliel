@@ -1301,9 +1301,12 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 nel_database('core')->exec(
                     'ALTER TABLE "nelliel_site_config" ADD COLUMN stored_raw SMALLINT NOT NULL DEFAULT 0');
 
-                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $setting_options_table = new TableSettingOptions(nel_database('core'),
                     nel_utilities()->sqlCompatibility());
+                $setting_options_table->insertDefaultRow(['board', 'content_links_expand_thread', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'content_links_collapse_thread', '', 1]);
+
+                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'boolean', 'show_blotter', '1', 'Show the short list of blotter entries.',
                         '{"type":"checkbox"}']);
