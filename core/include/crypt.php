@@ -23,7 +23,7 @@ if (!function_exists('hash_equals')) {
     }
 }
 
-function nel_password_hash(string $password, int $algorithm, array $options = array(), bool $new_hash = false)
+function nel_password_hash(string $password, string $algorithm, array $options = array(), bool $new_hash = false)
 {
     static $hashes = array();
 
@@ -63,7 +63,7 @@ function nel_password_verify(string $password, string $hash, string $pepper = nu
     return password_verify($password, $hash);
 }
 
-function nel_password_needs_rehash(string $password, int $algorithm, array $options = array()): bool
+function nel_password_needs_rehash(string $password, string $algorithm, array $options = array()): bool
 {
     if (!nel_site_domain()->setting('do_password_rehash')) {
         return false;

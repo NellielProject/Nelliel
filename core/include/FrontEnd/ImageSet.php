@@ -132,6 +132,11 @@ class ImageSet
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
+
+        if ($data === false) {
+            return;
+        }
+
         $this->directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
 

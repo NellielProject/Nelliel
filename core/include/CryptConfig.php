@@ -113,7 +113,7 @@ class CryptConfig
         return $this->current_config[$key] ?? null;
     }
 
-    public function accountPasswordAlgorithm()
+    public function accountPasswordAlgorithm(): string
     {
         return $this->account_password_algorithm;
     }
@@ -123,7 +123,7 @@ class CryptConfig
         return $this->account_password_options;
     }
 
-    public function postPasswordAlgorithm()
+    public function postPasswordAlgorithm(): string
     {
         return $this->post_password_strong_algorithm;
     }
@@ -133,7 +133,7 @@ class CryptConfig
         return $this->post_password_options;
     }
 
-    public function IPHashAlgorithm()
+    public function IPHashAlgorithm(): string
     {
         return $this->ip_strong_algorithm;
     }

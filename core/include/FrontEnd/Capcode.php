@@ -39,13 +39,11 @@ class Capcode
             [PDO::PARAM_STR, PDO::PARAM_STR])) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_CAPCODES_TABLE . '" SET "output" = ?, "moar" = ? WHERE "capcode" = ?');
-            $this->database->executePrepared($prepared,
-                [$this->data('output'), $this->data('moar'), $this->id()]);
+            $this->database->executePrepared($prepared, [$this->data('output'), $this->data('moar'), $this->id()]);
         } else {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_CAPCODES_TABLE . '" {"capcode", "output", "moar") VALUES (?, ?, ?');
-            $this->database->executePrepared($prepared,
-                [$this->id(), $this->data('output'), $this->data('moar')]);
+            $this->database->executePrepared($prepared, [$this->id(), $this->data('output'), $this->data('moar')]);
         }
 
         $this->load();
@@ -62,8 +60,10 @@ class Capcode
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
-        if (is_array($data)) {
-            $this->data = $data;
+        if ($data === false) {
+            return;
         }
+
+        $this->data = $data;
     }
 }
