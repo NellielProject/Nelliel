@@ -16,7 +16,7 @@ A relatively lightweight [Futallaby](https://www.1chan.net/futallaby/)-style ima
 These are the bare minimum requirements for Nelliel to function. Earlier versions will not receive any support. **It is strongly recommended to use the latest software versions available.**
 
 Required:
-- [PHP](https://www.php.net/) 7.2+
+- [PHP](https://www.php.net/) 7.4+
 - [Composer](https://getcomposer.org/)
 - [MySQL](https://www.mysql.com/) 5.7+, [MariaDB](https://mariadb.org/) 10.2+, [PostgreSQL](https://www.postgresql.org/) 10+ or [SQLite](https://www.sqlite.org/) 3.22+
 - [PHP PDO with corresponding support of your database choice](https://www.php.net/manual/en/book.pdo.php)

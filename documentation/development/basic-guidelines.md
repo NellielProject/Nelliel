@@ -34,7 +34,7 @@ All schemas and queries should follow SQL standards or widely used alternatives.
 Any core functions and features must target the software versions listed below in addition to maintaining compatibility with all later versions. If forward compatibility is not possible then an updated target version may be considered.
 
 ### Target Versions
-PHP: 7.2  
+PHP: 7.4  
 MySQL: 5.7  
 MariaDB: 10.2  
 PostgreSQL: 10  
