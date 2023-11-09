@@ -1570,6 +1570,25 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $setting_options_table->insertDefaultRow(['board', 'content_links_expand_thread', '', 1]);
                 $setting_options_table->insertDefaultRow(['board', 'content_links_collapse_thread', '', 1]);
 
+                $new_site_textareas = ['global_announcement', 'dnsbl_exceptions'];
+                $new_board_textareas = ['ban_page_extra_text', 'automatic_gets'];
+
+                foreach ($new_site_textareas as $setting_name) {
+                    $prepared = nel_database('core')->prepare(
+                        'UPDATE "nelliel_settings" SET "input_attributes" = :textarea WHERE "setting_name" = :setting_name AND "setting_category" = \'site\'');
+                    $prepared->bindValue(':textarea', '{"type":"textarea"}', PDO::PARAM_STR);
+                    $prepared->bindValue(':setting_name', $setting_name);
+                    nel_database('core')->executePrepared($prepared, null);
+                }
+
+                foreach ($new_board_textareas as $setting_name) {
+                    $prepared = nel_database('core')->prepare(
+                        'UPDATE "nelliel_settings" SET "input_attributes" = :textarea WHERE "setting_name" = :setting_name AND "setting_category" = \'board\'');
+                    $prepared->bindValue(':textarea', '{"type":"textarea"}', PDO::PARAM_STR);
+                    $prepared->bindValue(':setting_name', $setting_name);
+                    nel_database('core')->executePrepared($prepared, null);
+                }
+
                 echo ' - ' . __('Board settings updated.') . '<br>';
 
                 // Update moar database columns

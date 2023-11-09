@@ -86,7 +86,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_subdirectory_length', '50', 'Maximum characters allowed in a custom board subdirectory name.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_report_items', '5', 'Maximum items that can be reported at one time.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_delete_items', '5', 'Maximum items that can be deleted at one time.', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'global_announcement', '', 'Global announcement shown on all boards.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'global_announcement', '', 'Global announcement shown on all boards.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'uri_display_format', '/%s/', 'Format to use when displaying board URIs.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'shell_path', '/usr/local/bin', 'Append this to the path when executing shell commands. Multiple directories must be separated by :', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_content_disclaimer', '', 'Site-wide disclaimer added to the bottom of posts.', '{"type":"textarea"}']);
@@ -151,7 +151,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'session_length', '2592000', 'Session timeout (seconds), 0 to disable. Default is 1 month.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'store_unhashed_ip', '1', 'Store unhashed IP addresses; (hashed IP will always be stored).', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'use_dnsbl', '0', 'Use DNSBL to check incoming posts.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'dnsbl_exceptions', '[]', 'IPs that are exempt from DNSBL checks. Enter as JSON array of strings.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'dnsbl_exceptions', '[]', 'IPs that are exempt from DNSBL checks. Enter as JSON array of strings.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'visitor_id_lifespan', '31536000', 'How long a visitor ID will be valid (seconds).', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'ipv6_identification_cidr', '60', 'CIDR that will be used on an IPv6 address for identification purposes.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'ipv4_small_subnet_cidr', '24', 'CIDR for small IPv4 hashed subnet.', '{"type":"number"}']);
@@ -246,7 +246,7 @@ class TableSettings extends Table
 
         // Bans
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'must_see_ban', '1', 'Bans must be seen at least once before expiration purge.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ban_page_extra_text', '', 'Extra text that can be displayed on the ban page.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'ban_page_extra_text', '', 'Extra text that can be displayed on the ban page.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'allow_ban_appeals', '1', 'Allow ban appeals.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'min_time_before_ban_appeal', '21600', 'Minimum time before a ban can be appealed (seconds).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_ban_appeals', '2', 'Maximum number of appeals per ban.', '{"type":"number"}']);
@@ -360,7 +360,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_anonymous_names', '1', 'Use the list of anonymous names when name field is empty or disabled.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'anonymous_names', '["Anonymous"]', 'Names that can be randomly chosen when a name is not provided or forced anonymous is on. Enter as JSON array of strings.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'always_noko', '0', 'Always return to thread (noko) after making a post.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'automatic_gets', '[]', 'List of post numbers to be automatically stickied as a GET. Enter as JSON array of integers.', '{"type":"text"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'automatic_gets', '[]', 'List of post numbers to be automatically stickied as a GET. Enter as JSON array of integers.', '{"type":"textarea"}']);
 
         // Preview Generation
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'create_static_preview', '1', 'Create a static image preview whenever possible.', '{"type":"checkbox"}']);
