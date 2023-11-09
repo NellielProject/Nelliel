@@ -36,9 +36,9 @@
 		<caption data-i18n="">Site configuration</caption>
 		<thead>
 			<tr>
-	{{# show_raw }}
-				<th scope="col" data-i18n="">Store Raw</th>
-	{{/ show_raw }}
+	{{# show_raw_column }}
+				<th scope="col" class="min-column-width" data-i18n="">Store Raw</th>
+	{{/ show_raw_column }}
 				<th scope="col" class="min-column-width" data-i18n="">Name</th>
 				<th scope="col" class="min-column-width" data-i18n="">Value</th>
 				<th scope="col" data-i18n="">Description</th>
@@ -46,7 +46,7 @@
 		</thead>
 		<tbody>
 			<tr>
-				<th id="section-general" colspan="3" data-i18n="">General</th>
+				<th id="section-general" colspan="{{ colspan }}" data-i18n="">General</th>
 			</tr>
 	{{# name }}
 			{{> panels/pieces/settings/text }}
@@ -150,7 +150,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-banners" colspan="3" data-i18n="">Banners</th>
+				<th id="section-banners" colspan="{{ colspan }}" data-i18n="">Banners</th>
 			</tr>
 	{{# show_top_banners }}
 			{{> panels/pieces/settings/checkbox }}
@@ -173,7 +173,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-filenames-and-structure" colspan="3" data-i18n="">Filenames and Structure</th>
+				<th id="section-filenames-and-structure" colspan="{{ colspan }}" data-i18n="">Filenames and Structure</th>
 			</tr>
 	{{# index_filename_format }}
 			{{> panels/pieces/settings/text }}
@@ -196,7 +196,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-rendering" colspan="3" data-i18n="">Rendering</th>
+				<th id="section-rendering" colspan="{{ colspan }}" data-i18n="">Rendering</th>
 			</tr>
 	{{# base_image_set }}
 			{{> panels/pieces/settings/select }}
@@ -261,7 +261,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-uploads" colspan="3" data-i18n="">Uploads</th>
+				<th id="section-uploads" colspan="{{ colspan }}" data-i18n="">Uploads</th>
 			</tr>
 	{{# graphics_handler }}
 			{{> panels/pieces/settings/select }}
@@ -322,7 +322,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-captcha" colspan="3" data-i18n="">CAPTCHA</th>
+				<th id="section-captcha" colspan="{{ colspan }}" data-i18n="">CAPTCHA</th>
 			</tr>
 	{{# enable_captchas }}
 			{{> panels/pieces/settings/checkbox }}
@@ -366,7 +366,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-overboard" colspan="3" data-i18n="">Overboard</th>
+				<th id="section-overboard" colspan="{{ colspan }}" data-i18n="">Overboard</th>
 			</tr>
 	{{# overboard_active }}
 			{{> panels/pieces/settings/checkbox }}
@@ -410,7 +410,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-site-navigation-links" colspan="3" data-i18n="">Site Navigation Links</th>
+				<th id="section-site-navigation-links" colspan="{{ colspan }}" data-i18n="">Site Navigation Links</th>
 			</tr>
 	{{# translate_site_nav_links }}
 			{{> panels/pieces/settings/checkbox }}
@@ -439,7 +439,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-account-navigation-links" colspan="3" data-i18n="">Account Navigation Links</th>
+				<th id="section-account-navigation-links" colspan="{{ colspan }}" data-i18n="">Account Navigation Links</th>
 			</tr>
 	{{# translate_account_nav_links }}
 			{{> panels/pieces/settings/checkbox }}
