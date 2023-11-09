@@ -1,4 +1,63 @@
 # Nelliel Changelog
+## v0.9.31 (2023/2/6)
+### Added
+ - Dice rolls
+ - Many new settings
+ - Additional `moar` columns
+ - Optional lazy loading for previews
+ - Basic IP info and notes
+ - Subnet bans
+ - HTTP codes for error pages
+ - An actual installer
+ - Recent posts functions (not currently used)
+ - Simple render core for things like installs and upgrades
+ - Markup options for static pages
+ - JSON API threadlist
+ - `FileHandler` method to check for critical paths
+ - Size limits for filetype categories
+ - Customizable post form labels
+ - Customizable navigation labels
+ - Function for testing absolute URLs
+ - Checkboxes to specify raw HTML on relevant settings
+ - New hashing configuration options
+
+### Changed
+ - PHP 7.4 minimum
+ - Documentation updates
+ - Converted `moar` columns to LONGTEXT in MySQL/MariaDB
+ - Overhauled IP handling
+ - Improved ban page
+ - `Ban` classes moved into subdirectory
+ - JSON API output updated
+ - Markup and cite pasring improved
+ - Improved menu generation
+ - Updated hashing functions
+ - Split up config files
+ - URIs are now in the domain registry
+ - Improved native CAPTCHA
+ - if-thens are now checkpoints
+ - Overhaul of file and word filters
+ - Style tweaks
+ - Javascript functions split up more
+
+### Fixed
+ - Upload renzoku triggering with no file
+ - Favicon being used when not set
+ - Greentext markup
+ - URL markup
+ - Line markup
+ - Migrations debugging
+ - Boardlist display
+ - Missing `BanHammer` values
+ - Mod mode functions not showing on replies
+ - Viewing notices
+ - Index and catalog links
+
+### Removed
+ - Old post password algorithm
+ - Sticky column on overboard table
+ - Old `Setup` class
+
 ## v0.9.30 (2023/2/6)
 ### Added
  - Snippet setting for private messages

@@ -1304,7 +1304,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.30':
-                echo '<br>' . __('Updating from v0.9.30 to ???...') . '<br>';
+                echo '<br>' . __('Updating from v0.9.30 to v0.9.31') . '<br>';
 
                 // Update site settings
                 nel_database('core')->exec(

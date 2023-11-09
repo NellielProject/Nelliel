@@ -1,13 +1,13 @@
 # Nelliel Imageboard
 ## About
-A relatively lightweight [Futallaby](https://www.1chan.net/futallaby/)-style imageboard. Focuses on providing modern features and customization while preserving the old school imageboard feel.
+A lightweight [Futallaby](https://www.1chan.net/futallaby/)-style imageboard. Focuses on providing modern features and customization while preserving the old school imageboard feel.
 
-**IMPORTANT: Nelliel is in a beta stage of development and still has bugs and incomplete features.**
+**IMPORTANT: Nelliel is in late beta stage. Some things are still buggy or incomplete but the software is generally stable.**
 
 ## Notable Features
  - [Plugin API](documentation/plugins/plugin-api.md)
  - [JSON API](documentation/json-api/api.md)
- - Custom filetype checks with 84 formats included by default
+ - Customizable filetype checks with 84 formats already included
  - Extensive customization built-in
  - Web-based controls for most configuration and functions
  - Flexible role and permission system
