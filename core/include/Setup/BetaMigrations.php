@@ -1298,6 +1298,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo '<br>' . __('Updating from v0.9.30 to ???...') . '<br>';
 
                 // Update site settings
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_site_config" ADD COLUMN stored_raw SMALLINT NOT NULL DEFAULT 0');
+
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $setting_options_table = new TableSettingOptions(nel_database('core'),
                     nel_utilities()->sqlCompatibility());
@@ -1428,6 +1431,11 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
                 // Update board settings
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_board_configs" ADD COLUMN stored_raw SMALLINT NOT NULL DEFAULT 0');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_board_defaults" ADD COLUMN stored_raw SMALLINT NOT NULL DEFAULT 0');
+
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'boolean', 'allow_dice_rolls', '1', 'Allow posters to use dice rolls.',
                         '{"type":"checkbox"}']);

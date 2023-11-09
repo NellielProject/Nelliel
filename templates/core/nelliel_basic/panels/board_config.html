@@ -66,18 +66,21 @@
 		<caption data-i18n="">Board configuration</caption>
 		<thead>
 			<tr>
-				<th scope="col" class="min-column-width" data-i18n="">Setting</th>
-				<th scope="col" class="min-column-width" data-i18n="">Value</th>
 	{{# show_lock_update }}
 				<th scope="col" data-i18n="">Lock</th>
 				<th scope="col" data-i18n="">Force Update</th>
 	{{/ show_lock_update }}
+	{{# show_raw }}
+				<th scope="col" data-i18n="">Store Raw</th>
+	{{/ show_raw }}
+				<th scope="col" class="min-column-width" data-i18n="">Setting</th>
+				<th scope="col" class="min-column-width" data-i18n="">Value</th>
 				<th scope="col" data-i18n="">Description</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr>
-				<th id="section-general" colspan="5" data-i18n="">General</th>
+				<th id="section-general" colspan="6" data-i18n="">General</th>
 			</tr>
 	{{# name }}
 			{{> panels/pieces/settings/text }}
@@ -129,7 +132,13 @@
 	{{/ board_footer_text }}
 	{{# enabled_styles }}
 			<tr class="row1">
-			{{> panels/pieces/settings/setting_name }}
+		{{# show_lock_update }}
+				{{> panels/pieces/settings/lock_update }}
+		{{/ show_lock_update }}
+		{{# show_raw }}
+				{{> panels/pieces/settings/store_raw }}
+		{{/ show_raw }}
+				{{> panels/pieces/settings/setting_name }}
 				<td>
 		{{# styles }}
 			{{# entry }}
@@ -142,9 +151,6 @@
 			{{/ entry }}
 		{{/ styles }}
 				</td>
-		{{# show_lock_update }}
-				{{> panels/pieces/settings/lock_update }}
-		{{/ show_lock_update }}
 				{{> panels/pieces/settings/setting_description }}
 			</tr>
 	{{/ enabled_styles }}
@@ -175,7 +181,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-banners" colspan="3" data-i18n="">Banners</th>
+				<th id="section-banners" colspan="5" data-i18n="">Banners</th>
 			</tr>
 	{{# show_top_banners }}
 		{{> panels/pieces/settings/checkbox }}
@@ -192,7 +198,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-bans" colspan="3" data-i18n="">Bans</th>
+				<th id="section-bans" colspan="5" data-i18n="">Bans</th>
 			</tr>
 	{{# must_see_ban }}
 			{{> panels/pieces/settings/checkbox }}
@@ -221,7 +227,7 @@
 		</tbody>
 		<tbody>
 			<tr>
-				<th id="section-r9k" colspan="3" data-i18n="">R9K</th>
+				<th id="section-r9k" colspan="5" data-i18n="">R9K</th>
 			</tr>
 	{{# r9k_enable_board }}
 			{{> panels/pieces/settings/checkbox }}
@@ -496,13 +502,16 @@
 	{{/ store_exif_data }}
 	{{# enabled_filetypes }}
 		<tr class="row1">
+		{{# show_lock_update }}
+			{{> panels/pieces/settings/lock_update }}
+		{{/ show_lock_update }}
+		{{# show_raw }}
+			{{> panels/pieces/settings/store_raw }}
+		{{/ show_raw }}
 			{{> panels/pieces/settings/setting_name }}
 			<td>
 				<a href="#section-filetypes-selection" data-i18n="">Filetypes Selection</a>
 			</td>
-		{{# show_lock_update }}
-			{{> panels/pieces/settings/lock_update }}
-		{{/ show_lock_update }}
 			{{> panels/pieces/settings/setting_description }}
 		</tr>
 	{{/ enabled_filetypes }}
@@ -923,7 +932,13 @@
 	{{/ display_deleted_placeholder }}
 	{{# enabled_content_ops }}
 			<tr class="row1">
-			{{> panels/pieces/settings/setting_name }}
+		{{# show_lock_update }}
+				{{> panels/pieces/settings/lock_update }}
+		{{/ show_lock_update }}
+		{{# show_raw }}
+				{{> panels/pieces/settings/store_raw }}
+		{{/ show_raw }}
+				{{> panels/pieces/settings/setting_name }}
 				<td>
 		{{# content_ops }}
 			{{# entry }}
@@ -936,9 +951,6 @@
 			{{/ entry }}
 		{{/ content_ops }}
 				</td>
-		{{# show_lock_update }}
-				{{> panels/pieces/settings/lock_update }}
-		{{/ show_lock_update }}
 				{{> panels/pieces/settings/setting_description }}
 			</tr>
 	{{/ enabled_content_ops }}

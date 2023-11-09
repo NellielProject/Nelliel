@@ -50,6 +50,7 @@ class OutputPanelBoardConfig extends Output
 
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $user_lock_override = $this->session->user()->checkPermission($this->domain, 'perm_manage_board_config_override');
+        $user_raw_html = $this->session->user()->checkPermission($this->domain, 'perm_raw_html');
         $enabled_array = json_decode($enabled_types['setting_value'], true);
         $types_edit_lock = $defaults_list['enabled_filetypes']['edit_lock'] == 1 && !$defaults && !$user_lock_override;
 
@@ -59,7 +60,8 @@ class OutputPanelBoardConfig extends Output
             $category_output['item_label'] = _gettext($category_data['label'] ?? '');
             $category_output['category_select']['name'] = $category_data['category'];
             $category_output['category_select']['input_name'] = 'enabled_filetypes[' . $category_data['category'] . ']';
-            $category_output['category_max_size'] = intval($filetypes->categorySetting($this->domain, $category, 'max_size'));
+            $category_output['category_max_size'] = intval(
+                $filetypes->categorySetting($this->domain, $category, 'max_size'));
 
             if (isset($enabled_array[$category_data['category']]) &&
                 $enabled_array[$category_data['category']]['enabled']) {
@@ -145,8 +147,18 @@ class OutputPanelBoardConfig extends Output
             $setting_data['setting_name'] = $setting['setting_name'];
             $setting_data['setting_description'] = _gettext($setting['setting_description']);
             $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
+            $setting_data['store_raw'] = $setting['raw_output'] == 1;
+            $setting_data['show_raw'] = $user_raw_html;
 
-            if ($defaults_list[$setting['setting_name']]['edit_lock'] == 1) {
+            if ($defaults) {
+                $setting_locked = $defaults_list[$setting['setting_name']]['edit_lock'] == 1;
+                $setting_stored_raw = $defaults_list[$setting['setting_name']]['stored_raw'] == 1;
+            } else {
+                $setting_locked = $setting['edit_lock'] == 1;
+                $setting_stored_raw = $setting['stored_raw'] == 1;
+            }
+
+            if ($setting_locked) {
                 $setting_data['setting_locked'] = 'checked';
 
                 if (!$defaults && !$user_lock_override) {
@@ -154,9 +166,12 @@ class OutputPanelBoardConfig extends Output
                 }
             }
 
+            if ($setting_stored_raw) {
+                $setting_data['setting_stored_raw'] = 'checked';
+            }
+
             if ($setting['setting_name'] === 'enabled_styles') {
-                $styles_edit_lock = $defaults_list['enabled_styles']['edit_lock'] == 1 && !$defaults &&
-                    !$user_lock_override;
+                $styles_edit_lock = $setting_locked && !$defaults && !$user_lock_override;
                 $styles = $this->domain->frontEndData()->getAllStyles(true);
                 $styles_array = json_decode($setting['setting_value'] ?? '', true);
                 $style_entries = array();
@@ -179,8 +194,7 @@ class OutputPanelBoardConfig extends Output
             }
 
             if ($setting['setting_name'] === 'enabled_content_ops') {
-                $content_ops_edit_lock = $defaults_list['enabled_content_ops']['edit_lock'] == 1 && !$defaults &&
-                    !$user_lock_override;
+                $content_ops_edit_lock = $setting_locked && !$defaults && !$user_lock_override;
                 $content_ops = $this->domain->frontEndData()->getAllContentOps(true);
                 $content_ops_array = json_decode($setting['setting_value'] ?? '', true);
                 $content_op_entries = array();
