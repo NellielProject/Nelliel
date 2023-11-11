@@ -3,26 +3,6 @@ declare(strict_types = 1);
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-// TODO: Remove when minimum moves to PHP 7.4
-if (!function_exists('hash_equals')) {
-
-    function hash_equals(string $known_string, string $user_string): bool
-    {
-        if (strlen($known_string) != utf8_strlen($user_string)) {
-            return false;
-        } else {
-            $res = $known_string ^ $user_string;
-            $return = 0;
-
-            for ($i = utf8_strlen($res) - 1; $i >= 0; $i --) {
-                $return |= ord($res[$i]);
-            }
-
-            return !$return;
-        }
-    }
-}
-
 function nel_password_hash(string $password, string $algorithm, array $options = array(), bool $new_hash = false)
 {
     static $hashes = array();
