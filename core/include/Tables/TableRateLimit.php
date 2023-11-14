@@ -11,19 +11,23 @@ use PDO;
 
 class TableRateLimit extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'rate_id' => 'string',
+        'record' => 'string'];
+
+    public const PDO_TYPES = [
+        'rate_id' => PDO::PARAM_LOB,
+        'record' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_RATE_LIMIT_TABLE;
-        $this->column_types = [
-            'rate_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
-            'record' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'rate_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'record' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

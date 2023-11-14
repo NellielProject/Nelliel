@@ -11,40 +11,70 @@ use PDO;
 
 class TablePosts extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'post_number' => 'integer',
+        'parent_thread' => 'integer',
+        'reply_to' => 'integer',
+        'name' => 'string',
+        'password' => 'string',
+        'tripcode' => 'string',
+        'secure_tripcode' => 'string',
+        'capcode' => 'string',
+        'email' => 'string',
+        'subject' => 'string',
+        'comment' => 'string',
+        'hashed_ip_address' => 'string',
+        'ip_address' => 'string',
+        'visitor_id' => 'string',
+        'post_time' => 'integer',
+        'post_time_milli' => 'integer',
+        'total_uploads' => 'integer',
+        'file_count' => 'integer',
+        'embed_count' => 'integer',
+        'op' => 'boolean',
+        'sage' => 'boolean',
+        'shadow' => 'boolean',
+        'username' => 'string',
+        'mod_comment' => 'string',
+        'regen_cache' => 'boolean',
+        'cache' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'post_number' => PDO::PARAM_INT,
+        'parent_thread' => PDO::PARAM_INT,
+        'reply_to' => PDO::PARAM_INT,
+        'name' => PDO::PARAM_STR,
+        'password' => PDO::PARAM_STR,
+        'tripcode' => PDO::PARAM_STR,
+        'secure_tripcode' => PDO::PARAM_STR,
+        'capcode' => PDO::PARAM_STR,
+        'email' => PDO::PARAM_STR,
+        'subject' => PDO::PARAM_STR,
+        'comment' => PDO::PARAM_STR,
+        'hashed_ip_address' => PDO::PARAM_STR,
+        'ip_address' => PDO::PARAM_LOB,
+        'visitor_id' => PDO::PARAM_STR,
+        'post_time' => PDO::PARAM_INT,
+        'post_time_milli' => PDO::PARAM_INT,
+        'total_uploads' => PDO::PARAM_INT,
+        'file_count' => PDO::PARAM_INT,
+        'embed_count' => PDO::PARAM_INT,
+        'op' => PDO::PARAM_INT,
+        'sage' => PDO::PARAM_INT,
+        'shadow' => PDO::PARAM_INT,
+        'username' => PDO::PARAM_STR,
+        'mod_comment' => PDO::PARAM_STR,
+        'regen_cache' => PDO::PARAM_INT,
+        'cache' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_posts';
-        $this->column_types = [
-            'post_number' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'parent_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'reply_to' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'password' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'tripcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'secure_tripcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'capcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'email' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'subject' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'comment' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
-            'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'post_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'post_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'total_uploads' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'file_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'embed_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'op' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'sage' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'shadow' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'mod_comment' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'regen_cache' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'cache' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'post_number' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'parent_thread' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -73,7 +103,6 @@ class TablePosts extends Table
             'regen_cache' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'cache' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

@@ -11,24 +11,32 @@ use PDO;
 
 class TableStatistics extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'domain_id' => 'string',
+        'statistic' => 'string',
+        'value' => 'integer',
+        'last_updated' => 'integer',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'domain_id' => PDO::PARAM_STR,
+        'statistic' => PDO::PARAM_STR,
+        'value' => PDO::PARAM_INT,
+        'last_updated' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
+
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_STATISTICS_TABLE;
-        $this->columns_data = [
-            'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'statistic' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'value' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'last_updated' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks = [
             'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'statistic' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'value' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'last_updated' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

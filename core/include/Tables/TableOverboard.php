@@ -11,19 +11,28 @@ use PDO;
 
 class TableOverboard extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'overboard_id' => 'string',
+        'thread_id' => 'string',
+        'board_id' => 'string',
+        'bump_time' => 'integer',
+        'bump_time_milli' => 'integer',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'overboard_id' => PDO::PARAM_STR,
+        'thread_id' => PDO::PARAM_STR,
+        'board_id' => PDO::PARAM_STR,
+        'bump_time' => PDO::PARAM_INT,
+        'bump_time_milli' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_OVERBOARD_TABLE;
-        $this->column_types = [
-            'overboard_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'thread_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'bump_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'bump_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'overboard_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false, 'update' => false],
             'thread_id' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -31,7 +40,6 @@ class TableOverboard extends Table
             'bump_time' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false, 'update' => false],
             'bump_time_milli' => ['pdo_type' => PDO::PARAM_INT, 'row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

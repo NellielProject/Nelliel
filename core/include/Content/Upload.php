@@ -63,12 +63,7 @@ class Upload
             return true;
         }
 
-        $column_types = $this->main_table->columnTypes();
-
-        foreach ($result as $name => $value) {
-            $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
-        }
-
+        $this->content_data = TableUploads::typeCastData($result);
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
         return true;
@@ -80,9 +75,9 @@ class Upload
             return false;
         }
 
-        $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $filtered_data = TableUploads::filterData($this->content_data);
         $filtered_data['moar'] = $this->getMoar()->getJSON();
-        $pdo_types = $this->main_table->getPDOTypes($filtered_data);
+        $pdo_types = TableUploads::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
 
@@ -309,11 +304,8 @@ class Upload
 
     public function changeData(string $key, $new_data, bool $cast_null = true)
     {
-        $column_types = $this->main_table->columnTypes();
-        $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_typecast($new_data, $type, $cast_null);
         $old_data = $this->data($key);
-        $this->content_data[$key] = $new_data;
+        $this->content_data[$key] = TableUploads::typeCastValue($key, $new_data);
         return $old_data;
     }
 
@@ -400,13 +392,13 @@ class Upload
                 if ($this->fileDeduplicated() || $is_shadow) {
                     $file_handler->copyFile(
                         $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
-                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' .
-                        $new_upload->data('extension'));
+                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' . $new_upload->data(
+                            'extension'));
                 } else {
                     $file_handler->moveFile(
                         $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
-                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' .
-                        $new_upload->data('extension'));
+                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' . $new_upload->data(
+                            'extension'));
                 }
             }
 

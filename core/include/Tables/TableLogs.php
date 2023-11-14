@@ -11,25 +11,40 @@ use PDO;
 
 class TableLogs extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'log_id' => 'integer',
+        'level' => 'integer',
+        'event' => 'string',
+        'message' => 'string',
+        'message_values' => 'string',
+        'time' => 'integer',
+        'domain_id' => 'string',
+        'username' => 'string',
+        'hashed_ip_address' => 'string',
+        'ip_address' => 'string',
+        'visitor_id' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'log_id' => PDO::PARAM_INT,
+        'level' => PDO::PARAM_INT,
+        'event' => PDO::PARAM_STR,
+        'message' => PDO::PARAM_STR,
+        'message_values' => PDO::PARAM_STR,
+        'time' => PDO::PARAM_INT,
+        'domain_id' => PDO::PARAM_STR,
+        'username' => PDO::PARAM_STR,
+        'hashed_ip_address' => PDO::PARAM_STR,
+        'ip_address' => PDO::PARAM_LOB,
+        'visitor_id' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '';
-        $this->column_types = [
-            'log_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'level' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'event' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'message' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'message_values' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
-            'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'log_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'level' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -43,7 +58,6 @@ class TableLogs extends Table
             'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

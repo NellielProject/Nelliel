@@ -11,24 +11,32 @@ use PDO;
 
 class TableCache extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'domain_id' => 'string',
+        'cache_key' => 'string',
+        'cache_data' => 'string',
+        'regen' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'domain_id' => PDO::PARAM_STR,
+        'cache_key' => PDO::PARAM_STR,
+        'cache_data' => PDO::PARAM_STR,
+        'regen' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
+
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CACHE_TABLE;
-        $this->columns_data = [
-            'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'cache_key' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'cache_data' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'regen' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks = [
             'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'cache_key' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'cache_data' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'regen' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['pdo_type' => PDO::PARAM_STR, 'row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

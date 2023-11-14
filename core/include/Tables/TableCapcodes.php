@@ -11,25 +11,32 @@ use PDO;
 
 class TableCapcodes extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'capcode_id' => 'integer',
+        'capcode' => 'string',
+        'output' => 'string',
+        'enabled' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'capcode_id' => PDO::PARAM_INT,
+        'capcode' => PDO::PARAM_STR,
+        'output' => PDO::PARAM_STR,
+        'enabled' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CAPCODES_TABLE;
-        $this->column_types = [
-            'capcode_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'capcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'output' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'capcode_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'capcode' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'output' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

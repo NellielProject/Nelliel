@@ -11,23 +11,29 @@ use PDO;
 
 class TableVersions extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'id' => 'string',
+        'type' => 'string',
+        'original' => 'integer',
+        'current' => 'integer'];
+
+    public const PDO_TYPES = [
+        'id' => PDO::PARAM_STR,
+        'type' => PDO::PARAM_STR,
+        'original' => PDO::PARAM_INT,
+        'current' => PDO::PARAM_INT];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_VERSIONS_TABLE;
-        $this->column_types = [
-            'id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'original' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'current' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
             'id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'type' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'original' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'current' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

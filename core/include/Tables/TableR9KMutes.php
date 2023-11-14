@@ -11,24 +11,32 @@ use PDO;
 
 class TableR9KMutes extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'mute_id' => 'string',
+        'board_id' => 'string',
+        'poster_hash' => 'string',
+        'mute_time' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'mute_id' => PDO::PARAM_INT,
+        'board_id' => PDO::PARAM_STR,
+        'poster_hash' => PDO::PARAM_STR,
+        'mute_time' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
+
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_R9K_MUTES_TABLE;
-        $this->columns_data = [
-            'mute_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
-            'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'poster_hash' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'mute_time' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks = [
             'mute_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'poster_hash' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'mute_time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

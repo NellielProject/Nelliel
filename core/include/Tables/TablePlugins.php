@@ -11,19 +11,28 @@ use PDO;
 
 class TablePlugins extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'plugin_id' => 'string',
+        'directory' => 'string',
+        'initializer' => 'string',
+        'parsed_ini' => 'string',
+        'enabled' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'plugin_id' => PDO::PARAM_STR,
+        'directory' => PDO::PARAM_STR,
+        'initializer' => PDO::PARAM_STR,
+        'parsed_ini' => PDO::PARAM_STR,
+        'enabled' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_PLUGINS_TABLE;
-        $this->column_types = [
-            'plugin_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'directory' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'initializer' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'parsed_ini' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'plugin_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'directory' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -31,7 +40,6 @@ class TablePlugins extends Table
             'parsed_ini' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

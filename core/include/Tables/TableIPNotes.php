@@ -11,27 +11,35 @@ use PDO;
 
 class TableIPNotes extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'note_id' => 'integer',
+        'username' => 'string',
+        'hashed_ip_address' => 'string',
+        'time' => 'integer',
+        'notes' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'note_id' => PDO::PARAM_INT,
+        'username' => PDO::PARAM_STR,
+        'hashed_ip_address' => PDO::PARAM_STR,
+        'time' => PDO::PARAM_INT,
+        'notes' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_IP_NOTES_TABLE;
-        $this->columns_data = [
-            'note_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks = [
             'note_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

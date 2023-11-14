@@ -72,12 +72,7 @@ class Thread
             return true;
         }
 
-        $column_types = $this->main_table->columnTypes();
-
-        foreach ($result as $name => $value) {
-            $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
-        }
-
+        $this->content_data = TableThreads::typeCastData($result);
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
         return true;
@@ -89,9 +84,9 @@ class Thread
             return false;
         }
 
-        $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $filtered_data = TableThreads::filterData($this->content_data);
         $filtered_data['moar'] = $this->getMoar()->getJSON();
-        $pdo_types = $this->main_table->getPDOTypes($filtered_data);
+        $pdo_types = TableThreads::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
         if ($this->main_table->rowExists($filtered_data)) {
@@ -538,11 +533,8 @@ class Thread
 
     public function changeData(string $key, $new_data, bool $cast_null = true)
     {
-        $column_types = $this->main_table->columnTypes();
-        $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_typecast($new_data, $type, $cast_null);
         $old_data = $this->data($key);
-        $this->content_data[$key] = $new_data;
+        $this->content_data[$key] = TableThreads::typeCastValue($key, $new_data);
         return $old_data;
     }
 

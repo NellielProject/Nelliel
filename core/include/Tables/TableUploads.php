@@ -11,6 +11,68 @@ use PDO;
 
 class TableUploads extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'upload_id' => 'integer',
+        'parent_thread' => 'integer',
+        'post_ref' => 'integer',
+        'upload_order' => 'integer',
+        'category' => 'string',
+        'format' => 'string',
+        'mime' => 'string',
+        'filename' => 'string',
+        'extension' => 'string',
+        'original_filename' => 'string',
+        'display_width' => 'integer',
+        'display_height' => 'integer',
+        'static_preview_name' => 'string',
+        'animated_preview_name' => 'string',
+        'preview_width' => 'integer',
+        'preview_height' => 'integer',
+        'filesize' => 'string',
+        'md5' => 'string',
+        'sha1' => 'string',
+        'sha256' => 'string',
+        'sha512' => 'string',
+        'embed_url' => 'string',
+        'spoiler' => 'boolean',
+        'deleted' => 'boolean',
+        'shadow' => 'boolean',
+        'exif' => 'string',
+        'regen_cache' => 'boolean',
+        'cache' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'upload_id' => PDO::PARAM_INT,
+        'parent_thread' => PDO::PARAM_INT,
+        'post_ref' => PDO::PARAM_INT,
+        'upload_order' => PDO::PARAM_INT,
+        'category' => PDO::PARAM_STR,
+        'format' => PDO::PARAM_STR,
+        'mime' => PDO::PARAM_STR,
+        'filename' => PDO::PARAM_STR,
+        'extension' => PDO::PARAM_STR,
+        'original_filename' => PDO::PARAM_STR,
+        'display_width' => PDO::PARAM_INT,
+        'display_height' => PDO::PARAM_INT,
+        'static_preview_name' => PDO::PARAM_STR,
+        'animated_preview_name' => PDO::PARAM_STR,
+        'preview_width' => PDO::PARAM_INT,
+        'preview_height' => PDO::PARAM_INT,
+        'filesize' => PDO::PARAM_STR,
+        'md5' => PDO::PARAM_STR,
+        'sha1' => PDO::PARAM_STR,
+        'sha256' => PDO::PARAM_STR,
+        'sha512' => PDO::PARAM_STR,
+        'embed_url' => PDO::PARAM_STR,
+        'spoiler' => PDO::PARAM_INT,
+        'deleted' => PDO::PARAM_INT,
+        'shadow' => PDO::PARAM_INT,
+        'exif' => PDO::PARAM_STR,
+        'regen_cache' => PDO::PARAM_INT,
+        'cache' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
@@ -18,36 +80,6 @@ class TableUploads extends Table
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_uploads';
         $this->increment_column = 'upload_id';
-        $this->column_types = [
-            'upload_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'parent_thread' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'post_ref' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'upload_order' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'category' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'format' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'mime' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'filename' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'extension' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'original_filename' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'display_width' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'display_height' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'static_preview_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'animated_preview_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'preview_width' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'preview_height' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'filesize' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'md5' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'sha1' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'sha256' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'sha512' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'embed_url' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'spoiler' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'deleted' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'shadow' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'exif' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'regen_cache' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'cache' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'upload_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'parent_thread' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -79,7 +111,6 @@ class TableUploads extends Table
             'regen_cache' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'cache' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

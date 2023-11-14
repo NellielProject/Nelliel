@@ -11,25 +11,32 @@ use PDO;
 
 class TableSettingOptions extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'setting_category' => 'string',
+        'setting_name' => 'string',
+        'menu_data' => 'string',
+        'raw_output' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'setting_category' => PDO::PARAM_STR,
+        'setting_name' => PDO::PARAM_STR,
+        'menu_data' => PDO::PARAM_STR,
+        'raw_output' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_SETTING_OPTIONS_TABLE;
-        $this->column_types = [
-            'setting_category' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'setting_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'menu_data' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'raw_output' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'setting_category' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'setting_name' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'menu_data' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
             'raw_output' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

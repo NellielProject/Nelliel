@@ -11,25 +11,32 @@ use PDO;
 
 class TableCites extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'cite_id' => 'integer',
+        'source_board' => 'string',
+        'source_post' => 'integer',
+        'target_board' => 'string',
+        'target_post' => 'integer'];
+
+    public const PDO_TYPES = [
+        'cite_id' => PDO::PARAM_INT,
+        'source_board' => PDO::PARAM_STR,
+        'source_post' => PDO::PARAM_INT,
+        'target_board' => PDO::PARAM_STR,
+        'target_post' => PDO::PARAM_INT];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CITES_TABLE;
-        $this->column_types = [
-            'cite_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'source_board' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'source_post' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'target_board' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'target_post' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
             'cite_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'source_board' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'source_post' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'target_board' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'target_post' => ['row_check' => true, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

@@ -11,21 +11,32 @@ use PDO;
 
 class TableSettings extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'setting_category' => 'string',
+        'setting_owner' => 'string',
+        'data_type' => 'string',
+        'setting_name' => 'string',
+        'default_value' => 'string',
+        'setting_description' => 'string',
+        'input_attributes' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'setting_category' => PDO::PARAM_STR,
+        'setting_owner' => PDO::PARAM_STR,
+        'data_type' => PDO::PARAM_STR,
+        'setting_name' => PDO::PARAM_STR,
+        'default_value' => PDO::PARAM_STR,
+        'setting_description' => PDO::PARAM_STR,
+        'input_attributes' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_SETTINGS_TABLE;
-        $this->column_types = [
-            'setting_category' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'setting_owner' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'data_type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'setting_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'default_value' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'setting_description' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'input_attributes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'setting_category' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'setting_owner' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -35,7 +46,6 @@ class TableSettings extends Table
             'setting_description' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
             'input_attributes' => ['row_check' => false, 'auto_inc' => false, 'update' => true],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

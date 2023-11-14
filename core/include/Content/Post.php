@@ -74,12 +74,7 @@ class Post
             return true;
         }
 
-        $column_types = $this->main_table->columnTypes();
-
-        foreach ($result as $name => $value) {
-            $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
-        }
-
+        $this->content_data = TablePosts::typeCastData($result);
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
         return true;
@@ -91,9 +86,9 @@ class Post
             return false;
         }
 
-        $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $filtered_data = TablePosts::filterData($this->content_data);
         $filtered_data['moar'] = $this->getMoar()->getJSON();
-        $pdo_types = $this->main_table->getPDOTypes($filtered_data);
+        $pdo_types = TablePosts::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
         $row_check_data = ['post_number' => $this->content_id->postID()];
@@ -147,7 +142,8 @@ class Post
 
             $delete_post_time_limit = $this->domain->setting('delete_post_time_limit');
 
-            if (!$bypass && $delete_post_time_limit > 0 && time() - $this->content_data['post_time'] > $delete_post_time_limit) {
+            if (!$bypass && $delete_post_time_limit > 0 &&
+                time() - $this->content_data['post_time'] > $delete_post_time_limit) {
                 nel_derp(68, __('You waited too long and can no longer delete this post.'));
             }
         }
@@ -455,11 +451,8 @@ class Post
 
     public function changeData(string $key, $new_data, bool $cast_null = true)
     {
-        $column_types = $this->main_table->columnTypes();
-        $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_typecast($new_data, $type, $cast_null);
         $old_data = $this->data($key);
-        $this->content_data[$key] = $new_data;
+        $this->content_data[$key] = TablePosts::typeCastValue($key, $new_data);
         return $old_data;
     }
 

@@ -11,20 +11,30 @@ use PDO;
 
 class TableUsers extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'username' => 'string',
+        'display_name' => 'string',
+        'password' => 'string',
+        'active' => 'boolean',
+        'owner' => 'boolean',
+        'last_login' => 'integer',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'username' => PDO::PARAM_STR,
+        'display_name' => PDO::PARAM_STR,
+        'password' => PDO::PARAM_STR,
+        'active' => PDO::PARAM_INT,
+        'owner' => PDO::PARAM_INT,
+        'last_login' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_USERS_TABLE;
-        $this->column_types = [
-            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'display_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'password' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'active' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'owner' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'last_login' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'username' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'display_name' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -33,7 +43,6 @@ class TableUsers extends Table
             'owner' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'last_login' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

@@ -11,20 +11,30 @@ use PDO;
 
 class TableContentOps extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'op_id' => 'string',
+        'label' => 'string',
+        'url' => 'string',
+        'images_only' => 'boolean',
+        'enabled' => 'boolean',
+        'notes' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'op_id' => PDO::PARAM_STR,
+        'label' => PDO::PARAM_STR,
+        'url' => PDO::PARAM_STR,
+        'images_only' => PDO::PARAM_INT,
+        'enabled' => PDO::PARAM_INT,
+        'notes' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CONTENT_OPS_TABLE;
-        $this->column_types = [
-            'op_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'label' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'url' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'images_only' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'op_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'label' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -33,7 +43,6 @@ class TableContentOps extends Table
             'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

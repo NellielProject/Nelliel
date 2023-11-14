@@ -11,23 +11,29 @@ use PDO;
 
 class TableFiletypeCategories extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'category' => 'string',
+        'label' => 'string',
+        'enabled' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'category' => PDO::PARAM_STR,
+        'label' => PDO::PARAM_STR,
+        'enabled' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_FILETYPE_CATEGORIES_TABLE;
-        $this->column_types = [
-            'category' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'label' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'category' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'label' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)
