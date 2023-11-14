@@ -5,9 +5,10 @@ namespace Nelliel\FrontEnd;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Database\NellielPDO;
-use PDO;
 use Nelliel\INIParser;
+use Nelliel\Database\NellielPDO;
+use Nelliel\Tables\TableImageSets;
+use PDO;
 
 class ImageSet
 {
@@ -131,12 +132,13 @@ class ImageSet
     public function load(bool $original_ini = false): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = ?');
-        $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
-        if ($data === false) {
+        if ($result === false) {
             return;
         }
 
+        $data = TableImageSets::typeCastData($result);
         $this->directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
 

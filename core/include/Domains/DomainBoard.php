@@ -106,8 +106,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
             PDO::FETCH_ASSOC);
 
         foreach ($config_list as $config) {
-            $config['setting_value'] = nel_typecast($config['setting_value'], $config['data_type']);
-            $settings[$config['setting_name']] = $config['setting_value'];
+            $settings[$config['setting_name']] = nel_typecast($config['setting_value'], $config['data_type']);
         }
 
         return $settings;

@@ -6,8 +6,9 @@ namespace Nelliel\Filters;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Database\NellielPDO;
-use PDO;
 use Nelliel\Domains\Domain;
+use Nelliel\Tables\TableWordfilters;
+use PDO;
 
 class Wordfilter
 {
@@ -29,8 +30,8 @@ class Wordfilter
         $prepared->bindValue(':filter_id', $this->id, PDO::PARAM_INT);
         $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
-        if ($result != false) {
-            $this->data = $result;
+        if ($result !== false) {
+            $this->data = TableWordfilters::typeCastData($result);
         }
     }
 

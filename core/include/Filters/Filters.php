@@ -97,20 +97,21 @@ class Filters
 
         if ($board_id === Domain::GLOBAL) {
             $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_WORDFILTERS_TABLE .
+                'SELECT "filter_id" FROM "' . NEL_WORDFILTERS_TABLE .
                 '" WHERE "board_id" = ? OR "board_id" = \'\' OR "board_id" IS NULL');
-            $result = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+            $result = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_COLUMN);
         } else if (!is_null($board_id)) {
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '" WHERE "board_id" = ?');
-            $result = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+            $prepared = $this->database->prepare(
+                'SELECT "filter_id" FROM "' . NEL_WORDFILTERS_TABLE . '" WHERE "board_id" = ?');
+            $result = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_COLUMN);
         } else {
-            $query = 'SELECT * FROM "' . NEL_WORDFILTERS_TABLE . '"';
-            $result = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+            $query = 'SELECT "filter_id" FROM "' . NEL_WORDFILTERS_TABLE . '"';
+            $result = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
         }
 
         if (is_array($result)) {
-            foreach ($result as $filter) {
-                $wordfilters[] = new Wordfilter($this->database, (int) $filter['filter_id']);
+            foreach ($result as $filter_id) {
+                $wordfilters[] = new Wordfilter($this->database, (int) $filter_id);
             }
         }
 
@@ -154,20 +155,21 @@ class Filters
 
         if ($board_id === Domain::GLOBAL) {
             $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_FILE_FILTERS_TABLE .
+                'SELECT "filter_id" FROM "' . NEL_FILE_FILTERS_TABLE .
                 '" WHERE "board_id" = ? OR "board_id" = \'\' OR "board_id" IS NULL');
-            $result = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+            $result = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_COLUMN);
         } else if (!is_null($board_id)) {
-            $prepared = $this->database->prepare('SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '" WHERE "board_id" = ?');
-            $result = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_ASSOC);
+            $prepared = $this->database->prepare(
+                'SELECT "filter_id" FROM "' . NEL_FILE_FILTERS_TABLE . '" WHERE "board_id" = ?');
+            $result = $this->database->executePreparedFetchAll($prepared, [$board_id], PDO::FETCH_COLUMN);
         } else {
-            $query = 'SELECT * FROM "' . NEL_FILE_FILTERS_TABLE . '"';
-            $result = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+            $query = 'SELECT "filter_id" FROM "' . NEL_FILE_FILTERS_TABLE . '"';
+            $result = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
         }
 
         if (is_array($result)) {
-            foreach ($result as $filter) {
-                $file_filters[] = new FileFilter($this->database, (int) $filter['filter_id']);
+            foreach ($result as $filter_id) {
+                $file_filters[] = new FileFilter($this->database, (int) $filter_id);
             }
         }
 

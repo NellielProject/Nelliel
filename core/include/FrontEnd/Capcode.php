@@ -6,6 +6,7 @@ namespace Nelliel\FrontEnd;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Database\NellielPDO;
+use Nelliel\Tables\TableCapcodes;
 use PDO;
 
 class Capcode
@@ -58,12 +59,12 @@ class Capcode
     public function load(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode" = ?');
-        $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
-        if ($data === false) {
+        if ($result === false) {
             return;
         }
 
-        $this->data = $data;
+        $this->data = TableCapcodes::typeCastData($result);
     }
 }

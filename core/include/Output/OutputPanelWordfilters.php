@@ -32,7 +32,7 @@ class OutputPanelWordfilters extends Output
         $bgclass = 'row1';
         $filters = new Filters($this->database);
 
-        foreach ($filters->getWordfilters([$this->domain->uri()]) as $filter) {
+        foreach ($filters->getWordfilters([$this->domain->id()]) as $filter) {
             $wordfilter_data = array();
             $filter_domain = Domain::getDomainFromID($filter->getData('board_id'), $this->database);
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';

@@ -6,6 +6,7 @@ namespace Nelliel\FrontEnd;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Database\NellielPDO;
+use Nelliel\Tables\TableContentOps;
 use PDO;
 
 class ContentOp
@@ -64,12 +65,12 @@ class ContentOp
     public function load(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CONTENT_OPS_TABLE . '" WHERE "op_id" = ?');
-        $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
-        if ($data === false) {
+        if ($result === false) {
             return;
         }
 
-        $this->data = $data;
+        $this->data = TableContentOps::typeCastData($result);
     }
 }
