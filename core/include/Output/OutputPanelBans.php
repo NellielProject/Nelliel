@@ -119,13 +119,13 @@ class OutputPanelBans extends Output
 
         if ($from_content) {
             $content = $content_id->getInstanceFromID($this->domain);
-            $ip_info = new IPInfo($content->data('hashed_ip_address'));
+            $ip_info = new IPInfo($content->getData('hashed_ip_address'));
 
             if (empty($ip_info->getInfo('ip_address')) ||
                 !$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
                 $this->render_data['ban_ip'] = $ip_info->getInfo('hashed_ip_address');
             } else {
-                $this->render_data['ban_ip'] = nel_convert_ip_from_storage($content->data('ip_address'));
+                $this->render_data['ban_ip'] = nel_convert_ip_from_storage($content->getData('ip_address'));
             }
 
             if ($can_range_ban) {

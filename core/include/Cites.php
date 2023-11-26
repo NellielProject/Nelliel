@@ -8,15 +8,16 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
 
 class Cites
 {
-    private $database;
+    private NellielPDO $database;
 
-    function __construct($database)
+    function __construct(NellielPDO $database)
     {
         $this->database = $database;
     }
@@ -135,11 +136,11 @@ class Cites
 
     public function addCitesFromPost(Post $post): void
     {
-        if (nel_true_empty($post->data('comment'))) {
+        if (nel_true_empty($post->getData('comment'))) {
             return;
         }
 
-        $cite_list = $this->getCitesFromText($post->data('comment'));
+        $cite_list = $this->getCitesFromText($post->getData('comment'));
 
         foreach ($cite_list as $cite) {
             $cite_data = $this->getCiteData($cite, $post->domain());
@@ -249,7 +250,7 @@ class Cites
 
         $moved_post->changeData('comment',
             preg_replace_callback('/(>>|&gt;&gt;)(\d+)|(>>>|&gt;&gt;&gt;)\/(' . $old_domain->uri() . ')\/(\d*)/u',
-                $cite_change_callback, $moved_post->data('comment')));
+                $cite_change_callback, $moved_post->getData('comment')));
         $moved_post->writeToDatabase();
         $this->updateCachesForPost($moved_post);
     }

@@ -9,7 +9,7 @@ use Nelliel\Domains\DomainBoard;
 
 class ThreadlistJSON extends JSON
 {
-    private $board;
+    private DomainBoard $board;
 
     function __construct(DomainBoard $board)
     {
@@ -30,8 +30,8 @@ class ThreadlistJSON extends JSON
             foreach ($thread_set as $thread) {
                 $thread_data = array();
                 $thread_data['thread_id'] = $thread->contentID()->threadID();
-                $thread_data['last_update'] = $thread->data('last_update');
-                $thread_data['replies'] = $thread->data('post_count') - 1;
+                $thread_data['last_update'] = $thread->getData('last_update');
+                $thread_data['replies'] = $thread->getData('post_count') - 1;
                 $page_data['threads'][] = $thread_data;
             }
 

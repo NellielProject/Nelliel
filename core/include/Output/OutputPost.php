@@ -25,15 +25,15 @@ class OutputPost extends Output
         $thread = $post->getParent();
         $gen_data = $parameters['gen_data'] ?? array();
         $in_thread_number = $parameters['in_thread_number'] ?? 0;
-        $response = !$post->data('op');
+        $response = !$post->getData('op');
 
         if (NEL_USE_RENDER_CACHE) {
-            if ($post->data('regen_cache')) {
+            if ($post->getData('regen_cache')) {
                 $post->storeCache();
             }
         }
 
-        $this->render_data['is_op'] = $post->data('op');
+        $this->render_data['is_op'] = $post->getData('op');
         $this->render_data['post_corral_id'] = 'post-corral-' . $post->contentID()->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post->contentID()->getIDString();
 
@@ -69,7 +69,7 @@ class OutputPost extends Output
 
         $this->postHeaders($response, $thread, $post, $gen_data, $in_thread_number);
 
-        if ($post->data('total_uploads') > 0) {
+        if ($post->getData('total_uploads') > 0) {
             $uploads = $post->getUploads();
             $output_file_info = new OutputFile($this->domain, $this->write_mode);
             $output_embed_info = new OutputEmbed($this->domain, $this->write_mode);
@@ -79,18 +79,18 @@ class OutputPost extends Output
             $this->render_data['single_multiple'] = (count($uploads) > 1) ? 'multiple' : 'single';
 
             foreach ($uploads as $upload) {
-                if ($upload->data('deleted') && !$this->domain->setting('display_deleted_placeholder')) {
+                if ($upload->getData('deleted') && !$this->domain->setting('display_deleted_placeholder')) {
                     continue;
                 }
 
                 $file_data = array();
 
-                if (nel_true_empty($upload->data('embed_url'))) {
+                if (nel_true_empty($upload->getData('embed_url'))) {
                     $file_data = $output_file_info->render($upload, $post, [
-                        'multiple' => $post->data('file_count') > 1], true);
+                        'multiple' => $post->getData('file_count') > 1], true);
                 } else {
                     $file_data = $output_embed_info->render($upload, $post,
-                        ['multiple' => $post->data('file_count') > 1], true);
+                        ['multiple' => $post->getData('file_count') > 1], true);
                 }
 
                 $upload_row[] = $file_data;
@@ -120,7 +120,7 @@ class OutputPost extends Output
             }
         }
 
-        if ($thread->data('shadow') && $post->data('op')) {
+        if ($thread->getData('shadow') && $post->getData('op')) {
             $markup = new Markup($this->database);
             $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
             $cite_text = '>>>/' . $thread->getMoar()->get('shadow_board_id') . '/' .
@@ -181,29 +181,29 @@ class OutputPost extends Output
         $thread_headers['post_content_id'] = $post_content_id->getIDString();
         $post_headers['thread_content_id'] = $thread->contentID()->getIDString();
         $post_headers['post_content_id'] = $post_content_id->getIDString();
-        $post_headers['is_op'] = $post->data('op');
+        $post_headers['is_op'] = $post->getData('op');
 
         if (!$response) {
-            $thread_headers['is_sticky'] = $thread->data('sticky');
+            $thread_headers['is_sticky'] = $thread->getData('sticky');
             $thread_headers['status_sticky'] = $ui_image_set->getWebPath('ui', 'status_sticky', true);
-            $thread_headers['is_locked'] = $thread->data('locked');
+            $thread_headers['is_locked'] = $thread->getData('locked');
             $thread_headers['status_locked'] = $ui_image_set->getWebPath('ui', 'status_locked', true);
-            $thread_headers['is_cyclic'] = $thread->data('cyclic');
+            $thread_headers['is_cyclic'] = $thread->getData('cyclic');
             $thread_headers['status_cyclic'] = $ui_image_set->getWebPath('ui', 'status_cyclic', true);
             $this->render_data['headers']['thread_headers'] = $thread_headers;
         }
 
         $post_headers['in_thread_number'] = $in_thread_number;
 
-        if (!nel_true_empty($post->data('email'))) {
-            $post_headers['mailto']['mailto_url'] = 'mailto:' . $post->data('email');
+        if (!nel_true_empty($post->getData('email'))) {
+            $post_headers['mailto']['mailto_url'] = 'mailto:' . $post->getData('email');
         }
 
-        $post_headers['subject'] = $post->data('subject');
-        $post_headers['name'] = $post->data('name');
+        $post_headers['subject'] = $post->getData('subject');
+        $post_headers['name'] = $post->getData('name');
 
         if ($this->domain->setting('show_poster_id')) {
-            $raw_poster_id = hash_hmac('sha256', $thread->data('salt') . $post->data('hashed_ip_address'),
+            $raw_poster_id = hash_hmac('sha256', $thread->getData('salt') . $post->getData('hashed_ip_address'),
                 NEL_POSTER_ID_PEPPER . $this->domain->id() . $thread->contentID()->threadID());
             $poster_id = utf8_substr($raw_poster_id, 0, $this->domain->setting('poster_id_length'));
             $post_headers['id_color_code'] = '#' . utf8_substr($raw_poster_id, 0, 6);
@@ -215,24 +215,24 @@ class OutputPost extends Output
             }
         }
 
-        $tripcode = (!empty($post->data('tripcode'))) ? $this->domain->setting('tripcode_marker') .
-            $post->data('tripcode') : '';
-        $secure_tripcode = (!empty($post->data('secure_tripcode'))) ? $this->domain->setting('tripcode_marker') .
-            $this->domain->setting('tripcode_marker') . $post->data('secure_tripcode') : '';
+        $tripcode = (!empty($post->getData('tripcode'))) ? $this->domain->setting('tripcode_marker') .
+            $post->getData('tripcode') : '';
+        $secure_tripcode = (!empty($post->getData('secure_tripcode'))) ? $this->domain->setting('tripcode_marker') .
+            $this->domain->setting('tripcode_marker') . $post->getData('secure_tripcode') : '';
         $post_headers['tripline'] = $tripcode . $secure_tripcode;
 
-        if (!nel_true_empty($post->data('capcode'))) {
-            $capcode = new Capcode($this->database, $this->domain->frontEndData(), $post->data('capcode'));
+        if (!nel_true_empty($post->getData('capcode'))) {
+            $capcode = new Capcode($this->database, $post->getData('capcode'));
             $capcode->load();
 
             // Most likely no matching capcode so assume it was custom
-            if (nel_true_empty($capcode->data('output'))) {
-                $capcode = new Capcode($this->database, $this->domain->frontEndData(), '');
+            if (nel_true_empty($capcode->getData('output'))) {
+                $capcode = new Capcode($this->database, '');
                 $capcode->load();
             }
 
-            if ($capcode->data('enabled')) {
-                $post_headers['capcode_output'] = sprintf($capcode->data('output'), $post->data('capcode'));
+            if ($capcode->getData('enabled')) {
+                $post_headers['capcode_output'] = sprintf($capcode->getData('output'), $post->getData('capcode'));
             }
         }
 
@@ -241,7 +241,7 @@ class OutputPost extends Output
         $this->render_data['content_links_cite_post']['content_id'] = $post->contentID()->getIDString();
         $this->render_data['post_options'][] = $this->render_data['content_links_cite_post'];
 
-        $post_headers['post_time'] = $this->domain->domainDateTime(intval($post->data('post_time')))->format(
+        $post_headers['post_time'] = $this->domain->domainDateTime(intval($post->getData('post_time')))->format(
             $this->domain->setting('post_time_format'));
         $post_headers['post_number'] = $post->contentID()->postID();
         $post_headers['post_number_url'] = $post->getURL($this->session->inModmode($this->domain) && !$this->write_mode);
@@ -255,13 +255,13 @@ class OutputPost extends Output
         $options = array();
 
         if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
-            !empty($post->data('ip_address'))) {
-                $ip = nel_convert_ip_from_storage($post->data('ip_address'));
+            !empty($post->getData('ip_address'))) {
+                $ip = nel_convert_ip_from_storage($post->getData('ip_address'));
             } else {
-                if (!empty($post->data('hashed_ip_address'))) {
-                    $ip = $post->data('hashed_ip_address');
+                if (!empty($post->getData('hashed_ip_address'))) {
+                    $ip = $post->getData('hashed_ip_address');
                 } else {
-                    $ip = $post->data('visitor_id');
+                    $ip = $post->getData('visitor_id');
                 }
             }
 
@@ -303,7 +303,7 @@ class OutputPost extends Output
                     $options['post_modmode_options'][] = $this->render_data['mod_links_edit'];
                 }
 
-                if (!$thread->data('shadow')) {
+                if (!$thread->getData('shadow')) {
                     if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
                         $this->render_data['mod_links_move']['url'] = nel_build_router_url(
                             [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'move']);
@@ -319,10 +319,10 @@ class OutputPost extends Output
         $comment_data = array();
         $comment_data['post_contents_id'] = 'post-contents-' . $post->contentID()->getIDString();
         $comment_data['show_mod_comments'] = $this->domain->setting('show_mod_comments');
-        $comment_data['mod_comments'] = $post->data('mod_comment') ?? null;
+        $comment_data['mod_comments'] = $post->getData('mod_comment') ?? null;
         $comment_data['show_user_comments'] = $this->domain->setting('show_user_comments');
         $comment_data['nofollow_external_links'] = $this->site_domain->setting('nofollow_external_links');
-        $comment = $post->data('comment');
+        $comment = $post->getData('comment');
 
         if (nel_true_empty($comment)) {
             $comment_data['comment_markup'] = $this->domain->setting('no_comment_text');

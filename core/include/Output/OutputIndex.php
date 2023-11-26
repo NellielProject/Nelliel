@@ -140,14 +140,14 @@ class OutputIndex extends Output
             $thread_input['thread_corral_id'] = 'thread-corral-' . $thread->contentID()->getIDString();
             $index_replies = $this->domain->setting('index_thread_replies');
 
-            if ($thread->data('sticky')) {
+            if ($thread->getData('sticky')) {
                 $index_replies = $this->domain->setting('index_sticky_replies');
             }
 
-            $thread_input['omitted_count'] = $thread->data('post_count') - $index_replies - 1; // Subtract 1 to account for OP
+            $thread_input['omitted_count'] = $thread->getData('post_count') - $index_replies - 1; // Subtract 1 to account for OP
             $gen_data['abbreviate'] = $thread_input['omitted_count'] > 0;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
-            $abbreviate_start = $thread->data('post_count') - $index_replies;
+            $abbreviate_start = $thread->getData('post_count') - $index_replies;
 
             if ($this->session->inModmode($this->domain) && !$this->write_mode) {
                 $modmode_options = $this->modmodeHeaders($thread);
@@ -162,7 +162,7 @@ class OutputIndex extends Output
             foreach ($posts as $post) {
                 $parameters = ['gen_data' => $gen_data, 'in_thread_number' => $post_counter];
 
-                if ($post->data('op') == 1) {
+                if ($post->getData('op') == 1) {
                     $thread_input['op_post'] = $output_post->render($post, $parameters, true);
                 } else {
                     if ($post_counter > $abbreviate_start) {
@@ -259,13 +259,13 @@ class OutputIndex extends Output
         $options = array();
 
         if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
-            !empty($post->data('ip_address'))) {
-            $ip = nel_convert_ip_from_storage($post->data('ip_address'));
+            !empty($post->getData('ip_address'))) {
+            $ip = nel_convert_ip_from_storage($post->getData('ip_address'));
         } else {
-            if (!empty($post->data('hashed_ip_address'))) {
-                $ip = $post->data('hashed_ip_address');
+            if (!empty($post->getData('hashed_ip_address'))) {
+                $ip = $post->getData('hashed_ip_address');
             } else {
-                $ip = $post->data('visitor_id');
+                $ip = $post->getData('visitor_id');
             }
         }
 
@@ -277,32 +277,32 @@ class OutputIndex extends Output
                 [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'lock']);
             $this->render_data['mod_links_unlock']['url'] = nel_build_router_url(
                 [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unlock']);
-            $lock_id = $thread->data('locked') ? 'mod_links_unlock' : 'mod_links_lock';
+            $lock_id = $thread->getData('locked') ? 'mod_links_unlock' : 'mod_links_lock';
             $options['thread_modmode_options'][] = $this->render_data[$lock_id];
 
             $this->render_data['mod_links_sticky']['url'] = nel_build_router_url(
                 [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sticky']);
             $this->render_data['mod_links_unsticky']['url'] = nel_build_router_url(
                 [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsticky']);
-            $sticky_id = $thread->data('sticky') ? 'mod_links_unsticky' : 'mod_links_sticky';
+            $sticky_id = $thread->getData('sticky') ? 'mod_links_unsticky' : 'mod_links_sticky';
             $options['thread_modmode_options'][] = $this->render_data[$sticky_id];
 
             $this->render_data['mod_links_permasage']['url'] = nel_build_router_url(
                 [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sage']);
             $this->render_data['mod_links_unpermasage']['url'] = nel_build_router_url(
                 [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsage']);
-            $permasage_id = $thread->data('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
+            $permasage_id = $thread->getData('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
             $options['thread_modmode_options'][] = $this->render_data[$permasage_id];
 
             $this->render_data['mod_links_cyclic']['url'] = nel_build_router_url(
                 [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'cyclic']);
             $this->render_data['mod_links_non_cyclic']['url'] = nel_build_router_url(
                 [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'non-cyclic']);
-            $cyclic_id = $thread->data('cyclic') ? 'mod_links_non_cyclic' : 'mod_links_cyclic';
+            $cyclic_id = $thread->getData('cyclic') ? 'mod_links_non_cyclic' : 'mod_links_cyclic';
             $options['thread_modmode_options'][] = $this->render_data[$cyclic_id];
         }
 
-        if (!$thread->data('shadow')) {
+        if (!$thread->getData('shadow')) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
                 $this->render_data['mod_links_move']['url'] = nel_build_router_url(
                     [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
@@ -352,7 +352,7 @@ class OutputIndex extends Output
             $options['post_modmode_options'][] = $this->render_data['mod_links_edit'];
         }
 
-        if (!$thread->data('shadow')) {
+        if (!$thread->getData('shadow')) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
                 $this->render_data['mod_links_move']['url'] = nel_build_router_url(
                     [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'move']);
@@ -409,9 +409,9 @@ class OutputIndex extends Output
         $first_posts_format = $thread->pageBasename() . $this->site_domain->setting('first_posts_filename_format');
 
         if (is_array($first_posts_increments) &&
-            $thread->data('post_count') > $this->domain->setting('first_posts_threshold')) {
+            $thread->getData('post_count') > $this->domain->setting('first_posts_threshold')) {
             foreach ($first_posts_increments as $increment) {
-                if ($thread->data('post_count') >= $increment) {
+                if ($thread->getData('post_count') >= $increment) {
                     $this->render_data['content_links_first_posts']['url'] = $this->domain->reference('page_web_path') .
                         $thread->contentID()->threadID() . '/' . sprintf($first_posts_format, $increment) . NEL_PAGE_EXT;
                     $this->render_data['content_links_first_posts']['text'] = sprintf(
@@ -426,9 +426,9 @@ class OutputIndex extends Output
         $last_posts_format = $thread->pageBasename() . $this->site_domain->setting('last_posts_filename_format');
 
         if (is_array($last_posts_increments) &&
-            $thread->data('post_count') > $this->domain->setting('last_posts_threshold')) {
+            $thread->getData('post_count') > $this->domain->setting('last_posts_threshold')) {
             foreach ($last_posts_increments as $increment) {
-                if ($thread->data('post_count') >= $increment) {
+                if ($thread->getData('post_count') >= $increment) {
                     $this->render_data['content_links_last_posts']['url'] = $this->domain->reference('page_web_path') .
                         $thread->contentID()->threadID() . '/' . sprintf($last_posts_format, $increment) . NEL_PAGE_EXT;
                     $this->render_data['content_links_last_posts']['text'] = sprintf(

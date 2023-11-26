@@ -26,9 +26,9 @@ class OutputEmbed extends Output
         $this->render_data['is_embed'] = true;
         $this->render_data['embed_container_id'] = 'upload-container-' . $embed->contentID()->getIDString();
         $this->render_data['embed_content_id'] = $embed->contentID()->getIDString();
-        $this->render_data['original_url'] = $embed->data('embed_url');
-        $this->render_data['display_url'] = $embed->data('embed_url');
-        $this->render_data['embed_url'] = $embed->parseEmbedURL($embed->data('embed_url'), false);
+        $this->render_data['original_url'] = $embed->getData('embed_url');
+        $this->render_data['display_url'] = $embed->getData('embed_url');
+        $this->render_data['embed_url'] = $embed->parseEmbedURL($embed->getData('embed_url'), false);
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if (utf8_strlen($this->render_data['display_url']) > $this->domain->setting('embed_url_display_length')) {
@@ -58,7 +58,7 @@ class OutputEmbed extends Output
                 'catalog_max_multi_preview_display_height') : $this->domain->setting(
                 'catalog_max_preview_display_height');
         } else {
-            if ($post->data('op')) {
+            if ($post->getData('op')) {
                 $max_width = ($multiple) ? $this->domain->setting('max_op_multi_display_width') : $this->domain->setting(
                     'max_op_embed_display_width');
                 $max_height = ($multiple) ? $this->domain->setting('max_op_multi_display_height') : $this->domain->setting(
@@ -77,7 +77,7 @@ class OutputEmbed extends Output
         $this->render_data['content_links_hide_embed']['content_id'] = $embed->contentID()->getIDString();
         $this->render_data['embed_options'][] = $this->render_data['content_links_hide_embed'];
 
-        if ($embed->data('deleted')) {
+        if ($embed->getData('deleted')) {
             if(nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
                 $this->render_data['deleted_url'] = $this->domain->setting('image_deleted_embed');
             } else {

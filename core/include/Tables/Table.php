@@ -192,7 +192,7 @@ abstract class Table
 
     public static function getPDOTypesForData(array $data): array
     {
-        return array_values(array_intersect_key(static::PDO_TYPES, $data));
+        return array_values(array_replace($data, array_intersect_key(static::PDO_TYPES, $data)));
     }
 
     public static function typeCastValue(string $column_name, $value)

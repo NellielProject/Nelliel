@@ -13,7 +13,7 @@ use PDO;
 
 class GlobalRecents
 {
-    private $database;
+    private NellielPDO $database;
 
     function __construct(NellielPDO $database)
     {
@@ -59,7 +59,7 @@ class GlobalRecents
             '" ("content_id", "post_time", "post_time_milli", "board_id") VALUES
                     (?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
-            [$post->contentID()->getIDString(), $post->data('post_time'), $post->data('post_time_milli'),
+            [$post->contentID()->getIDString(), $post->getData('post_time'), $post->getData('post_time_milli'),
                 $post->domain()->id()]);
     }
 
@@ -72,7 +72,7 @@ class GlobalRecents
             'UPDATE "' . NEL_GLOBAL_RECENTS_TABLE .
             '" SET "post_time" = ?, "post_time_milli" = ?, WHERE "content_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared,
-            [$post->data('post_time'), $post->data('post_time_milli'), $post->contentID()->getIDString(),
+            [$post->getData('post_time'), $post->getData('post_time_milli'), $post->contentID()->getIDString(),
                 $post->domain()->id()]);
     }
 

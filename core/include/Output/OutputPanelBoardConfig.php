@@ -216,7 +216,7 @@ class OutputPanelBoardConfig extends Output
                     $op_id = $content_op->id();
                     $set = array();
                     $set['input_name'] = 'enabled_content_ops[' . $op_id . ']';
-                    $set['item_label'] = $content_op->data('label');
+                    $set['item_label'] = $content_op->getData('label');
                     $set['disabled'] = ($content_ops_edit_lock) ? 'disabled' : '';
 
                     if (in_array($op_id, $content_ops_array)) {

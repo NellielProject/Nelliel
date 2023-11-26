@@ -55,25 +55,25 @@ class OutputCatalog extends Output
                 $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
             }
 
-            $thread_data['first_post_subject'] = $post->data('subject');
+            $thread_data['first_post_subject'] = $post->getData('subject');
             $output_post = new OutputPost($this->domain, false);
 
             if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_markup'])) {
                 $thread_data['comment_markup'] = $post->getCache()['comment_markup'];
             } else {
-                $thread_data['comment_markup'] = $output_post->parseComment($post->data('comment'), $post);
+                $thread_data['comment_markup'] = $output_post->parseComment($post->getData('comment'), $post);
             }
 
-            $thread_data['mod-comment'] = $post->data('mod_comment');
-            $thread_data['reply_count'] = $thread->data('post_count') - 1;
-            $thread_data['total_uploads'] = $thread->data('total_uploads');
+            $thread_data['mod-comment'] = $post->getData('mod_comment');
+            $thread_data['reply_count'] = $thread->getData('post_count') - 1;
+            $thread_data['total_uploads'] = $thread->getData('total_uploads');
             $thread_data['index_page'] = ceil($thread_count / $thread->domain()->setting('threads_per_page'));
             $ui_image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('ui_image_set'));
-            $thread_data['is_sticky'] = $thread->data('sticky');
+            $thread_data['is_sticky'] = $thread->getData('sticky');
             $thread_data['status_sticky'] = $ui_image_set->getWebPath('ui', 'status_sticky', true);
-            $thread_data['is_locked'] = $thread->data('locked');
+            $thread_data['is_locked'] = $thread->getData('locked');
             $thread_data['status_locked'] = $ui_image_set->getWebPath('ui', 'status_locked', true);
-            $thread_data['is_cyclic'] = $thread->data('cyclic');
+            $thread_data['is_cyclic'] = $thread->getData('cyclic');
             $thread_data['status_cyclic'] = $ui_image_set->getWebPath('ui', 'status_cyclic', true);
             $uploads = $post->getUploads();
             $upload_count = count($uploads);
@@ -85,15 +85,15 @@ class OutputCatalog extends Output
                 $thread_data['multi_file'] = false;
                 $thread_data['single_multiple'] = 'single';
 
-                if (!nel_true_empty($post->data('subject'))) {
-                    $thread_data['subject'] = $post->data('subject');
+                if (!nel_true_empty($post->getData('subject'))) {
+                    $thread_data['subject'] = $post->getData('subject');
                 } else {
-                    $thread_data['subject'] = '#' . $post->data('post_number');
+                    $thread_data['subject'] = '#' . $post->getData('post_number');
                 }
 
                 $upload = $uploads[0];
 
-                if (nel_true_empty($upload->data('embed_url'))) {
+                if (nel_true_empty($upload->getData('embed_url'))) {
                     $file_data = $output_file_info->render($upload, $post, ['catalog' => true], true);
                 } else {
                     $file_data = $output_embed_info->render($upload, $post, ['catalog' => true], true);
@@ -104,13 +104,13 @@ class OutputCatalog extends Output
                 $multiple = $upload_count > 1 && $this->domain->setting('catalog_show_multiple_uploads');
 
                 foreach ($uploads as $upload) {
-                    if ($upload->data('deleted') && !$this->domain->setting('display_deleted_placeholder')) {
+                    if ($upload->getData('deleted') && !$this->domain->setting('display_deleted_placeholder')) {
                         continue;
                     }
 
                     $file_data = array();
 
-                    if (nel_true_empty($upload->data('embed_url'))) {
+                    if (nel_true_empty($upload->getData('embed_url'))) {
                         $file_data = $output_file_info->render($upload, $post,
                             ['catalog' => true, 'first' => $first, 'multiple' => $multiple], true);
                     } else {

@@ -13,7 +13,7 @@ class TableContentOps extends Table
 {
     public const SCHEMA_VERSION = 1;
     public const PHP_TYPES = [
-        'op_id' => 'string',
+        'op_id' => 'integer',
         'label' => 'string',
         'url' => 'string',
         'images_only' => 'boolean',
@@ -22,7 +22,7 @@ class TableContentOps extends Table
         'moar' => 'string'];
 
     public const PDO_TYPES = [
-        'op_id' => PDO::PARAM_STR,
+        'op_id' => PDO::PARAM_INT,
         'label' => PDO::PARAM_STR,
         'url' => PDO::PARAM_STR,
         'images_only' => PDO::PARAM_INT,

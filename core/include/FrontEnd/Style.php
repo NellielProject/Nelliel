@@ -7,10 +7,11 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\INIParser;
 use Nelliel\Database\NellielPDO;
+use Nelliel\Interfaces\SelfPersisting;
 use Nelliel\Tables\TableStyles;
 use PDO;
 
-class Style
+class Style implements SelfPersisting
 {
     private $database;
     private $style_id = '';
@@ -84,39 +85,27 @@ class Style
     {
         $ini_parser = new INIParser(nel_utilities()->fileHandler());
         $ini_files = $ini_parser->parseDirectories(NEL_STYLES_FILES_PATH, 'style_info.ini', true);
-        $encoded_ini = '';
         $directory = $this->front_end_data->styleIsCore($this->id()) ? 'core/' : 'custom/';
 
         foreach ($ini_files as $ini_file) {
             if ($ini_file->parsed()['info']['id'] === $this->id()) {
-                $encoded_ini = json_encode($ini_file->parsed());
                 $directory .= basename(dirname($ini_file->fileInfo()->getRealPath()));
+                $this->directory = $directory;
+                $this->data = $ini_file->parsed();
                 break;
             }
         }
 
-        if ($this->database->rowExists(NEL_STYLES_TABLE, ['style_id'], [$this->id()], [PDO::PARAM_STR, PDO::PARAM_STR])) {
-            if (!$overwrite) {
-                return;
-            }
-
-            $this->uninstall();
-        }
-
-        $prepared = $this->database->prepare(
-            'INSERT INTO "' . NEL_STYLES_TABLE .
-            '" ("style_id", "directory", "parsed_ini", "enabled") VALUES (?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $directory, $encoded_ini, 1]);
-        $this->load();
+        $this->enabled = true;
+        $this->save();
     }
 
     public function uninstall(): void
     {
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_STYLES_TABLE . '" WHERE "style_id" = ?');
-        $this->database->executePrepared($prepared, [$this->id()]);
+        $this->delete();
     }
 
-    public function load(bool $original_ini = false): void
+    public function load(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_STYLES_TABLE . '" WHERE "style_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
@@ -129,7 +118,7 @@ class Style
         $this->directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
 
-        if (nel_true_empty($data['parsed_ini']) || $original_ini) {
+        if (nel_true_empty($data['parsed_ini'])) {
             $file = NEL_STYLES_FILES_PATH . $this->directory . '/style_info.ini';
 
             if (file_exists($file)) {
@@ -141,6 +130,33 @@ class Style
 
         $this->data = $ini ?? array();
         $this->info = $ini['info'] ?? array();
+    }
+
+    public function save(): void
+    {
+        if ($this->database->rowExists(NEL_STYLES_TABLE, ['style_id'], [$this->id()],
+            [PDO::PARAM_STR, PDO::PARAM_STR])) {
+            $prepared = $this->database->prepare(
+                'UPDATE "' . NEL_STYLES_TABLE .
+                '" SET "directory" = :directory, "parsed_ini" = :parsed_ini, "enabled" = :enabled WHERE "style_id" = :style_id');
+        } else {
+            $prepared = $this->database->prepare(
+                'INSERT INTO "' . NEL_STYLES_TABLE .
+                '" ("style_id", "directory", "parsed_ini", "enabled") VALUES (:style_id, :directory, :parsed_ini, :enabled)');
+        }
+
+        $prepared->bindValue(':style_id', $this->style_id, PDO::PARAM_STR);
+        $prepared->bindValue(':directory', $this->directory ?? '', PDO::PARAM_STR);
+        $prepared->bindValue(':parsed_ini', json_encode($this->data) ?? '', PDO::PARAM_STR);
+        $prepared->bindValue(':enabled', $this->enabled ?? false, PDO::PARAM_INT);
+        $this->database->executePrepared($prepared);
+    }
+
+    public function delete(): void
+    {
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_STYLES_TABLE . '" WHERE "style_id" = :style_id');
+        $prepared->bindValue(':style_id', $this->style_id, PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
     }
 
     public function enable(): void

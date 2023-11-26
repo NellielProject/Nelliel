@@ -9,8 +9,8 @@ use Nelliel\Domains\DomainBoard;
 
 class IndexJSON extends JSON
 {
-    private $board;
-    private $page;
+    private DomainBoard $board;
+    private int $page;
 
     function __construct(DomainBoard $board, int $page)
     {
@@ -33,13 +33,13 @@ class IndexJSON extends JSON
                 $thread_data = array();
                 $thread_data = $thread->getJSON()->getRawData();
                 $thread_data['posts'] = array($thread->firstPost()->getJSON()->getRawData());
-                $last_reply_count = $thread->data('sticky') ? $index_sticky_replies : $index_replies;
+                $last_reply_count = $thread->getData('sticky') ? $index_sticky_replies : $index_replies;
 
                 foreach ($thread->lastReplies($last_reply_count) as $post) {
                     $thread_data['posts'][] = $post->getJSON()->getRawData();
                 }
 
-                $omitted_posts = $thread->data('post_count') - $last_reply_count; // Subtract 1 to account for OP
+                $omitted_posts = $thread->getData('post_count') - $last_reply_count; // Subtract 1 to account for OP
                 $thread_data['omitted_posts'] = $omitted_posts > 0 ? $omitted_posts : 0;
                 $raw_data['threads'][] = $thread_data;
             }

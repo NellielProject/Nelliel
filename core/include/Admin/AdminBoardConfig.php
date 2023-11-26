@@ -52,6 +52,7 @@ class AdminBoardConfig extends Admin
         foreach ($board_settings as $setting) {
             $setting_name = $setting['setting_name'];
             $store_raw = (bool) nel_form_input_default($_POST[$setting_name]['store_raw'] ?? array());
+            $constructed = false;
             $status_change = false;
 
             if (!isset($_POST[$setting_name])) {
@@ -81,6 +82,7 @@ class AdminBoardConfig extends Admin
                 }
 
                 $new_value = json_encode($filetypes_array);
+                $constructed = true;
             } else if ($setting_name === 'enabled_styles') {
                 $styles_array = array();
 
@@ -93,6 +95,7 @@ class AdminBoardConfig extends Admin
                 }
 
                 $new_value = json_encode($styles_array);
+                $constructed = true;
             } else if ($setting_name === 'enabled_content_ops') {
                 $content_ops_array = array();
 
@@ -105,10 +108,10 @@ class AdminBoardConfig extends Admin
                 }
 
                 $new_value = json_encode($content_ops_array);
+                $constructed = true;
             } else {
                 $new_value = nel_form_input_default($new_value);
                 $new_value = nel_typecast($new_value, $setting['data_type']);
-                $value_change = $old_value != $new_value;
 
                 if (!$user_can_raw_html) {
                     $store_raw = (bool) $setting['stored_raw'];
@@ -119,9 +122,11 @@ class AdminBoardConfig extends Admin
                 }
             }
 
+            $value_change = $old_value != $new_value;
+
             if ($value_change || $status_change) {
                 if (is_string($new_value)) {
-                    if (!$store_raw || !$user_can_raw_html || !($setting['raw_output'] ?? false)) {
+                    if (!$constructed && (!$store_raw || !$user_can_raw_html || !($setting['raw_output'] ?? false))) {
                         $new_value = htmlspecialchars($new_value, ENT_QUOTES, 'UTF-8');
                     }
                 }

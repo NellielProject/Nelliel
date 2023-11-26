@@ -9,7 +9,7 @@ use Nelliel\Content\Post;
 
 class PostJSON extends JSON
 {
-    private $post;
+    private Post $post;
 
     function __construct(Post $post)
     {
@@ -19,50 +19,50 @@ class PostJSON extends JSON
     protected function generate(): void
     {
         $raw_data = array();
-        $raw_data['post_number'] = $this->post->data('post_number');
-        $raw_data['parent_thread'] = $this->post->data('parent_thread');
-        $raw_data['reply_to'] = $this->post->data('reply_to');
+        $raw_data['post_number'] = $this->post->getData('post_number');
+        $raw_data['parent_thread'] = $this->post->getData('parent_thread');
+        $raw_data['reply_to'] = $this->post->getData('reply_to');
 
-        if (!nel_true_empty($this->post->data('name')) && $this->post->domain()->setting('show_poster_name')) {
-            $raw_data['name'] = $this->post->data('name');
+        if (!nel_true_empty($this->post->getData('name')) && $this->post->domain()->setting('show_poster_name')) {
+            $raw_data['name'] = $this->post->getData('name');
         }
 
-        if (!nel_true_empty($this->post->data('tripcode')) && $this->post->domain()->setting('show_tripcodes')) {
-            $raw_data['tripcode'] = $this->post->data('tripcode');
+        if (!nel_true_empty($this->post->getData('tripcode')) && $this->post->domain()->setting('show_tripcodes')) {
+            $raw_data['tripcode'] = $this->post->getData('tripcode');
         }
 
-        if (!nel_true_empty($this->post->data('secure_tripcode')) && $this->post->domain()->setting('show_tripcodes')) {
-            $raw_data['secure_tripcode'] = $this->post->data('secure_tripcode');
+        if (!nel_true_empty($this->post->getData('secure_tripcode')) && $this->post->domain()->setting('show_tripcodes')) {
+            $raw_data['secure_tripcode'] = $this->post->getData('secure_tripcode');
         }
 
-        if (!nel_true_empty($this->post->data('capcode')) && $this->post->domain()->setting('show_capcode')) {
-            $raw_data['capcode'] = $this->post->data('capcode');
+        if (!nel_true_empty($this->post->getData('capcode')) && $this->post->domain()->setting('show_capcode')) {
+            $raw_data['capcode'] = $this->post->getData('capcode');
         }
 
-        if (!nel_true_empty($this->post->data('email'))) {
-            $raw_data['email'] = $this->post->data('email');
+        if (!nel_true_empty($this->post->getData('email'))) {
+            $raw_data['email'] = $this->post->getData('email');
         }
 
-        if (!nel_true_empty($this->post->data('subject')) && $this->post->domain()->setting('show_post_subject')) {
-            $raw_data['subject'] = $this->post->data('subject');
+        if (!nel_true_empty($this->post->getData('subject')) && $this->post->domain()->setting('show_post_subject')) {
+            $raw_data['subject'] = $this->post->getData('subject');
         }
 
-        if (!nel_true_empty($this->post->data('comment')) && $this->post->domain()->setting('show_user_comments')) {
-            $raw_data['comment'] = $this->post->data('comment');
+        if (!nel_true_empty($this->post->getData('comment')) && $this->post->domain()->setting('show_user_comments')) {
+            $raw_data['comment'] = $this->post->getData('comment');
         }
 
-        $raw_data['post_time'] = $this->post->data('post_time');
-        $raw_data['post_time_milli'] = $this->post->data('post_time_milli');
-        $raw_data['formatted_time'] = $this->post->domain()->domainDateTime(intval($this->post->data('post_time')))->format(
+        $raw_data['post_time'] = $this->post->getData('post_time');
+        $raw_data['post_time_milli'] = $this->post->getData('post_time_milli');
+        $raw_data['formatted_time'] = $this->post->domain()->domainDateTime(intval($this->post->getData('post_time')))->format(
             $this->post->domain()->setting('post_time_format'));
-        $raw_data['total_uploads'] = $this->post->data('total_uploads');
-        $raw_data['file_count'] = $this->post->data('file_count');
-        $raw_data['embed_count'] = $this->post->data('embed_count');
-        $raw_data['op'] = $this->post->data('op');
-        $raw_data['sage'] = $this->post->data('sage');
+        $raw_data['total_uploads'] = $this->post->getData('total_uploads');
+        $raw_data['file_count'] = $this->post->getData('file_count');
+        $raw_data['embed_count'] = $this->post->getData('embed_count');
+        $raw_data['op'] = $this->post->getData('op');
+        $raw_data['sage'] = $this->post->getData('sage');
 
-        if (!nel_true_empty($this->post->data('mod_comment')) && $this->post->domain()->setting('show_mod_comments')) {
-            $raw_data['mod_comment'] = $this->post->data('mod_comment');
+        if (!nel_true_empty($this->post->getData('mod_comment')) && $this->post->domain()->setting('show_mod_comments')) {
+            $raw_data['mod_comment'] = $this->post->getData('mod_comment');
         }
 
         $uploads = $this->post->getUploads();

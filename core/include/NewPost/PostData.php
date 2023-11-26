@@ -39,35 +39,35 @@ class PostData
         }
 
         $post->changeData('parent_thread', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
-        $post->contentID()->changeThreadID($post->data('parent_thread'));
-        $post->changeData('op', $post->data('parent_thread') === 0);
-        $post->changeData('reply_to', $post->data('parent_thread')); // This may enable nested posts in the future
+        $post->contentID()->changeThreadID($post->getData('parent_thread'));
+        $post->changeData('op', $post->getData('parent_thread') === 0);
+        $post->changeData('reply_to', $post->getData('parent_thread')); // This may enable nested posts in the future
         $ip_info = new IPInfo(nel_request_ip_address());
         $post->changeData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
         $post->changeData('ip_address', nel_prepare_ip_for_storage($ip_info->getInfo('ip_address')));
         $visitor_info = new VisitorInfo(nel_visitor_id());
         $visitor_info->updateLastActivity(time());
-        $post->changeData('visitor_id', $visitor_info->getInfo('visitor_id'), false);
+        $post->changeData('visitor_id', $visitor_info->getInfo('visitor_id'));
 
         $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'] ?? '', 'string');
         $name = $this->fieldLengthCheck('name', $name);
         $staff_post = $this->staffPost();
 
-        $enable_name = $post->data('op') ? $this->domain->setting('enable_op_name_field') : $this->domain->setting(
+        $enable_name = $post->getData('op') ? $this->domain->setting('enable_op_name_field') : $this->domain->setting(
             'enable_reply_name_field');
-        $enable_email = $post->data('op') ? $this->domain->setting('enable_op_email_field') : $this->domain->setting(
+        $enable_email = $post->getData('op') ? $this->domain->setting('enable_op_email_field') : $this->domain->setting(
             'enable_reply_email_field');
-        $enable_subject = $post->data('op') ? $this->domain->setting('enable_op_subject_field') : $this->domain->setting(
+        $enable_subject = $post->getData('op') ? $this->domain->setting('enable_op_subject_field') : $this->domain->setting(
             'enable_reply_subject_field');
-        $enable_comment = $post->data('op') ? $this->domain->setting('enable_op_comment_field') : $this->domain->setting(
+        $enable_comment = $post->getData('op') ? $this->domain->setting('enable_op_comment_field') : $this->domain->setting(
             'enable_reply_comment_field');
-        $require_name = $post->data('op') ? $this->domain->setting('require_op_name') : $this->domain->setting(
+        $require_name = $post->getData('op') ? $this->domain->setting('require_op_name') : $this->domain->setting(
             'require_reply_name');
-        $require_email = $post->data('op') ? $this->domain->setting('require_op_email') : $this->domain->setting(
+        $require_email = $post->getData('op') ? $this->domain->setting('require_op_email') : $this->domain->setting(
             'require_reply_email');
-        $require_subject = $post->data('op') ? $this->domain->setting('require_op_subject') : $this->domain->setting(
+        $require_subject = $post->getData('op') ? $this->domain->setting('require_op_subject') : $this->domain->setting(
             'require_reply_subject');
-        $require_comment = $post->data('op') ? $this->domain->setting('require_op_comment') : $this->domain->setting(
+        $require_comment = $post->getData('op') ? $this->domain->setting('require_op_comment') : $this->domain->setting(
             'require_reply_comment');
 
         if (nel_true_empty($name) || !$enable_name || $this->domain->setting('forced_anonymous')) {
@@ -108,8 +108,8 @@ class PostData
                 }
             }
 
-            if ($this->domain->setting('require_tripcode') && nel_true_empty($post->data('tripcode')) &&
-                nel_true_empty($post->data('secure_tripcode'))) {
+            if ($this->domain->setting('require_tripcode') && nel_true_empty($post->getData('tripcode')) &&
+                nel_true_empty($post->getData('secure_tripcode'))) {
                 nel_derp(41, _gettext('A tripcode or secure tripcode is required to post.'));
             }
         }
@@ -139,7 +139,7 @@ class PostData
 
         $post->changeData('name', $name);
 
-        if (nel_true_empty($post->data('name')) && $require_name) {
+        if (nel_true_empty($post->getData('name')) && $require_name) {
             nel_derp(41, _gettext('A name is required to post.'));
         }
 
@@ -148,7 +148,7 @@ class PostData
             $post->changeData('email', $this->fieldLengthCheck('email', $email));
         }
 
-        if (nel_true_empty($post->data('email')) && $require_email) {
+        if (nel_true_empty($post->getData('email')) && $require_email) {
             nel_derp(42, _gettext('An email is required to post.'));
         }
 
@@ -157,7 +157,7 @@ class PostData
             $post->changeData('subject', $this->fieldLengthCheck('subject', $subject));
         }
 
-        if (nel_true_empty($post->data('subject')) && $require_subject) {
+        if (nel_true_empty($post->getData('subject')) && $require_subject) {
             nel_derp(43, _gettext('A subject is required to post.'));
         }
 
@@ -168,12 +168,12 @@ class PostData
             $post->changeData('comment', $this->fieldLengthCheck('comment', $comment), false);
         }
 
-        if (nel_true_empty($post->data('comment')) && $require_comment) {
+        if (nel_true_empty($post->getData('comment')) && $require_comment) {
             nel_derp(44, _gettext('A comment is required to post.'));
         }
 
         if ($this->domain->setting('r9k_enable_board')) {
-            $this->checkR9K($post->data('comment'), $post->data('hashed_ip_address'));
+            $this->checkR9K($post->getData('comment'), $post->getData('hashed_ip_address'));
         }
 
         if ($this->domain->setting('enable_fgsfds_field')) {
@@ -188,12 +188,12 @@ class PostData
 
         $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
 
-        if (!nel_true_empty($post->data('comment'))) {
+        if (!nel_true_empty($post->getData('comment'))) {
             $filters = new Filters($this->domain->database());
             $post->changeData('comment',
-                $filters->applyWordfilters($post->data('comment'), [$this->domain->id(), Domain::GLOBAL]), false);
+                $filters->applyWordfilters($post->getData('comment'), [$this->domain->id(), Domain::GLOBAL]), false);
             $cites = new Cites($this->domain->database());
-            $cite_list = $cites->getCitesFromText($post->data('comment'), false);
+            $cite_list = $cites->getCitesFromText($post->getData('comment'), false);
 
             if (count($cite_list['board']) > $this->domain->setting('max_cites')) {
                 nel_derp(45,
@@ -210,7 +210,7 @@ class PostData
             $url_protocols = $this->domain->setting('url_protocols');
             $url_split_regex = '#(' . $url_protocols . ')(:\/\/)#';
 
-            if (preg_match_all($url_split_regex, $post->data('comment')) > $this->domain->setting('max_comment_urls')) {
+            if (preg_match_all($url_split_regex, $post->getData('comment')) > $this->domain->setting('max_comment_urls')) {
                 nel_derp(47,
                     sprintf(_gettext('Comment contains too many URLs. Maximum is %d.'),
                         $this->domain->setting('max_comment_urls')));
@@ -443,10 +443,10 @@ class PostData
     private function processFGSFDS(Post $post)
     {
         $fgsfds = new FGSFDS();
-        $post_fgsfds = $post->data('fgsfds') ?? '';
+        $post_fgsfds = $post->getData('fgsfds') ?? '';
 
         $fgsfds->addFromString($post_fgsfds, true);
-        $post_email = $post->data('email') ?? '';
+        $post_email = $post->getData('email') ?? '';
 
         // If there are duplicates, the FGSFDS field takes precedence
         if ($this->domain->setting('allow_email_commands')) {

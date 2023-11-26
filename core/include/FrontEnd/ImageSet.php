@@ -9,8 +9,9 @@ use Nelliel\INIParser;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Tables\TableImageSets;
 use PDO;
+use Nelliel\Interfaces\SelfPersisting;
 
-class ImageSet
+class ImageSet implements SelfPersisting
 {
     private $database;
     private $image_set_id = '';
@@ -96,40 +97,27 @@ class ImageSet
     {
         $ini_parser = new INIParser(nel_utilities()->fileHandler());
         $ini_files = $ini_parser->parseDirectories(NEL_IMAGE_SETS_FILES_PATH, 'set_info.ini', true);
-        $encoded_ini = '';
         $directory = $this->front_end_data->imageSetIsCore($this->id()) ? 'core/' : 'custom/';
 
         foreach ($ini_files as $ini_file) {
             if ($ini_file->parsed()['info']['id'] === $this->id()) {
-                $encoded_ini = json_encode($ini_file->parsed());
                 $directory .= basename(dirname($ini_file->fileInfo()->getRealPath()));
+                $this->directory = $directory;
+                $this->data = $ini_file->parsed();
                 break;
             }
         }
 
-        if ($this->database->rowExists(NEL_IMAGE_SETS_TABLE, ['set_id'], [$this->id()],
-            [PDO::PARAM_STR, PDO::PARAM_STR])) {
-            if (!$overwrite) {
-                return;
-            }
-
-            $this->uninstall();
-        }
-
-        $prepared = $this->database->prepare(
-            'INSERT INTO "' . NEL_IMAGE_SETS_TABLE .
-            '" ("set_id", "directory", "parsed_ini", "enabled") VALUES (?, ?, ?, ?)');
-        $this->database->executePrepared($prepared, [$this->id(), $directory, $encoded_ini, 1]);
-        $this->load();
+        $this->enabled = true;
+        $this->save();
     }
 
     public function uninstall(): void
     {
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = ?');
-        $this->database->executePrepared($prepared, [$this->id()]);
+        $this->delete();
     }
 
-    public function load(bool $original_ini = false): void
+    public function load(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = ?');
         $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
@@ -142,7 +130,7 @@ class ImageSet
         $this->directory = $data['directory'] ?? '';
         $this->enabled = boolval($data['enabled'] ?? 0);
 
-        if (nel_true_empty($data['parsed_ini']) || $original_ini) {
+        if (nel_true_empty($data['parsed_ini'])) {
             $file = NEL_ASSETS_FILES_PATH . $this->directory . '/set_info.ini';
 
             if (file_exists($file)) {
@@ -154,6 +142,33 @@ class ImageSet
 
         $this->data = $ini ?? array();
         $this->info = $ini['info'] ?? array();
+    }
+
+    public function save(): void
+    {
+        if ($this->database->rowExists(NEL_IMAGE_SETS_TABLE, ['set_id'], [$this->id()],
+            [PDO::PARAM_STR, PDO::PARAM_STR])) {
+            $prepared = $this->database->prepare(
+                'UPDATE "' . NEL_IMAGE_SETS_TABLE .
+                '" SET "directory" = :directory, "parsed_ini" = :parsed_ini, "enabled" = :enabled WHERE "set_id" = :set_id');
+        } else {
+            $prepared = $this->database->prepare(
+                'INSERT INTO "' . NEL_IMAGE_SETS_TABLE .
+                '" ("set_id", "directory", "parsed_ini", "enabled") VALUES (:set_id, :directory, :parsed_ini, :enabled)');
+        }
+
+        $prepared->bindValue(':set_id', $this->image_set_id, PDO::PARAM_STR);
+        $prepared->bindValue(':directory', $this->directory ?? '', PDO::PARAM_STR);
+        $prepared->bindValue(':parsed_ini', json_encode($this->data) ?? '', PDO::PARAM_STR);
+        $prepared->bindValue(':enabled', $this->enabled ?? false, PDO::PARAM_INT);
+        $this->database->executePrepared($prepared);
+    }
+
+    public function delete(): void
+    {
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_IMAGE_SETS_TABLE . '" WHERE "set_id" = :set_id');
+        $prepared->bindValue(':set_id', $this->image_set_id, PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
     }
 
     public function enable(): void
