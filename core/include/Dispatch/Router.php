@@ -17,10 +17,14 @@ class Router
     private $dispatcher;
     private $uri = '';
     private $routes = array();
+    private $query_string = '';
 
     function __construct(string $uri)
     {
-        $this->uri = rawurldecode($uri);
+        $matches = array();
+        preg_match('/([^\?]*)\??(.*)/u', $uri, $matches);
+        $this->uri = $matches[1] ?? '';
+        $this->query_string = $matches[2] ?? '';
     }
 
     public function addRoutes(): void
@@ -70,7 +74,7 @@ class Router
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchNewPost';
-                        $r->addRoute(['POST'], '/{section:new-post}[?{query_string:.+}]', $dispatch_class);
+                        $r->addRoute(['POST'], '/{section:new-post}', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:[^\/]+}/{module:threads}',
@@ -205,7 +209,8 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchLogs';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'], '/{log_set:system|public|combined}[/{page:[^\/]+}]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{log_set:system|public|combined}[/{page:[^\/]+}]',
+                            $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:' . $site_domain . '}/{module:news}',
@@ -349,19 +354,19 @@ class Router
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
                         $r->addRoute(['GET'], '/{ip:[^\/]+}/{section:view}', $dispatch_class);
                         $r->addRoute(['POST'], '/{ip:[^\/]+}/{section:add-note}', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'], '/{ip:[^\/]+}/{section:delete-note}/{note-id:\d+}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{ip:[^\/]+}/{section:delete-note}/{note-id:\d+}',
+                            $dispatch_class);
                     });
 
                 // For now this is ALWAYS last
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Functions\DispatchOutput';
-                        $r->addRoute(['GET'], '/{page:\d+}[?{query_string:.+}]', $dispatch_class);
-                        $r->addRoute(['GET'], '/{section:catalog}/[?{query_string:.+}]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{page:\d+}', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:catalog}/', $dispatch_class);
                         // Board subdirectories can be custom so we catch it last and compare in dispatch
-                        $r->addRoute(['GET'], '/{section:[^\/]+}/{thread_id:\d+}/{slug:[^\/\?]+}[?{query_string:.+}]',
-                            $dispatch_class);
-                        $r->addRoute(['GET'], '/[?{query_string:.+}]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:[^\/]+}/{thread_id:\d+}/{slug:[^\/\?]+}', $dispatch_class);
+                        $r->addRoute(['GET'], '/', $dispatch_class);
                     });
             }, ['cacheFile' => NEL_CACHE_FILES_PATH . 'routes.php']);
     }
@@ -386,7 +391,7 @@ class Router
                 $inputs['module'] = $inputs['module'] ?? '';
                 $inputs['section'] = $inputs['section'] ?? '';
                 $inputs['action'] = $inputs['action'] ?? '';
-                parse_str($inputs['query_string'] ?? '', $inputs['parameters']);
+                parse_str($this->query_string, $inputs['parameters']);
                 $class = $routeInfo[1];
                 $instance = new $class($authorization, $domain, $session);
                 $instance->dispatch($inputs);
