@@ -120,4 +120,8 @@ class SQLHelpers
 
         return array_map($parameterize, $strings);
     }
+
+    public function paginationOffset(int $page, int $entries_per_page): int {
+        return ($page > 1) ? ($page - 1) * $entries_per_page : 0;
+    }
 }

@@ -25,7 +25,7 @@ class DispatchIPInfo extends Dispatch
 
     public function dispatch(array $inputs): void
     {
-        $ip = $inputs['ip'] ?? '';
+        $ip = rawurldecode($inputs['ip'] ?? '');
         $note_id = intval($inputs['note-id'] ?? 0);
         $ip_info = new IPInfo($ip, false);
         $forward_url = false;

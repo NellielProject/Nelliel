@@ -118,6 +118,10 @@ class OutputPanelMain extends Output
             'perm_manage_scripts');
         $this->render_data['scripts_url'] = nel_build_router_url([$this->domain->uri(), 'scripts']);
 
+        $this->render_data['module_logs'] = $this->session->user()->checkPermission($this->domain,
+            'perm_manage_scripts');
+        $this->render_data['logs_url'] = nel_build_router_url([$this->domain->uri(), 'logs']);
+
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_overboard');
         $this->render_data['regen_overboard_url'] = nel_build_router_url([$this->domain->uri(), 'regen', 'overboard']);

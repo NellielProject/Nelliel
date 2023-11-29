@@ -2085,6 +2085,22 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo ' - ' . __('Scripts table updated.') . '<br>';
 
                 $migration_count ++;
+
+            case 'v0.9.31':
+                echo '<br>' . __('Updating from v0.9.31 to ???') . '<br>';
+
+                // Update site settings
+                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'integer', 'pagination_default_entries', '50',
+                        'Default number of entries on a page.', '{"type":"number"}']);
+
+                $new_site_settings = ['pagination_entries_default'];
+                $this->updateSiteConfig($new_site_settings);
+
+                echo ' - ' . __('Site settings updated.') . '<br>';
+
+                $migration_count ++;
         }
 
         return $migration_count;
