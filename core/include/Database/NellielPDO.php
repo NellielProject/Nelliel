@@ -192,11 +192,13 @@ class NellielPDO extends PDO
             return $result;
         }
 
+        $fetched_result = $result->fetch($fetch_style);
+
         if ($close_cursor) {
             $result->closeCursor();
         }
 
-        return $result->fetch($fetch_style);
+        return $fetched_result;
     }
 
     public function executeFetchAll(string $query, int $fetch_style = PDO::FETCH_ASSOC): array
