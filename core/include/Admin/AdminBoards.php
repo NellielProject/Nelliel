@@ -171,6 +171,7 @@ class AdminBoards extends Admin
         $regen = new Regen();
         $domain->regenCache();
         $regen->boardPages($domain);
+        nel_logger('system')->info('Board ' . $domain->uri(true, true) . ' was created.', ['event' => 'board_create', 'username' => $this->session_user->id()]);
         $this->panel();
     }
 
@@ -184,6 +185,7 @@ class AdminBoards extends Admin
     {
         $this->verifyPermissions($this->domain, 'perm_boards_delete');
         $domain = new DomainBoard($board_id, $this->database);
+        $board_uri = $domain->uri(true, true);
 
         if (!$domain->exists()) {
             nel_derp(180, _gettext('Board does not appear to exist.'));
@@ -221,7 +223,8 @@ class AdminBoards extends Admin
         $domain->deleteCache();
         // Foreign key constraints allow this to handle any removals from site tables
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ?');
-        $this->database->executePrepared($prepared, [$board_id]);
+        $this->database->executePrepared($prepared, [$domain->id()]);
+        nel_logger('system')->info('Board ' . $board_uri . ' was deleted.', ['event' => 'board_delete', 'username' => $this->session_user->id()]);
         $this->panel();
     }
 

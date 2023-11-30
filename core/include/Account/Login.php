@@ -90,7 +90,7 @@ class Login
 
         $rate_limit->clearAttempts($ip_info->getInfo('hashed_ip_address'), 'login', true);
         $user->changeData('last_login', $attempt_time);
-        nel_logger('system')->info('Logged in.', ['event' => 'login', 'username' => $user->id()]);
+        nel_logger('system')->info('Logged in.', ['event' => 'user_login', 'username' => $user->id()]);
         return $user;
     }
 }
