@@ -190,6 +190,7 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchBans';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{page:\d+}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:modify}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
@@ -209,7 +210,7 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchLogs';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'], '/{log_set:system|public|combined}[/{page:[^\/]+}]',
+                        $r->addRoute(['GET', 'POST'], '/{log_set:system|public|combined}[/{page:\d+}]',
                             $dispatch_class);
                     });
 

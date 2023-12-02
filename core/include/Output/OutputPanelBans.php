@@ -27,15 +27,24 @@ class OutputPanelBans extends Output
         $this->setBodyTemplate('panels/bans_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
+        $page = (int) ($parameters['page'] ?? 1);
+        $ban_type = $parameters['ban_type'] ?? '';
+        $entries = $parameters['entries'] ?? $this->site_domain->setting('pagination_default_entries');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $this->render_data['can_add'] = $this->session->user()->checkPermission($this->domain, 'perm_add_bans');
         $bans_access = new BansAccess($this->database);
-        $ban_list = $bans_access->getBans($this->domain->id());
+        $ban_list = $bans_access->getBans($this->domain->id(), $page, $entries);
         $this->render_data['new_ban_url'] = nel_build_router_url([$this->domain->uri(), 'bans', 'new']);
         $bgclass = 'row1';
+
+        if (empty($ban_type)) {
+            $ban_count = $bans_access->getCountForDomain($this->domain->id());
+        } else {
+            $ban_count = $bans_access->getCountForType($ban_type, $this->domain->id());
+        }
 
         foreach ($ban_list as $ban_hammer) {
             $ban_data = array();
@@ -64,6 +73,18 @@ class OutputPanelBans extends Output
                     $ban_data['type'] = __('Subnet');
                     break;
             }
+
+            $page_count = (int) ceil($ban_count / $entries);
+            $page_url = nel_build_router_url([$this->domain->uri(), 'bans'], true) . '%d';
+            $previous_url = ($page > 1) ? nel_build_router_url([$this->domain->uri(), 'bans'], true) . '%d' : null;
+            $next_url = nel_build_router_url([$this->domain->uri(), 'bans'], true) . '%d';
+            $pagination = new Pagination();
+            $pagination->setPrevious(__('Previous'), $previous_url);
+            $pagination->setNext(__('Next'), $next_url);
+            $pagination->setPage('%d', $page_url);
+            $pagination->setFirst('%d', $page_url);
+            $pagination->setLast('%d', $page_url);
+            $this->render_data['pagination'] = $pagination->generateNumerical(1, $page_count, $page);
 
             $ban_domain = new DomainBoard($ban_hammer->getData('board_id'), $this->database);
             $ban_data['board_uri'] = $ban_domain->uri(true);
@@ -223,7 +244,8 @@ class OutputPanelBans extends Output
                 $this->render_data['appeal_status_select']['options'][] = ['option_label' => __('Unreviewed'),
                     'option_value' => 'unreviewed', 'option_selected' => ($appeal['pending']) ? 'selected' : ''];
                 $this->render_data['appeal_status_select']['options'][] = ['option_label' => __('Approved'),
-                    'option_value' => 'approved', 'option_selected' => (!$appeal['denied'] && !$appeal['pending']) ? 'selected' : ''];
+                    'option_value' => 'approved',
+                    'option_selected' => (!$appeal['denied'] && !$appeal['pending']) ? 'selected' : ''];
                 $this->render_data['appeal_status_select']['options'][] = ['option_label' => __('Denied'),
                     'option_value' => 'denied', 'option_selected' => ($appeal['denied']) ? 'selected' : ''];
                 break;

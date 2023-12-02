@@ -24,11 +24,11 @@ class AdminBans extends Admin
         $this->panel_name = _gettext('Bans');
     }
 
-    public function panel(): void
+    public function panel(int $page): void
     {
         $this->verifyPermissions($this->domain, 'perm_view_bans');
         $output_panel = new OutputPanelBans($this->domain, false);
-        $output_panel->main([], false);
+        $output_panel->main(['page' => $page], false);
     }
 
     public function creator(ContentID $content_id = null): void

@@ -23,7 +23,7 @@ class OutputPanelLogs extends Output
         $this->setupTimer();
         $this->setBodyTemplate('panels/logs');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
-        $page = (int) $parameters['page'] ?? 1;
+        $page = (int) ($parameters['page'] ?? 1);
         $entries = $parameters['entries'] ?? $this->site_domain->setting('pagination_default_entries');
         $row_offset = nel_utilities()->sqlHelpers()->paginationOffset($page, $entries);
         $log_set = $parameters['log_set'] ?? 'combined';

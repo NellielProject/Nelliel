@@ -54,7 +54,8 @@ class DispatchBans extends Dispatch
 
             default:
                 if ($inputs['method'] === 'GET') {
-                    $bans->panel();
+                    $page = (int) ($inputs['page'] ?? 1);
+                    $bans->panel($page);
                 }
         }
     }
