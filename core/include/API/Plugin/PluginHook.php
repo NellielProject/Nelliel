@@ -7,10 +7,10 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class PluginHook
 {
-    private $name;
-    private $registered = array();
-    private $in_progress = false;
-    private $unsorted = false;
+    private string $name;
+    private array $registered = array();
+    private bool $in_progress = false;
+    private bool $unsorted = false;
 
     function __construct(string $hook_name)
     {

@@ -233,3 +233,25 @@ Called during CAPTCHA generation.
 |2    |`$domain`    |`object` |No        |No        |Instance of `Nelliel\Domains\Domain`.|
 |3    |`$write_mode`|`boolean`|No        |No        |Whether output is being written to file.|
 |4    |`$area`      |`string` |No        |No        |The area calling for CAPTCHA generation.|
+
+### nel-in-after-plugin-install
+Added: v0.9.32
+
+Called after a plugin has been installed.
+ 
+**Arguments**
+
+|Order|Argument     |Type     |Modifiable|Returnable|Description|                               
+|:---:|:------------|:--------|:---------|:---------|:----------|
+|1    |`$plugin_id` |`string` |No        |No        |ID of the plugin.|
+
+### nel-in-after-plugin-uninstall
+Added: v0.9.32
+
+Called after a plugin has been uninstalled.
+ 
+**Arguments**
+
+|Order|Argument     |Type     |Modifiable|Returnable|Description|                               
+|:---:|:------------|:--------|:---------|:---------|:----------|
+|1    |`$plugin_id` |`string` |No        |No        |ID of the plugin.|

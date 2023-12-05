@@ -115,6 +115,7 @@ class Plugin
             'INSERT INTO "' . NEL_PLUGINS_TABLE .
             '" ("plugin_id", "directory", "initializer", "parsed_ini", "enabled") VALUES (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$this->id(), $directory, $initializer_file, $encoded_ini, 1]);
+        $this->processHook('nel-in-after-plugin-install', [$this->id()]);
     }
 
     /**
@@ -130,12 +131,13 @@ class Plugin
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PLUGINS_TABLE . '" WHERE "plugin_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
+        $this->processHook('nel-in-after-plugin-uninstall', [$this->id()]);
     }
 
     /**
      * Loads the plugin data.
      */
-    public function loadData(): void
+    private function loadData(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_PLUGINS_TABLE . '" WHERE "plugin_id" = ?');
         $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);

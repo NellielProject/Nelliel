@@ -12,11 +12,11 @@ use PDO;
 class PluginAPI
 {
     public const API_VERSION = 1; // Only updates on breaking changes
-    private $database;
-    private static $hooks = array();
-    private static $loaded_plugins = array();
-    private static $loaded_plugin_ids = array();
-    private $ini_parser;
+    private NellielPDO $database;
+    private static array $hooks = array();
+    private static array $loaded_plugins = array();
+    private static array $loaded_plugin_ids = array();
+    private INIParser $ini_parser;
 
     function __construct(NellielPDO $database)
     {
