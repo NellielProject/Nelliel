@@ -11,12 +11,12 @@ use PDO;
 
 class Plugin
 {
-    private $database;
-    private $plugin_id = '';
-    private $enabled = false;
-    private $info = array();
-    private $initializer = '';
-    private $directory = '';
+    private NellielPDO $database;
+    private string $plugin_id = '';
+    private bool $enabled = false;
+    private array $info = array();
+    private string $initializer = '';
+    private string $directory = '';
 
     function __construct(NellielPDO $database, string $plugin_id)
     {
@@ -66,7 +66,7 @@ class Plugin
     }
 
     /**
-     * Writes the plugin information to the database for faster access.
+     * Installs the plugin.
      */
     public function install(bool $reinstall = false): void
     {
@@ -75,12 +75,13 @@ class Plugin
         $parsed_ini = '';
         $directory = '';
         $initializer_file = '';
+        $installer_file = '';
 
         foreach ($plugin_files as $file) {
             if ($file->getFilename() === 'nelliel-plugin.ini') {
                 $parsed_ini = parse_ini_file($file->getPathname(), true);
 
-                if(!isset($parsed_ini['id'])) {
+                if (!isset($parsed_ini['id'])) {
                     continue;
                 }
 
@@ -89,9 +90,14 @@ class Plugin
                 }
 
                 $directory = basename(dirname($file->getRealPath()));
-                $initializer_file = $parsed_ini['initializer'];
+                $initializer_file = $parsed_ini['initializer'] ?? '';
+                $installer_file = $parsed_ini['installer'] ?? '';
                 break;
             }
+        }
+
+        if (!nel_true_empty($installer_file) && file_exists($directory . '/' . $installer_file)) {
+            include $directory . '/' . $installer_file;
         }
 
         $encoded_ini = json_encode($parsed_ini);
@@ -112,10 +118,16 @@ class Plugin
     }
 
     /**
-     * Removes the plugin from the database.
+     * Uninstalls the plugin.
      */
     public function uninstall(): void
     {
+        $uninstaller_file = $this->info['uninstaller'] ?? '';
+
+        if (!nel_true_empty($uninstaller_file) && file_exists($this->directory . '/' . $uninstaller_file)) {
+            include $this->directory . '/' . $uninstaller_file;
+        }
+
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PLUGINS_TABLE . '" WHERE "plugin_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
     }
