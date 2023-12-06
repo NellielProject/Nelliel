@@ -6,10 +6,10 @@ namespace Nelliel\Dispatch\Controls;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
-use Nelliel\Admin\AdminImageSets;
 use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelImageSets;
 
 class DispatchImageSets extends Dispatch
 {
@@ -23,29 +23,54 @@ class DispatchImageSets extends Dispatch
 
     public function dispatch(array $inputs): void
     {
-        $image_sets = new AdminImageSets($this->authorization, $this->domain, $this->session);
+        $go_to_panel = true;
+        $set_id = strval($inputs['id'] ?? '');
 
         switch ($inputs['section']) {
             case 'install':
-                $image_sets->install($inputs['id']);
+                $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
+                $this->domain->frontEndData()->getImageSet($set_id)->install();
                 break;
 
             case 'uninstall':
-                $image_sets->uninstall($inputs['id']);
+                $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
+                $this->domain->frontEndData()->getImageSet($set_id)->uninstall();
                 break;
 
             case 'enable':
-                $image_sets->enable($inputs['id']);
+                $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
+                $this->domain->frontEndData()->getImageSet($set_id)->enable();
                 break;
 
             case 'disable':
-                $image_sets->disable($inputs['id']);
+                $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
+                $this->domain->frontEndData()->getImageSet($set_id)->disable();
                 break;
 
             default:
-                if ($inputs['method'] === 'GET') {
-                    $image_sets->panel();
-                }
+                ;
+        }
+
+        if ($go_to_panel) {
+            $this->verifyPermissions($this->domain, 'perm_manage_image_sets');
+            $output_panel = new OutputPanelImageSets($this->domain, false);
+            $output_panel->render([], false);
+        }
+    }
+
+    protected function verifyPermissions(Domain $domain, string $perm): void
+    {
+        if ($this->session->user()->checkPermission($domain, $perm)) {
+            return;
+        }
+
+        switch ($perm) {
+            case 'perm_manage_image_sets':
+                nel_derp(350, _gettext('You are not allowed to manage image sets.'), 403);
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

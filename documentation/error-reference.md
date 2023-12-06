@@ -148,7 +148,7 @@ Error 264: Invalid target thread. (Admin/AdminThreads.php)
 
 Error 270: Maximum static pages. (Admin/AdminPages.php)  
 
-Error 300: Default permission error. (Admin/Admin.php)  
+Error 300: Default permission error. (Admin/Admin.php|Dispatch/Dispatch.php)  
 
 Error 310: perm_bans_view (Admin/AdminBans.php)  
 Error 311: perm_bans_add (Admin/AdminBans.php)   
@@ -170,10 +170,10 @@ Error 340: perm_manage_file_filters (Admin/AdminFileFilters.php)
 
 Error 345: perm_manage_filetypes (Admin/AdminFiletypes.php)  
 
-Error 350: perm_manage_image_sets (Admin/AdminImageSets.php)  
+Error 350: perm_manage_image_sets (Dispatch/DispatchImageSets.php)  
 
-Error 355: perm_view_public_logs (Admin/AdminLogs.php)  
-Error 356: perm_view_system_logs (Admin/AdminLogs.php)  
+Error 355: perm_view_public_logs (Dispatch/DispatchLogs.php)  
+Error 356: perm_view_system_logs (Dispatch/DispatchLogs.php)  
 
 Error 360: perm_manage_news (Admin/AdminNews.php)  
 
@@ -187,9 +187,9 @@ Error 376: perm_manage_roles (Admin/AdminRoles.php)
 
 Error 380: perm_modify_site_config (Admin/AdminSiteSettings.php)  
 
-Error 385: perm_manage_styles (Admin/AdminStyles.php)  
+Error 385: perm_manage_styles (Dispatch/DispatchStyles.php)  
 
-Error 390: perm_manage_templates (Admin/AdminTemplates.php)  
+Error 390: perm_manage_templates (Dispatch/DispatchTemplates.php)  
 
 Error 395: perm_view_users (Admin/AdminUsers.php)  
 Error 396: perm_manage_users (Admin/AdminUsers.php)  
@@ -219,6 +219,8 @@ Error 440: perm_view_unhashed_ip (Dispatch/DispatchIPInfo.php)
 Error 441: perm_view_ip_info (Dispatch/DispatchIPInfo.php)  
 Error 442: perm_add_ip_notes (Dispatch/DispatchIPInfo.php)  
 Error 443: perm_delete_ip_notes (Dispatch/DispatchIPInfo.php)  
+
+Error 450: perm_manage_plugins (Dispatch/DispatchPlugins.php)  
 
 Error 500: perm_regen_pages (site) (Dispatch/DispatchRegen.php)  
 Error 501: perm_regen_cache (site) (Dispatch/DispatchRegen.php)  

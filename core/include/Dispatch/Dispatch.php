@@ -23,4 +23,9 @@ abstract class Dispatch
     }
 
     public abstract function dispatch(array $inputs): void;
+
+    protected function defaultPermissionError()
+    {
+        nel_derp(300, __('You do not have permission for that.'), 403);
+    }
 }

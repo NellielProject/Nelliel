@@ -6,10 +6,10 @@ namespace Nelliel\Dispatch\Controls;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
-use Nelliel\Admin\AdminPlugins;
 use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelPlugins;
 
 class DispatchPlugins extends Dispatch
 {
@@ -23,29 +23,54 @@ class DispatchPlugins extends Dispatch
 
     public function dispatch(array $inputs): void
     {
-        $plugins = new AdminPlugins($this->authorization, $this->domain, $this->session);
+        $go_to_panel = true;
+        $plugin_id = strval($inputs['id'] ?? '');
 
         switch ($inputs['section']) {
             case 'install':
-                $plugins->install($inputs['id']);
+                $this->verifyPermissions($this->domain, 'perm_manage_plugins');
+                nel_plugins()->getPlugin($plugin_id)->install();
                 break;
 
             case 'uninstall':
-                $plugins->uninstall($inputs['id']);
+                $this->verifyPermissions($this->domain, 'perm_manage_plugins');
+                nel_plugins()->getPlugin($plugin_id)->uninstall();
                 break;
 
             case 'enable':
-                $plugins->enable($inputs['id']);
+                $this->verifyPermissions($this->domain, 'perm_manage_plugins');
+                nel_plugins()->getPlugin($plugin_id)->enable();
                 break;
 
             case 'disable':
-                $plugins->disable($inputs['id']);
+                $this->verifyPermissions($this->domain, 'perm_manage_plugins');
+                nel_plugins()->getPlugin($plugin_id)->disable();
                 break;
 
             default:
-                if ($inputs['method'] === 'GET') {
-                    $plugins->panel();
-                }
+                ;
+        }
+
+        if ($go_to_panel) {
+            $this->verifyPermissions($this->domain, 'perm_manage_plugins');
+            $output_panel = new OutputPanelPlugins($this->domain, false);
+            $output_panel->render([], false);
+        }
+    }
+
+    protected function verifyPermissions(Domain $domain, string $perm): void
+    {
+        if ($this->session->user()->checkPermission($domain, $perm)) {
+            return;
+        }
+
+        switch ($perm) {
+            case 'perm_manage_plugins':
+                nel_derp(450, _gettext('You are not allowed to manage plugins.'), 403);
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }
