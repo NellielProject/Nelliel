@@ -175,7 +175,7 @@ Error 350: perm_manage_image_sets (Dispatch/DispatchImageSets.php)
 Error 355: perm_view_public_logs (Dispatch/DispatchLogs.php)  
 Error 356: perm_view_system_logs (Dispatch/DispatchLogs.php)  
 
-Error 360: perm_manage_news (Admin/AdminNews.php)  
+Error 360: perm_manage_news (Dispatch/DispatchNews.php)  
 
 Error 365: perm_manage_permissions (Admin/AdminPermissions.php)  
 
