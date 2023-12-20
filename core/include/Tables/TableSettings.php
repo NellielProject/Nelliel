@@ -147,7 +147,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'error_image_max_size', '350', 'Maximum dimensions for error page images.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'pagination_default_entries', '50', 'Default number of entries on a page.', '{"type":"number"}']);
 
-
         // Uploads
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'graphics_handler', 'GD', 'Preferred graphics handler', '{"type":"select"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'imagemagick_args', '%s -auto-orient -thumbnail %dx%d -quality %d %s', 'Arguments given to ImageMagick for creating still image previews.', '{"type":"text"}']);
