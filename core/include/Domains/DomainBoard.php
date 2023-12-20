@@ -29,13 +29,16 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     protected function loadSettings(): void
     {
-        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
-            'domains/' . $this->domain_id);
+        $settings = array();
+
+        if(NEL_USE_FILE_CACHE) {
+            $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
+                'domains/' . $this->domain_id);
+        }
 
         if (empty($settings)) {
             $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
-                'domains/' . $this->domain_id);
+            $this->regenCache();
         }
 
         $this->settings = $settings;
@@ -97,16 +100,14 @@ class DomainBoard extends Domain implements NellielCacheInterface
     protected function loadSettingsFromDatabase(): array
     {
         $settings = array();
+        $settings_list = $this->database->executeFetchAll('SELECT "setting_name", "default_value", "data_type" FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_category" = \'board\'', PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare('SELECT "setting_name", "setting_value" FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "board_id" = :board_id');
+        $prepared->bindValue(':board_id', $this->domain_id, PDO::PARAM_STR);
+        $config_list = $this->database->executePreparedFetchAll($prepared, null,
+            PDO::FETCH_KEY_PAIR);
 
-        $query = 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '" ON "' .
-            NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
-            NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "setting_category" = ?';
-        $prepared = $this->database->prepare($query);
-        $config_list = $this->database->executePreparedFetchAll($prepared, [$this->domain_id, 'board'],
-            PDO::FETCH_ASSOC);
-
-        foreach ($config_list as $config) {
-            $settings[$config['setting_name']] = nel_typecast($config['setting_value'], $config['data_type']);
+        foreach ($settings_list as $setting) {
+            $settings[$setting['setting_name']] = nel_typecast($config_list[$setting['setting_name']] ?? $setting['default_value'], $setting['data_type'], false);
         }
 
         return $settings;
