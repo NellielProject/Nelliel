@@ -10,7 +10,7 @@ use Nelliel\Account\Session;
 use Nelliel\Domains\Domain;
 use Nelliel\Render\RenderCoreDOM;
 use Nelliel\Render\RenderCoreMustache;
-use Nelliel\Render\TemplateSubstitutes;
+use Nelliel\Render\Template;
 
 abstract class Output
 {
@@ -25,11 +25,11 @@ abstract class Output
     protected $core_id;
     protected $static_output = false;
     protected $write_mode = false;
-    protected $template_substitutes;
     protected $session;
     protected $default_body_template = 'empty_body';
     protected $timer;
     protected $templates_path;
+    protected Template $current_template;
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -40,7 +40,6 @@ abstract class Output
         $this->site_domain = nel_site_domain();
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new Filter();
-        $this->template_substitutes = new TemplateSubstitutes();
         $this->session = new Session();
         $this->templates_path = $this->domain->templatePath();
     }
@@ -95,11 +94,9 @@ abstract class Output
     protected function output(string $template, bool $data_only, bool $translate, array $render_data, $dom = null)
     {
         $output = null;
-        $substitutes = $this->template_substitutes->getAll();
 
         if ($this->core_id === 'mustache') {
-            $this->render_core->renderEngine()->getLoader()->updateSubstituteTemplates($substitutes);
-            $this->render_core->renderEngine()->getLoader()->setDefaultTemplatePath($this->templates_path);
+            $this->render_core->renderEngine()->getLoader()->setDefaultBasePath($this->templates_path);
 
             if ($data_only) {
                 return $render_data;
@@ -129,9 +126,16 @@ abstract class Output
         $this->templates_path = $path;
     }
 
-    protected function setBodyTemplate(string $template): void
+    protected function setBodyTemplate(string $name): void
     {
-        $this->template_substitutes->add($this->default_body_template, $template);
+        // Temporary values while we get things working
+        $template = new Template($this->templates_path, $name, '.html');
+        $this->render_core->renderEngine()->getLoader()->addSubstitute($this->default_body_template, $template);
+    }
+
+    protected function setTemplate(Template $template): void
+    {
+        $this->current_template = $template;
     }
 
     protected function uiDefines(): void

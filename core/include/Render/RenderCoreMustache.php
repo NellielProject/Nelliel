@@ -21,7 +21,7 @@ class RenderCoreMustache extends RenderCore
         $this->output_filter = new Filter();
         $this->file_handler = nel_utilities()->fileHandler();
         $this->escaper = new DOMEscaper();
-        $this->template_loaders['file'] = new MultipathFileSystemLoader($this->domain->templatePath(),
+        $this->template_loaders['file'] = new FileSystemLoader($this->domain->templatePath(),
             ['extension' => '.html']);
         $this->newMustache();
     }
