@@ -7,28 +7,30 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Timer;
 use Nelliel\Account\Session;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainSite;
 use Nelliel\Render\RenderCoreDOM;
 use Nelliel\Render\RenderCoreMustache;
 use Nelliel\Render\Template;
+use Nelliel\Utility\FileHandler;
 
 abstract class Output
 {
-    protected $domain;
-    protected $site_domain;
-    protected $database;
+    protected Domain $domain;
+    protected DomainSite $site_domain;
+    protected NellielPDO $database;
     protected $render_core;
-    protected $render_data = array();
+    protected array $render_data = array();
     protected static $render_cores = array();
-    protected $file_handler;
-    protected $output_filter;
-    protected $core_id;
-    protected $static_output = false;
-    protected $write_mode = false;
-    protected $session;
+    protected FileHandler $file_handler;
+    protected Filter $output_filter;
+    protected string $core_id;
+    protected bool $write_mode = false;
+    protected Session $session;
     protected $default_body_template = 'empty_body';
-    protected $timer;
-    protected $templates_path;
+    protected Timer $timer;
+    protected string $templates_path;
     protected Template $current_template;
 
     function __construct(Domain $domain, bool $write_mode)

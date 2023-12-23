@@ -5,17 +5,20 @@ namespace Nelliel\Render;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Mustache_Engine;
+use Mustache_Loader_FilesystemLoader;
+
 class RenderCoreSimple extends RenderCore
 {
-    private $template_file_loader;
-    private $mustache_engine;
+    private Mustache_Loader_FilesystemLoader $template_file_loader;
+    private Mustache_Engine $mustache_engine;
 
     function __construct(string $base_directory)
     {
         $options = array();
-        $options['pragmas'] = [\Mustache_Engine::PRAGMA_FILTERS];
-        $this->mustache_engine = new \Mustache_Engine($options);
-        $this->template_file_loader = new \Mustache_Loader_FilesystemLoader($base_directory, ['extension' => '.html']);
+        $options['pragmas'] = [Mustache_Engine::PRAGMA_FILTERS];
+        $this->mustache_engine = new Mustache_Engine($options);
+        $this->template_file_loader = new Mustache_Loader_FilesystemLoader($base_directory, ['extension' => '.html']);
         $this->mustache_engine->setLoader($this->template_file_loader);
         $this->mustache_engine->setPartialsLoader($this->template_file_loader);
         $this->mustache_engine->addHelper('esc',
