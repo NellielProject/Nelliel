@@ -18,7 +18,6 @@ class OutputPanelPlugins extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/plugins');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('plugins');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

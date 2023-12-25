@@ -19,7 +19,6 @@ class OutputAccount extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('account/account_main');
         $parameters['area'] = $parameters['area'] ?? _gettext('Account Management');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Account');

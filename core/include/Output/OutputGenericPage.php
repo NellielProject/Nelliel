@@ -18,7 +18,6 @@ class OutputGenericPage extends Output
     public function render(string $title, string $body_text, string $markup_type, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('generic_body');
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render(['page_title' => $title], true);

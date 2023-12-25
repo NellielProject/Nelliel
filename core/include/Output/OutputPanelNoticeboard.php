@@ -19,7 +19,6 @@ class OutputPanelNoticeboard extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/noticeboard');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Noticeboard');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -59,7 +58,6 @@ class OutputPanelNoticeboard extends Output
     public function viewNotice(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('pieces/notice');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Noticeboard');
         $parameters['section'] = $parameters['section'] ?? _gettext('View');

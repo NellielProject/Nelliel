@@ -6,9 +6,9 @@ namespace Nelliel\Output;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\ContentID;
+use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\Content\Thread;
 
 class OutputThread extends Output
 {
@@ -21,7 +21,6 @@ class OutputThread extends Output
     public function render(array $parameters = array(), bool $data_only = false)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('thread/thread');
         $route_parameters = $parameters['parameters'] ?? array();
         $thread_id = $parameters['thread_id'] ?? array();

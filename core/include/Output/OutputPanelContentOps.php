@@ -19,7 +19,6 @@ class OutputPanelContentOps extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/content_ops_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Content Ops');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

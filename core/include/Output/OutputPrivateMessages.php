@@ -19,7 +19,6 @@ class OutputPrivateMessages extends Output
     public function messageList(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('private_messages/message_list');
         $parameters['area'] = $parameters['area'] ?? _gettext('Account Management');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Private Messages');
@@ -70,7 +69,6 @@ class OutputPrivateMessages extends Output
     public function newMessage(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('private_messages/new_message');
         $parameters['area'] = $parameters['area'] ?? _gettext('Account Management');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Private Messages');
@@ -106,7 +104,6 @@ class OutputPrivateMessages extends Output
     public function viewMessage(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('private_messages/view_message');
         $parameters['area'] = $parameters['area'] ?? _gettext('Account Management');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Private Messages');

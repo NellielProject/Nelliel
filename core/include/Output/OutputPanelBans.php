@@ -9,8 +9,8 @@ use Nelliel\IPInfo;
 use Nelliel\Bans\BanHammer;
 use Nelliel\Bans\BansAccess;
 use Nelliel\Domains\Domain;
-use PDO;
 use Nelliel\Domains\DomainBoard;
+use PDO;
 
 class OutputPanelBans extends Output
 {
@@ -23,7 +23,6 @@ class OutputPanelBans extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/bans_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Bans');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

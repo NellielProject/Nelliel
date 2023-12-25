@@ -24,7 +24,6 @@ class OutputIndex extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('index/index');
         $page = intval($parameters['page'] ?? 1);
         $page_title = $this->domain->reference('title');

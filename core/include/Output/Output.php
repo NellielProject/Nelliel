@@ -44,11 +44,16 @@ abstract class Output
         $this->output_filter = new Filter();
         $this->session = new Session();
         $this->templates_path = $this->domain->templatePath();
+        $this->timer = new Timer();
     }
 
     protected function renderSetup(): void
     {
         $this->render_data = array();
+        $this->timer->reset();
+        $this->timer->start();
+        $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction(true, 4);
+        $this->render_data['show_render_timer'] = $this->domain->setting('show_render_timer');
         $this->render_data['page_language'] = $this->domain->locale(true);
         $this->render_data['nelliel_version'] = NELLIEL_VERSION;
         $this->render_data['nelliel_package'] = NELLIEL_PACKAGE;
@@ -84,15 +89,6 @@ abstract class Output
         };
     }
 
-    protected function setupTimer(bool $formatted = true, int $precision = 4): void
-    {
-        if ($this->domain->setting('show_render_timer')) {
-            $this->timer = new Timer();
-            $this->timer->start();
-            $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction($formatted, $precision);
-        }
-    }
-
     protected function output(string $template, bool $data_only, bool $translate, array $render_data, $dom = null)
     {
         $output = null;
@@ -121,11 +117,6 @@ abstract class Output
         }
 
         return $this->write_mode;
-    }
-
-    protected function setTemplatesPath(string $path): void
-    {
-        $this->templates_path = $path;
     }
 
     protected function setBodyTemplate(string $name): void

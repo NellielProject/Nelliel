@@ -19,7 +19,6 @@ class OutputPanelPages extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/pages_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Static Pages');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

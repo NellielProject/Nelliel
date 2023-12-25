@@ -18,7 +18,6 @@ class OutputPanelMain extends Output
     public function site(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/main_site');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Main');
         $parameters['section'] = $parameters['section'] ?? _gettext('Site');
@@ -149,7 +148,6 @@ class OutputPanelMain extends Output
     public function global(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/main_global');
         $parameters['panel'] = $parameters['panel'] ?? __('Main');
         $parameters['section'] = $parameters['section'] ?? __('Global');
@@ -193,7 +191,6 @@ class OutputPanelMain extends Output
     public function board(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/main_board');
         $parameters['panel'] = $parameters['panel'] ?? __('Main');
         $parameters['section'] = $parameters['section'] ?? __('Board');

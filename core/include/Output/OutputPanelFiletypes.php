@@ -19,7 +19,6 @@ class OutputPanelFiletypes extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/filetypes_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Filetypes');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

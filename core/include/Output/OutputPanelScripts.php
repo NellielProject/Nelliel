@@ -19,7 +19,6 @@ class OutputPanelScripts extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/scripts_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Scripts');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

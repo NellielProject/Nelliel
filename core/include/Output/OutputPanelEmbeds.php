@@ -19,7 +19,6 @@ class OutputPanelEmbeds extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/embeds_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Embeds');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

@@ -21,7 +21,6 @@ class OutputOverboard extends Output
     public function index(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('index/index');
         $sfw = $parameters['sfw'] ?? false;
         $overboard_id = $parameters['overboard_id'] ?? 'all';
@@ -119,7 +118,6 @@ class OutputOverboard extends Output
     public function catalog(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('catalog/catalog');
         $overboard_id = $parameters['overboard_id'] ?? 'all';
         $uri = $parameters['uri'] ?? 'overboard';

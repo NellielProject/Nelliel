@@ -19,7 +19,6 @@ class OutputPanelSiteConfig extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/site_config');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Site Config');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');

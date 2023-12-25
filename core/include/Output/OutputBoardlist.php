@@ -20,7 +20,6 @@ class OutputBoardlist extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('boardlist');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Boardlist');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

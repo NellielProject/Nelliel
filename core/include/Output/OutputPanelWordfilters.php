@@ -20,7 +20,6 @@ class OutputPanelWordfilters extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/wordfilters_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Wordfilters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -79,7 +78,6 @@ class OutputPanelWordfilters extends Output
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/wordfilters_edit');
         $editing = $parameters['editing'] ?? false;
         $this->render_data['submit_add'] = $parameters['submit_add'] ?? false;
