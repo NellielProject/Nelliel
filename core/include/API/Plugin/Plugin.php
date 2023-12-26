@@ -96,10 +96,6 @@ class Plugin
             }
         }
 
-        if (!nel_true_empty($installer_file) && file_exists($directory . '/' . $installer_file)) {
-            include $directory . '/' . $installer_file;
-        }
-
         $encoded_ini = json_encode($parsed_ini);
 
         if ($this->database->rowExists(NEL_PLUGINS_TABLE, ['plugin_id'], [$this->id()],
@@ -115,6 +111,11 @@ class Plugin
             'INSERT INTO "' . NEL_PLUGINS_TABLE .
             '" ("plugin_id", "directory", "initializer", "parsed_ini", "enabled") VALUES (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$this->id(), $directory, $initializer_file, $encoded_ini, 1]);
+
+        if (!nel_true_empty($installer_file) && file_exists($directory . '/' . $installer_file)) {
+            include $directory . '/' . $installer_file;
+        }
+
         $this->processHook('nel-in-after-plugin-install', [$this->id()]);
     }
 

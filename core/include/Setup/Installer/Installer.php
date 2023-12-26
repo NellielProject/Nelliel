@@ -69,6 +69,7 @@ use Nelliel\Tables\TableWordfilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
+use Nelliel\Tables\TablePluginConfigs;
 
 class Installer
 {
@@ -386,6 +387,13 @@ class Installer
         $ban_appeals_table = new TableBanAppeals($database, $sql_compatibility);
         $ban_appeals_table->createTable();
 
+        $plugins_table = new TablePlugins($database, $sql_compatibility);
+        $plugins_table->createTable();
+
+        // The following tables rely on the plugins and domain registry tables
+        $plugin_configs_table = new TablePluginConfigs($database, $sql_compatibility);
+        $plugin_configs_table->createTable();
+
         // The following tables are fully independent
         $image_sets_table = new TableImageSets($database, $sql_compatibility);
         $image_sets_table->createTable();
@@ -397,8 +405,6 @@ class Installer
         $rate_limit_table->createTable();
         $templates_table = new TableTemplates($database, $sql_compatibility);
         $templates_table->createTable();
-        $plugins_table = new TablePlugins($database, $sql_compatibility);
-        $plugins_table->createTable();
         $blotter_table = new TableBlotter($database, $sql_compatibility);
         $blotter_table->createTable();
         $embeds_table = new TableEmbeds($database, $sql_compatibility);
