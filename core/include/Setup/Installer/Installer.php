@@ -179,6 +179,7 @@ class Installer
         $regen = new Regen();
         $site_domain->regenCache();
         $regen->news($site_domain);
+        $regen->faq($site_domain);
         $generate_files->installDone();
 
         if ($this->ownerCreated()) {
@@ -482,6 +483,7 @@ class Installer
             }
 
             $front_end_data->getTemplate($template_id)->install($overwrite);
+            $front_end_data->getTemplate($template_id)->load();
         }
 
         echo __('Core templates installed.') . '<br>';
@@ -500,6 +502,7 @@ class Installer
             }
 
             $front_end_data->getStyle($style_id)->install($overwrite);
+            $front_end_data->getStyle($style_id)->load();
         }
 
         echo __('Core styles installed.') . '<br>';
@@ -518,6 +521,7 @@ class Installer
             }
 
             $front_end_data->getImageSet($image_set_id)->install($overwrite);
+            $front_end_data->getImageSet($image_set_id)->load();
         }
 
         echo __('Core image sets installed.') . '<br>';
