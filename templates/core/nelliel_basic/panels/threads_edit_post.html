@@ -2,26 +2,25 @@
 	<input type="hidden" name="return_url" value="{{ return_url }}">
 	<div>
 		{{^ forced_anonymous }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label" data-i18n="">Name</span>
-			<input type="text" class="new-post-form-input" name="not_anonymous" size="30" value="{{ not_anonymous_value }}" maxlength="255">
+		<label class="display-row">
+			<span class="display-cell form-label" data-i18n="">Name</span>
+			<input type="text" class="display-cell form-input" name="not_anonymous" value="{{ not_anonymous_value }}" maxlength="255">
 		</label>
-		<label class="new-post-form-row">
-			<span class="new-post-form-label" data-i18n="">E-mail</span>
-			<input class="new-post-form-input" type="text" name="spam_target" size="30" value="{{ spam_target_value }}"  maxlength="255">
+		<label class="display-row">
+			<span class="display-cell form-label" data-i18n="">E-mail</span>
+			<input class="display-cell form-input" type="text" name="spam_target" value="{{ spam_target_value }}"  maxlength="255">
 		</label>
 		{{/ forced_anonymous }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label" data-i18n="">Subject</span>
-			<input class="new-post-form-input" type="text" name="verb" size="30" value="{{ verb_value }}"  maxlength="255">
+		<label class="display-row">
+			<span class="display-cell form-label" data-i18n="">Subject</span>
+			<input class="display-cell form-input" type="text" name="verb" value="{{ verb_value }}"  maxlength="255">
 		</label>
-		<label class="new-post-form-row">
-			<span class="new-post-form-label" data-i18n="">Comment</span>
-			<textarea id="wordswordswords" class="new-post-form-input" name="wordswordswords" cols="30" rows="6">{{ wordswordswords_value }}</textarea>
+		<label class="display-row">
+			<span class="display-cell form-label" data-i18n="">Comment</span>
+			<textarea id="wordswordswords" class="display-cell form-input" name="wordswordswords">{{ wordswordswords_value }}</textarea>
 		</label>
-		<div class="new-post-form-row">
-			<span class="display-cell"></span>
-			<input type="submit" value="Update Post" data-i18n-attributes="value">
-		</div>
+	</div>
+	<div>
+		<input type="submit" value="Update Post" data-i18n-attributes="value">
 	</div>
 </form>

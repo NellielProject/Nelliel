@@ -71,7 +71,6 @@ class OutputPanelWordfilters extends Output
     public function new(array $parameters, bool $data_only)
     {
         $parameters['section'] = $parameters['section'] ?? _gettext('New');
-        $parameters['submit_add'] = true;
         return $this->edit($parameters, $data_only);
     }
 
@@ -80,8 +79,6 @@ class OutputPanelWordfilters extends Output
         $this->renderSetup();
         $this->setBodyTemplate('panels/wordfilters_edit');
         $editing = $parameters['editing'] ?? false;
-        $this->render_data['submit_add'] = $parameters['submit_add'] ?? false;
-        $this->render_data['submit_edit'] = $editing;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Wordfilters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);

@@ -74,6 +74,10 @@ function nel_typecast($value, string $datatype, bool $empty_null = true)
         return floatval($value);
     }
 
+    if ($datatype === 'array') {
+        return (array) $value;
+    }
+
     return $value;
 }
 

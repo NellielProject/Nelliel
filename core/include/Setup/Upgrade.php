@@ -29,25 +29,28 @@ class Upgrade
 <!DOCTYPE html>
 <html>
 <head>
+    <meta http-equiv="content-type"  content="text/html;charset=utf-8">
     <title>' . __('Site owner login') . '</title>
+    <link rel="stylesheet" type="text/css" href="' . NEL_STYLES_WEB_PATH . 'core/base_style.css' .
+            '">
 </head>
 <body>
     <p>' . __('Please log in with the site owner account to perform upgrades.') .
             '</p>
-    <form accept-charset="utf-8" action="imgboard.php?upgrade" method="post">
+    <form accept-charset="utf-8" action="imgboard.php?upgrade" method="post" class="display-table">
         <input type="hidden" name="upgrade_login" value="">
-        <div>
-            <label for="username">' . __('Username:') .
+        <div class="display-row">
+            <label for="username" class="display-cell form-label">' . __('Username') .
             '</label>
-            <input id="username" type="text" name="username" maxlength="255">
+            <input id="username" class="display-cell form-input" type="text" name="username" maxlength="255">
         </div>
-        <div>
-            <label for="super_sekrit">' . __('Password:') .
+        <div class="display-row">
+            <label for="super_sekrit" class="display-cell form-label">' . __('Password') .
             '</label>
-            <input id="super_sekrit" type="password" name="super_sekrit" maxlength="255">
+            <input id="super_sekrit" class="display-cell form-input" type="password" name="super_sekrit" maxlength="255">
         </div>
-        <div>
-            <input type="submit" value="' . __('Submit') . '">
+        <div class="display-row">
+            <input type="submit" class="display-cell form-input" value="' . __('Submit') . '">
         </div>
     </form>
 </body></html>';

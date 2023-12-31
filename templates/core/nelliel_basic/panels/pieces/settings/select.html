@@ -7,7 +7,7 @@
 {{/ show_raw }}
 	{{> panels/pieces/settings/setting_name }}
 	<td>
-		<select name="{{ setting_name }}[value]" id="{{ setting_name }}" {{ setting_disabled }}>
+		<select id="{{ setting_name }}" name="{{ setting_name }}[value]" {{ setting_disabled }}>
 {{# options }}
 			<option value="{{ option_value }}" {{ option_selected }}>{{ option_label }}</option>
 {{/ options }}

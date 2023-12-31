@@ -2,11 +2,11 @@
 	<div class="display-table">
 		<div class="display-row">
 			<label for="label" class="display-cell" data-i18n="">Label</label>
-			<input id="label" class="display-cell" type="text" name="label" size="30" value="{{ label }}">
+			<input id="label" class="display-cell" type="text" name="label" value="{{ label }}">
 		</div>
 		<div class="display-row">
 			<label for="url" class="display-cell" data-i18n="">URL</label>
-			<textarea id="url" class="display-cell" name="url" cols="64" rows="3">{{ url }}</textarea>
+			<textarea id="url" class="display-cell" name="url">{{ url }}</textarea>
 		</div>
 		<div class="display-row">
 			<label for="images_only" class="display-cell" data-i18n="">Images only</label>
@@ -18,10 +18,10 @@
 		</div>
 		<div class="display-row">
 			<label for="notes" class="display-cell" data-i18n="">Notes</label>
-			<textarea id="notes" class="display-cell" name="notes" cols="64" rows="3">{{ notes }}</textarea>
+			<textarea id="notes" class="display-cell" name="notes">{{ notes }}</textarea>
 		</div>
-		<div class="display-row">
-			<input type="submit" value="Update Content Op" data-i18n-attributes="value">
-		</div>
+	</div>
+	<div>
+		<input type="submit" value="Update Content Op" data-i18n-attributes="value">
 	</div>
 </form>

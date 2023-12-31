@@ -1,21 +1,22 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" class="display-table">
 	<div class="display-row">
-		<span class="display-cell" data-i18n="">User ID:</span>
-		<input class="display-cell" type="text" name="register_username" size="25" maxlength="50">
+		<span class="display-cell form-label" data-i18n="">User ID</span>
+		<input class="display-cell form-input" type="text" name="register_username" maxlength="50">
 	</div>
 	<div class="display-row">
-		<span class="display-cell" data-i18n="">Password:</span>
-		<input class="display-cell" type="password" name="register_super_sekrit" size="25" maxlength="{{ super_sekrit_max_length }}">
+		<span class="display-cell form-label" data-i18n="">Password</span>
+		<input class="display-cell form-input" type="password" name="register_super_sekrit" maxlength="{{ super_sekrit_max_length }}">
 	</div>
 	<div class="display-row">
-		<span class="display-cell" data-i18n="">Confirm password:</span>
-		<input class="display-cell" type="password" name="register_super_sekrit_confirm" size="25" maxlength="{{ super_sekrit_max_length }}">
+		<span class="display-cell form-label" data-i18n="">Confirm password</span>
+		<input class="display-cell form-input" type="password" name="register_super_sekrit_confirm" maxlength="{{ super_sekrit_max_length }}">
 	</div>
 	{{# captchas }}
 		{{> pieces/captcha }}
 	{{/ captchas }}
 	<div class="display-row">
-		<span class="display-cell"></span><input class="display-cell" type="submit" value="Submit" data-i18n-attributes="value">
+		<span class="display-cell"></span>
+		<input class="display-cell form-input" type="submit" value="Submit" data-i18n-attributes="value">
 	</div>
 </form>
 <div>

@@ -24,7 +24,7 @@ class AdminBans extends Admin
         $this->panel_name = _gettext('Bans');
     }
 
-    public function panel(int $page): void
+    public function panel(int $page = 1): void
     {
         $this->verifyPermissions($this->domain, 'perm_view_bans');
         $output_panel = new OutputPanelBans($this->domain, false);

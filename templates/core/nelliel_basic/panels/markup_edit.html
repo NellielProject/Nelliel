@@ -1,33 +1,33 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="label" class="display-cell" data-i18n="">Label</label>
-			<input id="label" class="display-cell" type="text" name="label" size="30" value="{{ label }}">
+			<label for="label" class="display-cell form-label" data-i18n="">Label</label>
+			<input id="label" class="display-cell form-input" type="text" name="label" value="{{ label }}">
 		</div>
 		<div class="display-row">
-			<label for="match_regex" class="display-cell" data-i18n="">Match</label>
-			<textarea id="match_regex" class="display-cell" name="match_regex" cols="64" rows="3">{{ match_regex }}</textarea>
+			<label for="match_regex" class="display-cell form-label" data-i18n="">Match</label>
+			<textarea id="match_regex" class="display-cell form-input" name="match_regex">{{ match_regex }}</textarea>
 		</div>
 		<div class="display-row">
-			<label for="replacement" class="display-cell" data-i18n="">Replace</label>
-			<textarea id="replacement" class="display-cell" name="replacement" cols="64" rows="3">{{ replacement }}</textarea>
+			<label for="replacement" class="display-cell form-label" data-i18n="">Replace</label>
+			<textarea id="replacement" class="display-cell form-input" name="replacement">{{ replacement }}</textarea>
 		</div>
 		<div class="display-row">
-			<label for="type" class="display-cell" data-i18n="">Type</label>
+			<label for="type" class="display-cell form-label" data-i18n="">Type</label>
 {{# type_select }}
 				{{> menu/select }}
 {{/ type_select }}
 		</div>
 		<div class="display-row">
-			<label for="enabled" class="display-cell" data-i18n="">Enabled</label>
-			<input id="enabled" class="display-cell" type="checkbox" value="1" name="enabled" {{ enabled }}>
+			<label for="enabled" class="display-cell form-label" data-i18n="">Enabled</label>
+			<input id="enabled" class="display-cell form-input" type="checkbox" value="1" name="enabled" {{ enabled }}>
 		</div>
 		<div class="display-row">
-			<label for="notes" class="display-cell" data-i18n="">Notes</label>
-			<textarea id="notes" class="display-cell" name="notes" cols="64" rows="3">{{ notes }}</textarea>
+			<label for="notes" class="display-cell form-label" data-i18n="">Notes</label>
+			<textarea id="notes" class="display-cell form-input" name="notes">{{ notes }}</textarea>
 		</div>
-		<div class="display-row">
-			<input type="submit" value="Update Markup" data-i18n-attributes="value">
-		</div>
+	</div>
+	<div>
+		<input type="submit" value="Update Markup" data-i18n-attributes="value">
 	</div>
 </form>

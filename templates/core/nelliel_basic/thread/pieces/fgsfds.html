@@ -1,7 +1,7 @@
-<label class="new-post-form-row">
-	<span class="new-post-form-label">{{{ fgsfds_field_label }}}</span>
+<label class="display-row">
+	<span class="display-cell form-label">{{{ fgsfds_field_label }}}</span>
 	{{^ use_fgsfds_menu }}
-	<input class="new-post-form-input" type="text" name="new_post[post_info][fgsfds]" size="30" placeholder="{{ fgsfds_field_placeholder }}">
+	<input class="display-cell form-input" type="text" name="new_post[post_info][fgsfds]" placeholder="{{ fgsfds_field_placeholder }}">
 	{{/ use_fgsfds_menu }}
 	{{# use_fgsfds_menu }}
 	<select name="new_post[post_info][fgsfds]" class="fgsfds-menu">

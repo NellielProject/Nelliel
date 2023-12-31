@@ -220,6 +220,7 @@ class OutputPanelBans extends Output
         $this->render_data['ban_length'] = $ban_hammer->getData('length');
         $this->render_data['global'] = ($ban_hammer->getData('board_id') === Domain::GLOBAL) ? 'checked' : '';
         $this->render_data['start_time'] = $ban_hammer->getData('start_time');
+        $this->render_data['expiration'] = $ban_hammer->getData('start_time') + $ban_hammer->getData('length');
         $this->render_data['ban_reason'] = $ban_hammer->getData('reason');
         $this->render_data['seen'] = $ban_hammer->getData('seen');
         $this->render_data['creator'] = $ban_hammer->getData('creator');

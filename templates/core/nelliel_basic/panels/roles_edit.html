@@ -1,26 +1,26 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="role_id" class="display-cell" data-i18n="">Role ID</label>
-			<input id="role_id" class="display-cell" type="text" name="role_id" size="30" value="{{ role_id }}">
+			<label for="role_id" class="display-cell form-label" data-i18n="">Role ID</label>
+			<input id="role_id" class="display-cell form-input" type="text" name="role_id" value="{{ role_id }}">
 		</div>
 		<div class="display-row">
-			<label for="role_level" class="display-cell" data-i18n="">Role Level</label>
-			<input id="role_level" class="display-cell" type="text" name="role_level" size="8" value="{{ role_level }}">
+			<label for="role_level" class="display-cell form-label" data-i18n="">Role Level</label>
+			<input id="role_level" class="display-cell form-input" type="text" name="role_level" value="{{ role_level }}">
 		</div>
 		<div class="display-row">
-			<label for="role_title" class="display-cell" data-i18n="">Role Title</label>
-			<input id="role_title" class="display-cell" type="text" name="role_title" size="30" value="{{ role_title }}">
+			<label for="role_title" class="display-cell form-label" data-i18n="">Role Title</label>
+			<input id="role_title" class="display-cell form-input" type="text" name="role_title" value="{{ role_title }}">
 		</div>
 		<div class="display-row">
-			<label for="capcode" class="display-cell" data-i18n="">Capcode ID</label>
-			<input id="capcode" class="display-cell" type="text" name="capcode" size="30" value="{{ capcode }}">
+			<label for="capcode" class="display-cell form-label" data-i18n="">Capcode ID</label>
+			<input id="capcode" class="display-cell form-input" type="text" name="capcode" value="{{ capcode }}">
 		</div>
 		<hr>
 		{{# permissions_list }}
 		<div class="display-row">
-			<input type="hidden" name="{{ permission }}[default]" value="0">
-			<input id="{{ permission }}" type="checkbox" name="{{ permission }}[value]" value="1" {{ checked }}>
+			<span class="display-cell"></span>
+			<input id="{{ permission }}" class="display-cell form-input" type="checkbox" name="{{ permission }}" value="1" {{ checked }}>
 			<label for="{{ permission }}">{{ description }}</label>
 		</div>
 		{{/ permissions_list }}

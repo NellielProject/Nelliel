@@ -75,8 +75,7 @@ class OutputPanelBoardConfig extends Output
             $category_output['category_max_size'] = intval(
                 $filetypes->categorySetting($this->domain, $category, 'max_size'));
 
-            if (isset($enabled_array[$category_data['category']]) &&
-                $enabled_array[$category_data['category']]['enabled']) {
+            if ($enabled_array[$category_data['category']]['enabled'] ?? false) {
                 $category_output['category_select']['checked'] = 'checked';
             }
 

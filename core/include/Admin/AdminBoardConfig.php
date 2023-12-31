@@ -52,21 +52,21 @@ class AdminBoardConfig extends Admin
         foreach ($board_settings as $setting) {
             $setting_name = $setting['setting_name'];
             $config = $config_list[$setting_name] ?? array();
-
-            if (!isset($_POST[$setting_name])) {
-                continue;
-            }
-
             $raw_output = $setting['raw_output'] ?? false;
             $constructed = false;
             $old_value = nel_typecast($config['setting_value'] ?? '', $setting['data_type']);
             $config_stored_raw = boolval($config['stored_raw'] ?? false);
-            $new_value = $_POST[$setting_name];
+
+            if ($setting['data_type'] === 'boolean') {
+                $new_value = $_POST[$setting_name] ?? false;
+            } else {
+                $new_value = $_POST[$setting_name] ?? $old_value;
+            }
 
             if (!$user_can_raw_html) {
                 $store_raw = false;
             } else {
-                $store_raw = (bool) nel_form_input_default($_POST[$setting_name]['store_raw'] ?? array()) && $raw_output;
+                $store_raw = boolval($_POST[$setting_name]['store_raw'] ?? false) && $raw_output;
             }
 
             if ($setting_name === 'enabled_filetypes') {
@@ -77,12 +77,12 @@ class AdminBoardConfig extends Admin
                         continue;
                     }
 
-                    $filetypes_array[$category]['enabled'] = nel_form_input_default($entries['enabled']) === '1';
-                    $filetypes_array[$category]['max_size'] = intval($entries['max_size']);
+                    $filetypes_array[$category]['enabled'] = boolval($entries['enabled'] ?? false);
+                    $filetypes_array[$category]['max_size'] = intval($entries['max_size'] ?? 0);
                     $formats = $entries['formats'] ?? array();
 
                     foreach ($formats as $format => $entries) {
-                        if (nel_form_input_default($entries['enabled']) === '1') {
+                        if ($entries['enabled']) {
                             $filetypes_array[$category]['formats'][] = $format;
                         }
                     }
@@ -93,8 +93,8 @@ class AdminBoardConfig extends Admin
             } else if ($setting_name === 'enabled_styles') {
                 $styles_array = array();
 
-                foreach ($new_value as $style => $entries) {
-                    $style_enabled = nel_form_input_default($entries) === '1';
+                foreach ((array) $new_value as $style => $entries) {
+                    $style_enabled = boolval($entries['enabled'] ?? false);
 
                     if ($style_enabled) {
                         $styles_array[] = $style;
@@ -106,8 +106,8 @@ class AdminBoardConfig extends Admin
             } else if ($setting_name === 'enabled_content_ops') {
                 $content_ops_array = array();
 
-                foreach ($new_value as $content_op => $entries) {
-                    $content_op_enabled = nel_form_input_default($entries) === '1';
+                foreach ((array) $new_value as $content_op => $entries) {
+                    $content_op_enabled = boolval($entries['enabled'] ?? false);
 
                     if ($content_op_enabled) {
                         $content_ops_array[] = $content_op;
@@ -117,8 +117,9 @@ class AdminBoardConfig extends Admin
                 $new_value = json_encode($content_ops_array);
                 $constructed = true;
             } else {
-                $new_value = nel_form_input_default($new_value);
-                $new_value = nel_typecast($new_value, $setting['data_type'], false);
+                if (is_array($new_value)) {
+                    $new_value = nel_typecast($new_value['value'], $setting['data_type'], false);
+                }
             }
 
             if ($old_value != $new_value || ($user_can_raw_html && $config_stored_raw !== $store_raw)) {

@@ -309,27 +309,8 @@ td {
 	margin: auto;
 }
 
-.new-post-form-row {
-	display: table-row;
-}
-
-.new-post-form-label {
-	display: table-cell;
-	background: var(--new-post-form-label-background);
-	font-weight: bold;
-	padding: 3px 5px 3px 5px;
-	background-clip: padding-box;
-	border: var(--new-post-form-label-border);
-	vertical-align: middle;
-}
-
-.new-post-form-input {
-	display: table-cell;
-	padding: 5px;
-}
-
 .posting-rules-list {
-	font-size: 0.85rem;
+	font-size: var(--posting-rules-list-font-size, 0.85rem);
 }
 
 /* Files */
@@ -354,7 +335,7 @@ td {
 }
 
 .file-header {
-
+	font-size: 1.0rem;
 }
 
 .single.file-header {
@@ -656,26 +637,6 @@ td {
 	margin: 1.0rem 0.5rem;
 }
 
-/* Installer */
-
-.installer-form {
-	display: table;
-}
-
-.installer-form-row {
-	display: table-row;
-}
-
-.installer-form-label {
-	display: table-cell;
-	padding: 3px;
-}
-
-.installer-form-input {
-	display: table-cell;
-	margin: 3px;
-}
-
 /* Other */
 .label {
 	margin-right: 0.2em;
@@ -788,24 +749,25 @@ td {
 	text-decoration: none;
 }
 
-.link-button {
-	background-color: transparent;
-	border: 0;
-	color: var(--link-color);
-	font-family: var(--base-font-family, sans-serif);
-	font-size: var(--base-font-size, 100%);
-	cursor: pointer;
-	text-decoration: underline;
-}
-
-.link-button:hover {
-	color: var(--link-hover-color);
-}
-
 .shadow-thread-header {
 	font-weight: bold;
 }
 
 .upload-meta {
 	text-align: left;
+}
+
+.form-label {
+	background: var(--form-label-background, inherit);
+	color: var(--form-label-color, inherit);
+	font-weight: var(--form-label-font-weight, bold);
+	padding: 3px 5px 3px 5px;
+	background-clip: padding-box;
+	border: var(--form-label-border, inherit);
+	vertical-align: middle;
+}
+
+.form-input {
+	padding: 3px;
+	vertical-align: middle;
 }

@@ -1,46 +1,45 @@
 <form accept-charset="utf-8" action="{{ form_action }}" method="post" enctype="multipart/form-data">
 	<div class="display-table">
 		<div class="display-row">
-			<label for="username" class="display-cell" data-i18n="">User ID</label>
-			<input id="username" class="display-cell" type="text" name="username" id="bname" size="30" value="{{ username }}">
+			<label for="username" class="display-cell form-label" data-i18n="">User ID</label>
+			<input id="username" class="display-cell form-input" type="text" name="username" id="bname" value="{{ username }}">
 		</div>
 		<div class="display-row">
-			<label for="user_password" class="display-cell" data-i18n="">New password (leave blank to keep current password)</label>
-			<input id="user_password" class="display-cell" type="text" name="user_password" size="30">
+			<label for="user_password" class="display-cell form-label" data-i18n="">New password (leave blank to keep current password)</label>
+			<input id="user_password" class="display-cell form-input" type="text" name="user_password">
 		</div>
-		{{^ is_site_owner }}
+{{^ is_site_owner }}
 		<div class="display-row">
-			<input type="hidden" name="active[default]" value="0">
-			<input id="user_active" type="checkbox" name="active[value]" value="1" {{ active }}>
-			<label for="user_active" data-i18n="">User is active</label>
+			<label for="user_active" class="display-cell form-label" data-i18n="">User is active</label>
+			<input id="user_active" class="display-cell form-input" type="checkbox" name="active" value="1" {{ active }}>
 		</div>
-		{{/ is_site_owner }}
+{{/ is_site_owner }}
 	</div>
 	<hr>
-	{{^ is_site_owner }}
+{{^ is_site_owner }}
 	<div class="display-table">
 		<div class="display-row">
 			<span>User Roles</span>
 		</div>
-		{{# special_domain_roles }}
+	{{# special_domain_roles }}
 		<div class="display-row">
 			<label for="{{ select_id }}" class="display-cell">{{ domain_name }}</label>
-			{{# roles }}
+		{{# roles }}
 				{{> panels/pieces/options_menu }}
-			{{/ roles }}
+		{{/ roles }}
 		</div>
-		{{/ special_domain_roles }}
+	{{/ special_domain_roles }}
 		<hr>
-		{{# domain_roles }}
+	{{# domain_roles }}
 		<div class="display-row">
 			<label for="{{ select_id }}" class="display-cell">{{ domain_name }}</label>
-			{{# roles }}
+		{{# roles }}
 				{{> panels/pieces/options_menu }}
-			{{/ roles }}
+		{{/ roles }}
 		</div>
-		{{/ domain_roles }}
+	{{/ domain_roles }}
 	</div>
-	{{/ is_site_owner }}
+{{/ is_site_owner }}
 	<div>
 		<input type="submit" value="Update User" data-i18n-attributes="value">
 	</div>

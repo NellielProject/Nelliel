@@ -205,28 +205,28 @@ class Installer
                 '/account/register" method="post">
         <input type="hidden" name="create_owner" value="' . $install_id .
                 '"
-        <div class="installer-form">
-            <div class="installer-form-row">
-                <label for="register_username" class="installer-form-label">' . __('Username:') .
+        <div class="display-table">
+            <div class="display-row">
+                <label for="register_username" class="display-cell display-cell form-label">' . __('Username') .
                 '</label>
-                <input id="register_username" class="installer-form-input" type="text" name="register_username" maxlength="255">
+                <input id="register_username" class="display-cell display-cell form-input" type="text" name="register_username" maxlength="255">
             </div>
-            <div class="installer-form-row">
-                <label for="register_super_sekrit" class="installer-form-label">' . __('Password:') .
+            <div class="display-row">
+                <label for="register_super_sekrit" class="display-cell display-cell form-label">' . __('Password') .
                 '</label>
-                <input id="register_super_sekrit" class="installer-form-input" type="password" name="register_super_sekrit" maxlength="' .
+                <input id="register_super_sekrit" class="display-cell display-cell form-input" type="password" name="register_super_sekrit" maxlength="' .
                 nel_crypt_config()->accountPasswordOptions()['max_length'] .
                 '">
             </div>
-            <div class="installer-form-row">
-                <label for="register_super_sekrit_confirm" class="installer-form-label">' . __('Confirm password:') .
+            <div class="display-row">
+                <label for="register_super_sekrit_confirm" class="display-cell display-cell form-label">' . __('Confirm password') .
                 '</label>
-                <input id="register_super_sekrit_confirm" class="installer-form-input" type="password" name="register_super_sekrit_confirm" maxlength="' .
+                <input id="register_super_sekrit_confirm" class="display-cell display-cell form-input" type="password" name="register_super_sekrit_confirm" maxlength="' .
                 nel_crypt_config()->accountPasswordOptions()['max_length'] .
                 '">
             </div>
-            <div class="installer-form-row">
-                <input class="installer-form-input" type="submit" value="' . __('Submit') .
+            <div class="display-row">
+                <input class="display-cell display-cell form-input" type="submit" value="' . __('Submit') .
                 '">
             </div>
         </div>

@@ -66,7 +66,7 @@ class PrivateMessage
     public function changeData(string $key, $new_data)
     {
         $old_data = $this->data($key);
-        $this->data[$key] = TablePrivateMessages::typeCast([$key => $new_data]);
+        $this->data[$key] = TablePrivateMessages::typeCastValue($key, $new_data);
         return $old_data;
     }
 

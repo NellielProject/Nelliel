@@ -14,9 +14,9 @@ function nel_early_derp(int $error_id, string $error_message, array $context = a
 {
     echo _gettext('oh god how did this get in here');
     echo '<br>';
-    echo _gettext('Error ID: ') . $error_id;
+    echo _gettext('Error') . ' ' . $error_id;
     echo '<br>';
-    echo _gettext('Error Message: ') . $error_message;
+    echo $error_message;
     die();
 }
 
