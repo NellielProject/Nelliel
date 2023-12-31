@@ -2101,6 +2101,12 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
+                // Update setting options table
+                nel_database('core')->exec(
+                    'UPDATE "nelliel_setting_options" SET "menu_data" = \'{"Filtered original": "filtered_original", "Unix timestamp": "timestamp", "MD5": "md5", "SHA1": "sha1", "SHA256": "sha256", "SHA512": "sha512"}\' WHERE "setting_name" = \'preferred_filename\'');
+
+                echo ' - ' . __('Setting options table updated.') . '<br>';
+
                 // Add plugin config table
                 $plugin_config_table = new TablePluginConfigs(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $plugin_config_table->createTable();
