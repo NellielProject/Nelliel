@@ -34,6 +34,7 @@ if (!$installer->checkInstallDone()) {
     nel_derp(107, _gettext('Installation has not been done yet or is not complete.'));
 }
 
+unset($translator);
 unset($installer);
 
 $upgrade = new Upgrade($file_handler);
@@ -48,6 +49,7 @@ if (isset($_GET['upgrade'])) {
     }
 }
 
+unset($upgrade);
 unset($file_handler);
 
 require_once NEL_INCLUDE_PATH . 'crypt.php';
