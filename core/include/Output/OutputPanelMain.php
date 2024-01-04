@@ -26,102 +26,159 @@ class OutputPanelMain extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        $this->render_data['module_manage_boards'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_boards');
-        $this->render_data['manage_boards_url'] = nel_build_router_url([$this->domain->uri(), 'manage-boards']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_boards')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'manage-boards']);
+            $info['name'] = __('Manage Boards');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_users'] = $this->session->user()->checkPermission($this->domain, 'perm_view_users');
-        $this->render_data['users_url'] = nel_build_router_url([$this->domain->uri(), 'users']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_modify_site_config')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'config']);
+            $info['name'] = __('Site Config');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_roles'] = $this->session->user()->checkPermission($this->domain, 'perm_view_roles');
-        $this->render_data['roles_url'] = nel_build_router_url([$this->domain->uri(), 'roles']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_modify_board_defaults')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'board-defaults']);
+            $info['name'] = __('Board Defaults');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_permissions'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_permissions');
-        $this->render_data['permissions_url'] = nel_build_router_url([$this->domain->uri(), 'permissions']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_view_users')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'users']);
+            $info['name'] = __('Site Config');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_site_config'] = $this->session->user()->checkPermission($this->domain,
-            'perm_modify_site_config');
-        $this->render_data['site_config_url'] = nel_build_router_url([$this->domain->uri(), 'config']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_view_roles')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'roles']);
+            $info['name'] = __('Roles');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_file_filters');
-        $this->render_data['file_filters_url'] = nel_build_router_url([$this->domain->uri(), 'file-filters']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_permissions')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'permissions']);
+            $info['name'] = __('Permissions');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_board_defaults'] = $this->session->user()->checkPermission($this->domain,
-            'perm_modify_board_defaults');
-        $this->render_data['board_defaults_url'] = nel_build_router_url([$this->domain->uri(), 'board-defaults']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_styles')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'styles']);
+            $info['name'] = __('Styles');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_view_bans');
-        $this->render_data['bans_url'] = nel_build_router_url([$this->domain->uri(), 'bans']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_templates')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'templates']);
+            $info['name'] = __('Templates');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
-            'perm_view_reports');
-        $this->render_data['reports_url'] = nel_build_router_url([$this->domain->uri(), 'reports']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_image_sets')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'image-sets']);
+            $info['name'] = __('Image Sets');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_templates'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_templates');
-        $this->render_data['templates_url'] = nel_build_router_url([$this->domain->uri(), 'templates']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_filetypes')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'filetypes']);
+            $info['name'] = __('Filetypes');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_filetypes'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_filetypes');
-        $this->render_data['filetypes_url'] = nel_build_router_url([$this->domain->uri(), 'filetypes']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_news')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'news']);
+            $info['name'] = __('News');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_styles'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_styles');
-        $this->render_data['styles_url'] = nel_build_router_url([$this->domain->uri(), 'styles']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_blotter')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'blotter']);
+            $info['name'] = __('Blotter');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_image_sets'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_image_sets');
-        $this->render_data['image_sets_url'] = nel_build_router_url([$this->domain->uri(), 'image-sets']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_pages')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'pages']);
+            $info['name'] = __('Static Pages');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_news'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_news');
-        $this->render_data['news_url'] = nel_build_router_url([$this->domain->uri(), 'news']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_embeds')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'embeds']);
+            $info['name'] = __('Embeds');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_wordfilters');
-        $this->render_data['wordfilters_url'] = nel_build_router_url([$this->domain->uri(), 'wordfilters']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_content_ops')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'content-ops']);
+            $info['name'] = __('Content Ops');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_blotter'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_blotter');
-        $this->render_data['blotter_url'] = nel_build_router_url([$this->domain->uri(), 'blotter']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_capcodes')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'capcodes']);
+            $info['name'] = __('Capcodes');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_pages'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_pages');
-        $this->render_data['pages_url'] = nel_build_router_url([$this->domain->uri(), 'pages']);
-        ;
-        $this->render_data['module_embeds'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_embeds');
-        $this->render_data['embeds_url'] = nel_build_router_url([$this->domain->uri(), 'embeds']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_noticeboard')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'noticeboard']);
+            $info['name'] = __('Noticeboard');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_content_ops'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_content_ops');
-        $this->render_data['content_ops_url'] = nel_build_router_url([$this->domain->uri(), 'content-ops']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_markup')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'markup']);
+            $info['name'] = __('Markup');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_capcodes'] = $this->session->user()->checkPermission($this->domain,
-            'perm_capcodes_manage');
-        $this->render_data['capcodes_url'] = nel_build_router_url([$this->domain->uri(), 'capcodes']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_scripts')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'scripts']);
+            $info['name'] = __('Scripts');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_noticeboard'] = $this->session->user()->checkPermission($this->domain,
-            'perm_noticeboard_view');
-        $this->render_data['noticeboard_url'] = nel_build_router_url([$this->domain->uri(), 'noticeboard']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_logs')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'logs']);
+            $info['name'] = __('Logs');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_plugins'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_plugins');
-        $this->render_data['plugins_url'] = nel_build_router_url([$this->domain->uri(), 'plugins']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_plugins')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'plugins']);
+            $info['name'] = __('Plugins');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_markup'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_markup');
-        $this->render_data['markup_url'] = nel_build_router_url([$this->domain->uri(), 'markup']);
-
-        $this->render_data['module_scripts'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_scripts');
-        $this->render_data['scripts_url'] = nel_build_router_url([$this->domain->uri(), 'scripts']);
-
-        $this->render_data['module_logs'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_scripts');
-        $this->render_data['logs_url'] = nel_build_router_url([$this->domain->uri(), 'logs']);
-
-        $this->render_data['module_plugin_controls'] = true;
-        $this->render_data['plugin_controls_url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
+        if (true) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
+            $info['name'] = __('Plugin Controls');
+            $this->render_data['control_panels'][] = $info;
+        }
 
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_overboard');
@@ -158,23 +215,47 @@ class OutputPanelMain extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_view_bans');
-        $this->render_data['bans_url'] = nel_build_router_url([$this->domain->uri(), 'bans']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_view_bans')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'bans']);
+            $info['name'] = __('Ban Controls');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
-            'perm_view_reports');
-        $this->render_data['reports_url'] = nel_build_router_url([$this->domain->uri(), 'reports']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_view_reports')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'reports']);
+            $info['name'] = __('Reports');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_file_filters');
-        $this->render_data['file_filters_url'] = nel_build_router_url([$this->domain->uri(), 'file-filters']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_file_filters')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'file-filters']);
+            $info['name'] = __('File Filters');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_wordfilters');
-        $this->render_data['wordfilters_url'] = nel_build_router_url([$this->domain->uri(), 'wordfilters']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_wordfilters')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'wordfilters']);
+            $info['name'] = __('Wordilters');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_plugin_controls'] = true;
-        $this->render_data['plugin_controls_url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_pages')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'pages']);
+            $info['name'] = __('Static Pages');
+            $this->render_data['control_panels'][] = $info;
+        }
+
+        if (true) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
+            $info['name'] = __('Plugin Controls');
+            $this->render_data['control_panels'][] = $info;
+        }
 
         $this->render_data['global_regen_board_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_pages');
@@ -204,36 +285,64 @@ class OutputPanelMain extends Output
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        $this->render_data['module_bans'] = $this->session->user()->checkPermission($this->domain, 'perm_view_bans');
-        $this->render_data['bans_url'] = nel_build_router_url([$this->domain->uri(), 'bans']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_view_bans')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'bans']);
+            $info['name'] = __('Ban Controls');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_reports'] = $this->session->user()->checkPermission($this->domain,
-            'perm_view_reports');
-        $this->render_data['reports_url'] = nel_build_router_url([$this->domain->uri(), 'reports']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_view_reports')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'reports']);
+            $info['name'] = __('Reports');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_file_filters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_file_filters');
-        $this->render_data['file_filters_url'] = nel_build_router_url([$this->domain->uri(), 'file-filters']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_file_filters')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'file-filters']);
+            $info['name'] = __('File Filters');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_wordfilters');
-        $this->render_data['wordfilters_url'] = nel_build_router_url([$this->domain->uri(), 'wordfilters']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_wordfilters')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'wordfilters']);
+            $info['name'] = __('Wordilters');
+            $this->render_data['control_panels'][] = $info;
+        }
 
-        $this->render_data['module_board_config'] = $this->session->user()->checkPermission($this->domain,
-            'perm_modify_board_config');
-        $this->render_data['board_config_url'] = nel_build_router_url([$this->domain->uri(), 'config']);
+        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_pages')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'pages']);
+            $info['name'] = __('Static Pages');
+            $this->render_data['control_panels'][] = $info;
+        }
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_modify_board_config')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'config']);
+            $info['name'] = __('Board Config');
+            $this->render_data['control_panels'][] = $info;
+        }
+
+        if (true) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
+            $info['name'] = __('Plugin Controls');
+            $this->render_data['control_panels'][] = $info;
+        }
+
+        if ($this->session->user()->checkPermission($this->domain, 'perm_mod_mode')) {
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri()], true, 'modmode');
+            $info['name'] = __('Moderator Mode');
+            $this->render_data['control_panels'][] = $info;
+        }
 
         // $this->render_data['module_threads'] = true;
         // $this->render_data['threads_url'] = nel_build_router_url([$this->domain->uri(), 'threads']);
-
-        $this->render_data['module_pages'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_pages');
-        $this->render_data['pages_url'] = nel_build_router_url([$this->domain->uri(), 'pages']);
-
-        $this->render_data['module_modmode'] = $this->session->user()->checkPermission($this->domain, 'perm_mod_mode');
-        $this->render_data['modmode_url'] = nel_build_router_url([$this->domain->uri()], true, 'modmode');
-
-        $this->render_data['module_plugin_controls'] = true;
-        $this->render_data['plugin_controls_url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
 
         $this->render_data['regen_board_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_pages');
