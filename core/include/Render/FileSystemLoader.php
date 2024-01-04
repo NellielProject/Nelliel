@@ -28,7 +28,13 @@ class FileSystemLoader implements Mustache_Loader
     public function load($name): string
     {
         if (!isset($this->templates[$name])) {
-            $this->templates[$name] = new Template($this->default_base_path, $name, $this->extension);
+            $split = explode('<>', $name);
+
+            if (is_array($split) && isset($split[1])) {
+                $this->templates[$name] = new Template($split[0], $split[1], $this->extension);
+            } else {
+                $this->templates[$name] = new Template($this->default_base_path, $name, $this->extension);
+            }
         }
 
         if (isset($this->substitute_templates[$name])) {

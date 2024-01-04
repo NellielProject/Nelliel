@@ -117,9 +117,11 @@ class OutputPanelMain extends Output
             'perm_manage_scripts');
         $this->render_data['scripts_url'] = nel_build_router_url([$this->domain->uri(), 'scripts']);
 
-        $this->render_data['module_logs'] = $this->session->user()->checkPermission($this->domain,
-            'perm_manage_scripts');
+        $this->render_data['module_logs'] = $this->session->user()->checkPermission($this->domain, 'perm_manage_scripts');
         $this->render_data['logs_url'] = nel_build_router_url([$this->domain->uri(), 'logs']);
+
+        $this->render_data['module_plugin_controls'] = true;
+        $this->render_data['plugin_controls_url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
 
         $this->render_data['regen_overboard_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_overboard');
@@ -170,6 +172,9 @@ class OutputPanelMain extends Output
         $this->render_data['module_wordfilters'] = $this->session->user()->checkPermission($this->domain,
             'perm_manage_wordfilters');
         $this->render_data['wordfilters_url'] = nel_build_router_url([$this->domain->uri(), 'wordfilters']);
+
+        $this->render_data['module_plugin_controls'] = true;
+        $this->render_data['plugin_controls_url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
 
         $this->render_data['global_regen_board_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_pages');
@@ -227,6 +232,9 @@ class OutputPanelMain extends Output
         $this->render_data['module_modmode'] = $this->session->user()->checkPermission($this->domain, 'perm_mod_mode');
         $this->render_data['modmode_url'] = nel_build_router_url([$this->domain->uri()], true, 'modmode');
 
+        $this->render_data['module_plugin_controls'] = true;
+        $this->render_data['plugin_controls_url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
+
         $this->render_data['regen_board_pages'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_pages');
         $this->render_data['regen_pages_url'] = nel_build_router_url([$this->domain->uri(), 'regen', 'pages']);
@@ -234,6 +242,38 @@ class OutputPanelMain extends Output
         $this->render_data['regen_board_caches'] = $this->session->user()->checkPermission($this->domain,
             'perm_regen_cache');
         $this->render_data['regen_caches_url'] = nel_build_router_url([$this->domain->uri(), 'regen', 'cache']);
+
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
+        $this->render_data['footer'] = $output_footer->manage([], true);
+        $output = $this->output('basic_page', $data_only, true, $this->render_data);
+        echo $output;
+        return $output;
+    }
+
+    public function plugin_controls(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $this->setBodyTemplate('panels/main_plugin_controls');
+        $parameters['panel'] = $parameters['panel'] ?? __('Main');
+        $parameters['section'] = $parameters['section'] ?? __('Plugin Controls');
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
+        $plugin_ids = nel_plugins()->processHook('nel-inb4-plugin-controls-list', [$this->domain], array());
+
+        foreach ($plugin_ids as $plugin_id) {
+            $plugin = nel_plugins()->getPlugin($plugin_id);
+
+            if (!$plugin->enabled()) {
+                continue;
+            }
+
+            $info = array();
+            $info['url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls', $plugin_id]);
+            $info['name'] = $plugin->info('name');
+            $this->render_data['plugins'][] = $info;
+        }
 
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);

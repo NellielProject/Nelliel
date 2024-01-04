@@ -210,8 +210,7 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchLogs';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'], '/{log_set:system|public|combined}[/{page:\d+}]',
-                            $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{log_set:system|public|combined}[/{page:\d+}]', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:' . $site_domain . '}/{module:news}',
@@ -258,6 +257,7 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchMainPanel';
                         $r->addRoute(['GET'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:plugin-controls}', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:' . $site_domain . '}/{module:boardlist}',
@@ -357,6 +357,13 @@ class Router
                         $r->addRoute(['POST'], '/{ip:[^\/]+}/{section:add-note}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{ip:[^\/]+}/{section:delete-note}/{note-id:\d+}',
                             $dispatch_class);
+                    });
+
+                $r->addGroup('/{domain_id:[^\/]+}/{module:plugin-controls}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchPluginControls';
+                        $r->addRoute(['GET'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{id:[^\/]+}', $dispatch_class);
                     });
 
                 // For now this is ALWAYS last

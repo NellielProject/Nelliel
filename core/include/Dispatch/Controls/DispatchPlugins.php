@@ -30,11 +30,13 @@ class DispatchPlugins extends Dispatch
             case 'install':
                 $this->verifyPermissions($this->domain, 'perm_manage_plugins');
                 nel_plugins()->getPlugin($plugin_id)->install();
+                nel_plugins()->processHook('nel-in-after-plugin-install', [$plugin_id]);
                 break;
 
             case 'uninstall':
                 $this->verifyPermissions($this->domain, 'perm_manage_plugins');
                 nel_plugins()->getPlugin($plugin_id)->uninstall();
+                nel_plugins()->processHook('nel-in-after-plugin-uninstall', [$plugin_id]);
                 break;
 
             case 'enable':

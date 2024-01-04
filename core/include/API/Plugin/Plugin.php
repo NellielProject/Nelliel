@@ -115,8 +115,6 @@ class Plugin
         if (!nel_true_empty($installer_file) && file_exists($directory . '/' . $installer_file)) {
             include $directory . '/' . $installer_file;
         }
-
-        $this->processHook('nel-in-after-plugin-install', [$this->id()]);
     }
 
     /**
@@ -132,7 +130,6 @@ class Plugin
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PLUGINS_TABLE . '" WHERE "plugin_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
-        $this->processHook('nel-in-after-plugin-uninstall', [$this->id()]);
     }
 
     /**
