@@ -222,6 +222,8 @@ Error 443: perm_delete_ip_notes (Dispatch/DispatchIPInfo.php)
 
 Error 450: perm_manage_plugins (Dispatch/DispatchPlugins.php)  
 
+Error 455: perm_access_plugin_controls (Dispatch/DispatchPluginControls.php)  
+
 Error 500: perm_regen_pages (site) (Dispatch/DispatchRegen.php)  
 Error 501: perm_regen_cache (site) (Dispatch/DispatchRegen.php)  
 Error 502: perm_regen_pages (global) (Dispatch/DispatchRegen.php)  

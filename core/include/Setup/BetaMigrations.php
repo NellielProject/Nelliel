@@ -2113,6 +2113,13 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Added plugin config table.') . '<br>';
 
+                // Update permissions and role permissions tables
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaultRow(['perm_access_plugin_controls', 'Access plugin control panels.']);
+                $this->addRolePermission('perm_access_plugin_controls');
+
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
                 $migration_count ++;
         }
 

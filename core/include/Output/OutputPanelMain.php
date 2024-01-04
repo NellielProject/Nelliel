@@ -173,7 +173,7 @@ class OutputPanelMain extends Output
             $this->render_data['control_panels'][] = $info;
         }
 
-        if (true) {
+        if ($this->session->user()->checkPermission($this->domain, 'perm_access_plugin_controls')) {
             $info = array();
             $info['url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
             $info['name'] = __('Plugin Controls');
@@ -250,7 +250,7 @@ class OutputPanelMain extends Output
             $this->render_data['control_panels'][] = $info;
         }
 
-        if (true) {
+        if ($this->session->user()->checkPermission($this->domain, 'perm_access_plugin_controls')) {
             $info = array();
             $info['url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
             $info['name'] = __('Plugin Controls');
@@ -327,7 +327,7 @@ class OutputPanelMain extends Output
             $this->render_data['control_panels'][] = $info;
         }
 
-        if (true) {
+        if ($this->session->user()->checkPermission($this->domain, 'perm_access_plugin_controls')) {
             $info = array();
             $info['url'] = nel_build_router_url([$this->domain->uri(), 'plugin-controls']);
             $info['name'] = __('Plugin Controls');
