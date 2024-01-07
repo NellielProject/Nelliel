@@ -62,8 +62,32 @@ class OutputPanelPluginControls extends Output
         $output_footer = new OutputFooter($this->domain, $this->write_mode);
         $this->render_data['footer'] = $output_footer->manage([], true);
         $base_path = $this->templates_path;
-        $body_template = 'panels/main_plugin_controls';
+        $body_template = 'empty_body';
         $render_data = nel_plugins()->processHook('nel-inb4-plugin-controls-render', [$this->domain, $plugin_id, &$base_path, &$body_template], array());
+        $this->render_data = array_merge($this->render_data, $render_data);
+        $template = new Template($base_path, $body_template, '.html');
+        $this->render_core->renderEngine()->getLoader()->addSubstitute($this->default_body_template, $template);
+        $output = $this->output('basic_page', $data_only, false, $this->render_data);
+        echo $output;
+        return $output;
+    }
+
+    public function config(array $parameters, bool $data_only)
+    {
+        $this->renderSetup();
+        $plugin_id = $parameters['plugin_id'] ?? '';
+        $plugin = nel_plugins()->getPlugin($plugin_id);
+        $parameters['panel'] = $parameters['panel'] ?? __('Plugin Config');
+        $parameters['section'] = $plugin->info('name');
+        $output_head = new OutputHead($this->domain, $this->write_mode);
+        $this->render_data['head'] = $output_head->render([], true);
+        $output_header = new OutputHeader($this->domain, $this->write_mode);
+        $this->render_data['header'] = $output_header->manage($parameters, true);
+        $output_footer = new OutputFooter($this->domain, $this->write_mode);
+        $this->render_data['footer'] = $output_footer->manage([], true);
+        $base_path = $this->templates_path;
+        $body_template = 'empty_body';
+        $render_data = nel_plugins()->processHook('nel-inb4-plugin-config-render', [$this->domain, $plugin_id, &$base_path, &$body_template], array());
         $this->render_data = array_merge($this->render_data, $render_data);
         $template = new Template($base_path, $body_template, '.html');
         $this->render_core->renderEngine()->getLoader()->addSubstitute($this->default_body_template, $template);

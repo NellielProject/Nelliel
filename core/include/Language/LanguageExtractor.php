@@ -356,7 +356,8 @@ class LanguageExtractor
         }
 
         $setting_descriptions = $database->executeFetchAll(
-            'SELECT "setting_description" FROM "' . NEL_SETTINGS_TABLE . '"', PDO::FETCH_COLUMN);
+            'SELECT "setting_description" FROM "' . NEL_SETTINGS_TABLE . '" WHERE "setting_owner" = \'nelliel\'',
+            PDO::FETCH_COLUMN);
 
         foreach ($setting_descriptions as $label) {
             if ($label !== '' && !is_null($label)) {

@@ -9,50 +9,53 @@ use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
-use Nelliel\Output\OutputPanelSiteConfig;
+use Nelliel\Output\OutputPanelPluginControls;
 use PDO;
 
-class AdminSiteConfig extends Admin
+class AdminPluginConfig extends Admin
 {
 
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->data_table = NEL_SITE_CONFIG_TABLE;
+        $this->domain = $domain;
+        $this->data_table = NEL_PLUGIN_CONFIGS_TABLE;
         $this->id_column = '';
-        $this->panel_name = _gettext('Site Config');
     }
 
     public function panel(): void
     {
-        $this->verifyPermissions($this->domain, 'perm_modify_site_config');
-        $output_panel = new OutputPanelSiteConfig($this->domain, false);
-        $output_panel->render([], false);
+        $this->verifyPermissions($this->domain, 'perm_modify_board_config');
+        $output_panel = new OutputPanelPluginControls($this->domain, false);
+        $output_panel->main(['defaults' => false], false);
     }
 
-    public function update(): void
+    public function update(string $plugin_id): void
     {
-        $this->verifyPermissions($this->domain, 'perm_modify_site_config');
+        $this->verifyPermissions($this->domain, 'perm_modify_board_config');
         $user_can_raw_html = $this->session_user->checkPermission($this->domain, 'perm_raw_html');
         $columns = ' "' . NEL_SETTINGS_TABLE . '"."setting_category", "' . NEL_SETTINGS_TABLE . '"."setting_name"'; // Why isn't this covered by *
-        $site_settings = $this->database->executeFetchAll(
+        $prepared = $this->database->prepare(
             'SELECT *, ' . $columns . ' FROM "' . NEL_SETTINGS_TABLE . '"
                 LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
                 ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE .
-            '"."setting_name" WHERE "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'site\' AND "' .
-            NEL_SETTINGS_TABLE . '"."setting_owner" = \'nelliel\'', PDO::FETCH_ASSOC);
-        $config_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_SITE_CONFIG_TABLE . '"',
-            PDO::FETCH_ASSOC);
+            '"."setting_name" WHERE "' . NEL_SETTINGS_TABLE . '"."setting_owner" = :setting_owner');
+        $prepared->bindValue(':setting_owner', $plugin_id, PDO::PARAM_STR);
+        $plugin_settings = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare(
+            'SELECT * FROM "' . NEL_PLUGIN_CONFIGS_TABLE . '" WHERE "plugin_id" = :plugin_id');
+        $prepared->bindValue(':plugin_id', $plugin_id, PDO::PARAM_STR);
+        $config_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $config_list = nel_key_array_by_column('setting_name', $config_list);
         $changes = 0;
 
-        foreach ($site_settings as $setting) {
+        foreach ($plugin_settings as $setting) {
             $setting_name = $setting['setting_name'];
             $config = $config_list[$setting_name] ?? array();
-            $old_value = nel_typecast($config['setting_value'] ?? '', $setting['data_type']);
-            $config_stored_raw = boolval($config['stored_raw'] ?? false);
             $raw_output = $setting['raw_output'] ?? false;
             $constructed = false;
+            $old_value = nel_typecast($config['setting_value'] ?? '', $setting['data_type']);
+            $config_stored_raw = boolval($config['stored_raw'] ?? false);
 
             if ($setting['data_type'] === 'boolean') {
                 $new_value = $_POST[$setting_name] ?? false;
@@ -69,8 +72,6 @@ class AdminSiteConfig extends Admin
             if (is_array($new_value)) {
                 $new_value = nel_typecast($new_value['value'], $setting['data_type'], false);
             }
-
-            $new_value = nel_typecast($new_value, $setting['data_type']);
 
             if ($old_value != $new_value || ($user_can_raw_html && $config_stored_raw !== $store_raw)) {
                 if ($setting['json']) {
@@ -91,7 +92,7 @@ class AdminSiteConfig extends Admin
                     }
                 }
 
-                $this->updateSetting($setting_name, $new_value, (int) $store_raw);
+                $this->updateSetting($plugin_id, $this->domain, $setting_name, $new_value, (int) $store_raw);
                 $changes ++;
             }
         }
@@ -101,23 +102,13 @@ class AdminSiteConfig extends Admin
             $this->domain->reload();
             nel_site_domain()->reload();
             $regen = new Regen();
-            $regen->allBoards(true, false);
-            $regen->sitePages($this->domain);
-            $regen->overboard($this->domain);
+
+            if ($this->domain->id() === Domain::SITE || $this->domain->id() === Domain::GLOBAL) {
+                $regen->sitePages(nel_site_domain());
+                $regen->allBoards(true, false);
+                $regen->overboard(nel_site_domain());
+            }
         }
-
-        $this->panel();
-    }
-
-    private function updateSetting($config_name, $setting, int $stored_raw)
-    {
-        $prepared = $this->database->prepare(
-            'UPDATE "' . NEL_SITE_CONFIG_TABLE .
-            '" SET "setting_value" = :setting_value, "stored_raw" = :stored_raw WHERE "setting_name" = :setting_name');
-        $prepared->bindValue(':setting_value', $setting, PDO::PARAM_STR);
-        $prepared->bindValue(':stored_raw', $stored_raw, PDO::PARAM_INT);
-        $prepared->bindValue(':setting_name', $config_name, PDO::PARAM_STR);
-        $this->database->executePrepared($prepared);
     }
 
     protected function verifyPermissions(Domain $domain, string $perm): void
@@ -127,12 +118,33 @@ class AdminSiteConfig extends Admin
         }
 
         switch ($perm) {
-            case 'perm_modify_site_config':
-                nel_derp(380, _gettext('You are not allowed to modify the site configuration.'), 403);
+            case 'perm_modify_board_config':
+                nel_derp(310, _gettext('You are not allowed to modify the board configuration.'), 403);
                 break;
 
             default:
                 $this->defaultPermissionError();
         }
+    }
+
+    private function updateSetting(string $plugin_id, Domain $domain, $config_name, $setting, int $stored_raw)
+    {
+        if ($this->database->rowExists(NEL_PLUGIN_CONFIGS_TABLE, ['setting_name', 'board_id'],
+            [$config_name, $domain->id()])) {
+            $prepared = $this->database->prepare(
+                'UPDATE "' . NEL_PLUGIN_CONFIGS_TABLE .
+                '" SET "setting_value" = :setting_value, "stored_raw" = :stored_raw WHERE "plugin_id" = :plugin_id AND "setting_name" = :setting_name AND "board_id" = :board_id');
+        } else {
+            $prepared = $this->database->prepare(
+                'INSERT INTO "' . NEL_PLUGIN_CONFIGS_TABLE .
+                '" ("plugin_id", "setting_name", "setting_value", "stored_raw", "board_id") VALUES (:plugin_id, :setting_name, :setting_value, :stored_raw, :board_id)');
+        }
+
+        $prepared->bindValue(':plugin_id', $plugin_id, PDO::PARAM_STR);
+        $prepared->bindValue(':setting_value', $setting, PDO::PARAM_STR);
+        $prepared->bindValue(':stored_raw', $stored_raw, PDO::PARAM_INT);
+        $prepared->bindValue(':setting_name', $config_name, PDO::PARAM_STR);
+        $prepared->bindValue('board_id', $domain->id(), PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
     }
 }

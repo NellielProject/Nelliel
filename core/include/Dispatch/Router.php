@@ -362,8 +362,8 @@ class Router
                 $r->addGroup('/{domain_id:[^\/]+}/{module:plugin-controls}',
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchPluginControls';
-                        $r->addRoute(['GET'], '[/]', $dispatch_class);
-                        $r->addRoute(['GET'], '/{id:[^\/]+}', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}[/{section:[^\/]+}]', $dispatch_class);
                     });
 
                 // For now this is ALWAYS last

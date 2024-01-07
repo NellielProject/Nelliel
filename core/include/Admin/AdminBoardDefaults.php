@@ -43,7 +43,8 @@ class AdminBoardDefaults extends Admin
             'SELECT *, ' . $columns . ' FROM "' . NEL_SETTINGS_TABLE . '"
                 LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
                 ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE .
-            '"."setting_name" WHERE "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'', PDO::FETCH_ASSOC);
+            '"."setting_name" WHERE "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'board\' AND "' .
+            NEL_SETTINGS_TABLE . '"."setting_owner" = \'nelliel\'', PDO::FETCH_ASSOC);
         $config_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DEFAULTS_TABLE . '"',
             PDO::FETCH_ASSOC);
         $config_list = nel_key_array_by_column('setting_name', $config_list);

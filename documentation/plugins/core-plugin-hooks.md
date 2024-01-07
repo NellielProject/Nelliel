@@ -271,7 +271,22 @@ Called before generating the list of plugins with web controls. To include a plu
 ### nel-inb4-plugin-controls-render
 Added: v0.9.32
 
-Called before outputting the plugin control panel. Plugin must provide a template.
+Called before outputting the control panel for a plugin. Plugin must provide a template.
+ 
+**Arguments**
+
+|Order|Argument        |Type    |Modifiable|Returnable|Description|                               
+|:---:|:---------------|:-------|:---------|:---------|:----------|
+|1    |`$render_data`  |`array` |Yes       |Yes       |Array of rendering data for the control panel.|
+|2    |`$domain`       |`object`|No        |No        |Instance of `Nelliel\Domains\Domain`.|
+|3    |`$plugin_id`    |`string`|No        |No        |ID of the plugin whose controls are being accessed.|
+|4    |`$base_path`    |`string`|Yes       |No        |Path to the plugin templates.|
+|5    |`$body_template`|`string`|Yes       |No        |Name of the body template to be used.|
+
+### nel-inb4-plugin-config-render
+Added: v0.9.32
+
+Called before outputting the control panel for a plugin config. Plugin must provide a template.
  
 **Arguments**
 
