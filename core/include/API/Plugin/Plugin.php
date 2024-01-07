@@ -112,8 +112,8 @@ class Plugin
             '" ("plugin_id", "directory", "initializer", "parsed_ini", "enabled") VALUES (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$this->id(), $directory, $initializer_file, $encoded_ini, 1]);
 
-        if (!nel_true_empty($installer_file) && file_exists($directory . '/' . $installer_file)) {
-            include $directory . '/' . $installer_file;
+        if (!nel_true_empty($installer_file) && file_exists(NEL_PLUGINS_FILES_PATH . $directory . '/' . $installer_file)) {
+            include NEL_PLUGINS_FILES_PATH . $directory . '/' . $installer_file;
         }
     }
 
@@ -124,8 +124,9 @@ class Plugin
     {
         $uninstaller_file = $this->info['uninstaller'] ?? '';
 
-        if (!nel_true_empty($uninstaller_file) && file_exists($this->directory . '/' . $uninstaller_file)) {
-            include $this->directory . '/' . $uninstaller_file;
+        if (!nel_true_empty($uninstaller_file) &&
+            file_exists(NEL_PLUGINS_FILES_PATH . $this->directory . '/' . $uninstaller_file)) {
+            include NEL_PLUGINS_FILES_PATH . $this->directory . '/' . $uninstaller_file;
         }
 
         $prepared = $this->database->prepare('DELETE FROM "' . NEL_PLUGINS_TABLE . '" WHERE "plugin_id" = ?');
