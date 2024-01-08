@@ -106,17 +106,11 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $prepared = $this->database->prepare(
             'SELECT "setting_name", "setting_value" FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "board_id" = :board_id');
         $prepared->bindValue(':board_id', $this->domain_id, PDO::PARAM_STR);
-        $board_config_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_KEY_PAIR);
-        $prepared = $this->database->prepare(
-            'SELECT "setting_name", "setting_value" FROM "' . NEL_PLUGIN_CONFIGS_TABLE . '" WHERE "board_id" = :board_id');
-        $prepared->bindValue(':board_id', $this->domain_id, PDO::PARAM_STR);
-        $plugin_config_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_KEY_PAIR);
-        $merged_config_list = array_merge($board_config_list, $plugin_config_list);
+        $config_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_KEY_PAIR);
 
         foreach ($settings_list as $setting) {
             $settings[$setting['setting_name']] = nel_typecast(
-                $merged_config_list[$setting['setting_name']] ?? $setting['default_value'], $setting['data_type'],
-                false);
+                $config_list[$setting['setting_name']] ?? $setting['default_value'], $setting['data_type'], false);
         }
 
         return $settings;

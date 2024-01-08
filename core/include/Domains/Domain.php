@@ -112,11 +112,7 @@ abstract class Domain implements NellielCacheInterface
             return $this->settings;
         }
 
-        if (!isset($this->settings[$setting])) {
-            return null;
-        }
-
-        return $this->settings[$setting];
+        return $this->settings[$setting] ?? null;
     }
 
     public function reference(string $reference = null)

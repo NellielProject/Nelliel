@@ -6,6 +6,7 @@ namespace Nelliel\API\Plugin;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Database\NellielPDO;
+use Nelliel\Domains\Domain;
 use Nelliel\Utility\FileHandler;
 use PDO;
 
@@ -17,6 +18,8 @@ class Plugin
     private array $info = array();
     private string $initializer = '';
     private string $directory = '';
+    private array $settings = array();
+    private bool $settings_loaded = false;
 
     function __construct(NellielPDO $database, string $plugin_id)
     {
@@ -169,5 +172,54 @@ class Plugin
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_PLUGINS_TABLE . '" SET "enabled" = 0 WHERE "plugin_id" = ?');
         $this->database->executePrepared($prepared, [$this->id()]);
+    }
+
+    public function setting(string $setting = null, string $domain_id = Domain::SITE)
+    {
+        if (empty($this->settings)) {
+            $this->loadSettings();
+        }
+
+        if (is_null($setting)) {
+            return $this->settings;
+        }
+
+        return $this->settings[$domain_id][$setting] ?? null;
+    }
+
+    private function loadSettings(bool $reload = false): void
+    {
+        if ($this->settings_loaded && !$reload) {
+            return;
+        }
+
+        $settings = array();
+        $prepared = $this->database->prepare(
+            'SELECT "setting_name", "default_value", "data_type" FROM "' . NEL_SETTINGS_TABLE .
+            '" WHERE "setting_category" = \'plugin\' AND "setting_owner" = :plugin_id');
+        $prepared->bindValue(':plugin_id', $this->plugin_id, PDO::PARAM_STR);
+        $settings_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
+
+        $prepared = $this->database->prepare(
+            'SELECT "board_id", "setting_name", "setting_value" FROM "' . NEL_PLUGIN_CONFIGS_TABLE .
+            '" WHERE "plugin_id" = :plugin_id');
+        $prepared->bindValue(':plugin_id', $this->plugin_id, PDO::PARAM_STR);
+        $configs = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
+
+        $config_list = array();
+
+        foreach ($configs as $config) {
+            $config_list[$config['setting_name']][$config['board_id']] = $config;
+        }
+
+        foreach ($settings_list as $setting) {
+            foreach ($config_list[$setting['setting_name']] as $domain_id => $config) {
+                $settings[$domain_id][$setting['setting_name']] = nel_typecast(
+                    $config['setting_value'] ?? $setting['default_value'], $setting['data_type'], false);
+            }
+        }
+
+        $this->settings = $settings;
+        $this->settings_loaded = true;
     }
 }
