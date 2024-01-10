@@ -128,8 +128,7 @@ class Uploads
             $this->removeEXIF($upload);
 
             if ($this->domain->setting('enable_spoilers')) {
-                $spoiler = $_POST['form_spoiler'] ?? 0;
-                $upload->changeData('spoiler', $data_handler->checkEntry($spoiler, 'integer'));
+                $upload->changeData('spoiler', intval($_POST['form_spoiler'] ?? 0));
             }
 
             $this->setDimensions($upload);

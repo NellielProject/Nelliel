@@ -33,14 +33,56 @@ class PostData
     public function processPostData(Post $post)
     {
         if (!isset($_POST['new_post'])) {
-            nel_derp(40,
-                __(
-                    'No POST data was received. The request may have been too big or server settings need to be adjusted.'));
+            nel_derp(40, __('No POST data was received. The request may have been too big.'));
         }
 
-        $post->changeData('parent_thread', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
+        $new_post_data = $_POST['new_post'];
+
+        $parent_thread = intval($new_post_data['post_info']['response_to'] ?? 0);
+        $is_op = $parent_thread === 0;
+
+        $require_name = $is_op ? $this->domain->setting('require_op_name') : $this->domain->setting(
+            'require_reply_name');
+        $require_email = $is_op ? $this->domain->setting('require_op_email') : $this->domain->setting(
+            'require_reply_email');
+        $require_subject = $is_op ? $this->domain->setting('require_op_subject') : $this->domain->setting(
+            'require_reply_subject');
+        $require_comment = $is_op ? $this->domain->setting('require_op_comment') : $this->domain->setting(
+            'require_reply_comment');
+
+        $name = strval($new_post_data['post_info']['not_anonymous'] ?? '');
+        $name = $this->fieldLengthCheck('name', $name);
+
+        if (nel_true_empty($name) && $require_name) {
+            nel_derp(41, _gettext('A name is required to post.'));
+        }
+
+        $email = strval($new_post_data['post_info']['spam_target'] ?? '');
+        $email = $this->fieldLengthCheck('email', $name);
+
+        if (nel_true_empty($email) && $require_email) {
+            nel_derp(42, _gettext('An email is required to post.'));
+        }
+
+        $subject = strval($new_post_data['post_info']['verb'] ?? '');
+        $subject = $this->fieldLengthCheck('subject', $subject);
+
+        if (nel_true_empty($subject) && $require_subject) {
+            nel_derp(43, _gettext('A subject is required to post.'));
+        }
+
+        $original_comment = strval($new_post_data['post_info']['wordswordswords'] ?? '');
+        $comment = $this->fieldLengthCheck('comment', $original_comment);
+
+        if (nel_true_empty($original_comment) && $require_comment) {
+            nel_derp(44, _gettext('A comment is required to post.'));
+        }
+
+        nel_plugins()->processHook('nel-in-after-post-valid-checks', [$this->domain, $new_post_data]);
+
+        $post->changeData('parent_thread', $parent_thread);
         $post->contentID()->changeThreadID($post->getData('parent_thread'));
-        $post->changeData('op', $post->getData('parent_thread') === 0);
+        $post->changeData('op', $is_op);
         $post->changeData('reply_to', $post->getData('parent_thread')); // This may enable nested posts in the future
         $ip_info = new IPInfo(nel_request_ip_address());
         $post->changeData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
@@ -49,127 +91,38 @@ class PostData
         $visitor_info->updateLastActivity(time());
         $post->changeData('visitor_id', $visitor_info->getInfo('visitor_id'));
 
-        $name = $this->checkEntry($_POST['new_post']['post_info']['not_anonymous'] ?? '', 'string');
-        $name = $this->fieldLengthCheck('name', $name);
-        $staff_post = $this->staffPost();
-
-        $enable_name = $post->getData('op') ? $this->domain->setting('enable_op_name_field') : $this->domain->setting(
-            'enable_reply_name_field');
-        $enable_email = $post->getData('op') ? $this->domain->setting('enable_op_email_field') : $this->domain->setting(
+        $enable_email = $is_op ? $this->domain->setting('enable_op_email_field') : $this->domain->setting(
             'enable_reply_email_field');
-        $enable_subject = $post->getData('op') ? $this->domain->setting('enable_op_subject_field') : $this->domain->setting(
+        $enable_subject = $is_op ? $this->domain->setting('enable_op_subject_field') : $this->domain->setting(
             'enable_reply_subject_field');
-        $enable_comment = $post->getData('op') ? $this->domain->setting('enable_op_comment_field') : $this->domain->setting(
+        $enable_comment = $is_op ? $this->domain->setting('enable_op_comment_field') : $this->domain->setting(
             'enable_reply_comment_field');
-        $require_name = $post->getData('op') ? $this->domain->setting('require_op_name') : $this->domain->setting(
-            'require_reply_name');
-        $require_email = $post->getData('op') ? $this->domain->setting('require_op_email') : $this->domain->setting(
-            'require_reply_email');
-        $require_subject = $post->getData('op') ? $this->domain->setting('require_op_subject') : $this->domain->setting(
-            'require_reply_subject');
-        $require_comment = $post->getData('op') ? $this->domain->setting('require_op_comment') : $this->domain->setting(
-            'require_reply_comment');
 
-        if (nel_true_empty($name) || !$enable_name || $this->domain->setting('forced_anonymous')) {
-            $name_choices = json_decode($this->domain->setting('anonymous_names'), true);
+        $this->processName($name, $post);
 
-            if ($this->domain->setting('use_anonymous_names') && !is_null($name_choices)) {
-                $name = $name_choices[mt_rand(0, count($name_choices) - 1)];
-            } else {
-                $name = null;
-            }
-        } else {
-            $matches = array();
-            $trip_string = '';
-            $type = '';
-
-            if (preg_match('/([^#]+)?(##|#)(.+)/', $name, $matches) === 1) {
-                $name = $matches[1];
-                $type = $matches[2];
-                $trip_string = $matches[3];
-            }
-
-            if (preg_match('/(.+)? ## (.+)/', $trip_string, $matches) === 1) {
-                $trip_string = $matches[1];
-                $capcode_string = $matches[2];
-
-                if ($staff_post) {
-                    $post->changeData('capcode', $this->capcode($capcode_string));
-                }
-            }
-
-            if ($this->domain->setting('allow_tripcodes')) {
-                if ($type === '##') {
-                    $post->changeData('secure_tripcode', $this->secureTripcode($trip_string));
-                }
-
-                if ($type === '#') {
-                    $post->changeData('tripcode', $this->tripcode($trip_string));
-                }
-            }
-
-            if ($this->domain->setting('require_tripcode') && nel_true_empty($post->getData('tripcode')) &&
-                nel_true_empty($post->getData('secure_tripcode'))) {
-                nel_derp(41, _gettext('A tripcode or secure tripcode is required to post.'));
-            }
-        }
-
-        $raw_html = $this->checkEntry($_POST['raw_html'] ?? false, 'boolean');
+        $raw_html = boolval($_POST['raw_html'] ?? false);
 
         if ($raw_html && $this->session->user()->checkPermission($this->domain, 'perm_raw_html')) {
             $post->getMoar()->modify('raw_html', true);
         }
 
-        $disable_markup = $this->checkEntry($_POST['no_markup'] ?? false, 'boolean');
+        $disable_markup = boolval($_POST['no_markup'] ?? false);
 
         if ($disable_markup) {
             $post->getMoar()->modify('no_markup', true);
         }
 
-        if ($staff_post) {
-            $this->session->ignore(true);
-            $user = $this->session->user();
-
-            if (!$user->checkPermission($this->domain, 'perm_custom_name')) {
-                $name = $user->id();
-            }
-
-            $post->changeData('username', $user->id());
-        }
-
-        $post->changeData('name', $name);
-
-        if (nel_true_empty($post->getData('name')) && $require_name) {
-            nel_derp(41, _gettext('A name is required to post.'));
-        }
-
         if ($enable_email && !$this->domain->setting('forced_anonymous')) {
-            $email = $this->checkEntry($_POST['new_post']['post_info']['spam_target'] ?? '', 'string');
-            $post->changeData('email', $this->fieldLengthCheck('email', $email));
-        }
-
-        if (nel_true_empty($post->getData('email')) && $require_email) {
-            nel_derp(42, _gettext('An email is required to post.'));
+            $post->changeData('email', $email);
         }
 
         if ($enable_subject) {
-            $subject = $this->checkEntry($_POST['new_post']['post_info']['verb'] ?? '', 'string');
-            $post->changeData('subject', $this->fieldLengthCheck('subject', $subject));
-        }
-
-        if (nel_true_empty($post->getData('subject')) && $require_subject) {
-            nel_derp(43, _gettext('A subject is required to post.'));
+            $post->changeData('subject', $subject);
         }
 
         if ($enable_comment) {
-            $original_comment = $_POST['new_post']['post_info']['wordswordswords'] ?? '';
-            $comment = $this->checkEntry($original_comment, 'string');
-            $post->changeData('original_comment', $comment);
-            $post->changeData('comment', $this->fieldLengthCheck('comment', $comment), false);
-        }
-
-        if (nel_true_empty($post->getData('comment')) && $require_comment) {
-            nel_derp(44, _gettext('A comment is required to post.'));
+            $post->changeData('original_comment', $original_comment);
+            $post->changeData('comment', $comment);
         }
 
         if ($this->domain->setting('r9k_enable_board')) {
@@ -177,21 +130,21 @@ class PostData
         }
 
         if ($this->domain->setting('enable_fgsfds_field')) {
-            $post->changeData('fgsfds', $this->checkEntry($_POST['new_post']['post_info']['fgsfds'] ?? '', 'string'));
+            $post->changeData('fgsfds', strval($new_post_data['post_info']['fgsfds'] ?? ''));
         }
 
         if ($this->domain->setting('enable_password_field')) {
-            $password = $this->checkEntry($_POST['new_post']['post_info']['sekrit'] ?? '', 'string');
+            $password = strval($new_post_data['post_info']['sekrit'] ?? '');
             $post->changeData('password',
                 substr($password, 0, nel_crypt_config()->configValue('post_password_max_length')));
         }
 
-        $post->changeData('response_to', $this->checkEntry($_POST['new_post']['post_info']['response_to'], 'integer'));
+        $post->changeData('response_to', intval($new_post_data['post_info']['response_to']));
 
         if (!nel_true_empty($post->getData('comment'))) {
             $filters = new Filters($this->domain->database());
             $post->changeData('comment',
-                $filters->applyWordfilters($post->getData('comment'), [$this->domain->id(), Domain::GLOBAL]), false);
+                $filters->applyWordfilters($post->getData('comment'), [$this->domain->id(), Domain::GLOBAL]));
             $cites = new Cites($this->domain->database());
             $cite_list = $cites->getCitesFromText($post->getData('comment'), false);
 
@@ -242,27 +195,73 @@ class PostData
         }
     }
 
-    public function checkEntry($post_item, $type)
+    private function processName(string $name, Post $post): void
     {
-        if ($type === "integer" || $type === "int") {
-            if (!is_numeric($post_item)) {
-                return null;
+        $enable_name = $post->getData('op') ? $this->domain->setting('enable_op_name_field') : $this->domain->setting(
+            'enable_reply_name_field');
+        $staff_post = $this->staffPost();
+
+        if (nel_true_empty($name) || !$enable_name || $this->domain->setting('forced_anonymous')) {
+            $name_choices = json_decode($this->domain->setting('anonymous_names'), true);
+
+            if ($this->domain->setting('use_anonymous_names') && !is_null($name_choices)) {
+                $name = $name_choices[mt_rand(0, count($name_choices) - 1)];
+            } else {
+                $name = null;
+            }
+        } else {
+            $matches = array();
+            $trip_string = '';
+            $type = '';
+
+            if (preg_match('/([^#]+)?(##|#)(.+)/', $name, $matches) === 1) {
+                $name = $matches[1];
+                $type = $matches[2];
+                $trip_string = $matches[3];
+            }
+
+            if (preg_match('/(.+)? ## (.+)/', $trip_string, $matches) === 1) {
+                $trip_string = $matches[1];
+                $capcode_string = $matches[2];
+
+                if ($staff_post) {
+                    $post->changeData('capcode', $this->capcode($capcode_string));
+                }
+            }
+
+            if ($this->domain->setting('allow_tripcodes')) {
+                if ($type === '##') {
+                    $post->changeData('secure_tripcode', $this->secureTripcode($trip_string));
+                }
+
+                if ($type === '#') {
+                    $post->changeData('tripcode', $this->tripcode($trip_string));
+                }
+            }
+
+            if ($this->domain->setting('require_tripcode') && nel_true_empty($post->getData('tripcode')) &&
+                nel_true_empty($post->getData('secure_tripcode'))) {
+                nel_derp(41, _gettext('A tripcode or secure tripcode is required to post.'));
             }
         }
 
-        if ($type === "string" || $type === "str") {
-            if ($post_item === '') {
-                return null;
+        if ($staff_post) {
+            $this->session->ignore(true);
+            $user = $this->session->user();
+
+            if (!$user->checkPermission($this->domain, 'perm_custom_name')) {
+                $name = $user->id();
             }
+
+            $post->changeData('username', $user->id());
         }
 
-        settype($post_item, $type);
-        return $post_item;
+        $post->changeData('name', $name);
     }
 
     private function staffPost(): bool
     {
-        $valid = (isset($_POST['post_as_staff'])) ? $this->checkEntry($_POST['post_as_staff'], 'boolean') : false;
+        $valid = boolval($_POST['post_as_staff'] ?? false);
 
         if (!$valid || !$this->session->isActive()) {
             return false;
