@@ -114,6 +114,7 @@ class Plugin
             'INSERT INTO "' . NEL_PLUGINS_TABLE .
             '" ("plugin_id", "directory", "initializer", "parsed_ini", "enabled") VALUES (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared, [$this->id(), $directory, $initializer_file, $encoded_ini, 1]);
+        $this->loadData();
 
         if (!nel_true_empty($installer_file) && file_exists(NEL_PLUGINS_FILES_PATH . $directory . '/' . $installer_file)) {
             include NEL_PLUGINS_FILES_PATH . $directory . '/' . $installer_file;
