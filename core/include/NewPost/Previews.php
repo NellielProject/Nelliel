@@ -78,7 +78,8 @@ class Previews
         $this->setPreviewDimensions($file);
 
         if ($this->generateStatic($file) &&
-            ($file->getData('format') === 'jpeg' || $file->getData('format') === 'png' || $file->getData('format') === 'webp')) {
+            ($file->getData('format') === 'jpeg' || $file->getData('format') === 'png' ||
+            $file->getData('format') === 'webp')) {
             $static_preview_name = $this->staticPreviewName($file);
             $has_static = $this->deduplicate($file, $static_preview_name);
 
@@ -126,8 +127,9 @@ class Previews
 
         if ($this->generateStatic($file) && !$has_static) {
             $resize_command = 'convert ' .
-                sprintf($this->site_domain->setting('imagemagick_args'), escapeshellarg($file->getData('location') . '[0]'),
-                    $file->getData('preview_width'), $file->getData('preview_height'), $this->compressionValue(),
+                sprintf($this->site_domain->setting('imagemagick_args'),
+                    escapeshellarg($file->getData('location') . '[0]'), $file->getData('preview_width'),
+                    $file->getData('preview_height'), $this->compressionValue(),
                     escapeshellarg($preview_path . $static_preview_name));
             $results = nel_exec($resize_command);
             $has_static = $results['result_code'] === 0;
@@ -341,6 +343,10 @@ class Previews
             $image = imagecreatefromxbm($file->getData('location'));
         } else if ($file->getData('format') === 'xpm' && $gd_test['XPM Support']) {
             $image = imagecreatefromxpm($file->getData('location'));
+        } else if ($file->getData('format') === 'tga' && $gd_test['TGA Read Support']) {
+            $image = imagecreatefromtga($file->getData('location'));
+        } else if ($file->getData('format') === 'avif' && $gd_test['AVIF Support']) {
+            $image = imagecreatefromtga($file->getData('location'));
         } else {
             return false;
         }
@@ -371,8 +377,8 @@ class Previews
         imagecolortransparent($preview, imagecolortransparent($image));
         imagealphablending($preview, false);
         imagesavealpha($preview, true);
-        imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->getData('preview_width'), $file->getData('preview_height'),
-            $file->getData('display_width'), $file->getData('display_height'));
+        imagecopyresampled($preview, $image, 0, 0, 0, 0, $file->getData('preview_width'),
+            $file->getData('preview_height'), $file->getData('display_width'), $file->getData('display_height'));
 
         if (!$has_static) {
             switch ($this->domain->setting('static_preview_format')) {
@@ -450,8 +456,10 @@ class Previews
 
         $ratio = min(($this->domain->setting('max_preview_height') / $file->getData('display_height')),
             ($this->domain->setting('max_preview_width') / $file->getData('display_width')));
-        $preview_width = ($ratio < 1) ? intval($ratio * $file->getData('display_width')) : $file->getData('display_width');
-        $preview_height = ($ratio < 1) ? intval($ratio * $file->getData('display_height')) : $file->getData('display_height');
+        $preview_width = ($ratio < 1) ? intval($ratio * $file->getData('display_width')) : $file->getData(
+            'display_width');
+        $preview_height = ($ratio < 1) ? intval($ratio * $file->getData('display_height')) : $file->getData(
+            'display_height');
         $file->changeData('preview_width', $preview_width);
         $file->changeData('preview_height', $preview_height);
     }
