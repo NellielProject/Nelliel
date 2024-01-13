@@ -50,7 +50,7 @@ class OutputPanelMain extends Output
         if ($this->session->user()->checkPermission($this->domain, 'perm_view_users')) {
             $info = array();
             $info['url'] = nel_build_router_url([$this->domain->uri(), 'users']);
-            $info['name'] = __('Site Config');
+            $info['name'] = __('Users');
             $this->render_data['control_panels'][] = $info;
         }
 

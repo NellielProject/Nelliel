@@ -38,7 +38,7 @@ class PostData
 
         $new_post_data = $_POST['new_post'];
 
-        $parent_thread = intval($new_post_data['post_info']['response_to'] ?? 0);
+        $parent_thread = intval($new_post_data['response_to'] ?? 0);
         $is_op = $parent_thread === 0;
 
         $require_name = $is_op ? $this->domain->setting('require_op_name') : $this->domain->setting(
@@ -50,35 +50,33 @@ class PostData
         $require_comment = $is_op ? $this->domain->setting('require_op_comment') : $this->domain->setting(
             'require_reply_comment');
 
-        $name = strval($new_post_data['post_info']['not_anonymous'] ?? '');
+        $name = strval($new_post_data['not_anonymous'] ?? '');
         $name = $this->fieldLengthCheck('name', $name);
 
         if (nel_true_empty($name) && $require_name) {
             nel_derp(41, _gettext('A name is required to post.'));
         }
 
-        $email = strval($new_post_data['post_info']['spam_target'] ?? '');
+        $email = strval($new_post_data['spam_target'] ?? '');
         $email = $this->fieldLengthCheck('email', $name);
 
         if (nel_true_empty($email) && $require_email) {
             nel_derp(42, _gettext('An email is required to post.'));
         }
 
-        $subject = strval($new_post_data['post_info']['verb'] ?? '');
+        $subject = strval($new_post_data['verb'] ?? '');
         $subject = $this->fieldLengthCheck('subject', $subject);
 
         if (nel_true_empty($subject) && $require_subject) {
             nel_derp(43, _gettext('A subject is required to post.'));
         }
 
-        $original_comment = strval($new_post_data['post_info']['wordswordswords'] ?? '');
+        $original_comment = strval($new_post_data['wordswordswords'] ?? '');
         $comment = $this->fieldLengthCheck('comment', $original_comment);
 
         if (nel_true_empty($original_comment) && $require_comment) {
             nel_derp(44, _gettext('A comment is required to post.'));
         }
-
-        nel_plugins()->processHook('nel-in-after-post-valid-checks', [$this->domain, $new_post_data]);
 
         $post->changeData('parent_thread', $parent_thread);
         $post->contentID()->changeThreadID($post->getData('parent_thread'));
@@ -130,16 +128,16 @@ class PostData
         }
 
         if ($this->domain->setting('enable_fgsfds_field')) {
-            $post->changeData('fgsfds', strval($new_post_data['post_info']['fgsfds'] ?? ''));
+            $post->changeData('fgsfds', strval($new_post_data['fgsfds'] ?? ''));
         }
 
         if ($this->domain->setting('enable_password_field')) {
-            $password = strval($new_post_data['post_info']['sekrit'] ?? '');
+            $password = strval($new_post_data['sekrit'] ?? '');
             $post->changeData('password',
                 substr($password, 0, nel_crypt_config()->configValue('post_password_max_length')));
         }
 
-        $post->changeData('response_to', intval($new_post_data['post_info']['response_to']));
+        $post->changeData('response_to', intval($new_post_data['response_to']));
 
         if (!nel_true_empty($post->getData('comment'))) {
             $filters = new Filters($this->domain->database());

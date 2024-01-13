@@ -1,30 +1,30 @@
 <form id="new-post-form" class="display-table new-post-form" accept-charset="utf-8" name="new_post_form" action="{{ form_action }}" method="post" enctype="multipart/form-data" data-jsevents="click|change">
-	<input type="hidden" name="new_post[post_info][response_to]" value="{{ response_to }}">
+	<input type="hidden" name="new_post[response_to]" value="{{ response_to }}">
 	<div>
 		{{^ forced_anonymous }}
 			{{# display_name_field }}
 		<label class="display-row">
 			<span class="display-cell form-label">{{{ name_field_label }}}</span>
-			<input type="text" class="display-cell form-input" name="new_post[post_info][not_anonymous]" minlength="{{ not_anonymous_minlength }}" maxlength="{{ not_anonymous_maxlength }}" placeholder="{{ name_field_placeholder }}" value="{{ not_anonymous }}" {{require_name }}>
+			<input type="text" class="display-cell form-input" name="new_post[not_anonymous]" minlength="{{ not_anonymous_minlength }}" maxlength="{{ not_anonymous_maxlength }}" placeholder="{{ name_field_placeholder }}" value="{{ not_anonymous }}" {{require_name }}>
 		</label>
 			{{/ display_name_field }}
 			{{# display_email_field }}
 		<label class="display-row">
 			<span class="display-cell form-label">{{{ email_field_label }}}</span>
-			<input class="display-cell form-input" type="text" name="new_post[post_info][spam_target]" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}" placeholder="{{ email_field_placeholder }}" value="{{ spam_target }}" {{ require_email }}>
+			<input class="display-cell form-input" type="text" name="new_post[spam_target]" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}" placeholder="{{ email_field_placeholder }}" value="{{ spam_target }}" {{ require_email }}>
 		</label>
 			{{/ display_email_field }}
 		{{/ forced_anonymous }}
 		{{# display_subject_field }}
 		<label class="display-row">
 			<span class="display-cell form-label">{{{ subject_field_label }}}</span>
-			<input class="display-cell form-input" type="text" name="new_post[post_info][verb]" minlength="{{ verb_minlength }}"  maxlength="{{ verb_maxlength }}" placeholder="{{ subject_field_placeholder }}" value="{{ verb }}" {{ require_subject }}>
+			<input class="display-cell form-input" type="text" name="new_post[verb]" minlength="{{ verb_minlength }}"  maxlength="{{ verb_maxlength }}" placeholder="{{ subject_field_placeholder }}" value="{{ verb }}" {{ require_subject }}>
 		</label>
 		{{/ display_subject_field }}
 		{{# display_comment_field }}
 		<label class="display-row">
 			<span class="display-cell form-label">{{{ comment_field_label }}}</span>
-			<textarea id="wordswordswords" class="display-cell form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6" placeholder="{{ comment_field_placeholder }}" {{ require_comment }}>{{ wordswordswords }}</textarea>
+			<textarea id="wordswordswords" class="display-cell form-input" name="new_post[wordswordswords]" cols="30" rows="6" placeholder="{{ comment_field_placeholder }}" {{ require_comment }}>{{ wordswordswords }}</textarea>
 		</label>
 		{{/ display_comment_field }}
 		{{# allow_files }}
@@ -73,7 +73,7 @@
 		{{# display_password_field }}
 		<label class="display-row">
 			<span class="display-cell form-label">{{{ password_field_label }}}</span>
-			<input id="new-post-form-sekrit" class="display-cell form-input" data-jsevents="input" type="password" name="new_post[post_info][sekrit]" maxlength="{{ sekrit_max_length }}" value="" placeholder="{{ password_field_placeholder }}">&nbsp;&nbsp;
+			<input id="new-post-form-sekrit" class="display-cell form-input" data-jsevents="input" type="password" name="new_post[sekrit]" maxlength="{{ sekrit_max_length }}" value="" placeholder="{{ password_field_placeholder }}">&nbsp;&nbsp;
 			(<span data-i18n="">Used for deletion</span>)
 		</label>
 		{{/ display_password_field }}

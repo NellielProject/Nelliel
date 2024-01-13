@@ -53,7 +53,7 @@ abstract class Output
         $this->timer->reset();
         $this->timer->start();
         $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction(true, 4);
-        $this->render_data['show_render_timer'] = $this->domain->setting('show_render_timer');
+        $this->render_data['show_render_time'] = $this->domain->setting('show_render_timer');
         $this->render_data['page_language'] = $this->domain->locale(true);
         $this->render_data['nelliel_version'] = NELLIEL_VERSION;
         $this->render_data['nelliel_package'] = NELLIEL_PACKAGE;
