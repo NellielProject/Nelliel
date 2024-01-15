@@ -24,13 +24,20 @@ class Markup
         $this->database = $database;
     }
 
-    public function getMarkupData(string $type): array
+    public function getMarkupData(string $type, bool $only_enabled = true): array
     {
         if (is_null($this->markup_data)) {
-            $markup_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_MARKUP_TABLE . '"', PDO::FETCH_ASSOC);
+            if ($only_enabled) {
+                $markup_list = $this->database->executeFetchAll(
+                    'SELECT * FROM "' . NEL_MARKUP_TABLE . '" WHERE "enabled" = 1', PDO::FETCH_ASSOC);
+            } else {
+                $markup_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_MARKUP_TABLE . '"',
+                    PDO::FETCH_ASSOC);
+            }
+
             foreach ($markup_list as $markup) {
                 $this->markup_data[$markup['type']][$markup['label']] = ['match' => $markup['match_regex'],
-                    'replace' => $markup['replacement']];
+                    'replace' => $markup['replacement'], 'enabled' => intval($markup['enabled'])];
             }
         }
 
@@ -41,7 +48,7 @@ class Markup
     {
         $this->domain = $source_domain;
         $this->dynamic_urls = $dynamic_urls;
-        $this->protocols = (!is_null($source_domain)) ? $source_domain->setting('url_protocols') ?? '' : '';
+        $this->protocols = (!is_null($source_domain)) ? $source_domain->setting('url_protocols') ?? '': '';
         $modified_text = $text;
         $modified_text = $this->parseBlocks($modified_text);
         return $modified_text;
