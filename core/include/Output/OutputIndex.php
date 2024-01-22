@@ -149,9 +149,9 @@ class OutputIndex extends Output
             $abbreviate_start = $thread->getData('post_count') - $index_replies;
 
             if ($this->session->inModmode($this->domain) && !$this->write_mode) {
-                $modmode_options = $this->modmodeHeaders($thread);
-                $thread_input['thread_modmode_options'] = $modmode_options['thread_modmode_options'];
-                $thread_input['post_modmode_options'] = $modmode_options['post_modmode_options'];
+                $output_modmode_headers = new OutputModmodeHeaders($this->domain, $this->write_mode);
+                $thread_input['thread_modmode_options'] = $output_modmode_headers->thread($thread);
+                $thread_input['post_modmode_options'] = $output_modmode_headers->post($thread->firstPost());
             }
 
             $options = $this->threadHeaders($thread, $thread->firstPost(), $gen_data, $thread->contentID()->threadID());
@@ -250,116 +250,6 @@ class OutputIndex extends Output
         }
 
         return $output;
-    }
-
-    private function modmodeHeaders(Thread $thread): array
-    {
-        $post = $thread->firstPost();
-        $options = array();
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
-            !empty($post->getData('ip_address'))) {
-            $ip = nel_convert_ip_from_storage($post->getData('ip_address'));
-        } else {
-            if (!empty($post->getData('hashed_ip_address'))) {
-                $ip = $post->getData('hashed_ip_address');
-            } else {
-                $ip = $post->getData('visitor_id');
-            }
-        }
-
-        $this->render_data['mod_ip_address'] = $ip;
-        $this->render_data['in_modmode'] = true;
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
-            $this->render_data['mod_links_lock']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'lock']);
-            $this->render_data['mod_links_unlock']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unlock']);
-            $lock_id = $thread->getData('locked') ? 'mod_links_unlock' : 'mod_links_lock';
-            $options['thread_modmode_options'][] = $this->render_data[$lock_id];
-
-            $this->render_data['mod_links_sticky']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sticky']);
-            $this->render_data['mod_links_unsticky']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsticky']);
-            $sticky_id = $thread->getData('sticky') ? 'mod_links_unsticky' : 'mod_links_sticky';
-            $options['thread_modmode_options'][] = $this->render_data[$sticky_id];
-
-            $this->render_data['mod_links_permasage']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sage']);
-            $this->render_data['mod_links_unpermasage']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsage']);
-            $permasage_id = $thread->getData('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
-            $options['thread_modmode_options'][] = $this->render_data[$permasage_id];
-
-            $this->render_data['mod_links_cyclic']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'cyclic']);
-            $this->render_data['mod_links_non_cyclic']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'non-cyclic']);
-            $cyclic_id = $thread->getData('cyclic') ? 'mod_links_non_cyclic' : 'mod_links_cyclic';
-            $options['thread_modmode_options'][] = $this->render_data[$cyclic_id];
-        }
-
-        if (!$thread->getData('shadow')) {
-            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
-                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
-                $options['thread_modmode_options'][] = $this->render_data['mod_links_move'];
-            }
-
-            if ($this->session->user()->checkPermission($this->domain, 'perm_merge_threads')) {
-                $this->render_data['mod_links_merge']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'merge']);
-                $options['thread_modmode_options'][] = $this->render_data['mod_links_merge'];
-            }
-        }
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_bans')) {
-            $this->render_data['mod_links_ban']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban']);
-            $options['post_modmode_options'][] = $this->render_data['mod_links_ban'];
-        }
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
-            $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete']);
-            $options['post_modmode_options'][] = $this->render_data['mod_links_delete'];
-        }
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_delete_by_ip')) {
-            $this->render_data['mod_links_delete_by_ip']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'delete-by-ip']);
-            $this->render_data['post_modmode_options'][] = $this->render_data['mod_links_delete_by_ip'];
-
-            $this->render_data['mod_links_global_delete_by_ip']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(),
-                    'global-delete-by-ip']);
-            $options['post_modmode_options'][] = $this->render_data['mod_links_global_delete_by_ip'];
-        }
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_manage_bans') &&
-            $this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
-            $this->render_data['mod_links_ban_and_delete']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'ban-delete']);
-            $options['post_modmode_options'][] = $this->render_data['mod_links_ban_and_delete'];
-        }
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_edit_posts')) {
-            $this->render_data['mod_links_edit']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);
-            $options['post_modmode_options'][] = $this->render_data['mod_links_edit'];
-        }
-
-        if (!$thread->getData('shadow')) {
-            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
-                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'move']);
-                $options['post_modmode_options'][] = $this->render_data['mod_links_move'];
-            }
-        }
-
-        return $options;
     }
 
     private function threadHeaders(Thread $thread, Post $post, array $gen_data, int $in_thread_number): array

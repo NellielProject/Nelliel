@@ -31,26 +31,8 @@ class OutputFile extends Output
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->session->inModmode($this->domain)) {
-            if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
-                $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'delete']);
-                $this->render_data['file_modmode_options'][] = $this->render_data['mod_links_delete'];
-            }
-
-            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
-                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $file->ContentID()->getIDString(), 'move']);
-                $this->render_data['file_modmode_options'][] = $this->render_data['mod_links_move'];
-            }
-
-            if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
-                $this->render_data['mod_links_spoiler']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'spoiler']);
-                $this->render_data['mod_links_unspoiler']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $file->contentID()->getIDString(), 'unspoiler']);
-                $spoiler_id = $file->getData('spoiler') ? 'mod_links_unspoiler' : 'mod_links_spoiler';
-                $this->render_data['file_modmode_options'][] = $this->render_data[$spoiler_id];
-            }
+            $output_modmode_headers = new OutputModmodeHeaders($this->domain, $this->write_mode);
+            $this->render_data['file_modmode_options'] = $output_modmode_headers->upload($file);
         }
 
         $units = $this->domain->setting('scale_upload_filesize_units') ? null : $this->domain->setting(
@@ -81,7 +63,6 @@ class OutputFile extends Output
 
         if ($this->domain->setting('show_original_name') && !nel_true_empty($file->getData('original_filename'))) {
             $display_filename = $file->getData('original_filename');
-
         } else {
             $display_filename = $file->getData('filename') . '.' . $file->getData('extension');
         }
@@ -244,7 +225,8 @@ class OutputFile extends Output
         }
 
         if (!is_null($preview_type)) {
-            $this->render_data['other_dims'] = 'w' . $file->getData('display_width') . 'h' . $file->getData('display_height');
+            $this->render_data['other_dims'] = 'w' . $file->getData('display_width') . 'h' .
+                $file->getData('display_height');
             $this->render_data['other_loc'] = $this->render_data['file_url'];
             $this->render_data['image_preview'] = $preview_type === 'image';
             $this->render_data['video_preview'] = $preview_type === 'video';

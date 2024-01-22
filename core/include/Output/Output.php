@@ -14,11 +14,13 @@ use Nelliel\Render\RenderCoreDOM;
 use Nelliel\Render\RenderCoreMustache;
 use Nelliel\Render\Template;
 use Nelliel\Utility\FileHandler;
+use Nelliel\Domains\DomainGlobal;
 
 abstract class Output
 {
     protected Domain $domain;
     protected DomainSite $site_domain;
+    protected DomainGlobal $global_domain;
     protected NellielPDO $database;
     protected $render_core;
     protected array $render_data = array();
@@ -40,6 +42,7 @@ abstract class Output
         $this->database = $domain->database();
         $this->selectRenderCore('mustache');
         $this->site_domain = nel_site_domain();
+        $this->global_domain = nel_global_domain();
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new Filter();
         $this->session = new Session();
@@ -131,12 +134,7 @@ abstract class Output
         $this->current_template = $template;
     }
 
-    protected function uiDefines(): void
-    {
-        if ($this->domain->id() === Domain::SITE) {
-            return;
-        }
-
+    protected function getUIText(string $id) {
         $domain = $this->domain;
         $do_translation = $domain->setting('translate_mod_links');
 
@@ -150,32 +148,13 @@ abstract class Output
             return $value;
         };
 
-        $left_bracket = $translate('mod_links_left_bracket');
-        $right_bracket = $translate('mod_links_right_bracket');
-        $mod_links = array();
-        $mod_links['mod_links_lock']['text'] = $translate('mod_links_lock');
-        $mod_links['mod_links_unlock']['text'] = $translate('mod_links_unlock');
-        $mod_links['mod_links_sticky']['text'] = $translate('mod_links_sticky');
-        $mod_links['mod_links_unsticky']['text'] = $translate('mod_links_unsticky');
-        $mod_links['mod_links_permasage']['text'] = $translate('mod_links_permasage');
-        $mod_links['mod_links_unpermasage']['text'] = $translate('mod_links_unpermasage');
-        $mod_links['mod_links_cyclic']['text'] = $translate('mod_links_cyclic');
-        $mod_links['mod_links_non_cyclic']['text'] = $translate('mod_links_non_cyclic');
-        $mod_links['mod_links_ban']['text'] = $translate('mod_links_ban');
-        $mod_links['mod_links_delete']['text'] = $translate('mod_links_delete');
-        $mod_links['mod_links_delete_by_ip']['text'] = $translate('mod_links_delete_by_ip');
-        $mod_links['mod_links_global_delete_by_ip']['text'] = $translate('mod_links_global_delete_by_ip');
-        $mod_links['mod_links_ban_and_delete']['text'] = $translate('mod_links_ban_and_delete');
-        $mod_links['mod_links_edit']['text'] = $translate('mod_links_edit');
-        $mod_links['mod_links_move']['text'] = $translate('mod_links_move');
-        $mod_links['mod_links_merge']['text'] = $translate('mod_links_merge');
-        $mod_links['mod_links_spoiler']['text'] = $translate('mod_links_spoiler');
-        $mod_links['mod_links_unspoiler']['text'] = $translate('mod_links_unspoiler');
+        return $translate($id);
+    }
 
-        foreach ($mod_links as $id => $values) {
-            $this->render_data[$id]['left_bracket'] = $left_bracket;
-            $this->render_data[$id]['right_bracket'] = $right_bracket;
-            $this->render_data[$id] = array_merge($this->render_data[$id], $values);
+    protected function uiDefines(): void
+    {
+        if ($this->domain->id() === Domain::SITE) {
+            return;
         }
 
         $domain = $this->domain;

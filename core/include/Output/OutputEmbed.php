@@ -37,17 +37,8 @@ class OutputEmbed extends Output
         }
 
         if ($this->session->inModmode($this->domain)) {
-            if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
-                $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'delete']);
-                $this->render_data['embed_modmode_options'][] = $this->render_data['mod_links_delete'];
-            }
-
-            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
-                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'move']);
-                $this->render_data['embed_modmode_options'][] = $this->render_data['mod_links_move'];
-            }
+            $output_modmode_headers = new OutputModmodeHeaders($this->domain, $this->write_mode);
+            $this->render_data['embed_modmode_options'] = $output_modmode_headers->upload($embed);
         }
 
         if ($catalog) {
