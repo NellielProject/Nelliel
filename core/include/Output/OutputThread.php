@@ -134,7 +134,7 @@ class OutputThread extends Output
         $abbreviate_start = $thread->getData('post_count') - $this->domain->setting('index_thread_replies');
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode) {
-            $output_modmode_headers = new OutputModmodeHeaders($this->domain, $this->write_mode);
+            $output_modmode_headers = new OutputModmodeLinks($this->domain, $this->write_mode);
             $this->render_data['thread_modmode_options'] = $output_modmode_headers->thread($thread);
         }
 

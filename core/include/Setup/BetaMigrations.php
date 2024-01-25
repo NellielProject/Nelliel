@@ -2101,6 +2101,12 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
+                // Update board settings
+                $removed_board_settings = ['content_links_download_file'];
+                $this->removeBoardSettings($removed_board_settings);
+
+                echo ' - ' . __('Board settings updated.') . '<br>';
+
                 // Update setting options table
                 nel_database('core')->exec(
                     'UPDATE "nelliel_setting_options" SET "menu_data" = \'{"Filtered original": "filtered_original", "Unix timestamp": "timestamp", "MD5": "md5", "SHA1": "sha1", "SHA256": "sha256", "SHA512": "sha512"}\' WHERE "setting_name" = \'preferred_filename\'');

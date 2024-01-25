@@ -37,9 +37,12 @@ class OutputEmbed extends Output
         }
 
         if ($this->session->inModmode($this->domain)) {
-            $output_modmode_headers = new OutputModmodeHeaders($this->domain, $this->write_mode);
+            $output_modmode_headers = new OutputModmodeLinks($this->domain, $this->write_mode);
             $this->render_data['embed_modmode_options'] = $output_modmode_headers->upload($embed);
         }
+
+        $output_content_links = new OutputContentLinks($this->domain, $this->write_mode);
+        $this->render_data['embed_options'] = $output_content_links->upload($embed);
 
         if ($catalog) {
             $first_full_size = $first && $this->domain->setting('catalog_first_preview_full_size');
@@ -65,11 +68,8 @@ class OutputEmbed extends Output
         $this->render_data['max_preview_width'] = $max_width;
         $this->render_data['max_preview_height'] = $max_height;
 
-        $this->render_data['content_links_hide_embed']['content_id'] = $embed->contentID()->getIDString();
-        $this->render_data['embed_options'][] = $this->render_data['content_links_hide_embed'];
-
         if ($embed->getData('deleted')) {
-            if(nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
+            if (nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
                 $this->render_data['deleted_url'] = $this->domain->setting('image_deleted_embed');
             } else {
                 $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_embed');

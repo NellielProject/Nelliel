@@ -583,7 +583,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_show_upload_meta', 'Show Meta', 'Show Meta', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_hide_upload_meta', 'Hide Meta', 'Hide Meta', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_cite_post', 'Cite', 'Cite', '{"type":"text"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_download_file', 'Download', 'Download', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_first_posts', 'First %d posts', 'First %d posts', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_last_posts', 'Last %d posts', 'Last %d posts', '{"type":"text"}']);
 

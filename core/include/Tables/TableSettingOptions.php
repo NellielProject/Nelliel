@@ -139,7 +139,6 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'content_links_show_upload_meta', '', 1, 0]);
         $this->insertDefaultRow(['board', 'content_links_hide_upload_meta', '', 1, 0]);
         $this->insertDefaultRow(['board', 'content_links_cite_post', '', 1, 0]);
-        $this->insertDefaultRow(['board', 'content_links_download_file', '', 1, 0]);
         $this->insertDefaultRow(['board', 'content_links_first_posts', '', 1, 0]);
         $this->insertDefaultRow(['board', 'content_links_last_posts', '', 1, 0]);
         $this->insertDefaultRow(['site', 'site_nav_links_left_bracket', '', 1, 0]);

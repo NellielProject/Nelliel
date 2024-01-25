@@ -77,7 +77,7 @@ class OutputPost extends Output
             }
 
             $this->render_data['mod_ip_address'] = $ip;
-            $output_modmode_headers = new OutputModmodeHeaders($this->domain, $this->write_mode);
+            $output_modmode_headers = new OutputModmodeLinks($this->domain, $this->write_mode);
             $this->render_data['post_modmode_options'] = $output_modmode_headers->post($post);
         }
 
@@ -250,10 +250,8 @@ class OutputPost extends Output
             }
         }
 
-        $this->render_data['content_links_hide_post']['content_id'] = $post->contentID()->getIDString();
-        $this->render_data['post_options'][] = $this->render_data['content_links_hide_post'];
-        $this->render_data['content_links_cite_post']['content_id'] = $post->contentID()->getIDString();
-        $this->render_data['post_options'][] = $this->render_data['content_links_cite_post'];
+        $output_content_links = new OutputContentLinks($this->domain, $this->write_mode);
+        $this->render_data['post_options'] = $output_content_links->post($post);
 
         $post_headers['post_time'] = $this->domain->domainDateTime(intval($post->getData('post_time')))->format(
             $this->domain->setting('post_time_format'));

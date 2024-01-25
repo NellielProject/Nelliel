@@ -105,6 +105,7 @@ class OutputIndex extends Output
         }
 
         $gen_data['index_rendering'] = true;
+        $gen_data['context'] = 'index';
         $threads_on_page = 0;
         $this->render_data['threads'] = array();
 
@@ -149,7 +150,7 @@ class OutputIndex extends Output
             $abbreviate_start = $thread->getData('post_count') - $index_replies;
 
             if ($this->session->inModmode($this->domain) && !$this->write_mode) {
-                $output_modmode_headers = new OutputModmodeHeaders($this->domain, $this->write_mode);
+                $output_modmode_headers = new OutputModmodeLinks($this->domain, $this->write_mode);
                 $thread_input['thread_modmode_options'] = $output_modmode_headers->thread($thread);
                 $thread_input['post_modmode_options'] = $output_modmode_headers->post($thread->firstPost());
             }
@@ -263,71 +264,8 @@ class OutputIndex extends Output
         $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
         $thread_headers['post_content_id'] = $post_content_id->getIDString();
         $thread_headers['index_render'] = true;
-
-        if ($gen_data['abbreviate']) {
-            if ($this->session->inModmode($this->domain)) {
-                $this->render_data['content_links_expand_thread']['url'] = $thread->getURL(!$this->write_mode, false,
-                    'expand&modmode');
-                $this->render_data['content_links_expand_thread']['alt_url'] = $thread->getURL(!$this->write_mode, false,
-                    'collapse&modmode');
-            } else {
-                $this->render_data['content_links_expand_thread']['url'] = $thread->getURL(!$this->write_mode, false,
-                    'expand');
-                $this->render_data['content_links_expand_thread']['alt_url'] = $thread->getURL(!$this->write_mode, false,
-                    'collapse');
-            }
-
-            $this->render_data['content_links_expand_thread']['query_class'] = 'js-hide-thread';
-            $this->render_data['content_links_expand_thread']['content_id'] = $thread->contentID()->getIDString();
-            $options['thread'][] = $this->render_data['content_links_expand_thread'];
-        }
-
-        if ($this->session->inModmode($this->domain)) {
-            $this->render_data['content_links_reply']['url'] = $thread->getURL(!$this->write_mode, false, 'modmode');
-        } else {
-            $this->render_data['content_links_reply']['url'] = $thread->getURL(!$this->write_mode);
-        }
-
-        $this->render_data['content_links_reply']['query_class'] = 'js-hide-thread';
-        $this->render_data['content_links_reply']['content_id'] = $thread->contentID()->getIDString();
-        $options['thread'][] = $this->render_data['content_links_reply'];
-        $this->render_data['content_links_hide_thread']['content_id'] = $post->contentID()->getIDString();
-        $options['thread'][] = $this->render_data['content_links_hide_thread'];
-
-        $first_posts_increments = json_decode($this->domain->setting('first_posts_increments'));
-        $first_posts_format = $thread->pageBasename() . $this->site_domain->setting('first_posts_filename_format');
-
-        if (is_array($first_posts_increments) &&
-            $thread->getData('post_count') > $this->domain->setting('first_posts_threshold')) {
-            foreach ($first_posts_increments as $increment) {
-                if ($thread->getData('post_count') >= $increment) {
-                    $this->render_data['content_links_first_posts']['url'] = $this->domain->reference('page_web_path') .
-                        $thread->contentID()->threadID() . '/' . sprintf($first_posts_format, $increment) . NEL_PAGE_EXT;
-                    $this->render_data['content_links_first_posts']['text'] = sprintf(
-                        $this->render_data['content_links_first_posts']['text'], $increment);
-                    $this->render_data['content_links_first_posts']['query_class'] = 'js-hide-thread';
-                    $options['thread'][] = $this->render_data['content_links_first_posts'];
-                }
-            }
-        }
-
-        $last_posts_increments = json_decode($this->domain->setting('last_posts_increments'));
-        $last_posts_format = $thread->pageBasename() . $this->site_domain->setting('last_posts_filename_format');
-
-        if (is_array($last_posts_increments) &&
-            $thread->getData('post_count') > $this->domain->setting('last_posts_threshold')) {
-            foreach ($last_posts_increments as $increment) {
-                if ($thread->getData('post_count') >= $increment) {
-                    $this->render_data['content_links_last_posts']['url'] = $this->domain->reference('page_web_path') .
-                        $thread->contentID()->threadID() . '/' . sprintf($last_posts_format, $increment) . NEL_PAGE_EXT;
-                    $this->render_data['content_links_last_posts']['text'] = sprintf(
-                        $this->render_data['content_links_last_posts']['text'], $increment);
-                    $this->render_data['content_links_last_posts']['query_class'] = 'js-hide-thread';
-                    $options['thread'][] = $this->render_data['content_links_last_posts'];
-                }
-            }
-        }
-
+        $output_content_links = new OutputContentLinks($this->domain, $this->write_mode);
+        $options['thread'] = $output_content_links->thread($thread, $gen_data);
         $this->render_data['headers']['thread_headers'] = $thread_headers;
         return $options;
     }

@@ -10,7 +10,7 @@ use Nelliel\Content\Thread;
 use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 
-class OutputModmodeHeaders extends Output
+class OutputModmodeLinks extends Output
 {
 
     function __construct(Domain $domain, bool $write_mode)
@@ -194,33 +194,6 @@ class OutputModmodeHeaders extends Output
         return $link_set->build($options_keys);
     }
 
-    public function file(Upload $upload): array
-    {
-        $options_keys = ['mod_links_delete', 'mod_links_move'];
-        $link_set = new LinkSet();
-        $base_data = array();
-        $base_data['left_bracket'] = $this->getUIText('mod_links_left_bracket');
-        $base_data['right_bracket'] = $this->getUIText('mod_links_right_bracket');
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
-            $link_set->addLink('mod_links_delete', $base_data);
-            $link_set->addData('mod_links_delete', 'url',
-                nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $upload->contentID()->getIDString(), 'delete']));
-            $link_set->addData('mod_links_delete', 'text', $this->getUIText('mod_links_delete'));
-        }
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
-            $link_set->addLink('mod_links_move', $base_data);
-            $link_set->addData('mod_links_move', 'url',
-                nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $upload->contentID()->getIDString(), 'move']));
-            $link_set->addData('mod_links_move', 'text', $this->getUIText('mod_links_move'));
-        }
-
-        return $link_set->build($options_keys);
-    }
-
     public function upload(Upload $upload): array
     {
         $is_file = nel_true_empty($upload->getData('embed_url'));
@@ -270,5 +243,16 @@ class OutputModmodeHeaders extends Output
         }
 
         return $link_set->build($options_keys);
+    }
+
+    private function getUIText(string $id)
+    {
+        $ui_text = strval($this->domain->setting($id));
+
+        if (!$this->domain->setting('translate_mod_links') || $ui_text === '') {
+            return $ui_text;
+        }
+
+        return __($ui_text);
     }
 }

@@ -31,7 +31,7 @@ class OutputFile extends Output
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->session->inModmode($this->domain)) {
-            $output_modmode_headers = new OutputModmodeHeaders($this->domain, $this->write_mode);
+            $output_modmode_headers = new OutputModmodeLinks($this->domain, $this->write_mode);
             $this->render_data['file_modmode_options'] = $output_modmode_headers->upload($file);
         }
 
@@ -51,6 +51,9 @@ class OutputFile extends Output
                 $this->render_data['display_ratio'] = $fraction->getNumerator() . ':' . $fraction->getDenominator();
             }
         }
+
+        $output_content_links = new OutputContentLinks($this->domain, $this->write_mode);
+        $this->render_data['file_options'] = $output_content_links->upload($file);
 
         $this->render_data['file_url'] = $file->getURL(false);
         $this->render_data['show_download_link'] = $this->domain->setting('show_download_link');
@@ -121,12 +124,6 @@ class OutputFile extends Output
         $has_static_preview = !nel_true_empty($file->getData('static_preview_name')) && $preview_size_not_zero;
         $has_animated_preview = !nel_true_empty($file->getData('animated_preview_name')) && $preview_size_not_zero;
         $preview_type = null;
-
-        $this->render_data['content_links_hide_file']['content_id'] = $file->contentID()->getIDString();
-        $this->render_data['file_options'][] = $this->render_data['content_links_hide_file'];
-        $this->render_data['content_links_show_upload_meta']['content_id'] = $file->contentID()->getIDString();
-        $this->render_data['content_links_show_upload_meta']['query_class'] = 'js-hide-file';
-        $this->render_data['file_options'][] = $this->render_data['content_links_show_upload_meta'];
 
         if ($file->getData('deleted') && $this->domain->setting('display_deleted_placeholder')) {
             if (nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
