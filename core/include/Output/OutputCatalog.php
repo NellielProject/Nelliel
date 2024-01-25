@@ -35,7 +35,7 @@ class OutputCatalog extends Output
         }
 
         $this->render_data['header']['name'] = _gettext('Catalog of') . ' ' . $this->render_data['header']['name'];
-        $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
+        $output_navigation = new OutputNavigationLinks($this->domain, $this->write_mode);
         $this->render_data['page_navigation'] = $output_navigation->boardPages(
             ['in_modmode' => $this->render_data['in_modmode'], 'display' => 'catalog'], $data_only);
         $thread_count = 1;

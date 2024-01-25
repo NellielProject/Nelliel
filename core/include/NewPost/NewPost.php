@@ -172,7 +172,7 @@ class NewPost
 
         // Generate thread page if it doesn't exist, otherwise update
         $regen = new Regen();
-        $regen->threads($this->domain, true, [$thread->contentID()->threadID()]);
+        $regen->threads($this->domain, [$thread->contentID()->threadID()]);
         $regen->index($this->domain);
 
         if ($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active')) {

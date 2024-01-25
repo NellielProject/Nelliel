@@ -23,8 +23,8 @@ class OutputHomePage extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
-        $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
-        $this->render_data['boards'] = $output_navigation->boardLinks([], true);
+        $output_navigation = new OutputNavigationLinks($this->domain, $this->write_mode);
+        $this->render_data['boards'] = $output_navigation->boards([], true);
         $output_news = new OutputNews($this->domain, $this->write_mode);
         $this->render_data['news_entries'] = $output_news->newsList(3);
         $output_footer = new OutputFooter($this->domain, $this->write_mode);

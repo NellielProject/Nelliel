@@ -130,7 +130,7 @@ class AdminThreads extends Admin
     private function regenThread(DomainBoard $domain, $thread_id, bool $regen_index = false)
     {
         $regen = new Regen();
-        $regen->threads($domain, true, [$thread_id]);
+        $regen->threads($domain, [$thread_id]);
 
         if ($this->site_domain->setting('overboard_active')) {
             $regen->overboard($this->site_domain);

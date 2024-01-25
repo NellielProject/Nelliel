@@ -66,7 +66,7 @@ class AdminBans extends Admin
                 $content_post->changeData('mod_comment', $mod_post_comment);
                 $content_post->writeToDatabase();
                 $regen = new Regen();
-                $regen->threads($this->domain, true, [$content_id->postID()]);
+                $regen->threads($this->domain, [$content_id->postID()]);
                 $regen->index($this->domain);
                 $regen->overboard($this->domain);
             }

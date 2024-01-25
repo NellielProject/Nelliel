@@ -706,7 +706,7 @@ class Thread implements MutableData
         }
 
         $regen = new Regen();
-        $regen->threads($domain, true, [$new_thread->contentID()->threadID()]);
+        $regen->threads($domain, [$new_thread->contentID()->threadID()]);
         $regen->index($domain);
         $regen->index($this->domain);
         return $new_thread;

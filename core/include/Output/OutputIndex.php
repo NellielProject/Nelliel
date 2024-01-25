@@ -43,7 +43,7 @@ class OutputIndex extends Output
             $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'threads']);
         }
 
-        $output_navigation = new OutputNavigation($this->domain, $this->write_mode);
+        $output_navigation = new OutputNavigationLinks($this->domain, $this->write_mode);
         $this->render_data['page_navigation'] = $output_navigation->boardPages(
             ['in_modmode' => $this->render_data['in_modmode'], 'display' => 'index'], $data_only);
 
