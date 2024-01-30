@@ -1103,6 +1103,15 @@
 			<tr>
 				<th id="section-moderator-links" colspan="{{ colspan }}" data-i18n="">Moderator Links</th>
 			</tr>
+	{{# thread_mod_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ thread_mod_options_link_set }}
+	{{# post_mod_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ post_mod_options_link_set }}
+	{{# upload_mod_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ upload_mod_options_link_set }}
 	{{# translate_mod_links }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ translate_mod_links }}
@@ -1159,6 +1168,15 @@
 			<tr>
 				<th id="section-content-links" colspan="{{ colspan }}" data-i18n="">Content Links</th>
 			</tr>
+	{{# thread_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ thread_options_link_set }}
+	{{# post_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ post_options_link_set }}
+	{{# upload_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ upload_options_link_set }}
 	{{# translate_content_links }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ translate_content_links }}

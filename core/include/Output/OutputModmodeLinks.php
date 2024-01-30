@@ -20,16 +20,14 @@ class OutputModmodeLinks extends Output
 
     public function thread(Thread $thread): array
     {
-        $options_keys = ['mod_links_lock', 'mod_links_unlock', 'mod_links_sticky', 'mod_links_unsticky',
-            'mod_links_permasage', 'mod_links_unpermasage', 'mod_links_cyclic', 'mod_links_non_cyclic', 'mod_links_move',
-            'mod_links_merge'];
+        $options_keys = (array) json_decode($this->domain->setting('thread_mod_options_link_set'));
         $link_set = new LinkSet();
         $base_data = array();
         $base_data['left_bracket'] = $this->getUIText('mod_links_left_bracket');
         $base_data['right_bracket'] = $this->getUIText('mod_links_right_bracket');
 
         if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
-            if ($thread->getData('locked')) {
+            if (!$thread->getData('locked')) {
                 $link_set->addLink('mod_links_lock', $base_data);
                 $link_set->addData('mod_links_lock', 'url',
                     nel_build_router_url(
@@ -43,7 +41,7 @@ class OutputModmodeLinks extends Output
                 $link_set->addData('mod_links_unlock', 'text', $this->getUIText('mod_links_unlock'));
             }
 
-            if ($thread->getData('sticky')) {
+            if (!$thread->getData('sticky')) {
                 $link_set->addLink('mod_links_sticky', $base_data);
                 $link_set->addData('mod_links_sticky', 'url',
                     nel_build_router_url(
@@ -57,7 +55,7 @@ class OutputModmodeLinks extends Output
                 $link_set->addData('mod_links_unsticky', 'text', $this->getUIText('mod_links_unsticky'));
             }
 
-            if ($thread->getData('permasage')) {
+            if (!$thread->getData('permasage')) {
                 $link_set->addLink('mod_links_permasage', $base_data);
                 $link_set->addData('mod_links_permasage', 'url',
                     nel_build_router_url(
@@ -73,7 +71,7 @@ class OutputModmodeLinks extends Output
                 $link_set->addData('mod_links_unpermasage', 'text', $this->getUIText('mod_links_unpermasage'));
             }
 
-            if ($thread->getData('cyclic')) {
+            if (!$thread->getData('cyclic')) {
                 $link_set->addLink('mod_links_cyclic', $base_data);
                 $link_set->addData('mod_links_cyclic', 'url',
                     nel_build_router_url(
@@ -124,8 +122,7 @@ class OutputModmodeLinks extends Output
         }
 
         $this->render_data['mod_ip_address'] = $ip;
-        $options_keys = ['mod_links_ban', 'mod_links_delete', 'mod_links_ban_and_delete', 'mod_links_delete_by_ip',
-            'mod_links_global_delete_by_ip', 'mod_links_edit', 'mod_links_move'];
+        $options_keys = (array) json_decode($this->domain->setting('post_mod_options_link_set'));
         $link_set = new LinkSet();
         $base_data = array();
         $base_data['left_bracket'] = $this->getUIText('mod_links_left_bracket');
@@ -197,7 +194,7 @@ class OutputModmodeLinks extends Output
     public function upload(Upload $upload): array
     {
         $is_file = nel_true_empty($upload->getData('embed_url'));
-        $options_keys = ['mod_links_delete', 'mod_links_move'];
+        $options_keys = (array) json_decode($this->domain->setting('upload_mod_options_link_set'));
         $link_set = new LinkSet();
         $base_data = array();
         $base_data['left_bracket'] = $this->getUIText('mod_links_left_bracket');
@@ -224,20 +221,20 @@ class OutputModmodeLinks extends Output
             $options_keys[] = 'mod_links_unspoiler';
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
-                if ($upload->getData('spoiler')) {
-                    $link_set->addLink('mod_links_unspoiler', $base_data);
-                    $link_set->addData('mod_links_unspoiler', 'url',
-                        nel_build_router_url(
-                            [$this->domain->uri(), 'moderation', 'modmode', $upload->contentID()->getIDString(),
-                                'unspoiler']));
-                    $link_set->addData('mod_links_unspoiler', 'text', $this->getUIText('mod_links_unspoiler'));
-                } else {
+                if (!$upload->getData('spoiler')) {
                     $link_set->addLink('mod_links_spoiler', $base_data);
                     $link_set->addData('mod_links_spoiler', 'url',
                         nel_build_router_url(
                             [$this->domain->uri(), 'moderation', 'modmode', $upload->contentID()->getIDString(),
                                 'spoiler']));
                     $link_set->addData('mod_links_spoiler', 'text', $this->getUIText('mod_links_spoiler'));
+                    $link_set->addLink('mod_links_unspoiler', $base_data);
+                } else {
+                    $link_set->addData('mod_links_unspoiler', 'url',
+                        nel_build_router_url(
+                            [$this->domain->uri(), 'moderation', 'modmode', $upload->contentID()->getIDString(),
+                                'unspoiler']));
+                    $link_set->addData('mod_links_unspoiler', 'text', $this->getUIText('mod_links_unspoiler'));
                 }
             }
         }

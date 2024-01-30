@@ -300,6 +300,7 @@ class BetaMigrations
 
                 echo ' - ' . __('Reports table updated.') . '<br>';
 
+                // Update settings table
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'boolean', 'post_backlinks_header', '1',
@@ -2125,6 +2126,37 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $this->addRolePermission('perm_access_plugin_controls');
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
+                // Update site settings
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'integer', 'visitor_id_lifespan', '31536000',
+                        'How long a visitor ID will be valid (seconds).', '{"type":"number"}']);
+
+                $new_site_settings = ['visitor_id_lifespan'];
+                $this->updateSiteConfig($new_site_settings);
+
+                $rename_site_settings = ['translate_site_nav_links' => 'translate_site_links',
+                    'site_nav_links_left_bracket' => 'site_links_left_bracket',
+                    'site_nav_links_right_bracket' => 'site_links_right_bracket',
+                    'site_nav_links_home' => 'site_links_home', 'site_nav_links_news' => 'site_links_news',
+                    'site_nav_links_faq' => 'site_links_faq',
+                    'site_nav_links_about_nelliel' => 'site_links_about_nelliel',
+                    'site_nav_links_blank_page' => 'site_links_blank_page',
+                    'account_nav_links_account' => 'site_links_account',
+                    'account_nav_links_site_panel' => 'site_links_site_panel',
+                    'account_nav_links_global_panel' => 'site_links_global_panel',
+                    'account_nav_links_board_panel' => 'site_links_board_panel',
+                    'account_nav_links_board_list' => 'site_links_board_list',
+                    'account_nav_links_logout' => 'site_links_logout'];
+                $this->renameSiteSettings($rename_site_settings);
+
+                $old_site_settings = ['translate_account_nav_links', 'account_nav_links_left_bracket',
+                    'account_nav_links_right_bracket'];
+                $this->removeSiteSettings($old_site_settings);
+                nel_site_domain()->deleteCache();
+                nel_site_domain(true);
+
+                echo ' - ' . __('Site settings updated.') . '<br>';
 
                 $migration_count ++;
         }

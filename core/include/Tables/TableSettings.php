@@ -199,26 +199,23 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_threads', '20', 'Maximum threads on the SFW overboard.', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_thread_replies', '5', 'How many replies to a thread should be displayed on the SFW overboard.', '{"type":"number"}']);
 
-        // Site Navigation Links
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'translate_site_nav_links', '1', 'Translate site navigation text when possible.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_left_bracket', '[', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_right_bracket', ']', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_home', 'Home', 'Home', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_news', 'News', 'News', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_faq', 'FAQ', 'FAQ', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_about_nelliel', 'About Nelliel', 'About Nelliel', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_nav_links_blank_page', 'Blank Page', 'Blank Page', '{"type":"text"}']);
-
-        // Account Navigation Links
-        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'translate_account_nav_links', '1', 'Translate account navigation text when possible.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_left_bracket', '[', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_right_bracket', ']', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_account', 'Account', 'Account', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_site_panel', 'Site Panel', 'Site Panel', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_global_panel', 'Global Panel', 'Global Panel', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_board_panel', 'Board Panel', 'Global Panel', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_board_list', 'Board List', 'Board List', '{"type":"text"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'account_nav_links_logout', 'Logout', 'Logout', '{"type":"text"}']);
+        // Site Links
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_navigation_link_set', '["site_links_home", "site_links_news", "site_links_faq", "site_links_overboard", "site_links_sfw_overboard", "site_links_about_nelliel", "site_links_blank_page", "site_links_account"]', 'Set of links for general site navigation.', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'logged_in_link_set', '["site_links_site_panel", "site_links_global_panel", "site_links_board_panel", "site_links_board_list", "site_links_logout"]', 'Set of links that appear while logged in.', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'translate_site_links', '1', 'Translate site navigation text when possible.', '{"type":"checkbox"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_left_bracket', '[', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_right_bracket', ']', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_home', 'Home', 'Home', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_news', 'News', 'News', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_faq', 'FAQ', 'FAQ', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_about_nelliel', 'About Nelliel', 'About Nelliel', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_blank_page', 'Blank Page', 'Blank Page', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_account', 'Account', 'Account', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_site_panel', 'Site Panel', 'Site Panel', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_global_panel', 'Global Panel', 'Global Panel', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_board_panel', 'Board Panel', 'Global Panel', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_board_list', 'Board List', 'Board List', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_logout', 'Logout', 'Logout', '{"type":"text"}']);
 
         // Board
         // General
@@ -543,6 +540,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'early404_page_threshold', '3', 'Last page of the index before early 404 pruning begins. Threads beyond this page will be checked.', '{"type":"number"}']);
 
         // Moderator Links
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'thread_mod_options_link_set', '["mod_links_lock", "mod_links_unlock", "mod_links_sticky", "mod_links_unsticky", "mod_links_permasage", "mod_links_unpermasage", "mod_links_cyclic", "mod_links_non_cyclic", "mod_links_move", "mod_links_merge"]', 'Set of links for thread moderation.', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'post_mod_options_link_set', '["mod_links_ban", "mod_links_delete", "mod_links_ban_and_delete", "mod_links_delete_by_ip", "mod_links_global_delete_by_ip", "mod_links_edit", "mod_links_move"]', 'Set of links for post moderation.', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'upload_mod_options_link_set', '["mod_links_delete", "mod_links_move"]', 'Set of links for upload moderation.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'translate_mod_links', '1', 'Translate moderator link text when possible.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_left_bracket', '[', 'Bracket on the left side of moderation links.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_right_bracket', ']', 'Bracket on the right side of moderation links.', '{"type":"text"}']);
@@ -566,6 +566,9 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_unspoiler', 'Unspoiler', 'Unspoiler', '{"type":"text"}']);
 
         // Content Links
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'thread_options_link_set', '["content_links_reply", "content_links_hide_thread", "content_links_expand_thread"]', 'Set of links for thread options.', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'post_options_link_set', '["content_links_hide_post", "content_links_cite_post"]', 'Set of links for post options.', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'upload_options_link_set', '["content_links_hide_file", "content_links_hide_embed", "content_links_show_upload_meta"]', 'Set of links for upload options.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'translate_content_links', '1', 'Translate content link text when possible.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_left_bracket', '[', 'Bracket on the left side of content links.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_right_bracket', ']', 'Bracket on the right side of content links.', '{"type":"text"}']);

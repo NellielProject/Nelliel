@@ -20,7 +20,7 @@ class OutputContentLinks extends Output
 
     public function thread(Thread $thread, array $gen_data = array()): array
     {
-        $options_keys = ['content_links_reply', 'content_links_hide_thread', 'content_links_expand_thread'];
+        $options_keys = (array) json_decode($this->domain->setting('thread_options_link_set'));
         $context = $gen_data['context'] ?? '';
         $link_set = new LinkSet();
         $base_data = array();
@@ -153,7 +153,7 @@ class OutputContentLinks extends Output
 
     public function post(Post $post): array
     {
-        $options_keys = ['content_links_hide_post', 'content_links_cite_post'];
+        $options_keys = (array) json_decode($this->domain->setting('post_options_link_set'));
         $link_set = new LinkSet();
         $base_data = array();
         $base_data['left_bracket'] = $this->getUIText('content_links_left_bracket');
@@ -184,7 +184,7 @@ class OutputContentLinks extends Output
     public function upload(Upload $upload): array
     {
         $is_file = nel_true_empty($upload->getData('embed_url'));
-        $options_keys = ['content_links_hide_file', 'content_links_hide_embed', 'content_links_show_upload_meta'];
+        $options_keys = (array) json_decode($this->domain->setting('post_options_link_set'));
         $link_set = new LinkSet();
         $base_data = array();
         $base_data['left_bracket'] = $this->getUIText('mod_links_left_bracket');
