@@ -30,7 +30,7 @@ class OutputHeader extends Output
         $this->render_data['site_navigation']['link_data'] = $output_navigation->site();
 
         if ($this->render_data['session_active']) {
-            $this->render_data['account_navigation']['link_data'] = $output_navigation->account();
+            $this->render_data['account_navigation']['link_data'] = $output_navigation->logged_in();
         }
 
         $this->render_data['use_general_header'] = true;
@@ -52,10 +52,10 @@ class OutputHeader extends Output
         $this->render_data['show_bottom_styles'] = $this->domain->setting('show_bottom_styles');
         $output_navigation = new OutputNavigationLinks($this->domain, $this->write_mode);
         $this->render_data['site_navigation']['link_data'] = $output_navigation->site();
-        $this->render_data['board_navigation'] = $output_navigation->boards();
+        $this->render_data['board_navigation']['boards'] = $output_navigation->boards();
 
         if ($this->render_data['session_active']) {
-            $this->render_data['account_navigation']['link_data'] = $output_navigation->account();
+            $this->render_data['account_navigation']['link_data'] = $output_navigation->logged_in();
         }
 
         $this->render_data['use_board_header'] = true;
@@ -101,7 +101,7 @@ class OutputHeader extends Output
         $this->render_data['site_navigation']['link_data'] = $output_navigation->site();
 
         if ($this->render_data['session_active']) {
-            $this->render_data['account_navigation']['link_data'] = $output_navigation->account();
+            $this->render_data['account_navigation']['link_data'] = $output_navigation->logged_in();
         }
         $output = $this->output('headers/manage', $data_only, true, $this->render_data);
         return $output;

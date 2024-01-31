@@ -2128,9 +2128,39 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
                 // Update site settings
+                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaultRow(
-                    ['site', 'nelliel', 'integer', 'visitor_id_lifespan', '31536000',
-                        'How long a visitor ID will be valid (seconds).', '{"type":"number"}']);
+                    ['site', 'nelliel', 'string', 'site_navigation_link_set',
+                        '["site_links_home", "site_links_news", "site_links_faq", "site_links_about_nelliel", "site_links_blank_page", "site_links_account"]',
+                        'Set of links for general site navigation.', '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'logged_in_link_set',
+                        '["site_links_site_panel", "site_links_global_panel", "site_links_board_panel", "site_links_board_list", "site_links_logout"]',
+                        'Set of links that appear while logged in.', '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'thread_mod_options_link_set',
+                        '["mod_links_lock", "mod_links_unlock", "mod_links_sticky", "mod_links_unsticky", "mod_links_permasage", "mod_links_unpermasage", "mod_links_cyclic", "mod_links_non_cyclic", "mod_links_move", "mod_links_merge"]',
+                        'Set of links for thread moderation.', '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'post_mod_options_link_set',
+                        '["mod_links_ban", "mod_links_delete", "mod_links_ban_and_delete", "mod_links_delete_by_ip", "mod_links_global_delete_by_ip", "mod_links_edit", "mod_links_move"]',
+                        'Set of links for post moderation.', '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'upload_mod_options_link_set',
+                        '["mod_links_delete", "mod_links_move"]', 'Set of links for upload moderation.',
+                        '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'thread_options_link_set',
+                        '["content_links_reply", "content_links_hide_thread", "content_links_expand_thread"]',
+                        'Set of links for thread options.', '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'post_options_link_set',
+                        '["content_links_hide_post", "content_links_cite_post"]', 'Set of links for post options.',
+                        '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'upload_options_link_set',
+                        '["content_links_hide_file", "content_links_hide_embed", "content_links_show_upload_meta"]',
+                        'Set of links for upload options.', '{"type":"textarea"}']);
 
                 $new_site_settings = ['visitor_id_lifespan'];
                 $this->updateSiteConfig($new_site_settings);

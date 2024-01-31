@@ -18,27 +18,46 @@ class OutputNavigationLinks extends Output
 
     public function boards(): array
     {
-        $this->renderSetup();
         $board_ids = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
             PDO::FETCH_COLUMN);
         $board_count = count($board_ids);
-        $end = $board_count - 1;
-        $link_data = array();
+        $link_set = new LinkSet();
+        $set_keys = array();
+        $last_key = '';
 
         for ($i = 0; $i < $board_count; $i ++) {
             $board = Domain::getDomainFromID($board_ids[$i], $this->database);
-            $board_info = array();
-            $board_info['board_url'] = $board->reference('board_web_path');
-            $board_info['name'] = $board->setting('name');
-            $board_info['board_uri'] = $board->uri();
-            $board_info['end'] = $i === $end;
-            $link_data['boards'][] = $board_info;
+            $link_set->addData($board->uri(), 'board_url', $board->reference('board_web_path'));
+            $link_set->addData($board->uri(), 'name', $board->setting('name'));
+            $link_set->addData($board->uri(), 'board_uri', $board->uri());
+            $last_key = $board->uri();
+            $set_keys[] = $board->uri();
         }
 
-        return $link_data;
+        if ($this->site_domain->setting('overboard_active')) {
+            $key = $this->site_domain->setting('overboard_uri');
+            $link_set->addData($key, 'board_uri', $this->site_domain->setting('overboard_uri'));
+            $link_set->addData($key, 'board_name', $this->site_domain->setting('overboard_name'));
+            $link_set->addData($key, 'board_url', NEL_BASE_WEB_PATH . $this->site_domain->setting('overboard_uri') . '/');
+            $last_key = $key;
+            $set_keys[] = $this->site_domain->setting('overboard_uri');
+        }
+
+        if ($this->site_domain->setting('sfw_overboard_active')) {
+            $key = $this->site_domain->setting('sfw_overboard_uri');
+            $link_set->addData($key, 'board_uri', $this->site_domain->setting('sfw_overboard_uri'));
+            $link_set->addData($key, 'board_name', $this->site_domain->setting('sfw_overboard_name'));
+            $link_set->addData($key, 'board_url',
+                NEL_BASE_WEB_PATH . $this->site_domain->setting('sfw_overboard_uri') . '/');
+            $last_key = $this->site_domain->setting('sfw_overboard_uri');
+            $set_keys[] = $this->site_domain->setting('sfw_overboard_uri');
+        }
+
+        $link_set->addData($last_key, 'end', true);
+        return $link_set->build($set_keys);
     }
 
-    public function account(): array
+    public function logged_in(): array
     {
         $domain = $this->site_domain;
         $do_translation = $domain->setting('translate_site_links');
@@ -133,20 +152,6 @@ class OutputNavigationLinks extends Output
         $link_set->addLink('site_links_account', $base_data);
         $link_set->addData('site_links_account', 'text', $translate('site_links_account'));
         $link_set->addData('site_links_account', 'url', nel_build_router_url([Domain::SITE, 'account']));
-
-        if ($this->site_domain->setting('overboard_active')) {
-            $link_set->addLink('site_links_overboard', $base_data);
-            $link_set->addData('site_links_overboard', 'text', $this->site_domain->setting('overboard_name'));
-            $link_set->addData('site_links_overboard', 'url',
-                NEL_BASE_WEB_PATH . $this->site_domain->setting('overboard_uri') . '/');
-        }
-
-        if ($this->site_domain->setting('sfw_overboard_active')) {
-            $link_set->addLink('site_links_sfw_overboard', $base_data);
-            $link_set->addData('site_links_sfw_overboard', 'text', $this->site_domain->setting('sfw_overboard_name'));
-            $link_set->addData('site_links_sfw_overboard', 'url',
-                NEL_BASE_WEB_PATH . $this->site_domain->setting('sfw_overboard_uri') . '/');
-        }
 
         return $link_set->build($options_keys);
     }

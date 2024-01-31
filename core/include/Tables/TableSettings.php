@@ -200,7 +200,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'sfw_overboard_thread_replies', '5', 'How many replies to a thread should be displayed on the SFW overboard.', '{"type":"number"}']);
 
         // Site Links
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_navigation_link_set', '["site_links_home", "site_links_news", "site_links_faq", "site_links_overboard", "site_links_sfw_overboard", "site_links_about_nelliel", "site_links_blank_page", "site_links_account"]', 'Set of links for general site navigation.', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_navigation_link_set', '["site_links_home", "site_links_news", "site_links_faq", "site_links_about_nelliel", "site_links_blank_page", "site_links_account"]', 'Set of links for general site navigation.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'logged_in_link_set', '["site_links_site_panel", "site_links_global_panel", "site_links_board_panel", "site_links_board_list", "site_links_logout"]', 'Set of links that appear while logged in.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'translate_site_links', '1', 'Translate site navigation text when possible.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_links_left_bracket', '[', 'Bracket on the left side of site menu links.', '{"type":"text"}']);
