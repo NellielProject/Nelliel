@@ -118,22 +118,6 @@ class Cites
         $this->database->executePrepared($prepared, [$post_id]);
     }
 
-    private function citeStored(array $cite_data, Domain $source_domain, int $source_post): bool
-    {
-        if ($cite_data['type'] === 'board-cite') {
-            $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
-            return $target_domain->exists();
-        }
-
-        $prepared = $this->database->prepare(
-            'SELECT 1 FROM "' . NEL_CITES_TABLE .
-            '" WHERE "source_board" = ? AND "source_post" = ? AND "target_board" = ? AND "target_post" = ? LIMIT 1');
-        return !empty(
-            $this->database->executePreparedFetch($prepared,
-                [$source_domain->id(), $source_post, $cite_data['target_board'], $cite_data['target_post']],
-                PDO::FETCH_COLUMN));
-    }
-
     public function addCitesFromPost(Post $post): void
     {
         if (nel_true_empty($post->getData('comment'))) {
@@ -144,10 +128,7 @@ class Cites
 
         foreach ($cite_list as $cite) {
             $cite_data = $this->getCiteData($cite, $post->domain());
-
-            if ($cite_data['exists']) {
-                $this->addCite($cite_data, $post->domain(), $post->contentID()->postID());
-            }
+            $this->addCite($cite_data, $post->domain(), $post->contentID()->postID());
         }
 
         $this->updateCachesForPost($post);
@@ -155,7 +136,12 @@ class Cites
 
     public function addCite(array $cite_data, Domain $source_domain, int $source_post): void
     {
-        if ($cite_data['type'] === 'board-cite' || $this->citeStored($cite_data, $source_domain, $source_post)) {
+        if ($cite_data['type'] === 'board-cite') {
+            return;
+        }
+
+        if ($this->database->rowExists(NEL_CITES_TABLE, ['source_board', 'source_post', 'target_board', 'target_post'],
+            [$source_domain->id(), $source_post, $cite_data['target_board'], $cite_data['target_post']])) {
             return;
         }
 
