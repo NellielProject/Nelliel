@@ -5,9 +5,9 @@ A guide to the basic development standards of Nelliel. Any contributions to the 
 ## Code Conventions
 PHP code follows [PSR-1](https://www.php-fig.org/psr/psr-1/), [PSR-2](https://www.php-fig.org/psr/psr-2/), [PSR-3](https://www.php-fig.org/psr/psr-3/) and [PSR-4](https://www.php-fig.org/psr/psr-4/) standards.
 
-Javascript and other code should follow common or recommended practice for the language.
-
 Markup languages (HTML, CSS, etc) must use tabs for indentation.
+
+Javascript and other code should follow common or recommended practice for the language.
 
 ### Naming
  - Global constants must be ALL CAPS and prefixed with `NEL_` or `NELLIEL_`.
@@ -45,7 +45,7 @@ Nelliel must be fully functional with recent versions of major browsers. Maintai
 
 ## Versioning
 After the 1.0 Release, Nelliel versioning will follow Major.Minor.Patch under these definitions:
- - Major: Major breaking changes or project-wide rework.
+ - Major: Major breaking changes or project-wide rework. Will probably never happen.
  - Minor: Minor breaking changes, requirements update, significant new features or changes introduced.
  - Patch: Bug fixes, code tweaks, refinements, minor new features.
 
@@ -54,8 +54,8 @@ When the version changes, the constant `NELLIEL_VERSION` in file `imgboard.php` 
 ## Branches
 Two primary Git branches are used:
 
- - `master` is the core stable branch. Aside from more critical patches it should only be updated on release versions or when stable checkpoints are achieved.
- - `dev-general	` is the core development branch. All development work should be performed on this branch.
+ - `master` is the core stable branch. Aside from critical patches it should only be updated on release versions or when stable checkpoints are achieved.
+ - `dev-general	` is the core development branch. All regular development work should be performed on this branch or merged into it.
 
 ## Error Codes
 Nelliel returns a numeric error id along with an error message. This keeps the benefit of a descriptive message for the user while making it easier to track where in the code the problem occurs. These are the designated ranges:
@@ -73,11 +73,11 @@ As much functionality and rendering as possible should be implemented server-sid
 
 ## Core vs Plugins
 Most functionality can be put in the core code base. However anything that is:
- - both complex to implement and opinionated or niche
- - subject to regular changes in implementation
+ - strongly opinionated or niche
+ - subject to changes in implementation
  - reliant on third-party services
  
-should be strongly considered for implementation via plugin instead of added directly to core. This simplifies maintenance and avoids bloating the code base over time.
+should be implemented via plugin instead of added directly to core. This simplifies maintenance and avoids bloating the code base over time.
 
 ## AI Code 	Generation
-Current code generation AI (e.g. GitHub Copilot) raises issues with copyright and open source licenses with no practical method of vetting the original context. Until these tools become better actors or the mentioned concerns are reasonably settled, code from broad-sourced generators is prohibited.
+Current code generation AI (e.g. GitHub Copilot) raises issues with copyright and open source licenses with no practical method of vetting the original context. Until these tools become better actors or the legal and ethical concerns are reasonably settled, code from AI generators is prohibited in both core and official plugins.
