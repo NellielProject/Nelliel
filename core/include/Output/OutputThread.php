@@ -22,7 +22,7 @@ class OutputThread extends Output
         $this->renderSetup();
         $this->setBodyTemplate('thread/thread');
         $route_parameters = $parameters['parameters'] ?? array();
-        $thread_id = $parameters['thread_id'] ?? array();
+        $thread_id = $parameters['thread_id'] ?? 0;
         $expand = array_key_exists('expand', $route_parameters);
         $collapse = array_key_exists('collapse', $route_parameters);
         $thread_content_id = new ContentID(ContentID::createIDString($thread_id));

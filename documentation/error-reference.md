@@ -61,7 +61,6 @@ Error 56: Uploads disabled. (NewPost/Uploads.php)
 Error 57: Upload flood. (NewPost/NewPost.php)  
 Error 58: File too big for category. (NewPost/Uploads.php)  
 Error 59: Rejected by wordfilter. (Wordfilters.php)  
-
 Error 60: Password does not match post. (Content/Post.php)  
 Error 61: Board locked, can't remove file. (Content/Upload.php)  
 Error 62: Board locked, can't remove post. (Content/Post.php)  
@@ -76,6 +75,8 @@ Error 70: CAPTCHA failed. (CAPTCHA.php)
 Error 72: Requesting CAPTCHAs too fast. (CAPTCHA.php)  
 
 Error 75: Post rejected by checkpoint. (NewPost/ActionsPost.php)  
+
+Error 80: Invalid domain. (Dispatch/Router.php)  
 
 Error 102: InnoDB engine unavailable. (Setup/Installer/DatabaseSetup.php)  
 Error 103: Failed to create database table. (Table.php)  
