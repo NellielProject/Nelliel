@@ -33,3 +33,7 @@ $technical_config['use_file_cache'] = true;
 
 // Stores some parsing and rendering data so it doesn't have to be processed as often.
 $technical_config['use_render_cache'] = true;
+
+// Enables debug mode. Debug mode bypasses some handlers and safeguards and provides more verbose information.
+// Debug mode may expose sensitive information and/or risk data corruption. Only use this for non-public development and debugging!
+$technical_config['debug_mode'] = false;
