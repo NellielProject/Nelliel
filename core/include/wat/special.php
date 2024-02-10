@@ -24,5 +24,5 @@ function nel_special(string $wut_do = null)
         return;
     }
 
-    nel_clean_exit();
+    exit(0);
 }

@@ -115,7 +115,7 @@ class Session
         $this->terminate();
         $output_login = new OutputLoginPage($this->domain, false);
         $output_login->render([], false);
-        nel_clean_exit(false);
+        exit(0);
     }
 
     public function login(): void

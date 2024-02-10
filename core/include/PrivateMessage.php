@@ -75,7 +75,7 @@ class PrivateMessage
         $this->canAccess();
         $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
         $output_private_messages->newMessage(['reply_id' => $this->message_id], false);
-        nel_clean_exit();
+        exit(0);
     }
 
     public function view()
@@ -83,7 +83,7 @@ class PrivateMessage
         $this->canAccess();
         $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
         $output_private_messages->viewMessage(['message_id' => $this->message_id], false);
-        nel_clean_exit();
+        exit(0);
     }
 
     public function send(): void

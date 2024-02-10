@@ -89,7 +89,7 @@ class DispatchAccount extends Dispatch
                         case 'new':
                             $output_private_messages = new OutputPrivateMessages($this->domain, false);
                             $output_private_messages->newMessage([], false);
-                            nel_clean_exit();
+                            exit(0);
                             break;
                     }
                 }

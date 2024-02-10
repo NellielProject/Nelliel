@@ -52,6 +52,10 @@ if (isset($_GET['upgrade'])) {
 unset($upgrade);
 unset($file_handler);
 
+require_once NEL_INCLUDE_PATH . 'exit_functions.php';
+register_shutdown_function('nel_clean_exit');
+set_exception_handler('nel_exception_handler');
+
 require_once NEL_INCLUDE_PATH . 'crypt.php';
 
 date_default_timezone_set(nel_site_domain()->setting('time_zone') ?? 'UTC');

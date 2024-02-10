@@ -5,18 +5,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use ChrisUllyott\FileSize;
 use IPTools\IP;
-use Nelliel\Redirect;
-use Nelliel\Auth\Authorization;
-
-function nel_clean_exit()
-{
-    $authorization = new Authorization(nel_database('core'));
-    $authorization->saveUsers();
-    $authorization->saveRoles();
-    $redirect = new Redirect();
-    $redirect->go();
-    die();
-}
 
 function nel_get_microtime(bool $convert_int = true)
 {

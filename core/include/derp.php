@@ -66,5 +66,5 @@ function nel_derp(int $error_id, string $error_message, int $response_code = 0, 
     http_response_code($response_code);
     echo $output_derp->render($parameters, false);
 
-    nel_clean_exit();
+    exit(1);
 }

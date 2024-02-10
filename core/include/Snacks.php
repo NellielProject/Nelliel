@@ -120,7 +120,7 @@ class Snacks
         $ban_hammer->apply();
         $output_ban_page = new OutputBanPage($this->domain, false);
         $output_ban_page->render(['ban_hammer' => $ban_hammer], false);
-        nel_clean_exit();
+        exit(0);
     }
 
     /**

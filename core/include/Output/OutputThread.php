@@ -230,7 +230,7 @@ class OutputThread extends Output
             }
         } else {
             echo $output;
-            nel_clean_exit();
+            exit(0);
         }
     }
 }
