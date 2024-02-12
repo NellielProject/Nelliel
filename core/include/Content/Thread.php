@@ -431,7 +431,7 @@ class Thread implements MutableData
     {
         if ($dynamic) {
             return nel_build_router_url(
-                [$this->domain->reference('board_uri'), $this->domain->reference('page_directory'),
+                [$this->domain->uri(), $this->domain->reference('page_directory'),
                     $this->content_id->threadID(), $this->pageBasename()], $end_slash, $query_string);
         }
 

@@ -58,9 +58,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $board_path = NEL_PUBLIC_PATH . $this->uri . '/';
         $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($this->uri) . '/';
         $new_reference['board_directory'] = $this->uri;
-        $new_reference['board_uri'] = $this->uri;
-        $new_reference['formatted_board_uri'] = sprintf(nel_site_domain()->setting('uri_display_format'), $this->uri);
-        $title = $new_reference['board_uri'];
+        $title = $this->uri(true, true);
         $title .= (!nel_true_empty($this->setting('name')) ? ' - ' . $this->setting('name') : '');
         $new_reference['title'] = $title;
         $new_reference['db_prefix'] = $board_data['db_prefix'];

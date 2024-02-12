@@ -59,13 +59,11 @@ class OutputHeader extends Output
         }
 
         $this->render_data['use_board_header'] = true;
-        $this->render_data['board_uri'] = $this->domain->uri(true);
+        $this->render_data['board_uri'] = $this->domain->uri(true, true);
         $this->render_data['name'] = $this->domain->uri(true);
 
-        $board_name = $this->domain->setting('name');
-
-        if ($this->domain->setting('show_name') && !nel_true_empty($this->domain->setting('name'))) {
-            $this->render_data['name'] .= ' - ' . $board_name;
+        if ($this->domain->setting('show_name')) {
+            $this->render_data['name'] = $this->domain->reference('title');
         }
 
         $this->render_data['description'] = ($this->domain->setting('show_description')) ? $this->domain->setting(
