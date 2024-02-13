@@ -2096,39 +2096,6 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'integer', 'pagination_default_entries', '50',
                         'Default number of entries on a page.', '{"type":"number"}']);
-
-                $new_site_settings = ['pagination_entries_default'];
-                $this->updateSiteConfig($new_site_settings);
-
-                echo ' - ' . __('Site settings updated.') . '<br>';
-
-                // Update board settings
-                $removed_board_settings = ['content_links_download_file'];
-                $this->removeBoardSettings($removed_board_settings);
-
-                echo ' - ' . __('Board settings updated.') . '<br>';
-
-                // Update setting options table
-                nel_database('core')->exec(
-                    'UPDATE "nelliel_setting_options" SET "menu_data" = \'{"Filtered original": "filtered_original", "Unix timestamp": "timestamp", "MD5": "md5", "SHA1": "sha1", "SHA256": "sha256", "SHA512": "sha512"}\' WHERE "setting_name" = \'preferred_filename\'');
-
-                echo ' - ' . __('Setting options table updated.') . '<br>';
-
-                // Add plugin config table
-                $plugin_config_table = new TablePluginConfigs(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $plugin_config_table->createTable();
-
-                echo ' - ' . __('Added plugin config table.') . '<br>';
-
-                // Update permissions and role permissions tables
-                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
-                $permissions_table->insertDefaultRow(['perm_access_plugin_controls', 'Access plugin control panels.']);
-                $this->addRolePermission('perm_access_plugin_controls');
-
-                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
-
-                // Update site settings
-                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'site_navigation_link_set',
                         '["site_links_home", "site_links_news", "site_links_faq", "site_links_about_nelliel", "site_links_blank_page", "site_links_account"]',
@@ -2138,31 +2105,11 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         '["site_links_site_panel", "site_links_global_panel", "site_links_board_panel", "site_links_board_list", "site_links_logout"]',
                         'Set of links that appear while logged in.', '{"type":"textarea"}']);
                 $settings_table->insertDefaultRow(
-                    ['board', 'nelliel', 'string', 'thread_mod_options_link_set',
-                        '["mod_links_lock", "mod_links_unlock", "mod_links_sticky", "mod_links_unsticky", "mod_links_permasage", "mod_links_unpermasage", "mod_links_cyclic", "mod_links_non_cyclic", "mod_links_move", "mod_links_merge"]',
-                        'Set of links for thread moderation.', '{"type":"textarea"}']);
-                $settings_table->insertDefaultRow(
-                    ['board', 'nelliel', 'string', 'post_mod_options_link_set',
-                        '["mod_links_ban", "mod_links_delete", "mod_links_ban_and_delete", "mod_links_delete_by_ip", "mod_links_global_delete_by_ip", "mod_links_edit", "mod_links_move"]',
-                        'Set of links for post moderation.', '{"type":"textarea"}']);
-                $settings_table->insertDefaultRow(
-                    ['board', 'nelliel', 'string', 'upload_mod_options_link_set',
-                        '["mod_links_delete", "mod_links_move"]', 'Set of links for upload moderation.',
-                        '{"type":"textarea"}']);
-                $settings_table->insertDefaultRow(
-                    ['board', 'nelliel', 'string', 'thread_options_link_set',
-                        '["content_links_reply", "content_links_hide_thread", "content_links_expand_thread"]',
-                        'Set of links for thread options.', '{"type":"textarea"}']);
-                $settings_table->insertDefaultRow(
-                    ['board', 'nelliel', 'string', 'post_options_link_set',
-                        '["content_links_hide_post", "content_links_cite_post"]', 'Set of links for post options.',
-                        '{"type":"textarea"}']);
-                $settings_table->insertDefaultRow(
-                    ['board', 'nelliel', 'string', 'upload_options_link_set',
-                        '["content_links_hide_file", "content_links_hide_embed", "content_links_show_upload_meta"]',
-                        'Set of links for upload options.', '{"type":"textarea"}']);
+                    ['site', 'nelliel', 'string', 'absolute_url_protocol', 'http',
+                        'Protocol used when generating absolute urls to the site.', '{"type":"text"}']);
 
-                $new_site_settings = ['visitor_id_lifespan'];
+                $new_site_settings = ['pagination_entries_default', 'site_navigation_link_set', 'logged_in_link_set',
+                    'absolute_url_protocol'];
                 $this->updateSiteConfig($new_site_settings);
 
                 $rename_site_settings = ['translate_site_nav_links' => 'translate_site_links',
@@ -2187,6 +2134,61 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 nel_site_domain(true);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
+
+                // Update board settings
+                $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'thread_mod_options_link_set',
+                        '["mod_links_lock", "mod_links_unlock", "mod_links_sticky", "mod_links_unsticky", "mod_links_permasage", "mod_links_unpermasage", "mod_links_cyclic", "mod_links_non_cyclic", "mod_links_move", "mod_links_merge"]',
+                        'Set of links for thread moderation.', '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'post_mod_options_link_set',
+                        '["mod_links_ban", "mod_links_delete", "mod_links_ban_and_delete", "mod_links_delete_by_ip", "mod_links_global_delete_by_ip", "mod_links_edit", "mod_links_move"]',
+                        'Set of links for post moderation.', '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'upload_mod_options_link_set',
+                        '["mod_links_delete", "mod_links_move"]', 'Set of links for upload moderation.',
+                        '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'thread_options_link_set',
+                        '["content_links_reply", "content_links_hide_thread", "content_links_expand_thread"]',
+                        'Set of links for thread options.', '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'post_options_link_set',
+                        '["content_links_hide_post", "content_links_cite_post"]', 'Set of links for post options.',
+                        '{"type":"textarea"}']);
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'upload_options_link_set',
+                        '["content_links_hide_file", "content_links_hide_embed", "content_links_show_upload_meta"]',
+                        'Set of links for upload options.', '{"type":"textarea"}']);
+                $new_board_settings = ['thread_mod_options_link_set', 'post_mod_options_link_set',
+                    'upload_mod_options_link_set', 'thread_options_link_set', 'post_options_link_set',
+                    'upload_options_link_set'];
+                $this->updateBoardConfig($new_board_settings);
+
+                $removed_board_settings = ['content_links_download_file'];
+                $this->removeBoardSettings($removed_board_settings);
+
+                echo ' - ' . __('Board settings updated.') . '<br>';
+
+                // Update setting options table
+                nel_database('core')->exec(
+                    'UPDATE "nelliel_setting_options" SET "menu_data" = \'{"Filtered original": "filtered_original", "Unix timestamp": "timestamp", "MD5": "md5", "SHA1": "sha1", "SHA256": "sha256", "SHA512": "sha512"}\' WHERE "setting_name" = \'preferred_filename\'');
+
+                echo ' - ' . __('Setting options table updated.') . '<br>';
+
+                // Add plugin config table
+                $plugin_config_table = new TablePluginConfigs(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $plugin_config_table->createTable();
+
+                echo ' - ' . __('Added plugin config table.') . '<br>';
+
+                // Update permissions and role permissions tables
+                $permissions_table = new TablePermissions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $permissions_table->insertDefaultRow(['perm_access_plugin_controls', 'Access plugin control panels.']);
+                $this->addRolePermission('perm_access_plugin_controls');
+
+                echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
                 $migration_count ++;
         }

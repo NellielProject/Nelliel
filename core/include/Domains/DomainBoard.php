@@ -50,7 +50,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
 
-        if(!is_array($board_data)) {
+        if (!is_array($board_data)) {
             return;
         }
 
@@ -61,6 +61,8 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $title = $this->uri(true, true);
         $title .= (!nel_true_empty($this->setting('name')) ? ' - ' . $this->setting('name') : '');
         $new_reference['title'] = $title;
+        $new_reference['board_absolute_url'] = nel_site_domain()->setting('absolute_url_protocol') . '//' .
+            ltrim($board_web_path, '/');
         $new_reference['db_prefix'] = $board_data['db_prefix'];
         $new_reference['locked'] = (bool) $board_data['locked'];
         $new_reference['source_directory'] = $board_data['source_directory'];
