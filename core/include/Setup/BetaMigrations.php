@@ -2105,11 +2105,14 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         '["site_links_site_panel", "site_links_global_panel", "site_links_board_panel", "site_links_board_list", "site_links_logout"]',
                         'Set of links that appear while logged in.', '{"type":"textarea"}']);
                 $settings_table->insertDefaultRow(
-                    ['site', 'nelliel', 'string', 'absolute_url_protocol', 'http',
+                    ['site', 'nelliel', 'string', 'absolute_url_protocol', 'https',
                         'Protocol used when generating absolute urls to the site.', '{"type":"text"}']);
+                $settings_table->insertDefaultRow(
+                    ['site', 'nelliel', 'string', 'site_domain', 'localhost',
+                        'Domain of the site. Used for generating absolute URLs.', '{"type":"text"}']);
 
                 $new_site_settings = ['pagination_entries_default', 'site_navigation_link_set', 'logged_in_link_set',
-                    'absolute_url_protocol'];
+                    'absolute_url_protocol', 'site_domain'];
                 $this->updateSiteConfig($new_site_settings);
 
                 $rename_site_settings = ['translate_site_nav_links' => 'translate_site_links',
@@ -2128,7 +2131,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $this->renameSiteSettings($rename_site_settings);
 
                 $old_site_settings = ['translate_account_nav_links', 'account_nav_links_left_bracket',
-                    'account_nav_links_right_bracket'];
+                    'account_nav_links_right_bracket', 'home_page'];
                 $this->removeSiteSettings($old_site_settings);
                 nel_site_domain()->deleteCache();
                 nel_site_domain(true);

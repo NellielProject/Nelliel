@@ -82,7 +82,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_description', '1', 'Display site description in header.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'favicon', '', 'Site favicon.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'show_favicon', '0', 'Show site favicon.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'home_page', '', 'Site home page. If empty, will default to the base web path.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'boolean', 'generate_home_page', '0', 'Generate a standard home page.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'locale', NEL_DEFAULT_LOCALE, 'Default locale for site. Use ISO language and country codes separated by underscore.', '{"type":"text"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'time_zone', 'UTC', 'Default time zone used on the site.', '{"type":"select"}']);
@@ -107,7 +106,8 @@ class TableSettings extends Table
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'min_time_between_site_stat_updates', '30', 'Minimum time between site statistics updates (seconds).', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'min_time_between_board_stat_updates', '30', 'Minimum time between board statistics updates (seconds).', '{"type":"number"}']);
         $this->insertDefaultRow(['site', 'nelliel', 'integer', 'max_recent_posts', '100', 'Maximum number of recent posts from all boards combined.', '{"type":"number"}']);
-        $this->insertDefaultRow(['site', 'nelliel', 'string', 'absolute_url_protocol', 'http', 'Protocol used when generating absolute urls to the site.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'absolute_url_protocol', 'https', 'Protocol used when generating absolute urls to the site.', '{"type":"text"}']);
+        $this->insertDefaultRow(['site', 'nelliel', 'string', 'site_domain', 'localhost', 'Domain of the site. Used for generating absolute URLs.', '{"type":"text"}']);
 
 
         // Banners

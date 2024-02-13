@@ -67,6 +67,12 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         return $uri;
     }
 
+    public function url(): string
+    {
+        return nel_site_domain()->setting('absolute_url_protocol') . '://' .
+            rtrim(nel_site_domain()->setting('site_domain'), '/') . '/' . rtrim($this->uri, '/') . '/';
+    }
+
     public function updateStatistics(): void
     {}
 

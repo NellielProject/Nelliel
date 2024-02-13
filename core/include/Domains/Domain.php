@@ -48,6 +48,8 @@ abstract class Domain implements NellielCacheInterface
 
     public abstract function uri(bool $display = false, bool $formatted = false): string;
 
+    public abstract function url(): string;
+
     function __construct(string $domain_id, NellielPDO $database)
     {
         $this->database = $database;

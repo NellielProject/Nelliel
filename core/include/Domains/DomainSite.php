@@ -47,12 +47,7 @@ class DomainSite extends Domain implements NellielCacheInterface
         $new_reference['log_table'] = NEL_SYSTEM_LOGS_TABLE;
         $new_reference['title'] = (!nel_true_empty($this->setting('name'))) ? $this->setting('name') : _gettext(
             'Nelliel Imageboard');
-        $new_reference['home_page'] = NEL_BASE_WEB_PATH;
-
-        if (!nel_true_empty($this->setting('home_page'))) {
-            $new_reference['home_page'] = $this->setting('home_page');
-        }
-
+        $new_reference['home_page'] = '/';
         $this->references = $new_reference;
     }
 
@@ -82,6 +77,11 @@ class DomainSite extends Domain implements NellielCacheInterface
         }
 
         return $uri;
+    }
+
+    public function url(): string
+    {
+        return $this->setting('absolute_url_protocol') . '://' . rtrim($this->setting('site_domain'), '/') . '/';
     }
 
     public function updateStatistics(): void
