@@ -39,8 +39,8 @@ class Cites
                     $this->getThreadID($source_domain, $cite_data['target_post']) !== 0;
             }
         } else if (preg_match('/^(?:>>>|&gt;&gt;&gt;)\/(.+?)\/([\d]*)/u', $text, $matches) === 1) {
-            $cite_data['target_board'] = $matches[1];
-            $target_domain = Domain::getDomainFromID($cite_data['target_board'], $this->database);
+            $target_domain = Domain::getDomainFromID($matches[1], $this->database);
+            $cite_data['target_board'] = $target_domain->id();
 
             if (!empty($matches[2])) {
                 $cite_data['type'] = 'crossboard-post-cite';
@@ -170,7 +170,12 @@ class Cites
                 $target_thread = $this->getThreadID($target_domain, $cite_data['target_post']);
                 $content_id = new ContentID(ContentID::createIDString($target_thread, $cite_data['target_post']));
                 $post = $content_id->getInstanceFromID($target_domain);
-                $url = $post->getURL($dynamic);
+
+                if ($dynamic) {
+                    $url = $post->getRoute();
+                } else {
+                    $url = $post->getURL();
+                }
             }
         }
 
