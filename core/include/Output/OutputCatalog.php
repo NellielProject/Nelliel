@@ -49,9 +49,9 @@ class OutputCatalog extends Output
             $post = $thread->firstPost();
 
             if ($this->session->inModmode($this->domain) && !$this->writeMode()) {
-                $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain), false, 'modmode');
+                $thread_data['open_url'] = $thread->getRoute(false, 'modmode');
             } else {
-                $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
+                $thread_data['open_url'] = $thread->getURL();
             }
 
             $thread_data['first_post_subject'] = $post->getData('subject');

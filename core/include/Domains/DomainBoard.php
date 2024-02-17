@@ -61,8 +61,6 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $title = $this->uri(true, true);
         $title .= (!nel_true_empty($this->setting('name')) ? ' - ' . $this->setting('name') : '');
         $new_reference['title'] = $title;
-        $new_reference['board_absolute_url'] = nel_site_domain()->setting('absolute_url_protocol') . '://' .
-            ltrim($board_web_path, '/');
         $new_reference['db_prefix'] = $board_data['db_prefix'];
         $new_reference['locked'] = (bool) $board_data['locked'];
         $new_reference['source_directory'] = $board_data['source_directory'];

@@ -51,14 +51,14 @@ class OutputContentLinks extends Output
 
                 if ($this->session->inModmode($this->domain)) {
                     $link_set->addData('content_links_expand_thread', 'url',
-                        $thread->getURL(!$this->write_mode, false, 'expand&modmode'));
+                        $thread->getRoute(false, 'expand&modmode'));
                     $link_set->addData('content_links_expand_thread', 'alt_url',
-                        $thread->getURL(!$this->write_mode, false, 'collapse&modmode'));
+                        $thread->getRoute(false, 'collapse&modmode'));
                 } else {
                     $link_set->addData('content_links_expand_thread', 'url',
-                        $thread->getURL(!$this->write_mode, false, 'expand'));
+                        $thread->getRoute(false, 'expand'));
                     $link_set->addData('content_links_expand_thread', 'alt_url',
-                        $thread->getURL(!$this->write_mode, false, 'collapse'));
+                        $thread->getRoute(false, 'collapse'));
                 }
 
                 $link_set->addData('content_links_collapse_thread', 'content_id', $thread->contentID()->getIDString());
@@ -74,14 +74,14 @@ class OutputContentLinks extends Output
 
                 if ($this->session->inModmode($this->domain)) {
                     $link_set->addData('content_links_collapse_thread', 'url',
-                        $thread->getURL(!$this->write_mode, false, 'collapse&modmode'));
+                        $thread->getRoute(false, 'collapse&modmode'));
                     $link_set->addData('content_links_collapse_thread', 'alt_url',
-                        $thread->getURL(!$this->write_mode, false, 'expand&modmode'));
+                        $thread->getRoute(false, 'expand&modmode'));
                 } else {
                     $link_set->addData('content_links_collapse_thread', 'url',
-                        $thread->getURL(!$this->write_mode, false, 'collapse'));
+                        $thread->getRoute(false, 'collapse'));
                     $link_set->addData('content_links_collapse_thread', 'alt_url',
-                        $thread->getURL(!$this->write_mode, false, 'expand'));
+                        $thread->getRoute(false, 'expand'));
                 }
 
                 $link_set->addData('content_links_collapse_thread', 'content_id', $thread->contentID()->getIDString());
@@ -91,9 +91,9 @@ class OutputContentLinks extends Output
             $link_set->addLink('content_links_reply', $base_data);
 
             if ($this->session->inModmode($this->domain)) {
-                $link_set->addData('content_links_reply', 'url', $thread->getURL(!$this->write_mode, false, 'modmode'));
+                $link_set->addData('content_links_reply', 'url', $thread->getRoute(false, 'modmode'));
             } else {
-                $link_set->addData('content_links_reply', 'url', $thread->getURL(!$this->write_mode));
+                $link_set->addData('content_links_reply', 'url', $thread->getRoute());
             }
 
             $link_set->addData('content_links_reply', 'text', $this->getUIText('content_links_reply'));

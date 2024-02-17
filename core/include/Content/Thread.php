@@ -427,16 +427,23 @@ class Thread implements MutableData
         return $page_filename;
     }
 
-    public function getURL(bool $dynamic, bool $end_slash = true, string $query_string = ''): string
+    public function getURL(bool $relative = true): string
     {
-        if ($dynamic) {
-            return nel_build_router_url(
-                [$this->domain->uri(), $this->domain->reference('page_directory'),
-                    $this->content_id->threadID(), $this->pageBasename()], $end_slash, $query_string);
+        if ($relative) {
+            $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
+        } else {
+            $base_path = $this->domain->url() . $this->domain->reference('page_directory') . '/' .
+                $this->content_id->threadID() . '/';
         }
 
-        $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
         return $base_path . $this->pageBasename() . NEL_PAGE_EXT;
+    }
+
+    public function getRoute(bool $end_slash = true, string $query_string = ''): string
+    {
+        return nel_build_router_url(
+            [$this->domain->uri(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
+                $this->pageBasename()], $end_slash, $query_string);
     }
 
     public function pageFilePath()

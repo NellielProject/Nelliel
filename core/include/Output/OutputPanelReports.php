@@ -56,7 +56,7 @@ class OutputPanelReports extends Output
             $content = $content_id->getInstanceFromID($report_domain);
 
             if ($content_id->isUpload()) {
-                $report_data['content_url'] = $content->getParent()->getURL(true);
+                $report_data['content_url'] = $content->getParent()->getURL();
                 $report_data['file_url'] = $content->getURL(true);
             } else {
                 $report_data['content_url'] = $content->getURL(true);

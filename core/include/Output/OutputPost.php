@@ -190,7 +190,7 @@ class OutputPost extends Output
         $this->render_data['show_tripcodes'] = $this->domain->setting('show_tripcodes');
         $this->render_data['show_capcode'] = $this->domain->setting('show_capcode');
         $this->render_data['show_post_subject'] = $this->domain->setting('show_post_subject');
-        $this->render_data['headers']['thread_url'] = $thread->getURL(!$this->write_mode);
+        $this->render_data['headers']['thread_url'] = ($this->write_mode) ? $thread->getRoute() : $thread->getURL();
         $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
         $thread_headers['post_content_id'] = $post_content_id->getIDString();
         $post_headers['thread_content_id'] = $thread->contentID()->getIDString();
@@ -290,7 +290,13 @@ class OutputPost extends Output
 
             if ($line_count > $this->domain->setting('max_index_comment_lines')) {
                 $comment_data['long_comment'] = true;
-                $comment_data['long_comment_url'] = $post->getURL($this->session->inModmode($this->domain));
+
+                if ($this->session->inModmode($this->domain)) {
+                    $comment_data['long_comment_url'] = $post->getRoute(true, 'modmode');
+                } else {
+                    $comment_data['long_comment_url'] = $post->getURL();
+                }
+
                 $comment_data['comment_lines'] = array();
                 $i = 0;
                 $reduced_lines = array();

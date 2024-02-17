@@ -460,10 +460,17 @@ class Post implements MutableData
         $this->content_data[$key] = TablePosts::typeCastValue($key, $new_data);
     }
 
-    public function getURL(bool $dynamic): string
+    public function getURL(bool $relative = true): string
     {
         $parent = $this->getParent();
-        $thread_url = $parent->getURL($dynamic, false, '');
+        $thread_url = $parent->getURL($relative);
+        return $thread_url . '#t' . $parent->contentID()->threadID() . 'p' . $this->content_id->postID();
+    }
+
+    public function getRoute(): string
+    {
+        $parent = $this->getParent();
+        $thread_url = $parent->getRoute(false, '');
         return $thread_url . '#t' . $parent->contentID()->threadID() . 'p' . $this->content_id->postID();
     }
 

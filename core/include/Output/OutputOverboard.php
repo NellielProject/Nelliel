@@ -138,10 +138,11 @@ class OutputOverboard extends Output
 
             $thread_data = array();
             $post = $thread->firstPost();
-            $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
 
             if ($this->session->inModmode($this->domain) && !$this->writeMode()) {
-                $thread_data['open_url'] .= '&modmode=true';
+                $thread_data['open_url'] = $thread->getRoute(true, '&modmode=true');
+            } else {
+                $thread_data['open_url'] = $thread->getURL();
             }
 
             $thread_data['first_post_subject'] = $post->getData('subject');

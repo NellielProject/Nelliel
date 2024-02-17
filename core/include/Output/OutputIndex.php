@@ -260,7 +260,12 @@ class OutputIndex extends Output
         $this->render_data['headers'] = array();
         $post_content_id = $post->contentID();
 
-        $this->render_data['headers']['thread_url'] = $thread->getURL(!$this->write_mode);
+        if ($this->write_mode) {
+            $this->render_data['headers']['thread_url'] = $thread->getURL();
+        } else {
+            $this->render_data['headers']['thread_url'] = $thread->getRoute();
+        }
+
         $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
         $thread_headers['post_content_id'] = $post_content_id->getIDString();
         $thread_headers['index_render'] = true;
