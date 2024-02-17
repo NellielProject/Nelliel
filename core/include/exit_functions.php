@@ -8,15 +8,13 @@ use Nelliel\Redirect;
 
 function nel_exception_handler(Throwable $exception)
 {
-    if (NEL_DEBUG_MODE) {
-        return;
-    }
-
     if ($exception instanceof PDOException) {
         $message = sprintf(__('A database error has occurred: %s in file %s.'), $exception->getCode(),
             basename($exception->getFile()));
         nel_derp(81, $message);
     }
+
+    throw $exception;
 }
 
 function nel_clean_exit()
