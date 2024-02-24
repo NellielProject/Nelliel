@@ -190,7 +190,6 @@ class OutputPost extends Output
         $this->render_data['show_tripcodes'] = $this->domain->setting('show_tripcodes');
         $this->render_data['show_capcode'] = $this->domain->setting('show_capcode');
         $this->render_data['show_post_subject'] = $this->domain->setting('show_post_subject');
-        $this->render_data['headers']['thread_url'] = ($this->write_mode) ? $thread->getRoute() : $thread->getURL();
         $thread_headers['thread_content_id'] = $thread->contentID()->getIDString();
         $thread_headers['post_content_id'] = $post_content_id->getIDString();
         $post_headers['thread_content_id'] = $thread->contentID()->getIDString();
