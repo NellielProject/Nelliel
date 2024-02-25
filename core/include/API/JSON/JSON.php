@@ -44,7 +44,7 @@ abstract class JSON
         $info = array();
         $info['compatibility'] = $this->compatibility;
         $info['version'] = $this->api_version;
-        $info = nel_plugins()->processHook('nel-in-during-info-json', [], $info);
+        $info = nel_plugins()->processHook('nel-in-after-info-json', [], $info);
         return $info;
     }
 }
