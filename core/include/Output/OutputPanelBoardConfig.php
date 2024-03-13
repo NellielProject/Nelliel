@@ -51,7 +51,6 @@ class OutputPanelBoardConfig extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $user_lock_override = $this->session->user()->checkPermission($this->domain, 'perm_manage_board_config_override');
         $user_raw_html = $this->session->user()->checkPermission($this->domain, 'perm_raw_html');
-        $this->render_data['show_raw_column'] = $user_raw_html;
         $this->render_data['show_lock_update_column'] = $defaults;
 
         if ($user_raw_html) {
@@ -153,9 +152,12 @@ class OutputPanelBoardConfig extends Output
             $setting_data = array();
             $setting_data['setting_name'] = $setting['setting_name'];
             $setting_data['setting_description'] = _gettext($setting['setting_description']);
-            $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
-            $setting_data['store_raw'] = $setting['raw_output'] == 1;
             $setting_data['show_raw'] = $user_raw_html;
+            $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
+
+            if ($setting['raw_output'] == 1) {
+                $setting_data['store_raw'] = true;
+            }
 
             if ($defaults) {
                 $setting_locked = $defaults_list[$setting['setting_name']]['edit_lock'] == 1;
@@ -260,6 +262,8 @@ class OutputPanelBoardConfig extends Output
 
             $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
+
+        $this->render_data['show_raw_column'] = $user_raw_html;
 
         $output_menu = new OutputMenu($this->domain, false);
         $this->render_data['settings_data']['default_style']['options'] = $output_menu->configStyles(
