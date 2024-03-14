@@ -50,7 +50,7 @@ abstract class Output
         $this->timer = new Timer();
     }
 
-    protected function renderSetup(): void
+    protected function renderSetup(string $base_path = null, string $extension = null): void
     {
         $this->render_data = array();
         $this->timer->reset();
@@ -63,7 +63,8 @@ abstract class Output
         $this->render_data['nelliel_copyright_dates'] = NELLIEL_COPYRIGHT_DATES;
         $this->render_data['nelliel_copyright_line'] = NELLIEL_COPYRIGHT_LINE;
         $this->render_data['preview_loading'] = $this->domain->setting('preview_lazy_loading') ? 'lazy' : 'eager';
-        $this->render_core->renderEngine()->getLoader()->setBasePath($this->templates_path);
+        $this->setBasePath($base_path ?? $this->templates_path);
+        $this->setExtension($extension ?? '.html');
     }
 
     protected function selectRenderCore(string $core_id): void
@@ -135,5 +136,10 @@ abstract class Output
     protected function setBasePath(string $base_path): void
     {
         $this->render_core->renderEngine()->getLoader()->setBasePath($base_path);
+    }
+
+    protected function setExtension(string $extension): void
+    {
+        $this->render_core->renderEngine()->getLoader()->setExtension($extension);
     }
 }
