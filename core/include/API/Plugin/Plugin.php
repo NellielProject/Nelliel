@@ -185,7 +185,7 @@ class Plugin
             return $this->settings;
         }
 
-        return $this->settings[$domain_id][$setting] ?? null;
+        return $this->settings[$setting]['domains'][$domain_id] ?? $this->settings[$setting]['default_value'] ?? null;
     }
 
     private function loadSettings(bool $reload = false): void
@@ -214,8 +214,12 @@ class Plugin
         }
 
         foreach ($settings_list as $setting) {
-            foreach ($config_list[$setting['setting_name']] as $domain_id => $config) {
-                $settings[$domain_id][$setting['setting_name']] = nel_typecast(
+            $settings[$setting['setting_name']]['default_value'] = nel_typecast($setting['default_value'],
+                $setting['data_type'], false);
+            $domain_config = $config_list[$setting['setting_name']] ?? array();
+
+            foreach ($domain_config as $domain_id => $config) {
+                $settings[$setting['setting_name']]['domains'][$domain_id] = nel_typecast(
                     $config['setting_value'] ?? $setting['default_value'], $setting['data_type'], false);
             }
         }
