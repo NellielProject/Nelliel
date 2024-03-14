@@ -13,12 +13,12 @@ class FileSystemLoader implements Mustache_Loader
     private array $template_texts = array();
     private array $substitute_templates = array();
     private array $substitute_template_texts = array();
-    private string $default_base_path = '';
+    private string $base_path = '';
     private string $extension = '.html';
 
     function __construct(string $default_base_path, array $options = array())
     {
-        $this->setDefaultBasePath($default_base_path);
+        $this->setBasePath($default_base_path);
 
         if (array_key_exists('extension', $options)) {
             $this->setExtension($options['extension']);
@@ -33,7 +33,7 @@ class FileSystemLoader implements Mustache_Loader
             if (is_array($split) && isset($split[1])) {
                 $this->templates[$name] = new Template($split[0], $split[1], $this->extension);
             } else {
-                $this->templates[$name] = new Template($this->default_base_path, $name, $this->extension);
+                $this->templates[$name] = new Template($this->base_path, $name, $this->extension);
             }
         }
 
@@ -73,9 +73,9 @@ class FileSystemLoader implements Mustache_Loader
         unset($this->substitute_templates[$name]);
     }
 
-    public function setDefaultBasePath(string $base_path): void
+    public function setBasePath(string $base_path): void
     {
-        $this->default_base_path = rtrim($base_path, '/') . '/';
+        $this->base_path = rtrim($base_path, '/') . '/';
     }
 
     public function setExtension(string $extension): void

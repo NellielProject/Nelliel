@@ -9,12 +9,12 @@ use Nelliel\Timer;
 use Nelliel\Account\Session;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainGlobal;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Render\RenderCoreDOM;
 use Nelliel\Render\RenderCoreMustache;
 use Nelliel\Render\Template;
 use Nelliel\Utility\FileHandler;
-use Nelliel\Domains\DomainGlobal;
 
 abstract class Output
 {
@@ -63,6 +63,7 @@ abstract class Output
         $this->render_data['nelliel_copyright_dates'] = NELLIEL_COPYRIGHT_DATES;
         $this->render_data['nelliel_copyright_line'] = NELLIEL_COPYRIGHT_LINE;
         $this->render_data['preview_loading'] = $this->domain->setting('preview_lazy_loading') ? 'lazy' : 'eager';
+        $this->render_core->renderEngine()->getLoader()->setBasePath($this->templates_path);
     }
 
     protected function selectRenderCore(string $core_id): void
@@ -96,8 +97,6 @@ abstract class Output
         $output = null;
 
         if ($this->core_id === 'mustache') {
-            $this->render_core->renderEngine()->getLoader()->setDefaultBasePath($this->templates_path);
-
             if ($data_only) {
                 return $render_data;
             } else {
@@ -131,5 +130,10 @@ abstract class Output
     protected function setTemplate(Template $template): void
     {
         $this->current_template = $template;
+    }
+
+    protected function setBasePath(string $base_path): void
+    {
+        $this->render_core->renderEngine()->getLoader()->setBasePath($base_path);
     }
 }
