@@ -54,7 +54,7 @@ class AdminPluginConfig extends Admin
             $config = $config_list[$setting_name] ?? array();
             $raw_output = $setting['raw_output'] ?? false;
             $constructed = false;
-            $old_value = nel_typecast($config['setting_value'] ?? '', $setting['data_type']);
+            $old_value = nel_typecast($config['setting_value'] ?? $setting['default_value'], $setting['data_type']);
             $config_stored_raw = boolval($config['stored_raw'] ?? false);
 
             if ($setting['data_type'] === 'boolean') {

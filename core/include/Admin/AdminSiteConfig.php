@@ -49,7 +49,7 @@ class AdminSiteConfig extends Admin
         foreach ($site_settings as $setting) {
             $setting_name = $setting['setting_name'];
             $config = $config_list[$setting_name] ?? array();
-            $old_value = nel_typecast($config['setting_value'] ?? '', $setting['data_type']);
+            $old_value = nel_typecast($config['setting_value'] ?? $setting['default_value'], $setting['data_type']);
             $config_stored_raw = boolval($config['stored_raw'] ?? false);
             $raw_output = $setting['raw_output'] ?? false;
             $constructed = false;
