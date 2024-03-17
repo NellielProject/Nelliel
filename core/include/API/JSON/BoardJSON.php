@@ -109,7 +109,7 @@ class BoardJSON extends JSON
         $raw_data['reply_uploads']['max_embeds'] = intval($this->board->setting('max_reply_embeds'));
         $raw_data['reply_uploads']['max_total'] = intval($this->board->setting('max_reply_total_uploads'));
 
-        $raw_data['enable_spoilers'] = $this->board->setting('enable_spoilers');
+        $raw_data['spoilers_enabled'] = $this->board->setting('enable_spoilers');
         $raw_data['max_filesize'] = $this->board->setting('max_filesize');
 
         $raw_data = nel_plugins()->processHook('nel-in-after-board-json', [$this->board], $raw_data);

@@ -24,5 +24,5 @@ Contains a representation of a board.
 |`poster_ids`        |`array`  |Always                           |True or false       |Are poster IDs displayed.|
 |`op_uploads`        |`object` |Always                           |Object              |List of settings for OP uploads.|
 |`reply_uploads`     |`object` |Always                           |Object              |List of settings for reply uploads.|
-|`enable_spoilers`   |`boolean`|Always                           |True or false       |Are spoilers enabled.|
+|`spoilers_enabled`  |`boolean`|Always                           |True or false       |Are spoilers enabled.|
 |`max_filesize`      |`integer`|Always                           |Any positive integer|Maximum file size of uploads in bytes.|
