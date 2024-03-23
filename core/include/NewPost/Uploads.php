@@ -92,19 +92,21 @@ class Uploads
             $upload = new Upload(new ContentID(), $this->domain);
             $upload->changeData('filesize', $filesize);
             $upload->changeData('tmp_name', $tmp_name);
+            $upload->changeData('location', $tmp_name);
             $upload->changeData('original_filename', $file_original_name);
             $this->checkHashes($upload);
             $this->checkFileDuplicates($post, $upload);
             $this->deduplicate($upload);
             $this->setFilenameAndExtension($upload, $post);
-            $this->checkFiletype($upload, $upload->getData('extension'), $tmp_name);
+            $this->checkFiletype($upload);
 
             // We re-add the extension to help with processing
-            $upload->changeData('location', $tmp_name . '.' . $upload->getData('extension'));
+            $old_location = $upload->getData('location');
+            $upload->changeData('location', $upload->getData('location') . '.' . $upload->getData('extension'));
 
             // Not sure what would cause this to fail but best to stop if it does
-            if (!move_uploaded_file($tmp_name, $upload->getData('location'))) {
-                nel_utilities()->fileHandler()->eraserGun($tmp_name);
+            if (!move_uploaded_file($old_location, $upload->getData('location'))) {
+                nel_utilities()->fileHandler()->eraserGun($old_location);
                 nel_derp(52, sprintf(__('The file %s is not a valid upload.'), $upload->getData('original_filename')));
             }
 
@@ -239,7 +241,7 @@ class Uploads
 
     private function checkHashes(Upload $upload): void
     {
-        $file = $upload->getData('tmp_name');
+        $file = $upload->getData('location');
         $md5 = md5_file($file);
         $sha1 = sha1_file($file);
 
@@ -339,10 +341,11 @@ class Uploads
         }
     }
 
-    private function checkFiletype(Upload $upload, string $extension, string $file): void
+    private function checkFiletype(Upload $upload): void
     {
+        $extension = $upload->getData('extension');
         $filetypes = new FileTypes($this->domain->database());
-        $file_format = $filetypes->getFileFormat($extension, $file);
+        $file_format = $filetypes->getFileFormat($extension, $upload->getData('location'));
 
         if (empty($file_format)) {
             nel_derp(21, _gettext('Unrecognized file type.'));
@@ -650,6 +653,13 @@ class Uploads
 
         if ($results['result_code'] === 0) {
             $this->checkHashes($upload);
+        }
+
+        clearstatcache();
+        $new_size = filesize($upload->getData('location'));
+
+        if ($new_size !== false) {
+            $upload->changeData('filesize', $new_size);
         }
     }
 
