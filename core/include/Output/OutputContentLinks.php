@@ -172,7 +172,7 @@ class OutputContentLinks extends Output
     public function upload(Upload $upload): array
     {
         $is_file = nel_true_empty($upload->getData('embed_url'));
-        $options_keys = (array) json_decode($this->domain->setting('post_options_link_set'));
+        $options_keys = (array) json_decode($this->domain->setting('upload_options_link_set'));
         $link_set = new LinkSet();
         $base_data = array();
         $base_data['left_bracket'] = $this->getUIText('mod_links_left_bracket');

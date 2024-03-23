@@ -2150,7 +2150,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         'Set of links for post moderation.', '{"type":"textarea"}']);
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'string', 'upload_mod_options_link_set',
-                        '["mod_links_delete", "mod_links_move"]', 'Set of links for upload moderation.',
+                        '["mod_links_delete", "mod_links_move", "mod_links_spoiler", "mod_links_unspoiler"]', 'Set of links for upload moderation.',
                         '{"type":"textarea"}']);
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'string', 'thread_options_link_set',
@@ -2177,6 +2177,16 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 // Update setting options table
                 nel_database('core')->exec(
                     'UPDATE "nelliel_setting_options" SET "menu_data" = \'{"Filtered original": "filtered_original", "Unix timestamp": "timestamp", "MD5": "md5", "SHA1": "sha1", "SHA256": "sha256", "SHA512": "sha512"}\' WHERE "setting_name" = \'preferred_filename\'');
+
+                $setting_options_table = new TableSettingOptions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                $setting_options_table->insertDefaultRow(['site', 'site_navigation_link_set', '', 0, 1]);
+                $setting_options_table->insertDefaultRow(['site', 'logged_in_link_set', '', 0, 1]);
+                $setting_options_table->insertDefaultRow(['board', 'thread_mod_options_link_set', '', 0, 1]);
+                $setting_options_table->insertDefaultRow(['board', 'post_mod_options_link_set', '', 0, 1]);
+                $setting_options_table->insertDefaultRow(['board', 'upload_mod_options_link_set', '', 0, 1]);
+                $setting_options_table->insertDefaultRow(['board', 'thread_options_link_set', '', 0, 1]);
+                $setting_options_table->insertDefaultRow(['board', 'post_options_link_set', '', 0, 1]);
+                $setting_options_table->insertDefaultRow(['board', 'upload_options_link_set', '', 0, 1]);
 
                 echo ' - ' . __('Setting options table updated.') . '<br>';
 

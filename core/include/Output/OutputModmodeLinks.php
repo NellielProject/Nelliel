@@ -217,9 +217,6 @@ class OutputModmodeLinks extends Output
         }
 
         if ($is_file) {
-            $options_keys[] = 'mod_links_spoiler';
-            $options_keys[] = 'mod_links_unspoiler';
-
             if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
                 if (!$upload->getData('spoiler')) {
                     $link_set->addLink('mod_links_spoiler', $base_data);
@@ -228,8 +225,8 @@ class OutputModmodeLinks extends Output
                             [$this->domain->uri(), 'moderation', 'modmode', $upload->contentID()->getIDString(),
                                 'spoiler']));
                     $link_set->addData('mod_links_spoiler', 'text', $this->getUIText('mod_links_spoiler'));
-                    $link_set->addLink('mod_links_unspoiler', $base_data);
                 } else {
+                    $link_set->addLink('mod_links_unspoiler', $base_data);
                     $link_set->addData('mod_links_unspoiler', 'url',
                         nel_build_router_url(
                             [$this->domain->uri(), 'moderation', 'modmode', $upload->contentID()->getIDString(),

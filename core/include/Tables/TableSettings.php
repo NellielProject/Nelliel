@@ -544,7 +544,7 @@ class TableSettings extends Table
         // Moderator Links
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'thread_mod_options_link_set', '["mod_links_lock", "mod_links_unlock", "mod_links_sticky", "mod_links_unsticky", "mod_links_permasage", "mod_links_unpermasage", "mod_links_cyclic", "mod_links_non_cyclic", "mod_links_move", "mod_links_merge"]', 'Set of links for thread moderation.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'post_mod_options_link_set', '["mod_links_ban", "mod_links_delete", "mod_links_ban_and_delete", "mod_links_delete_by_ip", "mod_links_global_delete_by_ip", "mod_links_edit", "mod_links_move"]', 'Set of links for post moderation.', '{"type":"textarea"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'upload_mod_options_link_set', '["mod_links_delete", "mod_links_move"]', 'Set of links for upload moderation.', '{"type":"textarea"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'upload_mod_options_link_set', '["mod_links_delete", "mod_links_move", "mod_links_spoiler", "mod_links_unspoiler"]', 'Set of links for upload moderation.', '{"type":"textarea"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'translate_mod_links', '1', 'Translate moderator link text when possible.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_left_bracket', '[', 'Bracket on the left side of moderation links.', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'mod_links_right_bracket', ']', 'Bracket on the right side of moderation links.', '{"type":"text"}']);

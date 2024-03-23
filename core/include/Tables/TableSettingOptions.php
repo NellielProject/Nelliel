@@ -103,6 +103,9 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'embeds_form_label', '', 1, 0]);
         $this->insertDefaultRow(['board', 'flags_form_label', '', 1, 0]);
         $this->insertDefaultRow(['board', 'captcha_form_label', '', 1, 0]);
+        $this->insertDefaultRow(['board', 'thread_mod_options_link_set', '', 0, 1]);
+        $this->insertDefaultRow(['board', 'post_mod_options_link_set', '', 0, 1]);
+        $this->insertDefaultRow(['board', 'upload_mod_options_link_set', '', 0, 1]);
         $this->insertDefaultRow(['board', 'mod_links_left_bracket', '', 1, 0]);
         $this->insertDefaultRow(['board', 'mod_links_right_bracket', '', 1, 0]);
         $this->insertDefaultRow(['board', 'mod_links_ban', '', 1, 0]);
@@ -123,6 +126,9 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'mod_links_merge', '', 1, 0]);
         $this->insertDefaultRow(['board', 'mod_links_spoiler', '', 1, 0]);
         $this->insertDefaultRow(['board', 'mod_links_unspoiler', '', 1, 0]);
+        $this->insertDefaultRow(['board', 'thread_options_link_set', '', 0, 1]);
+        $this->insertDefaultRow(['board', 'post_options_link_set', '', 0, 1]);
+        $this->insertDefaultRow(['board', 'upload_options_link_set', '', 0, 1]);
         $this->insertDefaultRow(['board', 'content_links_left_bracket', '', 1, 0]);
         $this->insertDefaultRow(['board', 'content_links_right_bracket', '', 1, 0]);
         $this->insertDefaultRow(['board', 'content_links_reply', '', 1, 0]);
@@ -141,6 +147,8 @@ class TableSettingOptions extends Table
         $this->insertDefaultRow(['board', 'content_links_cite_post', '', 1, 0]);
         $this->insertDefaultRow(['board', 'content_links_first_posts', '', 1, 0]);
         $this->insertDefaultRow(['board', 'content_links_last_posts', '', 1, 0]);
+        $this->insertDefaultRow(['site', 'site_navigation_link_set', '', 0, 1]);
+        $this->insertDefaultRow(['site', 'logged_in_link_set', '', 0, 1]);
         $this->insertDefaultRow(['site', 'site_links_left_bracket', '', 1, 0]);
         $this->insertDefaultRow(['site', 'site_links_right_bracket', '', 1, 0]);
         $this->insertDefaultRow(['site', 'site_links_home', '', 1, 0]);
