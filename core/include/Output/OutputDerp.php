@@ -21,16 +21,22 @@ class OutputDerp extends Output
         $this->renderSetup();
         $this->setBodyTemplate('derp');
         $output_head = new OutputHead($this->domain, $this->write_mode);
-        $this->render_data['head'] = $output_head->render(['title' => $this->site_domain->setting('error_message_header')], true);
+        $this->render_data['head'] = $output_head->render(
+            ['title' => $this->site_domain->setting('error_message_header')], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->general([], true);
         $diagnostic = $parameters['diagnostic'] ?? array();
         $context = $parameters['context'] ?? array();
         $return_link = $context['return_link'] ?? new ReturnLink();
         $this->render_data['error_header'] = $this->site_domain->setting('error_message_header');
-        $this->render_data['error_id'] = $diagnostic['error_id'];
-        $this->render_data['error_message'] = $diagnostic['error_message'];
+        $this->render_data['error_id'] = $diagnostic['error_id'] ?? 0;
+        $this->render_data['error_message'] = $diagnostic['error_message'] ?? '';
         $this->render_data['error_data'] = '';
+
+        if (isset($context['plugin_id'])) {
+            $this->render_data['plugin_error'] = true;
+            $this->render_data['plugin_id'] = $context['plugin_id'];
+        }
 
         if ($return_link->ready()) {
             $this->render_data['return_link_url'] = $return_link->URL();
@@ -42,7 +48,8 @@ class OutputDerp extends Output
                 $this->render_data['return_link_url'] = $this->domain->reference('home_page');
             } else {
                 if ($this->session->inModmode($this->domain)) {
-                    $this->render_data['return_link_url'] = nel_build_router_url([$this->domain->uri()], true, 'modmode');
+                    $this->render_data['return_link_url'] = nel_build_router_url([$this->domain->uri()], true,
+                        'modmode');
                 } else {
                     $this->render_data['return_link_url'] = NEL_BASE_WEB_PATH .
                         $this->domain->reference('board_directory');

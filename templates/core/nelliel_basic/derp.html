@@ -1,9 +1,15 @@
 <div class="text-center">
 	<h2>{{{ error_header }}}</h2>
-	<div>
+	<p>
 		<span class="label" data-i18n="">Error</span>
 		<span>{{ error_id }}</span>
-	</div>
+	</p>
+{{# plugin_error }}
+	<p>
+		<span class="label">Plugin:</span>
+		<span>{{ plugin_id }}</span>
+	</p>
+{{/ plugin_error }}
 	<p>{{ error_message }}</p>
 	<p>{{ error_data }}</p>
 {{# show_image }}
