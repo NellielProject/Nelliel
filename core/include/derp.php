@@ -70,5 +70,6 @@ function nel_derp(int $error_id, string $error_message, int $response_code = 0, 
 function nel_plugin_derp(string $plugin_id, string $error_message, int $response_code = 0, array $context = array())
 {
     $context['plugin_id'] = $plugin_id;
+    $context['plugin_name'] = nel_plugins()->getPlugin($plugin_id)->info('name');
     nel_derp(1000, $error_message, $response_code, $context);
 }

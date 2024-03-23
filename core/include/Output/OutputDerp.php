@@ -33,9 +33,9 @@ class OutputDerp extends Output
         $this->render_data['error_message'] = $diagnostic['error_message'] ?? '';
         $this->render_data['error_data'] = '';
 
-        if (isset($context['plugin_id'])) {
+        if (isset($context['plugin_name'])) {
             $this->render_data['plugin_error'] = true;
-            $this->render_data['plugin_id'] = $context['plugin_id'];
+            $this->render_data['plugin_name'] = $context['plugin_name'];
         }
 
         if ($return_link->ready()) {
