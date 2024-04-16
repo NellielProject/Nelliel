@@ -20,13 +20,16 @@ class DomainGlobal extends Domain implements NellielCacheInterface
 
     protected function loadSettings(): void
     {
-        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
-            'domains/' . $this->domain_id);
+        $settings = array();
+
+        if (NEL_USE_FILE_CACHE) {
+            $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
+                'domains/' . $this->domain_id);
+        }
 
         if (empty($settings)) {
             $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
-                'domains/' . $this->domain_id);
+            $this->regenCache();
         }
 
         $this->settings = $settings;
@@ -34,21 +37,20 @@ class DomainGlobal extends Domain implements NellielCacheInterface
     }
 
     protected function loadReferences(): void
-    {
-        $this->references['board_uri'] = Domain::GLOBAL;
-    }
+    {}
 
     protected function loadSettingsFromDatabase(): array
     {
         $settings = array();
-        $query = 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_DEFAULTS_TABLE . '" ON "' .
-            NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_DEFAULTS_TABLE .
-            '"."setting_name" WHERE "setting_category" = \'board\'';
-        $config_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
+        $settings_list = $this->database->executeFetchAll(
+            'SELECT "setting_name", "default_value", "data_type" FROM "' . NEL_SETTINGS_TABLE .
+            '" WHERE "setting_category" = \'board\'', PDO::FETCH_ASSOC);
+        $config_list = $this->database->executeFetchAll(
+            'SELECT "setting_name", "setting_value" FROM "' . NEL_BOARD_DEFAULTS_TABLE . '"', PDO::FETCH_KEY_PAIR);
 
-        foreach ($config_list as $config) {
-            $config['setting_value'] = nel_typecast($config['setting_value'], $config['data_type']);
-            $settings[$config['setting_name']] = $config['setting_value'];
+        foreach ($settings_list as $setting) {
+            $settings[$setting['setting_name']] = nel_typecast(
+                $config_list[$setting['setting_name']] ?? $setting['default_value'], $setting['data_type'], false);
         }
 
         return $settings;
@@ -63,6 +65,12 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         }
 
         return $uri;
+    }
+
+    public function url(): string
+    {
+        return nel_site_domain()->setting('absolute_url_protocol') . '://' .
+            rtrim(nel_site_domain()->setting('site_domain'), '/') . '/' . rtrim($this->uri, '/') . '/';
     }
 
     public function updateStatistics(): void

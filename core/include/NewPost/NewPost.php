@@ -67,7 +67,7 @@ class NewPost
         $post->changeData('total_uploads', count($uploads));
 
         if (!$spoon) {
-            if (!$post->data('comment')) {
+            if (!$post->getData('comment')) {
                 nel_derp(9, _gettext('Post contains zero content. What was the point of this?'), 0, $error_data);
             }
         } else {
@@ -85,13 +85,13 @@ class NewPost
             }
         }
 
-        if (utf8_strlen($post->data('comment')) > $this->domain->setting('max_comment_length')) {
+        if (utf8_strlen($post->getData('comment')) > $this->domain->setting('max_comment_length')) {
             nel_derp(10, _gettext('Post is too long. Try looking up the word concise.'), 0, $error_data);
         }
 
-        if (!is_null($post->data('password'))) {
+        if (!is_null($post->getData('password'))) {
             $post->changeData('password',
-                nel_password_hash($post->data('password'), nel_crypt_config()->postPasswordAlgorithm(),
+                nel_password_hash($post->getData('password'), nel_crypt_config()->postPasswordAlgorithm(),
                     nel_crypt_config()->postPasswordOptions()));
         }
 
@@ -100,7 +100,7 @@ class NewPost
         $checkpoint->process('new_post');
 
         $post->reserveDatabaseRow();
-        $thread_id = ($post->data('op')) ? $post->contentID()->postID() : $post->data('parent_thread');
+        $thread_id = ($post->getData('op')) ? $post->contentID()->postID() : $post->getData('parent_thread');
         $thread = new Thread(new ContentID(ContentID::createIDString($thread_id, 0, 0)), $this->domain);
         $thread->addPost($post);
         $post->writeToDatabase();
@@ -134,10 +134,10 @@ class NewPost
                 $upload->contentID()->changeOrderID($order);
                 $upload->changeData('upload_order', $order);
 
-                if ($upload->data('category') !== 'embed' && !$upload->data('use_existing')) {
-                    $file_handler->moveFile($upload->data('location'), $post->srcFilePath() . $upload->data('fullname'));
-                    chmod($post->srcFilePath() . $upload->data('fullname'), octdec(NEL_FILES_PERM));
-                    $upload->changeData('location', $post->srcFilePath() . $upload->data('fullname'));
+                if ($upload->getData('category') !== 'embed' && !$upload->getData('use_existing')) {
+                    $file_handler->moveFile($upload->getData('location'), $post->srcFilePath() . $upload->getData('fullname'));
+                    chmod($post->srcFilePath() . $upload->getData('fullname'), octdec(NEL_FILES_PERM));
+                    $upload->changeData('location', $post->srcFilePath() . $upload->getData('fullname'));
                 }
 
                 $upload->writeToDatabase();
@@ -155,11 +155,11 @@ class NewPost
             $get_thread->toggleSticky();
         }
 
-        if ($thread->data('cyclic') == 1) {
+        if ($thread->getData('cyclic') == 1) {
             $thread->cycle();
         }
 
-        if ($thread->data('op') || $thread->data('old')) {
+        if ($thread->getData('op') || $thread->getData('old')) {
             $archive_and_prune = new ArchiveAndPrune($thread->domain(), $file_handler);
             $archive_and_prune->updateThreads();
         }
@@ -172,7 +172,7 @@ class NewPost
 
         // Generate thread page if it doesn't exist, otherwise update
         $regen = new Regen();
-        $regen->threads($this->domain, true, [$thread->contentID()->threadID()]);
+        $regen->threads($this->domain, [$thread->contentID()->threadID()]);
         $regen->index($this->domain);
 
         if ($site_domain->setting('overboard_active') || $site_domain->setting('sfw_overboard_active')) {
@@ -189,7 +189,7 @@ class NewPost
         // Check for flood
         // If post is a reply, also check if the thread still exists
 
-        if ($post->data('parent_thread') == 0) {
+        if ($post->getData('parent_thread') == 0) {
             $renzoku_setting = $time - $this->domain->setting('thread_renzoku');
             $op_value = 1;
         } else {
@@ -209,10 +209,10 @@ class NewPost
             nel_derp(3, _gettext("Flood detected! You're posting too fast, slow down."), 0, $error_data);
         }
 
-        if ($post->data('parent_thread') != 0) {
+        if ($post->getData('parent_thread') != 0) {
             $prepared = $this->database->prepare(
                 'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
-            $thread_info = $this->database->executePreparedFetch($prepared, [$post->data('parent_thread')],
+            $thread_info = $this->database->executePreparedFetch($prepared, [$post->getData('parent_thread')],
                 PDO::FETCH_ASSOC, true);
 
             if (!empty($thread_info)) {

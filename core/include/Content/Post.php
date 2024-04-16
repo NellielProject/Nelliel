@@ -13,17 +13,19 @@ use Nelliel\Moar;
 use Nelliel\API\JSON\PostJSON;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
+use Nelliel\Interfaces\MutableData;
 use Nelliel\Output\OutputPost;
 use Nelliel\Tables\TablePosts;
 use PDO;
 
-class Post
+class Post implements MutableData
 {
     protected $content_id;
-    protected $database;
+    protected NellielPDO $database;
     protected $domain;
-    protected $content_data = array();
+    protected array $content_data = array();
     protected $content_moar;
     protected $authorization;
     protected $main_table;
@@ -74,12 +76,7 @@ class Post
             return true;
         }
 
-        $column_types = $this->main_table->columnTypes();
-
-        foreach ($result as $name => $value) {
-            $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
-        }
-
+        $this->content_data = TablePosts::typeCastData($result);
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
         return true;
@@ -91,9 +88,9 @@ class Post
             return false;
         }
 
-        $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $filtered_data = TablePosts::filterData($this->content_data);
         $filtered_data['moar'] = $this->getMoar()->getJSON();
-        $pdo_types = $this->main_table->getPDOTypes($filtered_data);
+        $pdo_types = TablePosts::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
         $row_check_data = ['post_number' => $this->content_id->postID()];
@@ -147,13 +144,14 @@ class Post
 
             $delete_post_time_limit = $this->domain->setting('delete_post_time_limit');
 
-            if (!$bypass && $delete_post_time_limit > 0 && time() - $this->content_data['post_time'] > $delete_post_time_limit) {
+            if (!$bypass && $delete_post_time_limit > 0 &&
+                time() - $this->content_data['post_time'] > $delete_post_time_limit) {
                 nel_derp(68, __('You waited too long and can no longer delete this post.'));
             }
         }
 
         // Threads can technically have just OP deleted but right now we don't use that
-        if ($this->data('op') && !$parent_delete) {
+        if ($this->getData('op') && !$parent_delete) {
             return $this->getParent()->delete($perm_override);
         }
 
@@ -222,8 +220,8 @@ class Post
         $flag = false;
 
         if ($session->isActive() && $user->checkPermission($this->domain, 'perm_delete_content')) {
-            if (!nel_true_empty($this->data('username'))) {
-                $mod_post_user = $this->authorization->getUser($this->data('username') ?? '');
+            if (!nel_true_empty($this->getData('username'))) {
+                $mod_post_user = $this->authorization->getUser($this->getData('username') ?? '');
 
                 $flag = $this->authorization->roleLevelCheck($user->getDomainRole($this->domain)->id(),
                     $mod_post_user->getDomainRole($this->domain)->id());
@@ -235,13 +233,13 @@ class Post
         $update_sekrit = $_POST['update_sekrit'] ?? '';
 
         if (!$flag && $this->domain->setting('user_delete_own')) {
-            if (!nel_true_empty($this->data('password'))) {
+            if (!nel_true_empty($this->getData('password'))) {
                 $flag = nel_password_verify($update_sekrit, $this->content_data['password'],
                     $this->crypt_config->postPasswordOptions()['pepper']);
             }
 
             if (!$flag && $this->domain->setting('allow_op_thread_moderation')) {
-                $flag = nel_password_verify($update_sekrit, $this->getParent()->firstPost()->data('password'),
+                $flag = nel_password_verify($update_sekrit, $this->getParent()->firstPost()->getData('password'),
                     $this->crypt_config->postPasswordOptions()['pepper']);
             }
         }
@@ -271,8 +269,8 @@ class Post
             'INSERT INTO "' . $this->domain->reference('posts_table') .
             '" ("post_time", "post_time_milli", "hashed_ip_address", "visitor_id") VALUES (?, ?, ?, ?)');
         $success = $this->database->executePrepared($prepared,
-            [$this->data('post_time'), $this->data('post_time_milli'), $this->data('hashed_ip_address'),
-                $this->data('visitor_id')]);
+            [$this->getData('post_time'), $this->getData('post_time_milli'), $this->getData('hashed_ip_address'),
+                $this->getData('visitor_id')]);
 
         if (!$success) {
             return false;
@@ -282,8 +280,8 @@ class Post
             'SELECT "post_number" FROM "' . $this->domain->reference('posts_table') .
             '" WHERE "post_time" = ? AND "post_time_milli" = ? AND "hashed_ip_address" = ? AND "visitor_id" = ?');
         $result = $this->database->executePreparedFetch($prepared,
-            [$this->data('post_time'), $this->data('post_time_milli'), $this->data('hashed_ip_address'),
-                $this->data('visitor_id')], PDO::FETCH_COLUMN, true);
+            [$this->getData('post_time'), $this->getData('post_time_milli'), $this->getData('hashed_ip_address'),
+                $this->getData('visitor_id')], PDO::FETCH_COLUMN, true);
         $this->content_id->changeThreadID(
             ($this->content_id->threadID() === 0) ? $result : $this->content_id->threadID());
         $this->changeData('post_number', $result);
@@ -329,10 +327,10 @@ class Post
         $new_thread->changeData('thread_id', $this->content_id->postID());
 
         if ($preserve_time) {
-            $new_thread->changeData('bump_time', $this->data('post_time'));
-            $new_thread->changeData('bump_time_milli', $this->data('post_time_milli'));
-            $new_thread->changeData('last_update', $this->data('post_time'));
-            $new_thread->changeData('last_update_milli', $this->data('post_time_milli'));
+            $new_thread->changeData('bump_time', $this->getData('post_time'));
+            $new_thread->changeData('bump_time_milli', $this->getData('post_time_milli'));
+            $new_thread->changeData('last_update', $this->getData('post_time'));
+            $new_thread->changeData('last_update_milli', $this->getData('post_time_milli'));
         } else {
             $time = nel_get_microtime();
             $new_thread->changeData('bump_time', $time['time']);
@@ -391,7 +389,7 @@ class Post
     {
         $cache_array = array();
         $output_post = new OutputPost($this->domain, false);
-        $cache_array['comment_markup'] = $output_post->parseComment($this->data('comment'), $this);
+        $cache_array['comment_markup'] = $output_post->parseComment($this->getData('comment'), $this);
         $cache_array['backlink_data'] = $output_post->generateBacklinks($this);
         $encoded_cache = json_encode($cache_array, JSON_UNESCAPED_UNICODE);
         $prepared = $this->database->prepare(
@@ -439,8 +437,12 @@ class Post
         return $default;
     }
 
-    public function data(string $key)
+    public function getData(string $key = null)
     {
+        if (is_null($key)) {
+            return $this->content_data;
+        }
+
         return $this->content_data[$key] ?? null;
     }
 
@@ -453,20 +455,22 @@ class Post
         return $this->content_data;
     }
 
-    public function changeData(string $key, $new_data, bool $cast_null = true)
+    public function changeData(string $key, $new_data): void
     {
-        $column_types = $this->main_table->columnTypes();
-        $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_typecast($new_data, $type, $cast_null);
-        $old_data = $this->data($key);
-        $this->content_data[$key] = $new_data;
-        return $old_data;
+        $this->content_data[$key] = TablePosts::typeCastValue($key, $new_data);
     }
 
-    public function getURL(bool $dynamic): string
+    public function getURL(bool $relative = true): string
     {
         $parent = $this->getParent();
-        $thread_url = $parent->getURL($dynamic, false, '');
+        $thread_url = $parent->getURL($relative);
+        return $thread_url . '#t' . $parent->contentID()->threadID() . 'p' . $this->content_id->postID();
+    }
+
+    public function getRoute(): string
+    {
+        $parent = $this->getParent();
+        $thread_url = $parent->getRoute(false, '');
         return $thread_url . '#t' . $parent->contentID()->threadID() . 'p' . $this->content_id->postID();
     }
 
@@ -542,7 +546,7 @@ class Post
             $new_post->reserveDatabaseRow();
 
             // If this is OP and we're moving the whole thread, finish preparation before continuing
-            if ($this->data('op')) {
+            if ($this->getData('op')) {
                 $new_thread->contentID()->changeThreadID($new_post->contentID()->postID());
                 $new_thread->changedata('thread_id', $new_thread->contentID()->threadID());
                 $new_thread->writeToDatabase();

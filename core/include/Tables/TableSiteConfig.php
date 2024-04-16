@@ -11,23 +11,29 @@ use PDO;
 
 class TableSiteConfig extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'setting_name' => 'string',
+        'setting_value' => 'string',
+        'stored_raw' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'setting_name' => PDO::PARAM_STR,
+        'setting_value' => PDO::PARAM_STR,
+        'stored_raw' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_SITE_CONFIG_TABLE;
-        $this->column_types = [
-            'setting_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'setting_value' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'stored_raw' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'setting_name' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'setting_value' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'stored_raw' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

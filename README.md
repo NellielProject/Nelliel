@@ -1,6 +1,6 @@
 # Nelliel Imageboard
 ## About
-A lightweight [Futallaby](https://www.1chan.net/futallaby/)-style imageboard. Focuses on providing modern features and customization while preserving the old school imageboard feel.
+A lightweight imageboard that focuses on providing modern features and customization while preserving the old school imageboard feel. Originally a fork of [Futallaby](https://www.1chan.net/futallaby/).
 
 **IMPORTANT: Nelliel is in late beta stage. Some things are still buggy or incomplete but the software is generally stable.**
 

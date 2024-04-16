@@ -6,20 +6,21 @@ namespace Nelliel\FrontEnd;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Database\NellielPDO;
+use Nelliel\Interfaces\MutableData;
+use Nelliel\Interfaces\SelfPersisting;
+use Nelliel\Tables\TableCapcodes;
 use PDO;
 
-class Capcode
+class Capcode implements SelfPersisting, MutableData
 {
-    private $database;
-    private $capcode = '';
-    private $data = array();
-    private $front_end_data;
+    private NellielPDO $database;
+    private string $capcode = '';
+    private array $data = array();
 
-    function __construct(NellielPDO $database, FrontEndData $front_end_data, string $capcode)
+    function __construct(NellielPDO $database, string $capcode)
     {
         $this->database = $database;
         $this->capcode = $capcode;
-        $this->front_end_data = $front_end_data;
         $this->load();
     }
 
@@ -28,42 +29,52 @@ class Capcode
         return $this->capcode;
     }
 
-    public function data(string $key): string
+    public function getData(string $key = null)
     {
-        return $this->data[$key] ?? '';
-    }
-
-    public function update(): void
-    {
-        if ($this->database->rowExists(NEL_CAPCODES_TABLE, ['capcode'], [$this->id()],
-            [PDO::PARAM_STR, PDO::PARAM_STR])) {
-            $prepared = $this->database->prepare(
-                'UPDATE "' . NEL_CAPCODES_TABLE . '" SET "output" = ?, "moar" = ? WHERE "capcode" = ?');
-            $this->database->executePrepared($prepared, [$this->data('output'), $this->data('moar'), $this->id()]);
-        } else {
-            $prepared = $this->database->prepare(
-                'INSERT INTO "' . NEL_CAPCODES_TABLE . '" {"capcode", "output", "moar") VALUES (?, ?, ?');
-            $this->database->executePrepared($prepared, [$this->id(), $this->data('output'), $this->data('moar')]);
+        if (is_null($key)) {
+            return $this->data;
         }
 
-        $this->load();
+        return $this->data[$key] ?? null;
     }
 
-    public function remove(): void
+    public function changeData(string $key, $new_data): void
     {
-        $prepared = $this->database->prepare('DELETE FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode" = ?');
-        $this->database->executePrepared($prepared, [$this->id()]);
+        $this->data[$key] = TableCapcodes::typeCastValue($key, $new_data);
     }
 
     public function load(): void
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode" = ?');
-        $data = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
+        $result = $this->database->executePreparedFetch($prepared, [$this->id()], PDO::FETCH_ASSOC);
 
-        if ($data === false) {
+        if ($result === false) {
             return;
         }
 
-        $this->data = $data;
+        $this->data = TableCapcodes::typeCastData($result);
+    }
+
+    public function save(): void
+    {
+        if ($this->database->rowExists(NEL_CAPCODES_TABLE, ['capcode'], [$this->id()],
+            [PDO::PARAM_STR, PDO::PARAM_STR])) {
+            $prepared = $this->database->prepare(
+                'UPDATE "' . NEL_CAPCODES_TABLE . '" SET "output" = :output, "moar" = :moar WHERE "capcode" = :capcode');
+        } else {
+            $prepared = $this->database->prepare(
+                'INSERT INTO "' . NEL_CAPCODES_TABLE . '" {"capcode", "output", "moar") VALUES (:capcode, :output, :moar');
+        }
+
+        $prepared->bindValue(':capcode', $this->id() ?? '', PDO::PARAM_STR);
+        $prepared->bindValue(':output', $this->getData('output') ?? '', PDO::PARAM_STR);
+        $prepared->bindValue(':moar', $this->getData('moar'), PDO::PARAM_STR);
+        $this->database->executePrepared($prepared);
+    }
+
+    public function delete(): void
+    {
+        $prepared = $this->database->prepare('DELETE FROM "' . NEL_CAPCODES_TABLE . '" WHERE "capcode" = ?');
+        $this->database->executePrepared($prepared, [$this->id()]);
     }
 }

@@ -26,9 +26,9 @@ class OutputEmbed extends Output
         $this->render_data['is_embed'] = true;
         $this->render_data['embed_container_id'] = 'upload-container-' . $embed->contentID()->getIDString();
         $this->render_data['embed_content_id'] = $embed->contentID()->getIDString();
-        $this->render_data['original_url'] = $embed->data('embed_url');
-        $this->render_data['display_url'] = $embed->data('embed_url');
-        $this->render_data['embed_url'] = $embed->parseEmbedURL($embed->data('embed_url'), false);
+        $this->render_data['original_url'] = $embed->getData('embed_url');
+        $this->render_data['display_url'] = $embed->getData('embed_url');
+        $this->render_data['embed_url'] = $embed->parseEmbedURL($embed->getData('embed_url'), false);
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if (utf8_strlen($this->render_data['display_url']) > $this->domain->setting('embed_url_display_length')) {
@@ -37,18 +37,12 @@ class OutputEmbed extends Output
         }
 
         if ($this->session->inModmode($this->domain)) {
-            if ($this->session->user()->checkPermission($this->domain, 'perm_delete_content')) {
-                $this->render_data['mod_links_delete']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'delete']);
-                $this->render_data['embed_modmode_options'][] = $this->render_data['mod_links_delete'];
-            }
-
-            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
-                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $embed->ContentID()->getIDString(), 'move']);
-                $this->render_data['embed_modmode_options'][] = $this->render_data['mod_links_move'];
-            }
+            $output_modmode_headers = new OutputModmodeLinks($this->domain, $this->write_mode);
+            $this->render_data['embed_modmode_options'] = $output_modmode_headers->upload($embed);
         }
+
+        $output_content_links = new OutputContentLinks($this->domain, $this->write_mode);
+        $this->render_data['embed_options'] = $output_content_links->upload($embed);
 
         if ($catalog) {
             $first_full_size = $first && $this->domain->setting('catalog_first_preview_full_size');
@@ -58,7 +52,7 @@ class OutputEmbed extends Output
                 'catalog_max_multi_preview_display_height') : $this->domain->setting(
                 'catalog_max_preview_display_height');
         } else {
-            if ($post->data('op')) {
+            if ($post->getData('op')) {
                 $max_width = ($multiple) ? $this->domain->setting('max_op_multi_display_width') : $this->domain->setting(
                     'max_op_embed_display_width');
                 $max_height = ($multiple) ? $this->domain->setting('max_op_multi_display_height') : $this->domain->setting(
@@ -74,11 +68,8 @@ class OutputEmbed extends Output
         $this->render_data['max_preview_width'] = $max_width;
         $this->render_data['max_preview_height'] = $max_height;
 
-        $this->render_data['content_links_hide_embed']['content_id'] = $embed->contentID()->getIDString();
-        $this->render_data['embed_options'][] = $this->render_data['content_links_hide_embed'];
-
-        if ($embed->data('deleted')) {
-            if(nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
+        if ($embed->getData('deleted')) {
+            if (nel_is_absolute_url($this->domain->setting('image_deleted_embed'))) {
                 $this->render_data['deleted_url'] = $this->domain->setting('image_deleted_embed');
             } else {
                 $this->render_data['deleted_url'] = NEL_ASSETS_WEB_PATH . $this->domain->setting('image_deleted_embed');

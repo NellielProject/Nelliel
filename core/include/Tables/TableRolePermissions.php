@@ -11,21 +11,26 @@ use PDO;
 
 class TableRolePermissions extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'role_id' => 'string',
+        'permission' => 'string',
+        'perm_setting' => 'boolean'];
+
+    public const PDO_TYPES = [
+        'role_id' => PDO::PARAM_STR,
+        'permission' => PDO::PARAM_STR,
+        'perm_setting' => PDO::PARAM_INT];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_ROLE_PERMISSIONS_TABLE;
-        $this->column_types = [
-            'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'permission' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'perm_setting' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT]];
         $this->column_checks = [
             'role_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'permission' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'perm_setting' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)
@@ -87,6 +92,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['site_admin', 'perm_manage_pages', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['site_admin', 'perm_manage_plugins', 1]);
+        $this->insertDefaultRow(['site_admin', 'perm_access_plugin_controls', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_view_reports', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_dismiss_reports', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_view_roles', 1]);
@@ -152,6 +158,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['board_owner', 'perm_manage_pages', 0]);
         $this->insertDefaultRow(['board_owner', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['board_owner', 'perm_manage_plugins', 0]);
+        $this->insertDefaultRow(['board_owner', 'perm_access_plugin_controls', 1]);
         $this->insertDefaultRow(['board_owner', 'perm_view_reports', 1]);
         $this->insertDefaultRow(['board_owner', 'perm_dismiss_reports', 1]);
         $this->insertDefaultRow(['board_owner', 'perm_view_roles', 0]);
@@ -217,6 +224,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['moderator', 'perm_manage_pages', 0]);
         $this->insertDefaultRow(['moderator', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['moderator', 'perm_manage_plugins', 0]);
+        $this->insertDefaultRow(['moderator', 'perm_access_plugin_controls', 0]);
         $this->insertDefaultRow(['moderator', 'perm_view_reports', 1]);
         $this->insertDefaultRow(['moderator', 'perm_dismiss_reports', 1]);
         $this->insertDefaultRow(['moderator', 'perm_view_roles', 0]);
@@ -282,6 +290,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['janitor', 'perm_manage_pages', 0]);
         $this->insertDefaultRow(['janitor', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['janitor', 'perm_manage_plugins', 0]);
+        $this->insertDefaultRow(['janitor', 'perm_access_plugin_controls', 0]);
         $this->insertDefaultRow(['janitor', 'perm_view_reports', 1]);
         $this->insertDefaultRow(['janitor', 'perm_dismiss_reports', 1]);
         $this->insertDefaultRow(['janitor', 'perm_view_roles', 0]);
@@ -347,6 +356,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['basic_user', 'perm_manage_pages', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_manage_plugins', 0]);
+        $this->insertDefaultRow(['basic_user', 'perm_access_plugin_controls', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_view_reports', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_dismiss_reports', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_view_roles', 0]);

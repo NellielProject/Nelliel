@@ -11,21 +11,26 @@ use PDO;
 
 class TablePermissions extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'permission' => 'string',
+        'description' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'permission' => PDO::PARAM_STR,
+        'description' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_PERMISSIONS_TABLE;
-        $this->column_types = [
-            'permission' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'description' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'permission' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'description' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)
@@ -79,6 +84,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_manage_pages', 'Manage static pages.']);
         $this->insertDefaultRow(['perm_manage_permissions', 'Manage permissions.']);
         $this->insertDefaultRow(['perm_manage_plugins', 'Manage plugins.']);
+        $this->insertDefaultRow(['perm_access_plugin_controls', 'Access plugin control panels.']);
         $this->insertDefaultRow(['perm_view_reports', 'View reports.']);
         $this->insertDefaultRow(['perm_dismiss_reports', 'Manage reports.']);
         $this->insertDefaultRow(['perm_view_roles', 'View roles.']);

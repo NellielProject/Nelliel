@@ -18,7 +18,6 @@ class OutputPanelTemplates extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/templates');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Templates');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

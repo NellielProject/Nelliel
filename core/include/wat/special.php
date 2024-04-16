@@ -5,7 +5,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 function nel_special(string $wut_do = null)
 {
-    if (empty($_GET) && is_null($wut_do)) {
+    if (count($_GET) !== 1 && is_null($wut_do)) {
         return;
     }
 
@@ -18,9 +18,11 @@ function nel_special(string $wut_do = null)
     } else if (isset($_GET['dawn'])) {
         header("Content-Type: image/jpeg");
         echo file_get_contents(NEL_WAT_FILES_PATH . 'dawn.jpg');
+    } else if (isset($_GET['aeiou'])) {
+        header("Location: https://www.youtube.com/watch?v=Hv6RbEOlqRo");
     } else {
         return;
     }
 
-    nel_clean_exit();
+    exit(0);
 }

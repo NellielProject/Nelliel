@@ -21,7 +21,6 @@ class OutputOverboard extends Output
     public function index(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('index/index');
         $sfw = $parameters['sfw'] ?? false;
         $overboard_id = $parameters['overboard_id'] ?? 'all';
@@ -83,23 +82,23 @@ class OutputOverboard extends Output
             $thread_input['board_uri'] = $thread->domain()->uri(true);
             $thread_input['board_url'] = NEL_BASE_WEB_PATH . $thread->domain()->uri() . '/';
             $thread_input['board_safety'] = $thread_domain->setting('safety_level');
-            $thread_input['thread_id'] = $thread->data('thread_id');
+            $thread_input['thread_id'] = $thread->getData('thread_id');
             $thread_input['thread_expand_id'] = 'thread-expand-' . $thread->contentID()->getIDString();
             $thread_input['thread_corral_id'] = 'thread-corral-' . $thread->contentID()->getIDString();
 
-            $thread_input['omitted_count'] = $thread->data('post_count') - $index_replies - 1; // Subtract 1 to account for OP
+            $thread_input['omitted_count'] = $thread->getData('post_count') - $index_replies - 1; // Subtract 1 to account for OP
             $gen_data['abbreviate'] = $thread_input['omitted_count'] > 0;
             $thread_input['abbreviate'] = $gen_data['abbreviate'];
-            $abbreviate_start = $thread->data('post_count') - $index_replies;
+            $abbreviate_start = $thread->getData('post_count') - $index_replies;
             $post_counter = 1;
 
             foreach ($thread->getPosts() as $post) {
                 $post_content_id = new ContentID(
-                    ContentID::createIDString($thread->data('thread_id'), $post->data('post_number')));
+                    ContentID::createIDString($thread->getData('thread_id'), $post->getData('post_number')));
                 $post = $post_content_id->getInstanceFromID($thread_domain);
                 $parameters = ['gen_data' => $gen_data, 'in_thread_number' => $post_counter];
 
-                if ($post->data('op') == 1) {
+                if ($post->getData('op') == 1) {
                     $thread_input['op_post'] = $output_post->render($post, $parameters, true);
                 } else {
                     if ($post_counter > $abbreviate_start) {
@@ -119,7 +118,6 @@ class OutputOverboard extends Output
     public function catalog(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('catalog/catalog');
         $overboard_id = $parameters['overboard_id'] ?? 'all';
         $uri = $parameters['uri'] ?? 'overboard';
@@ -140,31 +138,32 @@ class OutputOverboard extends Output
 
             $thread_data = array();
             $post = $thread->firstPost();
-            $thread_data['open_url'] = $thread->getURL($this->session->inModmode($this->domain));
 
             if ($this->session->inModmode($this->domain) && !$this->writeMode()) {
-                $thread_data['open_url'] .= '&modmode=true';
+                $thread_data['open_url'] = $thread->getRoute(true, '&modmode=true');
+            } else {
+                $thread_data['open_url'] = $thread->getURL();
             }
 
-            $thread_data['first_post_subject'] = $post->data('subject');
+            $thread_data['first_post_subject'] = $post->getData('subject');
             $output_post = new OutputPost($this->domain, false);
 
             if (NEL_USE_RENDER_CACHE && isset($post->getCache()['comment_markup'])) {
                 $thread_data['comment_markup'] = $post->getCache()['comment_markup'];
             } else {
-                $thread_data['comment_markup'] = $output_post->parseComment($post->data('comment'), $post);
+                $thread_data['comment_markup'] = $output_post->parseComment($post->getData('comment'), $post);
             }
 
-            $thread_data['mod-comment'] = $post->data('mod_comment');
-            $thread_data['reply_count'] = $thread->data('post_count') - 1;
-            $thread_data['total_uploads'] = $thread->data('total_uploads');
+            $thread_data['mod-comment'] = $post->getData('mod_comment');
+            $thread_data['reply_count'] = $thread->getData('post_count') - 1;
+            $thread_data['total_uploads'] = $thread->getData('total_uploads');
             $thread_data['index_page'] = ceil($thread_count / $thread->domain()->setting('threads_per_page'));
             $ui_image_set = $this->domain->frontEndData()->getImageSet($this->domain->setting('ui_image_set'));
-            $thread_data['is_sticky'] = $thread->data('sticky');
+            $thread_data['is_sticky'] = $thread->getData('sticky');
             $thread_data['status_sticky'] = $ui_image_set->getWebPath('ui', 'status_sticky', true);
-            $thread_data['is_locked'] = $thread->data('locked');
+            $thread_data['is_locked'] = $thread->getData('locked');
             $thread_data['status_locked'] = $ui_image_set->getWebPath('ui', 'status_locked', true);
-            $thread_data['is_cyclic'] = $thread->data('cyclic');
+            $thread_data['is_cyclic'] = $thread->getData('cyclic');
             $thread_data['status_cyclic'] = $ui_image_set->getWebPath('ui', 'status_cyclic', true);
             $thread_data['board_id'] = $thread->domain()->id();
             $thread_data['board_url'] = NEL_BASE_WEB_PATH . $thread->domain()->id() . '/';
@@ -179,15 +178,15 @@ class OutputOverboard extends Output
                 $thread_data['multi_file'] = false;
                 $thread_data['single_multiple'] = 'single';
 
-                if (!nel_true_empty($post->data('subject'))) {
-                    $thread_data['subject'] = $post->data('subject');
+                if (!nel_true_empty($post->getData('subject'))) {
+                    $thread_data['subject'] = $post->getData('subject');
                 } else {
-                    $thread_data['subject'] = '#' . $post->data('post_number');
+                    $thread_data['subject'] = '#' . $post->getData('post_number');
                 }
 
                 $upload = $uploads[0];
 
-                if (nel_true_empty($upload->data('embed_url'))) {
+                if (nel_true_empty($upload->getData('embed_url'))) {
                     $file_data = $output_file_info->render($upload, $post, ['catalog' => true], true);
                 } else {
                     $file_data = $output_embed_info->render($upload, $post, ['catalog' => true], true);
@@ -198,13 +197,13 @@ class OutputOverboard extends Output
                 $multiple = $upload_count > 1 && $this->domain->setting('catalog_show_multiple_uploads');
 
                 foreach ($uploads as $upload) {
-                    if ($upload->data('deleted') && !$this->domain->setting('display_deleted_placeholder')) {
+                    if ($upload->getData('deleted') && !$this->domain->setting('display_deleted_placeholder')) {
                         continue;
                     }
 
                     $file_data = array();
 
-                    if (nel_true_empty($upload->data('embed_url'))) {
+                    if (nel_true_empty($upload->getData('embed_url'))) {
                         $file_data = $output_file_info->render($upload, $post,
                             ['catalog' => true, 'first' => $first, 'multiple' => $multiple], true);
                     } else {

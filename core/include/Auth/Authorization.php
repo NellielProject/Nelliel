@@ -57,6 +57,11 @@ class Authorization
     {
         $username_lower = utf8_strtolower($username);
         $user = $this->getUser($username_lower);
+
+        if ($user->isSiteOwner()) {
+            return;
+        }
+
         $user->remove();
         unset(self::$users[$username_lower]);
     }

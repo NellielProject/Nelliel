@@ -20,7 +20,6 @@ class OutputPanelIPInfo extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/ip_info_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('IP Info');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

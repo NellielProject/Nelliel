@@ -11,21 +11,32 @@ use PDO;
 
 class TableBanAppeals extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'appeal_id' => 'integer',
+        'ban_id' => 'string',
+        'time' => 'string',
+        'appeal' => 'integer',
+        'response' => 'string',
+        'pending' => 'string',
+        'denied' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'appeal_id' => PDO::PARAM_INT,
+        'ban_id' => PDO::PARAM_INT,
+        'time' => PDO::PARAM_INT,
+        'appeal' => PDO::PARAM_STR,
+        'response' => PDO::PARAM_STR,
+        'pending' => PDO::PARAM_INT,
+        'denied' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_BAN_APPEALS_TABLE;
-        $this->column_types = [
-            'appeal_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'ban_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
-            'time' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
-            'appeal' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_STR],
-            'response' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'pending' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
-            'denied' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'appeal_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'ban_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -35,7 +46,6 @@ class TableBanAppeals extends Table
             'pending' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'denied' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

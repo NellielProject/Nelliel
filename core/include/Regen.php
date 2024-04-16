@@ -26,13 +26,13 @@ class Regen
     function __construct()
     {}
 
-    public function threads(Domain $domain, bool $write, array $ids): void
+    public function threads(Domain $domain, array $ids): void
     {
         $threads = count($ids);
         $i = 0;
 
         while ($i < $threads) {
-            $output_thread = new OutputThread($domain, $write);
+            $output_thread = new OutputThread($domain, true);
             $output_thread->render(['thread_id' => $ids[$i]], false);
             $i ++;
         }
@@ -186,7 +186,8 @@ class Regen
             'SELECT "thread_id" FROM "' . $board_domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);
         $board_domain->database()->query('UPDATE "' . $board_domain->reference('posts_table') . '" SET regen_cache = 1');
-        $this->threads($board_domain, true, $ids);
+        nel_session()->ignore(true);
+        $this->threads($board_domain, $ids);
         $this->index($board_domain);
 
         $prepared = $board_domain->database()->prepare(
@@ -199,5 +200,6 @@ class Regen
         }
 
         nel_plugins()->processHook('nel-in-after-regen-board-pages', [$board_domain]);
+        nel_session()->ignore(false);
     }
 }

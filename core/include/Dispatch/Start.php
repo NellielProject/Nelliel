@@ -26,7 +26,7 @@ class Start
         }
 
         if (isset($_GET['route'])) {
-            $full_uri = rawurldecode($_SERVER['REQUEST_URI']);
+            $full_uri = $_SERVER['REQUEST_URI'];
             $route_uri = preg_replace('/(.*?)\?route=/u', '', $full_uri);
             $router = new Router($route_uri);
             $router->addRoutes();

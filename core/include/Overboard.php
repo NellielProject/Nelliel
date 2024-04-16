@@ -13,7 +13,7 @@ use PDO;
 
 class Overboard
 {
-    private $database;
+    private NellielPDO $database;
 
     function __construct(NellielPDO $database)
     {
@@ -69,8 +69,8 @@ class Overboard
             '" ("overboard_id", "thread_id", "bump_time", "bump_time_milli", "board_id") VALUES
                     (?, ?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
-            [$overboard_id, $thread->contentID()->threadID(), $thread->data('bump_time'),
-                $thread->data('bump_time_milli'), $thread->domain()->id()]);
+            [$overboard_id, $thread->contentID()->threadID(), $thread->getData('bump_time'),
+                $thread->getData('bump_time_milli'), $thread->domain()->id()]);
     }
 
     /**
@@ -82,7 +82,7 @@ class Overboard
             'UPDATE "' . NEL_OVERBOARD_TABLE .
             '" SET "bump_time" = ?, "bump_time_milli" = ? WHERE "overboard_id" = ? AND "thread_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared,
-            [$thread->data('bump_time'), $thread->data('bump_time_milli'), $overboard_id,
+            [$thread->getData('bump_time'), $thread->getData('bump_time_milli'), $overboard_id,
                 $thread->contentID()->threadID(), $thread->domain()->id()]);
     }
 

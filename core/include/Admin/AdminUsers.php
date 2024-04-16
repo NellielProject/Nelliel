@@ -55,10 +55,6 @@ class AdminUsers extends Admin
         $update_user = $this->authorization->getUser($username);
 
         foreach ($_POST as $key => $value) {
-            if (is_array($value)) {
-                $value = nel_form_input_default($value);
-            }
-
             if (strpos($key, 'domain_role') !== false) {
                 $domain = Domain::getDomainFromID(utf8_substr($key, 12), $this->database);
                 $update_user->modifyRole($domain->id(), $value);

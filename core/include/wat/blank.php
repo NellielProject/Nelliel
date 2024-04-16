@@ -17,5 +17,5 @@ function nel_blank_page()
         </p>
     </body>
 </html>';
-    nel_clean_exit();
+    exit(0);
 }

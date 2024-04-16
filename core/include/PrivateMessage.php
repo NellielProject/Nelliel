@@ -63,13 +63,10 @@ class PrivateMessage
         return $this->data[$key] ?? null;
     }
 
-    public function changeData(string $key, $data)
+    public function changeData(string $key, $new_data)
     {
-        $column_types = $this->table->columnTypes();
-        $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_typecast($data, $type);
         $old_data = $this->data($key);
-        $this->data[$key] = $new_data;
+        $this->data[$key] = TablePrivateMessages::typeCastValue($key, $new_data);
         return $old_data;
     }
 
@@ -78,7 +75,7 @@ class PrivateMessage
         $this->canAccess();
         $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
         $output_private_messages->newMessage(['reply_id' => $this->message_id], false);
-        nel_clean_exit();
+        exit(0);
     }
 
     public function view()
@@ -86,7 +83,7 @@ class PrivateMessage
         $this->canAccess();
         $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
         $output_private_messages->viewMessage(['message_id' => $this->message_id], false);
-        nel_clean_exit();
+        exit(0);
     }
 
     public function send(): void

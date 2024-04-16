@@ -11,6 +11,8 @@ use Nelliel\Database\NellielPDO;
 use Nelliel\FrontEnd\FrontEndData;
 use Nelliel\Language\Language;
 use Nelliel\Language\Translator;
+use Nelliel\Utility\CacheHandler;
+use Nelliel\Utility\FileHandler;
 use DateTime;
 use DateTimeZone;
 use PDO;
@@ -19,24 +21,22 @@ abstract class Domain implements NellielCacheInterface
 {
     const SITE = 'site';
     const GLOBAL = 'global';
-    protected $domain_id;
-    protected $uri;
-    protected $display_uri;
-    protected $notes;
-    protected $settings;
-    protected $references;
-    protected $cache_handler;
-    protected $database;
-    protected $front_end_data;
-    protected $file_handler;
-    protected $render_core;
-    protected $render_active;
-    protected $template_path;
-    protected $translator;
-    protected $locale = NEL_DEFAULT_LOCALE;
-    protected $language;
-    protected $statistics;
-    protected $exists = false;
+    protected string $domain_id = '';
+    protected string $uri = '';
+    protected string $display_uri = '';
+    protected string $notes = '';
+    protected array $settings = array();
+    protected array $references = array();
+    protected CacheHandler $cache_handler;
+    protected NellielPDO $database;
+    protected FrontEndData $front_end_data;
+    protected FileHandler $file_handler;
+    protected string $template_path = '';
+    protected Translator $translator;
+    protected string $locale = NEL_DEFAULT_LOCALE;
+    protected Language $language;
+    protected Statistics $statistics;
+    protected bool $exists = false;
 
     protected abstract function loadSettings(): void;
 
@@ -47,6 +47,8 @@ abstract class Domain implements NellielCacheInterface
     public abstract function updateStatistics(): void;
 
     public abstract function uri(bool $display = false, bool $formatted = false): string;
+
+    public abstract function url(): string;
 
     function __construct(string $domain_id, NellielPDO $database)
     {
@@ -112,11 +114,7 @@ abstract class Domain implements NellielCacheInterface
             return $this->settings;
         }
 
-        if (!isset($this->settings[$setting])) {
-            return null;
-        }
-
-        return $this->settings[$setting];
+        return $this->settings[$setting] ?? null;
     }
 
     public function reference(string $reference = null)

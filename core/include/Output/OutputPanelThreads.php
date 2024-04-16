@@ -39,7 +39,6 @@ class OutputPanelThreads extends Output
     private function renderPanel(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/thread');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Threads');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -66,7 +65,7 @@ class OutputPanelThreads extends Output
             $op_post = $op_content_id->getInstanceFromID($this->domain);
             $thread_info['thread_id'] = $content_id->threadID();
 
-            if ($thread->data('sticky')) {
+            if ($thread->getData('sticky')) {
                 $thread_info['sticky_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                     '&actions=unsticky&content-id=' . $content_id->getIDString();
                 $thread_info['sticky_text'] = _gettext('Unsticky Thread');
@@ -76,7 +75,7 @@ class OutputPanelThreads extends Output
                 $thread_info['sticky_text'] = _gettext('Sticky Thread');
             }
 
-            if ($thread->data('locked')) {
+            if ($thread->getData('locked')) {
                 $thread_info['lock_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                     '&actions=unlock&content-id=' . $content_id->getIDString();
                 $thread_info['lock_text'] = _gettext('Unlock Thread');
@@ -89,21 +88,25 @@ class OutputPanelThreads extends Output
             $thread_info['delete_url'] = '?module=admin&section=threads&board-id=' . $this->domain->uri() .
                 '&actions=delete&content-id=' . $content_id->getIDString();
             $thread_info['delete_text'] = _gettext('Delete Thread');
-            $thread_info['last_update'] = $this->domain->domainDateTime(intval($thread->data('last_update')))->format(
+            $thread_info['last_update'] = $this->domain->domainDateTime(intval($thread->getData('last_update')))->format(
                 $this->domain->setting('post_time_format'));
-            $thread_info['subject'] = $op_post->data('subject');
-            $thread_info['thread_url'] = $thread->getURL(
-                $this->session->user()->checkPermission($this->domain, 'perm_mod_mode', false));
+            $thread_info['subject'] = $op_post->getData('subject');
 
-            if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
-                $thread_info['op_ip'] = $op_post->data('ip_address');
+            if($this->session->user()->checkPermission($this->domain, 'perm_mod_mode', false)) {
+                $thread_info['thread_url'] = $thread->getRoute(true, 'modmode');
             } else {
-                $thread_info['op_ip'] = $op_post->data('hashed_ip_address');
+                $thread_info['thread_url'] = $thread->getRoute();
             }
 
-            $thread_info['post_count'] = $thread->data('post_count');
-            $thread_info['total_uploads'] = $thread->data('total_uploads');
-            $thread_info['file_count'] = $thread->data('file_count');
+            if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
+                $thread_info['op_ip'] = $op_post->getData('ip_address');
+            } else {
+                $thread_info['op_ip'] = $op_post->getData('hashed_ip_address');
+            }
+
+            $thread_info['post_count'] = $thread->getData('post_count');
+            $thread_info['total_uploads'] = $thread->getData('total_uploads');
+            $thread_info['file_count'] = $thread->getData('file_count');
             $this->render_data['threads'][] = $thread_info;
         }
 
@@ -173,10 +176,10 @@ class OutputPanelThreads extends Output
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
-        $this->render_data['not_anonymous_value'] = $post->data('name');
-        $this->render_data['spam_target_value'] = $post->data('email');
-        $this->render_data['verb_value'] = $post->data('subject');
-        $this->render_data['wordswordswords_value'] = $post->data('comment');
+        $this->render_data['not_anonymous_value'] = $post->getData('name');
+        $this->render_data['spam_target_value'] = $post->getData('email');
+        $this->render_data['verb_value'] = $post->getData('subject');
+        $this->render_data['wordswordswords_value'] = $post->getData('comment');
         $this->render_data['return_url'] = $_SERVER['HTTP_REFERER'] ?? '';
         $this->render_data['form_action'] = nel_build_router_url(
             [$this->domain->uri(), 'moderation', 'modmode', $post->contentID()->getIDString(), 'edit']);

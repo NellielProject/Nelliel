@@ -4,7 +4,6 @@ declare(strict_types = 1);
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Redirect;
-use Nelliel\Account\Session;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Domains\DomainSite;
@@ -14,9 +13,9 @@ function nel_early_derp(int $error_id, string $error_message, array $context = a
 {
     echo _gettext('oh god how did this get in here');
     echo '<br>';
-    echo _gettext('Error ID: ') . $error_id;
+    echo _gettext('Error') . ' ' . $error_id;
     echo '<br>';
-    echo _gettext('Error Message: ') . $error_message;
+    echo $error_message;
     die();
 }
 
@@ -24,23 +23,22 @@ function nel_derp(int $error_id, string $error_message, int $response_code = 0, 
 {
     static $already_derping;
 
-    if (!$already_derping) {
-        $already_derping = true;
-    } else {
+    if ($already_derping) {
         return;
     }
+
+    $already_derping = true;
 
     if (!defined('NEL_SETUP_GOOD')) {
         nel_early_derp($error_id, $error_message, $context);
     }
 
-    $session = new Session();
-    $session->ignore(true);
+    nel_session()->ignore(true);
     $redirect = new Redirect();
     $redirect->doRedirect(false);
     $backtrace = debug_backtrace();
     $diagnostic = array();
-    $diagnostic['error_id'] = (!empty($error_id)) ? $error_id : 0;
+    $diagnostic['error_id'] = $error_id;
     $diagnostic['error_message'] = (!empty($error_message)) ? $error_message : __("I just don't know what went wrong!");
 
     if (!empty($context)) {
@@ -66,5 +64,12 @@ function nel_derp(int $error_id, string $error_message, int $response_code = 0, 
     http_response_code($response_code);
     echo $output_derp->render($parameters, false);
 
-    nel_clean_exit();
+    exit(1);
+}
+
+function nel_plugin_derp(string $plugin_id, string $error_message, int $response_code = 0, array $context = array())
+{
+    $context['plugin_id'] = $plugin_id;
+    $context['plugin_name'] = nel_plugins()->getPlugin($plugin_id)->info('name');
+    nel_derp(1000, $error_message, $response_code, $context);
 }

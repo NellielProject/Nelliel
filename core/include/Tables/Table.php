@@ -12,11 +12,9 @@ abstract class Table
     protected $database;
     protected $sql_compatibility;
     protected $table_name;
-    protected $columns_data = array();
-    protected $column_types = array(); // Stores column type data for typecasting and PDO binds
-    protected $column_checks = array(); // Stores info for table and row check functions
-    protected $schema_version = 1;
+    protected $column_checks = array();
 
+    // Stores info for table and row check functions
     public abstract function buildSchema(array $other_tables = null);
 
     public abstract function postCreate(array $other_tables = null);
@@ -26,13 +24,24 @@ abstract class Table
     public function createTable(array $other_tables = null)
     {
         $schema = $this->buildSchema($other_tables);
-        $created = $this->createTableQuery($schema, $this->table_name);
 
-        if ($created) {
-            $this->postCreate($other_tables);
-            $this->updateVersionsTable();
-            $this->insertDefaults();
+        if ($this->database->tableExists($this->table_name)) {
+            return false;
         }
+
+        $result = $this->database->query($schema);
+
+        if (!$result) {
+            nel_derp(103,
+                sprintf(
+                    _gettext(
+                        'Creation of table %s failed! Check database settings and config.php then retry installation.'),
+                    $this->table_name));
+        }
+
+        $this->postCreate($other_tables);
+        $this->updateVersionsTable();
+        $this->insertDefaults();
     }
 
     protected function updateVersionsTable(): void
@@ -40,13 +49,13 @@ abstract class Table
         if ($this->database->rowExists(NEL_VERSIONS_TABLE, ['id'], [$this->table_name])) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_VERSIONS_TABLE . '" SET "current" = ? WHERE "id" = ? AND "type" = ?');
-            $this->database->executePrepared($prepared, [$this->schema_version, $this->table_name, 'table']);
+            $this->database->executePrepared($prepared, [static::SCHEMA_VERSION, $this->table_name, 'table']);
         } else {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_VERSIONS_TABLE . '" ("id", "type", "original", "current") VALUES
                     (?, ?, ?, ?)');
             $this->database->executePrepared($prepared,
-                [$this->table_name, 'table', $this->schema_version, $this->schema_version]);
+                [$this->table_name, 'table', static::SCHEMA_VERSION, static::SCHEMA_VERSION]);
         }
     }
 
@@ -60,7 +69,7 @@ abstract class Table
             if ($info['row_check'] && isset($data[$column_name])) {
                 $check_values[] = $data[$column_name];
                 $check_columns[] = $column_name;
-                $check_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
+                $check_pdo_types[] = static::PDO_TYPES[$column_name];
             }
         }
 
@@ -89,7 +98,7 @@ abstract class Table
                 $where_columns[] = $column_name;
                 $where_keys[] = $column_name;
                 $where_values[] = $values[$index];
-                $where_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
+                $where_pdo_types[] = static::PDO_TYPES[$column_name];
             }
 
             if (isset($values[$index])) {
@@ -99,7 +108,7 @@ abstract class Table
             if ($info['update'] ?? false) {
                 $update_columns[] = $column_name;
                 $update_values[] = $values[$index];
-                $update_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
+                $update_pdo_types[] = static::PDO_TYPES[$column_name];
             }
 
             $index ++;
@@ -124,7 +133,7 @@ abstract class Table
         $insert_pdo_types = array();
         $index = 0;
 
-        foreach ($this->column_types as $column_name => $info) {
+        foreach (static::PDO_TYPES as $column_name => $pdo_type) {
             if ($this->column_checks[$column_name]['auto_inc']) {
                 continue;
             }
@@ -136,41 +145,13 @@ abstract class Table
 
             $insert_values[] = $values[$index];
             $insert_columns[] = $column_name;
-            $insert_pdo_types[] = $this->column_types[$column_name]['pdo_type'];
+            $insert_pdo_types[] = static::PDO_TYPES[$column_name];
             $index ++;
         }
 
         $prepared = $sql_helpers->buildPreparedInsert($this->table_name, $insert_columns);
         $sql_helpers->bindToPrepared($prepared, array_keys($insert_columns), $insert_values, $insert_pdo_types);
         $this->database->executePrepared($prepared);
-    }
-
-    public function verifyStructure(): array
-    {
-        $missing_columns = array();
-
-        foreach ($this->columns as $column) {
-            if (!$this->database->columnExists($this->table_name, $column)) {
-                $missing_columns[] = $column;
-            }
-        }
-
-        return $missing_columns;
-    }
-
-    public function checkAndRepair(): bool
-    {
-        if (!$this->database->tableExists($this->table_name)) {
-            $this->createTable();
-            $this->insertDefaults();
-            return true;
-        }
-
-        $missing = $this->verifyStructure();
-
-        if (!empty($missing)) {
-            ;
-        }
     }
 
     public function tableName(string $new_name = null): string
@@ -204,59 +185,42 @@ abstract class Table
         }
     }
 
-    public function schemaVersion(): int
+    public static function getPHPTypesForData(array $data): array
     {
-        return $this->schema_version;
+        return array_values(array_intersect_key(static::PHP_TYPES, $data));
     }
 
-    public function createTableQuery($schema, $table_name): bool
+    public static function getPDOTypesForData(array $data): array
     {
-        if ($this->database->tableExists($table_name)) {
-            return false;
-        }
-
-        $result = $this->database->query($schema);
-
-        if (!$result) {
-            nel_derp(103,
-                sprintf(
-                    _gettext('Creation of table %s failed! Check database settings and config.php then retry installation.'),
-                    $table_name));
-        }
-
-        return true;
+        return array_values(array_replace($data, array_intersect_key(static::PDO_TYPES, $data)));
     }
 
-    public function columnTypes(): array
+    public static function typeCastValue(string $column_name, $value)
     {
-        return $this->column_types;
-    }
-
-    public function getPDOTypes(array $data): array
-    {
-        $keys = array_keys($data);
-        $types = array();
-
-        foreach ($keys as $key) {
-            if (isset($this->column_types[$key])) {
-                $types[] = $this->column_types[$key]['pdo_type'];
-            }
+        if (isset(static::PDO_TYPES[$column_name])) {
+            return nel_typecast($value, static::PHP_TYPES[$column_name]);
         }
 
-        return $types;
+        return $value;
     }
 
-    public function filterColumns(array $data): array
+    public static function typeCastData(array $data, bool $filter = false): array
     {
-        $keys = array_keys($data);
-        $filtered = array();
+        $typed_data = array();
 
-        foreach ($keys as $key) {
-            if (isset($this->column_checks[$key])) {
-                $filtered[$key] = $data[$key];
-            }
+        if ($filter) {
+            $data = static::filterData($data);
         }
 
-        return $filtered;
+        foreach ($data as $column_name => $value) {
+            $typed_data[$column_name] = static::typeCastValue($column_name, $value);
+        }
+
+        return $typed_data;
+    }
+
+    public static function filterData(array $data): array
+    {
+        return array_intersect_key($data, static::PHP_TYPES);
     }
 }

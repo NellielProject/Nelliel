@@ -11,19 +11,29 @@ use PDO;
 
 class TableBoardConfigs extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'board_id' => 'string',
+        'setting_name' => 'string',
+        'setting_value' => 'string',
+        'edit_lock' => 'boolean',
+        'stored_raw' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'board_id' => PDO::PARAM_STR,
+        'setting_name' => PDO::PARAM_STR,
+        'setting_value' => PDO::PARAM_STR,
+        'edit_lock' => PDO::PARAM_INT,
+        'stored_raw' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
+
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_BOARD_CONFIGS_TABLE;
-        $this->column_types = [
-            'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'setting_name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'setting_value' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'edit_lock' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'stored_raw' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'board_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'setting_name' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -31,7 +41,6 @@ class TableBoardConfigs extends Table
             'edit_lock' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'stored_raw' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

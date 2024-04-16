@@ -11,21 +11,31 @@ use PDO;
 
 class TablePrivateMessages extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'message_id' => 'integer',
+        'sender' => 'string',
+        'recipient' => 'string',
+        'message' => 'string',
+        'time_sent' => 'integer',
+        'message_read' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'message_id' => PDO::PARAM_INT,
+        'sender' => PDO::PARAM_STR,
+        'recipient' => PDO::PARAM_STR,
+        'message' => PDO::PARAM_STR,
+        'time_sent' => PDO::PARAM_INT,
+        'message_read' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_PRIVATE_MESSAGES_TABLE;
-        $this->columns_data = [
-            'message_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'sender' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'recipient' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'message' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'time_sent' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'message_read' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks = [
             'message_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'sender' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'recipient' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -33,7 +43,6 @@ class TablePrivateMessages extends Table
             'time_sent' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'message_read' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

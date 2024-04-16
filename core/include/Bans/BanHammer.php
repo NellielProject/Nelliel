@@ -46,29 +46,18 @@ class BanHammer
         $existing_ban = $this->exists();
 
         $this->ban_id = intval($_POST['ban_id'] ?? 0);
+        $delete_ban = boolval($_POST['delete_ban'] ?? false);
 
-        if ($existing_ban) {
-            $delete_ban = $_POST['delete_ban'] ?? 0;
-
-            if (is_array($delete_ban)) {
-                $delete_ban = nel_form_input_default($delete_ban);
-
-                if ($delete_ban > 0) {
-                    $this->delete();
-                    return;
-                }
-            }
+        if ($existing_ban && $delete_ban) {
+            $this->delete();
+            return;
         }
 
         $this->ban_data['board_id'] = utf8_strtolower($_POST['ban_board'] ?? $this->ban_data['board_id'] ?? null);
         $this->ban_data['seen'] = $this->ban_data['seen'] ?? 0;
-        $global = $_POST['ban_global'] ?? 0;
+        $global = boolval($_POST['ban_global'] ?? false);
 
-        if (is_array($global)) {
-            $global = nel_form_input_default($global);
-        }
-
-        if ($global > 0 || $this->ban_data['board_id'] === Domain::GLOBAL) {
+        if ($global || $this->ban_data['board_id'] === Domain::GLOBAL) {
             $this->ban_data['board_id'] = Domain::GLOBAL;
         } else {
             $board_domain = new DomainBoard($this->ban_data['board_id'], $this->database);
@@ -148,11 +137,7 @@ class BanHammer
         }
 
         $this->ban_data['reason'] = $_POST['ban_reason'] ?? $this->ban_data['reason'] ?? null;
-        $this->ban_data['appeal_allowed'] = $_POST['appeal_allowed'] ?? 0;
-
-        if (is_array($this->ban_data['appeal_allowed'])) {
-            $this->ban_data['appeal_allowed'] = nel_form_input_default($this->ban_data['appeal_allowed']);
-        }
+        $this->ban_data['appeal_allowed'] = $_POST['allow_appeal'] ?? 0;
     }
 
     public function timeToExpiration()

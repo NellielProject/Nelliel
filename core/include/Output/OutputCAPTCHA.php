@@ -18,7 +18,6 @@ class OutputCAPTCHA extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $area = $parameters['area'];
         $this->render_data['captcha_gen_url'] = nel_build_router_url([$this->domain->uri(), 'captcha', 'get']);
         $this->render_data['captcha_regen_url'] = nel_build_router_url([$this->domain->uri(), 'captcha', 'regenerate']);

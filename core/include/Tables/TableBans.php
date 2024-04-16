@@ -11,29 +11,48 @@ use PDO;
 
 class TableBans extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'ban_id' => 'integer',
+        'board_id' => 'string',
+        'creator' => 'string',
+        'ban_type' => 'integer',
+        'hashed_ip_address' => 'string',
+        'ip_address' => 'string',
+        'hashed_subnet' => 'string',
+        'range_start' => 'string',
+        'range_end' => 'string',
+        'visitor_id' => 'string',
+        'reason' => 'string',
+        'start_time' => 'integer',
+        'length' => 'integer',
+        'seen' => 'boolean',
+        'appeal_allowed' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'ban_id' => PDO::PARAM_INT,
+        'board_id' => PDO::PARAM_STR,
+        'creator' => PDO::PARAM_STR,
+        'ban_type' => PDO::PARAM_INT,
+        'hashed_ip_address' => PDO::PARAM_STR,
+        'ip_address' => PDO::PARAM_LOB,
+        'hashed_subnet' => PDO::PARAM_STR,
+        'range_start' => PDO::PARAM_LOB,
+        'range_end' => PDO::PARAM_LOB,
+        'visitor_id' => PDO::PARAM_STR,
+        'reason' => PDO::PARAM_STR,
+        'start_time' => PDO::PARAM_INT,
+        'length' => PDO::PARAM_INT,
+        'seen' => PDO::PARAM_INT,
+        'appeal_allowed' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_BANS_TABLE;
-        $this->column_types = [
-            'ban_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'creator' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'ban_type' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
-            'hashed_subnet' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'range_start' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
-            'range_end' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
-            'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'reason' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'start_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'length' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'seen' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'appeal_allowed' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'ban_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -51,7 +70,6 @@ class TableBans extends Table
             'seen' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'appeal_allowed' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

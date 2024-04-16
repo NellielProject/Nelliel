@@ -11,35 +11,60 @@ use PDO;
 
 class TableThreads extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'thread_id' => 'integer',
+        'bump_time' => 'integer',
+        'bump_time_milli' => 'integer',
+        'last_update' => 'integer',
+        'last_update_milli' => 'integer',
+        'post_count' => 'integer',
+        'bump_count' => 'integer',
+        'total_uploads' => 'integer',
+        'file_count' => 'integer',
+        'embed_count' => 'integer',
+        'permasage' => 'boolean',
+        'sticky' => 'boolean',
+        'cyclic' => 'boolean',
+        'old' => 'boolean',
+        'preserve' => 'boolean',
+        'locked' => 'boolean',
+        'shadow' => 'boolean',
+        'slug' => 'string',
+        'salt' => 'string',
+        'regen_cache' => 'boolean',
+        'cache' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'thread_id' => PDO::PARAM_INT,
+        'bump_time' => PDO::PARAM_INT,
+        'bump_time_milli' => PDO::PARAM_INT,
+        'last_update' => PDO::PARAM_INT,
+        'last_update_milli' => PDO::PARAM_INT,
+        'post_count' => PDO::PARAM_INT,
+        'bump_count' => PDO::PARAM_INT,
+        'total_uploads' => PDO::PARAM_INT,
+        'file_count' => PDO::PARAM_INT,
+        'embed_count' => PDO::PARAM_INT,
+        'permasage' => PDO::PARAM_INT,
+        'sticky' => PDO::PARAM_INT,
+        'cyclic' => PDO::PARAM_INT,
+        'old' => PDO::PARAM_INT,
+        'preserve' => PDO::PARAM_INT,
+        'locked' => PDO::PARAM_INT,
+        'shadow' => PDO::PARAM_INT,
+        'slug' => PDO::PARAM_STR,
+        'salt' => PDO::PARAM_STR,
+        'regen_cache' => PDO::PARAM_INT,
+        'cache' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_threads';
-        $this->column_types = [
-            'thread_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'bump_time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'bump_time_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'last_update' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'last_update_milli' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'post_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'bump_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'total_uploads' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'file_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'embed_count' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'permasage' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'sticky' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'cyclic' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'old' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'preserve' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'locked' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'shadow' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'slug' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'salt' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'regen_cache' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'cache' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'thread_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'bump_time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -63,7 +88,6 @@ class TableThreads extends Table
             'regen_cache' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'cache' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

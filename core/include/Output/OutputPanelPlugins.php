@@ -18,7 +18,6 @@ class OutputPanelPlugins extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/plugins');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('plugins');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -34,7 +33,6 @@ class OutputPanelPlugins extends Output
             $plugin_data = array();
             $plugin_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $plugin->loadData();
             $installed_ids[] = $plugin->id();
             $plugin_data['id'] = $plugin->id();
             $plugin_data['name'] = $plugin->info('name');

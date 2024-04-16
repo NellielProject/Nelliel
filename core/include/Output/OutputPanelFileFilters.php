@@ -20,7 +20,6 @@ class OutputPanelFileFilters extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/file_filters_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('File Filters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

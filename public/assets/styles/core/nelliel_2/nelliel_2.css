@@ -22,8 +22,10 @@
 	--manage-header-color: inherit;
 	--manage-subheader-background: #55FFBB;
 	--manage-subheader-color: inherit;
-	--new-post-form-label-background: #44CF69;
-	--new-post-form-label-border: 1px solid #22AD47;
+	--form-label-background: #44CF69;
+	--form-label-color: inherit;
+	--form-label-font-weight: bold;
+	--form-label-border: 1px solid #22AD47;
 	--op-post-background: inherit;
 	--op-post-border: none;
 	--op-post-highlight-color: #AADFF2;
@@ -40,6 +42,7 @@
 	--mod-comment-color: #FF0000;
 	--omitted-background: inherit;
 	--omitted-color: #5500CC;
+	--posting-rules-list-font-size: 0.85rem;
 	
 	/* Markup */
 	--greentext-background: inherit;

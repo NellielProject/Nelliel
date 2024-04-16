@@ -190,6 +190,7 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchBans';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{page:\d+}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:modify}', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
@@ -209,8 +210,7 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchLogs';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'], '/{log_set:system|public|combined}[/{page:[^\/]+}]',
-                            $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{log_set:system|public|combined}[/{page:\d+}]', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:' . $site_domain . '}/{module:news}',
@@ -257,6 +257,7 @@ class Router
                     function (RouteCollector $r) {
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchMainPanel';
                         $r->addRoute(['GET'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET'], '/{section:plugin-controls}', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:' . $site_domain . '}/{module:boardlist}',
@@ -358,6 +359,13 @@ class Router
                             $dispatch_class);
                     });
 
+                $r->addGroup('/{domain_id:[^\/]+}/{module:plugin-controls}',
+                    function (RouteCollector $r) {
+                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchPluginControls';
+                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
+                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}[/{section:[^\/]+}]', $dispatch_class);
+                    });
+
                 // For now this is ALWAYS last
                 $r->addGroup('/{domain_id:[^\/]+}',
                     function (RouteCollector $r) {
@@ -387,7 +395,12 @@ class Router
             case Dispatcher::FOUND:
                 $inputs = $routeInfo[2];
                 $inputs['method'] = $_SERVER['REQUEST_METHOD'];
-                $domain = Domain::getDomainFromID($inputs['domain_id'], nel_database('core'));
+                $domain = Domain::getDomainFromID($inputs['domain_id'] ?? '', nel_database('core'));
+
+                if (!$domain->exists()) {
+                    nel_derp(80, _('Invalid domain given to router.'));
+                }
+
                 $inputs['module'] = $inputs['module'] ?? '';
                 $inputs['section'] = $inputs['section'] ?? '';
                 $inputs['action'] = $inputs['action'] ?? '';

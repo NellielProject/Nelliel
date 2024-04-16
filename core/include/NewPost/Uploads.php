@@ -6,22 +6,21 @@ namespace Nelliel\NewPost;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\FileTypes;
-use Nelliel\Snacks;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
-use Nelliel\Bans\BansAccess;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
+use Nelliel\Filters\Filters;
 use PDO;
 use SplFileInfo;
-use Nelliel\Filters\Filters;
 
 class Uploads
 {
-    private $domain;
-    private $database;
+    private Domain $domain;
+    private NellielPDO $database;
     private $embeds = array();
     private $files = array();
     private $processed_uploads = array();
@@ -93,30 +92,32 @@ class Uploads
             $upload = new Upload(new ContentID(), $this->domain);
             $upload->changeData('filesize', $filesize);
             $upload->changeData('tmp_name', $tmp_name);
+            $upload->changeData('location', $tmp_name);
             $upload->changeData('original_filename', $file_original_name);
             $this->checkHashes($upload);
             $this->checkFileDuplicates($post, $upload);
             $this->deduplicate($upload);
             $this->setFilenameAndExtension($upload, $post);
-            $this->checkFiletype($upload, $upload->data('extension'), $tmp_name);
+            $this->checkFiletype($upload);
 
             // We re-add the extension to help with processing
-            $upload->changeData('location', $tmp_name . '.' . $upload->data('extension'));
+            $old_location = $upload->getData('location');
+            $upload->changeData('location', $upload->getData('location') . '.' . $upload->getData('extension'));
 
             // Not sure what would cause this to fail but best to stop if it does
-            if (!move_uploaded_file($tmp_name, $upload->data('location'))) {
-                nel_utilities()->fileHandler()->eraserGun($tmp_name);
-                nel_derp(52, sprintf(__('The file %s is not a valid upload.'), $upload->data('original_filename')));
+            if (!move_uploaded_file($old_location, $upload->getData('location'))) {
+                nel_utilities()->fileHandler()->eraserGun($old_location);
+                nel_derp(52, sprintf(__('The file %s is not a valid upload.'), $upload->getData('original_filename')));
             }
 
             // Store this temporarily in case we need it for later processing
-            $temp_exif = @exif_read_data($upload->data('location'));
-            $upload->changeData('temp_exif', @exif_read_data($upload->data('location'), '', true));
+            $temp_exif = @exif_read_data($upload->getData('location'));
+            $upload->changeData('temp_exif', @exif_read_data($upload->getData('location'), '', true));
 
             if ($this->domain->setting('store_exif_data') && is_array($temp_exif)) {
                 // EXIF read picks up the temporary filename so we correct it here
                 if (isset($temp_exif['FILE'])) {
-                    $temp_exif['FILE']['FileName'] = $upload->data('original_filename');
+                    $temp_exif['FILE']['FileName'] = $upload->getData('original_filename');
                 }
 
                 $exif_data = json_encode($temp_exif);
@@ -129,8 +130,7 @@ class Uploads
             $this->removeEXIF($upload);
 
             if ($this->domain->setting('enable_spoilers')) {
-                $spoiler = $_POST['form_spoiler'] ?? 0;
-                $upload->changeData('spoiler', $data_handler->checkEntry($spoiler, 'integer'));
+                $upload->changeData('spoiler', intval($_POST['form_spoiler'] ?? 0));
             }
 
             $this->setDimensions($upload);
@@ -143,29 +143,29 @@ class Uploads
 
     private function setFilenameAndExtension(Upload $upload, Post $post): void
     {
-        if ($upload->data('use_existing')) {
+        if ($upload->getData('use_existing')) {
             return;
         }
 
-        $file_info = new SplFileInfo($upload->data('original_filename'));
+        $file_info = new SplFileInfo($upload->getData('original_filename'));
         $extension = $file_info->getExtension();
         $filename = $file_info->getBasename('.' . $extension);
 
         switch ($this->domain->setting('preferred_filename')) {
             case 'md5':
-                $filename = $upload->data('md5');
+                $filename = $upload->getData('md5');
                 break;
 
             case 'sha1':
-                $filename = $upload->data('sha1');
+                $filename = $upload->getData('sha1');
                 break;
 
             case 'sha256':
-                $filename = $upload->data('sha256');
+                $filename = $upload->getData('sha256');
                 break;
 
             case 'sha512':
-                $filename = $upload->data('sha512');
+                $filename = $upload->getData('sha512');
                 break;
 
             case 'original':
@@ -176,12 +176,12 @@ class Uploads
 
             case 'timestamp':
             default:
-                $filename = $post->data('post_time') . $post->data('post_time_milli');
+                $filename = $post->getData('post_time') . $post->getData('post_time_milli');
                 break;
         }
 
         if (nel_true_empty($filename)) {
-            $filename = $post->data('post_time') . $post->data('post_time_milli');
+            $filename = $post->getData('post_time') . $post->getData('post_time_milli');
         }
 
         $fullname = $filename . '.' . $extension;
@@ -241,7 +241,7 @@ class Uploads
 
     private function checkHashes(Upload $upload): void
     {
-        $file = $upload->data('tmp_name');
+        $file = $upload->getData('location');
         $md5 = md5_file($file);
         $sha1 = sha1_file($file);
 
@@ -284,32 +284,32 @@ class Uploads
             $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ') AND "shadow" = 0';
             $prepared = $this->database->prepare($query);
-            $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
-            $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
-        } else if ($post->data('op') && $this->domain->setting('check_op_file_duplicates')) {
+            $prepared->bindValue(':md5', $upload->getData('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(':sha1', $upload->getData('sha1'), PDO::PARAM_STR);
+        } else if ($post->getData('op') && $this->domain->setting('check_op_file_duplicates')) {
             $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "parent_thread" = "post_ref" AND ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 .
                 ') AND "shadow" = 0';
             $prepared = $this->database->prepare($query);
-            $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
-            $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
-        } else if (!$post->data('op') && $this->domain->setting('check_thread_file_duplicates')) {
+            $prepared->bindValue(':md5', $upload->getData('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(':sha1', $upload->getData('sha1'), PDO::PARAM_STR);
+        } else if (!$post->getData('op') && $this->domain->setting('check_thread_file_duplicates')) {
             $query = 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "parent_thread" = :parent_thread AND ("md5" = :md5 OR "sha1" = :sha1' . $sha256 . $sha512 . ')';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(':parent_thread', $post->contentID()->threadID(), PDO::PARAM_INT);
-            $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
-            $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
+            $prepared->bindValue(':md5', $upload->getData('md5'), PDO::PARAM_STR);
+            $prepared->bindValue(':sha1', $upload->getData('sha1'), PDO::PARAM_STR);
         } else {
             return;
         }
 
         if ($sha256 != '') {
-            $prepared->bindValue(':sha256', $upload->data('sha256'), PDO::PARAM_STR);
+            $prepared->bindValue(':sha256', $upload->getData('sha256'), PDO::PARAM_STR);
         }
 
         if ($sha512 != '') {
-            $prepared->bindValue(':sha512', $upload->data('sha512'), PDO::PARAM_STR);
+            $prepared->bindValue(':sha512', $upload->getData('sha512'), PDO::PARAM_STR);
         }
 
         $parent_threads = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_COLUMN);
@@ -341,10 +341,11 @@ class Uploads
         }
     }
 
-    private function checkFiletype(Upload $upload, string $extension, string $file): void
+    private function checkFiletype(Upload $upload): void
     {
+        $extension = $upload->getData('extension');
         $filetypes = new FileTypes($this->domain->database());
-        $file_format = $filetypes->getFileFormat($extension, $file);
+        $file_format = $filetypes->getFileFormat($extension, $upload->getData('location'));
 
         if (empty($file_format)) {
             nel_derp(21, _gettext('Unrecognized file type.'));
@@ -363,7 +364,7 @@ class Uploads
         $category_max_size = intval(
             $filetypes->categorySetting($upload->domain(), $format_data['category'], 'max_size'));
 
-        if ($category_max_size > 0 && $upload->data('filesize') > $category_max_size) {
+        if ($category_max_size > 0 && $upload->getData('filesize') > $category_max_size) {
             nel_derp(58, _gettext('File is larger than allowed for that type.'));
         }
 
@@ -403,16 +404,16 @@ class Uploads
                 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "embed_url" = :embed_url');
             $prepared->bindValue(':embed_url', $embed_url, PDO::PARAM_STR);
-        } else if ($post->data('op') && $this->domain->setting('check_op_embed_duplicates')) {
+        } else if ($post->getData('op') && $this->domain->setting('check_op_embed_duplicates')) {
             $prepared = $this->database->prepare(
                 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "parent_thread" = "post_ref" AND "embed_url" = :embed_url');
             $prepared->bindValue(':embed_url', $embed_url, PDO::PARAM_STR);
-        } else if (!$post->data('op') && $this->domain->setting('check_thread_embed_duplicates')) {
+        } else if (!$post->getData('op') && $this->domain->setting('check_thread_embed_duplicates')) {
             $prepared = $this->database->prepare(
                 'SELECT "parent_thread" FROM "' . $this->domain->reference('uploads_table') .
                 '" WHERE "parent_thread" = :parent_thread AND "embed_url" = :embed_url');
-            $prepared->bindValue(':parent_thread', $post->data('parent_thread'), PDO::PARAM_INT);
+            $prepared->bindValue(':parent_thread', $post->getData('parent_thread'), PDO::PARAM_INT);
             $prepared->bindValue(':embed_url', $embed_url, PDO::PARAM_STR);
         } else {
             return;
@@ -451,7 +452,7 @@ class Uploads
     {
         $embeds_count = 0;
         $files_count = 0;
-        $response_to = $post->data('response_to');
+        $response_to = $post->getData('response_to');
         $parent_thread = $post->getParent();
         $parent_thread->loadFromDatabase();
 
@@ -529,7 +530,7 @@ class Uploads
         }
 
         if ($this->domain->setting('limit_thread_uploads') &&
-            $parent_thread->data('total_uploads') >= $this->domain->setting('max_thread_uploads')) {
+            $parent_thread->getData('total_uploads') >= $this->domain->setting('max_thread_uploads')) {
             nel_derp(34, _gettext('This thread has reached the maximum number of uploads.'));
         }
     }
@@ -575,7 +576,7 @@ class Uploads
         $display_width = 0;
         $display_height = 0;
 
-        $dims = getimagesize($upload->data('location'));
+        $dims = getimagesize($upload->getData('location'));
 
         if ($dims !== false) {
             $display_width = $dims[0];
@@ -585,7 +586,8 @@ class Uploads
         if ($display_width === 0 || $display_height === 0) {
             if ($graphics_handler === 'ImageMagick') {
                 if (in_array('imagemagick', $magicks)) {
-                    $results = nel_exec('identify -format "%wx%h" ' . escapeshellarg($upload->data('location') . '[0]'));
+                    $results = nel_exec(
+                        'identify -format "%wx%h" ' . escapeshellarg($upload->getData('location') . '[0]'));
 
                     if ($results['result_code'] === 0) {
                         $matches = array();
@@ -594,7 +596,7 @@ class Uploads
                         $display_height = intval($matches['2'] ?? 0);
                     }
                 } else if (in_array('imagick', $magicks)) {
-                    $image = new \Imagick($upload->data('location'));
+                    $image = new \Imagick($upload->getData('location'));
                     $display_width = $image->getimagewidth();
                     $display_height = $image->getimageheight();
                 }
@@ -603,7 +605,7 @@ class Uploads
             if ($graphics_handler === 'GraphicsMagick') {
                 if (in_array('graphicsmagick', $magicks)) {
                     $results = nel_exec(
-                        'gm identify -format "%wx%h" ' . escapeshellarg($upload->data('location') . '[0]'));
+                        'gm identify -format "%wx%h" ' . escapeshellarg($upload->getData('location') . '[0]'));
 
                     if ($results['result_code'] === 0) {
                         $matches = array();
@@ -612,7 +614,7 @@ class Uploads
                         $display_height = intval($matches['2'] ?? 0);
                     }
                 } else if (in_array('gmagick', $magicks)) {
-                    $image = new \Gmagick($upload->data('location'));
+                    $image = new \Gmagick($upload->getData('location'));
                     $display_width = $image->getimagewidth();
                     $display_height = $image->getimageheight();
                 }
@@ -647,10 +649,17 @@ class Uploads
             $exiftool_args = '-all= ';
         }
 
-        $results = nel_exec('exiftool ' . $exiftool_args . escapeshellarg($upload->data('location')));
+        $results = nel_exec('exiftool ' . $exiftool_args . escapeshellarg($upload->getData('location')));
 
         if ($results['result_code'] === 0) {
             $this->checkHashes($upload);
+        }
+
+        clearstatcache();
+        $new_size = filesize($upload->getData('location'));
+
+        if ($new_size !== false) {
+            $upload->changeData('filesize', $new_size);
         }
     }
 
@@ -663,8 +672,8 @@ class Uploads
         $query = 'SELECT "filename", "extension" FROM "' . $this->domain->reference('uploads_table') .
             '" WHERE "md5" = :md5 AND "sha1" = :sha1';
         $prepared = $this->database->prepare($query);
-        $prepared->bindValue(':md5', $upload->data('md5'), PDO::PARAM_STR);
-        $prepared->bindValue(':sha1', $upload->data('sha1'), PDO::PARAM_STR);
+        $prepared->bindValue(':md5', $upload->getData('md5'), PDO::PARAM_STR);
+        $prepared->bindValue(':sha1', $upload->getData('sha1'), PDO::PARAM_STR);
         $existing = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
         if (!is_array($existing)) {

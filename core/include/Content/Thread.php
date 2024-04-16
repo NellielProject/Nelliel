@@ -13,15 +13,17 @@ use Nelliel\Overboard;
 use Nelliel\Regen;
 use Nelliel\API\JSON\ThreadJSON;
 use Nelliel\Auth\Authorization;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
+use Nelliel\Interfaces\MutableData;
 use Nelliel\Tables\TableThreads;
 use PDO;
 
-class Thread
+class Thread implements MutableData
 {
     protected $content_id;
-    protected $database;
+    protected NellielPDO $database;
     protected $domain;
     protected $content_data = array();
     protected $content_moar;
@@ -72,12 +74,7 @@ class Thread
             return true;
         }
 
-        $column_types = $this->main_table->columnTypes();
-
-        foreach ($result as $name => $value) {
-            $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
-        }
-
+        $this->content_data = TableThreads::typeCastData($result);
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
         return true;
@@ -89,9 +86,9 @@ class Thread
             return false;
         }
 
-        $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $filtered_data = TableThreads::filterData($this->content_data);
         $filtered_data['moar'] = $this->getMoar()->getJSON();
-        $pdo_types = $this->main_table->getPDOTypes($filtered_data);
+        $pdo_types = TableThreads::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
         if ($this->main_table->rowExists($filtered_data)) {
@@ -126,11 +123,11 @@ class Thread
             }
 
             if ($this->domain->setting('thread_no_delete_replies') > 0 &&
-                $this->data('post_count') - 1 >= $this->domain->setting('thread_no_delete_replies')) {
+                $this->getData('post_count') - 1 >= $this->domain->setting('thread_no_delete_replies')) {
                 nel_derp(65, _gettext('Thread has reached reply threshold and cannot be deleted.'));
             }
 
-            $time_since_op = time() - $this->firstPost()->data('post_time');
+            $time_since_op = time() - $this->firstPost()->getData('post_time');
 
             if ($this->domain->setting('thread_no_delete_time') > 0 &&
                 $time_since_op > $this->domain->setting('thread_no_delete_time')) {
@@ -231,8 +228,8 @@ class Thread
 
     public function updateBumpTime(): void
     {
-        if ($this->domain->setting('limit_bump_count') && $this->data('bump_count') > $this->domain->setting(
-            'max_bumps')) {
+        if ($this->domain->setting('limit_bump_count') &&
+            $this->getData('bump_count') > $this->domain->setting('max_bumps')) {
             return;
         }
 
@@ -242,15 +239,15 @@ class Thread
             return;
         }
 
-        if ($last_bump->data('post_time') === $this->data('bump_time')) {
-            $last_bump_lower = $last_bump->data('post_time_milli') < $this->data('bump_time_milli');
+        if ($last_bump->getData('post_time') === $this->getData('bump_time')) {
+            $last_bump_lower = $last_bump->getData('post_time_milli') < $this->getData('bump_time_milli');
         } else {
-            $last_bump_lower = $last_bump->data('post_time') < $this->data('bump_time');
+            $last_bump_lower = $last_bump->getData('post_time') < $this->getData('bump_time');
         }
 
-        if (!$this->data('permasage') || $last_bump_lower) {
-            $this->changeData('bump_time', $last_bump->data('post_time'));
-            $this->changeData('bump_time_milli', $last_bump->data('post_time_milli'));
+        if (!$this->getData('permasage') || $last_bump_lower) {
+            $this->changeData('bump_time', $last_bump->getData('post_time'));
+            $this->changeData('bump_time_milli', $last_bump->getData('post_time_milli'));
             $this->writeToDatabase();
         }
     }
@@ -260,8 +257,8 @@ class Thread
         $last_post = $this->lastPost();
 
         if ($last_post->exists()) {
-            $this->changeData('last_update_time', $last_post->data('post_time'));
-            $this->changeData('last_update_time_milli', $last_post->data('post_time_milli'));
+            $this->changeData('last_update_time', $last_post->getData('post_time'));
+            $this->changeData('last_update_time_milli', $last_post->getData('post_time_milli'));
             $this->writeToDatabase();
         }
     }
@@ -286,19 +283,19 @@ class Thread
 
     public function toggleLock(): bool
     {
-        $this->changeData('locked', !$this->data('locked'));
+        $this->changeData('locked', !$this->getData('locked'));
         return $this->writeToDatabase();
     }
 
     public function togglePermasage(): bool
     {
-        $this->changeData('permasage', !$this->data('permasage'));
+        $this->changeData('permasage', !$this->getData('permasage'));
         return $this->writeToDatabase();
     }
 
     public function toggleCyclic(): bool
     {
-        $this->changeData('cyclic', !$this->data('cyclic'));
+        $this->changeData('cyclic', !$this->getData('cyclic'));
         return $this->writeToDatabase();
     }
 
@@ -311,7 +308,7 @@ class Thread
             PDO::FETCH_ASSOC);
         $bump_limit = $this->domain->setting('max_bumps');
 
-        if ($this->data('post_count') > $bump_limit) {
+        if ($this->getData('post_count') > $bump_limit) {
             $old_post_list = array_slice($descending_post_list, $bump_limit - 1);
 
             foreach ($old_post_list as $old_post) {
@@ -379,10 +376,10 @@ class Thread
         $slug = '';
         $max_length = $this->domain->setting('max_slug_length');
 
-        if (!nel_true_empty($post->data('subject'))) {
-            $base_text = $post->data('subject');
-        } else if (!nel_true_empty($post->data('comment'))) {
-            $base_text = $post->data('comment');
+        if (!nel_true_empty($post->getData('subject'))) {
+            $base_text = $post->getData('subject');
+        } else if (!nel_true_empty($post->getData('comment'))) {
+            $base_text = $post->getData('comment');
         } else {
             $base_text = '';
         }
@@ -430,16 +427,23 @@ class Thread
         return $page_filename;
     }
 
-    public function getURL(bool $dynamic, bool $end_slash = true, string $query_string = ''): string
+    public function getURL(bool $relative = true): string
     {
-        if ($dynamic) {
-            return nel_build_router_url(
-                [$this->domain->reference('board_uri'), $this->domain->reference('page_directory'),
-                    $this->content_id->threadID(), $this->pageBasename()], $end_slash, $query_string);
+        if ($relative) {
+            $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
+        } else {
+            $base_path = $this->domain->url() . $this->domain->reference('page_directory') . '/' .
+                $this->content_id->threadID() . '/';
         }
 
-        $base_path = $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
         return $base_path . $this->pageBasename() . NEL_PAGE_EXT;
+    }
+
+    public function getRoute(bool $end_slash = true, string $query_string = ''): string
+    {
+        return nel_build_router_url(
+            [$this->domain->uri(), $this->domain->reference('page_directory'), $this->content_id->threadID(),
+                $this->pageBasename()], $end_slash, $query_string);
     }
 
     public function pageFilePath()
@@ -522,8 +526,12 @@ class Thread
         return $default;
     }
 
-    public function data(string $key)
+    public function getData(string $key = null)
     {
+        if (is_null($key)) {
+            return $this->content_data;
+        }
+
         return $this->content_data[$key] ?? null;
     }
 
@@ -536,14 +544,9 @@ class Thread
         return $this->content_data;
     }
 
-    public function changeData(string $key, $new_data, bool $cast_null = true)
+    public function changeData(string $key, $new_data): void
     {
-        $column_types = $this->main_table->columnTypes();
-        $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_typecast($new_data, $type, $cast_null);
-        $old_data = $this->data($key);
-        $this->content_data[$key] = $new_data;
-        return $old_data;
+        $this->content_data[$key] = TableThreads::typeCastValue($key, $new_data);
     }
 
     public function contentID()
@@ -585,9 +588,9 @@ class Thread
     public function lastReplies(int $limit): array
     {
         $last_replies = array();
-        $offset = $this->data('post_count') - $limit;
+        $offset = $this->getData('post_count') - $limit;
 
-        if ($this->data('post_count') == 1) {
+        if ($this->getData('post_count') == 1) {
             return $last_replies;
         }
 
@@ -628,25 +631,25 @@ class Thread
         if (!$first_post->exists()) {
             $this->createDirectories();
             $this->changeData('thread_id', $post->contentID()->postID());
-            $this->changeData('bump_time', $post->data('post_time'));
-            $this->changeData('bump_time_milli', $post->data('post_time_milli'));
-            $this->changeData('last_update', $post->data('post_time'));
-            $this->changeData('last_update_milli', $post->data('post_time_milli'));
+            $this->changeData('bump_time', $post->getData('post_time'));
+            $this->changeData('bump_time_milli', $post->getData('post_time_milli'));
+            $this->changeData('last_update', $post->getData('post_time'));
+            $this->changeData('last_update_milli', $post->getData('post_time_milli'));
             $this->changeData('post_count', 1);
             $this->changeData('slug', $this->generateSlug($post));
             $this->changeData('salt', base64_encode(random_bytes(33)));
             $post->changeData('reply_to', 0);
             $post->changeData('op', true);
         } else {
-            $this->changeData('last_update', $post->data('post_time'));
-            $this->changeData('last_update_milli', $post->data('post_time_milli'));
-            $this->changeData('post_count', $this->data('post_count') + 1);
+            $this->changeData('last_update', $post->getData('post_time'));
+            $this->changeData('last_update_milli', $post->getData('post_time_milli'));
+            $this->changeData('post_count', $this->getData('post_count') + 1);
 
             if ((!$this->domain->setting('limit_bump_count') ||
-                ($this->data('bump_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
-                !$this->data('permasage'))) {
-                $this->changeData('bump_time', $post->data('post_time'));
-                $this->changeData('bump_time_milli', $post->data('post_time_milli'));
+                ($this->getData('bump_count') <= $this->domain->setting('max_bumps')) && !$fgsfds->commandIsSet('sage') &&
+                !$this->getData('permasage'))) {
+                $this->changeData('bump_time', $post->getData('post_time'));
+                $this->changeData('bump_time_milli', $post->getData('post_time_milli'));
             }
 
             $post->changeData('reply_to', $this->content_id->threadID());
@@ -710,7 +713,7 @@ class Thread
         }
 
         $regen = new Regen();
-        $regen->threads($domain, true, [$new_thread->contentID()->threadID()]);
+        $regen->threads($domain, [$new_thread->contentID()->threadID()]);
         $regen->index($domain);
         $regen->index($this->domain);
         return $new_thread;

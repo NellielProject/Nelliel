@@ -7,13 +7,14 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use Nelliel\Output\Filter;
+use Mustache_Engine;
 use phpDOMExtend\DOMEscaper;
 
 class RenderCoreMustache extends RenderCore
 {
-    private $domain;
-    private $mustache_engine;
-    private $escaper;
+    private Domain $domain;
+    private Mustache_Engine $mustache_engine;
+    private DOMEscaper $escaper;
 
     function __construct(Domain $domain)
     {
@@ -21,21 +22,20 @@ class RenderCoreMustache extends RenderCore
         $this->output_filter = new Filter();
         $this->file_handler = nel_utilities()->fileHandler();
         $this->escaper = new DOMEscaper();
-        $this->template_loaders['file'] = new MultipathFileSystemLoader($this->domain->templatePath(),
-            ['extension' => '.html']);
+        $this->template_loaders['file'] = new FileSystemLoader($this->domain->templatePath(), ['extension' => '.html']);
         $this->newMustache();
     }
 
     private function newMustache()
     {
         $options = array();
-        $options['pragmas'] = [\Mustache_Engine::PRAGMA_FILTERS];
+        $options['pragmas'] = [Mustache_Engine::PRAGMA_FILTERS];
 
         if (NEL_USE_MUSTACHE_CACHE) {
             $options['cache'] = NEL_CACHE_FILES_PATH . 'mustache';
         }
 
-        $this->mustache_engine = new \Mustache_Engine($options);
+        $this->mustache_engine = new Mustache_Engine($options);
         $this->mustache_engine->setLoader($this->template_loaders['file']);
         $this->mustache_engine->setPartialsLoader($this->template_loaders['file']);
         $this->mustache_engine->addHelper('esc',
@@ -56,23 +56,23 @@ class RenderCoreMustache extends RenderCore
         });
     }
 
-    public function renderEngine()
+    public function renderEngine(): Mustache_Engine
     {
         return $this->mustache_engine;
     }
 
-    public function loadTemplateFromFile(string $file)
+    public function loadTemplateFromFile(string $file): string
     {
         $template = $this->template_loaders['file']->load($file);
         return $template;
     }
 
-    public function renderFromTemplateFile(string $file, array $render_data)
+    public function renderFromTemplateFile(string $file, array $render_data): string
     {
         return $this->mustache_engine->render($file, $render_data);
     }
 
-    public function escapeString(string $string = null, string $type)
+    public function escapeString(string $string = null, string $type): string
     {
         $this->escaper->doEscaping($string, $type);
         return $string;

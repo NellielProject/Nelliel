@@ -11,21 +11,31 @@ use PDO;
 
 class TableCaptcha extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'captcha_key' => 'string',
+        'captcha_text' => 'string',
+        'domain_id' => 'string',
+        'time_created' => 'integer',
+        'seen' => 'boolean',
+        'solved' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'captcha_key' => PDO::PARAM_STR,
+        'captcha_text' => PDO::PARAM_STR,
+        'domain_id' => PDO::PARAM_STR,
+        'time_created' => PDO::PARAM_INT,
+        'seen' => PDO::PARAM_INT,
+        'solved' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_CAPTCHA_TABLE;
-        $this->columns_data = [
-            'captcha_key' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'captcha_text' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'time_created' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'seen' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'solved' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks = [
             'captcha_key' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'captcha_text' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'domain_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -33,7 +43,6 @@ class TableCaptcha extends Table
             'seen' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'solved' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

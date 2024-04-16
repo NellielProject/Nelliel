@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
 use PDO;
+use Nelliel\IPInfo;
 
 class OutputPanelLogs extends Output
 {
@@ -19,35 +20,18 @@ class OutputPanelLogs extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/logs');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
-        $page = (int) $parameters['page'] ?? 1;
-        $entries = $parameters['entries'] ?? 20;
-        $row_offset = ($page > 1) ? ($page - 1) * $entries : 0;
+        $page = (int) ($parameters['page'] ?? 1);
+        $entries = $parameters['entries'] ?? $this->site_domain->setting('pagination_default_entries');
+        $row_offset = nel_utilities()->sqlHelpers()->paginationOffset($page, $entries);
         $log_set = $parameters['log_set'] ?? 'combined';
         $log_count = 0;
         $panel = '';
 
-        // TODO: Cache and possibly update this elsewhere instead of calling every time
-        if ($log_set === 'public' || $log_set === 'combined') {
+        if ($log_set === 'public') {
             $log_count += $this->database->executeFetch('SELECT COUNT(*) FROM "' . NEL_PUBLIC_LOGS_TABLE . '"',
                 PDO::FETCH_COLUMN);
-        }
-
-        if ($log_set === 'system' || $log_set === 'combined') {
-            $log_count += $this->database->executeFetch('SELECT COUNT(*) FROM "' . NEL_SYSTEM_LOGS_TABLE . '"',
-                PDO::FETCH_COLUMN);
-        }
-
-        if ($log_set === 'system') {
-            $panel = __('System Logs');
-            $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE .
-                '" ORDER BY "time" DESC, "log_id" DESC LIMIT :limit OFFSET :offset');
-        }
-
-        if ($log_set === 'public') {
             $panel = __('Public Logs');
 
             if ($this->domain->id() !== Domain::GLOBAL) {
@@ -60,9 +44,18 @@ class OutputPanelLogs extends Output
                     'SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE .
                     '" ORDER BY "time" DESC, "log_id" DESC LIMIT :limit OFFSET :offset');
             }
-        }
-
-        if ($log_set === 'combined') {
+        } else if ($log_set === 'system') {
+            $log_count += $this->database->executeFetch('SELECT COUNT(*) FROM "' . NEL_SYSTEM_LOGS_TABLE . '"',
+                PDO::FETCH_COLUMN);
+            $panel = __('System Logs');
+            $prepared = $this->database->prepare(
+                'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE .
+                '" ORDER BY "time" DESC, "log_id" DESC LIMIT :limit OFFSET :offset');
+        } else {
+            $log_count += $this->database->executeFetch('SELECT COUNT(*) FROM "' . NEL_SYSTEM_LOGS_TABLE . '"',
+                PDO::FETCH_COLUMN);
+            $log_count += $this->database->executeFetch('SELECT COUNT(*) FROM "' . NEL_PUBLIC_LOGS_TABLE . '"',
+                PDO::FETCH_COLUMN);
             $panel = __('Combined Logs');
             $prepared = $this->database->prepare(
                 'SELECT * FROM "' . NEL_SYSTEM_LOGS_TABLE . '" UNION ALL SELECT * FROM "' . NEL_PUBLIC_LOGS_TABLE .
@@ -88,7 +81,16 @@ class OutputPanelLogs extends Output
             $log_data['event'] = $log['event'];
             $log_data['domain_id'] = $log['domain_id'];
             $log_data['user'] = $log['username'];
-            $log_data['ip_address'] = nel_convert_ip_from_storage($log['ip_address']);
+            $ip_info = new IPInfo(nel_convert_ip_from_storage($log['ip_address']));
+
+            if (!$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
+                $ip_address = $ip_info->getInfo('hashed_ip_address');
+            } else {
+                $ip_address = $ip_info->getInfo('ip_address');
+            }
+
+            $log_data['ip_address'] = $ip_address;
+            $log_data['ip_url'] = nel_build_router_url([nel_site_domain()->uri(), 'ip-info', $ip_address, 'view']);
             $log_data['hashed_ip_address'] = $log['hashed_ip_address'];
             $log_data['time'] = $log['time'];
             $log_data['message'] = $this->formatMessage($log['message'], $log['message_values']);
@@ -96,9 +98,9 @@ class OutputPanelLogs extends Output
         }
 
         $page_count = (int) ceil($log_count / $entries);
-        $page_url = nel_build_router_url([$this->domain->uri(), 'logs'], true) . '%d';
-        $previous_url = ($page > 1) ? nel_build_router_url([$this->domain->uri(), 'logs'], true) . '%d' : null;
-        $next_url = nel_build_router_url([$this->domain->uri(), 'logs'], true) . '%d';
+        $page_url = nel_build_router_url([$this->domain->uri(), 'logs', $log_set], true) . '%d';
+        $previous_url = ($page > 1) ? nel_build_router_url([$this->domain->uri(), 'logs', $log_set], true) . '%d' : null;
+        $next_url = nel_build_router_url([$this->domain->uri(), 'logs', $log_set], true) . '%d';
         $pagination = new Pagination();
         $pagination->setPrevious(__('Previous'), $previous_url);
         $pagination->setNext(__('Next'), $next_url);

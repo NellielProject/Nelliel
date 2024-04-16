@@ -11,21 +11,32 @@ use PDO;
 
 class TableMarkup extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'markup_id' => 'string',
+        'label' => 'string',
+        'type' => 'string',
+        'match_regex' => 'string',
+        'replacement' => 'string',
+        'enabled' => 'boolean',
+        'notes' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'markup_id' => PDO::PARAM_STR,
+        'label' => PDO::PARAM_STR,
+        'type' => PDO::PARAM_STR,
+        'match_regex' => PDO::PARAM_STR,
+        'replacement' => PDO::PARAM_STR,
+        'enabled' => PDO::PARAM_INT,
+        'notes' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_MARKUP_TABLE;
-        $this->column_types = [
-            'markup_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'label' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'type' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'match_regex' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'replacement' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'markup_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'label' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -35,7 +46,6 @@ class TableMarkup extends Table
             'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

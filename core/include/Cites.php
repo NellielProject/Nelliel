@@ -8,15 +8,16 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use PDO;
 
 class Cites
 {
-    private $database;
+    private NellielPDO $database;
 
-    function __construct($database)
+    function __construct(NellielPDO $database)
     {
         $this->database = $database;
     }
@@ -38,8 +39,8 @@ class Cites
                     $this->getThreadID($source_domain, $cite_data['target_post']) !== 0;
             }
         } else if (preg_match('/^(?:>>>|&gt;&gt;&gt;)\/(.+?)\/([\d]*)/u', $text, $matches) === 1) {
-            $cite_data['target_board'] = $matches[1];
-            $target_domain = Domain::getDomainFromID($cite_data['target_board'], $this->database);
+            $target_domain = Domain::getDomainFromID($matches[1], $this->database);
+            $cite_data['target_board'] = $target_domain->id();
 
             if (!empty($matches[2])) {
                 $cite_data['type'] = 'crossboard-post-cite';
@@ -117,36 +118,17 @@ class Cites
         $this->database->executePrepared($prepared, [$post_id]);
     }
 
-    private function citeStored(array $cite_data, Domain $source_domain, int $source_post): bool
-    {
-        if ($cite_data['type'] === 'board-cite') {
-            $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
-            return $target_domain->exists();
-        }
-
-        $prepared = $this->database->prepare(
-            'SELECT 1 FROM "' . NEL_CITES_TABLE .
-            '" WHERE "source_board" = ? AND "source_post" = ? AND "target_board" = ? AND "target_post" = ? LIMIT 1');
-        return !empty(
-            $this->database->executePreparedFetch($prepared,
-                [$source_domain->id(), $source_post, $cite_data['target_board'], $cite_data['target_post']],
-                PDO::FETCH_COLUMN));
-    }
-
     public function addCitesFromPost(Post $post): void
     {
-        if (nel_true_empty($post->data('comment'))) {
+        if (nel_true_empty($post->getData('comment'))) {
             return;
         }
 
-        $cite_list = $this->getCitesFromText($post->data('comment'));
+        $cite_list = $this->getCitesFromText($post->getData('comment'));
 
         foreach ($cite_list as $cite) {
             $cite_data = $this->getCiteData($cite, $post->domain());
-
-            if ($cite_data['exists']) {
-                $this->addCite($cite_data, $post->domain(), $post->contentID()->postID());
-            }
+            $this->addCite($cite_data, $post->domain(), $post->contentID()->postID());
         }
 
         $this->updateCachesForPost($post);
@@ -154,7 +136,12 @@ class Cites
 
     public function addCite(array $cite_data, Domain $source_domain, int $source_post): void
     {
-        if ($cite_data['type'] === 'board-cite' || $this->citeStored($cite_data, $source_domain, $source_post)) {
+        if ($cite_data['type'] === 'board-cite') {
+            return;
+        }
+
+        if ($this->database->rowExists(NEL_CITES_TABLE, ['source_board', 'source_post', 'target_board', 'target_post'],
+            [$source_domain->id(), $source_post, $cite_data['target_board'], $cite_data['target_post']])) {
             return;
         }
 
@@ -183,7 +170,12 @@ class Cites
                 $target_thread = $this->getThreadID($target_domain, $cite_data['target_post']);
                 $content_id = new ContentID(ContentID::createIDString($target_thread, $cite_data['target_post']));
                 $post = $content_id->getInstanceFromID($target_domain);
-                $url = $post->getURL($dynamic);
+
+                if ($dynamic) {
+                    $url = $post->getRoute();
+                } else {
+                    $url = $post->getURL();
+                }
             }
         }
 
@@ -249,7 +241,7 @@ class Cites
 
         $moved_post->changeData('comment',
             preg_replace_callback('/(>>|&gt;&gt;)(\d+)|(>>>|&gt;&gt;&gt;)\/(' . $old_domain->uri() . ')\/(\d*)/u',
-                $cite_change_callback, $moved_post->data('comment')));
+                $cite_change_callback, $moved_post->getData('comment')));
         $moved_post->writeToDatabase();
         $this->updateCachesForPost($moved_post);
     }

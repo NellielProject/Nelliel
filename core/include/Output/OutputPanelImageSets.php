@@ -18,7 +18,6 @@ class OutputPanelImageSets extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/image_sets');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Image Sets');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

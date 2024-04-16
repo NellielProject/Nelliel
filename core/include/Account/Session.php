@@ -109,13 +109,13 @@ class Session
         $this->init(true);
 
         if (!empty(self::$user) && self::$user->id() !== '') {
-            nel_logger('system')->info('Logged out.', ['event' => 'logout', 'username' => self::$user->id()]);
+            nel_logger('system')->info('Logged out.', ['event' => 'user_logout', 'username' => self::$user->id()]);
         }
 
         $this->terminate();
         $output_login = new OutputLoginPage($this->domain, false);
         $output_login->render([], false);
-        nel_clean_exit(false);
+        exit(0);
     }
 
     public function login(): void

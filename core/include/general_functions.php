@@ -3,20 +3,8 @@ declare(strict_types = 1);
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Redirect;
-use Nelliel\Auth\Authorization;
 use ChrisUllyott\FileSize;
 use IPTools\IP;
-
-function nel_clean_exit()
-{
-    $authorization = new Authorization(nel_database('core'));
-    $authorization->saveUsers();
-    $authorization->saveRoles();
-    $redirect = new Redirect();
-    $redirect->go();
-    die();
-}
 
 function nel_get_microtime(bool $convert_int = true)
 {
@@ -72,6 +60,10 @@ function nel_typecast($value, string $datatype, bool $empty_null = true)
 
     if ($datatype === 'float') {
         return floatval($value);
+    }
+
+    if ($datatype === 'array') {
+        return (array) $value;
     }
 
     return $value;
@@ -317,4 +309,27 @@ function nel_config_var_export(array $array, string $prefix = '')
 function nel_is_absolute_url(string $url): bool
 {
     return preg_match('/^(?:.+:)?\/\//u', $url) === 1;
+}
+
+function nel_key_array_by_column(string $column, array $array): array
+{
+    $new_array = array();
+
+    foreach ($array as $sub_array) {
+        $new_array[$sub_array[$column]] = $sub_array;
+    }
+
+    return $new_array;
+}
+
+function nel_array_htmlspecialchars(array $array, int $flags): array
+{
+    $html_filter = function (&$value, $key) use ($flags) {
+        if (is_string($value)) {
+            $value = htmlspecialchars($value, $flags, 'UTF-8');
+        }
+    };
+
+    array_walk_recursive($array, $html_filter);
+    return $array;
 }

@@ -54,10 +54,6 @@ class AdminRoles extends Admin
         $role = $this->authorization->getRole($role_id);
 
         foreach ($_POST as $key => $value) {
-            if (is_array($value)) {
-                $value = nel_form_input_default($value);
-            }
-
             if (utf8_substr($key, 0, 5) === 'perm_') {
                 $value = ($value == 1) ? true : false;
                 $role->permissions->changeData($key, $value);

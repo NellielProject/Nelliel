@@ -5,11 +5,13 @@ namespace Nelliel\Dispatch\Controls;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\NewsArticle;
+use Nelliel\Regen;
 use Nelliel\Account\Session;
-use Nelliel\Admin\AdminNews;
 use Nelliel\Auth\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
+use Nelliel\Output\OutputPanelNews;
 
 class DispatchNews extends Dispatch
 {
@@ -23,28 +25,62 @@ class DispatchNews extends Dispatch
 
     public function dispatch(array $inputs): void
     {
-        $news = new AdminNews($this->authorization, $this->domain, $this->session);
+        $article_id = intval($inputs['id'] ?? 0);
 
         switch ($inputs['section']) {
             case 'new':
-                if ($inputs['method'] === 'GET') {
-                    $news->creator();
-                }
-
                 if ($inputs['method'] === 'POST') {
-                    $news->add();
+                    $this->verifyPermissions($this->domain, 'perm_manage_news');
+                    $news_article = new NewsArticle($this->domain->database());
+                    $news_article->changeData('username', $this->session->user()->id());
+                    $name = $_POST['name'] ?? '';
+
+                    if ($name === '' || !$this->session->user()->checkPermission($this->domain, 'perm_custom_name')) {
+                        $news_article->changeData('name', $this->session->user()->id());
+                    } else {
+                        $news_article->changeData('name', $name);
+                    }
+
+                    $news_article->changeData('headline', $_POST['headline'] ?? '');
+                    $news_article->changeData('time', time());
+                    $news_article->changeData('text', $_POST['text'] ?? '');
+                    $news_article->save();
+                    $regen = new Regen();
+                    $regen->news($this->domain);
                 }
 
                 break;
 
             case 'delete':
-                $news->delete($inputs['id']);
+                $this->verifyPermissions($this->domain, 'perm_manage_news');
+                $news_article = new NewsArticle($this->domain->database(), $article_id);
+                $news_article->delete();
+                $regen = new Regen();
+                $regen->news($this->domain);
                 break;
 
             default:
-                if ($inputs['method'] === 'GET') {
-                    $news->panel();
-                }
+                ;
+        }
+
+        $this->verifyPermissions($this->domain, 'perm_manage_news');
+        $output_panel = new OutputPanelNews($this->domain, false);
+        $output_panel->render([], false);
+    }
+
+    protected function verifyPermissions(Domain $domain, string $perm): void
+    {
+        if ($this->session->user()->checkPermission($domain, $perm)) {
+            return;
+        }
+
+        switch ($perm) {
+            case 'perm_manage_news':
+                nel_derp(360, _gettext('You are not allowed to manage news entries.'), 403);
+                break;
+
+            default:
+                $this->defaultPermissionError();
         }
     }
 }

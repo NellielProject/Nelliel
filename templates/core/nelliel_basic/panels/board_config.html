@@ -142,11 +142,8 @@
 				<td>
 		{{# styles }}
 			{{# entry }}
-					<input type="hidden" name="{{ input_name }}[default]" value="0">
-					<label>
-					<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
-					<span>{{ item_label }}</span>
-					</label>
+					<input id="{{ input_name }}[enabled]" type="checkbox" name="{{ input_name }}[enabled]" value="1" {{ checked }} {{ disabled }}>
+					<label for="{{ input_name }}[enabled]">{{ item_label }}</label>
 					<br>
 			{{/ entry }}
 		{{/ styles }}
@@ -942,11 +939,8 @@
 				<td>
 		{{# content_ops }}
 			{{# entry }}
-					<input type="hidden" name="{{ input_name }}[default]" value="0">
-					<label>
-					<input type="checkbox" name="{{ input_name }}[value]" value="1" {{ checked }} {{ disabled }}>
-					<span>{{ item_label }}</span>
-					</label>
+					<input id="{{ input_name }}[enabled]" type="checkbox" name="{{ input_name }}[enabled]" value="1" {{ checked }} {{ disabled }}>
+					<label for="{{ input_name }}[enabled]">{{ item_label }}</label>
 					<br>
 			{{/ entry }}
 		{{/ content_ops }}
@@ -1109,6 +1103,15 @@
 			<tr>
 				<th id="section-moderator-links" colspan="{{ colspan }}" data-i18n="">Moderator Links</th>
 			</tr>
+	{{# thread_mod_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ thread_mod_options_link_set }}
+	{{# post_mod_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ post_mod_options_link_set }}
+	{{# upload_mod_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ upload_mod_options_link_set }}
 	{{# translate_mod_links }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ translate_mod_links }}
@@ -1165,6 +1168,15 @@
 			<tr>
 				<th id="section-content-links" colspan="{{ colspan }}" data-i18n="">Content Links</th>
 			</tr>
+	{{# thread_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ thread_options_link_set }}
+	{{# post_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ post_options_link_set }}
+	{{# upload_options_link_set }}
+			{{> panels/pieces/settings/textarea }}
+	{{/ upload_options_link_set }}
 	{{# translate_content_links }}
 			{{> panels/pieces/settings/checkbox }}
 	{{/ translate_content_links }}
@@ -1237,9 +1249,8 @@
 		<div class="display-row">
 			<span class="display-cell">
 				<br>
-				<input type="hidden" name="{{ input_name }}[enabled][default]" value="0">
 				<label for="{{ input_name }}[enabled]" class="bold">{{ item_label }}</label>
-				<input id="{{ input_name }}[enabled]" type="checkbox" name="{{ input_name }}[enabled][value]" value="1" {{ checked }} {{ disabled }}>
+				<input id="{{ input_name }}[enabled]" type="checkbox" name="{{ input_name }}[enabled]" value="1" {{ checked }} {{ disabled }}>
 			</span>
 		</div>
 		<div class="display-row">
@@ -1253,11 +1264,8 @@
 		<div class="display-row">
 				{{# entry }}
 			<span class="display-cell">
-				<input type="hidden" name="{{ input_name }}[enabled][default]" value="0">
-				<label>
-				<input type="checkbox" name="{{ input_name }}[enabled][value]" value="1" {{ checked }} {{ disabled }}>
-				<span>{{ item_label }}</span>
-				</label>
+				<input id="{{ input_name }}[enabled]" type="checkbox" name="{{ input_name }}[enabled]" value="1" {{ checked }} {{ disabled }}>
+				<label for="{{ input_name }}[enabled]">{{ item_label }}</label>
 			</span>
 				{{/ entry }}
 		</div>

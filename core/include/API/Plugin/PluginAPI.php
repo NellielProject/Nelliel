@@ -12,11 +12,12 @@ use PDO;
 class PluginAPI
 {
     public const API_VERSION = 1; // Only updates on breaking changes
-    private $database;
-    private static $hooks = array();
-    private static $loaded_plugins = array();
-    private static $loaded_plugin_ids = array();
-    private $ini_parser;
+    private NellielPDO $database;
+    private static array $hooks = array();
+    private static array $loaded_plugins = array();
+    private static array $loaded_plugin_ids = array();
+    private INIParser $ini_parser;
+    private static array $namespaces = array();
 
     function __construct(NellielPDO $database)
     {
@@ -254,6 +255,27 @@ class PluginAPI
         }
 
         $this->processHook('nel-in-after-all-plugins-loaded', []);
+    }
+
+    public function registerNamespace(string $plugin_id, string $namespace, string $directory): void
+    {
+        $plugin = $this->getPlugin($plugin_id);
+        self::$namespaces[$namespace]['plugin_directory'] = $plugin->directory();
+        self::$namespaces[$namespace]['directory'] = $directory;
+    }
+
+    public static function autoload(string $class): void
+    {
+        $parts = explode('\\', $class);
+        $class_name = end($parts);
+        $namespace = str_replace('\\' . $class_name, '', $class);
+
+        if (!isset(self::$namespaces[$namespace])) {
+            return;
+        }
+
+        require NEL_PLUGINS_FILES_PATH . self::$namespaces[$namespace]['plugin_directory'] . '/' .
+            self::$namespaces[$namespace]['directory'] . '/' . $class_name . '.php';
     }
 
     /**

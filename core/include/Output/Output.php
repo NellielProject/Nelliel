@@ -7,29 +7,33 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Timer;
 use Nelliel\Account\Session;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
+use Nelliel\Domains\DomainGlobal;
+use Nelliel\Domains\DomainSite;
 use Nelliel\Render\RenderCoreDOM;
 use Nelliel\Render\RenderCoreMustache;
-use Nelliel\Render\TemplateSubstitutes;
+use Nelliel\Render\Template;
+use Nelliel\Utility\FileHandler;
 
 abstract class Output
 {
-    protected $domain;
-    protected $site_domain;
-    protected $database;
+    protected Domain $domain;
+    protected DomainSite $site_domain;
+    protected DomainGlobal $global_domain;
+    protected NellielPDO $database;
     protected $render_core;
-    protected $render_data = array();
+    protected array $render_data = array();
     protected static $render_cores = array();
-    protected $file_handler;
-    protected $output_filter;
-    protected $core_id;
-    protected $static_output = false;
-    protected $write_mode = false;
-    protected $template_substitutes;
-    protected $session;
+    protected FileHandler $file_handler;
+    protected Filter $output_filter;
+    protected string $core_id;
+    protected bool $write_mode = false;
+    protected Session $session;
     protected $default_body_template = 'empty_body';
-    protected $timer;
-    protected $templates_path;
+    protected Timer $timer;
+    protected string $templates_path;
+    protected Template $current_template;
 
     function __construct(Domain $domain, bool $write_mode)
     {
@@ -38,23 +42,29 @@ abstract class Output
         $this->database = $domain->database();
         $this->selectRenderCore('mustache');
         $this->site_domain = nel_site_domain();
+        $this->global_domain = nel_global_domain();
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new Filter();
-        $this->template_substitutes = new TemplateSubstitutes();
         $this->session = new Session();
         $this->templates_path = $this->domain->templatePath();
+        $this->timer = new Timer();
     }
 
-    protected function renderSetup(): void
+    protected function renderSetup(string $base_path = null, string $extension = null): void
     {
         $this->render_data = array();
+        $this->timer->reset();
+        $this->timer->start();
+        $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction(true, 4);
+        $this->render_data['show_render_time'] = $this->domain->setting('show_render_timer');
         $this->render_data['page_language'] = $this->domain->locale(true);
         $this->render_data['nelliel_version'] = NELLIEL_VERSION;
         $this->render_data['nelliel_package'] = NELLIEL_PACKAGE;
         $this->render_data['nelliel_copyright_dates'] = NELLIEL_COPYRIGHT_DATES;
         $this->render_data['nelliel_copyright_line'] = NELLIEL_COPYRIGHT_LINE;
         $this->render_data['preview_loading'] = $this->domain->setting('preview_lazy_loading') ? 'lazy' : 'eager';
-        $this->uiDefines();
+        $this->setBasePath($base_path ?? $this->templates_path);
+        $this->setExtension($extension ?? '.html');
     }
 
     protected function selectRenderCore(string $core_id): void
@@ -83,24 +93,11 @@ abstract class Output
         };
     }
 
-    protected function setupTimer(bool $formatted = true, int $precision = 4): void
-    {
-        if ($this->domain->setting('show_render_timer')) {
-            $this->timer = new Timer();
-            $this->timer->start();
-            $this->render_data['show_stats']['render_timer'] = $this->timerTotalFunction($formatted, $precision);
-        }
-    }
-
     protected function output(string $template, bool $data_only, bool $translate, array $render_data, $dom = null)
     {
         $output = null;
-        $substitutes = $this->template_substitutes->getAll();
 
         if ($this->core_id === 'mustache') {
-            $this->render_core->renderEngine()->getLoader()->updateSubstituteTemplates($substitutes);
-            $this->render_core->renderEngine()->getLoader()->setDefaultTemplatePath($this->templates_path);
-
             if ($data_only) {
                 return $render_data;
             } else {
@@ -124,114 +121,25 @@ abstract class Output
         return $this->write_mode;
     }
 
-    protected function setTemplatesPath(string $path): void
+    protected function setBodyTemplate(string $name): void
     {
-        $this->templates_path = $path;
+        // Temporary values while we get things working
+        $template = new Template($this->templates_path, $name, '.html');
+        $this->render_core->renderEngine()->getLoader()->addSubstitute($this->default_body_template, $template);
     }
 
-    protected function setBodyTemplate(string $template): void
+    protected function setTemplate(Template $template): void
     {
-        $this->template_substitutes->add($this->default_body_template, $template);
+        $this->current_template = $template;
     }
 
-    protected function uiDefines(): void
+    protected function setBasePath(string $base_path): void
     {
-        if ($this->domain->id() === Domain::SITE) {
-            return;
-        }
+        $this->render_core->renderEngine()->getLoader()->setBasePath($base_path);
+    }
 
-        $domain = $this->domain;
-        $do_translation = $domain->setting('translate_mod_links');
-
-        $translate = function (string $setting) use ($domain, $do_translation) {
-            $value = $domain->setting($setting) ?? '';
-
-            if ($do_translation && $value !== '') {
-                $value = __($value);
-            }
-
-            return $value;
-        };
-
-        $left_bracket = $translate('mod_links_left_bracket');
-        $right_bracket = $translate('mod_links_right_bracket');
-        $mod_links = array();
-        $mod_links['mod_links_lock']['text'] = $translate('mod_links_lock');
-        $mod_links['mod_links_unlock']['text'] = $translate('mod_links_unlock');
-        $mod_links['mod_links_sticky']['text'] = $translate('mod_links_sticky');
-        $mod_links['mod_links_unsticky']['text'] = $translate('mod_links_unsticky');
-        $mod_links['mod_links_permasage']['text'] = $translate('mod_links_permasage');
-        $mod_links['mod_links_unpermasage']['text'] = $translate('mod_links_unpermasage');
-        $mod_links['mod_links_cyclic']['text'] = $translate('mod_links_cyclic');
-        $mod_links['mod_links_non_cyclic']['text'] = $translate('mod_links_non_cyclic');
-        $mod_links['mod_links_ban']['text'] = $translate('mod_links_ban');
-        $mod_links['mod_links_delete']['text'] = $translate('mod_links_delete');
-        $mod_links['mod_links_delete_by_ip']['text'] = $translate('mod_links_delete_by_ip');
-        $mod_links['mod_links_global_delete_by_ip']['text'] = $translate('mod_links_global_delete_by_ip');
-        $mod_links['mod_links_ban_and_delete']['text'] = $translate('mod_links_ban_and_delete');
-        $mod_links['mod_links_edit']['text'] = $translate('mod_links_edit');
-        $mod_links['mod_links_move']['text'] = $translate('mod_links_move');
-        $mod_links['mod_links_merge']['text'] = $translate('mod_links_merge');
-        $mod_links['mod_links_spoiler']['text'] = $translate('mod_links_spoiler');
-        $mod_links['mod_links_unspoiler']['text'] = $translate('mod_links_unspoiler');
-
-        foreach ($mod_links as $id => $values) {
-            $this->render_data[$id]['left_bracket'] = $left_bracket;
-            $this->render_data[$id]['right_bracket'] = $right_bracket;
-            $this->render_data[$id] = array_merge($this->render_data[$id], $values);
-        }
-
-        $domain = $this->domain;
-        $do_translation = $domain->setting('translate_content_links');
-
-        $translate = function (string $setting) use ($domain, $do_translation) {
-            $value = $domain->setting($setting) ?? '';
-
-            if ($do_translation && $value !== '') {
-                $value = __($value);
-            }
-
-            return $value;
-        };
-
-        $left_bracket = $translate('content_links_left_bracket');
-        $right_bracket = $translate('content_links_right_bracket');
-        $content_links = array();
-        $content_links['content_links_reply']['text'] = $translate('content_links_reply');
-        $content_links['content_links_hide_thread']['text'] = $translate('content_links_hide_thread');
-        $content_links['content_links_hide_thread']['command'] = 'hide-thread';
-        $content_links['content_links_hide_thread']['alt_command'] = 'show-thread';
-        $content_links['content_links_hide_thread']['alt_text'] = $translate('content_links_show_thread');
-        $content_links['content_links_hide_post']['text'] = $translate('content_links_hide_post');
-        $content_links['content_links_hide_post']['command'] = 'hide-post';
-        $content_links['content_links_hide_post']['alt_command'] = 'show-post';
-        $content_links['content_links_hide_post']['alt_text'] = $translate('content_links_show_post');
-        $content_links['content_links_hide_file']['text'] = $translate('content_links_hide_file');
-        $content_links['content_links_hide_file']['command'] = 'hide-file';
-        $content_links['content_links_hide_file']['alt_command'] = 'show-file';
-        $content_links['content_links_hide_file']['alt_text'] = $translate('content_links_show_file');
-        $content_links['content_links_hide_embed']['text'] = $translate('content_links_hide_embed');
-        $content_links['content_links_hide_embed']['command'] = 'hide-embed';
-        $content_links['content_links_hide_embed']['alt_command'] = 'show-embed';
-        $content_links['content_links_hide_embed']['alt_text'] = $translate('content_links_show_embed');
-        $content_links['content_links_cite_post']['text'] = $translate('content_links_cite_post');
-        $content_links['content_links_cite_post']['command'] = 'cite-post';
-        $content_links['content_links_show_upload_meta']['text'] = $translate('content_links_show_upload_meta');
-        $content_links['content_links_show_upload_meta']['command'] = 'show-upload-meta';
-        $content_links['content_links_show_upload_meta']['alt_command'] = 'hide-upload-meta';
-        $content_links['content_links_show_upload_meta']['alt_text'] = $translate('content_links_hide_upload_meta');
-        $content_links['content_links_download_file']['text'] = $translate('content_links_download_file');
-        $content_links['content_links_first_posts']['text'] = $translate('content_links_first_posts');
-        $content_links['content_links_last_posts']['text'] = $translate('content_links_last_posts');
-        $content_links['content_links_expand_thread']['text'] = $translate('content_links_expand_thread');
-        $content_links['content_links_expand_thread']['command'] = 'expand-thread';
-        $content_links['content_links_expand_thread']['alt_command'] = 'collapse-thread';
-        $content_links['content_links_expand_thread']['alt_text'] = $translate('content_links_collapse_thread');
-
-        foreach ($content_links as $id => $values) {
-            $this->render_data[$id]['left_bracket'] = $left_bracket;
-            $this->render_data[$id]['right_bracket'] = $right_bracket;
-            $this->render_data[$id] = array_merge($this->render_data[$id], $values);
-        }
+    protected function setExtension(string $extension): void
+    {
+        $this->render_core->renderEngine()->getLoader()->setExtension($extension);
     }
 }

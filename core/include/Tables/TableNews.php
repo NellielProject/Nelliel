@@ -11,20 +11,30 @@ use PDO;
 
 class TableNews extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'article_id' => 'integer',
+        'username' => 'string',
+        'name' => 'string',
+        'time' => 'integer',
+        'headline' => 'string',
+        'text' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'article_id' => PDO::PARAM_INT,
+        'username' => PDO::PARAM_STR,
+        'name' => PDO::PARAM_STR,
+        'time' => PDO::PARAM_INT,
+        'headline' => PDO::PARAM_STR,
+        'text' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_NEWS_TABLE;
-        $this->column_types = [
-            'article_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'name' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'time' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'headline' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'text' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'article_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -33,7 +43,6 @@ class TableNews extends Table
             'headline' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'text' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

@@ -18,7 +18,6 @@ class OutputInterstitial extends Output
     public function basic(array $parameters, bool $data_only, array $messages, array $links)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('interstitials/basic');
         $is_manage = $parameters['is_manage'] ?? false;
         $page_title = $parameters['page_title'] ?? $this->domain->reference('title');
@@ -55,7 +54,6 @@ class OutputInterstitial extends Output
     public function confirm(array $parameters, bool $data_only, array $messages, array $yes_info, array $no_info)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('interstitials/confirm');
         $is_manage = $parameters['is_manage'] ?? false;
         $page_title = $parameters['page_title'] ?? $this->domain->reference('title');

@@ -11,21 +11,26 @@ use PDO;
 
 class TableUserRoles extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'username' => 'string',
+        'role_id' => 'string',
+        'domain_id' => 'string'];
+
+    public const PDO_TYPES = [
+        'username' => PDO::PARAM_STR,
+        'role_id' => PDO::PARAM_STR,
+        'domain_id' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_USER_ROLES_TABLE;
-        $this->column_types = [
-            'username' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'domain_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'username' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'role_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

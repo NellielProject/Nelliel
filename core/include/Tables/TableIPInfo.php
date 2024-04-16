@@ -11,21 +11,31 @@ use PDO;
 
 class TableIPInfo extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'info_id' => 'integer',
+        'hashed_ip_address' => 'string',
+        'ip_address' => 'string',
+        'hashed_small_subnet' => 'string',
+        'hashed_large_subnet' => 'string',
+        'last_activity' => 'integer',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'info_id' => PDO::PARAM_INT,
+        'hashed_ip_address' => PDO::PARAM_STR,
+        'ip_address' => PDO::PARAM_STR,
+        'hashed_small_subnet' => PDO::PARAM_STR,
+        'hashed_large_subnet' => PDO::PARAM_STR,
+        'last_activity' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_IP_INFO_TABLE;
-        $this->columns_data = [
-            'info_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'hashed_ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'ip_address' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'hashed_small_subnet' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'hashed_large_subnet' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'last_activity' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks = [
             'info_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'hashed_ip_address' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -33,7 +43,6 @@ class TableIPInfo extends Table
             'hashed_large_subnet' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'last_activity' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

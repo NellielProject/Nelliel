@@ -20,7 +20,6 @@ class OutputPanelBoardConfig extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/board_config');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $defaults = $parameters['defaults'] ?? false;
@@ -52,7 +51,6 @@ class OutputPanelBoardConfig extends Output
         $this->render_data['header'] = $output_header->manage($parameters, true);
         $user_lock_override = $this->session->user()->checkPermission($this->domain, 'perm_manage_board_config_override');
         $user_raw_html = $this->session->user()->checkPermission($this->domain, 'perm_raw_html');
-        $this->render_data['show_raw_column'] = $user_raw_html;
         $this->render_data['show_lock_update_column'] = $defaults;
 
         if ($user_raw_html) {
@@ -76,8 +74,7 @@ class OutputPanelBoardConfig extends Output
             $category_output['category_max_size'] = intval(
                 $filetypes->categorySetting($this->domain, $category, 'max_size'));
 
-            if (isset($enabled_array[$category_data['category']]) &&
-                $enabled_array[$category_data['category']]['enabled']) {
+            if ($enabled_array[$category_data['category']]['enabled'] ?? false) {
                 $category_output['category_select']['checked'] = 'checked';
             }
 
@@ -129,46 +126,45 @@ class OutputPanelBoardConfig extends Output
 
         $this->render_data['show_lock_update'] = $defaults;
 
-        if ($defaults) {
-            $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
+        $columns = ' "' . NEL_SETTINGS_TABLE . '"."setting_category", "' . NEL_SETTINGS_TABLE . '"."setting_name"'; // Why isn't this covered by *
+        $settings_list = $this->database->executeFetchAll(
+            'SELECT *, ' . $columns . ' FROM "' . NEL_SETTINGS_TABLE . '"
                 LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
                 ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE .
-                '"."setting_name"
-                INNER JOIN "' . NEL_BOARD_DEFAULTS_TABLE . '"
-                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_DEFAULTS_TABLE .
-                '"."setting_name"
-                WHERE "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'');
-            $board_settings = $this->database->executePreparedFetchAll($prepared, [], PDO::FETCH_ASSOC);
+            '"."setting_name" WHERE "' . NEL_SETTINGS_TABLE . '"."setting_category" = \'board\'', PDO::FETCH_ASSOC);
+
+        if ($defaults) {
+            $config_list = $this->database->executeFetchAll('SELECT * FROM "' . NEL_BOARD_DEFAULTS_TABLE . '"',
+                PDO::FETCH_ASSOC);
         } else {
             $prepared = $this->database->prepare(
-                'SELECT * FROM "' . NEL_SETTINGS_TABLE . '"
-                LEFT JOIN "' . NEL_SETTING_OPTIONS_TABLE . '"
-                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_SETTING_OPTIONS_TABLE .
-                '"."setting_name"
-                INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '"
-                ON "' . NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE .
-                '"."setting_name"
-                WHERE "' . NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "' . NEL_SETTINGS_TABLE .
-                '"."setting_category" = \'board\'');
-            $board_settings = $this->database->executePreparedFetchAll($prepared, [$this->domain->id()],
-                PDO::FETCH_ASSOC);
+                'SELECT * FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "board_id" = :board_id');
+            $prepared->bindValue(':board_id', $this->domain->id(), PDO::PARAM_STR);
+            $config_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         }
 
-        foreach ($board_settings as $setting) {
+        $config_list = nel_key_array_by_column('setting_name', $config_list);
+
+        foreach ($settings_list as $setting) {
+            $setting_name = $setting['setting_name'];
+            $config = $config_list[$setting_name] ?? array();
+            $config_value = nel_typecast($config['setting_value'] ?? $setting['default_value'], $setting['data_type']);
             $setting_data = array();
             $setting_data['setting_name'] = $setting['setting_name'];
             $setting_data['setting_description'] = _gettext($setting['setting_description']);
-            $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
-            $setting_data['store_raw'] = $setting['raw_output'] == 1;
             $setting_data['show_raw'] = $user_raw_html;
+            $input_attributes = json_decode($setting['input_attributes'], true) ?? array();
+
+            if ($setting['raw_output'] == 1) {
+                $setting_data['store_raw'] = true;
+            }
 
             if ($defaults) {
                 $setting_locked = $defaults_list[$setting['setting_name']]['edit_lock'] == 1;
                 $setting_stored_raw = $defaults_list[$setting['setting_name']]['stored_raw'] == 1;
             } else {
-                $setting_locked = $setting['edit_lock'] == 1;
-                $setting_stored_raw = $setting['stored_raw'] == 1;
+                $setting_locked = $setting['edit_lock'] ?? 0 == 1;
+                $setting_stored_raw = $config['stored_raw'] ?? 0 == 1;
             }
 
             if ($setting_locked) {
@@ -186,7 +182,7 @@ class OutputPanelBoardConfig extends Output
             if ($setting['setting_name'] === 'enabled_styles') {
                 $styles_edit_lock = $setting_locked && !$defaults && !$user_lock_override;
                 $styles = $this->domain->frontEndData()->getAllStyles(true);
-                $styles_array = json_decode($setting['setting_value'] ?? '', true);
+                $styles_array = json_decode($config_value, true);
                 $style_entries = array();
 
                 foreach ($styles as $style) {
@@ -209,14 +205,14 @@ class OutputPanelBoardConfig extends Output
             if ($setting['setting_name'] === 'enabled_content_ops') {
                 $content_ops_edit_lock = $setting_locked && !$defaults && !$user_lock_override;
                 $content_ops = $this->domain->frontEndData()->getAllContentOps(true);
-                $content_ops_array = json_decode($setting['setting_value'] ?? '', true);
+                $content_ops_array = json_decode($config_value, true);
                 $content_op_entries = array();
 
                 foreach ($content_ops as $content_op) {
                     $op_id = $content_op->id();
                     $set = array();
                     $set['input_name'] = 'enabled_content_ops[' . $op_id . ']';
-                    $set['item_label'] = $content_op->data('label');
+                    $set['item_label'] = $content_op->getData('label');
                     $set['disabled'] = ($content_ops_edit_lock) ? 'disabled' : '';
 
                     if (in_array($op_id, $content_ops_array)) {
@@ -234,7 +230,7 @@ class OutputPanelBoardConfig extends Output
             }
 
             if ($setting['data_type'] === 'boolean') {
-                if ($setting['setting_value'] == 1) {
+                if ($config_value) {
                     $setting_data['setting_checked'] = 'checked';
                 }
             } else {
@@ -249,7 +245,7 @@ class OutputPanelBoardConfig extends Output
                         $options['option_value'] = $value;
                         $options['option_key'] = $setting_data['setting_name'] . '_' . $label;
 
-                        if ($setting['setting_value'] === $value) {
+                        if ($config_value === $value) {
                             if ($type == 'radio') {
                                 $options['option_checked'] = 'checked';
                             } else if ($type == 'select') {
@@ -260,12 +256,14 @@ class OutputPanelBoardConfig extends Output
                         $setting_data['options'][] = $options;
                     }
                 } else {
-                    $setting_data['setting_value'] = $setting['setting_value'];
+                    $setting_data['setting_value'] = $config_value;
                 }
             }
 
             $this->render_data['settings_data'][$setting['setting_name']] = $setting_data;
         }
+
+        $this->render_data['show_raw_column'] = $user_raw_html;
 
         $output_menu = new OutputMenu($this->domain, false);
         $this->render_data['settings_data']['default_style']['options'] = $output_menu->configStyles(

@@ -11,21 +11,26 @@ use PDO;
 
 class TableVisitorInfo extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'visitor_id' => 'string',
+        'last_activity' => 'integer',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'visitor_id' => PDO::PARAM_STR,
+        'last_activity' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_VISITOR_INFO_TABLE;
-        $this->columns_data = [
-            'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'last_activity' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks= [
             'visitor_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'last_activity' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

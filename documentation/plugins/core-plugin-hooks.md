@@ -233,3 +233,67 @@ Called during CAPTCHA generation.
 |2    |`$domain`    |`object` |No        |No        |Instance of `Nelliel\Domains\Domain`.|
 |3    |`$write_mode`|`boolean`|No        |No        |Whether output is being written to file.|
 |4    |`$area`      |`string` |No        |No        |The area calling for CAPTCHA generation.|
+
+### nel-in-after-plugin-install
+Added: v0.9.32
+
+Called after a plugin has been installed.
+ 
+**Arguments**
+
+|Order|Argument     |Type     |Modifiable|Returnable|Description|                               
+|:---:|:------------|:--------|:---------|:---------|:----------|
+|1    |`$plugin_id` |`string` |No        |No        |ID of the plugin.|
+
+### nel-in-after-plugin-uninstall
+Added: v0.9.32
+
+Called after a plugin has been uninstalled.
+ 
+**Arguments**
+
+|Order|Argument     |Type     |Modifiable|Returnable|Description|                               
+|:---:|:------------|:--------|:---------|:---------|:----------|
+|1    |`$plugin_id` |`string` |No        |No        |ID of the plugin.|
+
+### nel-inb4-plugin-controls-list
+Added: v0.9.32
+
+Called before generating the list of plugins with web controls. To include a plugin in the list, add the ID to the `$plugins_list` array.
+ 
+**Arguments**
+
+|Order|Argument       |Type    |Modifiable|Returnable|Description|                               
+|:---:|:--------------|:-------|:---------|:---------|:----------|
+|1    |`$plugins_list`|`array` |Yes       |Yes       |Array of IDs for plugins with web controls.|
+|2    |`$domain`      |`object`|No        |No        |Instance of `Nelliel\Domains\Domain`.|
+
+### nel-inb4-plugin-controls-render
+Added: v0.9.32
+
+Called before outputting the control panel for a plugin. Plugin must provide a template.
+ 
+**Arguments**
+
+|Order|Argument        |Type    |Modifiable|Returnable|Description|                               
+|:---:|:---------------|:-------|:---------|:---------|:----------|
+|1    |`$render_data`  |`array` |Yes       |Yes       |Array of rendering data for the control panel.|
+|2    |`$domain`       |`object`|No        |No        |Instance of `Nelliel\Domains\Domain`.|
+|3    |`$plugin_id`    |`string`|No        |No        |ID of the plugin whose controls are being accessed.|
+|4    |`$base_path`    |`string`|Yes       |No        |Path to the plugin templates.|
+|5    |`$body_template`|`string`|Yes       |No        |Name of the body template to be used.|
+
+### nel-inb4-plugin-config-render
+Added: v0.9.32
+
+Called before outputting the control panel for a plugin config. Plugin must provide a template.
+ 
+**Arguments**
+
+|Order|Argument        |Type    |Modifiable|Returnable|Description|                               
+|:---:|:---------------|:-------|:---------|:---------|:----------|
+|1    |`$render_data`  |`array` |Yes       |Yes       |Array of rendering data for the control panel.|
+|2    |`$domain`       |`object`|No        |No        |Instance of `Nelliel\Domains\Domain`.|
+|3    |`$plugin_id`    |`string`|No        |No        |ID of the plugin whose controls are being accessed.|
+|4    |`$base_path`    |`string`|Yes       |No        |Path to the plugin templates.|
+|5    |`$body_template`|`string`|Yes       |No        |Name of the body template to be used.|

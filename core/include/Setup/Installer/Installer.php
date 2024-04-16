@@ -69,6 +69,7 @@ use Nelliel\Tables\TableWordfilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
+use Nelliel\Tables\TablePluginConfigs;
 
 class Installer
 {
@@ -178,6 +179,7 @@ class Installer
         $regen = new Regen();
         $site_domain->regenCache();
         $regen->news($site_domain);
+        $regen->faq($site_domain);
         $generate_files->installDone();
 
         if ($this->ownerCreated()) {
@@ -203,28 +205,28 @@ class Installer
                 '/account/register" method="post">
         <input type="hidden" name="create_owner" value="' . $install_id .
                 '"
-        <div class="installer-form">
-            <div class="installer-form-row">
-                <label for="register_username" class="installer-form-label">' . __('Username:') .
+        <div class="display-table">
+            <div class="display-row">
+                <label for="register_username" class="display-cell display-cell form-label">' . __('Username') .
                 '</label>
-                <input id="register_username" class="installer-form-input" type="text" name="register_username" maxlength="255">
+                <input id="register_username" class="display-cell display-cell form-input" type="text" name="register_username" maxlength="255">
             </div>
-            <div class="installer-form-row">
-                <label for="register_super_sekrit" class="installer-form-label">' . __('Password:') .
+            <div class="display-row">
+                <label for="register_super_sekrit" class="display-cell display-cell form-label">' . __('Password') .
                 '</label>
-                <input id="register_super_sekrit" class="installer-form-input" type="password" name="register_super_sekrit" maxlength="' .
+                <input id="register_super_sekrit" class="display-cell display-cell form-input" type="password" name="register_super_sekrit" maxlength="' .
                 nel_crypt_config()->accountPasswordOptions()['max_length'] .
                 '">
             </div>
-            <div class="installer-form-row">
-                <label for="register_super_sekrit_confirm" class="installer-form-label">' . __('Confirm password:') .
+            <div class="display-row">
+                <label for="register_super_sekrit_confirm" class="display-cell display-cell form-label">' . __('Confirm password') .
                 '</label>
-                <input id="register_super_sekrit_confirm" class="installer-form-input" type="password" name="register_super_sekrit_confirm" maxlength="' .
+                <input id="register_super_sekrit_confirm" class="display-cell display-cell form-input" type="password" name="register_super_sekrit_confirm" maxlength="' .
                 nel_crypt_config()->accountPasswordOptions()['max_length'] .
                 '">
             </div>
-            <div class="installer-form-row">
-                <input class="installer-form-input" type="submit" value="' . __('Submit') .
+            <div class="display-row">
+                <input class="display-cell display-cell form-input" type="submit" value="' . __('Submit') .
                 '">
             </div>
         </div>
@@ -386,6 +388,13 @@ class Installer
         $ban_appeals_table = new TableBanAppeals($database, $sql_compatibility);
         $ban_appeals_table->createTable();
 
+        $plugins_table = new TablePlugins($database, $sql_compatibility);
+        $plugins_table->createTable();
+
+        // The following tables rely on the plugins and domain registry tables
+        $plugin_configs_table = new TablePluginConfigs($database, $sql_compatibility);
+        $plugin_configs_table->createTable();
+
         // The following tables are fully independent
         $image_sets_table = new TableImageSets($database, $sql_compatibility);
         $image_sets_table->createTable();
@@ -397,8 +406,6 @@ class Installer
         $rate_limit_table->createTable();
         $templates_table = new TableTemplates($database, $sql_compatibility);
         $templates_table->createTable();
-        $plugins_table = new TablePlugins($database, $sql_compatibility);
-        $plugins_table->createTable();
         $blotter_table = new TableBlotter($database, $sql_compatibility);
         $blotter_table->createTable();
         $embeds_table = new TableEmbeds($database, $sql_compatibility);
@@ -476,6 +483,7 @@ class Installer
             }
 
             $front_end_data->getTemplate($template_id)->install($overwrite);
+            $front_end_data->getTemplate($template_id)->load();
         }
 
         echo __('Core templates installed.') . '<br>';
@@ -494,6 +502,7 @@ class Installer
             }
 
             $front_end_data->getStyle($style_id)->install($overwrite);
+            $front_end_data->getStyle($style_id)->load();
         }
 
         echo __('Core styles installed.') . '<br>';
@@ -512,6 +521,7 @@ class Installer
             }
 
             $front_end_data->getImageSet($image_set_id)->install($overwrite);
+            $front_end_data->getImageSet($image_set_id)->load();
         }
 
         echo __('Core image sets installed.') . '<br>';

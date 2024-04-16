@@ -8,14 +8,16 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Moar;
 use Nelliel\API\JSON\UploadJSON;
 use Nelliel\Auth\Authorization;
+use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
+use Nelliel\Interfaces\MutableData;
 use Nelliel\Tables\TableUploads;
 use PDO;
 
-class Upload
+class Upload implements MutableData
 {
     protected $content_id;
-    protected $database;
+    protected NellielPDO $database;
     protected $domain;
     protected $content_data = array();
     protected $content_moar;
@@ -63,12 +65,7 @@ class Upload
             return true;
         }
 
-        $column_types = $this->main_table->columnTypes();
-
-        foreach ($result as $name => $value) {
-            $this->content_data[$name] = nel_typecast($value, $column_types[$name]['php_type'] ?? '');
-        }
-
+        $this->content_data = TableUploads::typeCastData($result);
         $moar = $result['moar'] ?? '';
         $this->getMoar()->storeFromJSON($moar);
         return true;
@@ -80,16 +77,16 @@ class Upload
             return false;
         }
 
-        $filtered_data = $this->main_table->filterColumns($this->content_data);
+        $filtered_data = TableUploads::filterData($this->content_data);
         $filtered_data['moar'] = $this->getMoar()->getJSON();
-        $pdo_types = $this->main_table->getPDOTypes($filtered_data);
+        $pdo_types = TableUploads::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
 
         if ($this->main_table->rowExists($filtered_data)) {
             $where_columns = ['upload_id'];
             $where_keys = ['where_upload_id'];
-            $where_values = [$this->data('upload_id')];
+            $where_values = [$this->getData('upload_id')];
             $prepared = $this->sql_helpers->buildPreparedUpdate($this->main_table->tableName(), $column_list,
                 $where_columns, $where_keys, $this->sql_helpers->parameterize($column_list),
                 $this->sql_helpers->parameterize($where_keys));
@@ -156,7 +153,7 @@ class Upload
             $this->loadFromDatabase();
         }
 
-        if (!nel_true_empty($this->data('embed_url'))) {
+        if (!nel_true_empty($this->getData('embed_url'))) {
             return false;
         }
 
@@ -220,7 +217,7 @@ class Upload
 
     public function toggleSpoiler(): void
     {
-        $this->changeData('spoiler', !$this->data('spoiler'));
+        $this->changeData('spoiler', !$this->getData('spoiler'));
         $this->writeToDatabase();
     }
 
@@ -231,7 +228,7 @@ class Upload
 
     public function getURL(bool $dynamic): string
     {
-        $full_filename = $this->data('filename') . '.' . $this->data('extension');
+        $full_filename = $this->getData('filename') . '.' . $this->getData('extension');
         return $this->srcWebPath() . rawurlencode($full_filename);
     }
 
@@ -293,8 +290,12 @@ class Upload
         return $default;
     }
 
-    public function data(string $key)
+    public function getData(string $key = null)
     {
+        if (is_null($key)) {
+            return $this->content_data;
+        }
+
         return $this->content_data[$key] ?? null;
     }
 
@@ -307,14 +308,9 @@ class Upload
         return $this->content_data;
     }
 
-    public function changeData(string $key, $new_data, bool $cast_null = true)
+    public function changeData(string $key, $new_data): void
     {
-        $column_types = $this->main_table->columnTypes();
-        $type = $column_types[$key]['php_type'] ?? '';
-        $new_data = nel_typecast($new_data, $type, $cast_null);
-        $old_data = $this->data($key);
-        $this->content_data[$key] = $new_data;
-        return $old_data;
+        $this->content_data[$key] = TableUploads::typeCastValue($key, $new_data);
     }
 
     public function contentID()
@@ -396,37 +392,37 @@ class Upload
         if ($new_board) {
             $file_handler = nel_utilities()->fileHandler();
 
-            if (nel_true_empty($this->data('embed_url'))) {
+            if (nel_true_empty($this->getData('embed_url'))) {
                 if ($this->fileDeduplicated() || $is_shadow) {
                     $file_handler->copyFile(
-                        $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
-                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' .
-                        $new_upload->data('extension'));
+                        $this->srcFilePath() . $this->getData('filename') . '.' . $this->getData('extension'),
+                        $new_upload->srcFilePath() . $new_upload->getData('filename') . '.' .
+                        $new_upload->getData('extension'));
                 } else {
                     $file_handler->moveFile(
-                        $this->srcFilePath() . $this->data('filename') . '.' . $this->data('extension'),
-                        $new_upload->srcFilePath() . $new_upload->data('filename') . '.' .
-                        $new_upload->data('extension'));
+                        $this->srcFilePath() . $this->getData('filename') . '.' . $this->getData('extension'),
+                        $new_upload->srcFilePath() . $new_upload->getData('filename') . '.' .
+                        $new_upload->getData('extension'));
                 }
             }
 
-            if (!nel_true_empty($this->data('static_preview_name'))) {
+            if (!nel_true_empty($this->getData('static_preview_name'))) {
                 if ($this->staticPreviewDeduplicated() || $is_shadow) {
-                    $file_handler->copyFile($this->previewFilePath() . $this->data('static_preview_name'),
-                        $new_upload->previewFilePath() . $this->data('static_preview_name'));
+                    $file_handler->copyFile($this->previewFilePath() . $this->getData('static_preview_name'),
+                        $new_upload->previewFilePath() . $this->getData('static_preview_name'));
                 } else {
-                    $file_handler->moveFile($this->previewFilePath() . $this->data('static_preview_name'),
-                        $new_upload->previewFilePath() . $this->data('static_preview_name'));
+                    $file_handler->moveFile($this->previewFilePath() . $this->getData('static_preview_name'),
+                        $new_upload->previewFilePath() . $this->getData('static_preview_name'));
                 }
             }
 
-            if (!nel_true_empty($this->data('animated_preview_name'))) {
+            if (!nel_true_empty($this->getData('animated_preview_name'))) {
                 if ($this->animatedPreviewDeduplicated() || $is_shadow) {
-                    $file_handler->copyFile($this->previewFilePath() . $this->data('animated_preview_name'),
-                        $new_upload->previewFilePath() . $this->data('animated_preview_name'));
+                    $file_handler->copyFile($this->previewFilePath() . $this->getData('animated_preview_name'),
+                        $new_upload->previewFilePath() . $this->getData('animated_preview_name'));
                 } else {
-                    $file_handler->moveFile($this->previewFilePath() . $this->data('animated_preview_name'),
-                        $new_upload->previewFilePath() . $this->data('animated_preview_name'));
+                    $file_handler->moveFile($this->previewFilePath() . $this->getData('animated_preview_name'),
+                        $new_upload->previewFilePath() . $this->getData('animated_preview_name'));
                 }
             }
 

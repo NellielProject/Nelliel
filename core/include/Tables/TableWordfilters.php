@@ -11,21 +11,32 @@ use PDO;
 
 class TableWordfilters extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'filter_id' => 'integer',
+        'board_id' => 'string',
+        'text_match' => 'string',
+        'replacement' => 'string',
+        'filter_action' => 'string',
+        'notes' => 'string',
+        'enabled' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'filter_id' => PDO::PARAM_INT,
+        'board_id' => PDO::PARAM_STR,
+        'text_match' => PDO::PARAM_STR,
+        'replacement' => PDO::PARAM_STR,
+        'filter_action' => PDO::PARAM_STR,
+        'notes' => PDO::PARAM_STR,
+        'enabled' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_WORDFILTERS_TABLE;
-        $this->column_types = [
-            'filter_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'text_match' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'replacement' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'filter_action' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'notes' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'enabled' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'filter_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -35,7 +46,6 @@ class TableWordfilters extends Table
             'notes' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'enabled' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

@@ -24,11 +24,11 @@ class AdminBans extends Admin
         $this->panel_name = _gettext('Bans');
     }
 
-    public function panel(): void
+    public function panel(int $page = 1): void
     {
         $this->verifyPermissions($this->domain, 'perm_view_bans');
         $output_panel = new OutputPanelBans($this->domain, false);
-        $output_panel->main([], false);
+        $output_panel->main(['page' => $page], false);
     }
 
     public function creator(ContentID $content_id = null): void
@@ -66,7 +66,7 @@ class AdminBans extends Admin
                 $content_post->changeData('mod_comment', $mod_post_comment);
                 $content_post->writeToDatabase();
                 $regen = new Regen();
-                $regen->threads($this->domain, true, [$content_id->postID()]);
+                $regen->threads($this->domain, [$content_id->postID()]);
                 $regen->index($this->domain);
                 $regen->overboard($this->domain);
             }

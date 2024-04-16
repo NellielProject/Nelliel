@@ -29,13 +29,16 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     protected function loadSettings(): void
     {
-        $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
-            'domains/' . $this->domain_id);
+        $settings = array();
+
+        if (NEL_USE_FILE_CACHE) {
+            $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
+                'domains/' . $this->domain_id);
+        }
 
         if (empty($settings)) {
             $settings = $this->loadSettingsFromDatabase();
-            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
-                'domains/' . $this->domain_id);
+            $this->regenCache();
         }
 
         $this->settings = $settings;
@@ -46,13 +49,16 @@ class DomainBoard extends Domain implements NellielCacheInterface
     {
         $prepared = $this->database->prepare('SELECT * FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_id" = ?');
         $board_data = $this->database->executePreparedFetch($prepared, [$this->domain_id], PDO::FETCH_ASSOC);
+
+        if (!is_array($board_data)) {
+            return;
+        }
+
         $new_reference = array();
         $board_path = NEL_PUBLIC_PATH . $this->uri . '/';
         $board_web_path = NEL_BASE_WEB_PATH . rawurlencode($this->uri) . '/';
         $new_reference['board_directory'] = $this->uri;
-        $new_reference['board_uri'] = $this->uri;
-        $new_reference['formatted_board_uri'] = sprintf(nel_site_domain()->setting('uri_display_format'), $this->uri);
-        $title = $new_reference['board_uri'];
+        $title = $this->uri(true, true);
         $title .= (!nel_true_empty($this->setting('name')) ? ' - ' . $this->setting('name') : '');
         $new_reference['title'] = $title;
         $new_reference['db_prefix'] = $board_data['db_prefix'];
@@ -97,17 +103,17 @@ class DomainBoard extends Domain implements NellielCacheInterface
     protected function loadSettingsFromDatabase(): array
     {
         $settings = array();
+        $settings_list = $this->database->executeFetchAll(
+            'SELECT "setting_name", "default_value", "data_type" FROM "' . NEL_SETTINGS_TABLE .
+            '" WHERE "setting_category" = \'board\'', PDO::FETCH_ASSOC);
+        $prepared = $this->database->prepare(
+            'SELECT "setting_name", "setting_value" FROM "' . NEL_BOARD_CONFIGS_TABLE . '" WHERE "board_id" = :board_id');
+        $prepared->bindValue(':board_id', $this->domain_id, PDO::PARAM_STR);
+        $config_list = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_KEY_PAIR);
 
-        $query = 'SELECT * FROM "' . NEL_SETTINGS_TABLE . '" INNER JOIN "' . NEL_BOARD_CONFIGS_TABLE . '" ON "' .
-            NEL_SETTINGS_TABLE . '"."setting_name" = "' . NEL_BOARD_CONFIGS_TABLE . '"."setting_name" WHERE "' .
-            NEL_BOARD_CONFIGS_TABLE . '"."board_id" = ? AND "setting_category" = ?';
-        $prepared = $this->database->prepare($query);
-        $config_list = $this->database->executePreparedFetchAll($prepared, [$this->domain_id, 'board'],
-            PDO::FETCH_ASSOC);
-
-        foreach ($config_list as $config) {
-            $config['setting_value'] = nel_typecast($config['setting_value'], $config['data_type']);
-            $settings[$config['setting_name']] = $config['setting_value'];
+        foreach ($settings_list as $setting) {
+            $settings[$setting['setting_name']] = nel_typecast(
+                $config_list[$setting['setting_name']] ?? $setting['default_value'], $setting['data_type'], false);
         }
 
         return $settings;
@@ -122,6 +128,12 @@ class DomainBoard extends Domain implements NellielCacheInterface
         }
 
         return $uri;
+    }
+
+    public function url(): string
+    {
+        return nel_site_domain()->setting('absolute_url_protocol') . '://' .
+            rtrim(nel_site_domain()->setting('site_domain'), '/') . '/' . ltrim($this->uri, '/') . '/';
     }
 
     public function updateStatistics(): void

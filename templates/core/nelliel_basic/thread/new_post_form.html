@@ -1,35 +1,35 @@
 <form id="new-post-form" class="display-table new-post-form" accept-charset="utf-8" name="new_post_form" action="{{ form_action }}" method="post" enctype="multipart/form-data" data-jsevents="click|change">
-	<input type="hidden" name="new_post[post_info][response_to]" value="{{ response_to }}">
+	<input type="hidden" name="new_post[response_to]" value="{{ response_to }}">
 	<div>
 		{{^ forced_anonymous }}
 			{{# display_name_field }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label">{{{ name_field_label }}}</span>
-			<input type="text" class="new-post-form-input" name="new_post[post_info][not_anonymous]" size="30" minlength="{{ not_anonymous_minlength }}" maxlength="{{ not_anonymous_maxlength }}" placeholder="{{ name_field_placeholder }}" value="{{ not_anonymous }}" {{require_name }}>
+		<label class="display-row">
+			<span class="display-cell form-label">{{{ name_field_label }}}</span>
+			<input type="text" class="display-cell form-input" name="new_post[not_anonymous]" minlength="{{ not_anonymous_minlength }}" maxlength="{{ not_anonymous_maxlength }}" placeholder="{{ name_field_placeholder }}" value="{{ not_anonymous }}" {{require_name }}>
 		</label>
 			{{/ display_name_field }}
 			{{# display_email_field }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label">{{{ email_field_label }}}</span>
-			<input class="new-post-form-input" type="text" name="new_post[post_info][spam_target]" size="30" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}" placeholder="{{ email_field_placeholder }}" value="{{ spam_target }}" {{ require_email }}>
+		<label class="display-row">
+			<span class="display-cell form-label">{{{ email_field_label }}}</span>
+			<input class="display-cell form-input" type="text" name="new_post[spam_target]" minlength="{{ spam_target_minlength }}" maxlength="{{ spam_target_maxlength }}" placeholder="{{ email_field_placeholder }}" value="{{ spam_target }}" {{ require_email }}>
 		</label>
 			{{/ display_email_field }}
 		{{/ forced_anonymous }}
 		{{# display_subject_field }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label">{{{ subject_field_label }}}</span>
-			<input class="new-post-form-input" type="text" name="new_post[post_info][verb]" size="30" minlength="{{ verb_minlength }}"  maxlength="{{ verb_maxlength }}" placeholder="{{ subject_field_placeholder }}" value="{{ verb }}" {{ require_subject }}>
+		<label class="display-row">
+			<span class="display-cell form-label">{{{ subject_field_label }}}</span>
+			<input class="display-cell form-input" type="text" name="new_post[verb]" minlength="{{ verb_minlength }}"  maxlength="{{ verb_maxlength }}" placeholder="{{ subject_field_placeholder }}" value="{{ verb }}" {{ require_subject }}>
 		</label>
 		{{/ display_subject_field }}
 		{{# display_comment_field }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label">{{{ comment_field_label }}}</span>
-			<textarea id="wordswordswords" class="new-post-form-input" name="new_post[post_info][wordswordswords]" cols="30" rows="6" placeholder="{{ comment_field_placeholder }}" {{ require_comment }}>{{ wordswordswords }}</textarea>
+		<label class="display-row">
+			<span class="display-cell form-label">{{{ comment_field_label }}}</span>
+			<textarea id="wordswordswords" class="display-cell form-input" name="new_post[wordswordswords]" cols="30" rows="6" placeholder="{{ comment_field_placeholder }}" {{ require_comment }}>{{ wordswordswords }}</textarea>
 		</label>
 		{{/ display_comment_field }}
 		{{# allow_files }}
-		<span class="new-post-form-row">
-			<label for="new-post-form-files" class="new-post-form-label">{{{ files_form_label }}}</label>
+		<span class="display-row">
+			<label for="new-post-form-files" class="display-cell form-label">{{{ files_form_label }}}</label>
 			<span>{{ file_max_message }}</span>
 			<br>
 			{{# file_required }}
@@ -37,7 +37,7 @@
 			<br>
 			{{/ file_required }}
 			{{# allowed_files }}
-			<input id="new-post-form-files" class="new-post-form-input" type="file" name="upload_files[]">
+			<input id="new-post-form-files" class="display-cell form-input" type="file" name="upload_files[]">
 			<br>
 			{{/ allowed_files }}
 			{{# spoilers_enabled }}
@@ -50,8 +50,8 @@
 		</span>
 		{{/ allow_files}}
 		{{# allow_embeds }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label">{{{ embeds_form_label }}}</span>
+		<label class="display-row">
+			<span class="display-cell form-label">{{{ embeds_form_label }}}</span>
 			<span>{{ embed_max_message }}</span>
 			<br>
 			{{# embed_required }}
@@ -59,7 +59,7 @@
 			<br>
 			{{/ embed_required }}
 			{{# allowed_embeds }}
-			<input class="new-post-form-input" type="text" name="embed_urls[]" size="30">
+			<input class="display-cell form-input" type="text" name="embed_urls[]">
 			<br>
 			{{/ allowed_embeds }}
 			{{# embed_replaces }}
@@ -71,15 +71,15 @@
 			{{> thread/pieces/fgsfds }}
 		{{/ display_fgsfds_field }}
 		{{# display_password_field }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label">{{{ password_field_label }}}</span>
-			<input id="new-post-form-sekrit" class="new-post-form-input" data-jsevents="input" type="password" name="new_post[post_info][sekrit]" size="12" maxlength="{{ sekrit_max_length }}" value="" placeholder="{{ password_field_placeholder }}">&nbsp;&nbsp;
+		<label class="display-row">
+			<span class="display-cell form-label">{{{ password_field_label }}}</span>
+			<input id="new-post-form-sekrit" class="display-cell form-input" data-jsevents="input" type="password" name="new_post[sekrit]" maxlength="{{ sekrit_max_length }}" value="" placeholder="{{ password_field_placeholder }}">&nbsp;&nbsp;
 			(<span data-i18n="">Used for deletion</span>)
 		</label>
 		{{/ display_password_field }}
 		{{# flags }}
-		<label class="new-post-form-row">
-			<span class="new-post-form-label" data-i18n="">{{{ flags_form_label }}}</span>
+		<label class="display-row">
+			<span class="display-cell form-label" data-i18n="">{{{ flags_form_label }}}</span>
 			{{# no_markup }}
 			<input type="hidden" name="no_markup" value="0">
 			<input type="checkbox" name="no_markup" value="1">
@@ -101,14 +101,14 @@
 		</label>
 		{{/ flags }}
 		{{# use_new_post_captcha }}
-		<div class="new-post-form-row">
-			<span class="new-post-form-label">{{{ captcha_form_label }}}</span>
+		<div class="display-row">
+			<span class="display-cell form-label">{{{ captcha_form_label }}}</span>
 			{{# post_form_captchas }}
 			{{> pieces/captcha }}
 			{{/ post_form_captchas }}
 		</div>
 		{{/ use_new_post_captcha }}
-		<div class="new-post-form-row">
+		<div class="display-row">
 			<span class="display-cell"></span>
 			<input type="submit" value="{{ new_post_submit }}">&nbsp;&nbsp;&nbsp;&nbsp;
 			<input type="reset" value="Clear form" data-i18n-attributes="value">

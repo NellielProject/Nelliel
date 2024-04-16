@@ -11,21 +11,32 @@ use PDO;
 
 class TableReports extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'report_id' => 'integer',
+        'board_id' => 'string',
+        'content_id' => 'string',
+        'hashed_reporter_ip' => 'string',
+        'reporter_ip' => 'string',
+        'visitor_id' => 'string',
+        'reason' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'report_id' => PDO::PARAM_INT,
+        'board_id' => PDO::PARAM_STR,
+        'content_id' => PDO::PARAM_STR,
+        'hashed_reporter_ip' => PDO::PARAM_STR,
+        'reporter_ip' => PDO::PARAM_LOB,
+        'visitor_id' => PDO::PARAM_STR,
+        'reason' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_REPORTS_TABLE;
-        $this->column_types = [
-            'report_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'content_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'hashed_reporter_ip' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'reporter_ip' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_LOB],
-            'visitor_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'reason' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'report_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
             'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -35,7 +46,6 @@ class TableReports extends Table
             'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'reason' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

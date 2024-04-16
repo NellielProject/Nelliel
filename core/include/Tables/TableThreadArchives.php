@@ -11,25 +11,32 @@ use PDO;
 
 class TableThreadArchives extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'thread_id' => 'integer',
+        'thread_data' => 'string',
+        'time_archived' => 'integer',
+        'permanent' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'thread_id' => PDO::PARAM_INT,
+        'thread_data' => PDO::PARAM_STR,
+        'time_archived' => PDO::PARAM_INT,
+        'permanent' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = '_archives';
-        $this->columns_data = [
-            'thread_id' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'thread_data' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'time_archived' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'permanent' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks = [
             'thread_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'thread_data' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'time_added' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'permanent' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

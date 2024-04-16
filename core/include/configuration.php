@@ -21,6 +21,7 @@ define('NEL_USE_RENDER_CACHE', boolval($technical_config['use_render_cache'] ?? 
 define('NEL_USE_MUSTACHE_CACHE', boolval($technical_config['use_mustache_cache'] ?? true));
 define('NEL_ENABLE_PLUGINS', boolval($technical_config['enable_plugins'] ?? true));
 define('NEL_ENABLE_JSON_API', boolval($technical_config['enable_json_api'] ?? true));
+define('NEL_DEBUG_MODE', boolval($technical_config['debug_mode'] ?? false));
 
 $file_handler = new FileHandler();
 $base_temp_directory = empty($technical_config['base_temp_directory'] ?? '') ? sys_get_temp_dir() : $technical_config['base_temp_directory'];

@@ -11,24 +11,32 @@ use PDO;
 
 class TableR9KContent extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'entry' => 'string',
+        'board_id' => 'string',
+        'content_hash' => 'string',
+        'post_time' => 'boolean',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'entry' => PDO::PARAM_INT,
+        'board_id' => PDO::PARAM_STR,
+        'content_hash' => PDO::PARAM_STR,
+        'post_time' => PDO::PARAM_INT,
+        'moar' => PDO::PARAM_STR];
+
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_R9K_CONTENT_TABLE;
-        $this->columns_data = [
-            'entry' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_INT],
-            'board_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'content_hash' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'post_time' => ['php_type' => 'boolean', 'pdo_type' => PDO::PARAM_INT],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
-        $this->columns_data = [
+        $this->column_checks = [
             'entry' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'content_hash' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'post_time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

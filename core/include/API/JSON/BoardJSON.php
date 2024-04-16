@@ -19,7 +19,7 @@ class BoardJSON extends JSON
     protected function generate(): void
     {
         $raw_data = array();
-        $raw_data['board_uri'] = $this->board->reference('board_uri');
+        $raw_data['board_uri'] = $this->board->uri();
 
         if ($this->board->setting('show_name')) {
             $raw_data['name'] = $this->board->setting('name') ?? '';
@@ -109,7 +109,7 @@ class BoardJSON extends JSON
         $raw_data['reply_uploads']['max_embeds'] = intval($this->board->setting('max_reply_embeds'));
         $raw_data['reply_uploads']['max_total'] = intval($this->board->setting('max_reply_total_uploads'));
 
-        $raw_data['enable_spoilers'] = $this->board->setting('enable_spoilers');
+        $raw_data['spoilers_enabled'] = $this->board->setting('enable_spoilers');
         $raw_data['max_filesize'] = $this->board->setting('max_filesize');
 
         $raw_data = nel_plugins()->processHook('nel-in-after-board-json', [$this->board], $raw_data);

@@ -19,7 +19,6 @@ class OutputPanelNews extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/news');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('News');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');

@@ -82,7 +82,7 @@ class ThreadHandler
         }
 
         $regen = new Regen();
-        $regen->threads($this->domain, true, $updates);
+        $regen->threads($this->domain, $updates);
         $this->site_domain = new DomainSite($this->database);
 
         if ($this->site_domain->setting('overboard_active')) {

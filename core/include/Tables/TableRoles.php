@@ -11,25 +11,32 @@ use PDO;
 
 class TableRoles extends Table
 {
+    public const SCHEMA_VERSION = 1;
+    public const PHP_TYPES = [
+        'role_id' => 'string',
+        'role_level' => 'integer',
+        'role_title' => 'string',
+        'capcode' => 'string',
+        'moar' => 'string'];
+
+    public const PDO_TYPES = [
+        'role_id' => PDO::PARAM_STR,
+        'role_level' => PDO::PARAM_INT,
+        'role_title' => PDO::PARAM_STR,
+        'capcode' => PDO::PARAM_STR,
+        'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
         $this->database = $database;
         $this->sql_compatibility = $sql_compatibility;
         $this->table_name = NEL_ROLES_TABLE;
-        $this->column_types = [
-            'role_id' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'role_level' => ['php_type' => 'integer', 'pdo_type' => PDO::PARAM_INT],
-            'role_title' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'capcode' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR],
-            'moar' => ['php_type' => 'string', 'pdo_type' => PDO::PARAM_STR]];
         $this->column_checks = [
             'role_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'role_level' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'role_title' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'capcode' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
-        $this->schema_version = 1;
     }
 
     public function buildSchema(array $other_tables = null)

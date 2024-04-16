@@ -2,18 +2,19 @@
 	<div class="display-table">
 		<div class="display-row">
 			<label for="capcode" class="display-cell" data-i18n="">Capcode</label>
-			<textarea id="capcode" class="display-cell" name="capcode" cols="64" rows="3">{{ capcode }}</textarea>
+			<textarea id="capcode" class="display-cell" name="capcode">{{ capcode }}</textarea>
 		</div>
 		<div class="display-row">
 			<label for="output" class="display-cell" data-i18n="">Output</label>
-			<textarea id="output" class="display-cell" name="output" cols="64" rows="3">{{ output }}</textarea>
+			<textarea id="output" class="display-cell" name="output">{{ output }}</textarea>
 		</div>
 		<div class="display-row">
 			<label for="enabled" class="display-cell" data-i18n="">Enabled</label>
 			<input id="enabled" class="display-cell" type="checkbox" value="1" name="enabled" {{ enabled }}>
 		</div>
-		<div class="display-row">
-			<input type="submit" value="Update Capcode" data-i18n-attributes="value">
-		</div>
+
+	</div>
+	<div>
+		<input type="submit" value="Update Capcode" data-i18n-attributes="value">
 	</div>
 </form>

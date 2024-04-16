@@ -9,7 +9,7 @@ Plugins will be contained within their own folder. To install:
  - Select the install option. The plugin should now show up on the list of installed plugins.
 
 ## Uninstalling
-Plugins can be uninstalled. This will remove plugin settings and information. If you only need to deactivate it temporarily, disable the plugin instead.
+Plugins can be uninstalled. This may permanently remove plugin configurations and information! If you only need to deactivate it temporarily, disable the plugin instead.
 
 To uninstall:
  - Go to the `Plugins` control panel and look for the plugin on the list of installed plugins.

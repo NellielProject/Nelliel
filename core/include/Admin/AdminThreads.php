@@ -130,7 +130,7 @@ class AdminThreads extends Admin
     private function regenThread(DomainBoard $domain, $thread_id, bool $regen_index = false)
     {
         $regen = new Regen();
-        $regen->threads($domain, true, [$thread_id]);
+        $regen->threads($domain, [$thread_id]);
 
         if ($this->site_domain->setting('overboard_active')) {
             $regen->overboard($this->site_domain);
@@ -160,7 +160,7 @@ class AdminThreads extends Admin
         $prepared = $this->database->prepare(
             'SELECT "post_number", "parent_thread" FROM "' . $this->domain->reference('posts_table') .
             '" WHERE "hashed_ip_address" = ?');
-        $prepared->bindValue(1, $post_instance->data('hashed_ip_address'), PDO::PARAM_STR);
+        $prepared->bindValue(1, $post_instance->getData('hashed_ip_address'), PDO::PARAM_STR);
         $post_ids = $this->database->executePreparedFetchAll($prepared, null, PDO::FETCH_ASSOC);
         $thread_ids = array();
 
@@ -179,7 +179,7 @@ class AdminThreads extends Admin
     {
         $this->verifyPermissions(nel_global_domain(), 'perm_delete_by_ip');
         $post_instance = $first_content_id->getInstanceFromID($this->domain);
-        $hashed_ip = $post_instance->data('hashed_ip_address');
+        $hashed_ip = $post_instance->getData('hashed_ip_address');
         $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
 

@@ -8,7 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
 use PDO;
-use Nelliel\Content\Thread;
 
 class OutputThread extends Output
 {
@@ -21,10 +20,9 @@ class OutputThread extends Output
     public function render(array $parameters = array(), bool $data_only = false)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('thread/thread');
         $route_parameters = $parameters['parameters'] ?? array();
-        $thread_id = $parameters['thread_id'] ?? array();
+        $thread_id = $parameters['thread_id'] ?? 0;
         $expand = array_key_exists('expand', $route_parameters);
         $collapse = array_key_exists('collapse', $route_parameters);
         $thread_content_id = new ContentID(ContentID::createIDString($thread_id));
@@ -37,7 +35,8 @@ class OutputThread extends Output
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
 
         if ($this->render_data['in_modmode']) {
-            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'threads'], false, 'modmode');
+            $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'threads'], false,
+                'modmode');
         } else {
             $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'threads']);
         }
@@ -49,7 +48,7 @@ class OutputThread extends Output
             return;
         }
 
-        $op_post = $posts[0];
+        $op_post = $thread->firstPost();
 
         if (!$expand && !$collapse) {
             $page_title = '';
@@ -58,12 +57,12 @@ class OutputThread extends Output
                 $page_title .= $this->domain->reference('title');
             }
 
-            if ($this->domain->setting('subject_in_title') && !nel_true_empty($op_post->data('subject'))) {
-                $page_title .= ' - ' . $op_post->data('subject');
-            } else if ($this->domain->setting('slug_in_title') && !nel_true_empty($thread->data('slug'))) {
-                $page_title .= ' - ' . $thread->data('slug');
+            if ($this->domain->setting('subject_in_title') && !nel_true_empty($op_post->getData('subject'))) {
+                $page_title .= ' - ' . $op_post->getData('subject');
+            } else if ($this->domain->setting('slug_in_title') && !nel_true_empty($thread->getData('slug'))) {
+                $page_title .= ' - ' . $thread->getData('slug');
             } else if ($this->domain->setting('thread_number_in_title')) {
-                $page_title .= ' - ' . _gettext('Thread') . ' #' . $op_post->data('post_number');
+                $page_title .= ' - ' . _gettext('Thread') . ' #' . $op_post->getData('post_number');
             }
 
             $output_head = new OutputHead($this->domain, $this->write_mode);
@@ -132,11 +131,11 @@ class OutputThread extends Output
         $first_posts = array();
         $last_posts = array();
         $post_counter = 1;
-        $abbreviate_start = $thread->data('post_count') - $this->domain->setting('index_thread_replies');
+        $abbreviate_start = $thread->getData('post_count') - $this->domain->setting('index_thread_replies');
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode) {
-            $modmode_options = $this->modmodeHeaders($thread);
-            $this->render_data['thread_modmode_options'] = $modmode_options['thread_modmode_options'] ?? array();
+            $output_modmode_headers = new OutputModmodeLinks($this->domain, $this->write_mode);
+            $this->render_data['thread_modmode_options'] = $output_modmode_headers->thread($thread);
         }
 
         foreach ($posts as $post) {
@@ -149,11 +148,11 @@ class OutputThread extends Output
             $parameters = ['gen_data' => $gen_data, 'in_thread_number' => $post_counter];
             $post_render = $output_post->render($post, $parameters, true);
 
-            if ($post->data('op')) {
+            if ($post->getData('op')) {
                 $this->render_data['op_post'] = $post_render;
 
                 if ($this->domain->setting('new_post_auto_subject')) {
-                    $this->render_data['new_post_form']['verb'] = $post->data('subject');
+                    $this->render_data['new_post_form']['verb'] = $post->getData('subject');
                 }
             } else {
                 $this->render_data['thread_posts'][] = $post_render;
@@ -231,59 +230,7 @@ class OutputThread extends Output
             }
         } else {
             echo $output;
-            nel_clean_exit();
+            exit(0);
         }
-    }
-
-    private function modmodeHeaders(Thread $thread): array
-    {
-        $options = array();
-        $this->render_data['in_modmode'] = true;
-
-        if ($this->session->user()->checkPermission($this->domain, 'perm_modify_content_status')) {
-            $this->render_data['mod_links_lock']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'lock']);
-            $this->render_data['mod_links_unlock']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unlock']);
-            $lock_id = $thread->data('locked') ? 'mod_links_unlock' : 'mod_links_lock';
-            $options['thread_modmode_options'][] = $this->render_data[$lock_id];
-
-            $this->render_data['mod_links_sticky']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sticky']);
-            $this->render_data['mod_links_unsticky']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsticky']);
-            $sticky_id = $thread->data('sticky') ? 'mod_links_unsticky' : 'mod_links_sticky';
-            $options['thread_modmode_options'][] = $this->render_data[$sticky_id];
-
-            $this->render_data['mod_links_permasage']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'sage']);
-            $this->render_data['mod_links_unpermasage']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'unsage']);
-            $permasage_id = $thread->data('permasage') ? 'mod_links_unpermasage' : 'mod_links_permasage';
-            $options['thread_modmode_options'][] = $this->render_data[$permasage_id];
-
-            $this->render_data['mod_links_cyclic']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'cyclic']);
-            $this->render_data['mod_links_non_cyclic']['url'] = nel_build_router_url(
-                [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'non-cyclic']);
-            $cyclic_id = $thread->data('cyclic') ? 'mod_links_non_cyclic' : 'mod_links_cyclic';
-            $options['thread_modmode_options'][] = $this->render_data[$cyclic_id];
-        }
-
-        if (!$thread->data('shadow')) {
-            if ($this->session->user()->checkPermission($this->domain, 'perm_move_content')) {
-                $this->render_data['mod_links_move']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'move']);
-                $options['thread_modmode_options'][] = $this->render_data['mod_links_move'];
-            }
-
-            if ($this->session->user()->checkPermission($this->domain, 'perm_merge_threads')) {
-                $this->render_data['mod_links_merge']['url'] = nel_build_router_url(
-                    [$this->domain->uri(), 'moderation', 'modmode', $thread->contentID()->getIDString(), 'merge']);
-                $options['thread_modmode_options'][] = $this->render_data['mod_links_merge'];
-            }
-        }
-
-        return $options;
     }
 }

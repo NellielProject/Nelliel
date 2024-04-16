@@ -20,7 +20,6 @@ class OutputPanelWordfilters extends Output
     public function main(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/wordfilters_main');
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Wordfilters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Main');
@@ -32,7 +31,7 @@ class OutputPanelWordfilters extends Output
         $bgclass = 'row1';
         $filters = new Filters($this->database);
 
-        foreach ($filters->getWordfilters([$this->domain->uri()]) as $filter) {
+        foreach ($filters->getWordfilters([$this->domain->id()]) as $filter) {
             $wordfilter_data = array();
             $filter_domain = Domain::getDomainFromID($filter->getData('board_id'), $this->database);
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
@@ -72,18 +71,14 @@ class OutputPanelWordfilters extends Output
     public function new(array $parameters, bool $data_only)
     {
         $parameters['section'] = $parameters['section'] ?? _gettext('New');
-        $parameters['submit_add'] = true;
         return $this->edit($parameters, $data_only);
     }
 
     public function edit(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $this->setupTimer();
         $this->setBodyTemplate('panels/wordfilters_edit');
         $editing = $parameters['editing'] ?? false;
-        $this->render_data['submit_add'] = $parameters['submit_add'] ?? false;
-        $this->render_data['submit_edit'] = $editing;
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Wordfilters');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $output_head = new OutputHead($this->domain, $this->write_mode);

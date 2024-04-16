@@ -91,6 +91,7 @@ class Register
 
         $new_user->changeData('active', 1);
         $this->authorization->saveUsers();
+        nel_logger('system')->info('New user registered.', ['event' => 'user_registered', 'username' => $new_user->id()]);
 
         // Successful
 

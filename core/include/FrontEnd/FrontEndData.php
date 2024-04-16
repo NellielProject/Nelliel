@@ -142,7 +142,7 @@ class FrontEndData
     public function getContentOp(string $op_id): ContentOp
     {
         if (!isset(self::$content_ops[$op_id])) {
-            self::$content_ops[$op_id] = new ContentOp($this->database, $this, $op_id);
+            self::$content_ops[$op_id] = new ContentOp($this->database, $op_id);
         }
 
         return self::$content_ops[$op_id];
