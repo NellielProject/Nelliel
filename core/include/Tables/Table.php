@@ -76,7 +76,7 @@ abstract class Table
         return $this->database->rowExists($this->table_name, $check_columns, $check_values, $check_pdo_types);
     }
 
-    public function insertDefaultRow(array $values): void
+    public function insertDefaultRow(array $values, array $skip_columns = array()): void
     {
         $sql_helpers = nel_utilities()->sqlHelpers();
         $data = array();
@@ -90,7 +90,7 @@ abstract class Table
         $index = 0;
 
         foreach ($this->column_checks as $column_name => $info) {
-            if ($info['auto_inc']) {
+            if ($info['auto_inc'] || in_array($column_name, $skip_columns)) {
                 continue;
             }
 
