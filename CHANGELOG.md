@@ -1,5 +1,55 @@
 # Nelliel Changelog
-## v0.9.31 (2023/2/6)
+## v0.9.32 (2024/4/20) 🌿
+### Added
+ - `MutableData` and `SelfPersisting` interfaces
+ - Finished logs control panel
+ - Additional log events
+ - Pagination for bans control panel
+ - Support for install/uninstall functions in plugins
+ - `json` flag in the setting options table
+ - Plugin config table
+ - Optional control panels for plugins
+ - Plugin namespace support and autoloading
+ - Support for generating previews of TGA and AVIF images with GD
+ - Customizable UI link sets
+ - Setting for protocol used on absolute URLs
+ - Limited debug mode
+ - Template base path and extension can now be changed
+ - `nel_plugin_derp` function for plugins to submit their own errors
+
+### Changed
+ - Better data typing for database tables
+ - Improved config handling
+ - Reworked template loading for more flexibility
+ - Forms and CSS cleanup
+ - Control panel list now generates more dynamically
+ - Moved overboard links to board navigation
+ - README and dev guidelines
+ - Improved static and dynamic URL generation
+
+### Fixed
+ - Router parsing
+ - `executeFetch` method
+ - Site owner could be deleted
+ - Styles not being loaded after install
+ - Installer config select menus
+ - Some initialization variable not being unset
+ - Installer CSS
+ - Future cites
+ - Cite linking
+ - Typo in `nel-in-after-info-json` plugin hook
+ - Thread URL generation
+ - Config display breaking when no settings have the `raw_output` option
+ - Improper handling of missing config for a setting
+ - `spoilers_enabled` typo in JSON API output
+ - Filesize not recalculated after EXIF removal
+
+### Removed
+ - `hash_equals` polyfill
+ - Several of the old `Admin` classes
+ - Old `board_uri` domain reference
+
+## v0.9.31 (2023/11/9)
 ### Added
  - Dice rolls
  - Many new settings
