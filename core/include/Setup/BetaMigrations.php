@@ -57,7 +57,7 @@ class BetaMigrations
 
         switch ($this->upgrade->installedVersion()) {
             case 'v0.9.25':
-                echo '<br>' . __('Updating from v0.9.25 to v0.9.26...') . '<br>';
+                echo '<br><b>' . __('Updating from v0.9.25 to v0.9.26...') . '</b><br>';
 
                 // Update setting options table
                 nel_database('core')->exec('ALTER TABLE "nelliel_menu_data" RENAME TO nelliel_setting_options');
@@ -66,12 +66,12 @@ class BetaMigrations
 
                 $setting_options_table = new TableSettingOptions(nel_database('core'),
                     nel_utilities()->sqlCompatibility());
-                $setting_options_table->insertDefaultRow(['site', 'description', '', 1]);
-                $setting_options_table->insertDefaultRow(['site', 'site_content_disclaimer', '', 1]);
-                $setting_options_table->insertDefaultRow(['site', 'site_footer_text', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'description', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'board_content_disclaimer', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'board_footer_text', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'description', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['site', 'site_content_disclaimer', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['site', 'site_footer_text', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'description', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'board_content_disclaimer', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'board_footer_text', '', 1], ['json']);
 
                 echo ' - ' . __('Setting options table updated.') . '<br>';
 
@@ -268,7 +268,7 @@ class BetaMigrations
                 $migration_count ++;
 
             case 'v0.9.26':
-                echo '<br>' . __('Updating from v0.9.26 to v0.9.27...') . '<br>';
+                echo '<br><b>' . __('Updating from v0.9.26 to v0.9.27...') . '</b><br>';
 
                 // Update post tables
                 $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
@@ -378,7 +378,7 @@ class BetaMigrations
                 $migration_count ++;
 
             case 'v0.9.27':
-                echo '<br>' . __('Updating from v0.9.27 to v0.9.28...') . '<br>';
+                echo '<br><b>' . __('Updating from v0.9.27 to v0.9.28...') . '</b><br>';
 
                 // Update core image set info
                 $image_set_instance = nel_site_domain()->frontEndData()->getImageSet('images-nelliel-basic');
@@ -605,7 +605,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.28':
-                echo '<br>' . __('Updating from v0.9.28 to v0.9.29...') . '<br>';
+                echo '<br><b>' . __('Updating from v0.9.28 to v0.9.29...') . '</b><br>';
 
                 // Update file filters
                 nel_database('core')->exec(
@@ -756,7 +756,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.29':
-                echo '<br>' . __('Updating from v0.9.29 to v0.9.30...') . '<br>';
+                echo '<br><b>' . __('Updating from v0.9.29 to v0.9.30...') . '</b><br>';
 
                 // Update settings table
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
@@ -1306,7 +1306,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.30':
-                echo '<br>' . __('Updating from v0.9.30 to v0.9.31') . '<br>';
+                echo '<br><b>' . __('Updating from v0.9.30 to v0.9.31') . '</b><br>';
 
                 // Update site settings
                 nel_database('core')->exec(
@@ -1363,58 +1363,58 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'site_nav_links_left_bracket', '[',
                         'Bracket on the left side of site menu links.', '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_left_bracket', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_left_bracket', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'site_nav_links_right_bracket', ']',
                         'Bracket on the left side of site menu links.', '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_right_bracket', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_right_bracket', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'site_nav_links_home', 'Home', 'Home', '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_home', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_home', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'site_nav_links_news', 'News', 'News', '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_news', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_news', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'site_nav_links_faq', 'FAQ', 'FAQ', '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_faq', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_faq', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'site_nav_links_about_nelliel', 'About Nelliel', 'About Nelliel',
                         '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_about_nelliel', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_about_nelliel', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'site_nav_links_blank_page', 'Blank Page', 'Blank Page',
                         '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_blank_page', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'site_nav_links_blank_page', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'account_nav_links_left_bracket', '[',
                         'Bracket on the left side of site menu links.', '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_left_bracket', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_left_bracket', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'account_nav_links_right_bracket', ']',
                         'Bracket on the left side of site menu links.', '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_right_bracket', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_right_bracket', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'account_nav_links_account', 'Account', 'Account', '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_account', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_account', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'account_nav_links_site_panel', 'Site Panel', 'Site Panel',
                         '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_site_panel', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_site_panel', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'account_nav_links_global_panel', 'Global Panel', 'Global Panel',
                         '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_global_panel', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_global_panel', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'account_nav_links_board_panel', 'Board Panel', 'Global Panel',
                         '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_board_panel', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_board_panel', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'account_nav_links_board_list', 'Board List', 'Board List',
                         '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_board_list', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_board_list', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'string', 'account_nav_links_logout', 'Logout', 'Logout', '{"type":"text"}']);
-                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_logout', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'account_nav_links_logout', '', 1], ['json']);
                 $settings_table->insertDefaultRow(
                     ['site', 'nelliel', 'boolean', 'translate_site_nav_links', '1',
                         'Translate site navigation text when possible.', '{"type":"checkbox"}']);
@@ -1439,9 +1439,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 nel_site_domain()->deleteCache();
                 nel_site_domain(true);
 
-                $setting_options_table->insertDefaultRow(['site', 'name', '', 1]);
-                $setting_options_table->insertDefaultRow(['site', 'error_message_header', '', 1]);
-                $setting_options_table->insertDefaultRow(['site', 'global_announcement', '', 1]);
+                $setting_options_table->insertDefaultRow(['site', 'name', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['site', 'error_message_header', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['site', 'global_announcement', '', 1], ['json']);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
@@ -1553,24 +1553,24 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $setting_options_table = new TableSettingOptions(nel_database('core'),
                     nel_utilities()->sqlCompatibility());
-                $setting_options_table->insertDefaultRow(['board', 'name', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'board_footer_text', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'shadow_message_moved', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'shadow_message_merged', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'ban_page_extra_text', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'post_backlinks_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'name_field_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'email_field_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'subject_field_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'comment_field_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'fgsfds_field_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'password_field_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'files_form_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'embeds_form_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'flags_form_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'captcha_form_label', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'content_links_expand_thread', '', 1]);
-                $setting_options_table->insertDefaultRow(['board', 'content_links_collapse_thread', '', 1]);
+                $setting_options_table->insertDefaultRow(['board', 'name', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'board_footer_text', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'shadow_message_moved', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'shadow_message_merged', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'ban_page_extra_text', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'post_backlinks_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'name_field_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'email_field_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'subject_field_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'comment_field_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'fgsfds_field_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'password_field_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'files_form_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'embeds_form_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'flags_form_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'captcha_form_label', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'content_links_expand_thread', '', 1], ['json']);
+                $setting_options_table->insertDefaultRow(['board', 'content_links_collapse_thread', '', 1], ['json']);
 
                 $new_site_textareas = ['global_announcement', 'dnsbl_exceptions'];
                 $new_board_textareas = ['ban_page_extra_text', 'automatic_gets'];
@@ -2089,7 +2089,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.31':
-                echo '<br>' . __('Updating from v0.9.31 to ???') . '<br>';
+                echo '<br><b>' . __('Updating from v0.9.31 to v0.9.32') . '</b><br>';
 
                 // Update site settings
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
@@ -2150,8 +2150,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         'Set of links for post moderation.', '{"type":"textarea"}']);
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'string', 'upload_mod_options_link_set',
-                        '["mod_links_delete", "mod_links_move", "mod_links_spoiler", "mod_links_unspoiler"]', 'Set of links for upload moderation.',
-                        '{"type":"textarea"}']);
+                        '["mod_links_delete", "mod_links_move", "mod_links_spoiler", "mod_links_unspoiler"]',
+                        'Set of links for upload moderation.', '{"type":"textarea"}']);
                 $settings_table->insertDefaultRow(
                     ['board', 'nelliel', 'string', 'thread_options_link_set',
                         '["content_links_reply", "content_links_hide_thread", "content_links_expand_thread"]',
@@ -2167,7 +2167,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $new_board_settings = ['thread_mod_options_link_set', 'post_mod_options_link_set',
                     'upload_mod_options_link_set', 'thread_options_link_set', 'post_options_link_set',
                     'upload_options_link_set'];
-                $this->updateBoardConfig($new_board_settings);
+                $this->updateBoardConfigs($new_board_settings);
 
                 $removed_board_settings = ['content_links_download_file'];
                 $this->removeBoardSettings($removed_board_settings);
@@ -2178,7 +2178,11 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 nel_database('core')->exec(
                     'UPDATE "nelliel_setting_options" SET "menu_data" = \'{"Filtered original": "filtered_original", "Unix timestamp": "timestamp", "MD5": "md5", "SHA1": "sha1", "SHA256": "sha256", "SHA512": "sha512"}\' WHERE "setting_name" = \'preferred_filename\'');
 
-                $setting_options_table = new TableSettingOptions(nel_database('core'), nel_utilities()->sqlCompatibility());
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_setting_options" ADD COLUMN json SMALLINT NOT NULL DEFAULT 0');
+
+                $setting_options_table = new TableSettingOptions(nel_database('core'),
+                    nel_utilities()->sqlCompatibility());
                 $setting_options_table->insertDefaultRow(['site', 'site_navigation_link_set', '', 0, 1]);
                 $setting_options_table->insertDefaultRow(['site', 'logged_in_link_set', '', 0, 1]);
                 $setting_options_table->insertDefaultRow(['board', 'thread_mod_options_link_set', '', 0, 1]);

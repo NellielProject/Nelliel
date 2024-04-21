@@ -50,7 +50,8 @@ class Upgrade
             <input id="super_sekrit" class="display-cell form-input" type="password" name="super_sekrit" maxlength="255">
         </div>
         <div class="display-row">
-            <input type="submit" class="display-cell form-input" value="' . __('Submit') . '">
+            <input type="submit" class="display-cell form-input" value="' . __('Submit') .
+            '">
         </div>
     </form>
 </body></html>';
@@ -107,9 +108,9 @@ class Upgrade
         $migration_count = $this->doMigrations();
 
         if ($migration_count > 0) {
-            echo sprintf(__('%d migrations were completed.'), $migration_count) . '<br>';
+            echo '<br>' . sprintf(__('%d migrations were completed.'), $migration_count) . '<br>';
         } else {
-            echo __('No migrations were needed.') . '<br>';
+            echo '<br>' . __('No migrations were needed.') . '<br>';
         }
 
         $generate_files = new GenerateFiles($this->file_handler);
@@ -118,7 +119,7 @@ class Upgrade
         $versions_data['installed'] = NELLIEL_VERSION;
         $generate_files->versions($versions_data, true);
 
-        echo __('Regenerating caches and pages.') . '<br>';
+        echo '<br>' . __('Regenerating caches and pages.') . '<br>';
         $regen = new Regen();
         nel_site_domain()->regenCache();
         nel_site_domain(true);
@@ -126,7 +127,7 @@ class Upgrade
         $regen->allBoards(true, true);
         $regen->overboard(nel_site_domain());
 
-        echo __('Upgrades completed!');
+        echo '<br>' . __('Upgrades completed!');
     }
 
     public function needsUpgrade(): bool
