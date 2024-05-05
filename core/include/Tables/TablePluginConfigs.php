@@ -58,7 +58,7 @@ class TablePluginConfigs extends Table
             CONSTRAINT fk_plugin_configs__plugins
             FOREIGN KEY (plugin_id) REFERENCES ' . NEL_PLUGINS_TABLE . ' (plugin_id)
             ON UPDATE CASCADE
-            ON DELETE CASCADE
+            ON DELETE CASCADE,
             CONSTRAINT fk_plugin_configs__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
             ON UPDATE CASCADE

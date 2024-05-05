@@ -29,7 +29,7 @@ class VisitorInfo
     private function load(): void
     {
         $prepared = $this->database->prepare(
-            'SELECT * FROM "' . NEL_VISITOR_INFO_TABLE . '" WHERE "visitor_ids" = :visitor_id');
+            'SELECT * FROM "' . NEL_VISITOR_INFO_TABLE . '" WHERE "visitor_id" = :visitor_id');
         $prepared->bindValue(':visitor_id', $this->visitor_id, PDO::PARAM_STR);
         $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
@@ -44,7 +44,8 @@ class VisitorInfo
         if ($this->inDatabase()) {
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_VISITOR_INFO_TABLE .
-                '" SET "visitor_id" = :visitor_id, "last_activity" = :last_activity WHERE "visitor_id" = :visitor_id');
+                '" SET "visitor_id" = :visitor_id, "last_activity" = :last_activity WHERE "visitor_id" = :current_visitor_id');
+            $prepared->bindValue(':current_visitor_id', $this->visitor_id, PDO::PARAM_STR);
         } else {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_VISITOR_INFO_TABLE .
@@ -54,6 +55,7 @@ class VisitorInfo
 
         $prepared->bindValue(':visitor_id', $this->visitor_id, PDO::PARAM_STR);
         $prepared->bindValue(':last_activity', $this->info['last_activity'] ?? 0, PDO::PARAM_INT);
+
         $this->database->executePrepared($prepared);
     }
 
