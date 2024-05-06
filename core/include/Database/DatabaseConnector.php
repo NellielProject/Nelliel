@@ -60,8 +60,10 @@ class DatabaseConnector
             $connection = new NellielPDO($config, $dsn, $username, $password, $options);
             return $connection;
         } catch (PDOException $exception) {
-            nel_derp(1, __('Error connecting to database. Verify database setup.'));
+            nel_derp(1, sprintf(__('Received SQL Error %d while connecting to database. Verify database setup.'), $exception->getCode()));
         }
+
+        die();
     }
 
     private function mysql(array $config): NellielPDO
