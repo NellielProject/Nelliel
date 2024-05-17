@@ -24,8 +24,8 @@ Javascript and other code should follow common or recommended practice for the l
 All schemas and queries should follow SQL standards or widely used alternatives. If something RDBMS-specific is necessary it may be added to the `SQLCompatibility` class.
 
  - Queries must be done through PDO or NellielPDO.
- - Queries must be parameterized unless the entire query is hardcoded.
- - Identifiers must be placed in double quotes `" "`, except during table or column creation.
+ - Queries must be parameterized unless the entire query is hardcoded with no possible user input.
+ - Identifiers must be placed in double quotes `" "` except during table or column creation.
  - SQL keywords must be ALL CAPS.
  - Non-parameterized string literals must be placed inside single quotes `' '`.
  - All identifiers should be treated as case sensitive.
@@ -69,7 +69,7 @@ Nelliel returns a numeric error id along with an error message. This keeps the b
  All error codes in core must be listed in [error-reference.md](../error-reference.md).
  
 ## Server-side vs Client-side
-As much functionality and rendering as possible should be implemented server-side. Client-side scripting should only be used for niceties or features that cannot be done fully server-side. All primary functions for posting and moderation must continue to work even if a user has disabled scripts. 
+As much functionality and rendering as possible should be implemented server-side. Client-side scripting should only be used for niceties or features that cannot be done fully server-side. All primary functions for accounts, posting and moderation must continue to work even if a user has disabled scripts. 
 
 ## Core vs Plugins
 Most functionality can be put in the core code base. However anything that is:
@@ -80,4 +80,4 @@ Most functionality can be put in the core code base. However anything that is:
 should be implemented via plugin instead of added directly to core. This simplifies maintenance and avoids bloating the code base over time.
 
 ## AI Code 	Generation
-Current code generation AI (e.g. GitHub Copilot) raises issues with copyright and open source licenses with no practical method of vetting the original context. Until these tools become better actors or the legal and ethical concerns are reasonably settled, code from AI generators is prohibited in both core and official plugins.
+Current code generation AI raises issues with copyright and open source licenses with no practical method of vetting the original context. Until these tools become better actors and the legal and ethical concerns are reasonably settled, AI-generated code is prohibited in both core and official plugins.
