@@ -292,130 +292,130 @@ class Installer
     {
         // Versions is first as all table creation relies on it
         $versions_table = new TableVersions($database, $sql_compatibility);
-        $versions_table->createTable();
+        $versions_table->createTable(null, true);
 
         // Domain registry is second as many tables rely on it
         $domain_registry_table = new TableDomainRegistry($database, $sql_compatibility);
-        $domain_registry_table->createTable();
+        $domain_registry_table->createTable(null, true);
 
         // The following tables rely on the domain registry table
         $board_data_table = new TableBoardData($database, $sql_compatibility);
-        $board_data_table->createTable();
+        $board_data_table->createTable(null, true);
         $file_filters_table = new TableFileFilters($database, $sql_compatibility);
-        $file_filters_table->createTable();
+        $file_filters_table->createTable(null, true);
         $overboard_table = new TableOverboard($database, $sql_compatibility);
-        $overboard_table->createTable();
+        $overboard_table->createTable(null, true);
         $cites_table = new TableCites($database, $sql_compatibility);
-        $cites_table->createTable();
+        $cites_table->createTable(null, true);
         $wordfilters_table = new TableWordfilters($database, $sql_compatibility);
-        $wordfilters_table->createTable();
+        $wordfilters_table->createTable(null, true);
         $captcha_table = new TableCaptcha($database, $sql_compatibility);
-        $captcha_table->createTable();
+        $captcha_table->createTable(null, true);
         $board_configs_table = new TableBoardConfigs($database, $sql_compatibility);
-        $board_configs_table->createTable();
+        $board_configs_table->createTable(null, true);
         $pages_table = new TablePages($database, $sql_compatibility);
-        $pages_table->createTable();
+        $pages_table->createTable(null, true);
         $cache_table = new TableCache($database, $sql_compatibility);
-        $cache_table->createTable();
+        $cache_table->createTable(null, true);
         $r9k_content_table = new TableR9KContent($database, $sql_compatibility);
-        $r9k_content_table->createTable();
+        $r9k_content_table->createTable(null, true);
         $r9k_mutes_table = new TableR9KMutes($database, $sql_compatibility);
-        $r9k_mutes_table->createTable();
+        $r9k_mutes_table->createTable(null, true);
         $statistics_table = new TableStatistics($database, $sql_compatibility);
-        $statistics_table->createTable();
+        $statistics_table->createTable(null, true);
         $scripts_table = new TableScripts($database, $sql_compatibility);
-        $scripts_table->createTable();
+        $scripts_table->createTable(null, true);
         $global_recents_table = new TableGlobalRecents($database, $sql_compatibility);
-        $global_recents_table->createTable();
+        $global_recents_table->createTable(null, true);
 
         // The following tables rely on the settings table
         $settings_table = new TableSettings($database, $sql_compatibility);
-        $settings_table->createTable();
+        $settings_table->createTable(null, true);
         $setting_options_table = new TableSettingOptions($database, $sql_compatibility);
-        $setting_options_table->createTable();
+        $setting_options_table->createTable(null, true);
         $board_defaults_table = new TableBoardDefaults($database, $sql_compatibility);
-        $board_defaults_table->createTable();
+        $board_defaults_table->createTable(null, true);
         $site_config_table = new TableSiteConfig($database, $sql_compatibility);
-        $site_config_table->createTable();
+        $site_config_table->createTable(null, true);
 
         // The following tables rely on the filetype categories table
         $filetype_categories_table = new TableFiletypeCategories($database, $sql_compatibility);
-        $filetype_categories_table->createTable();
+        $filetype_categories_table->createTable(null, true);
         $filetypes_table = new TableFiletypes($database, $sql_compatibility);
-        $filetypes_table->createTable();
+        $filetypes_table->createTable(null, true);
 
         // The following tables rely on the roles and permissions tables
         $roles_table = new TableRoles($database, $sql_compatibility);
-        $roles_table->createTable();
+        $roles_table->createTable(null, true);
         $permissions_table = new TablePermissions($database, $sql_compatibility);
-        $permissions_table->createTable();
+        $permissions_table->createTable(null, true);
         $role_permissions_table = new TableRolePermissions($database, $sql_compatibility);
-        $role_permissions_table->createTable();
+        $role_permissions_table->createTable(null, true);
 
         // The following tables rely on the users table
         $users_table = new TableUsers($database, $sql_compatibility);
-        $users_table->createTable();
+        $users_table->createTable(null, true);
         $ip_notes_table = new TableIPNotes($database, $sql_compatibility);
-        $ip_notes_table->createTable();
+        $ip_notes_table->createTable(null, true);
         $news_table = new TableNews($database, $sql_compatibility);
-        $news_table->createTable();
+        $news_table->createTable(null, true);
         $private_messages_table = new TablePrivateMessages($database, $sql_compatibility);
-        $private_messages_table->createTable();
+        $private_messages_table->createTable(null, true);
         $noticeboard_table = new TableNoticeboard($database, $sql_compatibility);
-        $noticeboard_table->createTable();
+        $noticeboard_table->createTable(null, true);
 
         // The following tables rely on ip info and visitor id tables
         $ip_info_table = new TableIPInfo($database, $sql_compatibility);
-        $ip_info_table->createTable();
+        $ip_info_table->createTable(null, true);
         $visitor_info_table = new TableVisitorInfo($database, $sql_compatibility);
-        $visitor_info_table->createTable();
+        $visitor_info_table->createTable(null, true);
         $reports_table = new TableReports($database, $sql_compatibility);
-        $reports_table->createTable();
+        $reports_table->createTable(null, true);
         $system_logs_table = new TableLogs($database, $sql_compatibility);
         $system_logs_table->tableName(NEL_SYSTEM_LOGS_TABLE);
-        $system_logs_table->createTable();
+        $system_logs_table->createTable(null, true);
         $public_logs_table = new TableLogs($database, $sql_compatibility);
         $public_logs_table->tableName(NEL_PUBLIC_LOGS_TABLE);
-        $public_logs_table->createTable();
+        $public_logs_table->createTable(null, true);
 
         // The following tables rely on the users and roles tables
         $user_roles_table = new TableUserRoles($database, $sql_compatibility);
-        $user_roles_table->createTable();
+        $user_roles_table->createTable(null, true);
 
         // The following tables rely on the users and bans table
         $bans_table = new TableBans($database, $sql_compatibility);
-        $bans_table->createTable();
+        $bans_table->createTable(null, true);
         $ban_appeals_table = new TableBanAppeals($database, $sql_compatibility);
-        $ban_appeals_table->createTable();
+        $ban_appeals_table->createTable(null, true);
 
         $plugins_table = new TablePlugins($database, $sql_compatibility);
-        $plugins_table->createTable();
+        $plugins_table->createTable(null, true);
 
         // The following tables rely on the plugins and domain registry tables
         $plugin_configs_table = new TablePluginConfigs($database, $sql_compatibility);
-        $plugin_configs_table->createTable();
+        $plugin_configs_table->createTable(null, true);
 
         // The following tables are fully independent
         $image_sets_table = new TableImageSets($database, $sql_compatibility);
-        $image_sets_table->createTable();
+        $image_sets_table->createTable(null, true);
         $styles_table = new TableStyles($database, $sql_compatibility);
-        $styles_table->createTable();
+        $styles_table->createTable(null, true);
         $embeds_table = new TableEmbeds($database, $sql_compatibility);
-        $embeds_table->createTable();
+        $embeds_table->createTable(null, true);
         $rate_limit_table = new TableRateLimit($database, $sql_compatibility);
-        $rate_limit_table->createTable();
+        $rate_limit_table->createTable(null, true);
         $templates_table = new TableTemplates($database, $sql_compatibility);
-        $templates_table->createTable();
+        $templates_table->createTable(null, true);
         $blotter_table = new TableBlotter($database, $sql_compatibility);
-        $blotter_table->createTable();
+        $blotter_table->createTable(null, true);
         $embeds_table = new TableEmbeds($database, $sql_compatibility);
-        $embeds_table->createTable();
+        $embeds_table->createTable(null, true);
         $content_ops_table = new TableContentOps($database, $sql_compatibility);
-        $content_ops_table->createTable();
+        $content_ops_table->createTable(null, true);
         $capcodes_table = new TableCapcodes($database, $sql_compatibility);
-        $capcodes_table->createTable();
+        $capcodes_table->createTable(null, true);
         $markup_table = new TableMarkup($database, $sql_compatibility);
-        $markup_table->createTable();
+        $markup_table->createTable(null, true);
 
         echo __('Core database tables created.'), '<br>';
     }

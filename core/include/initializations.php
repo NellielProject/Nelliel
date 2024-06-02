@@ -11,6 +11,11 @@ use Nelliel\Utility\FileHandler;
 Mustache_Autoloader::register();
 
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
+require_once NEL_INCLUDE_PATH . 'exception_handlers.php';
+
+if (!NEL_DEBUG_MODE) {
+    set_exception_handler('nel_exception_handler');
+}
 
 if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
     $peppers = array();
@@ -31,7 +36,7 @@ if (isset($_GET['install'])) {
 }
 
 if (!$installer->checkInstallDone()) {
-    nel_derp(107, _gettext('Installation has not been done yet or is not complete.'));
+    nel_derp(107, _gettext('Installation has not been completed.'));
 }
 
 unset($translator);
@@ -54,10 +59,6 @@ unset($file_handler);
 
 require_once NEL_INCLUDE_PATH . 'exit_functions.php';
 register_shutdown_function('nel_clean_exit');
-
-if (!NEL_DEBUG_MODE) {
-    set_exception_handler('nel_exception_handler');
-}
 
 require_once NEL_INCLUDE_PATH . 'crypt.php';
 

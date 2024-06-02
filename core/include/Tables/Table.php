@@ -21,7 +21,7 @@ abstract class Table
 
     public abstract function insertDefaults();
 
-    public function createTable(array $other_tables = null)
+    public function createTable(array $other_tables = null, bool $announce = false)
     {
         $schema = $this->buildSchema($other_tables);
 
@@ -29,13 +29,16 @@ abstract class Table
             return false;
         }
 
+        if ($announce) {
+            echo sprintf(__('Creating table %s'), $this->table_name) . '<br>';
+        }
+
         $result = $this->database->query($schema);
 
         if (!$result) {
             nel_derp(103,
                 sprintf(
-                    _gettext(
-                        'Creation of table %s failed! Check database settings and config.php then retry installation.'),
+                    __('Creation of table %s failed! Verify database is functioning and has all necessary permissions.'),
                     $this->table_name));
         }
 

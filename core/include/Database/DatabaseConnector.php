@@ -60,7 +60,11 @@ class DatabaseConnector
             $connection = new NellielPDO($config, $dsn, $username, $password, $options);
             return $connection;
         } catch (PDOException $exception) {
-            nel_derp(1, sprintf(__('Received SQL Error %d while connecting to database. Verify database setup.'), $exception->getCode()));
+            nel_derp(1,
+                sprintf(
+                    __(
+                        'Received SQL Error %d while connecting to database. Verify the database is functioning and the configuration is correct.'),
+                    $exception->getCode()));
         }
 
         die();
