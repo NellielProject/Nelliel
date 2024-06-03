@@ -7,7 +7,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Content\ContentID;
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
 
 class ThreadHandler
 {
@@ -83,7 +82,7 @@ class ThreadHandler
 
         $regen = new Regen();
         $regen->threads($this->domain, $updates);
-        $this->site_domain = new DomainSite($this->database);
+        $this->site_domain = Domain::getDomainFromID(Domain::SITE);
 
         if ($this->site_domain->setting('overboard_active')) {
             $regen->overboard($this->site_domain);

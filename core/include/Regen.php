@@ -140,7 +140,7 @@ class Regen
             PDO::FETCH_COLUMN);
 
         foreach ($board_ids as $id) {
-            $board_domain = Domain::getDomainFromID($id, $site_domain->database());
+            $board_domain = Domain::getDomainFromID($id);
 
             if ($cache) {
                 $board_domain->regenCache();

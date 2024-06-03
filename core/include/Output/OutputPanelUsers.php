@@ -102,7 +102,7 @@ class OutputPanelUsers extends Output
             $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
             foreach ($domain_list as $domain_id) {
-                $domain = Domain::getDomainFromID($domain_id, $this->database);
+                $domain = Domain::getDomainFromID($domain_id);
                 $domain_role_data = array();
                 $domain_role_data['domain'] = $domain->uri();
                 $domain_role_data['select_name'] = 'domain_role_' . $domain->uri();

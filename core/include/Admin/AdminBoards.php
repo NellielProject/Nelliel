@@ -10,7 +10,6 @@ use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
-use Nelliel\Domains\DomainSite;
 use Nelliel\Language\Translator;
 use Nelliel\Output\OutputInterstitial;
 use Nelliel\Output\OutputPanelManageBoards;
@@ -26,7 +25,7 @@ class AdminBoards extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->site_domain = new DomainSite($this->database);
+        $this->site_domain = Domain::getDomainFromID(Domain::SITE);
         $this->data_table = NEL_BOARD_DATA_TABLE;
         $this->id_column = 'board_id';
         $this->panel_name = _gettext('Manage Boards');
@@ -45,7 +44,6 @@ class AdminBoards extends Admin
     public function add(): void
     {
         $this->verifyPermissions($this->domain, 'perm_boards_add');
-        $site_domain = new DomainSite($this->database);
         $board_uri = trim($_POST['new_board_uri']);
         $board_uri_lower = utf8_strtolower($board_uri);
 
@@ -53,7 +51,7 @@ class AdminBoards extends Admin
             nel_derp(243, _gettext('No board URI provided.'));
         }
 
-        if ($site_domain->setting('only_alphanumeric_board_ids')) {
+        if ($this->site_domain->setting('only_alphanumeric_board_ids')) {
             if (preg_match('/[^a-zA-Z0-9]/', $board_uri) === 1) {
                 nel_derp(242, _gettext('Board URI contains invalid characters. Must be alphanumeric only.'));
             }
@@ -73,7 +71,7 @@ class AdminBoards extends Admin
             nel_derp(244, _gettext('Board URI is reserved.'));
         }
 
-        $test_domain = Domain::getDomainFromID($board_uri, $this->database);
+        $test_domain = Domain::getDomainFromID($board_uri);
 
         if ($test_domain->exists()) {
             nel_derp(240, sprintf(_gettext('There is already a board with the URI %s.'), $board_uri));
@@ -167,7 +165,7 @@ class AdminBoards extends Admin
 
         $installer->createBoardTables($this->database, nel_utilities()->sqlCompatibility(), $board_id, $db_prefix);
         $installer->createBoardDirectories($board_id);
-        $domain = new DomainBoard($board_id, $this->database);
+        $domain = Domain::getDomainFromID($board_id);
         $regen = new Regen();
         $domain->regenCache();
         $regen->boardPages($domain);
@@ -184,7 +182,7 @@ class AdminBoards extends Admin
     public function delete(string $board_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_boards_delete');
-        $domain = new DomainBoard($board_id, $this->database);
+        $domain = Domain::getDomainFromID($board_id);
         $board_uri = $domain->uri(true, true);
 
         if (!$domain->exists()) {

@@ -41,7 +41,7 @@ abstract class Admin
     {
         $entry = $this->getEntryByID($id);
         $domain_id = $entry['board_id'] ?? Domain::SITE;
-        return Domain::getDomainFromID($domain_id, $this->database);
+        return Domain::getDomainFromID($domain_id);
     }
 
     protected function getEntryByID($id): array

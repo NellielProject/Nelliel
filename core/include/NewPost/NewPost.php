@@ -19,7 +19,6 @@ use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
 use PDO;
 
 class NewPost
@@ -37,7 +36,7 @@ class NewPost
 
     public function processPost()
     {
-        $site_domain = new DomainSite($this->database);
+        $site_domain = Domain::getDomainFromID(Domain::SITE);
         $error_data = ['board_id' => $this->domain->id()];
         $captcha = new CAPTCHA($this->domain);
 

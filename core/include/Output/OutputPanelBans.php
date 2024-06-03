@@ -85,7 +85,7 @@ class OutputPanelBans extends Output
             $pagination->setLast('%d', $page_url);
             $this->render_data['pagination'] = $pagination->generateNumerical(1, $page_count, $page);
 
-            $ban_domain = new DomainBoard($ban_hammer->getData('board_id'), $this->database);
+            $ban_domain = Domain::getDomainFromID($ban_hammer->getData('board_id'));
             $ban_data['board_uri'] = $ban_domain->uri(true);
 
             $ban_data['reason'] = $ban_hammer->getData('reason');

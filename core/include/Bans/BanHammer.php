@@ -60,7 +60,7 @@ class BanHammer
         if ($global || $this->ban_data['board_id'] === Domain::GLOBAL) {
             $this->ban_data['board_id'] = Domain::GLOBAL;
         } else {
-            $board_domain = new DomainBoard($this->ban_data['board_id'], $this->database);
+            $board_domain = Domain::getDomainFromID($this->ban_data['board_id']);
 
             if (is_null($this->ban_data['board_id']) || !$board_domain->exists()) {
                 nel_derp(158, _gettext('No valid board given for the ban.'));

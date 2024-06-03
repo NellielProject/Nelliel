@@ -240,7 +240,7 @@ class AdminBoardDefaults extends Admin
         $board_domains = array();
 
         foreach ($board_ids as $board_id) {
-            $board_domains[] = new DomainBoard($board_id, $this->database);
+            $board_domains[] = Domain::getDomainFromID($board_id);
         }
 
         return $board_domains;

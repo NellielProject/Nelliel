@@ -395,7 +395,7 @@ class Router
             case Dispatcher::FOUND:
                 $inputs = $routeInfo[2];
                 $inputs['method'] = $_SERVER['REQUEST_METHOD'];
-                $domain = Domain::getDomainFromID($inputs['domain_id'] ?? '', nel_database('core'));
+                $domain = Domain::getDomainFromID($inputs['domain_id'] ?? '');
 
                 if (!$domain->exists()) {
                     nel_derp(80, _('Invalid domain given to router.'));

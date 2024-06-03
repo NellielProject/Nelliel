@@ -117,7 +117,7 @@ class Overboard
 
         foreach ($thread_list as $thread_data) {
             $content_id = new ContentID(ContentID::createIDString(intval($thread_data['thread_id'])));
-            $thread_domain = Domain::getDomainFromID($thread_data['board_id'], $this->database);
+            $thread_domain = Domain::getDomainFromID($thread_data['board_id']);
             $thread = $content_id->getInstanceFromID($thread_domain);
 
             if (!$this->canInclude($thread, $overboard_id)) {

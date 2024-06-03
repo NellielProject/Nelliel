@@ -102,7 +102,7 @@ class GlobalRecents
         $post_list = $this->database->executePreparedFetchAll($prepared, [$limit], PDO::FETCH_ASSOC);
 
         foreach ($post_list as $post_data) {
-            $thread_domain = Domain::getDomainFromID($post_data['board_id'], $this->database);
+            $thread_domain = Domain::getDomainFromID($post_data['board_id']);
 
             if (in_array($thread_domain->setting('safety_level'), $safety_level_exclusions)) {
                 continue;
@@ -153,7 +153,7 @@ class GlobalRecents
         $limit = nel_site_domain()->setting('max_recent_posts');
 
         foreach ($board_ids as $board_id) {
-            $board = Domain::getDomainFromID($board_id, $this->database);
+            $board = Domain::getDomainFromID($board_id);
 
             foreach ($board->recentPosts($limit) as $post) {
                 $this->addPost($post);

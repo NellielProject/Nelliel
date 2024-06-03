@@ -56,7 +56,7 @@ class AdminUsers extends Admin
 
         foreach ($_POST as $key => $value) {
             if (strpos($key, 'domain_role') !== false) {
-                $domain = Domain::getDomainFromID(utf8_substr($key, 12), $this->database);
+                $domain = Domain::getDomainFromID(utf8_substr($key, 12));
                 $update_user->modifyRole($domain->id(), $value);
                 continue;
             }

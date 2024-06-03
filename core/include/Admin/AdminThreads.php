@@ -15,7 +15,6 @@ use Nelliel\Content\Thread;
 use Nelliel\Content\Upload;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
-use Nelliel\Domains\DomainSite;
 use Nelliel\Output\OutputPanelBans;
 use Nelliel\Output\OutputPanelThreads;
 use PDO;
@@ -27,7 +26,7 @@ class AdminThreads extends Admin
     function __construct(Authorization $authorization, Domain $domain, Session $session)
     {
         parent::__construct($authorization, $domain, $session);
-        $this->site_domain = new DomainSite($this->database);
+        $this->site_domain = Domain::getDomainFromID(Domain::SITE);
     }
 
     public function panel(): void
@@ -184,7 +183,7 @@ class AdminThreads extends Admin
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
 
         foreach ($board_ids as $board_id) {
-            $board_domain = new DomainBoard($board_id, $this->database);
+            $board_domain = Domain::getDomainFromID($board_id);
             $prepared = $this->database->prepare(
                 'SELECT "post_number", "parent_thread" FROM "' . $board_domain->reference('posts_table') .
                 '" WHERE "hashed_ip_address" = ?');
@@ -207,12 +206,12 @@ class AdminThreads extends Admin
     public function move(ContentID $content_id): void
     {
         $this->verifyPermissions($this->domain, 'perm_move_content');
-        $destination_domain = Domain::getDomainFromID($_POST['destination_board'] ?? 0, $this->domain->database());
+        $destination_domain = Domain::getDomainFromID($_POST['destination_board'] ?? 0);
         $this->verifyPermissions($destination_domain, 'perm_move_content');
         $keep_shadow = boolval($_POST['keep_shadow'] ?? false);
 
         if ($content_id->isThread() || $content_id->threadID() === $content_id->postID()) {
-            $destination = Domain::getDomainFromID($_POST['destination_board'] ?? 0, $this->domain->database());
+            $destination = Domain::getDomainFromID($_POST['destination_board'] ?? 0);
             $thread = new Thread($content_id, $this->domain);
             $thread->move($destination, $keep_shadow);
         }
@@ -277,7 +276,7 @@ class AdminThreads extends Admin
         }
 
         $this->verifyPermissions($this->domain, 'perm_merge_threads');
-        $target_domain = Domain::getDomainFromID($target_board, $this->domain->database());
+        $target_domain = Domain::getDomainFromID($target_board);
         $this->verifyPermissions($target_domain, 'perm_merge_threads');
         $keep_shadow = boolval($_POST['keep_shadow'] ?? false);
 

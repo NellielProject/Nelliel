@@ -44,7 +44,7 @@ class OutputPanelReports extends Output
 
         foreach ($report_list as $report_info) {
             if (!isset($domains[$report_info['board_id']])) {
-                $domains[$report_info['board_id']] = Domain::getDomainFromID($report_info['board_id'], $this->database);
+                $domains[$report_info['board_id']] = Domain::getDomainFromID($report_info['board_id']);
             }
 
             $report_domain = $domains[$report_info['board_id']];

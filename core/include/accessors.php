@@ -12,6 +12,7 @@ use Nelliel\API\Plugin\PluginAPI;
 use Nelliel\Account\Session;
 use Nelliel\Database\DatabaseConnector;
 use Nelliel\Database\NellielPDO;
+use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainGlobal;
 use Nelliel\Domains\DomainSite;
 use Nelliel\Logging\NellielDatabaseHandler;
@@ -46,7 +47,7 @@ function nel_site_domain(bool $renew = false): DomainSite
     static $site_domain;
 
     if (!isset($site_domain) || $renew) {
-        $site_domain = new DomainSite(nel_database('core'));
+        $site_domain = Domain::getDomainFromID(Domain::SITE);
     }
 
     return $site_domain;
@@ -57,7 +58,7 @@ function nel_global_domain(bool $renew = false): DomainGlobal
     static $global_domain;
 
     if (!isset($global_domain) || $renew) {
-        $global_domain = new DomainGlobal(nel_database('core'));
+        $global_domain = Domain::getDomainFromID(Domain::GLOBAL);
     }
 
     return $global_domain;

@@ -70,7 +70,7 @@ class OutputBoardlist extends Output
                 continue;
             }
 
-            $board_domain = Domain::getDomainFromID($board['board_id'], $this->database);
+            $board_domain = Domain::getDomainFromID($board['board_id']);
 
             if(!$board_domain->exists()) {
                 continue;

@@ -48,7 +48,7 @@ class FileFilter
             $prepared->bindValue(':filter_id', $this->id, PDO::PARAM_INT);
         }
 
-        $board = Domain::getDomainFromID($this->getData('board_id') ?? '', $this->database);
+        $board = Domain::getDomainFromID($this->getData('board_id') ?? '');
         $prepared->bindValue(':board_id', $board->id(), PDO::PARAM_STR);
         $prepared->bindValue(':hash_type', $this->getData('hash_type') ?? '', PDO::PARAM_STR);
         $prepared->bindValue(':file_hash', $this->getData('file_hash'), PDO::PARAM_STR);

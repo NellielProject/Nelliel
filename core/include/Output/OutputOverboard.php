@@ -75,7 +75,7 @@ class OutputOverboard extends Output
             }
 
             $thread = $threads[$i];
-            $thread_domain = new DomainBoard($thread->domain()->id(), $this->database);
+            $thread_domain = Domain::getDomainFromID($thread->domain()->id());
             $thread_input = array();
             $output_post = new OutputPost($thread_domain, $this->write_mode);
             $thread_input = array();

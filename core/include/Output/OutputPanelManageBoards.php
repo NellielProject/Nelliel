@@ -31,7 +31,7 @@ class OutputPanelManageBoards extends Output
         $bgclass = 'row1';
 
         foreach ($board_ids as $id) {
-            $domain = Domain::getDomainFromID($id, $this->database);
+            $domain = Domain::getDomainFromID($id);
             $board_data = array();
             $board_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';

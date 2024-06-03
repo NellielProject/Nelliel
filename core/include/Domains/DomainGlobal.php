@@ -82,7 +82,7 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
 
         foreach ($board_ids as $board_id) {
-            $board = new DomainBoard($board_id, $this->database);
+            $board = $this->getDomainFromID($board_id);
             $board->regenCache();
         }
     }
@@ -93,7 +93,7 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
 
         foreach ($board_ids as $board_id) {
-            $board = new DomainBoard($board_id, $this->database);
+            $board = $this->getDomainFromID($board_id);
             $board->deleteCache();
         }
     }

@@ -82,7 +82,7 @@ class AdminPages extends Admin
             return;
         }
 
-        $domain = Domain::getDomainFromID($domain_id, $this->database);
+        $domain = Domain::getDomainFromID($domain_id);
         $this->verifyPermissions($domain, 'perm_manage_pages');
         $page_info = array();
         $page_info['uri'] = $_POST['uri'] ?? '';
@@ -117,7 +117,7 @@ class AdminPages extends Admin
         }
 
         $domain_id = $info['domain_id'];
-        $domain = Domain::getDomainFromID($domain_id, $this->database);
+        $domain = Domain::getDomainFromID($domain_id);
         $this->verifyPermissions($domain, 'perm_manage_pages');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "page_id" = ?');
         $this->database->executePrepared($prepared, [$page_id]);

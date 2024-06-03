@@ -40,7 +40,7 @@ class AdminFileFilters extends Admin
     public function add(): void
     {
         $board_id = $_POST['board_id'] ?? $this->domain->uri();
-        $domain = Domain::getDomainFromID($board_id, $this->database);
+        $domain = Domain::getDomainFromID($board_id);
         $this->verifyPermissions($domain, 'perm_manage_file_filters');
         $output_filter = new Filter();
         $hashes = $output_filter->newlinesToArray($_POST['file_hashes']);
@@ -71,7 +71,7 @@ class AdminFileFilters extends Admin
     public function update(int $filter_id): void
     {
         $file_filter = new FileFilter($this->database, $filter_id);
-        $domain = Domain::getDomainFromID($file_filter->getData('board_id'), $this->database);
+        $domain = Domain::getDomainFromID($file_filter->getData('board_id'));
         $this->verifyPermissions($domain, 'perm_manage_file_filters');
         $file_filter->changeData('board_id', $_POST['board_id'] ?? $file_filter->getData('board_id'));
         $file_filter->changeData('file_hash', $_POST['file_hash'] ?? $file_filter->getData('file_hash'));
@@ -85,7 +85,7 @@ class AdminFileFilters extends Admin
     public function delete(int $filter_id): void
     {
         $file_filter = new FileFilter($this->database, $filter_id);
-        $domain = Domain::getDomainFromID($file_filter->getData('board_id'), $this->database);
+        $domain = Domain::getDomainFromID($file_filter->getData('board_id'));
         $this->verifyPermissions($domain, 'perm_manage_file_filters');
         $file_filter->delete();
         $this->panel();
@@ -94,7 +94,7 @@ class AdminFileFilters extends Admin
     public function enable(string $filter_id)
     {
         $file_filter = new FileFilter($this->database, $filter_id);
-        $domain = Domain::getDomainFromID($file_filter->getData('board_id'), $this->database);
+        $domain = Domain::getDomainFromID($file_filter->getData('board_id'));
         $this->verifyPermissions($domain, 'perm_manage_file_filters');
         $file_filter->changeData('enabled', 1);
         $file_filter->update();
@@ -104,7 +104,7 @@ class AdminFileFilters extends Admin
     public function disable(string $filter_id)
     {
         $file_filter = new FileFilter($this->database, $filter_id);
-        $domain = Domain::getDomainFromID($file_filter->getData('board_id'), $this->database);
+        $domain = Domain::getDomainFromID($file_filter->getData('board_id'));
         $this->verifyPermissions($domain, 'perm_manage_file_filters');
         $file_filter->changeData('enabled', 0);
         $file_filter->update();
