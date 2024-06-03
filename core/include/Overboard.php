@@ -136,7 +136,7 @@ class Overboard
     public function prune(): void
     {
         $sfw_total = 0;
-        $sfw_limit = nel_site_domain()->setting('sfw_overboard_threads');
+        $sfw_limit = nel_get_cached_domain(Domain::SITE)->setting('sfw_overboard_threads');
 
         foreach ($this->getThreads('sfw') as $thread) {
             if ($sfw_total > $sfw_limit || !$this->canInclude($thread, 'sfw')) {
@@ -148,7 +148,7 @@ class Overboard
         }
 
         $all_total = 0;
-        $all_limit = nel_site_domain()->setting('overboard_threads');
+        $all_limit = nel_get_cached_domain(Domain::SITE)->setting('overboard_threads');
 
         foreach ($this->getThreads('all') as $thread) {
             if ($all_total > $all_limit || !$this->canInclude($thread, 'all')) {
@@ -205,12 +205,12 @@ class Overboard
     {
         if ($overboard_id === 'all') {
             if ($thread->domain()->setting('safety_level') === 'NSFL' &&
-                !nel_site_domain()->setting('nsfl_on_overboard')) {
+                !nel_get_cached_domain(Domain::SITE)->setting('nsfl_on_overboard')) {
                 return false;
             }
         }
         if ($overboard_id === 'sfw') {
-            if (!nel_site_domain()->setting('sfw_overboard_active')) {
+            if (!nel_get_cached_domain(Domain::SITE)->setting('sfw_overboard_active')) {
                 return false;
             }
 

@@ -70,7 +70,7 @@ class GlobalRecents
     {
         $prepared = $this->database->prepare(
             'UPDATE "' . NEL_GLOBAL_RECENTS_TABLE .
-            '" SET "post_time" = ?, "post_time_milli" = ?, WHERE "content_id" = ? AND "board_id" = ?');
+            '" SET "post_time" = ?, "post_time_milli" = ? WHERE "content_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared,
             [$post->getData('post_time'), $post->getData('post_time_milli'), $post->contentID()->getIDString(),
                 $post->domain()->id()]);
@@ -94,7 +94,7 @@ class GlobalRecents
         $recent_posts = array();
 
         if ($limit <= 0) {
-            $limit = nel_site_domain()->setting('max_recent_posts');
+            $limit = nel_get_cached_domain(Domain::SITE)->setting('max_recent_posts');
         }
 
         $prepared = $this->database->prepare(
@@ -121,7 +121,7 @@ class GlobalRecents
      */
     public function prune(): void
     {
-        $limit = nel_site_domain()->setting('max_recent_posts');
+        $limit = nel_get_cached_domain(Domain::SITE)->setting('max_recent_posts');
         $total = 0;
 
         foreach ($this->getPosts() as $post) {
@@ -150,7 +150,7 @@ class GlobalRecents
         $this->purge();
         $board_ids = $this->database->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
             PDO::FETCH_COLUMN);
-        $limit = nel_site_domain()->setting('max_recent_posts');
+        $limit = nel_get_cached_domain(Domain::SITE)->setting('max_recent_posts');
 
         foreach ($board_ids as $board_id) {
             $board = Domain::getDomainFromID($board_id);

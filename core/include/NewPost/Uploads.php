@@ -572,7 +572,7 @@ class Uploads
     private function setDimensions(Upload $upload)
     {
         $magicks = nel_magick_available();
-        $graphics_handler = nel_site_domain()->setting('graphics_handler');
+        $graphics_handler = nel_get_cached_domain(Domain::SITE)->setting('graphics_handler');
         $display_width = 0;
         $display_height = 0;
 

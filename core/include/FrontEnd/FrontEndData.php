@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\INIParser;
 use Nelliel\Database\NellielPDO;
+use Nelliel\Domains\Domain;
 use Nelliel\Utility\CacheHandler;
 use PDO;
 
@@ -63,7 +64,7 @@ class FrontEndData
 
     public function getBaseImageSet(): ImageSet
     {
-        return $this->getImageSet(nel_site_domain()->setting('base_image_set'));
+        return $this->getImageSet(nel_get_cached_domain(Domain::SITE)->setting('base_image_set'));
     }
 
     public function imageSetIsCore(string $id): bool

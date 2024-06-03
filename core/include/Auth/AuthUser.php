@@ -187,13 +187,13 @@ class AuthUser extends AuthHandler
             return false;
         }
 
-        $global_role = $this->getDomainRole(nel_global_domain());
+        $global_role = $this->getDomainRole(nel_get_cached_domain(Domain::GLOBAL));
 
         if ($global_role->checkPermission($permission)) {
             return true;
         }
 
-        $site_role = $this->getDomainRole(nel_site_domain());
+        $site_role = $this->getDomainRole(nel_get_cached_domain(Domain::SITE));
         return $site_role->checkPermission($permission);
     }
 

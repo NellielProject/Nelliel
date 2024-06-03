@@ -29,7 +29,7 @@ class Login
     {
         $captcha = new CAPTCHA($this->domain);
 
-        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_login_captcha')) {
+        if (nel_get_cached_domain(Domain::SITE)->setting('enable_captchas') && $this->domain->setting('use_login_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha->verify($captcha_key, $captcha_answer);

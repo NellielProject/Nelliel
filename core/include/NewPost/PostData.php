@@ -288,7 +288,7 @@ class PostData
     private function secureTripcode(string $key): string
     {
         $secure_tripcode = '';
-        $trip_code = hash_hmac(nel_site_domain()->setting('secure_tripcode_algorithm'), $key, NEL_TRIPCODE_PEPPER);
+        $trip_code = hash_hmac(nel_get_cached_domain(Domain::SITE)->setting('secure_tripcode_algorithm'), $key, NEL_TRIPCODE_PEPPER);
         $trip_code = base64_encode(pack("H*", $trip_code));
         $secure_tripcode = utf8_substr($trip_code, 2, 10);
         return $secure_tripcode;

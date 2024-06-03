@@ -90,7 +90,7 @@ class OutputPanelLogs extends Output
             }
 
             $log_data['ip_address'] = $ip_address;
-            $log_data['ip_url'] = nel_build_router_url([nel_site_domain()->uri(), 'ip-info', $ip_address, 'view']);
+            $log_data['ip_url'] = nel_build_router_url([nel_get_cached_domain(Domain::SITE)->uri(), 'ip-info', $ip_address, 'view']);
             $log_data['hashed_ip_address'] = $log['hashed_ip_address'];
             $log_data['time'] = $log['time'];
             $log_data['message'] = $this->formatMessage($log['message'], $log['message_values']);

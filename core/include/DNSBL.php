@@ -6,6 +6,7 @@ namespace Nelliel;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use IPTools\IP;
+use Nelliel\Domains\Domain;
 
 class DNSBL
 {
@@ -15,13 +16,13 @@ class DNSBL
 
     public function checkIP(string $ip_address): void
     {
-        if (!nel_site_domain()->setting('use_dnsbl')) {
+        if (!nel_get_cached_domain(Domain::SITE)->setting('use_dnsbl')) {
             return;
         }
 
         // TODO: Exclude local IPs here
 
-        $exceptions = json_decode(nel_site_domain()->setting('dnsbl_exceptions'));
+        $exceptions = json_decode(nel_get_cached_domain(Domain::SITE)->setting('dnsbl_exceptions'));
 
         if (is_array($exceptions) && in_array($ip_address, $exceptions)) {
             return;

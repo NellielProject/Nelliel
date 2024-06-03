@@ -418,10 +418,10 @@ class Thread implements MutableData
         $page_filename = '';
 
         if ($this->domain->setting('slugify_thread_url') && !nel_true_empty($this->content_data['slug'])) {
-            $page_filename = sprintf(nel_site_domain()->setting('slug_thread_filename_format'),
+            $page_filename = sprintf(nel_get_cached_domain(Domain::SITE)->setting('slug_thread_filename_format'),
                 $this->content_data['slug']);
         } else {
-            $page_filename = sprintf(nel_site_domain()->setting('thread_filename_format'), $this->content_id->threadID());
+            $page_filename = sprintf(nel_get_cached_domain(Domain::SITE)->setting('thread_filename_format'), $this->content_id->threadID());
         }
 
         return $page_filename;

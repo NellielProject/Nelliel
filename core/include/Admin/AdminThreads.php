@@ -176,7 +176,7 @@ class AdminThreads extends Admin
 
     public function globalDeleteByIP(ContentID $first_content_id): void
     {
-        $this->verifyPermissions(nel_global_domain(), 'perm_delete_by_ip');
+        $this->verifyPermissions(nel_get_cached_domain(Domain::GLOBAL), 'perm_delete_by_ip');
         $post_instance = $first_content_id->getInstanceFromID($this->domain);
         $hashed_ip = $post_instance->getData('hashed_ip_address');
         $query = 'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"';

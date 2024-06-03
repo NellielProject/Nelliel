@@ -42,26 +42,15 @@ function nel_plugins(): PluginAPI
     return $plugins;
 }
 
-function nel_site_domain(bool $renew = false): DomainSite
+function nel_get_cached_domain(string $id, bool $renew = false): Domain
 {
-    static $site_domain;
+    static $domains;
 
-    if (!isset($site_domain) || $renew) {
-        $site_domain = Domain::getDomainFromID(Domain::SITE);
+    if (!isset($domains[$id]) || $renew) {
+        $domains[$id] = Domain::getDomainFromID($id);
     }
 
-    return $site_domain;
-}
-
-function nel_global_domain(bool $renew = false): DomainGlobal
-{
-    static $global_domain;
-
-    if (!isset($global_domain) || $renew) {
-        $global_domain = Domain::getDomainFromID(Domain::GLOBAL);
-    }
-
-    return $global_domain;
+    return $domains[$id];
 }
 
 function nel_request_ip_address(bool $hashed = false, bool $single_ip = false): string
@@ -99,7 +88,7 @@ function nel_effective_ip(string $ip_address): string
 
     if ($ip->getVersion() === IP::IP_V6) {
         $effective_ip_address = Network::parse(
-            $ip_address . '/' . nel_site_domain()->setting('ipv6_identification_cidr'))->getCIDR();
+            $ip_address . '/' . nel_get_cached_domain(Domain::SITE)->setting('ipv6_identification_cidr'))->getCIDR();
     } else {
         $effective_ip_address = $ip_address;
     }
@@ -148,14 +137,14 @@ function nel_visitor_id(bool $regenerate = false, int $version = NEL_VISITOR_ID_
     static $visitor_id;
 
     if ($regenerate) {
-        switch($version) {
+        switch ($version) {
             case 1:
                 $visitor_id = base64_encode(hash('sha256', (random_bytes(16)), true));
                 $visitor_id = 'vid1>' . utf8_substr($visitor_id, 0, 24);
                 break;
         }
 
-        setcookie('visitor-id', $visitor_id, time() + nel_site_domain()->setting('visitor_id_lifespan'),
+        setcookie('visitor-id', $visitor_id, time() + nel_get_cached_domain(Domain::SITE)->setting('visitor_id_lifespan'),
             NEL_BASE_WEB_PATH . '; samesite=strict', '', false, true);
     }
 

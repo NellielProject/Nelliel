@@ -41,7 +41,7 @@ class Session
             $this->session_options['cookie_path'] = NEL_BASE_WEB_PATH . '; samesite=strict';
         }
 
-        $this->domain = nel_site_domain();
+        $this->domain = nel_get_cached_domain(Domain::SITE);
         $this->authorization = new Authorization(nel_database('core'));
 
         if (empty(self::$user)) {

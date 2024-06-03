@@ -17,7 +17,7 @@ class Previews
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->site_domain = nel_site_domain();
+        $this->site_domain = nel_get_cached_domain(Domain::SITE);
     }
 
     public function generate($files, $preview_path)

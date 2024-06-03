@@ -96,7 +96,7 @@ class Regen
 
     public function overboard(DomainSite $site_domain): void
     {
-        $output_overboard = new OutputOverboard(nel_global_domain(), true);
+        $output_overboard = new OutputOverboard(nel_get_cached_domain(Domain::GLOBAL), true);
 
         if ($site_domain->setting('overboard_active')) {
             $output_overboard->index(
@@ -135,7 +135,7 @@ class Regen
 
     public function allBoards(bool $pages, bool $cache): void
     {
-        $site_domain = nel_site_domain();
+        $site_domain = nel_get_cached_domain(Domain::SITE);
         $board_ids = $site_domain->database()->executeFetchAll('SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '"',
             PDO::FETCH_COLUMN);
 
@@ -181,7 +181,7 @@ class Regen
 
     public function boardPages(DomainBoard $board_domain): void
     {
-        set_time_limit(nel_site_domain()->setting('max_page_regen_time'));
+        set_time_limit(nel_get_cached_domain(Domain::SITE)->setting('max_page_regen_time'));
         $result = $board_domain->database()->query(
             'SELECT "thread_id" FROM "' . $board_domain->reference('threads_table') . '" WHERE "old" = 0');
         $ids = $result->fetchAll(PDO::FETCH_COLUMN);

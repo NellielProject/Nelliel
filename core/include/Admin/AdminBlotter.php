@@ -40,7 +40,7 @@ class AdminBlotter extends Admin
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared, [$time, $text]);
         $regen = new Regen();
-        $regen->blotter(nel_site_domain());
+        $regen->blotter(nel_get_cached_domain(Domain::SITE));
         $regen->allBoards(true, true);
         $this->panel();
     }
@@ -60,7 +60,7 @@ class AdminBlotter extends Admin
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "record_id" = ?');
         $this->database->executePrepared($prepared, [$record_id]);
         $regen = new Regen();
-        $regen->blotter(nel_site_domain());
+        $regen->blotter(nel_get_cached_domain(Domain::SITE));
         $regen->allBoards(true, true);
         $this->panel();
     }

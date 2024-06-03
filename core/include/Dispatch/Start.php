@@ -5,6 +5,7 @@ namespace Nelliel\Dispatch;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputAboutNelliel;
 
 class Start
@@ -20,7 +21,7 @@ class Start
         }
 
         if (isset($_GET['about_nelliel'])) {
-            $about_nelliel = new OutputAboutNelliel(nel_site_domain(), false);
+            $about_nelliel = new OutputAboutNelliel(nel_get_cached_domain(Domain::SITE), false);
             $about_nelliel->render([], false);
             return;
         }

@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\GlobalRecents;
 use Nelliel\Overboard;
+use Nelliel\Domains\Domain;
 use Nelliel\Tables\TableBanAppeals;
 use Nelliel\Tables\TableBans;
 use Nelliel\Tables\TableBoardDefaults;
@@ -347,7 +348,8 @@ class BetaMigrations
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
 
                 // Update core template info
-                $template_instance = nel_site_domain()->frontEndData()->getTemplate('template-nelliel-basic');
+                $template_instance = nel_get_cached_domain(Domain::SITE)->frontEndData()->getTemplate(
+                    'template-nelliel-basic');
                 $enabled = $template_instance->enabled();
                 $template_instance->install(true);
                 $template_instance->enable($enabled);
@@ -359,7 +361,7 @@ class BetaMigrations
                     'style-burichan', 'style-nigra'];
 
                 foreach ($core_styles as $style) {
-                    $style_instance = nel_site_domain()->frontEndData()->getStyle($style);
+                    $style_instance = nel_get_cached_domain(Domain::SITE)->frontEndData()->getStyle($style);
                     $enabled = $style_instance->enabled();
                     $style_instance->install(true);
                     $style_instance->enable($enabled);
@@ -368,7 +370,8 @@ class BetaMigrations
                 echo ' - ' . __('Style info updated.') . '<br>';
 
                 // Update core image set info
-                $image_set_instance = nel_site_domain()->frontEndData()->getImageSet('images-nelliel-basic');
+                $image_set_instance = nel_get_cached_domain(Domain::SITE)->frontEndData()->getImageSet(
+                    'images-nelliel-basic');
                 $enabled = $image_set_instance->enabled();
                 $image_set_instance->install(true);
                 $image_set_instance->enable($enabled);
@@ -381,7 +384,8 @@ class BetaMigrations
                 echo '<br><b>' . __('Updating from v0.9.27 to v0.9.28...') . '</b><br>';
 
                 // Update core image set info
-                $image_set_instance = nel_site_domain()->frontEndData()->getImageSet('images-nelliel-basic');
+                $image_set_instance = nel_get_cached_domain(Domain::SITE)->frontEndData()->getImageSet(
+                    'images-nelliel-basic');
                 $enabled = $image_set_instance->enabled();
                 $image_set_instance->install(true);
                 $image_set_instance->enable($enabled);
@@ -534,8 +538,8 @@ class BetaMigrations
                 $old_site_settings = ['must_see_ban', 'allow_ban_appeals', 'min_time_before_ban_appeal',
                     'ban_page_extra_text'];
                 $this->removeSiteSettings($old_site_settings);
-                nel_site_domain()->deleteCache();
-                nel_site_domain(true);
+                nel_get_cached_domain('_site')->deleteCache();
+                nel_get_cached_domain('_site_', true);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
@@ -748,8 +752,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $new_site_settings = ['max_page_regen_time', 'allow_user_registration'];
                 $this->updateSiteConfig($new_site_settings);
 
-                nel_site_domain()->deleteCache();
-                nel_site_domain(true);
+                nel_get_cached_domain(Domain::SITE)->deleteCache();
+                nel_get_cached_domain(Domain::SITE, true);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 
@@ -1113,8 +1117,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $removed_site_settings = ['recaptcha_site_key', 'recaptcha_sekrit_key', 'recaptcha_type',
                     'use_login_recaptcha', 'use_register_recaptcha', 'use_post_recaptcha', 'use_report_recaptcha'];
                 $this->removeSiteSettings($removed_site_settings);
-                nel_site_domain()->deleteCache();
-                nel_site_domain(true);
+                nel_get_cached_domain(Domain::SITE)->deleteCache();
+                nel_get_cached_domain(Domain::SITE, true);
 
                 // Description and defaults updates
                 $settings_table->insertDefaultRow(
@@ -1436,8 +1440,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 $removed_site_settings = ['post_password_algorithm'];
                 $this->removeSiteSettings($removed_site_settings);
-                nel_site_domain()->deleteCache();
-                nel_site_domain(true);
+                nel_get_cached_domain(Domain::SITE)->deleteCache();
+                nel_get_cached_domain(Domain::SITE, true);
 
                 $setting_options_table->insertDefaultRow(['site', 'name', '', 1], ['json']);
                 $setting_options_table->insertDefaultRow(['site', 'error_message_header', '', 1], ['json']);
@@ -1964,7 +1968,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo ' - ' . __('IP notes table updated.') . '<br>';
 
                 // Update core image set info
-                $image_set_instance = nel_site_domain()->frontEndData()->getImageSet('images-nelliel-basic');
+                $image_set_instance = nel_get_cached_domain(Domain::SITE)->frontEndData()->getImageSet(
+                    'images-nelliel-basic');
                 $enabled = $image_set_instance->enabled();
                 $image_set_instance->install(true);
                 $image_set_instance->enable($enabled);
@@ -2133,8 +2138,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $old_site_settings = ['translate_account_nav_links', 'account_nav_links_left_bracket',
                     'account_nav_links_right_bracket', 'home_page'];
                 $this->removeSiteSettings($old_site_settings);
-                nel_site_domain()->deleteCache();
-                nel_site_domain(true);
+                nel_get_cached_domain(Domain::SITE)->deleteCache();
+                nel_get_cached_domain(Domain::SITE, true);
 
                 echo ' - ' . __('Site settings updated.') . '<br>';
 

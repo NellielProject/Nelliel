@@ -226,7 +226,7 @@ class Markup
     public function parseURLs(string $text, string $protocols): string
     {
         $url_regex = '/(' . $protocols . ')(:\/\/)[^\s]+/';
-        $site_domain = nel_site_domain();
+        $site_domain = nel_get_cached_domain(Domain::SITE);
 
         $replace_callback = function ($matches) use ($site_domain) {
             $rel = ($site_domain->setting('nofollow_external_links')) ? 'rel="nofollow"' : '';

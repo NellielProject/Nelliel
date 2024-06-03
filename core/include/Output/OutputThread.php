@@ -80,8 +80,8 @@ class OutputThread extends Output
             }
 
             $this->render_data['show_global_announcement'] = !nel_true_empty(
-                nel_site_domain()->setting('global_announcement'));
-            $this->render_data['global_announcement_text'] = nel_site_domain()->setting('global_announcement');
+                nel_get_cached_domain(Domain::SITE)->setting('global_announcement'));
+            $this->render_data['global_announcement_text'] = nel_get_cached_domain(Domain::SITE)->setting('global_announcement');
 
             $query = 'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" ASC';
             $blotter_entries = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);

@@ -26,7 +26,7 @@ class ThreadHandler
         $posts = array();
         $uploads = array();
         $delete_count = 0;
-        $max_deletes = nel_site_domain()->setting('max_delete_items');
+        $max_deletes = nel_get_cached_domain(Domain::SITE)->setting('max_delete_items');
 
         foreach ($_POST as $name => $value) {
 

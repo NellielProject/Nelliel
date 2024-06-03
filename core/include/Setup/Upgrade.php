@@ -8,6 +8,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\DatabaseConfig;
 use Nelliel\Regen;
 use Nelliel\Database\DatabaseConnector;
+use Nelliel\Domains\Domain;
 use Nelliel\Utility\FileHandler;
 use PDO;
 
@@ -121,11 +122,11 @@ class Upgrade
 
         echo '<br>' . __('Regenerating caches and pages.') . '<br>';
         $regen = new Regen();
-        nel_site_domain()->regenCache();
-        nel_site_domain(true);
-        $regen->sitePages(nel_site_domain());
+        nel_get_cached_domain(Domain::SITE)->regenCache();
+        nel_get_cached_domain(Domain::SITE, true);
+        $regen->sitePages(nel_get_cached_domain(Domain::SITE));
         $regen->allBoards(true, true);
-        $regen->overboard(nel_site_domain());
+        $regen->overboard(nel_get_cached_domain(Domain::SITE));
 
         echo '<br>' . __('Upgrades completed!');
     }

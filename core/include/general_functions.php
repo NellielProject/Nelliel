@@ -5,6 +5,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use ChrisUllyott\FileSize;
 use IPTools\IP;
+use Nelliel\Domains\Domain;
 
 function nel_get_microtime(bool $convert_int = true)
 {
@@ -106,7 +107,7 @@ function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = 
         return null;
     }
 
-    if ($unhashed_check && !nel_site_domain()->setting('store_unhashed_ip')) {
+    if ($unhashed_check && !nel_get_cached_domain(Domain::SITE)->setting('store_unhashed_ip')) {
         return null;
     }
 
@@ -146,7 +147,7 @@ function nel_exec(string $command): array
     }
 
     $path_command = '';
-    $path = nel_site_domain()->setting('shell_path');
+    $path = nel_get_cached_domain(Domain::SITE)->setting('shell_path');
 
     if ($path !== '') {
         $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";';
@@ -166,7 +167,7 @@ function nel_shell_exec(string $command): ?string
     }
 
     $path_command = '';
-    $path = nel_site_domain()->setting('shell_path');
+    $path = nel_get_cached_domain(Domain::SITE)->setting('shell_path');
 
     if ($path !== '') {
         $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";';

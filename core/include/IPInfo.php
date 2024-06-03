@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use IPTools\IP;
 use IPTools\Network;
+use Nelliel\Domains\Domain;
 use PDO;
 
 class IPInfo
@@ -19,7 +20,7 @@ class IPInfo
 
     function __construct(string $ip_address, bool $process = true)
     {
-        $this->database = nel_site_domain()->database();
+        $this->database = nel_get_cached_domain(Domain::SITE)->database();
 
         if (nel_is_unhashed_ip($ip_address)) {
             $this->ip_address = $ip_address;
@@ -127,14 +128,14 @@ class IPInfo
 
             if ($ip->getVersion() === IP::IP_V6) {
                 $small_network = Network::parse(
-                    $new_ip_address . '/' . nel_site_domain()->setting('ipv6_small_subnet_cidr'));
+                    $new_ip_address . '/' . nel_get_cached_domain(Domain::SITE)->setting('ipv6_small_subnet_cidr'));
                 $large_network = Network::parse(
-                    $new_ip_address . '/' . nel_site_domain()->setting('ipv6_large_subnet_cidr'));
+                    $new_ip_address . '/' . nel_get_cached_domain(Domain::SITE)->setting('ipv6_large_subnet_cidr'));
             } else {
                 $small_network = Network::parse(
-                    $new_ip_address . '/' . nel_site_domain()->setting('ipv4_small_subnet_cidr'));
+                    $new_ip_address . '/' . nel_get_cached_domain(Domain::SITE)->setting('ipv4_small_subnet_cidr'));
                 $large_network = Network::parse(
-                    $new_ip_address . '/' . nel_site_domain()->setting('ipv4_large_subnet_cidr'));
+                    $new_ip_address . '/' . nel_get_cached_domain(Domain::SITE)->setting('ipv4_large_subnet_cidr'));
             }
 
             $this->info['hashed_small_subnet'] = nel_ip_hash($small_network->getCIDR(), true);

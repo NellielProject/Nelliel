@@ -26,7 +26,7 @@ class OutputLoginPage extends Output
         $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'account', 'login']);
         $this->render_data['register_url'] = nel_build_router_url([Domain::SITE, 'account', 'register']);
 
-        if (nel_site_domain()->setting('enable_captchas') && ($this->domain->setting('use_login_captcha'))) {
+        if (nel_get_cached_domain(Domain::SITE)->setting('enable_captchas') && ($this->domain->setting('use_login_captcha'))) {
             $output_native_captchas = new OutputCAPTCHA($this->domain, $this->write_mode);
             $this->render_data['captchas'] = $output_native_captchas->render(['area' => 'user-login'], false);
         }

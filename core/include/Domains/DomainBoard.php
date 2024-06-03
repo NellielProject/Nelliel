@@ -124,7 +124,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $uri = ($display) ? $this->display_uri : $this->uri;
 
         if ($formatted) {
-            $uri = sprintf(nel_site_domain()->setting('uri_display_format'), $uri);
+            $uri = sprintf(nel_get_cached_domain(Domain::SITE)->setting('uri_display_format'), $uri);
         }
 
         return $uri;
@@ -132,13 +132,13 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function url(): string
     {
-        return nel_site_domain()->setting('absolute_url_protocol') . '://' .
-            rtrim(nel_site_domain()->setting('site_domain'), '/') . '/' . ltrim($this->uri, '/') . '/';
+        return nel_get_cached_domain(Domain::SITE)->setting('absolute_url_protocol') . '://' .
+            rtrim(nel_get_cached_domain(Domain::SITE)->setting('site_domain'), '/') . '/' . ltrim($this->uri, '/') . '/';
     }
 
     public function updateStatistics(): void
     {
-        $limit = time() - nel_site_domain()->setting('min_time_between_board_stat_updates');
+        $limit = time() - nel_get_cached_domain(Domain::SITE)->setting('min_time_between_board_stat_updates');
 
         if ($this->statistics->get($this, 'last_update') > $limit) {
             return;

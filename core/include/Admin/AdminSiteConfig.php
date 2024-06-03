@@ -99,7 +99,7 @@ class AdminSiteConfig extends Admin
         if ($changes > 0) {
             $this->domain->regenCache();
             $this->domain->reload();
-            nel_site_domain()->reload();
+            nel_get_cached_domain(Domain::SITE)->reload();
             $regen = new Regen();
             $regen->allBoards(true, false);
             $regen->sitePages($this->domain);
