@@ -51,21 +51,20 @@ class Language
                 $hash = md5_file($po_absolute_path);
             }
 
-            if ($cache_handler->checkHash($po_relative_path, $hash) && file_exists(NEL_CACHE_FILES_PATH . $locale_cache_path . $cache_file)) {
-                include NEL_CACHE_FILES_PATH . $locale_cache_path . $cache_file;
-                return self::$gettext->loadTranslationFromArray($translation_array, $domain, $category);
-            } else {
-                // No valid Po file or cache file to work with
-                if ($hash === '') {
-                    return false;
-                }
-
-                $loaded = self::$gettext->loadTranslation($domain, $category);
-                $cache_handler->updateHash($po_relative_path, $hash);
-                $cache_handler->writeArrayToFile('translation_array', self::$gettext->getTranslation($domain, $category),
+            if ($cache_handler->checkHash($po_relative_path, $hash)) {
+                $translation_array = $cache_handler->loadArrayFromFile('translation_array',
                     $locale_cache_path . $cache_file);
-                return $loaded;
+
+                if (!empty($translation_array)) {
+                    return self::$gettext->loadTranslationFromArray($translation_array, $domain, $category);
+                }
             }
+
+            $loaded = self::$gettext->loadTranslation($domain, $category);
+            $cache_handler->updateHash($po_relative_path, $hash);
+            $cache_handler->writeArrayToFile('translation_array', self::$gettext->getTranslation($domain, $category),
+                $locale_cache_path . $cache_file);
+            return $loaded;
         }
 
         return self::$gettext->loadTranslationFromFile($po_absolute_path, $domain, $category);
@@ -84,8 +83,7 @@ class Language
 
         foreach ($extracted as $category_id => $domain_output) {
             foreach ($domain_output as $out_domain => $output) {
-                $directory = NEL_LANGUAGES_FILES_PATH . 'extracted/' . date('Y-m-d_H-i-s') . '/' .
-                    'LC_MESSAGES';
+                $directory = NEL_LANGUAGES_FILES_PATH . 'extracted/' . date('Y-m-d_H-i-s') . '/' . 'LC_MESSAGES';
                 $file_handler->createDirectory($directory);
                 $file = $directory . '/' . $out_domain . '.pot';
                 $file_handler->writeFile($file, $output);
@@ -93,7 +91,8 @@ class Language
         }
     }
 
-    public function changeLanguage(string $locale): void {
+    public function changeLanguage(string $locale): void
+    {
         self::$gettext->language(self::LC_MESSAGES, $locale);
     }
 

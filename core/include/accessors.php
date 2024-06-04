@@ -13,8 +13,6 @@ use Nelliel\Account\Session;
 use Nelliel\Database\DatabaseConnector;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainGlobal;
-use Nelliel\Domains\DomainSite;
 use Nelliel\Logging\NellielDatabaseHandler;
 use Nelliel\Logging\NellielLogProcessor;
 use Nelliel\Utility\Utilities;

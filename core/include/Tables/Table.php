@@ -40,7 +40,7 @@ abstract class Table
         }
 
         if ($announce) {
-            echo sprintf(__('Creating table %s'), $this->table_name) . '<br>';
+            echo sprintf(__('Creating table: %s'), $this->table_name) . '<br>';
         }
 
         $result = $this->database->query($schema);

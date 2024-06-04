@@ -56,6 +56,11 @@ if (isset($_GET['upgrade'])) {
 }
 
 unset($upgrade);
+
+if(!file_exists(NEL_CACHE_FILES_PATH)) {
+    $file_handler->createDirectory(NEL_CACHE_FILES_PATH);
+}
+
 unset($file_handler);
 
 require_once NEL_INCLUDE_PATH . 'exit_functions.php';

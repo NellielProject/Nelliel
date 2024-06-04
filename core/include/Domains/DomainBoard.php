@@ -33,7 +33,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
         if (NEL_USE_FILE_CACHE) {
             $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
-                'domains/' . $this->domain_id);
+                'domains/' . $this->uri);
         }
 
         if (empty($settings)) {
@@ -177,7 +177,9 @@ class DomainBoard extends Domain implements NellielCacheInterface
     public function regenCache()
     {
         if (NEL_USE_FILE_CACHE) {
-            $this->cacheSettings();
+            $settings = $this->loadSettingsFromDatabase();
+            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
+                'domains/' . $this->uri);
         }
     }
 

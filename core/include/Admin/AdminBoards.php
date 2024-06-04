@@ -185,8 +185,8 @@ class AdminBoards extends Admin
         $domain = Domain::getDomainFromID($board_id);
         $board_uri = $domain->uri(true, true);
 
-        if (!$domain->exists()) {
-            nel_derp(180, _gettext('Board does not appear to exist.'));
+        if (!$domain->exists() || !($domain instanceof DomainBoard)) {
+            nel_derp(180, _gettext('Not a board ID or board does not exist.'));
         }
 
         if ($this->database->tableExists($domain->reference('uploads_table'))) {

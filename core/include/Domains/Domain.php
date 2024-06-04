@@ -166,13 +166,6 @@ abstract class Domain implements NellielCacheInterface
         return $this->front_end_data;
     }
 
-    protected function cacheSettings(): void
-    {
-        $settings = $this->loadSettingsFromDatabase();
-        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
-            'domains/' . $this->domain_id);
-    }
-
     public function reload(): void
     {
         $this->loadSettings();

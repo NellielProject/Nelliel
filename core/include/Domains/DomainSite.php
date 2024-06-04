@@ -90,7 +90,9 @@ class DomainSite extends Domain implements NellielCacheInterface
     public function regenCache()
     {
         if (NEL_USE_FILE_CACHE) {
-            $this->cacheSettings();
+            $settings = $this->loadSettingsFromDatabase();
+            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
+                'domains/' . $this->uri);
         }
     }
 
