@@ -14,8 +14,13 @@ Mustache_Autoloader::register();
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
 require_once NEL_INCLUDE_PATH . 'exception_handlers.php';
 
-if (!NEL_DEBUG_MODE) {
+if (!NEL_DEBUG_PASS_EXCEPTIONS) {
     set_exception_handler('nel_exception_handler');
+}
+
+if (NEL_DEBUG_DISPLAY_ERRORS) {
+    error_reporting(E_ALL);
+    ini_set('display_erors', '1');
 }
 
 if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
@@ -57,7 +62,7 @@ if (isset($_GET['upgrade'])) {
 
 unset($upgrade);
 
-if(!file_exists(NEL_CACHE_FILES_PATH)) {
+if (!file_exists(NEL_CACHE_FILES_PATH)) {
     $file_handler->createDirectory(NEL_CACHE_FILES_PATH);
 }
 

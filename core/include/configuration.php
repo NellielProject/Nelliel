@@ -22,6 +22,11 @@ define('NEL_USE_MUSTACHE_CACHE', boolval($technical_config['use_mustache_cache']
 define('NEL_ENABLE_PLUGINS', boolval($technical_config['enable_plugins'] ?? true));
 define('NEL_ENABLE_JSON_API', boolval($technical_config['enable_json_api'] ?? true));
 define('NEL_DEBUG_MODE', boolval($technical_config['debug_mode'] ?? false));
+define('NEL_DEBUG_FLAGS', strval($technical_config['debug_flags'] ?? ''));
+
+$flags = array_map('trim', explode('|', NEL_DEBUG_FLAGS));
+define('NEL_DEBUG_PASS_EXCEPTIONS', in_array('PASS_EXCEPTIONS', $flags));
+define('NEL_DEBUG_DISPLAY_ERRORS', in_array('DISPLAY_ERRORS', $flags));
 
 $file_handler = new FileHandler();
 $base_temp_directory = empty($technical_config['base_temp_directory'] ?? '') ? sys_get_temp_dir() : $technical_config['base_temp_directory'];
