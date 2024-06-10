@@ -18,24 +18,25 @@ use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Interfaces\MutableData;
 use Nelliel\Tables\TableThreads;
+use Nelliel\Utility\SQLHelpers;
 use PDO;
 
 class Thread implements MutableData
 {
-    protected $content_id;
+    protected ContentID $content_id;
     protected NellielPDO $database;
-    protected $domain;
-    protected $content_data = array();
-    protected $content_moar;
-    protected $authorization;
+    protected DomainBoard $domain;
+    protected array $content_data = array();
+    protected Moar $content_moar;
+    protected Authorization $authorization;
     protected $main_table;
-    protected $archive_prune;
-    protected $overboard;
+    protected ArchiveAndPrune $archive_prune;
+    protected Overboard $overboard;
     protected $parent = null;
-    protected $json;
-    protected $sql_helpers;
+    protected ThreadJSON $json;
+    protected SQLHelpers $sql_helpers;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
+    function __construct(ContentID $content_id, DomainBoard $domain, bool $load = true)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
@@ -51,7 +52,7 @@ class Thread implements MutableData
             $this->loadFromDatabase(true);
         }
 
-        $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
+        $this->archive_prune = new ArchiveAndPrune($this->domain);
         $this->overboard = new Overboard($this->database);
     }
 
@@ -191,7 +192,7 @@ class Thread implements MutableData
         return $this;
     }
 
-    public function updateCounts()
+    public function updateCounts(): void
     {
         $prepared = $this->database->prepare(
             'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') . '" WHERE "parent_thread" = ?');
@@ -421,7 +422,8 @@ class Thread implements MutableData
             $page_filename = sprintf(nel_get_cached_domain(Domain::SITE)->setting('slug_thread_filename_format'),
                 $this->content_data['slug']);
         } else {
-            $page_filename = sprintf(nel_get_cached_domain(Domain::SITE)->setting('thread_filename_format'), $this->content_id->threadID());
+            $page_filename = sprintf(nel_get_cached_domain(Domain::SITE)->setting('thread_filename_format'),
+                $this->content_id->threadID());
         }
 
         return $page_filename;
@@ -446,39 +448,39 @@ class Thread implements MutableData
                 $this->pageBasename()], $end_slash, $query_string);
     }
 
-    public function pageFilePath()
+    public function pageFilePath(): string
     {
         return $this->domain->reference('page_path') . $this->content_id->threadID() . '/';
     }
 
-    public function srcFilePath()
+    public function srcFilePath(): string
     {
         return $this->domain->reference('src_path');
     }
 
-    public function previewFilePath()
+    public function previewFilePath(): string
     {
         return $this->domain->reference('preview_path');
     }
 
-    public function pageWebPath()
+    public function pageWebPath(): string
     {
         return $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
     }
 
-    public function srcWebPath()
+    public function srcWebPath(): string
     {
         return $this->domain->reference('src_web_path');
     }
 
-    public function previewWebPath()
+    public function previewWebPath(): string
     {
         return $this->domain->reference('preview_web_path');
     }
 
     public function archive(bool $permanent): bool
     {
-        return false; // TODO: Update for flattened structure
+        $file_handler = nel_utilities()->fileHandler();
         $thread_data = $this->getJSON()->getJSON();
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->domain->reference('archives_table') .
@@ -487,32 +489,45 @@ class Thread implements MutableData
         $prepared->bindValue(2, $thread_data, PDO::PARAM_STR);
         $prepared->bindValue(3, time(), PDO::PARAM_INT);
         $prepared->bindValue(4, $permanent, PDO::PARAM_INT);
-        $prepared->bindValue(5, $this->getMoar()->get(), PDO::PARAM_STR);
+        $prepared->bindValue(5, $this->getMoar()->getJSON(), PDO::PARAM_STR);
         $result = $this->database->executePrepared($prepared);
 
         if ($result !== true) {
             return false;
         }
 
-        $file_handler = nel_utilities()->fileHandler();
-        $file_handler->moveDirectory($this->domain->reference('src_path') . $this->content_id->threadID() . '/',
-            $this->domain->reference('archive_src_path') . $this->content_id->threadID() . '/');
-        $file_handler->moveDirectory($this->domain->reference('preview_path') . $this->content_id->threadID() . '/',
-            $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/');
-        // TODO: regen as archive page
-        $file_handler->moveDirectory($this->domain->reference('page_path') . $this->content_id->threadID() . '/',
-            $this->domain->reference('archive_page_path') . $this->content_id->threadID() . '/');
+        foreach ($this->getPosts() as $post) {
+            foreach ($post->getUploads() as $upload) {
+                if (nel_true_empty($upload->getData('embed_url'))) {
+                    $file_handler->copyFile(
+                        $upload->srcFilePath() . $upload->getData('filename') . '.' . $upload->getData('extension'),
+                        $this->domain->reference('archive_src_path') . $this->content_id->threadID() . '/' .
+                        $upload->getData('filename') . '.' . $upload->getData('extension'), true);
+                }
 
-        $this->deleteFromDatabase();
-        return true;
+                if (!nel_true_empty($upload->getData('static_preview_name'))) {
+                    $file_handler->copyFile($upload->previewFilePath() . $upload->getData('static_preview_name'),
+                        $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/' .
+                        $upload->getData('static_preview_name'), true);
+                }
+
+                if (!nel_true_empty($upload->getData('animated_preview_name'))) {
+                    $file_handler->copyFile($upload->previewFilePath() . $upload->getData('animated_preview_name'),
+                        $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/' .
+                        $upload->getData('animated_preview_name'), true);
+                }
+            }
+        }
+
+        return $this->delete(false);
     }
 
-    public function storeMoar(Moar $moar)
+    public function storeMoar(Moar $moar): void
     {
         $this->content_moar = $moar;
     }
 
-    public function getMoar()
+    public function getMoar(): Moar
     {
         return $this->content_moar;
     }
@@ -549,17 +564,17 @@ class Thread implements MutableData
         $this->content_data[$key] = TableThreads::typeCastValue($key, $new_data);
     }
 
-    public function contentID()
+    public function contentID(): ContentID
     {
         return $this->content_id;
     }
 
-    public function domain()
+    public function domain(): DomainBoard
     {
         return $this->domain;
     }
 
-    public function isLoaded()
+    public function isLoaded(): bool
     {
         return !empty($this->content_data);
     }

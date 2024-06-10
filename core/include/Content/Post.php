@@ -54,7 +54,7 @@ class Post implements MutableData
             $this->loadFromDatabase(true);
         }
 
-        $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
+        $this->archive_prune = new ArchiveAndPrune($this->domain);
     }
 
     public function exists(): bool

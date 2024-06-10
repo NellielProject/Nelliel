@@ -47,7 +47,7 @@ class OutputIndex extends Output
         $this->render_data['page_navigation'] = $output_navigation->boardPages(
             ['in_modmode' => $this->render_data['in_modmode'], 'display' => 'index'], $data_only);
 
-        $threads = $this->domain->activeThreads(true);
+        $threads = $this->domain->getThreads(true, false);
         $thread_count = count($threads);
         $threads_done = 0;
         $gen_data = array();

@@ -53,7 +53,7 @@ class OutputPanelThreads extends Output
          * PDO::FETCH_ASSOC);
          */
         $bgclass = 'row1';
-        $threads = $this->domain->activeThreads(true);
+        $threads = $this->domain->getThreads(true, false);
 
         foreach ($threads as $thread) {
             $thread_info = array();

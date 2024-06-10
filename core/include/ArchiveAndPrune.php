@@ -5,21 +5,15 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Content\ContentID;
-use Nelliel\Domains\Domain;
-use PDO;
+use Nelliel\Domains\DomainBoard;
 
 class ArchiveAndPrune
 {
-    private $database;
-    private $file_handler;
-    private $domain;
+    private DomainBoard $domain;
 
-    function __construct(Domain $domain, $file_handler)
+    function __construct(DomainBoard $domain)
     {
-        $this->database = $domain->database();
         $this->domain = $domain;
-        $this->file_handler = $file_handler;
     }
 
     public function updateThreads()
@@ -39,48 +33,34 @@ class ArchiveAndPrune
         $archive_prune = $this->domain->setting('do_archive_pruning');
         $archive = $this->domain->setting('old_threads') === 'ARCHIVE';
         $prune = $this->domain->setting('old_threads') === 'PRUNE';
-        $thread_list = $this->getFullThreadList();
+        $thread_list = $this->domain->getThreads();
         $page = 1;
         $page_size = $this->domain->setting('threads_per_page');
         $threads_on_page = 0;
 
         foreach ($thread_list as $thread) {
-            $content_id = new ContentID();
-            $content_id->changeThreadID($thread['thread_id']);
-
-            if ($thread['preserve'] != 1 && $early404 && $page > $early404_page &&
-                $thread['post_count'] - 1 < $early404_replies &&
-                $thread['post_count'] - 1 < $this->domain->setting('auto_archive_min_replies')) {
-                $thread = $content_id->getInstanceFromID($this->domain);
+            if (!$thread->getData('preserve') && $early404 && $page > $early404_page &&
+                $thread->getData('post_count') - 1 < $early404_replies &&
+                $thread->getData('post_count') - 1 < $this->domain->setting('auto_archive_min_replies')) {
                 $thread->delete(true);
                 continue;
-            }
-
-            if ($line <= $last_active) // Thread is within active range
+            } else if ($line <= $last_active) // Thread is within active range
             {
-                if ($thread['old'] == 1) {
-                    $thread = $content_id->getInstanceFromID($this->domain);
-                    $thread->changeData('old', false);
-                    $thread->writeToDatabase();
-                }
+                $thread->changeData('old', false);
+                $thread->writeToDatabase();
             } else if ($line <= $last_buffer) // Thread is within buffer range
             {
-                if ($thread['old'] == 0) {
-                    $thread = $content_id->getInstanceFromID($this->domain);
-                    $thread->changeData('old', true);
-                    $thread->writeToDatabase();
-                }
+                $thread->changeData('old', true);
+                $thread->writeToDatabase();
             } else if ($line <= $last_archive) // Thread is past buffer range
             {
-                if ($archive) {
-                    $thread = $content_id->getInstanceFromID($this->domain);
+                if ($archive || $thread->getData('preserve')) {
                     $thread->archive(false);
                     continue;
                 }
             } else // Thread is beyond automatic archive range
             {
                 if ($prune && $archive_prune) {
-                    $thread = $content_id->getInstanceFromID($this->domain);
                     $thread->delete(true);
                     continue;
                 }
@@ -92,16 +72,8 @@ class ArchiveAndPrune
                 $page ++;
                 $threads_on_page = 0;
             }
+
             $line ++;
         }
-    }
-
-    private function getFullThreadList()
-    {
-        $query = 'SELECT "thread_id", "post_count", "old", "preserve" FROM "' .
-            $this->domain->reference('threads_table') .
-            '" ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC';
-        $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
-        return $thread_list;
     }
 }

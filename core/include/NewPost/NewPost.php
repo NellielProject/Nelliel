@@ -40,7 +40,8 @@ class NewPost
         $error_data = ['board_id' => $this->domain->id()];
         $captcha = new CAPTCHA($this->domain);
 
-        if (nel_get_cached_domain(Domain::SITE)->setting('enable_captchas') && $this->domain->setting('use_post_captcha')) {
+        if (nel_get_cached_domain(Domain::SITE)->setting('enable_captchas') && $this->domain->setting(
+            'use_post_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha->verify($captcha_key, $captcha_answer);
@@ -134,7 +135,8 @@ class NewPost
                 $upload->changeData('upload_order', $order);
 
                 if ($upload->getData('category') !== 'embed' && !$upload->getData('use_existing')) {
-                    $file_handler->moveFile($upload->getData('location'), $post->srcFilePath() . $upload->getData('fullname'));
+                    $file_handler->moveFile($upload->getData('location'),
+                        $post->srcFilePath() . $upload->getData('fullname'));
                     chmod($post->srcFilePath() . $upload->getData('fullname'), octdec(NEL_FILES_PERM));
                     $upload->changeData('location', $post->srcFilePath() . $upload->getData('fullname'));
                 }
@@ -158,11 +160,8 @@ class NewPost
             $thread->cycle();
         }
 
-        if ($thread->getData('op') || $thread->getData('old')) {
-            $archive_and_prune = new ArchiveAndPrune($thread->domain(), $file_handler);
-            $archive_and_prune->updateThreads();
-        }
-
+        $archive_and_prune = new ArchiveAndPrune($thread->domain());
+        $archive_and_prune->updateThreads();
         $update_overboard = new Overboard($this->database);
         $update_overboard->addThread($thread);
         $update_global_recents = new GlobalRecents($this->database);

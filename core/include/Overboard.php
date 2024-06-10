@@ -187,12 +187,12 @@ class Overboard
             $board = Domain::getDomainFromID($board_id, $this->database);
 
             if ($all_overboards) {
-                foreach ($board->activeThreads(true) as $thread) {
+                foreach ($board->getThreads(true, false) as $thread) {
                     $this->addThread($thread, 'sfw');
                     $this->addThread($thread, 'all');
                 }
             } else {
-                foreach ($board->activeThreads(true) as $thread) {
+                foreach ($board->getThreads(true, false) as $thread) {
                     $this->addThread($thread, $overboard_id);
                 }
             }
