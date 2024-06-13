@@ -34,6 +34,7 @@ use Nelliel\Tables\TableVisitorInfo;
 use Nelliel\Utility\FileHandler;
 use PDO;
 use Nelliel\Tables\TablePluginConfigs;
+use Nelliel\Tables\TableThreadArchives;
 
 class BetaMigrations
 {
@@ -2211,6 +2212,45 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $this->addRolePermission('perm_access_plugin_controls');
 
                 echo ' - ' . __('Permissions and role permissions tables updated.') . '<br>';
+
+                $migration_count ++;
+
+            case 'v0.9.32':
+                echo '<br><b>' . __('Updating from v0.9.32 to ???') . '</b><br>';
+
+                // Update archive tables
+                $prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
+
+                foreach ($prefixes as $prefix) {
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_archives" RENAME TO ' . $prefix . '_archives_old');
+                    $news_table = new TableThreadArchives(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $news_table->createTable();
+                    $rows = nel_database('core')->executeFetchAll('SELECT * FROM "' . $prefix . '_archives_old"',
+                        PDO::FETCH_ASSOC);
+                    $row_insert = nel_database('core')->prepare(
+                        'INSERT INTO "' . $prefix .
+                        '_archives" ("thread_id", "thread_meta", "thread_data", "time_archived", "permanent", "moar") VALUES (:thread_id, :thread_meta, :thread_data, :time_archived, :permanent, :moar)');
+
+                    foreach ($rows as $row) {
+                        $thread_data_decoded = json_decode($row['thread_data'], true);
+                        $thread_data_decoded['op_data'] = $thread_data_decoded['posts'][0] ?? array();
+                        unset($thread_data_decoded['posts']);
+                        $thread_meta = json_encode($thread_data_decoded);
+                        $row_insert->bindValue(':thread_id', $row['thread_id'], PDO::PARAM_INT);
+                        $row_insert->bindValue(':thread_meta', $thread_meta, PDO::PARAM_STR);
+                        $row_insert->bindValue(':thread_data', $row['thread_data'], PDO::PARAM_STR);
+                        $row_insert->bindValue(':time_archived', $row['time_archived'], PDO::PARAM_INT);
+                        $row_insert->bindValue(':permanent', $row['permanent'], PDO::PARAM_INT);
+                        $row_insert->bindValue(':moar', $row['moar'], PDO::PARAM_STR);
+                        nel_database('core')->executePrepared($ip_transfer);
+                    }
+
+                    nel_database('core')->exec('DROP TABLE "' . $prefix . '_archives_old"');
+                }
+
+                echo ' - ' . __('Archive tables updated.') . '<br>';
 
                 $migration_count ++;
         }

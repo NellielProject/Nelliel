@@ -481,15 +481,19 @@ class Thread implements MutableData
     public function archive(bool $permanent): bool
     {
         $file_handler = nel_utilities()->fileHandler();
+        $raw_meta = $this->getData();
+        $raw_meta['op_data'] = $this->firstPost()->getData();
+        $thread_meta = json_encode($raw_meta);
         $thread_data = $this->getJSON()->getJSON();
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->domain->reference('archives_table') .
-            '" ("thread_id", "thread_data", "time_archived", "permanent", "moar") VALUES (?, ?, ?, ?, ?)');
-        $prepared->bindValue(1, $this->content_id->threadID(), PDO::PARAM_INT);
-        $prepared->bindValue(2, $thread_data, PDO::PARAM_STR);
-        $prepared->bindValue(3, time(), PDO::PARAM_INT);
-        $prepared->bindValue(4, $permanent, PDO::PARAM_INT);
-        $prepared->bindValue(5, $this->getMoar()->getJSON(), PDO::PARAM_STR);
+            '" ("thread_id", "thread_meta", "thread_data", "time_archived", "permanent", "moar") VALUES (:thread_id, :thread_meta, :thread_data, :time_archived, :permanent, :moar)');
+        $prepared->bindValue(':thread_id', $this->content_id->threadID(), PDO::PARAM_INT);
+        $prepared->bindValue(':thread_meta', $thread_meta, PDO::PARAM_STR);
+        $prepared->bindValue(':thread_data', $thread_data, PDO::PARAM_STR);
+        $prepared->bindValue(':time_archived', time(), PDO::PARAM_INT);
+        $prepared->bindValue(':permanent', $permanent, PDO::PARAM_INT);
+        $prepared->bindValue(':moar', $this->getMoar()->getJSON(), PDO::PARAM_STR);
         $result = $this->database->executePrepared($prepared);
 
         if ($result !== true) {

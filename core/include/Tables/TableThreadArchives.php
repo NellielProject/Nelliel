@@ -14,6 +14,7 @@ class TableThreadArchives extends Table
     public const SCHEMA_VERSION = 1;
     public const PHP_TYPES = [
         'thread_id' => 'integer',
+        'thread_meta' => 'string',
         'thread_data' => 'string',
         'time_archived' => 'integer',
         'permanent' => 'boolean',
@@ -21,6 +22,7 @@ class TableThreadArchives extends Table
 
     public const PDO_TYPES = [
         'thread_id' => PDO::PARAM_INT,
+        'thread_meta' => PDO::PARAM_STR,
         'thread_data' => PDO::PARAM_STR,
         'time_archived' => PDO::PARAM_INT,
         'permanent' => PDO::PARAM_INT,
@@ -32,6 +34,7 @@ class TableThreadArchives extends Table
         $this->table_name = '_archives';
         $this->column_checks = [
             'thread_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
+            'thread_meta' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'thread_data' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'time_added' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'permanent' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -44,7 +47,8 @@ class TableThreadArchives extends Table
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
             thread_id       INTEGER NOT NULL,
-            thread_data     ' . $this->sql_compatibility->textType('LONGTEXT') . ',
+            thread_meta     ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
+            thread_data     ' . $this->sql_compatibility->textType('LONGTEXT') . ' NOT NULL,
             time_archived   BIGINT NOT NULL,
             permanent       SMALLINT NOT NULL DEFAULT 0,
             moar            ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
