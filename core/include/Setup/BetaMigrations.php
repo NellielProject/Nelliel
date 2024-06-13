@@ -41,11 +41,13 @@ class BetaMigrations
     private $file_handler;
     private $upgrade;
     private $setting_defaults_inserted = false;
+    private $updating_message = '';
 
     function __construct(FileHandler $file_handler, Upgrade $upgrade)
     {
         $this->file_handler = $file_handler;
         $this->upgrade = $upgrade;
+        $this->updating_message = __('Updating from %s to %s...');
     }
 
     // NOTES
@@ -59,7 +61,7 @@ class BetaMigrations
 
         switch ($this->upgrade->installedVersion()) {
             case 'v0.9.25':
-                echo '<br><b>' . __('Updating from v0.9.25 to v0.9.26...') . '</b><br>';
+                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.25', 'v0.9.26') . '</b><br>';
 
                 // Update setting options table
                 nel_database('core')->exec('ALTER TABLE "nelliel_menu_data" RENAME TO nelliel_setting_options');
@@ -270,7 +272,7 @@ class BetaMigrations
                 $migration_count ++;
 
             case 'v0.9.26':
-                echo '<br><b>' . __('Updating from v0.9.26 to v0.9.27...') . '</b><br>';
+                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.26', 'v0.9.27') . '</b><br>';
 
                 // Update post tables
                 $db_prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
@@ -382,7 +384,7 @@ class BetaMigrations
                 $migration_count ++;
 
             case 'v0.9.27':
-                echo '<br><b>' . __('Updating from v0.9.27 to v0.9.28...') . '</b><br>';
+                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.27', 'v0.9.28') . '</b><br>';
 
                 // Update core image set info
                 $image_set_instance = nel_get_cached_domain(Domain::SITE)->frontEndData()->getImageSet(
@@ -610,7 +612,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.28':
-                echo '<br><b>' . __('Updating from v0.9.28 to v0.9.29...') . '</b><br>';
+                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.28', 'v0.9.29') . '</b><br>';
 
                 // Update file filters
                 nel_database('core')->exec(
@@ -761,7 +763,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.29':
-                echo '<br><b>' . __('Updating from v0.9.29 to v0.9.30...') . '</b><br>';
+                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.29', 'v0.9.30') . '</b><br>';
 
                 // Update settings table
                 if ($core_sqltype === 'MYSQL' || $core_sqltype === 'MARIADB') {
@@ -1311,7 +1313,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.30':
-                echo '<br><b>' . __('Updating from v0.9.30 to v0.9.31') . '</b><br>';
+                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.30', 'v0.9.31') . '</b><br>';
 
                 // Update site settings
                 nel_database('core')->exec(
@@ -2095,7 +2097,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.31':
-                echo '<br><b>' . __('Updating from v0.9.31 to v0.9.32') . '</b><br>';
+                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.31', 'v0.9.32') . '</b><br>';
 
                 // Update site settings
                 $settings_table = new TableSettings(nel_database('core'), nel_utilities()->sqlCompatibility());
@@ -2216,7 +2218,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.32':
-                echo '<br><b>' . __('Updating from v0.9.32 to ???') . '</b><br>';
+                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.32', '???') . '</b><br>';
 
                 // Update archive tables
                 $prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
@@ -2225,8 +2227,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 foreach ($prefixes as $prefix) {
                     nel_database('core')->exec(
                         'ALTER TABLE "' . $prefix . '_archives" RENAME TO ' . $prefix . '_archives_old');
-                    $news_table = new TableThreadArchives(nel_database('core'), nel_utilities()->sqlCompatibility());
-                    $news_table->createTable();
+                    $archives_table = new TableThreadArchives(nel_database('core'), nel_utilities()->sqlCompatibility());
+                    $archives_table->tableName($prefix . '_archives');
+                    $archives_table->createTable();
                     $rows = nel_database('core')->executeFetchAll('SELECT * FROM "' . $prefix . '_archives_old"',
                         PDO::FETCH_ASSOC);
                     $row_insert = nel_database('core')->prepare(
