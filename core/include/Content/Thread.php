@@ -480,17 +480,33 @@ class Thread implements MutableData
 
     public function archive(bool $permanent): bool
     {
-        $file_handler = nel_utilities()->fileHandler();
-        $raw_meta = $this->getData();
-        $raw_meta['op_data'] = $this->firstPost()->getData();
-        $thread_meta = json_encode($raw_meta);
-        $thread_data = $this->getJSON()->getJSON();
+        $thread_meta = $this->getData();
+        $thread_data = $this->getData();
+
+        foreach ($this->getPosts() as $post) {
+            $post_data = $post->getData();
+
+            foreach ($post->getUploads() as $upload) {
+                $post_data['uploads'][] = $upload->getData();
+                $upload->archive();
+            }
+
+            if ($post->getData('op')) {
+                $thread_meta['op_post'] = $thread_data;
+            }
+
+            $thread_data['posts'][] = $post_data;
+        }
+
+        $thread_meta_json = json_encode($thread_meta);
+        $thread_data_json = json_encode($thread_data);
+
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->domain->reference('archives_table') .
             '" ("thread_id", "thread_meta", "thread_data", "time_archived", "permanent", "moar") VALUES (:thread_id, :thread_meta, :thread_data, :time_archived, :permanent, :moar)');
         $prepared->bindValue(':thread_id', $this->content_id->threadID(), PDO::PARAM_INT);
-        $prepared->bindValue(':thread_meta', $thread_meta, PDO::PARAM_STR);
-        $prepared->bindValue(':thread_data', $thread_data, PDO::PARAM_STR);
+        $prepared->bindValue(':thread_meta', $thread_meta_json, PDO::PARAM_STR);
+        $prepared->bindValue(':thread_data', $thread_data_json, PDO::PARAM_STR);
         $prepared->bindValue(':time_archived', time(), PDO::PARAM_INT);
         $prepared->bindValue(':permanent', $permanent, PDO::PARAM_INT);
         $prepared->bindValue(':moar', $this->getMoar()->getJSON(), PDO::PARAM_STR);
@@ -500,30 +516,7 @@ class Thread implements MutableData
             return false;
         }
 
-        foreach ($this->getPosts() as $post) {
-            foreach ($post->getUploads() as $upload) {
-                if (nel_true_empty($upload->getData('embed_url'))) {
-                    $file_handler->copyFile(
-                        $upload->srcFilePath() . $upload->getData('filename') . '.' . $upload->getData('extension'),
-                        $this->domain->reference('archive_src_path') . $this->content_id->threadID() . '/' .
-                        $upload->getData('filename') . '.' . $upload->getData('extension'), true);
-                }
-
-                if (!nel_true_empty($upload->getData('static_preview_name'))) {
-                    $file_handler->copyFile($upload->previewFilePath() . $upload->getData('static_preview_name'),
-                        $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/' .
-                        $upload->getData('static_preview_name'), true);
-                }
-
-                if (!nel_true_empty($upload->getData('animated_preview_name'))) {
-                    $file_handler->copyFile($upload->previewFilePath() . $upload->getData('animated_preview_name'),
-                        $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/' .
-                        $upload->getData('animated_preview_name'), true);
-                }
-            }
-        }
-
-        return $this->delete(false);
+        return true;
     }
 
     public function storeMoar(Moar $moar): void

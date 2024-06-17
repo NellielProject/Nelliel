@@ -56,6 +56,7 @@ class ArchiveAndPrune
             {
                 if ($archive || $thread->getData('preserve')) {
                     $thread->archive(false);
+                    $thread->delete(true);
                     continue;
                 }
             } else // Thread is beyond automatic archive range

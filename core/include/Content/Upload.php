@@ -215,6 +215,37 @@ class Upload implements MutableData
         return false;
     }
 
+    public function archive(): bool
+    {
+        if (!$this->isLoaded()) {
+            $this->loadFromDatabase();
+        }
+
+        if (!nel_true_empty($this->getData('embed_url'))) {
+            return true;
+        }
+
+        $file_handler = nel_utilities()->fileHandler();
+
+        $file_handler->copyFile($this->srcFilePath() . $this->getData('filename') . '.' . $this->getData('extension'),
+            $this->domain->reference('archive_src_path') . $this->content_id->threadID() . '/' .
+            $this->getData('filename') . '.' . $this->getData('extension'), true);
+
+        if (!nel_true_empty($this->getData('static_preview_name'))) {
+            $file_handler->copyFile($this->previewFilePath() . $this->getData('static_preview_name'),
+                $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/' .
+                $this->getData('static_preview_name'), true);
+        }
+
+        if (!nel_true_empty($this->getData('animated_preview_name'))) {
+            $file_handler->copyFile($this->previewFilePath() . $this->getData('animated_preview_name'),
+                $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/' .
+                $this->getData('animated_preview_name'), true);
+        }
+
+        return true;
+    }
+
     public function toggleSpoiler(): void
     {
         $this->changeData('spoiler', !$this->getData('spoiler'));
