@@ -36,6 +36,11 @@ class BoardEditor
         }
 
         $this->validateURI($board_uri);
+
+        if (isset($custom['subdirectories'])) {
+            $this->validateSubdirectories($custom['subdirectories']);
+        }
+
         $board_id = $this->generateID($board_uri);
         $display_uri = $board_uri;
         $uri = utf8_strtolower($board_uri);
@@ -101,12 +106,13 @@ class BoardEditor
 
     public function updateSubdirectories(DomainBoard $board, array $subdirectories): void
     {
+        $this->validateSubdirectories($subdirectories);
+
         $final = array();
         $final['source'] = $board->reference('source_directory');
         $final['preview'] = $board->reference('preview_directory');
         $final['page'] = $board->reference('page_directory');
         $final['archive'] = $board->reference('archive_directory');
-        $max_length = $this->site_domain->setting('max_subdirectory_length');
 
         foreach ($final as $index => $current_name) {
             $new_name = $subdirectories[$index] ?? '';
@@ -119,23 +125,6 @@ class BoardEditor
 
             if (nel_true_empty($current_name)) {
                 $final[$index] = $default_setting;
-            }
-
-            if (!$this->site_domain->setting('allow_custom_subdirectories') && $new_name !== $default_setting) {
-                nel_derp(246, __('Custom subdirectory names are not allowed.'));
-            }
-
-            if (utf8_strlen($new_name) > $max_length) {
-                nel_derp(247,
-                    sprintf(__('One or more of the provided subdirectory names is too long. Maximum %d characters.'),
-                        $max_length));
-            }
-
-            if ($this->site_domain->setting('only_alphanumeric_subdirectories') &&
-                preg_match('/[^a-zA-Z0-9]/', $new_name) === 1) {
-                nel_derp(248,
-                    _gettext(
-                        'One or more of the provided subdirectory names contain invalid characters. Must be alphanumeric only.'));
             }
 
             $final[$index] = $new_name;
@@ -152,6 +141,36 @@ class BoardEditor
         $this->database->executePrepared($prepared);
         $board->reload();
         nel_get_cached_domain($board->id(), true);
+    }
+
+    public function validateSubdirectories(array $subdirectories): void
+    {
+        $max_length = $this->site_domain->setting('max_subdirectory_length');
+
+        foreach ($subdirectories as $index => $name) {
+            if (nel_true_empty($name)) {
+                continue;
+            }
+
+            $default_setting = $this->site_domain->setting('default_' . $index . '_subdirectory');
+
+            if (!$this->site_domain->setting('allow_custom_subdirectories') && $name !== $default_setting) {
+                nel_derp(246, __('Custom subdirectory names are not allowed.'));
+            }
+
+            if (utf8_strlen($name) > $max_length) {
+                nel_derp(247,
+                    sprintf(__('One or more of the provided subdirectory names is too long. Maximum %d characters.'),
+                        $max_length));
+            }
+
+            if ($this->site_domain->setting('only_alphanumeric_subdirectories') &&
+                preg_match('/[^a-zA-Z0-9]/', $name) === 1) {
+                    nel_derp(248,
+                        _gettext(
+                            'One or more of the provided subdirectory names contain invalid characters. Must be alphanumeric only.'));
+                }
+        }
     }
 
     public function updateURI(DomainBoard $board, string $new_uri): void
@@ -275,7 +294,7 @@ class BoardEditor
     public function delete(DomainBoard $board): void
     {
         if (!$board->exists()) {
-            nel_derp(180, _gettext('Not a board ID or board does not exist.'));
+            nel_derp(180, __('Cannot delete a board that doesn\'t exist.'));
         }
 
         $board_uri = $board->uri(true, true);
