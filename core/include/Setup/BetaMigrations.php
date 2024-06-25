@@ -6,6 +6,7 @@ namespace Nelliel\Setup;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\GlobalRecents;
+use Nelliel\Moar;
 use Nelliel\Overboard;
 use Nelliel\Domains\Domain;
 use Nelliel\Tables\TableBanAppeals;
@@ -20,6 +21,7 @@ use Nelliel\Tables\TableNews;
 use Nelliel\Tables\TableNoticeboard;
 use Nelliel\Tables\TableOverboard;
 use Nelliel\Tables\TablePermissions;
+use Nelliel\Tables\TablePluginConfigs;
 use Nelliel\Tables\TablePosts;
 use Nelliel\Tables\TableR9KContent;
 use Nelliel\Tables\TableR9KMutes;
@@ -28,13 +30,12 @@ use Nelliel\Tables\TableScripts;
 use Nelliel\Tables\TableSettingOptions;
 use Nelliel\Tables\TableSettings;
 use Nelliel\Tables\TableStatistics;
+use Nelliel\Tables\TableThreadArchives;
 use Nelliel\Tables\TableThreads;
 use Nelliel\Tables\TableUploads;
 use Nelliel\Tables\TableVisitorInfo;
 use Nelliel\Utility\FileHandler;
 use PDO;
-use Nelliel\Tables\TablePluginConfigs;
-use Nelliel\Tables\TableThreadArchives;
 
 class BetaMigrations
 {
@@ -2247,13 +2248,37 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         $row_insert->bindValue(':time_archived', $row['time_archived'], PDO::PARAM_INT);
                         $row_insert->bindValue(':permanent', $row['permanent'], PDO::PARAM_INT);
                         $row_insert->bindValue(':moar', $row['moar'], PDO::PARAM_STR);
-                        nel_database('core')->executePrepared($ip_transfer);
+                        nel_database('core')->executePrepared($row_insert);
                     }
 
                     nel_database('core')->exec('DROP TABLE "' . $prefix . '_archives_old"');
                 }
 
                 echo ' - ' . __('Archive tables updated.') . '<br>';
+
+                // Update post tables
+                $prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',
+                    PDO::FETCH_COLUMN);
+                $post_moar_select = nel_database('core')->prepare('SELECT "post_number", "moar" FROM :post_table');
+
+                foreach ($prefixes as $prefix) {
+                    $post_moar_select->bindValue(':post_table', $prefix . '_posts', PDO::PARAM_STR);
+                    $moars = nel_database('core')->executePreparedFetchAll($ip_transfer, null, PDO::FETCH_KEY_PAIR);
+
+                    $moar_update = nel_database('core')->prepare(
+                        'UPDATE "' . $prefix . '_posts" SET "moar" = :moar WHERE "post_number" = :post_number');
+
+                    foreach ($moars as $post_number => $moar) {
+                        $modified_moar = new Moar($moar);
+                        $current_data = $modified_moar->getData();
+                        $modified_moar->changeSectionData('nelliel', $current_data);
+                        $moar_update->bindValue(':moar', json_encode($modified_moar), PDO::PARAM_STR);
+                        $moar_update->bindValue(':post_number', $post_number, PDO::PARAM_STR);
+                        nel_database('core')->executePrepared($moar_update);
+                    }
+                }
+
+                echo ' - ' . __('Post tables updated.') . '<br>';
 
                 $migration_count ++;
         }

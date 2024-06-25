@@ -42,7 +42,7 @@ class Thread implements MutableData
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->authorization = new Authorization($this->database);
-        $this->storeMoar(new Moar());
+        $this->content_moar = new Moar();
         $this->main_table = new TableThreads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('threads_table'));
         $this->json = new ThreadJSON($this);
@@ -76,8 +76,8 @@ class Thread implements MutableData
         }
 
         $this->content_data = TableThreads::typeCastData($result);
-        $moar = $result['moar'] ?? '';
-        $this->getMoar()->storeFromJSON($moar);
+        $moar = strval($result['moar'] ?? '');
+        $this->content_moar = new Moar($moar);
         return true;
     }
 
@@ -88,7 +88,7 @@ class Thread implements MutableData
         }
 
         $filtered_data = TableThreads::filterData($this->content_data);
-        $filtered_data['moar'] = $this->getMoar()->getJSON();
+        $filtered_data['moar'] = json_encode($this->content_moar->getData());
         $pdo_types = TableThreads::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
@@ -509,7 +509,7 @@ class Thread implements MutableData
         $prepared->bindValue(':thread_data', $thread_data_json, PDO::PARAM_STR);
         $prepared->bindValue(':time_archived', time(), PDO::PARAM_INT);
         $prepared->bindValue(':permanent', $permanent, PDO::PARAM_INT);
-        $prepared->bindValue(':moar', $this->getMoar()->getJSON(), PDO::PARAM_STR);
+        $prepared->bindValue(':moar', json_encode($this->content_moar->getData()), PDO::PARAM_STR);
         $result = $this->database->executePrepared($prepared);
 
         if ($result !== true) {
@@ -696,9 +696,9 @@ class Thread implements MutableData
 
                 if ($keep_shadow) {
                     $this->changeData('shadow', true);
-                    $this->getMoar()->modify('shadow_board_id', $domain->id());
-                    $this->getMoar()->modify('shadow_thread_id', $new_thread->contentID()->threadID());
-                    $this->getMoar()->modify('shadow_type', 'moved');
+                    $this->content_moar->changeData('shadow_board_id', $domain->id());
+                    $this->content_moar->changeData('shadow_thread_id', $new_thread->contentID()->threadID());
+                    $this->content_moar->changeData('shadow_type', 'moved');
                     $this->changeData('locked', true);
                     $this->writeToDatabase();
                 }
@@ -756,9 +756,9 @@ class Thread implements MutableData
 
         if ($cross_board && $keep_shadow) {
             $incoming_thread->changeData('shadow', true);
-            $incoming_thread->getMoar()->modify('shadow_board_id', $this->domain->id());
-            $incoming_thread->getMoar()->modify('shadow_thread_id', $this->contentID()->threadID());
-            $incoming_thread->getMoar()->modify('shadow_type', 'merged');
+            $incoming_thread->getMoar()->changeData('shadow_board_id', $this->domain->id());
+            $incoming_thread->getMoar()->changeData('shadow_thread_id', $this->contentID()->threadID());
+            $incoming_thread->getMoar()->changeData('shadow_type', 'merged');
             $incoming_thread->changeData('locked', true);
             $incoming_thread->writeToDatabase();
         } else {

@@ -101,13 +101,13 @@ class PostData
         $raw_html = boolval($_POST['raw_html'] ?? false);
 
         if ($raw_html && $this->session->user()->checkPermission($this->domain, 'perm_raw_html')) {
-            $post->getMoar()->modify('raw_html', true);
+            $post->getMoar()->changeSectionData('nelliel', 'raw_html', true);
         }
 
         $disable_markup = boolval($_POST['no_markup'] ?? false);
 
         if ($disable_markup) {
-            $post->getMoar()->modify('no_markup', true);
+            $post->getMoar()->changeSectionData('nelliel', 'no_markup', true);
         }
 
         if ($enable_email && !$this->domain->setting('forced_anonymous')) {
@@ -288,7 +288,8 @@ class PostData
     private function secureTripcode(string $key): string
     {
         $secure_tripcode = '';
-        $trip_code = hash_hmac(nel_get_cached_domain(Domain::SITE)->setting('secure_tripcode_algorithm'), $key, NEL_TRIPCODE_PEPPER);
+        $trip_code = hash_hmac(nel_get_cached_domain(Domain::SITE)->setting('secure_tripcode_algorithm'), $key,
+            NEL_TRIPCODE_PEPPER);
         $trip_code = base64_encode(pack("H*", $trip_code));
         $secure_tripcode = utf8_substr($trip_code, 2, 10);
         return $secure_tripcode;
@@ -433,7 +434,7 @@ class PostData
             $modifier = intval($matches[3] ?? 0);
 
             // If multiple rolls, only the last one is used
-            $post->getMoar()->modify('dice_roll', $dice_instance->roll($dice, $sides, $modifier));
+            $post->getMoar()->changeSectionData('nelliel', 'dice_roll', $dice_instance->roll($dice, $sides, $modifier));
         }
     }
 

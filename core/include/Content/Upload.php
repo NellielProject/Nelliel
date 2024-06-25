@@ -33,7 +33,7 @@ class Upload implements MutableData
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->authorization = new Authorization($this->database);
-        $this->storeMoar(new Moar());
+        $this->content_moar = new Moar();
         $this->main_table = new TableUploads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('uploads_table'));
         $this->json = new UploadJSON($this);
@@ -66,8 +66,8 @@ class Upload implements MutableData
         }
 
         $this->content_data = TableUploads::typeCastData($result);
-        $moar = $result['moar'] ?? '';
-        $this->getMoar()->storeFromJSON($moar);
+        $moar = strval($result['moar'] ?? '');
+        $this->content_moar = new Moar($moar);
         return true;
     }
 
@@ -78,7 +78,7 @@ class Upload implements MutableData
         }
 
         $filtered_data = TableUploads::filterData($this->content_data);
-        $filtered_data['moar'] = $this->getMoar()->getJSON();
+        $filtered_data['moar'] = json_encode($this->content_moar->getData());
         $pdo_types = TableUploads::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
