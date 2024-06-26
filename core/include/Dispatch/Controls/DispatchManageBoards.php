@@ -25,20 +25,51 @@ class DispatchManageBoards extends Dispatch
     public function dispatch(array $inputs): void
     {
         $board_editor = new BoardEditor($this->domain->database());
-        $board_uri = trim($_POST['new_board_uri'] ?? '');
+        $board_uri = trim($_POST['board_uri'] ?? '');
         $go_to_panel = true;
 
         switch ($inputs['section']) {
             case 'new':
                 $this->verifyPermissions($this->domain, 'perm_boards_add');
-                $custom = array();
-                $custom['subdirectories']['source'] = trim($_POST['new_board_src'] ?? '');
-                $custom['subdirectories']['preview'] = trim($_POST['new_board_preview'] ?? '');
-                $custom['subdirectories']['page'] = trim($_POST['new_board_page'] ?? '');
-                $custom['subdirectories']['archive'] = trim($_POST['new_board_archive'] ?? '');
+
+                if ($inputs['method'] === 'GET') {
+                    $output_panel = new OutputPanelManageBoards($this->domain, false);
+                    $output_panel->new([], false);
+                    $go_to_panel = false;
+                }
 
                 if ($inputs['method'] === 'POST') {
+                    $custom = array();
+                    $custom['subdirectories']['source'] = trim($_POST['source_directory'] ?? '');
+                    $custom['subdirectories']['preview'] = trim($_POST['preview_directory'] ?? '');
+                    $custom['subdirectories']['page'] = trim($_POST['page_directory'] ?? '');
+                    $custom['subdirectories']['archive'] = trim($_POST['archive_directory'] ?? '');
                     $board_editor->create($board_uri, $custom);
+                }
+
+                break;
+
+            case 'modify':
+                $this->verifyPermissions($this->domain, 'perm_boards_modify');
+                $board = Domain::getDomainFromID($inputs['id']);
+                $board_id = $board->id();
+
+                if ($inputs['method'] === 'GET') {
+                    $output_panel = new OutputPanelManageBoards($this->domain, false);
+                    $output_panel->edit(['board' => $board], false);
+                    $go_to_panel = false;
+                }
+
+                if ($inputs['method'] === 'POST') {
+                    $subdirectories = array();
+                    $subdirectories['source'] = trim($_POST['source_directory'] ?? '');
+                    $subdirectories['preview'] = trim($_POST['preview_directory'] ?? '');
+                    $subdirectories['page'] = trim($_POST['page_directory'] ?? '');
+                    $subdirectories['archive'] = trim($_POST['archive_directory'] ?? '');
+
+                    $board_editor->updateURI($board, $board_uri);
+                    $board = Domain::getDomainFromID($board_id);
+                    $board_editor->updateSubdirectories($board, $subdirectories);
                 }
 
                 break;

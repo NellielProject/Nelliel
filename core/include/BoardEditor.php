@@ -5,6 +5,7 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Account\Session;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
@@ -13,7 +14,6 @@ use Nelliel\Language\Translator;
 use Nelliel\Output\OutputInterstitial;
 use Nelliel\Setup\Installer\Installer;
 use PDO;
-use Nelliel\Account\Session;
 
 class BoardEditor
 {
@@ -62,12 +62,17 @@ class BoardEditor
             '" ("board_id", "db_prefix", "source_directory", "preview_directory", "page_directory", "archive_directory") VALUES (:board_id, :db_prefix, :source_directory, :preview_directory, :page_directory, :archive_directory)');
         $prepared->bindValue(':board_id', $board_id, PDO::PARAM_STR);
         $prepared->bindValue(':db_prefix', $db_prefix, PDO::PARAM_STR);
-        $prepared->bindValue(':source_directory', $this->site_domain->setting('default_source_subdirectory'),
+        $prepared->bindValue(':source_directory',
+            $custom['subdirectories']['source'] ?? $this->site_domain->setting('default_source_subdirectory'),
             PDO::PARAM_STR);
-        $prepared->bindValue(':preview_directory', $this->site_domain->setting('default_preview_subdirectory'),
+        $prepared->bindValue(':preview_directory',
+            $custom['subdirectories']['preview'] ?? $this->site_domain->setting('default_preview_subdirectory'),
             PDO::PARAM_STR);
-        $prepared->bindValue(':page_directory', $this->site_domain->setting('default_page_subdirectory'), PDO::PARAM_STR);
-        $prepared->bindValue(':archive_directory', $this->site_domain->setting('default_archive_subdirectory'),
+        $prepared->bindValue(':page_directory',
+            $custom['subdirectories']['page'] ?? $this->site_domain->setting('default_page_subdirectory'),
+            PDO::PARAM_STR);
+        $prepared->bindValue(':archive_directory',
+            $custom['subdirectories']['archive'] ?? $this->site_domain->setting('default_archive_subdirectory'),
             PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
 
@@ -88,11 +93,6 @@ class BoardEditor
         $installer = new Installer(nel_utilities()->fileHandler(), new Translator(nel_utilities()->fileHandler()));
         $installer->createBoardTables($this->database, nel_utilities()->sqlCompatibility(), $board_id, $db_prefix);
         $board = Domain::getDomainFromID($board_id);
-
-        if (isset($custom['subdirectories'])) {
-            $this->updateSubdirectories($board, $custom['subdirectories']);
-        }
-
         $installer->createBoardDirectories($board->id());
         $regen = new Regen();
         $board->regenCache();
@@ -104,6 +104,18 @@ class BoardEditor
         return true;
     }
 
+    public function createBoardDirectories(DomainBoard $board): void
+    {
+        $file_handler = nel_utilities()->fileHandler();
+        $file_handler->createDirectory($board->reference('src_path'));
+        $file_handler->createDirectory($board->reference('preview_path'));
+        $file_handler->createDirectory($board->reference('page_path'));
+        $file_handler->createDirectory($board->reference('banners_path'));
+        $file_handler->createDirectory($board->reference('archive_src_path'));
+        $file_handler->createDirectory($board->reference('archive_preview_path'));
+        $file_handler->createDirectory($board->reference('archive_page_path'));
+    }
+
     public function updateSubdirectories(DomainBoard $board, array $subdirectories): void
     {
         $this->validateSubdirectories($subdirectories);
@@ -113,6 +125,8 @@ class BoardEditor
         $final['preview'] = $board->reference('preview_directory');
         $final['page'] = $board->reference('page_directory');
         $final['archive'] = $board->reference('archive_directory');
+
+        $changes_made = false;
 
         foreach ($final as $index => $current_name) {
             $new_name = $subdirectories[$index] ?? '';
@@ -128,6 +142,11 @@ class BoardEditor
             }
 
             $final[$index] = $new_name;
+            $changes_made = true;
+        }
+
+        if (!$changes_made) {
+            return;
         }
 
         $prepared = $this->database->prepare(
@@ -139,8 +158,24 @@ class BoardEditor
         $prepared->bindValue(':page_directory', $final['page'], PDO::PARAM_STR);
         $prepared->bindValue(':archive_directory', $final['archive'], PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
-        $board->reload();
-        nel_get_cached_domain($board->id(), true);
+
+        $updated_board = Domain::getDomainFromID($board->id());
+
+        $file_handler = nel_utilities()->fileHandler();
+        $file_handler->moveDirectory($board->reference('src_path'), $updated_board->reference('src_path'));
+        $file_handler->moveDirectory($board->reference('preview_path'), $updated_board->reference('preview_path'));
+        $file_handler->moveDirectory($board->reference('page_path'), $updated_board->reference('page_path'));
+        $file_handler->moveDirectory($board->reference('archive_src_path'),
+            $updated_board->reference('archive_src_path'));
+        $file_handler->moveDirectory($board->reference('archive_preview_path'),
+            $updated_board->reference('archive_preview_path'));
+        $file_handler->moveDirectory($board->reference('archive_page_path'),
+            $updated_board->reference('archive_page_path'));
+
+        nel_get_cached_domain($updated_board->id(), true);
+        $regen = new Regen();
+        $updated_board->regenCache();
+        $regen->boardPages($updated_board);
     }
 
     public function validateSubdirectories(array $subdirectories): void
@@ -166,15 +201,19 @@ class BoardEditor
 
             if ($this->site_domain->setting('only_alphanumeric_subdirectories') &&
                 preg_match('/[^a-zA-Z0-9]/', $name) === 1) {
-                    nel_derp(248,
-                        _gettext(
-                            'One or more of the provided subdirectory names contain invalid characters. Must be alphanumeric only.'));
-                }
+                nel_derp(248,
+                    _gettext(
+                        'One or more of the provided subdirectory names contain invalid characters. Must be alphanumeric only.'));
+            }
         }
     }
 
     public function updateURI(DomainBoard $board, string $new_uri): void
     {
+        if ($board->uri() === $new_uri) {
+            return;
+        }
+
         $this->validateURI($new_uri);
 
         $prepared = $this->database->prepare(
@@ -184,8 +223,17 @@ class BoardEditor
         $prepared->bindValue(':uri', utf8_strtolower($new_uri), PDO::PARAM_STR);
         $prepared->bindValue(':display_uri', $new_uri, PDO::PARAM_STR);
         $this->database->executePrepared($prepared);
-        $board->reload();
+
+        $updated_board = nel_get_cached_domain($board->id(), true);
+        $file_handler = nel_utilities()->fileHandler();
+        $file_handler->moveDirectory($board->reference('base_path'), $updated_board->reference('base_path'));
         nel_get_cached_domain($board->id(), true);
+
+        $regen = new Regen();
+        $board->regenCache();
+        $regen->allBoards(true, false);
+        $regen->sitePages(nel_get_cached_domain(Domain::SITE));
+        $regen->overboard(nel_get_cached_domain(Domain::SITE));
     }
 
     public function validateURI(string $uri): void
