@@ -16,15 +16,8 @@ class DNSBL
 
     public function checkIP(string $ip_address): void
     {
-        if (!nel_get_cached_domain(Domain::SITE)->setting('use_dnsbl')) {
-            return;
-        }
-
-        // TODO: Exclude local IPs here
-
-        $exceptions = json_decode(nel_get_cached_domain(Domain::SITE)->setting('dnsbl_exceptions'));
-
-        if (is_array($exceptions) && in_array($ip_address, $exceptions)) {
+        $site_domain = nel_get_cached_domain(Domain::SITE);
+        if (!$site_domain->setting('use_dnsbl')) {
             return;
         }
 
@@ -35,12 +28,25 @@ class DNSBL
             return;
         }
 
+        $exceptions = array();
+        $services = array();
+
+        if (file_exists(NEL_CONFIG_FILES_PATH . 'dnsbl.php')) {
+            include NEL_CONFIG_FILES_PATH . 'dnsbl.php';
+        }
+
+        $exceptions = array_unique(
+            array_merge($exceptions, (array) json_decode($site_domain->setting('dnsbl_exceptions'))));
+
+        if (is_array($exceptions) && in_array($ip_address, $exceptions)) {
+            return;
+        }
+
         // IPTools appends these for the pointer but we don't need them
         $reverse_ip = utf8_str_replace(['.in-addr.arpa', '.ip6.arpa'], '', $ip->getReversePointer());
-        $services = $this->getServices();
 
         foreach ($services as $service) {
-            if (!isset($service[0])) {
+            if (!is_array($service) || !isset($service[0])) {
                 continue;
             }
 
@@ -85,7 +91,7 @@ class DNSBL
                 }
 
                 if ($bad_ip) {
-                    nel_derp(157, sprintf(_gettext('Your IP was found on a DNS blacklist: %s'), $service_domain));
+                    nel_derp(157, sprintf(__('Your IP was found on a DNS blacklist: %s'), $service_domain));
                 }
             }
         }
@@ -95,16 +101,5 @@ class DNSBL
     {
         $lookup_result = dns_get_record($lookup_address, DNS_A);
         return (is_array($lookup_result)) ? $lookup_result : array();
-    }
-
-    protected function getServices(): array
-    {
-        $services = array();
-
-        if (file_exists(NEL_CONFIG_FILES_PATH . 'dnsbl.php')) {
-            include NEL_CONFIG_FILES_PATH . 'dnsbl.php';
-        }
-
-        return $services;
     }
 }
