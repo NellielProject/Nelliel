@@ -30,17 +30,8 @@ class Session
         $this->session_options['cookie_httponly'] = true;
         $this->session_options['cookie_lifetime'] = 0;
         $this->session_options['cookie_path'] = NEL_BASE_WEB_PATH;
-
-        if (NEL_SECURE_SESSION_ONLY) {
-            $this->session_options['cookie_secure'] = true;
-        }
-
-        if (version_compare(PHP_VERSION, '7.3.0', '>=')) {
-            $this->session_options['cookie_samesite'] = 'Strict';
-        } else {
-            $this->session_options['cookie_path'] = NEL_BASE_WEB_PATH . '; samesite=strict';
-        }
-
+        $this->session_options['cookie_samesite'] = 'Strict';
+        $this->session_options['cookie_secure'] = NEL_SECURE_SESSION_ONLY;
         $this->domain = nel_site_domain();
         $this->authorization = new Authorization(nel_database('core'));
 
