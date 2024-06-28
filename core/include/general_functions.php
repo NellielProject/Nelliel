@@ -11,13 +11,16 @@ function nel_get_microtime(bool $convert_int = true)
     $time = microtime();
     $return_time = ['time' => $time];
     $split_time = explode(' ', $time);
+    $seconds = intval($split_time[1]);
+    $milliseconds = intval($split_time[0] * 1000);
+    $microseconds = intval($split_time[0] * 1000000);
 
     if ($convert_int) {
-        $return_time = ['time' => intval($split_time[1]), 'milli' => intval(round($split_time[0], 3) * 1000),
-            'micro' => intval($split_time[0] * 1000000)];
+        $return_time = ['time' => intval($seconds), 'milli' => intval(round($milliseconds, 3)),
+            'micro' => intval($microseconds)];
     } else {
-        $return_time = ['time' => (float) $split_time[1], 'milli' => round($split_time[0], 3),
-            'micro' => (float) $split_time[0] * 1000000];
+        $return_time = ['time' => (float) $seconds, 'milli' => round($milliseconds, 3),
+            'micro' => (float) $microseconds];
     }
 
     return $return_time;
