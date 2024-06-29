@@ -189,8 +189,9 @@ abstract class Domain implements NellielCacheInterface
             // Check if we were passed a URI
             if (!$board_domain->exists()) {
                 $prepared = $database->prepare(
-                    'SELECT "board_id" FROM "' . NEL_BOARD_DATA_TABLE . '" WHERE "board_uri" = ?');
-                $prepared->bindValue(1, $id, PDO::PARAM_STR);
+                    'SELECT "domain_id" FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ? OR "uri" = ?');
+                $prepared->bindValue(1, utf8_strtolower($id), PDO::PARAM_STR);
+                $prepared->bindValue(2, utf8_strtolower($id), PDO::PARAM_STR);
                 $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
                 if ($result !== false) {
