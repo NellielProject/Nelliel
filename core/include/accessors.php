@@ -142,8 +142,9 @@ function nel_visitor_id(bool $regenerate = false, int $version = NEL_VISITOR_ID_
                 break;
         }
 
-        setcookie('visitor-id', $visitor_id, time() + nel_get_cached_domain(Domain::SITE)->setting('visitor_id_lifespan'),
-            NEL_BASE_WEB_PATH . '; samesite=strict', '', false, true);
+        $options = ['expires' => time() + nel_get_cached_domain(Domain::SITE)->setting('visitor_id_lifespan'),
+            'path' => NEL_BASE_WEB_PATH, 'domain' => '', 'secure' => false, 'httponly' => true, 'samesite' => 'Strict'];
+        setcookie('visitor-id', $visitor_id, $options);
     }
 
     if (!isset($visitor_id)) {

@@ -78,8 +78,9 @@ class CAPTCHA
 
         $captcha_image = $this->render($captcha_text);
         $captcha_key = utf8_substr(hash('sha256', (random_bytes(16))), -32);
-        setrawcookie('captcha-key', $captcha_key, time() + $this->site_domain->setting('captcha_timeout'),
-            NEL_BASE_WEB_PATH);
+        $cookie_options = ['expires' => time() + $this->site_domain->setting('captcha_timeout'), 'path' => NEL_BASE_WEB_PATH,
+            'domain' => '', 'secure' => false, 'httponly' => true, 'samesite' => 'Strict'];
+        setcookie('captcha-key', $captcha_key, $options);
         $this->file_handler->createDirectory(NEL_CAPTCHA_FILES_PATH); // Just to be sure
         imagejpeg($captcha_image, NEL_CAPTCHA_FILES_PATH . $captcha_key . '.jpg');
         $captcha_data = array();

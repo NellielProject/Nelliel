@@ -57,7 +57,7 @@ class DatabaseSetup
                     }
 
                     if ($database_type === 'SQLITE') {
-                        $this->output('database/SQLite_config', ['page_title' => __('SQLite configuration')]);
+                        $this->output('database/sqlite_config', ['page_title' => __('SQLite configuration')]);
                     }
                 }
             }
