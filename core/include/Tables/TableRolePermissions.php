@@ -376,7 +376,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['basic_user', 'perm_modify_content_status', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_edit_posts', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_delete_by_ip', 0]);
-        $this->insertDefaultRow(['basic_user', 'perm_mod_mode', 1]);
+        $this->insertDefaultRow(['basic_user', 'perm_mod_mode', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_post_as_staff', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_post_locked_thread', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_post_locked_board', 0]);
