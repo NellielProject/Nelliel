@@ -86,11 +86,11 @@ class AuthUser extends AuthHandler
         }
 
         foreach ($this->user_roles as $domain_id => $user_role) {
-            $prepared = $this->database->prepare(
-                'SELECT 1 FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
-            $result = $this->database->executePreparedFetch($prepared, [$this->id(), $domain_id], PDO::FETCH_COLUMN);
+            if (nel_true_empty($user_role['role_id'])) {
+                continue;
+            }
 
-            if ($result) {
+            if ($this->database->rowExists(NEL_USER_ROLES_TABLE, ['username', 'domain_id'], [$this->id(), $domain_id])) {
                 $prepared = $this->database->prepare(
                     'UPDATE "' . NEL_USER_ROLES_TABLE .
                     '" SET "role_id" = :role_id WHERE "username" = :username AND "domain_id" = :domain_id');
@@ -145,16 +145,15 @@ class AuthUser extends AuthHandler
 
     public function modifyRole(string $domain_id, string $role_id): void
     {
-        if (!isset($this->user_roles[$domain_id])) {
-            $this->user_roles[$domain_id] = ['role_id' => $role_id, 'domain_id' => $domain_id,
-                'role' => $this->setupAuthRole($role_id)];
-        } else {
-            $this->user_roles[$domain_id]['role_id'] = $role_id;
-            $this->user_roles[$domain_id]['role'] = $this->setupAuthRole($role_id);
+        if (nel_true_empty($role_id)) {
+            $this->removeRole($domain_id);
         }
+
+        $this->user_roles[$domain_id]['role_id'] = $role_id;
+        $this->user_roles[$domain_id]['role'] = $this->setupAuthRole($role_id);
     }
 
-    public function removeRole(string $domain_id, string $role_id): void
+    public function removeRole(string $domain_id): void
     {
         if (!isset($this->user_roles[$domain_id])) {
             return;
@@ -168,13 +167,13 @@ class AuthUser extends AuthHandler
 
     public function checkPermission(Domain $domain, string $permission, bool $escalate = true): bool
     {
+        if ($this->empty()) {
+            return false;
+        }
+
         // Site Owner can do all the things
         if ($this->isSiteOwner()) {
             return true;
-        }
-
-        if ($this->empty()) {
-            return false;
         }
 
         $role = $this->getDomainRole($domain);
