@@ -2280,6 +2280,14 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Post tables updated.') . '<br>';
 
+                // Update permissions table
+                nel_database('core')->exec('DELETE FROM "nelliel_permissions" WHERE "permission" = \'perm_manage_permissions\'');
+                nel_database('core')->exec(
+                    'ALTER TABLE "nelliel_permissions" ADD COLUMN owner TEXT NOT NULL DEFAULT \'\'');
+                nel_database('core')->exec('UPDATE "nelliel_permissions" SET "owner" = \'nelliel\'');
+
+                echo ' - ' . __('Permissions table updated.') . '<br>';
+
                 $migration_count ++;
         }
 

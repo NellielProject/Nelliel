@@ -178,8 +178,6 @@ Error 356: perm_view_system_logs (Dispatch/DispatchLogs.php)
 
 Error 360: perm_manage_news (Dispatch/DispatchNews.php)  
 
-Error 365: perm_manage_permissions (Admin/AdminPermissions.php)  
-
 Error 370: perm_reports_view (Admin/AdminReports.php)  
 Error 371: perm_reports_dismiss (Admin/AdminReports.php)  
 
