@@ -15,7 +15,6 @@ class TableBoardData extends Table
     public const PHP_TYPES = [
         'board_id' => 'string',
         'db_prefix' => 'string',
-        'database_id' => 'string',
         'source_directory' => 'string',
         'preview_directory' => 'string',
         'page_directory' => 'string',
@@ -26,7 +25,6 @@ class TableBoardData extends Table
     public const PDO_TYPES = [
         'board_id' => PDO::PARAM_STR,
         'db_prefix' => PDO::PARAM_STR,
-        'database_id' => PDO::PARAM_STR,
         'source_directory' => PDO::PARAM_STR,
         'preview_directory' => PDO::PARAM_STR,
         'page_directory' => PDO::PARAM_STR,
@@ -41,7 +39,6 @@ class TableBoardData extends Table
         $this->column_checks = [
             'board_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
             'db_prefix' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
-            'database_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'source_directory' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'preview_directory' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'page_directory' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -57,7 +54,6 @@ class TableBoardData extends Table
         CREATE TABLE ' . $this->table_name . ' (
             board_id            VARCHAR(50) NOT NULL,
             db_prefix           VARCHAR(20) NOT NULL,
-            database_id         VARCHAR(255) NOT NULL,
             source_directory    VARCHAR(255) NOT NULL,
             preview_directory   VARCHAR(255) NOT NULL,
             page_directory      VARCHAR(255) NOT NULL,

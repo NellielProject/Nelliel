@@ -24,6 +24,7 @@ class DispatchManageBoards extends Dispatch
 
     public function dispatch(array $inputs): void
     {
+        $site_domain = nel_get_cached_domain(Domain::SITE);
         $board_editor = new BoardEditor($this->domain->database());
         $board_uri = trim($_POST['board_uri'] ?? '');
         $go_to_panel = true;
@@ -40,11 +41,19 @@ class DispatchManageBoards extends Dispatch
 
                 if ($inputs['method'] === 'POST') {
                     $custom = array();
-                    $custom['subdirectories']['source'] = trim($_POST['source_directory'] ?? '');
-                    $custom['subdirectories']['preview'] = trim($_POST['preview_directory'] ?? '');
-                    $custom['subdirectories']['page'] = trim($_POST['page_directory'] ?? '');
-                    $custom['subdirectories']['archive'] = trim($_POST['archive_directory'] ?? '');
-                    $board_editor->create($board_uri, $custom);
+                    $custom['subdirectories']['source'] = trim(
+                        $_POST['source_directory'] ?? $site_domain->setting('default_source_subdirectory'));
+                    $custom['subdirectories']['preview'] = trim(
+                        $_POST['preview_directory'] ?? $site_domain->setting('default_preview_subdirectory'));
+                    $custom['subdirectories']['page'] = trim(
+                        $_POST['page_directory'] ?? $site_domain->setting('default_page_subdirectory'));
+                    $custom['subdirectories']['archive'] = trim(
+                        $_POST['archive_directory'] ?? $site_domain->setting('default_archive_subdirectory'));
+                    $success = $board_editor->create($board_uri, $custom);
+
+                    if (!$success) {
+                        nel_derp(101, __('Could not create the board as requested.'));
+                    }
                 }
 
                 break;

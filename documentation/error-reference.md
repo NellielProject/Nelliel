@@ -78,6 +78,7 @@ Error 75: Post rejected by checkpoint. (NewPost/ActionsPost.php)
 
 Error 80: Invalid domain. (Dispatch/Router.php)  
 
+Error 101: Couldn't create board. (Dispatch/DispatchManageBoards.php)  
 Error 102: InnoDB engine unavailable. (Setup/Installer/DatabaseSetup.php)  
 Error 103: Failed to create database table. (Table.php)  
 Error 107: Install not done. (initializations.php)  
