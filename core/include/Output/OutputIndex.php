@@ -53,7 +53,7 @@ class OutputIndex extends Output
         $gen_data = array();
         $gen_data['index']['thread_count'] = $thread_count;
         $output_new_post_form = new OutputNewPostForm($this->domain, $this->write_mode);
-        $this->render_data['new_post_form'] = $output_new_post_form->render(['response_to' => 0], true);
+        $this->render_data['new_post_form'] = $output_new_post_form->render(['thread_id' => 'cid_0_0_0', 'reply_to' => 0], true);
 
         if ($thread_count === 0) {
             $page_count = 1;

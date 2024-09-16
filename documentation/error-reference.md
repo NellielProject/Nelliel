@@ -9,7 +9,6 @@ Error 4: Thread locked. (NewPost/NewPost.php)
 Error 5: Thread inaccessible. (NewPost/NewPost.php)  
 Error 6: Thread missing. (NewPost/NewPost.php)  
 Error 7: Maximum posts in thread. (NewPost/NewPost.php)  
-Error 8: Thread archived. (NewPost/NewPost.php)  
 Error 9: Post empty. (NewPost/NewPost.php)  
 Error 10: Comment too long. (NewPost/NewPost.php)  
 Error 11: No new post, board locked. (NewPost/NewPost.php)  
@@ -75,6 +74,7 @@ Error 70: CAPTCHA failed. (CAPTCHA.php)
 Error 72: Requesting CAPTCHAs too fast. (CAPTCHA.php)  
 
 Error 75: Post rejected by checkpoint. (NewPost/ActionsPost.php)  
+Error 76: No thread ID. (NewPost/PostData.php) 
 
 Error 80: Invalid domain. (Dispatch/Router.php)  
 

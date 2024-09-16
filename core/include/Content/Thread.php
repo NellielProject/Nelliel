@@ -664,7 +664,6 @@ class Thread implements MutableData
                 $this->changeData('bump_time_milli', $post->getData('post_time_milli'));
             }
 
-            $post->changeData('reply_to', $this->content_id->threadID());
             $post->changeData('op', false);
         }
 

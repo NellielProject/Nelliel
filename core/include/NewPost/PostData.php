@@ -13,6 +13,7 @@ use Nelliel\ROBOT9000;
 use Nelliel\VisitorInfo;
 use Nelliel\Account\Session;
 use Nelliel\Auth\Authorization;
+use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;
 use Nelliel\Filters\Filters;
@@ -37,9 +38,15 @@ class PostData
         }
 
         $new_post_data = $_POST['new_post'];
+        $thread_id = $new_post_data['thread_id'] ?? '';
 
-        $parent_thread = intval($new_post_data['response_to'] ?? 0);
-        $is_op = $parent_thread === 0;
+        if (!ContentID::isContentID($thread_id)) {
+            nel_derp(76, __('No recognizable thread ID provided.'));
+        }
+
+        $reply_to = intval($new_post_data['reply_to'] ?? 0);
+        $thread_content_id = new ContentID($thread_id);
+        $is_op = $thread_content_id->threadID() === 0;
 
         $require_name = $is_op ? $this->domain->setting('require_op_name') : $this->domain->setting(
             'require_reply_name');
@@ -78,10 +85,10 @@ class PostData
             nel_derp(44, _gettext('A comment is required to post.'));
         }
 
-        $post->changeData('parent_thread', $parent_thread);
+        $post->changeData('parent_thread', $thread_content_id->threadID());
         $post->contentID()->changeThreadID($post->getData('parent_thread'));
         $post->changeData('op', $is_op);
-        $post->changeData('reply_to', $post->getData('parent_thread')); // This may enable nested posts in the future
+        $post->changeData('reply_to', $reply_to);
         $ip_info = new IPInfo(nel_request_ip_address());
         $post->changeData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
         $post->changeData('ip_address', nel_prepare_ip_for_storage($ip_info->getInfo('ip_address')));
@@ -136,8 +143,6 @@ class PostData
             $post->changeData('password',
                 substr($password, 0, nel_crypt_config()->configValue('post_password_max_length')));
         }
-
-        $post->changeData('response_to', intval($new_post_data['response_to']));
 
         if (!nel_true_empty($post->getData('comment'))) {
             $filters = new Filters($this->domain->database());
