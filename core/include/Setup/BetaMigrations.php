@@ -2300,6 +2300,11 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 echo ' - ' . __('Board data table updated.') . '<br>';
 
+                // Update markup table
+                nel_database('core')->exec('UPDATE "nelliel_markup" SET "match_regex" = \'/\[spoiler(\d+)\](.*?)\[\/spoiler\1\]/us\' WHERE "label" = \'nested-spoiler\'');
+
+                echo ' - ' . __('Markup table updated.') . '<br>';
+
                 $migration_count ++;
         }
 

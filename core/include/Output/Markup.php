@@ -24,7 +24,7 @@ class Markup
         $this->database = $database;
     }
 
-    public function getMarkupData(string $type, bool $only_enabled = true): array
+    public function getMarkupData(string $type = null, bool $only_enabled = true): array
     {
         if (is_null($this->markup_data)) {
             if ($only_enabled) {
@@ -39,6 +39,10 @@ class Markup
                 $this->markup_data[$markup['type']][$markup['label']] = ['match' => $markup['match_regex'],
                     'replace' => $markup['replacement'], 'enabled' => intval($markup['enabled'])];
             }
+        }
+
+        if (is_null($type)) {
+            return $this->markup_data;
         }
 
         return $this->markup_data[$type] ?? array();
@@ -76,13 +80,10 @@ class Markup
 
     public function parseBlocks(string $text, array $markup_data = array(), $recursive_call = false): string
     {
-        if (empty($markup_data)) {
-            $block_markup = $this->getMarkupData('block');
-        } else {
-            $block_markup = $markup_data['block'];
-        }
-
+        $markup_data = empty($markup_data) ? $this->getMarkupData() : $markup_data;
+        $block_markup = $markup_data['block'];
         $block_markup = nel_plugins()->processHook('nel-inb4-markup-blocks', [$text], $block_markup);
+
         $modified_text = $text;
         $modified_blocks = array();
 
@@ -103,7 +104,7 @@ class Markup
                 if ($i % 2 === 0) {
                     $modified = preg_replace('/^(.*)$/us', $data['replace'], $block);
                 } else {
-                    $modified = $this->parseBlocks($block, $block_markup, true);
+                    $modified = $this->parseBlocks($block, $markup_data, true);
                 }
 
                 $modified_blocks[] = $modified;
@@ -127,12 +128,8 @@ class Markup
 
     public function parseLines(string $text, array $markup_data = array()): string
     {
-        if (empty($markup_data)) {
-            $line_markup = $this->getMarkupData('line');
-        } else {
-            $line_markup = $markup_data['line'];
-        }
-
+        $markup_data = empty($markup_data) ? $this->getMarkupData() : $markup_data;
+        $line_markup = $markup_data['line'];
         $lines = explode("\n", $text);
         $line_markup = nel_plugins()->processHook('nel-inb4-markup-lines', [$lines], $line_markup);
 
@@ -155,13 +152,10 @@ class Markup
 
     public function parseSimple(string $text, array $markup_data = array()): string
     {
-        if (empty($markup_data)) {
-            $simple_markup = $this->getMarkupData('simple');
-        } else {
-            $simple_markup = $markup_data['simple'];
-        }
-
+        $markup_data = empty($markup_data) ? $this->getMarkupData() : $markup_data;
+        $simple_markup = $markup_data['simple'];
         $simple_markup = nel_plugins()->processHook('nel-inb4-markup-simple', [$text], $simple_markup);
+
         $modified_text = $text;
 
         foreach ($simple_markup as $data) {
@@ -173,13 +167,10 @@ class Markup
 
     public function parseLoops(string $text, array $markup_data = array()): string
     {
-        if (empty($markup_data)) {
-            $loop_markup = $this->getMarkupData('loop');
-        } else {
-            $loop_markup = $markup_data['loop'];
-        }
-
+        $markup_data = empty($markup_data) ? $this->getMarkupData() : $markup_data;
+        $loop_markup = $markup_data['loop'];
         $loop_markup = nel_plugins()->processHook('nel-inb4-markup-loops', [$text], $loop_markup);
+
         $modified_text = $text;
 
         foreach ($loop_markup as $data) {
