@@ -209,7 +209,7 @@ class NewPost
 
         $thread = $post->getParent();
 
-        if (is_null($thread->getData('thread_id'))) {
+        if (!$post->getData('op') && !$thread->exists()) {
             nel_derp(6, _gettext('The thread you tried posting in could not be found.'), 404, $error_data);
         }
 

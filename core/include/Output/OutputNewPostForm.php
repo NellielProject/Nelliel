@@ -24,7 +24,6 @@ class OutputNewPostForm extends Output
         $this->render_data['thread_id'] = $thread_id;
         $reply_to = $parameters['reply_to'];
         $this->render_data['reply_to'] = $reply_to;
-        //$this->render_data['allow_sub_threads'] = true;
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['not_anonymous_minlength'] = $this->domain->setting('min_name_length');
         $this->render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');

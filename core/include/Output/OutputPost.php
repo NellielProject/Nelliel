@@ -34,7 +34,6 @@ class OutputPost extends Output
         }
 
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
-
         $this->render_data['is_op'] = $post->getData('op');
         $this->render_data['post_corral_id'] = 'post-corral-' . $post->contentID()->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post->contentID()->getIDString();

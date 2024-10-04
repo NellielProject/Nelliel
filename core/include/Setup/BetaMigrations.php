@@ -2277,6 +2277,10 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         $moar_update->bindValue(':post_number', $post_number, PDO::PARAM_STR);
                         nel_database('core')->executePrepared($moar_update);
                     }
+
+                    nel_database('core')->exec(
+                        'ALTER TABLE "' . $prefix . '_posts" ADD COLUMN reply_depth INT NOT NULL DEFAULT 0');
+                    nel_database('core')->exec('UPDATE "' . $prefix . '_posts" SET "reply_depth" = 1 WHERE "op" = 0');
                 }
 
                 echo ' - ' . __('Post tables updated.') . '<br>';
@@ -2301,7 +2305,8 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 echo ' - ' . __('Board data table updated.') . '<br>';
 
                 // Update markup table
-                nel_database('core')->exec('UPDATE "nelliel_markup" SET "match_regex" = \'/\[spoiler(\d+)\](.*?)\[\/spoiler\1\]/us\' WHERE "label" = \'nested-spoiler\'');
+                nel_database('core')->exec(
+                    'UPDATE "nelliel_markup" SET "match_regex" = \'/\[spoiler(\d+)\](.*?)\[\/spoiler\1\]/us\' WHERE "label" = \'nested-spoiler\'');
 
                 echo ' - ' . __('Markup table updated.') . '<br>';
 

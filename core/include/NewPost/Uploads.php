@@ -455,7 +455,7 @@ class Uploads
         $parent_thread = $post->getParent();
         $parent_thread->loadFromDatabase();
 
-        if (!$post->getData('op')) {
+        if ($post->getData('op')) {
             $allow_files = $this->domain->setting('allow_op_files');
             $require_file = $this->domain->setting('require_op_file');
             $allow_embeds = $this->domain->setting('allow_op_embeds');

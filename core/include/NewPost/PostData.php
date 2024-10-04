@@ -44,9 +44,28 @@ class PostData
             nel_derp(76, __('No recognizable thread ID provided.'));
         }
 
-        $reply_to = intval($new_post_data['reply_to'] ?? 0);
         $thread_content_id = new ContentID($thread_id);
         $is_op = $thread_content_id->threadID() === 0;
+        $sub_threads_enabled = false; // TODO: Finish sub thread implementation
+
+        if($is_op) {
+            $reply_to = 0;
+        } else {
+            $reply_to = $thread_content_id->threadID();
+            //$reply_to = intval($new_post_data['reply_to'] ?? $thread_content_id->threadID());
+        }
+
+        $parent_post_content_id = $thread_content_id;
+        $parent_post_content_id->changePostID($reply_to);
+        $parent_post = $parent_post_content_id->getInstanceFromID($this->domain);
+
+        if($sub_threads_enabled && $parent_post->exists()) {
+            $post->changeData('reply_to', $parent_post->contentID()->postID());
+            $post->changeData('reply_depth', $parent_post->getData('reply_depth') + 1);
+        } else {
+            $post->changeData('reply_to', $reply_to);
+            $post->changeData('reply_depth', 0);
+        }
 
         $require_name = $is_op ? $this->domain->setting('require_op_name') : $this->domain->setting(
             'require_reply_name');
@@ -88,7 +107,6 @@ class PostData
         $post->changeData('parent_thread', $thread_content_id->threadID());
         $post->contentID()->changeThreadID($post->getData('parent_thread'));
         $post->changeData('op', $is_op);
-        $post->changeData('reply_to', $reply_to);
         $ip_info = new IPInfo(nel_request_ip_address());
         $post->changeData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
         $post->changeData('ip_address', nel_prepare_ip_for_storage($ip_info->getInfo('ip_address')));
