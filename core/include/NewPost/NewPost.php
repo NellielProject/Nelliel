@@ -13,7 +13,7 @@ use Nelliel\Overboard;
 use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\AntiSpam\CAPTCHA;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Checkpoints\Checkpoint;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;

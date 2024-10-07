@@ -12,7 +12,7 @@ use Nelliel\IPInfo;
 use Nelliel\ROBOT9000;
 use Nelliel\VisitorInfo;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;

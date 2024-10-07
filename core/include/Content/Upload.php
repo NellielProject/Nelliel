@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Moar;
 use Nelliel\API\JSON\UploadJSON;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Interfaces\MutableData;

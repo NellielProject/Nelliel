@@ -12,7 +12,7 @@ use Nelliel\GlobalRecents;
 use Nelliel\Moar;
 use Nelliel\API\JSON\PostJSON;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Interfaces\MutableData;

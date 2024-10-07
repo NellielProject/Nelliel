@@ -8,8 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\IPInfo;
 use Nelliel\ReturnLink;
 use Nelliel\AntiSpam\CAPTCHA;
-use Nelliel\Auth\AuthUser;
-use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 
 class Login
@@ -25,7 +23,7 @@ class Login
         $this->database = $domain->database();
     }
 
-    public function validate(): AuthUser
+    public function validate(): \Nelliel\Account\User
     {
         $captcha = new CAPTCHA($this->domain);
 

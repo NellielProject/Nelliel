@@ -5,7 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -109,7 +109,7 @@ class OutputPanelUsers extends Output
                 $domain_role_data['select_id'] = 'domain_role_' . $domain->uri();
                 $prepared = $this->database->prepare(
                     'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
-                $role_id = $this->database->executePreparedFetch($prepared, [$username, $domain->uri()],
+                $role_id = $this->database->executePreparedFetch($prepared, [$username, $domain->id()],
                     PDO::FETCH_COLUMN);
                 $domain_role_data['roles']['options'][] = ['role_id' => '', 'role_title' => ''];
 

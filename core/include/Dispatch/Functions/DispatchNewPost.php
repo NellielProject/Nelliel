@@ -10,7 +10,7 @@ use Nelliel\DNSBL;
 use Nelliel\FGSFDS;
 use Nelliel\Snacks;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 use Nelliel\NewPost\NewPost;

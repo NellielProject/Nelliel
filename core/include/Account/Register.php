@@ -6,7 +6,6 @@ namespace Nelliel\Account;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\AntiSpam\CAPTCHA;
-use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputRegisterPage;
 

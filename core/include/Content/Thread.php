@@ -12,7 +12,7 @@ use Nelliel\Moar;
 use Nelliel\Overboard;
 use Nelliel\Regen;
 use Nelliel\API\JSON\ThreadJSON;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;

@@ -5,7 +5,7 @@ namespace Nelliel\Language;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Auth\AuthUser;
+use Nelliel\Account\User;
 use Nelliel\Domains\Domain;
 use Nelliel\Utility\CacheHandler;
 use SmallPHPGettext\SmallPHPGettext;
@@ -70,7 +70,7 @@ class Language
         return self::$gettext->loadTranslationFromFile($po_absolute_path, $domain, $category);
     }
 
-    public function extractLanguageStrings(Domain $domain, AuthUser $user, string $default_textdomain,
+    public function extractLanguageStrings(Domain $domain, User $user, string $default_textdomain,
         int $default_category)
     {
         if (!$user->checkPermission($domain, 'perm_extract_gettext')) {

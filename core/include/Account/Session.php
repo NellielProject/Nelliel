@@ -5,10 +5,8 @@ namespace Nelliel\Account;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputLoginPage;
-use Nelliel\Auth\AuthUser;
 
 class Session
 {
@@ -151,7 +149,7 @@ class Session
         return (time() - $last_activity) > $this->domain->setting('session_length');
     }
 
-    public function user(): AuthUser
+    public function user(): \Nelliel\Account\User
     {
         return self::$user ?? $this->authorization->emptyUser();
     }
