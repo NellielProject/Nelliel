@@ -54,6 +54,10 @@ class AdminUsers extends Admin
         $this->verifyPermissions($this->domain, 'perm_manage_users');
         $update_user = $this->authorization->getUser($username);
 
+        if($update_user->isSiteOwner() && $update_user->id() !== $this->session_user->id()) {
+            nel_derp(232, _gettext('Site owners can only be modified by themselves.'), 403);
+        }
+
         foreach ($_POST as $key => $value) {
             if (strpos($key, 'domain_role') !== false) {
                 $domain = Domain::getDomainFromID(utf8_substr($key, 12));

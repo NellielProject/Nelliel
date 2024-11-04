@@ -130,6 +130,7 @@ Error 225: Cannot view PM. (PrivateMessage.php)
 
 Error 230: User does not exist. (Admin/AdminUsers.php)  
 Error 231: Role does not exist. (Admin/AdminRoles.php)  
+Error 232: Can't modify site owner. (Admin/AdminUsers.php)  
 
 Error 240: Board URI already exists. (BoardEditor.php)  
 Error 241: Trouble with board URI. (BoardEditor.php)  
