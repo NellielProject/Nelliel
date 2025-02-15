@@ -6,14 +6,16 @@ To create a style:
 1. Create a folder for the style.
 2. Create a CSS file in the root style folder.
 3. Create `style_info.ini` in the root style folder.
-4. In `style_info.ini` add an `[info]` section which will contain basic information about the style. Required fields are `id`, `name`, `version` and `main_file`.
+4. In `style_info.ini` add an `[info]` section which will contain basic information about the style.
 
 ## Info Fields
+Fields available under the [info] section:
+
 |Field        |Required|Description|                             
 |:-----------:|:-------|:----------|
 |`id`         |Yes     |A string ID used to uniqely identify the style.|
 |`name`       |Yes     |The display name.|
-|`description`|Yes     |A description of the style.|
+|`description`|No      |A description of the style.|
 |`version`    |Yes     |The current version.|
 |`main_file`  |Yes     |The main CSS file.|
 
