@@ -152,7 +152,7 @@ class OutputPanelThreads extends Output
             $post_info['thread_url'] = $this->domain->reference('page_directory') . '/' . $post['parent_thread'] . '/' .
                 $post['post_number'] . '.html';
             $post_info['name'] = $post['name'];
-            $post_info['poster_ip'] = nel_convert_ip_from_storage($post['ip_address']);
+            $post_info['poster_ip'] = $post['ip_address'];
             $post_info['email'] = $post['email'];
             $post_info['comment'] = $post['comment'];
             $this->render_data['posts'][] = $post_info;

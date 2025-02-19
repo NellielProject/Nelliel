@@ -689,10 +689,10 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     PDO::FETCH_ASSOC);
 
                 foreach ($ips as $ip) {
-                    if ($ip['ip_address'] !== nel_prepare_ip_for_storage($ip['ip_address'])) {
+                    if ($ip['ip_address'] !== $this->prepare_ip_for_storage($ip['ip_address'])) {
                         $ip_fix = nel_database('core')->prepare(
                             'UPDATE "nelliel_system_logs" SET "ip_address" = ? WHERE "ip_address" = ?');
-                        $ip_fix->bindValue(1, nel_prepare_ip_for_storage($ip['ip_address']));
+                        $ip_fix->bindValue(1, $this->prepare_ip_for_storage($ip['ip_address']));
                         $ip_fix->bindValue(2, $ip['ip_address']);
                         nel_database('core')->executePrepared($ip_fix);
                     }
@@ -1822,9 +1822,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 foreach ($ips as $ip) {
                     if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address', 'ip_address'],
-                        [$ip['hashed_ip_address'], nel_prepare_ip_for_storage($ip['ip_address'])])) {
+                        [$ip['hashed_ip_address'], $this->prepare_ip_for_storage($ip['ip_address'])])) {
                         $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
-                        $ip_transfer->bindValue(2, nel_prepare_ip_for_storage($ip['ip_address']));
+                        $ip_transfer->bindValue(2, $this->prepare_ip_for_storage($ip['ip_address']));
                         nel_database('core')->executePrepared($ip_transfer);
                     }
                 }
@@ -1877,7 +1877,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                         [$ip['hashed_ip_address']]) &&
                         !nel_database('core')->rowExists('nelliel_ip_info', ['ip_address'], [$ip['ip_address']])) {
                         $ip_transfer->bindValue(1, $ip['hashed_ip_address'], PDO::PARAM_STR);
-                        $ip_transfer->bindValue(2, nel_prepare_ip_for_storage($ip['ip_address']), PDO::PARAM_LOB);
+                        $ip_transfer->bindValue(2, $this->prepare_ip_for_storage($ip['ip_address']), PDO::PARAM_LOB);
                         nel_database('core')->executePrepared($ip_transfer);
                     } else {
                         $prepared = nel_database('core')->prepare(
@@ -1928,9 +1928,9 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                 foreach ($ips as $ip) {
                     if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address', 'ip_address'],
-                        [$ip['hashed_ip_address'], nel_prepare_ip_for_storage($ip['ip_address'])])) {
+                        [$ip['hashed_ip_address'], $this->prepare_ip_for_storage($ip['ip_address'])])) {
                         $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
-                        $ip_transfer->bindValue(2, nel_prepare_ip_for_storage($ip['ip_address']));
+                        $ip_transfer->bindValue(2, $this->prepare_ip_for_storage($ip['ip_address']));
                         nel_database('core')->executePrepared($ip_transfer);
                     }
                 }
@@ -2468,5 +2468,44 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
             $add_role_permission->bindValue(2, $permission);
             nel_database('core')->executePrepared($add_role_permission);
         }
+    }
+
+    private function prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = true)
+    {
+        if (is_null($ip_address)) {
+            return null;
+        }
+
+        if ($unhashed_check && !nel_get_cached_domain(Domain::SITE)->setting('store_unhashed_ip')) {
+            return null;
+        }
+
+        $packed_ip_address = @inet_pton($ip_address);
+
+        if ($packed_ip_address === false) {
+            // Check if the error is simply due to the address already being packed
+            if (@inet_ntop($ip_address) !== false) {
+                return $ip_address;
+            }
+
+            return null;
+        }
+
+        return $packed_ip_address;
+    }
+
+    private function convert_ip_from_storage(?string $ip_address)
+    {
+        if (is_null($ip_address)) {
+            return null;
+        }
+
+        $unpacked_ip_address = @inet_ntop($ip_address);
+
+        if ($unpacked_ip_address === false) {
+            return null;
+        }
+
+        return $unpacked_ip_address;
     }
 }

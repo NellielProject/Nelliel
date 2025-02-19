@@ -43,7 +43,7 @@ class NellielDatabaseHandler extends AbstractProcessingHandler
         $prepared->bindValue(':time', $record['datetime']->format('U'), PDO::PARAM_INT);
         $prepared->bindValue(':domain_id', $record['extra']['domain_id'], PDO::PARAM_STR);
         $prepared->bindValue(':username', $record['extra']['username'], PDO::PARAM_STR);
-        $prepared->bindValue(':unhashed_ip_address', nel_prepare_ip_for_storage($record['extra']['ip_address']), PDO::PARAM_LOB);
+        $prepared->bindValue(':unhashed_ip_address', $record['extra']['ip_address'], PDO::PARAM_LOB);
         $prepared->bindValue(':hashed_ip_address', $record['extra']['hashed_ip_address'], PDO::PARAM_STR);
         $prepared->bindValue(':visitor_id', $record['extra']['visitor_id'], PDO::PARAM_STR);
         $prepared->bindValue(':moar', $record['extra']['moar'], PDO::PARAM_STR);

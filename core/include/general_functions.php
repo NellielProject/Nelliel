@@ -105,45 +105,6 @@ function nel_form_input_default(array $input)
     return $value;
 }
 
-function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = true)
-{
-    if (is_null($ip_address)) {
-        return null;
-    }
-
-    if ($unhashed_check && !nel_get_cached_domain(Domain::SITE)->setting('store_unhashed_ip')) {
-        return null;
-    }
-
-    $packed_ip_address = @inet_pton($ip_address);
-
-    if ($packed_ip_address === false) {
-        // Check if the error is simply due to the address already being packed
-        if (@inet_ntop($ip_address) !== false) {
-            return $ip_address;
-        }
-
-        return null;
-    }
-
-    return $packed_ip_address;
-}
-
-function nel_convert_ip_from_storage(?string $ip_address)
-{
-    if (is_null($ip_address)) {
-        return null;
-    }
-
-    $unpacked_ip_address = @inet_ntop($ip_address);
-
-    if ($unpacked_ip_address === false) {
-        return null;
-    }
-
-    return $unpacked_ip_address;
-}
-
 function nel_exec(string $command): array
 {
     if (!function_exists('exec')) {

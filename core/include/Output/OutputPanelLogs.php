@@ -81,7 +81,7 @@ class OutputPanelLogs extends Output
             $log_data['event'] = $log['event'];
             $log_data['domain_id'] = $log['domain_id'];
             $log_data['user'] = $log['username'];
-            $ip_info = new IPInfo(nel_convert_ip_from_storage($log['ip_address']));
+            $ip_info = new IPInfo($log['ip_address']);
 
             if (!$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
                 $ip_address = $ip_info->getInfo('hashed_ip_address');
