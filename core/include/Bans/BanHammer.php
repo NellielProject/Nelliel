@@ -205,13 +205,13 @@ class BanHammer
             $prepared = $this->database->prepare(
                 'UPDATE "' . NEL_BANS_TABLE .
                 '" SET "board_id" = ?, "ban_type" = ?, "creator" = ?,
-                 "ip_address" = ?, "hashed_ip_address" = ?, "hashed_subnet" = ?, "range_start" = ?, "range_end" = ?,
+                 "unhashed_ip_address" = ?, "hashed_ip_address" = ?, "hashed_subnet" = ?, "range_start" = ?, "range_end" = ?,
                  "reason" = ?, "start_time" = ?, "length" = ?, "seen" = ?, "appeal_allowed" = ? WHERE "ban_id" = ?');
             $prepared->bindValue(14, $this->ban_id, PDO::PARAM_INT);
         } else {
             $prepared = $this->database->prepare(
                 'INSERT INTO "' . NEL_BANS_TABLE .
-                '" ("board_id", "ban_type", "creator", "ip_address", "hashed_ip_address", "hashed_subnet", "range_start",
+                '" ("board_id", "ban_type", "creator", "unhashed_ip_address", "hashed_ip_address", "hashed_subnet", "range_start",
                  "range_end", "reason", "start_time", "length", "seen", "appeal_allowed") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)');
         }
 

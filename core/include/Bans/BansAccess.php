@@ -36,16 +36,16 @@ class BansAccess
 
         if (!is_null($board_id)) {
             $prepared = $this->database->prepare(
-                'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_address" = :ip_address AND "ban_type" = ' .
+                'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "unhashed_ip_address" = :unhashed_ip_address AND "ban_type" = ' .
                 self::IP . ' AND "board_id" = :board_id' . $limit_clause);
             $prepared->bindValue(':board_id', $board_id, PDO::PARAM_STR);
         } else {
             $prepared = $this->database->prepare(
-                'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "ip_address" = :ip_address AND "ban_type" = ' .
+                'SELECT "ban_id" FROM "' . NEL_BANS_TABLE . '" WHERE "unhashed_ip_address" = :unhashed_ip_address AND "ban_type" = ' .
                 self::IP . $limit_clause);
         }
 
-        $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($ban_ip, false), PDO::PARAM_LOB);
+        $prepared->bindValue(':unhashed_ip_address', nel_prepare_ip_for_storage($ban_ip, false), PDO::PARAM_LOB);
 
         if ($entries > 0) {
             $prepared->bindValue(':limit', $entries, PDO::PARAM_INT);
@@ -61,16 +61,16 @@ class BansAccess
     {
         if (!is_null($board_id)) {
             $prepared = $this->database->prepare(
-                'SELECT COUNT(*) FROM "' . NEL_BANS_TABLE . '" WHERE "ip_address" = :ip_address AND "ban_type" = \'' .
+                'SELECT COUNT(*) FROM "' . NEL_BANS_TABLE . '" WHERE "unhashed_ip_address" = :unhashed_ip_address AND "ban_type" = \'' .
                 self::IP . '\' AND "board_id" = :board_id');
             $prepared->bindValue(':board_id', $board_id, PDO::PARAM_STR);
         } else {
             $prepared = $this->database->prepare(
-                'SELECT COUNT(*) FROM "' . NEL_BANS_TABLE . '" WHERE "ip_address" = :ip_address AND "ban_type" = \'' .
+                'SELECT COUNT(*) FROM "' . NEL_BANS_TABLE . '" WHERE "unhashed_ip_address" = :unhashed_ip_address AND "ban_type" = \'' .
                 self::IP . '\'');
         }
 
-        $prepared->bindValue(':ip_address', nel_prepare_ip_for_storage($ban_ip, false), PDO::PARAM_LOB);
+        $prepared->bindValue(':unhashed_ip_address', nel_prepare_ip_for_storage($ban_ip, false), PDO::PARAM_LOB);
         return (int) $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
     }
 
