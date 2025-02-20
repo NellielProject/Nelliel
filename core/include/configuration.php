@@ -7,11 +7,14 @@ use Nelliel\Utility\FileHandler;
 
 $technical_config = array();
 
-if ((isset($_GET['install']) || isset($_GET['upgrade'])) && !file_exists(NEL_CONFIG_FILES_PATH . 'technical.php')) {
+if ((isset($_GET['install']) || isset($_GET['upgrade'])) && !file_exists(NEL_CONFIG_FILES_PATH . 'technical.php') &&
+    file_exists(NEL_CONFIG_FILES_PATH . 'technical.php.example')) {
     copy(NEL_CONFIG_FILES_PATH . 'technical.php.example', NEL_CONFIG_FILES_PATH . 'technical.php');
 }
 
-require_once NEL_CONFIG_FILES_PATH . 'technical.php';
+if (file_exists(NEL_CONFIG_FILES_PATH . 'technical.php')) {
+    include_once NEL_CONFIG_FILES_PATH . 'technical.php';
+}
 
 define('NEL_SECURE_SESSION_ONLY', boolval($technical_config['secure_session_only'] ?? false));
 define('NEL_DIRECTORY_PERM', strval($technical_config['directory_perm'] ?? '0775'));

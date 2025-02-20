@@ -41,7 +41,7 @@ class TableReports extends Table
             'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'content_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'unhashed_reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'reason' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
