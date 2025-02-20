@@ -46,7 +46,7 @@ class BansAccess
                 '" WHERE "unhashed_ip_address" = :unhashed_ip_address AND "ban_type" = ' . self::IP . $limit_clause);
         }
 
-        $prepared->bindValue(':unhashed_ip_address', $ban_ip, PDO::PARAM_LOB);
+        $prepared->bindValue(':unhashed_ip_address', $ban_ip, PDO::PARAM_STR);
 
         if ($entries > 0) {
             $prepared->bindValue(':limit', $entries, PDO::PARAM_INT);
@@ -72,7 +72,7 @@ class BansAccess
                 '" WHERE "unhashed_ip_address" = :unhashed_ip_address AND "ban_type" = \'' . self::IP . '\'');
         }
 
-        $prepared->bindValue(':unhashed_ip_address', $ban_ip, PDO::PARAM_LOB);
+        $prepared->bindValue(':unhashed_ip_address', $ban_ip, PDO::PARAM_STR);
         return (int) $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
     }
 

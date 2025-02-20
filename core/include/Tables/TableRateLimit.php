@@ -17,7 +17,7 @@ class TableRateLimit extends Table
         'record' => 'string'];
 
     public const PDO_TYPES = [
-        'rate_id' => PDO::PARAM_LOB,
+        'rate_id' => PDO::PARAM_STR,
         'record' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)

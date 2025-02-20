@@ -59,7 +59,7 @@ class IPInfo
 
         $prepared = $this->database->prepare(
             'SELECT * FROM "' . NEL_IP_INFO_TABLE . '" WHERE "unhashed_ip_address" = :unhashed_ip_address');
-        $prepared->bindValue(':unhashed_ip_address', $this->ip_address, PDO::PARAM_LOB);
+        $prepared->bindValue(':unhashed_ip_address', $this->ip_address, PDO::PARAM_STR);
         $result = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_ASSOC);
 
         if ($result !== false) {
@@ -89,7 +89,7 @@ class IPInfo
                 VALUES (:hashed_ip_address, :unhashed_ip_address, :hashed_small_subnet, :hashed_large_subnet, :last_activity)');
         }
 
-        $prepared->bindValue(':unhashed_ip_address', $this->ip_address, PDO::PARAM_LOB);
+        $prepared->bindValue(':unhashed_ip_address', $this->ip_address, PDO::PARAM_STR);
         $prepared->bindValue(':hashed_ip_address', $this->hashed_ip_address, PDO::PARAM_STR);
         $prepared->bindValue(':hashed_small_subnet', $this->info['hashed_small_subnet'] ?? null, PDO::PARAM_STR);
         $prepared->bindValue(':hashed_large_subnet', $this->info['hashed_large_subnet'] ?? null, PDO::PARAM_STR);
@@ -111,7 +111,7 @@ class IPInfo
     {
         if (!empty($this->ip_address)) {
             return $this->database->rowExists(NEL_IP_INFO_TABLE, ['unhashed_ip_address'], [$this->ip_address],
-                [PDO::PARAM_LOB]);
+                [PDO::PARAM_STR]);
         }
 
         return false;

@@ -2258,7 +2258,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $migration_count ++;
 
             case 'v0.9.32':
-                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.32', '???') . '</b><br>';
+                echo '<br><b>' . sprintf($this->updating_message, 'v0.9.32', 'v0.9.33') . '</b><br>';
 
                 // Update archive tables
                 $prefixes = nel_database('core')->executeFetchAll('SELECT "db_prefix" FROM "nelliel_board_data"',

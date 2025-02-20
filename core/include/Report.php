@@ -63,7 +63,7 @@ class Report
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(1, $this->domain->id(), PDO::PARAM_STR);
             $prepared->bindValue(2, $report_data['content_id'], PDO::PARAM_STR);
-            $prepared->bindValue(3, $report_data['unhashed_reporter_ip'], PDO::PARAM_LOB);
+            $prepared->bindValue(3, $report_data['unhashed_reporter_ip'], PDO::PARAM_STR);
             $prepared->bindValue(4, $report_data['hashed_reporter_ip'], PDO::PARAM_STR);
             $prepared->bindValue(5, $report_data['visitor_id'], PDO::PARAM_STR);
             $prepared->bindValue(6, $report_data['reason'], PDO::PARAM_STR);
