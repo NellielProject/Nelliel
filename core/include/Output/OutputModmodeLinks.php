@@ -112,7 +112,7 @@ class OutputModmodeLinks extends Output
     {
         if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
             !empty($post->getData('ip_address'))) {
-            $ip = nel_convert_ip_from_storage($post->getData('ip_address'));
+            $ip = $post->getData('ip_address');
         } else {
             if (!empty($post->getData('hashed_ip_address'))) {
                 $ip = $post->getData('hashed_ip_address');

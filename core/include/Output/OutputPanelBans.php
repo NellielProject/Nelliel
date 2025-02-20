@@ -145,7 +145,7 @@ class OutputPanelBans extends Output
                 !$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
                 $this->render_data['ban_ip'] = $ip_info->getInfo('hashed_ip_address');
             } else {
-                $this->render_data['ban_ip'] = nel_convert_ip_from_storage($content->getData('ip_address'));
+                $this->render_data['ban_ip'] = $content->getData('ip_address');
             }
 
             if ($can_range_ban) {

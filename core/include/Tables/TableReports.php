@@ -17,7 +17,7 @@ class TableReports extends Table
         'board_id' => 'string',
         'content_id' => 'string',
         'hashed_reporter_ip' => 'string',
-        'reporter_ip' => 'string',
+        'unhashed_reporter_ip' => 'string',
         'visitor_id' => 'string',
         'reason' => 'string',
         'moar' => 'string'];
@@ -27,7 +27,7 @@ class TableReports extends Table
         'board_id' => PDO::PARAM_STR,
         'content_id' => PDO::PARAM_STR,
         'hashed_reporter_ip' => PDO::PARAM_STR,
-        'reporter_ip' => PDO::PARAM_LOB,
+        'unhashed_reporter_ip' => PDO::PARAM_STR,
         'visitor_id' => PDO::PARAM_STR,
         'reason' => PDO::PARAM_STR,
         'moar' => PDO::PARAM_STR];
@@ -41,7 +41,7 @@ class TableReports extends Table
             'board_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'content_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'unhashed_reporter_ip' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'reason' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
@@ -53,14 +53,14 @@ class TableReports extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
-            report_id           ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            board_id            VARCHAR(50) NOT NULL,
-            content_id          VARCHAR(255) NOT NULL,
-            hashed_reporter_ip  VARCHAR(128) DEFAULT NULL,
-            reporter_ip         ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
-            visitor_id          VARCHAR(128) DEFAULT NULL,
-            reason              TEXT NOT NULL,
-            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
+            report_id               ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
+            board_id                VARCHAR(50) NOT NULL,
+            content_id              VARCHAR(255) NOT NULL,
+            hashed_reporter_ip      VARCHAR(128) DEFAULT NULL,
+            unhashed_reporter_ip    VARCHAR(128) DEFAULT NULL,
+            visitor_id              VARCHAR(128) DEFAULT NULL,
+            reason                  TEXT NOT NULL,
+            moar                    ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (report_id),
             CONSTRAINT fk_reports__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)
