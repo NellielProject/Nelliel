@@ -1,0 +1,2 @@
+# Permissions
+Nelliel defines numerous permissions throughout the core code to provide a fine level of authorization control. Plugins are capable of defining custom permissions and amay perform their own checks of any permission.

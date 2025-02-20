@@ -5,9 +5,19 @@ Image sets contain one or more image files and a file named `set_info.ini` conta
 To create an image set:
 1. Collect one or more image files in a folder. Subfolders and organization within the main folder can be done in any manner.
 2. Create a `set_info.ini` file in the root folder.
-3. In `set_info.ini` add an `[info]` section which will contain basic information about the image set. Required fields are `id`, `name` and `version` (the current revision).
+3. In `set_info.ini` add an `[info]` section which will contain basic information about the image set.
 4. After the `[info]` section one or more sections are added which will contain the file keys. The available sections and keys to map are determined by Nelliel or plugins. All sections and keys are optional. If a key is added in the file but has no corresponding file it should be set as an empty string `""`.
 5. The assigned value for each key will be a relative path within the image set folder. Full URLs or files outside of the folder should never be used.
+
+## Info Fields
+Fields available under the [info] section:
+
+|Field        |Required|Description|                             
+|:-----------:|:-------|:----------|
+|`id`         |Yes     |A string ID used to uniqely identify the image set.|
+|`name`       |Yes     |The display name.|
+|`description`|No      |A description of the image set.|
+|`version`    |Yes     |The current version.|
 
 ## Installation
 To install a custom image set:
