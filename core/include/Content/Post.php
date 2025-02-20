@@ -12,7 +12,7 @@ use Nelliel\GlobalRecents;
 use Nelliel\Moar;
 use Nelliel\API\JSON\PostJSON;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Interfaces\MutableData;
@@ -42,7 +42,7 @@ class Post implements MutableData
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->authorization = new Authorization($this->database);
-        $this->storeMoar(new Moar());
+        $this->content_moar = new Moar();
         $this->main_table = new TablePosts($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('posts_table'));
         $this->json = new PostJSON($this);
@@ -54,7 +54,7 @@ class Post implements MutableData
             $this->loadFromDatabase(true);
         }
 
-        $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
+        $this->archive_prune = new ArchiveAndPrune($this->domain);
     }
 
     public function exists(): bool
@@ -77,8 +77,8 @@ class Post implements MutableData
         }
 
         $this->content_data = TablePosts::typeCastData($result);
-        $moar = $result['moar'] ?? '';
-        $this->getMoar()->storeFromJSON($moar);
+        $moar = strval($result['moar'] ?? '');
+        $this->content_moar = new Moar($moar);
         return true;
     }
 
@@ -89,7 +89,7 @@ class Post implements MutableData
         }
 
         $filtered_data = TablePosts::filterData($this->content_data);
-        $filtered_data['moar'] = $this->getMoar()->getJSON();
+        $filtered_data['moar'] = json_encode($this->content_moar->getData());
         $pdo_types = TablePosts::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);

@@ -13,13 +13,12 @@ use Nelliel\Overboard;
 use Nelliel\Regen;
 use Nelliel\Account\Session;
 use Nelliel\AntiSpam\CAPTCHA;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Checkpoints\Checkpoint;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Thread;
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
 use PDO;
 
 class NewPost
@@ -37,11 +36,12 @@ class NewPost
 
     public function processPost()
     {
-        $site_domain = new DomainSite($this->database);
+        $site_domain = Domain::getDomainFromID(Domain::SITE);
         $error_data = ['board_id' => $this->domain->id()];
         $captcha = new CAPTCHA($this->domain);
 
-        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_post_captcha')) {
+        if (nel_get_cached_domain(Domain::SITE)->setting('enable_captchas') &&
+            $this->domain->setting('use_post_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha->verify($captcha_key, $captcha_answer);
@@ -135,7 +135,8 @@ class NewPost
                 $upload->changeData('upload_order', $order);
 
                 if ($upload->getData('category') !== 'embed' && !$upload->getData('use_existing')) {
-                    $file_handler->moveFile($upload->getData('location'), $post->srcFilePath() . $upload->getData('fullname'));
+                    $file_handler->moveFile($upload->getData('location'),
+                        $post->srcFilePath() . $upload->getData('fullname'));
                     chmod($post->srcFilePath() . $upload->getData('fullname'), octdec(NEL_FILES_PERM));
                     $upload->changeData('location', $post->srcFilePath() . $upload->getData('fullname'));
                 }
@@ -159,11 +160,8 @@ class NewPost
             $thread->cycle();
         }
 
-        if ($thread->getData('op') || $thread->getData('old')) {
-            $archive_and_prune = new ArchiveAndPrune($thread->domain(), $file_handler);
-            $archive_and_prune->updateThreads();
-        }
-
+        $archive_and_prune = new ArchiveAndPrune($thread->domain());
+        $archive_and_prune->updateThreads();
         $update_overboard = new Overboard($this->database);
         $update_overboard->addThread($thread);
         $update_global_recents = new GlobalRecents($this->database);
@@ -182,60 +180,53 @@ class NewPost
         return $thread->contentID()->threadID();
     }
 
-    private function isPostOk($post, $time)
+    private function isPostOk(Post $post, $time)
     {
         $error_data = ['board_id' => $this->domain->id()];
 
         // Check for flood
-        // If post is a reply, also check if the thread still exists
-
-        if ($post->getData('parent_thread') == 0) {
-            $renzoku_setting = $time - $this->domain->setting('thread_renzoku');
-            $op_value = 1;
-        } else {
-            $renzoku_setting = $time - $this->domain->setting('reply_renzoku');
-            $op_value = 0;
-        }
-
-        $prepared = $this->database->prepare(
-            'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
-            '" WHERE "post_time" > ? AND "op" = ? AND "hashed_ip_address" = ? LIMIT 1');
-        $prepared->bindValue(1, $renzoku_setting, PDO::PARAM_INT);
-        $prepared->bindValue(2, $op_value, PDO::PARAM_INT);
-        $prepared->bindValue(3, nel_request_ip_address(true), PDO::PARAM_STR);
-        $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
-
-        if ($renzoku !== false && !$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
-            nel_derp(3, _gettext("Flood detected! You're posting too fast, slow down."), 0, $error_data);
-        }
-
-        if ($post->getData('parent_thread') != 0) {
-            $prepared = $this->database->prepare(
-                'SELECT * FROM "' . $this->domain->reference('threads_table') . '" WHERE "thread_id" = ?');
-            $thread_info = $this->database->executePreparedFetch($prepared, [$post->getData('parent_thread')],
-                PDO::FETCH_ASSOC, true);
-
-            if (!empty($thread_info)) {
-                if ($thread_info['locked'] == 1 &&
-                    !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_thread')) {
-                    nel_derp(4, _gettext('This thread is locked, you cannot post in it.'), 0, $error_data);
-                }
-
-                if ($thread_info['old'] != 0) {
-                    nel_derp(5, _gettext('The thread you tried posting in is currently inaccessible or archived.'), 0,
-                        $error_data);
-                }
+        if (!$this->session->user()->checkPermission($this->domain, 'perm_bypass_renzoku')) {
+            if ($post->getData('op')) {
+                $renzoku_setting = $time - $this->domain->setting('thread_renzoku');
+                $op_value = 1;
             } else {
-                nel_derp(6, _gettext('The thread you tried posting in could not be found.'), 404, $error_data);
+                $renzoku_setting = $time - $this->domain->setting('reply_renzoku');
+                $op_value = 0;
             }
 
-            if ($this->domain->setting('limit_post_count') && $thread_info['cyclic'] != 1 &&
-                $thread_info['post_count'] >= $this->domain->setting('max_posts')) {
+            $prepared = $this->database->prepare(
+                'SELECT 1 FROM "' . $this->domain->reference('posts_table') .
+                '" WHERE "post_time" > ? AND "op" = ? AND "hashed_ip_address" = ? LIMIT 1');
+            $prepared->bindValue(1, $renzoku_setting, PDO::PARAM_INT);
+            $prepared->bindValue(2, $op_value, PDO::PARAM_INT);
+            $prepared->bindValue(3, nel_request_ip_address(true), PDO::PARAM_STR);
+            $renzoku = $this->database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
+
+            if ($renzoku !== false) {
+                nel_derp(3, _gettext("Flood detected! You're posting too fast, slow down."), 0, $error_data);
+            }
+        }
+
+        $thread = $post->getParent();
+
+        if (!$post->getData('op') && !$thread->exists()) {
+            nel_derp(6, _gettext('The thread you tried posting in could not be found.'), 404, $error_data);
+        }
+
+        if ($thread->getData('locked') &&
+            !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_thread')) {
+            nel_derp(4, _gettext('This thread is locked, you cannot post in it.'), 0, $error_data);
+        }
+
+        if ($thread->getData('old') && !$this->session->user()->checkPermission($this->domain, 'perm_post_locked_thread')) {
+            nel_derp(5, _gettext('The thread you tried posting in is currently inaccessible or archived.'), 0,
+                $error_data);
+        }
+
+        if ($post->getData('op')) {
+            if ($this->domain->setting('limit_post_count') && $thread->getData('cyclic') != 1 &&
+                $thread->getData('post_count') >= $this->domain->setting('max_posts')) {
                 nel_derp(7, _gettext('The thread has reached maximum posts.'), 0, $error_data);
-            }
-
-            if ($thread_info['old'] != 0) {
-                nel_derp(8, _gettext('The thread is archived or buffered and cannot be posted to.'), 0, $error_data);
             }
         } else {
             if ($this->domain->setting('threads_per_hour_limit') > 0 &&

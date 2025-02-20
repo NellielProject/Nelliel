@@ -37,3 +37,9 @@ $technical_config['use_render_cache'] = true;
 // Enables debug mode. Debug mode bypasses some handlers and safeguards and provides more verbose information.
 // Debug mode may expose sensitive information and/or risk data corruption. Only use this for non-public development and debugging!
 $technical_config['debug_mode'] = false;
+
+// Sets parameters for debug mode. Flags must be capitalized and separated by |
+// Flags:
+// IGNORE_EXCEPTIONS - Disables the catch-all exception handlers.
+// DISPLAY_ERRORS - Sets PHP error reporting to E_ALL and displays errors.
+$technical_config['debug_flags'] = '';

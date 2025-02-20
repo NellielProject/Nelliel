@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Regen;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Output\OutputPanelBoardConfig;
@@ -240,7 +240,7 @@ class AdminBoardDefaults extends Admin
         $board_domains = array();
 
         foreach ($board_ids as $board_id) {
-            $board_domains[] = new DomainBoard($board_id, $this->database);
+            $board_domains[] = Domain::getDomainFromID($board_id);
         }
 
         return $board_domains;

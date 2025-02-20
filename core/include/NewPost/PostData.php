@@ -12,7 +12,8 @@ use Nelliel\IPInfo;
 use Nelliel\ROBOT9000;
 use Nelliel\VisitorInfo;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
+use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Domains\Domain;
 use Nelliel\Filters\Filters;
@@ -37,9 +38,34 @@ class PostData
         }
 
         $new_post_data = $_POST['new_post'];
+        $thread_id = $new_post_data['thread_id'] ?? '';
 
-        $parent_thread = intval($new_post_data['response_to'] ?? 0);
-        $is_op = $parent_thread === 0;
+        if (!ContentID::isContentID($thread_id)) {
+            nel_derp(76, __('No recognizable thread ID provided.'));
+        }
+
+        $thread_content_id = new ContentID($thread_id);
+        $is_op = $thread_content_id->threadID() === 0;
+        $sub_threads_enabled = false; // TODO: Finish sub thread implementation
+
+        if($is_op) {
+            $reply_to = 0;
+        } else {
+            $reply_to = $thread_content_id->threadID();
+            //$reply_to = intval($new_post_data['reply_to'] ?? $thread_content_id->threadID());
+        }
+
+        $parent_post_content_id = $thread_content_id;
+        $parent_post_content_id->changePostID($reply_to);
+        $parent_post = $parent_post_content_id->getInstanceFromID($this->domain);
+
+        if($sub_threads_enabled && $parent_post->exists()) {
+            $post->changeData('reply_to', $parent_post->contentID()->postID());
+            $post->changeData('reply_depth', $parent_post->getData('reply_depth') + 1);
+        } else {
+            $post->changeData('reply_to', $reply_to);
+            $post->changeData('reply_depth', 0);
+        }
 
         $require_name = $is_op ? $this->domain->setting('require_op_name') : $this->domain->setting(
             'require_reply_name');
@@ -78,13 +104,12 @@ class PostData
             nel_derp(44, _gettext('A comment is required to post.'));
         }
 
-        $post->changeData('parent_thread', $parent_thread);
+        $post->changeData('parent_thread', $thread_content_id->threadID());
         $post->contentID()->changeThreadID($post->getData('parent_thread'));
         $post->changeData('op', $is_op);
-        $post->changeData('reply_to', $post->getData('parent_thread')); // This may enable nested posts in the future
         $ip_info = new IPInfo(nel_request_ip_address());
         $post->changeData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
-        $post->changeData('ip_address', nel_prepare_ip_for_storage($ip_info->getInfo('ip_address')));
+        $post->changeData('ip_address', $ip_info->getInfo('ip_address'));
         $visitor_info = new VisitorInfo(nel_visitor_id());
         $visitor_info->updateLastActivity(time());
         $post->changeData('visitor_id', $visitor_info->getInfo('visitor_id'));
@@ -101,13 +126,13 @@ class PostData
         $raw_html = boolval($_POST['raw_html'] ?? false);
 
         if ($raw_html && $this->session->user()->checkPermission($this->domain, 'perm_raw_html')) {
-            $post->getMoar()->modify('raw_html', true);
+            $post->getMoar()->changeSectionData('nelliel', 'raw_html', true);
         }
 
         $disable_markup = boolval($_POST['no_markup'] ?? false);
 
         if ($disable_markup) {
-            $post->getMoar()->modify('no_markup', true);
+            $post->getMoar()->changeSectionData('nelliel', 'no_markup', true);
         }
 
         if ($enable_email && !$this->domain->setting('forced_anonymous')) {
@@ -136,8 +161,6 @@ class PostData
             $post->changeData('password',
                 substr($password, 0, nel_crypt_config()->configValue('post_password_max_length')));
         }
-
-        $post->changeData('response_to', intval($new_post_data['response_to']));
 
         if (!nel_true_empty($post->getData('comment'))) {
             $filters = new Filters($this->domain->database());
@@ -288,7 +311,8 @@ class PostData
     private function secureTripcode(string $key): string
     {
         $secure_tripcode = '';
-        $trip_code = hash_hmac(nel_site_domain()->setting('secure_tripcode_algorithm'), $key, NEL_TRIPCODE_PEPPER);
+        $trip_code = hash_hmac(nel_get_cached_domain(Domain::SITE)->setting('secure_tripcode_algorithm'), $key,
+            NEL_TRIPCODE_PEPPER);
         $trip_code = base64_encode(pack("H*", $trip_code));
         $secure_tripcode = utf8_substr($trip_code, 2, 10);
         return $secure_tripcode;
@@ -433,7 +457,7 @@ class PostData
             $modifier = intval($matches[3] ?? 0);
 
             // If multiple rolls, only the last one is used
-            $post->getMoar()->modify('dice_roll', $dice_instance->roll($dice, $sides, $modifier));
+            $post->getMoar()->changeSectionData('nelliel', 'dice_roll', $dice_instance->roll($dice, $sides, $modifier));
         }
     }
 

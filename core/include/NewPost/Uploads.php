@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\FileTypes;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Content\Post;
 use Nelliel\Content\Upload;
@@ -452,11 +452,10 @@ class Uploads
     {
         $embeds_count = 0;
         $files_count = 0;
-        $response_to = $post->getData('response_to');
         $parent_thread = $post->getParent();
         $parent_thread->loadFromDatabase();
 
-        if (!$response_to) {
+        if ($post->getData('op')) {
             $allow_files = $this->domain->setting('allow_op_files');
             $require_file = $this->domain->setting('require_op_file');
             $allow_embeds = $this->domain->setting('allow_op_embeds');
@@ -572,7 +571,7 @@ class Uploads
     private function setDimensions(Upload $upload)
     {
         $magicks = nel_magick_available();
-        $graphics_handler = nel_site_domain()->setting('graphics_handler');
+        $graphics_handler = nel_get_cached_domain(Domain::SITE)->setting('graphics_handler');
         $display_width = 0;
         $display_height = 0;
 

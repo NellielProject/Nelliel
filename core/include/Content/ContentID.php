@@ -111,6 +111,6 @@ class ContentID
             return new Upload($this, $domain, $load);
         }
 
-        return null;
+        return new Thread($this, $domain, $load);
     }
 }

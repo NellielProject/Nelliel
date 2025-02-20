@@ -28,8 +28,7 @@ class TableCapcodes extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_CAPCODES_TABLE;
         $this->column_checks = [
             'capcode_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],

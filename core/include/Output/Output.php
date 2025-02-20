@@ -41,8 +41,8 @@ abstract class Output
         $this->write_mode = $write_mode;
         $this->database = $domain->database();
         $this->selectRenderCore('mustache');
-        $this->site_domain = nel_site_domain();
-        $this->global_domain = nel_global_domain();
+        $this->site_domain = nel_get_cached_domain(Domain::SITE);
+        $this->global_domain = nel_get_cached_domain(Domain::GLOBAL);
         $this->file_handler = nel_utilities()->fileHandler();
         $this->output_filter = new Filter();
         $this->session = new Session();

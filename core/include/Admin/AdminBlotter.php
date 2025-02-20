@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Regen;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPanelBlotter;
 
@@ -40,7 +40,7 @@ class AdminBlotter extends Admin
         $prepared = $this->database->prepare($query);
         $this->database->executePrepared($prepared, [$time, $text]);
         $regen = new Regen();
-        $regen->blotter(nel_site_domain());
+        $regen->blotter(nel_get_cached_domain(Domain::SITE));
         $regen->allBoards(true, true);
         $this->panel();
     }
@@ -60,7 +60,7 @@ class AdminBlotter extends Admin
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "record_id" = ?');
         $this->database->executePrepared($prepared, [$record_id]);
         $regen = new Regen();
-        $regen->blotter(nel_site_domain());
+        $regen->blotter(nel_get_cached_domain(Domain::SITE));
         $regen->allBoards(true, true);
         $this->panel();
     }

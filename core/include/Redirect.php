@@ -3,6 +3,8 @@ declare(strict_types = 1);
 
 namespace Nelliel;
 
+use Nelliel\Domains\Domain;
+
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 class Redirect
@@ -45,7 +47,7 @@ class Redirect
     {
         if (self::$do_redirect) {
             if (self::$url === '') {
-                self::$url = nel_site_domain()->reference('home_page');
+                self::$url = nel_get_cached_domain(Domain::SITE)->reference('home_page');
             }
 
             $redirect = '<meta http-equiv="refresh" content="' . self::$delay . ';URL=' . self::$url . '"  f>';

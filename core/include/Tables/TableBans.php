@@ -18,7 +18,7 @@ class TableBans extends Table
         'creator' => 'string',
         'ban_type' => 'integer',
         'hashed_ip_address' => 'string',
-        'ip_address' => 'string',
+        'unhashed_ip_address' => 'string',
         'hashed_subnet' => 'string',
         'range_start' => 'string',
         'range_end' => 'string',
@@ -36,10 +36,10 @@ class TableBans extends Table
         'creator' => PDO::PARAM_STR,
         'ban_type' => PDO::PARAM_INT,
         'hashed_ip_address' => PDO::PARAM_STR,
-        'ip_address' => PDO::PARAM_LOB,
+        'unhashed_ip_address' => PDO::PARAM_STR,
         'hashed_subnet' => PDO::PARAM_STR,
-        'range_start' => PDO::PARAM_LOB,
-        'range_end' => PDO::PARAM_LOB,
+        'range_start' => PDO::PARAM_STR,
+        'range_end' => PDO::PARAM_STR,
         'visitor_id' => PDO::PARAM_STR,
         'reason' => PDO::PARAM_STR,
         'start_time' => PDO::PARAM_INT,
@@ -50,8 +50,7 @@ class TableBans extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_BANS_TABLE;
         $this->column_checks = [
             'ban_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
@@ -59,10 +58,10 @@ class TableBans extends Table
             'creator' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'ban_type' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'unhashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_subnet' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'range_start' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'range_end' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'unhashed_range_start' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'unhashed_range_end' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'reason' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'start_time' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
@@ -78,22 +77,22 @@ class TableBans extends Table
         $options = $this->sql_compatibility->tableOptions();
         $schema = '
         CREATE TABLE ' . $this->table_name . ' (
-            ban_id              ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
-            board_id            VARCHAR(50) NOT NULL,
-            creator             VARCHAR(50) DEFAULT NULL,
-            ban_type            SMALLINT NOT NULL DEFAULT 0,
-            hashed_ip_address   VARCHAR(128) DEFAULT NULL,
-            ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
-            hashed_subnet       VARCHAR(128) DEFAULT NULL,
-            range_start         ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
-            range_end           ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
-            visitor_id          VARCHAR(128) DEFAULT NULL,
-            reason              TEXT NOT NULL,
-            start_time          BIGINT NOT NULL,
-            length              BIGINT NOT NULL,
-            seen                SMALLINT NOT NULL DEFAULT 0,
-            appeal_allowed      SMALLINT NOT NULL DEFAULT 0,
-            moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
+            ban_id                  ' . $auto_inc[0] . ' ' . $auto_inc[1] . ' NOT NULL,
+            board_id                VARCHAR(50) NOT NULL,
+            creator                 VARCHAR(50) DEFAULT NULL,
+            ban_type                SMALLINT NOT NULL DEFAULT 0,
+            hashed_ip_address       VARCHAR(128) DEFAULT NULL,
+            unhashed_ip_address     VARCHAR(128) DEFAULT NULL,
+            hashed_subnet           VARCHAR(128) DEFAULT NULL,
+            unhashed_range_start    VARCHAR(128) DEFAULT NULL,
+            unhashed_range_end      VARCHAR(128) DEFAULT NULL,
+            visitor_id              VARCHAR(128) DEFAULT NULL,
+            reason                  TEXT NOT NULL,
+            start_time              BIGINT NOT NULL,
+            length                  BIGINT NOT NULL,
+            seen                    SMALLINT NOT NULL DEFAULT 0,
+            appeal_allowed          SMALLINT NOT NULL DEFAULT 0,
+            moar                    ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (ban_id),
             CONSTRAINT fk_bans__domain_registry
             FOREIGN KEY (board_id) REFERENCES ' . NEL_DOMAIN_REGISTRY_TABLE . ' (domain_id)

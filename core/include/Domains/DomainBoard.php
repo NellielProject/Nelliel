@@ -33,7 +33,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
         if (NEL_USE_FILE_CACHE) {
             $settings = $this->cache_handler->loadArrayFromFile('domain_settings', 'domain_settings.php',
-                'domains/' . $this->domain_id);
+                'domains/' . $this->uri);
         }
 
         if (empty($settings)) {
@@ -124,7 +124,7 @@ class DomainBoard extends Domain implements NellielCacheInterface
         $uri = ($display) ? $this->display_uri : $this->uri;
 
         if ($formatted) {
-            $uri = sprintf(nel_site_domain()->setting('uri_display_format'), $uri);
+            $uri = sprintf(nel_get_cached_domain(Domain::SITE)->setting('uri_display_format'), $uri);
         }
 
         return $uri;
@@ -132,13 +132,13 @@ class DomainBoard extends Domain implements NellielCacheInterface
 
     public function url(): string
     {
-        return nel_site_domain()->setting('absolute_url_protocol') . '://' .
-            rtrim(nel_site_domain()->setting('site_domain'), '/') . '/' . ltrim($this->uri, '/') . '/';
+        return nel_get_cached_domain(Domain::SITE)->setting('absolute_url_protocol') . '://' .
+            rtrim(nel_get_cached_domain(Domain::SITE)->setting('site_domain'), '/') . '/' . ltrim($this->uri, '/') . '/';
     }
 
     public function updateStatistics(): void
     {
-        $limit = time() - nel_site_domain()->setting('min_time_between_board_stat_updates');
+        $limit = time() - nel_get_cached_domain(Domain::SITE)->setting('min_time_between_board_stat_updates');
 
         if ($this->statistics->get($this, 'last_update') > $limit) {
             return;
@@ -177,7 +177,9 @@ class DomainBoard extends Domain implements NellielCacheInterface
     public function regenCache()
     {
         if (NEL_USE_FILE_CACHE) {
-            $this->cacheSettings();
+            $settings = $this->loadSettingsFromDatabase();
+            $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
+                'domains/' . $this->uri);
         }
     }
 
@@ -188,25 +190,30 @@ class DomainBoard extends Domain implements NellielCacheInterface
         }
     }
 
-    public function activeThreads(bool $index_sort): array
+    public function getThreads(bool $active_threads = true, bool $old_threads = true): array
     {
-        $active_threads = array();
+        $threads = array();
 
-        if ($index_sort) {
+        if ($active_threads && $old_threads) {
+            $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') .
+                '" ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC';
+        } else if ($active_threads) {
             $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') .
                 '" WHERE "old" = 0 ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC';
+        } else if ($old_threads) {
+            $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') .
+                '" WHERE "old" = 1 ORDER BY "sticky" DESC, "bump_time" DESC, "bump_time_milli" DESC';
         } else {
-            $query = 'SELECT "thread_id" FROM "' . $this->reference('threads_table') . '" WHERE "old" = 0';
+            return $threads;
         }
 
-        $thread_list = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
+        $thread_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
 
-        foreach ($thread_list as $thread) {
+        foreach ($thread_ids as $thread) {
             $content_id = new ContentID(ContentID::createIDString(intval($thread)));
-            $active_threads[] = $content_id->getInstanceFromID($this);
+            $threads[] = $content_id->getInstanceFromID($this);
         }
-
-        return $active_threads;
+        return $threads;
     }
 
     public function recentPosts(int $limit): array

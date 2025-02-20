@@ -3,9 +3,10 @@ declare(strict_types = 1);
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Domains\Domain;
 use Nelliel\Language\Translator;
-use Nelliel\Setup\Installer\Installer;
 use Nelliel\Setup\Upgrade;
+use Nelliel\Setup\Installer\Installer;
 use Nelliel\Utility\FileHandler;
 
 Mustache_Autoloader::register();
@@ -13,8 +14,13 @@ Mustache_Autoloader::register();
 require_once NEL_INCLUDE_PATH . 'general_functions.php';
 require_once NEL_INCLUDE_PATH . 'exception_handlers.php';
 
-if (!NEL_DEBUG_MODE) {
+if (!NEL_DEBUG_PASS_EXCEPTIONS) {
     set_exception_handler('nel_exception_handler');
+}
+
+if (NEL_DEBUG_DISPLAY_ERRORS) {
+    error_reporting(E_ALL);
+    ini_set('display_erors', '1');
 }
 
 if (file_exists(NEL_GENERATED_FILES_PATH . 'peppers.php')) {
@@ -55,6 +61,11 @@ if (isset($_GET['upgrade'])) {
 }
 
 unset($upgrade);
+
+if (!file_exists(NEL_CACHE_FILES_PATH)) {
+    $file_handler->createDirectory(NEL_CACHE_FILES_PATH);
+}
+
 unset($file_handler);
 
 require_once NEL_INCLUDE_PATH . 'exit_functions.php';
@@ -62,7 +73,7 @@ register_shutdown_function('nel_clean_exit');
 
 require_once NEL_INCLUDE_PATH . 'crypt.php';
 
-date_default_timezone_set(nel_site_domain()->setting('time_zone') ?? 'UTC');
+date_default_timezone_set(nel_get_cached_domain(Domain::SITE)->setting('time_zone') ?? 'UTC');
 
 define('NEL_SETUP_GOOD', true);
 

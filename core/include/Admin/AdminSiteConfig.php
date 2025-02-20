@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Regen;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPanelSiteConfig;
 use PDO;
@@ -99,7 +99,7 @@ class AdminSiteConfig extends Admin
         if ($changes > 0) {
             $this->domain->regenCache();
             $this->domain->reload();
-            nel_site_domain()->reload();
+            nel_get_cached_domain(Domain::SITE)->reload();
             $regen = new Regen();
             $regen->allBoards(true, false);
             $regen->sitePages($this->domain);

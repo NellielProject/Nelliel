@@ -12,8 +12,7 @@ use Nelliel\API\Plugin\PluginAPI;
 use Nelliel\Account\Session;
 use Nelliel\Database\DatabaseConnector;
 use Nelliel\Database\NellielPDO;
-use Nelliel\Domains\DomainGlobal;
-use Nelliel\Domains\DomainSite;
+use Nelliel\Domains\Domain;
 use Nelliel\Logging\NellielDatabaseHandler;
 use Nelliel\Logging\NellielLogProcessor;
 use Nelliel\Utility\Utilities;
@@ -41,26 +40,15 @@ function nel_plugins(): PluginAPI
     return $plugins;
 }
 
-function nel_site_domain(bool $renew = false): DomainSite
+function nel_get_cached_domain(string $id, bool $renew = false): Domain
 {
-    static $site_domain;
+    static $domains;
 
-    if (!isset($site_domain) || $renew) {
-        $site_domain = new DomainSite(nel_database('core'));
+    if (!isset($domains[$id]) || $renew) {
+        $domains[$id] = Domain::getDomainFromID($id);
     }
 
-    return $site_domain;
-}
-
-function nel_global_domain(bool $renew = false): DomainGlobal
-{
-    static $global_domain;
-
-    if (!isset($global_domain) || $renew) {
-        $global_domain = new DomainGlobal(nel_database('core'));
-    }
-
-    return $global_domain;
+    return $domains[$id];
 }
 
 function nel_request_ip_address(bool $hashed = false, bool $single_ip = false): string
@@ -98,7 +86,7 @@ function nel_effective_ip(string $ip_address): string
 
     if ($ip->getVersion() === IP::IP_V6) {
         $effective_ip_address = Network::parse(
-            $ip_address . '/' . nel_site_domain()->setting('ipv6_identification_cidr'))->getCIDR();
+            $ip_address . '/' . nel_get_cached_domain(Domain::SITE)->setting('ipv6_identification_cidr'))->getCIDR();
     } else {
         $effective_ip_address = $ip_address;
     }
@@ -154,7 +142,7 @@ function nel_visitor_id(bool $regenerate = false, int $version = NEL_VISITOR_ID_
                 break;
         }
 
-        $options = ['expires' => time() + nel_site_domain()->setting('visitor_id_lifespan'),
+        $options = ['expires' => time() + nel_get_cached_domain(Domain::SITE)->setting('visitor_id_lifespan'),
             'path' => NEL_BASE_WEB_PATH, 'domain' => '', 'secure' => false, 'httponly' => true, 'samesite' => 'Strict'];
         setcookie('visitor-id', $visitor_id, $options);
     }

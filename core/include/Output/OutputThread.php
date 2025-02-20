@@ -80,8 +80,8 @@ class OutputThread extends Output
             }
 
             $this->render_data['show_global_announcement'] = !nel_true_empty(
-                nel_site_domain()->setting('global_announcement'));
-            $this->render_data['global_announcement_text'] = nel_site_domain()->setting('global_announcement');
+                nel_get_cached_domain(Domain::SITE)->setting('global_announcement'));
+            $this->render_data['global_announcement_text'] = nel_get_cached_domain(Domain::SITE)->setting('global_announcement');
 
             $query = 'SELECT * FROM "' . NEL_BLOTTER_TABLE . '" ORDER BY "time" ASC';
             $blotter_entries = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
@@ -101,7 +101,7 @@ class OutputThread extends Output
 
             $this->render_data['abbreviate'] = false;
             $output_new_post_form = new OutputNewPostForm($this->domain, $this->write_mode);
-            $this->render_data['new_post_form'] = $output_new_post_form->render(['response_to' => $thread_id], true);
+            $this->render_data['new_post_form'] = $output_new_post_form->render(['thread_id' => $thread->contentID()->getIDString(), 'reply_to' => $thread_id], true);
             $output_menu = new OutputMenu($this->domain, $this->write_mode);
             $this->render_data['styles'] = $output_menu->styles([], true);
             $this->render_data['return_link'] = true;

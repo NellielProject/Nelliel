@@ -8,8 +8,6 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 use Nelliel\Regen;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainBoard;
-use Nelliel\Domains\DomainSite;
 use Nelliel\FrontEnd\FrontEndData;
 use Nelliel\Language\Language;
 use Nelliel\Language\Translator;
@@ -42,6 +40,7 @@ use Nelliel\Tables\TableNoticeboard;
 use Nelliel\Tables\TableOverboard;
 use Nelliel\Tables\TablePages;
 use Nelliel\Tables\TablePermissions;
+use Nelliel\Tables\TablePluginConfigs;
 use Nelliel\Tables\TablePlugins;
 use Nelliel\Tables\TablePosts;
 use Nelliel\Tables\TablePrivateMessages;
@@ -69,7 +68,6 @@ use Nelliel\Tables\TableWordfilters;
 use Nelliel\Utility\FileHandler;
 use Nelliel\Utility\SQLCompatibility;
 use PDO;
-use Nelliel\Tables\TablePluginConfigs;
 
 class Installer
 {
@@ -175,7 +173,7 @@ class Installer
         $prepared->bindValue(1, $this->installer_variables['default_language'], PDO::PARAM_STR);
         $database->executePrepared($prepared);
 
-        $site_domain = new DomainSite($database);
+        $site_domain = Domain::getDomainFromID(Domain::SITE);
         $regen = new Regen();
         $site_domain->regenCache();
         $regen->news($site_domain);
@@ -439,7 +437,7 @@ class Installer
     public function createBoardTables(NellielPDO $database, SQLCompatibility $sql_compatibility, string $board_id,
         string $db_prefix)
     {
-        $domain = new DomainBoard($board_id, nel_database('core'));
+        $domain = Domain::getDomainFromID($board_id, nel_database('core'));
 
         $archives_table = new TableThreadArchives($database, $sql_compatibility);
         $archives_table->tableName($domain->reference('archives_table'));
@@ -460,7 +458,7 @@ class Installer
 
     public function createBoardDirectories(string $board_id)
     {
-        $domain = new DomainBoard($board_id, nel_database('core'));
+        $domain = Domain::getDomainFromID($board_id, nel_database('core'));
         $this->file_handler->createDirectory($domain->reference('src_path'));
         $this->file_handler->createDirectory($domain->reference('preview_path'));
         $this->file_handler->createDirectory($domain->reference('page_path'));

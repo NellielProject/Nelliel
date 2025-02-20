@@ -40,7 +40,7 @@ class OutputCatalog extends Output
             ['in_modmode' => $this->render_data['in_modmode'], 'display' => 'catalog'], $data_only);
         $thread_count = 1;
 
-        foreach ($this->domain->activeThreads(true) as $thread) {
+        foreach ($this->domain->getThreads(true, false) as $thread) {
             if (is_null($thread) || !$thread->exists()) {
                 continue;
             }

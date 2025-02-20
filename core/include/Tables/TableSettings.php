@@ -34,8 +34,7 @@ class TableSettings extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_SETTINGS_TABLE;
         $this->column_checks = [
             'setting_category' => ['row_check' => true, 'auto_inc' => false, 'update' => false],

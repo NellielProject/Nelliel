@@ -21,7 +21,7 @@ class CatalogJSON extends JSON
     protected function generate(): void
     {
         $raw_data = array();
-        $threads = $this->board->activeThreads(true);
+        $threads = $this->board->getThreads(true, false);
         $thread_list = array();
         // This allows for possible pagination in the future
         // Also 4Chan API compatible

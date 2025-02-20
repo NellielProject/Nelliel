@@ -25,7 +25,7 @@ class Report
     {
         $captcha = new CAPTCHA($this->domain);
 
-        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_report_captcha')) {
+        if (nel_get_cached_domain(Domain::SITE)->setting('enable_captchas') && $this->domain->setting('use_report_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha_result = $captcha->verify($captcha_key, $captcha_answer);
@@ -51,10 +51,10 @@ class Report
 
         $report_count = count($reports);
 
-        if ($report_count > nel_site_domain()->setting('max_report_items')) {
+        if ($report_count > nel_get_cached_domain(Domain::SITE)->setting('max_report_items')) {
             nel_derp(130,
                 sprintf(_gettext('You are trying to report too many items at once. Limit is %d.'),
-                    nel_site_domain()->setting('max_report_items')));
+                    nel_get_cached_domain(Domain::SITE)->setting('max_report_items')));
         }
 
         foreach ($reports as $report_data) {
@@ -63,7 +63,7 @@ class Report
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(1, $this->domain->id(), PDO::PARAM_STR);
             $prepared->bindValue(2, $report_data['content_id'], PDO::PARAM_STR);
-            $prepared->bindValue(3, nel_prepare_ip_for_storage($report_data['reporter_ip']), PDO::PARAM_LOB);
+            $prepared->bindValue(3, $report_data['reporter_ip'], PDO::PARAM_LOB);
             $prepared->bindValue(4, $report_data['hashed_reporter_ip'], PDO::PARAM_STR);
             $prepared->bindValue(5, $report_data['visitor_id'], PDO::PARAM_STR);
             $prepared->bindValue(6, $report_data['reason'], PDO::PARAM_STR);

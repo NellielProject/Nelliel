@@ -76,8 +76,7 @@ class TableUploads extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = '_uploads';
         $this->increment_column = 'upload_id';
         $this->column_checks = [

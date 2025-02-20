@@ -1,47 +1,57 @@
 <?php
-
-declare(strict_types=1);
+declare(strict_types = 1);
 
 namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-class Moar
+use Nelliel\Interfaces\MutableData;
+use Nelliel\Interfaces\SectionedMutableData;
+
+class Moar implements MutableData, SectionedMutableData
 {
-    private $moar = array();
-    private $json_needs_update;
+    private $data = array();
 
-    function __construct()
+    function __construct(string $json = null)
     {
+        if (!is_null($json)) {
+            $this->data = json_decode($json, true);
+        }
     }
 
-    public function storeFromArray(array $moar)
+    public function getData(string $key = null)
     {
-        $this->moar = $moar;
-    }
-
-    public function storeFromJSON(string $moar)
-    {
-        $this->moar = json_decode($moar, true);
-    }
-
-    public function get($index = null)
-    {
-        if (is_null($index))
-        {
-            return $this->moar;
+        if (is_null($key)) {
+            return $this->data;
         }
 
-        return $this->moar[$index] ?? null;
+        return $this->data[$key] ?? null;
     }
 
-    public function getJSON($index = null)
+    public function changeData(string $key = null, $new_data): void
     {
-        return json_encode($this->get($index));
+        if (is_null($key)) {
+            $this->data = $new_data;
+        } else {
+            $this->data[$key] = $new_data;
+        }
     }
 
-    public function modify($index, $moar)
+    public function getSectionData(string $section, string $key = null)
     {
-        $this->moar[$index] = $moar;
+        if (is_null($key)) {
+            return $this->data[$section] ?? null;
+        }
+
+        return $this->data[$section][$key] ?? null;
+    }
+
+    public function changeSectionData(string $section, string $key = null, $new_data): void
+    {
+        if (is_null($key)) {
+            $this->data[$section] = $new_data;
+        } else {
+            $this->data[$section][$key] = $new_data;
+        }
     }
 }

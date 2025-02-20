@@ -6,7 +6,6 @@ namespace Nelliel\Account;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\AntiSpam\CAPTCHA;
-use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputRegisterPage;
 
@@ -27,7 +26,7 @@ class Register
     {
         $captcha = new CAPTCHA($this->domain);
 
-        if (nel_site_domain()->setting('enable_captchas') && $this->domain->setting('use_register_captcha')) {
+        if (nel_get_cached_domain(Domain::SITE)->setting('enable_captchas') && $this->domain->setting('use_register_captcha')) {
             $captcha_key = $_COOKIE['captcha-key'] ?? '';
             $captcha_answer = $_POST['new_post']['captcha_answer'] ?? '';
             $captcha->verify($captcha_key, $captcha_answer);

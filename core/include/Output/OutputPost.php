@@ -34,7 +34,6 @@ class OutputPost extends Output
         }
 
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
-
         $this->render_data['is_op'] = $post->getData('op');
         $this->render_data['post_corral_id'] = 'post-corral-' . $post->contentID()->getIDString();
         $this->render_data['post_container_id'] = 'post-container-' . $post->contentID()->getIDString();
@@ -67,7 +66,7 @@ class OutputPost extends Output
         if ($this->session->inModmode($this->domain) && !$this->write_mode) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
                 !empty($post->getData('ip_address'))) {
-                $ip = nel_convert_ip_from_storage($post->getData('ip_address'));
+                $ip = $post->getData('ip_address');
             } else {
                 if (!empty($post->getData('hashed_ip_address'))) {
                     $ip = $post->getData('hashed_ip_address');
@@ -137,11 +136,11 @@ class OutputPost extends Output
         if ($thread->getData('shadow') && $post->getData('op')) {
             $markup = new Markup($this->database);
             $dynamic_urls = $this->session->inModmode($this->domain) && !$this->write_mode;
-            $cite_text = '>>>/' . $thread->getMoar()->get('shadow_board_id') . '/' .
-                $thread->getMoar()->get('shadow_thread_id');
+            $cite_text = '>>>/' . $thread->getMoar()->getData('shadow_board_id') . '/' .
+                $thread->getMoar()->getData('shadow_thread_id');
             $shadow_cite = $markup->parseCites($cite_text, $post->domain(), $dynamic_urls);
             $this->render_data['is_shadow'] = true;
-            $shadow_type = $thread->getMoar()->get('shadow_type');
+            $shadow_type = $thread->getMoar()->getData('shadow_type');
             $shadow_message = '';
 
             if ($shadow_type === 'moved') {
@@ -155,7 +154,7 @@ class OutputPost extends Output
             $this->render_data['shadow_message'] = sprintf(htmlspecialchars($shadow_message), $shadow_cite);
         }
 
-        $dice_roll = $post->getMoar()->get('dice_roll');
+        $dice_roll = $post->getMoar()->getSectionData('nelliel', 'dice_roll');
 
         if (!is_null($dice_roll)) {
             $this->render_data['show_dice_roll'] = true;
@@ -351,7 +350,7 @@ class OutputPost extends Output
             return '';
         }
 
-        if ($post->getMoar()->get('raw_html') === true) {
+        if ($post->getMoar()->getSectionData('nelliel', 'raw_html') === true) {
             return $comment_text;
         }
 
@@ -369,7 +368,7 @@ class OutputPost extends Output
             $comment = $this->output_filter->filterZalgo($comment);
         }
 
-        if ($post->getMoar()->get('no_markup') === true) {
+        if ($post->getMoar()->getSectionData('nelliel', 'no_markup') === true) {
             return htmlspecialchars($comment, ENT_QUOTES, 'UTF-8', false);
         }
 

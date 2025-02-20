@@ -33,7 +33,7 @@ class OutputPanelFileFilters extends Output
         $filters = new Filters($this->database);
 
         foreach ($filters->getFileFilters([$this->domain->id()]) as $filter) {
-            $filter_domain = Domain::getDomainFromID($filter->getData('board_id'), $this->database);
+            $filter_domain = Domain::getDomainFromID($filter->getData('board_id'));
             $filter_data = array();
             $filter_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
