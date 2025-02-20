@@ -1749,11 +1749,16 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
 
                     foreach ($ips as $ip) {
                         if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address'],
-                            [$ip['hashed_ip_address']]) &&
-                            !nel_database('core')->rowExists('nelliel_ip_info', ['unhashed_ip_address'],
-                                [$ip['ip_address']])) {
+                            [$ip['hashed_ip_address']])) {
                             $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
-                            $ip_transfer->bindValue(2, $ip['ip_address']);
+
+                            if (nel_database('core')->rowExists('nelliel_ip_info', ['unhashed_ip_address'],
+                                [$this->convert_ip_from_storage($ip['ip_address'])])) {
+                                $ip_transfer->bindValue(2, null);
+                            } else {
+                                $ip_transfer->bindValue(2, $this->convert_ip_from_storage($ip['ip_address']));
+                            }
+
                             nel_database('core')->executePrepared($ip_transfer);
                         }
                     }
@@ -1830,10 +1835,17 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     'INSERT INTO "nelliel_ip_info" ("hashed_ip_address", "unhashed_ip_address") VALUES (?, ?)');
 
                 foreach ($ips as $ip) {
-                    if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address', 'unhashed_ip_address'],
-                        [$ip['hashed_ip_address'], $this->prepare_ip_for_storage($ip['ip_address'])])) {
+                    if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address'],
+                        [$ip['hashed_ip_address']])) {
                         $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
-                        $ip_transfer->bindValue(2, $this->prepare_ip_for_storage($ip['ip_address']));
+
+                        if (nel_database('core')->rowExists('nelliel_ip_info', ['unhashed_ip_address'],
+                            [$this->convert_ip_from_storage($ip['ip_address'])])) {
+                            $ip_transfer->bindValue(2, null);
+                        } else {
+                            $ip_transfer->bindValue(2, $this->convert_ip_from_storage($ip['ip_address']));
+                        }
+
                         nel_database('core')->executePrepared($ip_transfer);
                     }
                 }
@@ -1889,11 +1901,16 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 foreach ($ips as $ip) {
                     // Earlier log entries may not have a properly encoded IP
                     if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address'],
-                        [$ip['hashed_ip_address']]) &&
-                        !nel_database('core')->rowExists('nelliel_ip_info', ['unhashed_ip_address'],
-                            [$ip['ip_address']])) {
+                        [$ip['hashed_ip_address']])) {
                         $ip_transfer->bindValue(1, $ip['hashed_ip_address'], PDO::PARAM_STR);
-                        $ip_transfer->bindValue(2, $this->prepare_ip_for_storage($ip['ip_address']), PDO::PARAM_LOB);
+
+                        if (nel_database('core')->rowExists('nelliel_ip_info', ['unhashed_ip_address'],
+                            [$this->convert_ip_from_storage($ip['ip_address'])])) {
+                            $ip_transfer->bindValue(2, null);
+                        } else {
+                            $ip_transfer->bindValue(2, $this->convert_ip_from_storage($ip['ip_address']));
+                        }
+
                         nel_database('core')->executePrepared($ip_transfer);
                     } else {
                         $prepared = nel_database('core')->prepare(
@@ -1939,15 +1956,22 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $threads_table->createTable();
 
                 $ips = nel_database('core')->executeFetchAll(
-                    'SELECT "hashed_ip_address", "ip_address" FROM "nelliel_reports_old"', PDO::FETCH_ASSOC);
+                    'SELECT "hashed_ip_address", "reporter_ip" FROM "nelliel_reports_old"', PDO::FETCH_ASSOC);
                 $ip_transfer = nel_database('core')->prepare(
                     'INSERT INTO "nelliel_ip_info" ("hashed_ip_address", "unhashed_ip_address") VALUES (?, ?)');
 
                 foreach ($ips as $ip) {
-                    if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address', 'iunhashed_p_address'],
-                        [$ip['hashed_ip_address'], $this->prepare_ip_for_storage($ip['ip_address'])])) {
+                    if (!nel_database('core')->rowExists('nelliel_ip_info', ['hashed_ip_address'],
+                        [$ip['hashed_ip_address']])) {
                         $ip_transfer->bindValue(1, $ip['hashed_ip_address']);
-                        $ip_transfer->bindValue(2, $this->prepare_ip_for_storage($ip['ip_address']));
+
+                        if (nel_database('core')->rowExists('nelliel_ip_info', ['unhashed_ip_address'],
+                            [$this->convert_ip_from_storage($ip['reporter_ips'])])) {
+                            $ip_transfer->bindValue(2, null);
+                        } else {
+                            $ip_transfer->bindValue(2, $this->convert_ip_from_storage($ip['reporter_ip']));
+                        }
+
                         nel_database('core')->executePrepared($ip_transfer);
                     }
                 }
@@ -2358,7 +2382,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     $ip_infos = nel_database('core')->executeFetchAll(
                         'SELECT "info_id", "ip_address" FROM "nelliel_ip_info"', PDO::FETCH_ASSOC);
                     $update_ip_info = nel_database('core')->prepare(
-                        'UPDATE "nelliel_ip_info" SET "unhashed_ip_address" = :unhashed_ip_address, WHERE "info_id" = :info_id');
+                        'UPDATE "nelliel_ip_info" SET "unhashed_ip_address" = :unhashed_ip_address WHERE "info_id" = :info_id');
 
                     foreach ($ip_infos as $ip_info) {
                         $update_ip_info->bindValue(':unhashed_ip_address',
@@ -2372,10 +2396,21 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     } else {
                         nel_database('core')->exec('UPDATE "nelliel_ip_info" SET "ip_address" = NULL');
                     }
+                } else {
+                    $ip_infos = nel_database('core')->executeFetchAll(
+                        'SELECT "info_id", "unhashed_ip_address" FROM "nelliel_ip_info"', PDO::FETCH_ASSOC);
+                    $update_ip_info = nel_database('core')->prepare(
+                        'UPDATE "nelliel_ip_info" SET "unhashed_ip_address" = :unhashed_ip_address WHERE "info_id" = :info_id');
 
-                    echo ' - ' . __('IP info table updated.') . '<br>';
+                    foreach ($ip_infos as $ip_info) {
+                        $update_ip_info->bindValue(':unhashed_ip_address',
+                            $this->convert_ip_from_storage($ip_info['unhashed_ip_address']), PDO::PARAM_STR);
+                        $update_ip_info->bindValue(':info_id', $ip_info['info_id'], PDO::PARAM_INT);
+                        nel_database('core')->executePrepared($update_ip_info);
+                    }
                 }
 
+                echo ' - ' . __('IP info table updated.') . '<br>';
                 // Update log tables
                 if (!nel_database('core')->columnExists('nelliel_public_logs', 'unhashed_ip_address')) {
                     nel_database('core')->exec(
@@ -2386,7 +2421,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     $public_logs = nel_database('core')->executeFetchAll(
                         'SELECT "log_id", "ip_address"FROM "nelliel_public_logs"', PDO::FETCH_ASSOC);
                     $update_public_logs = nel_database('core')->prepare(
-                        'UPDATE "nelliel_public_logs" SET "unhashed_ip_address" = :unhashed_ip_address, WHERE "log_id" = :log_id');
+                        'UPDATE "nelliel_public_logs" SET "unhashed_ip_address" = :unhashed_ip_address WHERE "log_id" = :log_id');
 
                     foreach ($public_logs as $log) {
                         $update_public_logs->bindValue(':unhashed_ip_address',
@@ -2678,7 +2713,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
         $unpacked_ip_address = @inet_ntop($ip_address);
 
         if ($unpacked_ip_address === false) {
-            return null;
+            $unpacked_ip_address = $ip_address;
         }
 
         return $unpacked_ip_address;
