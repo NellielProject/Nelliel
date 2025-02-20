@@ -111,8 +111,8 @@ class OutputModmodeLinks extends Output
     public function post(Post $post): array
     {
         if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
-            !empty($post->getData('ip_address'))) {
-            $ip = $post->getData('ip_address');
+            !empty($post->getData('unhashed_ip_address'))) {
+            $ip = $post->getData('unhashed_ip_address');
         } else {
             if (!empty($post->getData('hashed_ip_address'))) {
                 $ip = $post->getData('hashed_ip_address');

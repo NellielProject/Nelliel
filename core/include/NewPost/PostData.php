@@ -109,7 +109,7 @@ class PostData
         $post->changeData('op', $is_op);
         $ip_info = new IPInfo(nel_request_ip_address());
         $post->changeData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
-        $post->changeData('ip_address', $ip_info->getInfo('ip_address'));
+        $post->changeData('unhashed_ip_address', $ip_info->getInfo('unhashed_ip_address'));
         $visitor_info = new VisitorInfo(nel_visitor_id());
         $visitor_info->updateLastActivity(time());
         $post->changeData('visitor_id', $visitor_info->getInfo('visitor_id'));

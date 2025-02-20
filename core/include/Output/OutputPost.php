@@ -65,8 +65,8 @@ class OutputPost extends Output
 
         if ($this->session->inModmode($this->domain) && !$this->write_mode) {
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip') &&
-                !empty($post->getData('ip_address'))) {
-                $ip = $post->getData('ip_address');
+                !empty($post->getData('unhashed_ip_address'))) {
+                $ip = $post->getData('unhashed_ip_address');
             } else {
                 if (!empty($post->getData('hashed_ip_address'))) {
                     $ip = $post->getData('hashed_ip_address');

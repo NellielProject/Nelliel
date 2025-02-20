@@ -59,11 +59,11 @@ class Report
 
         foreach ($reports as $report_data) {
             $query = 'INSERT INTO "' . NEL_REPORTS_TABLE .
-                '" ("board_id", "content_id", "reporter_ip", "hashed_reporter_ip", "visitor_id", "reason") VALUES (?, ?, ?, ?, ?, ?)';
+                '" ("board_id", "content_id", "unhashed_reporter_ip", "hashed_reporter_ip", "visitor_id", "reason") VALUES (?, ?, ?, ?, ?, ?)';
             $prepared = $this->database->prepare($query);
             $prepared->bindValue(1, $this->domain->id(), PDO::PARAM_STR);
             $prepared->bindValue(2, $report_data['content_id'], PDO::PARAM_STR);
-            $prepared->bindValue(3, $report_data['reporter_ip'], PDO::PARAM_LOB);
+            $prepared->bindValue(3, $report_data['unhashed_reporter_ip'], PDO::PARAM_LOB);
             $prepared->bindValue(4, $report_data['hashed_reporter_ip'], PDO::PARAM_STR);
             $prepared->bindValue(5, $report_data['visitor_id'], PDO::PARAM_STR);
             $prepared->bindValue(6, $report_data['reason'], PDO::PARAM_STR);

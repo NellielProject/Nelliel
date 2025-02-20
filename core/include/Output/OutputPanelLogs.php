@@ -81,12 +81,12 @@ class OutputPanelLogs extends Output
             $log_data['event'] = $log['event'];
             $log_data['domain_id'] = $log['domain_id'];
             $log_data['user'] = $log['username'];
-            $ip_info = new IPInfo($log['ip_address']);
+            $ip_info = new IPInfo($log['unhashed_ip_address']);
 
             if (!$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
                 $ip_address = $ip_info->getInfo('hashed_ip_address');
             } else {
-                $ip_address = $ip_info->getInfo('ip_address');
+                $ip_address = $ip_info->getInfo('unhashed_ip_address');
             }
 
             $log_data['ip_address'] = $ip_address;

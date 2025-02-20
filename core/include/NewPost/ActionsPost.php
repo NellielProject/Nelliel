@@ -45,7 +45,7 @@ class ActionsPost implements Actions
                     }
 
                     $ban_hammer->modifyData('ban_type', BansAccess::IP);
-                    $ban_hammer->modifyData('ip_address', $ip_info->getInfo('ip_address'));
+                    $ban_hammer->modifyData('unhashed_ip_address', $ip_info->getInfo('unhashed_ip_address'));
                     $ban_hammer->modifyData('hashed_ip_address', $ip_info->getInfo('hashed_ip_address'));
                     $ban_hammer->modifyData('start_time', time());
                     $ban_hammer->modifyData('length', $data['length'] ?? 0);

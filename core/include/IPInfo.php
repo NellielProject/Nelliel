@@ -48,8 +48,8 @@ class IPInfo
 
         if ($result !== false) {
             $this->info = $result;
-            $this->info['ip_address'] = $this->getInfo('ip_address');
-            $this->ip_address = $this->getInfo('ip_address');
+            $this->info['unhashed_ip_address'] = $this->getInfo('unhashed_ip_address');
+            $this->ip_address = $this->getInfo('unhashed_ip_address');
             return;
         }
 
@@ -64,7 +64,7 @@ class IPInfo
 
         if ($result !== false) {
             $this->info = $result;
-            $this->info['ip_address'] = $this->getInfo('ip_address');
+            $this->info['unhashed_ip_address'] = $this->getInfo('unhashed_ip_address');
             $this->hashed_ip_address = $this->getInfo('hashed_ip_address');
             return;
         }
@@ -121,7 +121,7 @@ class IPInfo
     {
         if (nel_is_unhashed_ip($new_ip_address)) {
             $ip = new IP($new_ip_address);
-            $this->info['ip_address'] = $new_ip_address;
+            $this->info['unhashed_ip_address'] = $new_ip_address;
             $this->ip_address = $new_ip_address;
             $this->hashed_ip_address = nel_ip_hash($new_ip_address, true);
             $this->info['hashed_ip_address'] = $this->hashed_ip_address;
@@ -141,7 +141,7 @@ class IPInfo
             $this->info['hashed_small_subnet'] = nel_ip_hash($small_network->getCIDR(), true);
             $this->info['hashed_large_subnet'] = nel_ip_hash($large_network->getCIDR(), true);
         } else {
-            $this->info['ip_address'] = null;
+            $this->info['unhashed_ip_address'] = null;
             $this->ip_address = null;
             $this->hashed_ip_address = $new_ip_address;
             $this->info['hashed_ip_address'] = $this->hashed_ip_address;

@@ -53,7 +53,7 @@ class OutputPanelBans extends Output
 
             switch ($ban_hammer->getData('ban_type')) {
                 case BansAccess::IP:
-                    $ban_data['target'] = $ban_hammer->getData('ip_address');
+                    $ban_data['target'] = $ban_hammer->getData('unhashed_ip_address');
                     $ban_data['type'] = __('IP');
                     break;
 
@@ -141,11 +141,11 @@ class OutputPanelBans extends Output
             $content = $content_id->getInstanceFromID($this->domain);
             $ip_info = new IPInfo($content->getData('hashed_ip_address'));
 
-            if (empty($ip_info->getInfo('ip_address')) ||
+            if (empty($ip_info->getInfo('unhashed_ip_address')) ||
                 !$this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
                 $this->render_data['ban_ip'] = $ip_info->getInfo('hashed_ip_address');
             } else {
-                $this->render_data['ban_ip'] = $content->getData('ip_address');
+                $this->render_data['ban_ip'] = $content->getData('unhashed_ip_address');
             }
 
             if ($can_range_ban) {

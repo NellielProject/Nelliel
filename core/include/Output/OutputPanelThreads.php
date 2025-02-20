@@ -99,7 +99,7 @@ class OutputPanelThreads extends Output
             }
 
             if ($this->session->user()->checkPermission($this->domain, 'perm_view_unhashed_ip')) {
-                $thread_info['op_ip'] = $op_post->getData('ip_address');
+                $thread_info['op_ip'] = $op_post->getData('unhashed_ip_address');
             } else {
                 $thread_info['op_ip'] = $op_post->getData('hashed_ip_address');
             }
@@ -152,7 +152,7 @@ class OutputPanelThreads extends Output
             $post_info['thread_url'] = $this->domain->reference('page_directory') . '/' . $post['parent_thread'] . '/' .
                 $post['post_number'] . '.html';
             $post_info['name'] = $post['name'];
-            $post_info['poster_ip'] = $post['ip_address'];
+            $post_info['poster_ip'] = $post['unhashed_ip_address'];
             $post_info['email'] = $post['email'];
             $post_info['comment'] = $post['comment'];
             $this->render_data['posts'][] = $post_info;
