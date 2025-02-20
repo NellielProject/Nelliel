@@ -2339,7 +2339,7 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                 $board_data_table = new TableBoardData(nel_database('core'), nel_utilities()->sqlCompatibility());
                 $board_data_table->createTable();
                 nel_database('core')->exec(
-                    'INSERT INTO "nelliel_board_data" SELECT "board_id", "db_prefix", "source_directoery", "preview_directory", "page_directory", "archive_directory", "locked", "moar" FROM "nelliel_board_data_old"');
+                    'INSERT INTO "nelliel_board_data" SELECT "board_id", "db_prefix", "source_directory", "preview_directory", "page_directory", "archive_directory", "locked", "moar" FROM "nelliel_board_data_old"');
                 nel_database('core')->exec('DROP TABLE "nelliel_board_data_old"');
 
                 echo ' - ' . __('Board data table updated.') . '<br>';
