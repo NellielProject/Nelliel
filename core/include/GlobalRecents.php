@@ -45,7 +45,7 @@ class GlobalRecents
         $prepared = $this->database->prepare(
             'SELECT 1 FROM "' . NEL_GLOBAL_RECENTS_TABLE . '" WHERE "content_id" = ? AND "board_id" = ?');
         $entry = $this->database->executePreparedFetch($prepared,
-            [$post->contentID()->getIDString(), $post->domain()->id()], PDO::FETCH_COLUMN);
+            [$post->contentID()->postID(), $post->domain()->id()], PDO::FETCH_COLUMN);
         return !empty($entry);
     }
 
@@ -59,7 +59,7 @@ class GlobalRecents
             '" ("content_id", "post_time", "post_time_milli", "board_id") VALUES
                     (?, ?, ?, ?)');
         $this->database->executePrepared($prepared,
-            [$post->contentID()->getIDString(), $post->getData('post_time'), $post->getData('post_time_milli'),
+            [$post->contentID()->postID(), $post->getData('post_time'), $post->getData('post_time_milli'),
                 $post->domain()->id()]);
     }
 
@@ -72,7 +72,7 @@ class GlobalRecents
             'UPDATE "' . NEL_GLOBAL_RECENTS_TABLE .
             '" SET "post_time" = ?, "post_time_milli" = ? WHERE "content_id" = ? AND "board_id" = ?');
         $this->database->executePrepared($prepared,
-            [$post->getData('post_time'), $post->getData('post_time_milli'), $post->contentID()->getIDString(),
+            [$post->getData('post_time'), $post->getData('post_time_milli'), $post->contentID()->postID(),
                 $post->domain()->id()]);
     }
 
@@ -83,7 +83,7 @@ class GlobalRecents
     {
         $prepared = $this->database->prepare(
             'DELETE FROM "' . NEL_GLOBAL_RECENTS_TABLE . '" WHERE "content_id" = ? AND "board_id" = ?');
-        $this->database->executePrepared($prepared, [$post->contentID()->getIDString(), $post->domain()->id()]);
+        $this->database->executePrepared($prepared, [$post->contentID()->postID(), $post->domain()->id()]);
     }
 
     /**
