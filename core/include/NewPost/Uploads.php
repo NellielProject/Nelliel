@@ -176,7 +176,8 @@ class Uploads
 
             case 'timestamp':
             default:
-                $filename = $post->getData('post_time') . $post->getData('post_time_milli');
+                $filename = $post->getData('post_time') .
+                    str_pad($post->getData('post_time_milli'), 3, '0', STR_PAD_LEFT);
                 break;
         }
 
