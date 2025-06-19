@@ -7,27 +7,16 @@ use ChrisUllyott\FileSize;
 use IPTools\IP;
 use Nelliel\Domains\Domain;
 
-function nel_get_microtime(bool $convert_int = true)
+function nel_get_microtime(bool $as_strings = false)
 {
     $time = microtime();
     $return_time = ['time' => $time];
     $split_time = explode(' ', $time);
-    $seconds = intval($split_time[1]);
-    $milliseconds = intval($split_time[0] * 1000);
-    $microseconds = intval($split_time[0] * 1000000);
-
-    $seconds = intval($split_time[1]);
-    $milliseconds = intval($split_time[0] * 1000);
-    $microseconds = intval($split_time[0] * 1000000);
-
-    if ($convert_int) {
-        $return_time = ['time' => intval($seconds), 'milli' => intval(round($milliseconds, 3)),
-            'micro' => intval($microseconds)];
-    } else {
-        $return_time = ['time' => (float) $seconds, 'milli' => round($milliseconds, 3),
-            'micro' => (float) $microseconds];
-    }
-
+    $seconds = $split_time[1];
+    $milliseconds = substr($split_time[0], 2, 3);
+    $microseconds = substr($split_time[0], 2, 6);
+    $return_time = ['time' => intval($seconds), 'time_str' => $seconds, 'milli' => intval($milliseconds),
+        'milli_str' => $milliseconds, 'micro' => intval($microseconds), 'micro_str' => $microseconds];
     return $return_time;
 }
 
