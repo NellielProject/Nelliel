@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "df8accd9d4021ea641a6d065ab6245e6",
+    "content-hash": "3bd573be6e9f22974f85db9ed22f71d2",
     "packages": [
         {
             "name": "chrisullyott/php-filesize",
@@ -358,25 +358,25 @@
         },
         {
             "name": "s1lentium/iptools",
-            "version": "v1.1.1",
+            "version": "v1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/S1lentium/IPTools.git",
-                "reference": "f6f8ab6132ca7443bd7cced1681f5066d725fd5f"
+                "reference": "88be1aaaab3c50fc131ebe778e246215ff006d8e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/S1lentium/IPTools/zipball/f6f8ab6132ca7443bd7cced1681f5066d725fd5f",
-                "reference": "f6f8ab6132ca7443bd7cced1681f5066d725fd5f",
+                "url": "https://api.github.com/repos/S1lentium/IPTools/zipball/88be1aaaab3c50fc131ebe778e246215ff006d8e",
+                "reference": "88be1aaaab3c50fc131ebe778e246215ff006d8e",
                 "shasum": ""
             },
             "require": {
                 "ext-bcmath": "*",
-                "php": ">=5.4.0"
+                "php": "^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "~4.0",
-                "satooshi/php-coveralls": "~1.0"
+                "php-coveralls/php-coveralls": "^2.5",
+                "phpunit/phpunit": "^9.0"
             },
             "type": "library",
             "autoload": {
@@ -407,9 +407,9 @@
             ],
             "support": {
                 "issues": "https://github.com/S1lentium/IPTools/issues",
-                "source": "https://github.com/S1lentium/IPTools/tree/master"
+                "source": "https://github.com/S1lentium/IPTools/tree/v1.2.0"
             },
-            "time": "2018-09-19T06:15:53+00:00"
+            "time": "2022-08-17T14:28:59+00:00"
         }
     ],
     "packages-dev": [
@@ -485,16 +485,16 @@
         },
         {
             "name": "myclabs/deep-copy",
-            "version": "1.13.0",
+            "version": "1.13.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/myclabs/DeepCopy.git",
-                "reference": "024473a478be9df5fdaca2c793f2232fe788e414"
+                "reference": "1720ddd719e16cf0db4eb1c6eca108031636d46c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/024473a478be9df5fdaca2c793f2232fe788e414",
-                "reference": "024473a478be9df5fdaca2c793f2232fe788e414",
+                "url": "https://api.github.com/repos/myclabs/DeepCopy/zipball/1720ddd719e16cf0db4eb1c6eca108031636d46c",
+                "reference": "1720ddd719e16cf0db4eb1c6eca108031636d46c",
                 "shasum": ""
             },
             "require": {
@@ -533,7 +533,7 @@
             ],
             "support": {
                 "issues": "https://github.com/myclabs/DeepCopy/issues",
-                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.0"
+                "source": "https://github.com/myclabs/DeepCopy/tree/1.13.1"
             },
             "funding": [
                 {
@@ -541,7 +541,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-02-12T12:17:51+00:00"
+            "time": "2025-04-29T12:36:36+00:00"
         },
         {
             "name": "phar-io/manifest",
@@ -960,16 +960,16 @@
         },
         {
             "name": "phpunit/phpunit",
-            "version": "8.5.41",
+            "version": "8.5.42",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/phpunit.git",
-                "reference": "d843cb5bcf0bf9ae3484016444fe0c5b6ec7e4fa"
+                "reference": "3a68a70824da546d26ac08ca4fced67341f4158f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/d843cb5bcf0bf9ae3484016444fe0c5b6ec7e4fa",
-                "reference": "d843cb5bcf0bf9ae3484016444fe0c5b6ec7e4fa",
+                "url": "https://api.github.com/repos/sebastianbergmann/phpunit/zipball/3a68a70824da546d26ac08ca4fced67341f4158f",
+                "reference": "3a68a70824da546d26ac08ca4fced67341f4158f",
                 "shasum": ""
             },
             "require": {
@@ -980,7 +980,7 @@
                 "ext-mbstring": "*",
                 "ext-xml": "*",
                 "ext-xmlwriter": "*",
-                "myclabs/deep-copy": "^1.12.1",
+                "myclabs/deep-copy": "^1.13.1",
                 "phar-io/manifest": "^2.0.4",
                 "phar-io/version": "^3.2.1",
                 "php": ">=7.2",
@@ -1038,7 +1038,7 @@
             "support": {
                 "issues": "https://github.com/sebastianbergmann/phpunit/issues",
                 "security": "https://github.com/sebastianbergmann/phpunit/security/policy",
-                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.41"
+                "source": "https://github.com/sebastianbergmann/phpunit/tree/8.5.42"
             },
             "funding": [
                 {
@@ -1050,11 +1050,19 @@
                     "type": "github"
                 },
                 {
+                    "url": "https://liberapay.com/sebastianbergmann",
+                    "type": "liberapay"
+                },
+                {
+                    "url": "https://thanks.dev/u/gh/sebastianbergmann",
+                    "type": "thanks_dev"
+                },
+                {
                     "url": "https://tidelift.com/funding/github/packagist/phpunit/phpunit",
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-12-05T13:44:26+00:00"
+            "time": "2025-05-02T06:33:00+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1841,7 +1849,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.2",
+        "php": ">=7.4",
         "ext-gd": "*",
         "ext-dom": "*",
         "ext-iconv": "*",
