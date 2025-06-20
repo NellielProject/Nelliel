@@ -78,7 +78,6 @@ class TableUploads extends Table
     {
         parent::__construct($database, $sql_compatibility);
         $this->table_name = '_uploads';
-        $this->increment_column = 'upload_id';
         $this->column_checks = [
             'upload_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'parent_thread' => ['row_check' => false, 'auto_inc' => false, 'update' => false],

@@ -41,10 +41,10 @@ class FileSystemLoader implements Mustache_Loader
             $full_path = $this->substitute_templates[$name]->fullPath();
 
             if (!isset($this->substitute_template_texts[$full_path])) {
-                $this->substitue_template_texts[$full_path] = $this->loadFile($full_path);
+                $this->substitute_template_texts[$full_path] = $this->loadFile($full_path);
             }
 
-            $text = $this->substitue_template_texts[$full_path];
+            $text = $this->substitute_template_texts[$full_path];
         } else {
             $full_path = $this->templates[$name]->fullPath();
 
