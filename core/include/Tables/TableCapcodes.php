@@ -61,11 +61,15 @@ class TableCapcodes extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['Site Owner', '<span class="capcode" style="color: fuchsia;"> ## Site Owner</span>', 1]);
         $this->insertDefaultRow(['Site Admin', '<span class="capcode" style="color: blue;"> ## Site Admin</span>', 1]);
         $this->insertDefaultRow(['Board Owner', '<span class="capcode" style="color: green;"> ## Board Owner</span>', 1]);
         $this->insertDefaultRow(['Moderator', '<span class="capcode" style="color: red;"> ## Moderator</span>', 1]);
         $this->insertDefaultRow(['Janitor', '<span class="capcode" style="color: orange;"> ## Janitor</span>', 1]);
         $this->insertDefaultRow(['', '<span class="capcode"> ## %s</span>', 1]);
+
+        $this->database->commit();
     }
 }

@@ -60,10 +60,14 @@ class TableRoles extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['site_admin', 100, 'Site Administrator', 'Site Administrator']);
         $this->insertDefaultRow(['board_owner', 75, 'Board Owner', 'Board Owner']);
         $this->insertDefaultRow(['moderator', 50, 'Moderator', 'Moderator']);
         $this->insertDefaultRow(['janitor', 25, 'Janitor', 'Janitor']);
         $this->insertDefaultRow(['basic_user', 0, 'Basic', '']);
+
+        $this->database->commit();
     }
 }

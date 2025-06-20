@@ -56,6 +56,8 @@ class TableFiletypeCategories extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['graphics', 'Graphics', 1]);
         $this->insertDefaultRow(['audio', 'Audio', 1]);
         $this->insertDefaultRow(['video', 'Video', 1]);
@@ -63,5 +65,7 @@ class TableFiletypeCategories extends Table
         $this->insertDefaultRow(['archive', 'Archive', 1]);
         $this->insertDefaultRow(['font', 'Font', 1]);
         $this->insertDefaultRow(['other', 'Other', 1]);
+
+        $this->database->commit();
     }
 }

@@ -56,6 +56,8 @@ class TablePermissions extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['perm_view_bans', 'View existing bans.', 'nelliel']);
         $this->insertDefaultRow(['perm_add_bans', 'Add new bans.', 'nelliel']);
         $this->insertDefaultRow(['perm_add_range_bans', 'Add new range or subnet bans.', 'nelliel']);
@@ -121,5 +123,7 @@ class TablePermissions extends Table
         $this->insertDefaultRow(['perm_use_private_messages', 'View and send private messages.', 'nelliel']);
         $this->insertDefaultRow(['perm_manage_private_messages', 'Manage all private messages.', 'nelliel']);
         $this->insertDefaultRow(['perm_raw_html', 'Can use raw HTML input.', 'nelliel']);
+
+        $this->database->commit();
     }
 }

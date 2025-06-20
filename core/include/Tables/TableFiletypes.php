@@ -76,6 +76,8 @@ class TableFiletypes extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         // These regexes should not be considered authoritative for processing a format!
         // They are designed to identify files in combination with a known extension
         // IMPORTANT: If the regex has / in it, that needs to be escaped since that's the delimiter Nelliel uses
@@ -177,5 +179,7 @@ class TableFiletypes extends Table
         // Other formats
         $this->insertDefaultRow(['swf', '["swf"]', 'other', '["application/vnd.adobe.flash-movie", "application/x-shockwave-flash"]', '^CWS|FWS|ZWS', 'Flash/Shockwave', 1]);
         $this->insertDefaultRow(['blorb', '["blorb","blb","gblorb","glb","zblorb","zlb"]', 'other', '["application/x-blorb"]', '^FORM.{4}IFRSRIdx', 'Blorb', 1]);
+
+        $this->database->commit();
     }
 }

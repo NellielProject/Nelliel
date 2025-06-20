@@ -73,6 +73,8 @@ class TableSettings extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         // Site
         // General
         $this->insertDefaultRow(['site', 'nelliel', 'string', 'name', '', 'Site name.', '{"type":"text"}']);
@@ -380,6 +382,7 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'animated_preview_max_frames', '1000', 'Maximum number of frames to use in animated previews.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'jpeg_quality', '85', 'JPEG quality (1-100).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'webp_quality', '75', 'WebP quality (1-100).', '{"type":"number"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'integer', 'avif_quality', '55', 'AVIF quality (1-100).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_width', '250', 'Maximum width when generating previews.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'max_preview_height', '250', 'Maximum height when generating previews.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'use_copy_for_small_preview', '0', 'For images smaller than preview dimensions, just use a copy of the original.', '{"type":"checkbox"}']);
@@ -590,5 +593,6 @@ class TableSettings extends Table
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_first_posts', 'First %d posts', 'First %d posts', '{"type":"text"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'string', 'content_links_last_posts', 'Last %d posts', 'Last %d posts', '{"type":"text"}']);
 
+        $this->database->commit();
     }
 }

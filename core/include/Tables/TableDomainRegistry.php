@@ -62,7 +62,11 @@ class TableDomainRegistry extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow([Domain::SITE, 'site', 'Site', 'System domain. NEVER DELETE!']);
         $this->insertDefaultRow([Domain::GLOBAL, 'global', 'Global', 'System domain. NEVER DELETE!']);
+
+        $this->database->commit();
     }
 }

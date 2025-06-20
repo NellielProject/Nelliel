@@ -398,8 +398,6 @@ class Installer
         $image_sets_table->createTable(null, true);
         $styles_table = new TableStyles($database, $sql_compatibility);
         $styles_table->createTable(null, true);
-        $embeds_table = new TableEmbeds($database, $sql_compatibility);
-        $embeds_table->createTable(null, true);
         $rate_limit_table = new TableRateLimit($database, $sql_compatibility);
         $rate_limit_table->createTable(null, true);
         $templates_table = new TableTemplates($database, $sql_compatibility);

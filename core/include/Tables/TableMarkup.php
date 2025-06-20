@@ -73,6 +73,8 @@ class TableMarkup extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         // Regex should account for escaped and unescaped HTML when practical
         $this->insertDefaultRow(['spoiler', 'simple', '/\|\|(.+?)\|\|/us', '<span class="markup-spoiler">$1</span>', 1]);
         $this->insertDefaultRow(['italic', 'simple', '/(?:(?<!\*))\*{2}(.+?)(?:(?<!\*))\*{2}(?:(?!\*))/us', '<span class="markup-italic">$1</span>', 1]);
@@ -87,5 +89,7 @@ class TableMarkup extends Table
         $this->insertDefaultRow(['orangetext', 'line', '/^(\^.*)$/u', '<span class="markup-orangetext">$1</span>', 1]);
         $this->insertDefaultRow(['ascii', 'block', '/\[ascii\]|\[\/ascii\]/', '<pre class="ascii-art">$1</pre>', 1]);
         $this->insertDefaultRow(['shift-jis-art', 'block', '/\[sjis]|\[\/sjis\]/', '<pre class="shift-jis-art">$1</pre>', 1]);
+
+        $this->database->commit();
     }
 }

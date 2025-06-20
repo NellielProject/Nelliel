@@ -64,8 +64,12 @@ class TableBoardDefaults extends Table
             '" WHERE "setting_category" = \'board\'';
         $board_settings = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
+        $this->database->beginTransaction();
+
         foreach ($board_settings as $setting) {
             $this->insertDefaultRow([$setting['setting_name'], $setting['default_value']]);
         }
+
+        $this->database->commit();
     }
 }

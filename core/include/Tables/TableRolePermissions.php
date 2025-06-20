@@ -60,6 +60,8 @@ class TableRolePermissions extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['site_admin', 'perm_view_bans', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_add_bans', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_add_range_bans', 1]);
@@ -385,5 +387,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['basic_user', 'perm_use_private_messages', 1]);
         $this->insertDefaultRow(['basic_user', 'perm_manage_private_messages', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_raw_html', 0]);
+
+        $this->database->commit();
     }
 }
