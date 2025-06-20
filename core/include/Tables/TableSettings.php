@@ -375,10 +375,10 @@ class TableSettings extends Table
         // Preview Generation
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'create_static_preview', '1', 'Create a static image preview whenever possible.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'static_preview_images_only', '0', 'Only create static previews for images.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'static_preview_format', 'jpg', 'Format used for static previews.', '{"type":"select"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'static_preview_format', 'jpg', 'Format used for static previews. Note: GD may not support all options.', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'create_animated_preview', '0', 'Create an animated image preview when appropriate. Requires extra libraries.', '{"type":"checkbox"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'boolean', 'animated_preview_images_only', '1', 'Only create animated previews for images. Strongly recommended.', '{"type":"checkbox"}']);
-        $this->insertDefaultRow(['board', 'nelliel', 'string', 'animated_preview_format', 'gif', 'Format used for animated previews.', '{"type":"select"}']);
+        $this->insertDefaultRow(['board', 'nelliel', 'string', 'animated_preview_format', 'gif', 'Format used for animated previews. Note: GD may not support all options.', '{"type":"select"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'animated_preview_max_frames', '1000', 'Maximum number of frames to use in animated previews.', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'jpeg_quality', '85', 'JPEG quality (1-100).', '{"type":"number"}']);
         $this->insertDefaultRow(['board', 'nelliel', 'integer', 'webp_quality', '75', 'WebP quality (1-100).', '{"type":"number"}']);

@@ -2520,6 +2520,19 @@ VALUES (:ban_id, :time, :appeal, :response, :pending, :denied)');
                     echo ' - ' . __('Bans table updated.') . '<br>';
                 }
 
+                // Update board settings table
+
+                $settings_table->insertDefaultRow(
+                    ['board', 'nelliel', 'string', 'avif_quality', '55', 'AVIF quality (1-100).', '{"type":"number"}',
+                        '{"type":"text"}']);
+                $new_board_settings = ['avif_quality'];
+                $this->updateBoardConfigs($new_board_settings);
+
+                // Update setting options table
+
+                nel_database('core')->exec(
+                    'UPDATE "nelliel_setting_options" SET "menu_data" = \'{"JPEG": "jpg", "PNG": "png", "WebP": "webp", "GIF": "gif", "AVIF": "avif"}\' WHERE "setting_name" = \'static_preview_format\'');
+
                 $migration_count ++;
         }
 
