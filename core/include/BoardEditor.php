@@ -82,6 +82,8 @@ class BoardEditor
             'INSERT INTO "' . NEL_BOARD_CONFIGS_TABLE .
             '" ("board_id", "setting_name", "setting_value", "edit_lock") VALUES (:board_id, :setting_name, :setting_value, :edit_lock)');
 
+        $this->database->beginTransaction();
+
         foreach ($defaults as $default) {
             $prepared->bindValue(':board_id', $board_id, PDO::PARAM_STR);
             $prepared->bindValue(':setting_name', $default['setting_name'], PDO::PARAM_STR);
@@ -89,6 +91,8 @@ class BoardEditor
             $prepared->bindValue(':edit_lock', $default['edit_lock'], PDO::PARAM_INT);
             $this->database->executePrepared($prepared);
         }
+
+        $this->database->commit();
 
         $installer = new Installer(nel_utilities()->fileHandler(), new Translator(nel_utilities()->fileHandler()));
         $installer->createBoardTables($this->database, nel_utilities()->sqlCompatibility(), $board_id, $db_prefix);
