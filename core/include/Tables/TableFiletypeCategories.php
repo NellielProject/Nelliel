@@ -26,8 +26,7 @@ class TableFiletypeCategories extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_FILETYPE_CATEGORIES_TABLE;
         $this->column_checks = [
             'category' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -57,6 +56,8 @@ class TableFiletypeCategories extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['graphics', 'Graphics', 1]);
         $this->insertDefaultRow(['audio', 'Audio', 1]);
         $this->insertDefaultRow(['video', 'Video', 1]);
@@ -64,5 +65,7 @@ class TableFiletypeCategories extends Table
         $this->insertDefaultRow(['archive', 'Archive', 1]);
         $this->insertDefaultRow(['font', 'Font', 1]);
         $this->insertDefaultRow(['other', 'Other', 1]);
+
+        $this->database->commit();
     }
 }

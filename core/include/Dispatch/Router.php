@@ -9,7 +9,7 @@ use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
 use function FastRoute\cachedDispatcher;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 
 class Router
@@ -117,14 +117,6 @@ class Router
                         $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchBoardDefaults';
                         $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
                         $r->addRoute(['GET', 'POST'], '/{section:update}', $dispatch_class);
-                    });
-
-                $r->addGroup('/{domain_id:' . $site_domain . '}/{module:permissions}',
-                    function (RouteCollector $r) {
-                        $dispatch_class = '\Nelliel\Dispatch\Controls\DispatchPermissions';
-                        $r->addRoute(['GET', 'POST'], '[/]', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'], '/{section:new}', $dispatch_class);
-                        $r->addRoute(['GET', 'POST'], '/{id:[^\/]+}/{section:delete}', $dispatch_class);
                     });
 
                 $r->addGroup('/{domain_id:[^\/]+}/{module:pages}',
@@ -395,7 +387,7 @@ class Router
             case Dispatcher::FOUND:
                 $inputs = $routeInfo[2];
                 $inputs['method'] = $_SERVER['REQUEST_METHOD'];
-                $domain = Domain::getDomainFromID($inputs['domain_id'] ?? '', nel_database('core'));
+                $domain = Domain::getDomainFromID($inputs['domain_id'] ?? '');
 
                 if (!$domain->exists()) {
                     nel_derp(80, _('Invalid domain given to router.'));

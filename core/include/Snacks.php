@@ -153,7 +153,7 @@ class Snacks
     private function checkIPBans(IPInfo $ip_info): void
     {
         $hashed_bans = $this->bans_access->getForHashedIP($ip_info->getInfo('hashed_ip_address'));
-        $ip_bans = $this->bans_access->getForIP($ip_info->getInfo('ip_address'));
+        $ip_bans = $this->bans_access->getForIP($ip_info->getInfo('unhashed_ip_address'));
         $bans = array_merge($hashed_bans, $ip_bans);
         $longest = null;
 

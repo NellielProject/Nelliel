@@ -22,7 +22,7 @@ class TableLogs extends Table
         'domain_id' => 'string',
         'username' => 'string',
         'hashed_ip_address' => 'string',
-        'ip_address' => 'string',
+        'unhashed_ip_address' => 'string',
         'visitor_id' => 'string',
         'moar' => 'string'];
 
@@ -36,14 +36,13 @@ class TableLogs extends Table
         'domain_id' => PDO::PARAM_STR,
         'username' => PDO::PARAM_STR,
         'hashed_ip_address' => PDO::PARAM_STR,
-        'ip_address' => PDO::PARAM_LOB,
+        'unhashed_ip_address' => PDO::PARAM_STR,
         'visitor_id' => PDO::PARAM_STR,
         'moar' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = '';
         $this->column_checks = [
             'log_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
@@ -55,7 +54,7 @@ class TableLogs extends Table
             'domain_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'username' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'hashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
-            'ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
+            'unhashed_ip_address' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'visitor_id' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
             'moar' => ['row_check' => false, 'auto_inc' => false, 'update' => false]];
     }
@@ -75,7 +74,7 @@ class TableLogs extends Table
             domain_id           VARCHAR(50) NOT NULL,
             username            VARCHAR(50) DEFAULT NULL,
             hashed_ip_address   VARCHAR(128) DEFAULT NULL,
-            ip_address          ' . $this->sql_compatibility->sqlAlternatives('VARBINARY', '16') . ' DEFAULT NULL,
+            unhashed_ip_address VARCHAR(128) DEFAULT NULL,
             visitor_id          VARCHAR(128) DEFAULT NULL,
             moar                ' . $this->sql_compatibility->textType('LONGTEXT') . ' DEFAULT NULL,
             CONSTRAINT pk_' . $this->table_name . ' PRIMARY KEY (log_id),

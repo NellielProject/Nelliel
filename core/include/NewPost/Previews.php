@@ -17,7 +17,7 @@ class Previews
     function __construct(Domain $domain)
     {
         $this->domain = $domain;
-        $this->site_domain = nel_site_domain();
+        $this->site_domain = nel_get_cached_domain(Domain::SITE);
     }
 
     public function generate($files, $preview_path)
@@ -79,7 +79,8 @@ class Previews
 
         if ($this->generateStatic($file) &&
             ($file->getData('format') === 'jpeg' || $file->getData('format') === 'png' ||
-            $file->getData('format') === 'webp')) {
+            $file->getData('format') === 'webp' || $file->getData('format') === 'gif' ||
+            $file->getData('format') === 'avif')) {
             $static_preview_name = $this->staticPreviewName($file);
             $has_static = $this->deduplicate($file, $static_preview_name);
 
@@ -346,7 +347,7 @@ class Previews
         } else if ($file->getData('format') === 'tga' && $gd_test['TGA Read Support']) {
             $image = imagecreatefromtga($file->getData('location'));
         } else if ($file->getData('format') === 'avif' && $gd_test['AVIF Support']) {
-            $image = imagecreatefromtga($file->getData('location'));
+            $image = imagecreatefromavif($file->getData('location'));
         } else {
             return false;
         }
@@ -396,6 +397,10 @@ class Previews
 
                 case 'webp':
                     $has_static = imagewebp($preview, $preview_path . $static_preview_name, $this->compressionValue());
+                    break;
+
+                case 'avif':
+                    $has_static = imageavif($preview, $preview_path . $static_preview_name, $this->compressionValue());
                     break;
             }
         }
@@ -493,6 +498,10 @@ class Previews
 
             case 'webp':
                 $value = $this->domain->setting('webp_quality');
+                break;
+
+            case 'avif':
+                $value = $this->domain->setting('avif_quality');
                 break;
 
             case 'png':

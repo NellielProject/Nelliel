@@ -26,7 +26,7 @@ class OutputNavigationLinks extends Output
         $last_key = '';
 
         for ($i = 0; $i < $board_count; $i ++) {
-            $board = Domain::getDomainFromID($board_ids[$i], $this->database);
+            $board = Domain::getDomainFromID($board_ids[$i]);
             $link_set->addData($board->uri(), 'board_url', $board->reference('board_web_path'));
             $link_set->addData($board->uri(), 'name', $board->setting('name'));
             $link_set->addData($board->uri(), 'board_uri', $board->uri());

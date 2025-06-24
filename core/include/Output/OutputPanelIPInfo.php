@@ -34,8 +34,8 @@ class OutputPanelIPInfo extends Output
         $this->render_data['last_activity'] = $ip_info->getInfo('last_activity');
         $this->render_data['has_data'] = $ip_info->infoAvailable();
 
-        if (!is_null($ip_info->getInfo('ip_address'))) {
-            $this->render_data['ip_address'] = $ip_info->getInfo('ip_address');
+        if (!is_null($ip_info->getInfo('unhashed_ip_address'))) {
+            $this->render_data['ip_address'] = $ip_info->getInfo('unhashed_ip_address');
             $this->render_data['can_view_unhashed'] = $this->session->user()->checkPermission($this->domain,
                 'view_unhashed_ip');
         }

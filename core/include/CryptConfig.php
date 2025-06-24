@@ -14,7 +14,7 @@ class CryptConfig
     private $post_password_strong_algorithm;
     private $post_password_options = array();
     private $ip_strong_algorithm;
-    private $ip_options = array();
+    private $ip_hash_options = array();
 
     function __construct(array $temp_config = array())
     {

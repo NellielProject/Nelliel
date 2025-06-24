@@ -24,8 +24,7 @@ class TableRolePermissions extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_ROLE_PERMISSIONS_TABLE;
         $this->column_checks = [
             'role_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -61,6 +60,8 @@ class TableRolePermissions extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['site_admin', 'perm_view_bans', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_add_bans', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_add_range_bans', 1]);
@@ -90,7 +91,6 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['site_admin', 'perm_noticeboard_post', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_noticeboard_delete', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_manage_pages', 1]);
-        $this->insertDefaultRow(['site_admin', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['site_admin', 'perm_manage_plugins', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_access_plugin_controls', 1]);
         $this->insertDefaultRow(['site_admin', 'perm_view_reports', 1]);
@@ -156,7 +156,6 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['board_owner', 'perm_noticeboard_post', 1]);
         $this->insertDefaultRow(['board_owner', 'perm_noticeboard_delete', 0]);
         $this->insertDefaultRow(['board_owner', 'perm_manage_pages', 0]);
-        $this->insertDefaultRow(['board_owner', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['board_owner', 'perm_manage_plugins', 0]);
         $this->insertDefaultRow(['board_owner', 'perm_access_plugin_controls', 1]);
         $this->insertDefaultRow(['board_owner', 'perm_view_reports', 1]);
@@ -222,7 +221,6 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['moderator', 'perm_noticeboard_post', 1]);
         $this->insertDefaultRow(['moderator', 'perm_noticeboard_delete', 0]);
         $this->insertDefaultRow(['moderator', 'perm_manage_pages', 0]);
-        $this->insertDefaultRow(['moderator', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['moderator', 'perm_manage_plugins', 0]);
         $this->insertDefaultRow(['moderator', 'perm_access_plugin_controls', 0]);
         $this->insertDefaultRow(['moderator', 'perm_view_reports', 1]);
@@ -288,7 +286,6 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['janitor', 'perm_noticeboard_post', 0]);
         $this->insertDefaultRow(['janitor', 'perm_noticeboard_delete', 0]);
         $this->insertDefaultRow(['janitor', 'perm_manage_pages', 0]);
-        $this->insertDefaultRow(['janitor', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['janitor', 'perm_manage_plugins', 0]);
         $this->insertDefaultRow(['janitor', 'perm_access_plugin_controls', 0]);
         $this->insertDefaultRow(['janitor', 'perm_view_reports', 1]);
@@ -354,7 +351,6 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['basic_user', 'perm_noticeboard_post', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_noticeboard_delete', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_manage_pages', 0]);
-        $this->insertDefaultRow(['basic_user', 'perm_manage_permissions', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_manage_plugins', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_access_plugin_controls', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_view_reports', 0]);
@@ -391,5 +387,7 @@ class TableRolePermissions extends Table
         $this->insertDefaultRow(['basic_user', 'perm_use_private_messages', 1]);
         $this->insertDefaultRow(['basic_user', 'perm_manage_private_messages', 0]);
         $this->insertDefaultRow(['basic_user', 'perm_raw_html', 0]);
+
+        $this->database->commit();
     }
 }

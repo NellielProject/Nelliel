@@ -39,12 +39,12 @@ class OutputRegisterPage extends Output
         $this->render_data['form_action'] = nel_build_router_url([Domain::SITE, 'account', 'register']);
         $this->render_data['login_url'] = nel_build_router_url([Domain::SITE, 'account', 'login']);
 
-        if (nel_site_domain()->setting('enable_captchas') && ($this->domain->setting('use_register_captcha'))) {
+        if (nel_get_cached_domain(Domain::SITE)->setting('enable_captchas') && ($this->domain->setting('use_register_captcha'))) {
             $output_native_captchas = new OutputCAPTCHA($this->domain, $this->write_mode);
             $this->render_data['captchas'] = $output_native_captchas->render(['area' => 'user-register'], false);
         }
 
-        $this->render_data['use_register_captcha'] = nel_site_domain()->setting('enable_captchas') &&
+        $this->render_data['use_register_captcha'] = nel_get_cached_domain(Domain::SITE)->setting('enable_captchas') &&
             $this->domain->setting('use_register_captcha');
         $this->render_data['captcha_gen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'get']);
         $this->render_data['captcha_regen_url'] = nel_build_router_url([Domain::SITE, 'captcha', 'regenerate']);

@@ -48,7 +48,7 @@ class Wordfilter
             $prepared->bindValue(':filter_id', $this->id, PDO::PARAM_INT);
         }
 
-        $board = Domain::getDomainFromID($this->getData('board_id') ?? '', $this->database);
+        $board = Domain::getDomainFromID($this->getData('board_id') ?? '');
         $prepared->bindValue(':board_id', $board->id(), PDO::PARAM_STR);
         $prepared->bindValue(':text_match', $this->getData('text_match'), PDO::PARAM_STR);
         $prepared->bindValue(':replacement', $this->getData('replacement'), PDO::PARAM_STR);

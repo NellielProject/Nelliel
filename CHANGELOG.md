@@ -1,4 +1,36 @@
 # Nelliel Changelog
+## v0.9.33 (2025/2/20)
+### Added
+ - Generic SQL error code
+ - Debug mode flags
+ - Basic archving functions
+ - Exceptions in DNSBL config file
+ - More documentation
+ - Board editing
+
+### Changed
+ - Tweaked dev guidelines
+ - Improved exception and installer handling
+ - Improved `Table` class
+ - Improved domain fetching
+ - Cleaned up internal caching
+ - Updated error reference
+ - Updated handling of moars
+ - Incorporated groundwork for sub threads
+ - Cleaned up account stuff
+ - Improved site owner checks
+ - Updated composer lock file
+
+### Fixed
+ - User role changes
+ - Markup
+ - Unhashed IP storage
+
+### Removed
+ - `AdminBoards` class
+ - `TableInstances` class
+ - Permissions control panel
+ 
 ## v0.9.32 (2024/4/20) 🌿
 ### Added
  - `MutableData` and `SelfPersisting` interfaces

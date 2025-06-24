@@ -15,7 +15,7 @@ class DomainGlobal extends Domain implements NellielCacheInterface
     public function __construct(NellielPDO $database)
     {
         parent::__construct(Domain::GLOBAL, $database);
-        $this->templatePath($this->front_end_data->getTemplate(nel_site_domain()->setting('template_id'))->getPath());
+        $this->templatePath($this->front_end_data->getTemplate(nel_get_cached_domain(Domain::SITE)->setting('template_id'))->getPath());
     }
 
     protected function loadSettings(): void
@@ -69,8 +69,8 @@ class DomainGlobal extends Domain implements NellielCacheInterface
 
     public function url(): string
     {
-        return nel_site_domain()->setting('absolute_url_protocol') . '://' .
-            rtrim(nel_site_domain()->setting('site_domain'), '/') . '/' . rtrim($this->uri, '/') . '/';
+        return nel_get_cached_domain(Domain::SITE)->setting('absolute_url_protocol') . '://' .
+            rtrim(nel_get_cached_domain(Domain::SITE)->setting('site_domain'), '/') . '/' . rtrim($this->uri, '/') . '/';
     }
 
     public function updateStatistics(): void
@@ -82,7 +82,7 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
 
         foreach ($board_ids as $board_id) {
-            $board = new DomainBoard($board_id, $this->database);
+            $board = $this->getDomainFromID($board_id);
             $board->regenCache();
         }
     }
@@ -93,7 +93,7 @@ class DomainGlobal extends Domain implements NellielCacheInterface
         $board_ids = $this->database->executeFetchAll($query, PDO::FETCH_COLUMN);
 
         foreach ($board_ids as $board_id) {
-            $board = new DomainBoard($board_id, $this->database);
+            $board = $this->getDomainFromID($board_id);
             $board->deleteCache();
         }
     }

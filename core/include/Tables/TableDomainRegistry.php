@@ -29,8 +29,7 @@ class TableDomainRegistry extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_DOMAIN_REGISTRY_TABLE;
         $this->column_checks = [
             'domain_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -63,7 +62,11 @@ class TableDomainRegistry extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow([Domain::SITE, 'site', 'Site', 'System domain. NEVER DELETE!']);
         $this->insertDefaultRow([Domain::GLOBAL, 'global', 'Global', 'System domain. NEVER DELETE!']);
+
+        $this->database->commit();
     }
 }

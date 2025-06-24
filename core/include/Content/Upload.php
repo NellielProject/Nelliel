@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Moar;
 use Nelliel\API\JSON\UploadJSON;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Interfaces\MutableData;
@@ -33,7 +33,7 @@ class Upload implements MutableData
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->authorization = new Authorization($this->database);
-        $this->storeMoar(new Moar());
+        $this->content_moar = new Moar();
         $this->main_table = new TableUploads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('uploads_table'));
         $this->json = new UploadJSON($this);
@@ -66,8 +66,8 @@ class Upload implements MutableData
         }
 
         $this->content_data = TableUploads::typeCastData($result);
-        $moar = $result['moar'] ?? '';
-        $this->getMoar()->storeFromJSON($moar);
+        $moar = strval($result['moar'] ?? '');
+        $this->content_moar = new Moar($moar);
         return true;
     }
 
@@ -78,7 +78,7 @@ class Upload implements MutableData
         }
 
         $filtered_data = TableUploads::filterData($this->content_data);
-        $filtered_data['moar'] = $this->getMoar()->getJSON();
+        $filtered_data['moar'] = json_encode($this->content_moar->getData());
         $pdo_types = TableUploads::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
@@ -213,6 +213,37 @@ class Upload implements MutableData
         }
 
         return false;
+    }
+
+    public function archive(): bool
+    {
+        if (!$this->isLoaded()) {
+            $this->loadFromDatabase();
+        }
+
+        if (!nel_true_empty($this->getData('embed_url'))) {
+            return true;
+        }
+
+        $file_handler = nel_utilities()->fileHandler();
+
+        $file_handler->copyFile($this->srcFilePath() . $this->getData('filename') . '.' . $this->getData('extension'),
+            $this->domain->reference('archive_src_path') . $this->content_id->threadID() . '/' .
+            $this->getData('filename') . '.' . $this->getData('extension'), true);
+
+        if (!nel_true_empty($this->getData('static_preview_name'))) {
+            $file_handler->copyFile($this->previewFilePath() . $this->getData('static_preview_name'),
+                $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/' .
+                $this->getData('static_preview_name'), true);
+        }
+
+        if (!nel_true_empty($this->getData('animated_preview_name'))) {
+            $file_handler->copyFile($this->previewFilePath() . $this->getData('animated_preview_name'),
+                $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/' .
+                $this->getData('animated_preview_name'), true);
+        }
+
+        return true;
     }
 
     public function toggleSpoiler(): void

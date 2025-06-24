@@ -28,8 +28,7 @@ class TableBoardDefaults extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_BOARD_DEFAULTS_TABLE;
         $this->column_checks = [
             'setting_name' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -65,8 +64,12 @@ class TableBoardDefaults extends Table
             '" WHERE "setting_category" = \'board\'';
         $board_settings = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
+        $this->database->beginTransaction();
+
         foreach ($board_settings as $setting) {
             $this->insertDefaultRow([$setting['setting_name'], $setting['default_value']]);
         }
+
+        $this->database->commit();
     }
 }

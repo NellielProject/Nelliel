@@ -7,7 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Regen;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPanelPages;
 use PDO;
@@ -82,7 +82,7 @@ class AdminPages extends Admin
             return;
         }
 
-        $domain = Domain::getDomainFromID($domain_id, $this->database);
+        $domain = Domain::getDomainFromID($domain_id);
         $this->verifyPermissions($domain, 'perm_manage_pages');
         $page_info = array();
         $page_info['uri'] = $_POST['uri'] ?? '';
@@ -117,7 +117,7 @@ class AdminPages extends Admin
         }
 
         $domain_id = $info['domain_id'];
-        $domain = Domain::getDomainFromID($domain_id, $this->database);
+        $domain = Domain::getDomainFromID($domain_id);
         $this->verifyPermissions($domain, 'perm_manage_pages');
         $prepared = $this->database->prepare('DELETE FROM "' . $this->data_table . '" WHERE "page_id" = ?');
         $this->database->executePrepared($prepared, [$page_id]);
@@ -149,7 +149,7 @@ class AdminPages extends Admin
             $prepared->bindValue(':domain_id', $domain->id());
             $page_count = $this->domain->database()->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
 
-            if ($page_count >= nel_site_domain()->setting('max_board_pages')) {
+            if ($page_count >= nel_get_cached_domain(Domain::SITE)->setting('max_board_pages')) {
                 nel_derp(270, _gettext('The maximum number of static pages for this board has been reached.'));
             }
         }

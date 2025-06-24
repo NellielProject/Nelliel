@@ -7,6 +7,7 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
 use Nelliel\Database\NellielPDO;
+use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPrivateMessages;
 use Nelliel\Tables\TablePrivateMessages;
 use PDO;
@@ -73,7 +74,7 @@ class PrivateMessage
     public function reply()
     {
         $this->canAccess();
-        $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
+        $output_private_messages = new OutputPrivateMessages(nel_get_cached_domain(Domain::SITE), false);
         $output_private_messages->newMessage(['reply_id' => $this->message_id], false);
         exit(0);
     }
@@ -81,7 +82,7 @@ class PrivateMessage
     public function view()
     {
         $this->canAccess();
-        $output_private_messages = new OutputPrivateMessages(nel_site_domain(), false);
+        $output_private_messages = new OutputPrivateMessages(nel_get_cached_domain(Domain::SITE), false);
         $output_private_messages->viewMessage(['message_id' => $this->message_id], false);
         exit(0);
     }
@@ -132,7 +133,7 @@ class PrivateMessage
     {
         if ($this->data('sender') !== $this->session->user()->id() &&
             $this->data('recipient') !== $this->session->user()->id() &&
-            !$this->session->user()->checkPermission(nel_site_domain(), 'perm_manage_private_messages')) {
+            !$this->session->user()->checkPermission(nel_get_cached_domain(Domain::SITE), 'perm_manage_private_messages')) {
             nel_derp(225, __('You cannot access that private message.'));
         }
     }

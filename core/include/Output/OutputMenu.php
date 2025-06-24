@@ -132,7 +132,7 @@ class OutputMenu extends Output
         $boards['options'] = $this->createSelectOption('', '', $selected);
 
         foreach ($board_data as $board) {
-            $domain = Domain::getDomainFromID($board, $this->database);
+            $domain = Domain::getDomainFromID($board);
             $boards['options'] = $this->createSelectOption($domain->uri(), $domain->uri(), $selected);
         }
 

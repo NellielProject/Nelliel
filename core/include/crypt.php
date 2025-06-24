@@ -1,7 +1,10 @@
 <?php
+
 declare(strict_types = 1);
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
+
+use Nelliel\Domains\Domain;
 
 function nel_password_hash(string $password, string $algorithm, array $options = array(), bool $new_hash = false)
 {
@@ -45,7 +48,7 @@ function nel_password_verify(string $password, string $hash, string $pepper = nu
 
 function nel_password_needs_rehash(string $password, string $algorithm, array $options = array()): bool
 {
-    if (!nel_site_domain()->setting('do_password_rehash')) {
+    if (!nel_get_cached_domain(Domain::SITE)->setting('do_password_rehash')) {
         return false;
     }
 

@@ -10,7 +10,7 @@ use Nelliel\DNSBL;
 use Nelliel\FGSFDS;
 use Nelliel\Snacks;
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;
 use Nelliel\NewPost\NewPost;
@@ -49,7 +49,7 @@ class DispatchNewPost extends Dispatch
             } else {
                 $url = $this->domain->reference('board_directory') . '/' . $this->domain->reference('page_directory') .
                     '/' . $fgsfds->getCommandData('noko', 'topic') . '/' .
-                    sprintf(nel_site_domain()->setting('thread_filename_format'),
+                    sprintf(nel_get_cached_domain(Domain::SITE)->setting('thread_filename_format'),
                         $fgsfds->getCommandData('noko', 'topic')) . NEL_PAGE_EXT;
             }
         } else {

@@ -14,7 +14,6 @@ class Utilities
     private RateLimit $rate_limit;
     private SQLCompatibility $sql_compatibility;
     private SQLHelpers $sql_helpers;
-    private TableInstances $table_instances;
 
     function __construct(NellielPDO $database)
     {
@@ -23,7 +22,6 @@ class Utilities
         $this->rate_limit = new RateLimit($database);
         $this->sql_compatibility = new SQLCompatibility($database);
         $this->sql_helpers = new SQLHelpers($database);
-        $this->table_instances = new TableInstances($database);
     }
 
     public function cacheHandler(): CacheHandler
@@ -49,10 +47,5 @@ class Utilities
     public function sqlHelpers(): SQLHelpers
     {
         return $this->sql_helpers;
-    }
-
-    public function tableInstances(): TableInstances
-    {
-        return $this->table_instances;
     }
 }

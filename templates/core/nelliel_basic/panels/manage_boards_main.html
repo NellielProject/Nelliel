@@ -1,0 +1,33 @@
+<div>
+	<a href="{{ new_url }}">Create new board</a>
+</div>
+<hr>
+<table >
+	<caption data-i18n="">List of boards</caption>
+	<thead>
+		<tr>
+			<th scope="col" data-i18n="">Board URI</th>
+			<th scope="col" data-i18n="">Board ID</th>
+			<th scope="col" data-i18n="">DB Prefix</th>
+			<th scope="col" data-i18n="">Status</th>
+			<th scope="col" data-i18n="">Actions</th>
+		</tr>
+	</thead>
+	<tbody>
+{{# board_list }}
+		<tr class="{{ bgclass }}">
+			<td>
+				<a href="{{ board_url }}">{{ board_uri }}</a>
+			</td>
+			<td>{{ board_id }}</td>
+			<td>{{ db_prefix }}</td>
+			<td>{{ status }}</td>
+			<td>
+				<span class="text-button">[<a class="display-cell" href="{{ lock_unlock_url }}">{{ lock_unlock_text }}</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ edit_url }}" data-i18n="">Edit</a>]</span>
+				<span class="text-button">[<a class="display-cell" href="{{ delete_url }}" data-i18n="">Delete</a>]</span>
+			</td>
+		</tr>
+{{/ board_list }}
+	</tbody>
+</table>

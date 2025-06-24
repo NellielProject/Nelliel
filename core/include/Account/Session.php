@@ -5,10 +5,8 @@ namespace Nelliel\Account;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Auth\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputLoginPage;
-use Nelliel\Auth\AuthUser;
 
 class Session
 {
@@ -32,7 +30,7 @@ class Session
         $this->session_options['cookie_path'] = NEL_BASE_WEB_PATH;
         $this->session_options['cookie_samesite'] = 'Strict';
         $this->session_options['cookie_secure'] = NEL_SECURE_SESSION_ONLY;
-        $this->domain = nel_site_domain();
+        $this->domain = nel_get_cached_domain(Domain::SITE);
         $this->authorization = new Authorization(nel_database('core'));
 
         if (empty(self::$user)) {
@@ -151,7 +149,7 @@ class Session
         return (time() - $last_activity) > $this->domain->setting('session_length');
     }
 
-    public function user(): AuthUser
+    public function user(): \Nelliel\Account\User
     {
         return self::$user ?? $this->authorization->emptyUser();
     }

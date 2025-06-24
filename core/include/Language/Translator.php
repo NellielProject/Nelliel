@@ -10,6 +10,7 @@ use Nelliel\Utility\FileHandler;
 
 class Translator
 {
+    private $dom_render_core;
 
     function __construct(FileHandler $file_handler)
     {

@@ -17,13 +17,12 @@ class TableRateLimit extends Table
         'record' => 'string'];
 
     public const PDO_TYPES = [
-        'rate_id' => PDO::PARAM_LOB,
+        'rate_id' => PDO::PARAM_STR,
         'record' => PDO::PARAM_STR];
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_RATE_LIMIT_TABLE;
         $this->column_checks = [
             'rate_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],

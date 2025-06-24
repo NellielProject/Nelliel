@@ -52,11 +52,7 @@ function nel_derp(int $error_id, string $error_message, int $response_code = 0, 
         }
     }
 
-    if (isset($context['board_id']) && $context['board_id'] !== Domain::SITE) {
-        $domain = new DomainBoard($context['board_id'], nel_database('core'));
-    } else {
-        $domain = new DomainSite(nel_database('core'));
-    }
+    $domain = Domain::getDomainFromID($context['board_id'] ?? Domain::SITE);
 
     $output_derp = new OutputDerp($domain, false);
     $parameters = ['context' => $context, 'diagnostic' => $diagnostic];

@@ -47,13 +47,13 @@ class OutputIndex extends Output
         $this->render_data['page_navigation'] = $output_navigation->boardPages(
             ['in_modmode' => $this->render_data['in_modmode'], 'display' => 'index'], $data_only);
 
-        $threads = $this->domain->activeThreads(true);
+        $threads = $this->domain->getThreads(true, false);
         $thread_count = count($threads);
         $threads_done = 0;
         $gen_data = array();
         $gen_data['index']['thread_count'] = $thread_count;
         $output_new_post_form = new OutputNewPostForm($this->domain, $this->write_mode);
-        $this->render_data['new_post_form'] = $output_new_post_form->render(['response_to' => 0], true);
+        $this->render_data['new_post_form'] = $output_new_post_form->render(['thread_id' => 'cid_0_0_0', 'reply_to' => 0], true);
 
         if ($thread_count === 0) {
             $page_count = 1;

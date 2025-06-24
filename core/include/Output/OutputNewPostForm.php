@@ -20,8 +20,10 @@ class OutputNewPostForm extends Output
     public function render(array $parameters, bool $data_only)
     {
         $this->renderSetup();
-        $response_to = $parameters['response_to'];
-        $this->render_data['response_to'] = $response_to;
+        $thread_id = $parameters['thread_id'] ?? 'cid_0_0_0';
+        $this->render_data['thread_id'] = $thread_id;
+        $reply_to = $parameters['reply_to'];
+        $this->render_data['reply_to'] = $reply_to;
         $this->render_data['in_modmode'] = $this->session->inModmode($this->domain) && !$this->write_mode;
         $this->render_data['not_anonymous_minlength'] = $this->domain->setting('min_name_length');
         $this->render_data['not_anonymous_maxlength'] = $this->domain->setting('max_name_length');
@@ -33,7 +35,7 @@ class OutputNewPostForm extends Output
         $this->render_data['display_fgsfds_field'] = $this->domain->setting('enable_fgsfds_field');
         $this->render_data['display_password_field'] = $this->domain->setting('enable_password_field');
 
-        if (!$response_to) {
+        if (!$reply_to) {
             $this->render_data['display_name_field'] = $this->domain->setting('enable_op_name_field');
             $this->render_data['display_email_field'] = $this->domain->setting('enable_op_email_field');
             $this->render_data['display_subject_field'] = $this->domain->setting('enable_op_subject_field');
@@ -83,7 +85,7 @@ class OutputNewPostForm extends Output
             $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'new-post']);
         }
 
-        if (!$response_to) {
+        if (!$reply_to) {
             $this->render_data['allow_files'] = $this->domain->setting('allow_op_files') &&
                 $this->domain->setting('max_op_files') > 0 && $this->domain->setting('max_op_total_uploads') > 0;
             $this->render_data['file_required'] = $this->domain->setting('require_op_file');
@@ -124,7 +126,7 @@ class OutputNewPostForm extends Output
                 false);
         }
 
-        $this->render_data['new_post_submit'] = ($response_to) ? _gettext('Reply') : _gettext('New thread');
+        $this->render_data['new_post_submit'] = ($reply_to) ? _gettext('Reply') : _gettext('New thread');
         $this->postingRules();
         $output = $this->output('thread/new_post_form', $data_only, true, $this->render_data);
         return $output;

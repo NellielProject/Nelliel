@@ -5,6 +5,7 @@ namespace Nelliel;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Domains\Domain;
 use PDO;
 
 class VisitorInfo
@@ -16,7 +17,7 @@ class VisitorInfo
 
     function __construct(string $visitor_id, bool $process = true)
     {
-        $this->database = nel_site_domain()->database();
+        $this->database = nel_get_cached_domain(Domain::SITE)->database();
         $this->visitor_id = $visitor_id;
 
         if ($process) {

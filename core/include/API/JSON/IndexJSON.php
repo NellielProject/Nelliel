@@ -21,7 +21,7 @@ class IndexJSON extends JSON
     protected function generate(): void
     {
         $raw_data = array();
-        $threads = $this->board->activeThreads(true);
+        $threads = $this->board->getThreads(true, false);
         $offset = ($this->page - 1) * $this->board->setting('threads_per_page');
         $limit = $offset + $this->board->setting('threads_per_page');
         $thread_count = 0;

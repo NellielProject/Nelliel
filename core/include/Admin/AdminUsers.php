@@ -6,7 +6,7 @@ namespace Nelliel\Admin;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Output\OutputPanelUsers;
 
@@ -54,9 +54,13 @@ class AdminUsers extends Admin
         $this->verifyPermissions($this->domain, 'perm_manage_users');
         $update_user = $this->authorization->getUser($username);
 
+        if($update_user->isSiteOwner() && $update_user->id() !== $this->session_user->id()) {
+            nel_derp(232, _gettext('Site owners can only be modified by themselves.'), 403);
+        }
+
         foreach ($_POST as $key => $value) {
             if (strpos($key, 'domain_role') !== false) {
-                $domain = Domain::getDomainFromID(utf8_substr($key, 12), $this->database);
+                $domain = Domain::getDomainFromID(utf8_substr($key, 12));
                 $update_user->modifyRole($domain->id(), $value);
                 continue;
             }

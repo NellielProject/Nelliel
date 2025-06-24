@@ -5,11 +5,14 @@ namespace Nelliel\Tables;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
+use Nelliel\Database\NellielPDO;
 use PDO;
+use Nelliel\Utility\SQLCompatibility;
 
 abstract class Table
 {
     protected $database;
+    protected $core_database;
     protected $sql_compatibility;
     protected $table_name;
     protected $column_checks = array();
@@ -21,6 +24,13 @@ abstract class Table
 
     public abstract function insertDefaults();
 
+    function __construct(NellielPDO $database, SQLCompatibility $sql_compatibility)
+    {
+        $this->database = $database;
+        $this->core_database = nel_database('core');
+        $this->sql_compatibility = $sql_compatibility;
+    }
+
     public function createTable(array $other_tables = null, bool $announce = false)
     {
         $schema = $this->buildSchema($other_tables);
@@ -30,7 +40,7 @@ abstract class Table
         }
 
         if ($announce) {
-            echo sprintf(__('Creating table %s'), $this->table_name) . '<br>';
+            echo sprintf(__('Creating table: %s'), $this->table_name) . '<br>';
         }
 
         $result = $this->database->query($schema);
@@ -49,15 +59,15 @@ abstract class Table
 
     protected function updateVersionsTable(): void
     {
-        if ($this->database->rowExists(NEL_VERSIONS_TABLE, ['id'], [$this->table_name])) {
-            $prepared = $this->database->prepare(
+        if ($this->core_database->rowExists(NEL_VERSIONS_TABLE, ['id'], [$this->table_name])) {
+            $prepared = $this->core_database->prepare(
                 'UPDATE "' . NEL_VERSIONS_TABLE . '" SET "current" = ? WHERE "id" = ? AND "type" = ?');
-            $this->database->executePrepared($prepared, [static::SCHEMA_VERSION, $this->table_name, 'table']);
+            $this->core_database->executePrepared($prepared, [static::SCHEMA_VERSION, $this->table_name, 'table']);
         } else {
-            $prepared = $this->database->prepare(
+            $prepared = $this->core_database->prepare(
                 'INSERT INTO "' . NEL_VERSIONS_TABLE . '" ("id", "type", "original", "current") VALUES
                     (?, ?, ?, ?)');
-            $this->database->executePrepared($prepared,
+            $this->core_database->executePrepared($prepared,
                 [$this->table_name, 'table', static::SCHEMA_VERSION, static::SCHEMA_VERSION]);
         }
     }

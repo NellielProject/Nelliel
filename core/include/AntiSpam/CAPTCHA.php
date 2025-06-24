@@ -6,7 +6,6 @@ namespace Nelliel\AntiSpam;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Domains\Domain;
-use Nelliel\Domains\DomainSite;
 use PDO;
 
 class CAPTCHA
@@ -20,7 +19,7 @@ class CAPTCHA
     {
         $this->domain = $domain;
         $this->database = $domain->database();
-        $this->site_domain = new DomainSite($this->database);
+        $this->site_domain = Domain::getDomainFromID(Domain::SITE);
         $this->file_handler = nel_utilities()->fileHandler();
     }
 

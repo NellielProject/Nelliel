@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-define('NELLIEL_VERSION', 'v0.9.32'); // Version
+define('NELLIEL_VERSION', 'v0.9.33'); // Version
 define('NELLIEL_PACKAGE', 'Nelliel'); // Package
 define('NELLIEL_PHP_MINIMUM', '7.4.0'); // Minimum PHP version
 define('NELLIEL_COPYRIGHT_DATES', '2010-2024'); // Copyright dates

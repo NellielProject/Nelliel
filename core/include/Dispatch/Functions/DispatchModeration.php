@@ -9,7 +9,7 @@ use Nelliel\Redirect;
 use Nelliel\Account\Session;
 use Nelliel\Admin\AdminBans;
 use Nelliel\Admin\AdminThreads;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Content\ContentID;
 use Nelliel\Dispatch\Dispatch;
 use Nelliel\Domains\Domain;

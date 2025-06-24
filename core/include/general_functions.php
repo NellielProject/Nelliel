@@ -5,24 +5,18 @@ defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use ChrisUllyott\FileSize;
 use IPTools\IP;
+use Nelliel\Domains\Domain;
 
-function nel_get_microtime(bool $convert_int = true)
+function nel_get_microtime(bool $as_strings = false)
 {
     $time = microtime();
     $return_time = ['time' => $time];
     $split_time = explode(' ', $time);
-    $seconds = intval($split_time[1]);
-    $milliseconds = intval($split_time[0] * 1000);
-    $microseconds = intval($split_time[0] * 1000000);
-
-    if ($convert_int) {
-        $return_time = ['time' => intval($seconds), 'milli' => intval(round($milliseconds, 3)),
-            'micro' => intval($microseconds)];
-    } else {
-        $return_time = ['time' => (float) $seconds, 'milli' => round($milliseconds, 3),
-            'micro' => (float) $microseconds];
-    }
-
+    $seconds = $split_time[1];
+    $milliseconds = substr($split_time[0], 2, 3);
+    $microseconds = substr($split_time[0], 2, 6);
+    $return_time = ['time' => intval($seconds), 'time_str' => $seconds, 'milli' => intval($milliseconds),
+        'milli_str' => $milliseconds, 'micro' => intval($microseconds), 'micro_str' => $microseconds];
     return $return_time;
 }
 
@@ -103,45 +97,6 @@ function nel_form_input_default(array $input)
     return $value;
 }
 
-function nel_prepare_ip_for_storage(?string $ip_address, bool $unhashed_check = true)
-{
-    if (is_null($ip_address)) {
-        return null;
-    }
-
-    if ($unhashed_check && !nel_site_domain()->setting('store_unhashed_ip')) {
-        return null;
-    }
-
-    $packed_ip_address = @inet_pton($ip_address);
-
-    if ($packed_ip_address === false) {
-        // Check if the error is simply due to the address already being packed
-        if (@inet_ntop($ip_address) !== false) {
-            return $ip_address;
-        }
-
-        return null;
-    }
-
-    return $packed_ip_address;
-}
-
-function nel_convert_ip_from_storage(?string $ip_address)
-{
-    if (is_null($ip_address)) {
-        return null;
-    }
-
-    $unpacked_ip_address = @inet_ntop($ip_address);
-
-    if ($unpacked_ip_address === false) {
-        return null;
-    }
-
-    return $unpacked_ip_address;
-}
-
 function nel_exec(string $command): array
 {
     if (!function_exists('exec')) {
@@ -149,7 +104,7 @@ function nel_exec(string $command): array
     }
 
     $path_command = '';
-    $path = nel_site_domain()->setting('shell_path');
+    $path = nel_get_cached_domain(Domain::SITE)->setting('shell_path');
 
     if ($path !== '') {
         $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";';
@@ -169,7 +124,7 @@ function nel_shell_exec(string $command): ?string
     }
 
     $path_command = '';
-    $path = nel_site_domain()->setting('shell_path');
+    $path = nel_get_cached_domain(Domain::SITE)->setting('shell_path');
 
     if ($path !== '') {
         $path_command = 'PATH="' . escapeshellcmd($path) . ':$PATH";';

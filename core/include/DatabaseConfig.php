@@ -63,4 +63,9 @@ class DatabaseConfig
     {
         return $this->current_config[$key] ?? array();
     }
+
+    public function validKey(string $key)
+    {
+        return !empty($this->getConfig($key));
+    }
 }

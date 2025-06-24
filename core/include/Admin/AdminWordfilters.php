@@ -6,7 +6,7 @@ namespace Nelliel\Admin;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use Nelliel\Filters\Wordfilter;
 use Nelliel\Output\OutputPanelWordfilters;
@@ -39,7 +39,7 @@ class AdminWordfilters extends Admin
     public function add(): void
     {
         $board_id = $_POST['board_id'] ?? $this->domain->uri();
-        $domain = Domain::getDomainFromID($board_id, $this->database);
+        $domain = Domain::getDomainFromID($board_id);
         $this->verifyPermissions($domain, 'perm_manage_wordfilters');
         $wordfilter = new Wordfilter($this->database, 0);
         $wordfilter->changeData('board_id', $domain->id());
@@ -55,7 +55,7 @@ class AdminWordfilters extends Admin
     public function editor(int $filter_id): void
     {
         $wordfilter = new Wordfilter($this->database, $filter_id);
-        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'));
         $this->verifyPermissions($domain, 'perm_manage_wordfilters');
         $output_panel = new OutputPanelWordfilters($this->domain, false);
         $output_panel->edit(['editing' => true, 'filter_id' => $filter_id], false);
@@ -64,7 +64,7 @@ class AdminWordfilters extends Admin
     public function update(int $filter_id): void
     {
         $wordfilter = new Wordfilter($this->database, $filter_id);
-        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'));
         $this->verifyPermissions($domain, 'perm_manage_wordfilters');
         $wordfilter->changeData('board_id', $_POST['board_id'] ?? $wordfilter->getData('board_id'));
         $wordfilter->changeData('text_match', $_POST['text_match'] ?? $wordfilter->getData('text_match'));
@@ -79,7 +79,7 @@ class AdminWordfilters extends Admin
     public function delete(int $filter_id): void
     {
         $wordfilter = new Wordfilter($this->database, $filter_id);
-        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'));
         $this->verifyPermissions($domain, 'perm_manage_wordfilters');
         $wordfilter->delete();
         $this->panel();
@@ -88,7 +88,7 @@ class AdminWordfilters extends Admin
     public function enable(int $filter_id)
     {
         $wordfilter = new Wordfilter($this->database, $filter_id);
-        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'));
         $this->verifyPermissions($domain, 'perm_manage_wordfilters');
         $wordfilter->changeData('enabled', 1);
         $wordfilter->update();
@@ -98,7 +98,7 @@ class AdminWordfilters extends Admin
     public function disable(int $filter_id)
     {
         $wordfilter = new Wordfilter($this->database, $filter_id);
-        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'), $this->database);
+        $domain = Domain::getDomainFromID($wordfilter->getData('board_id'));
         $this->verifyPermissions($domain, 'perm_manage_wordfilters');
         $wordfilter->changeData('enabled', 0);
         $wordfilter->update();

@@ -29,6 +29,7 @@ abstract class Domain implements NellielCacheInterface
     protected array $references = array();
     protected CacheHandler $cache_handler;
     protected NellielPDO $database;
+    protected NellielPDO $core_database;
     protected FrontEndData $front_end_data;
     protected FileHandler $file_handler;
     protected string $template_path = '';
@@ -53,6 +54,7 @@ abstract class Domain implements NellielCacheInterface
     function __construct(string $domain_id, NellielPDO $database)
     {
         $this->database = $database;
+        $this->core_database = nel_database('core');
         $this->loadDomainInfo($domain_id);
         $this->utilitySetup();
         $this->locale();
@@ -61,9 +63,9 @@ abstract class Domain implements NellielCacheInterface
     protected function loadDomainInfo(string $id): void
     {
         $id_lower = utf8_strtolower($id);
-        $prepared = $this->database->prepare(
+        $prepared = $this->core_database->prepare(
             'SELECT * FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ? OR "uri" = ?');
-        $info = $this->database->executePreparedFetch($prepared, [$id_lower, $id_lower], PDO::FETCH_ASSOC);
+        $info = $this->core_database->executePreparedFetch($prepared, [$id_lower, $id_lower], PDO::FETCH_ASSOC);
 
         if (is_array($info)) {
             $this->domain_id = $info['domain_id'] ?? '';
@@ -164,42 +166,22 @@ abstract class Domain implements NellielCacheInterface
         return $this->front_end_data;
     }
 
-    protected function cacheSettings(): void
-    {
-        $settings = $this->loadSettingsFromDatabase();
-        $this->cache_handler->writeArrayToFile('domain_settings', $settings, 'domain_settings.php',
-            'domains/' . $this->domain_id);
-    }
-
     public function reload(): void
     {
         $this->loadSettings();
         $this->loadReferences();
     }
 
-    public static function getDomainFromID(string $id, NellielPDO $database): Domain
+    public static function getDomainFromID(string $id, NellielPDO $database = null): Domain
     {
+        $database = $database ?? nel_database('core');
+
         if ($id === Domain::SITE) {
-            return new DomainSite($database);
+            return new DomainSite(nel_database('core'));
         } else if ($id === Domain::GLOBAL) {
-            return new DomainGlobal($database);
+            return new DomainGlobal(nel_database('core'));
         } else {
-            $board_domain = new DomainBoard($id, $database);
-
-            // Check if we were passed a URI
-            if (!$board_domain->exists()) {
-                $prepared = $database->prepare(
-                    'SELECT "domain_id" FROM "' . NEL_DOMAIN_REGISTRY_TABLE . '" WHERE "domain_id" = ? OR "uri" = ?');
-                $prepared->bindValue(1, utf8_strtolower($id), PDO::PARAM_STR);
-                $prepared->bindValue(2, utf8_strtolower($id), PDO::PARAM_STR);
-                $result = $database->executePreparedFetch($prepared, null, PDO::FETCH_COLUMN);
-
-                if ($result !== false) {
-                    return new DomainBoard($result, $database);
-                }
-            }
-
-            return $board_domain;
+            return new DomainBoard($id, nel_database('core'));
         }
     }
 

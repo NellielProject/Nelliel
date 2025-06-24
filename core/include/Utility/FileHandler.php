@@ -108,7 +108,12 @@ class FileHandler
         $dir_chmod = NEL_DIRECTORY_PERM): bool
     {
         clearstatcache();
-        $success = file_exists($file);
+
+        if ($file === $destination) {
+            return false;
+        }
+
+        $success = file_exists($file) && is_file($file);
 
         if ($success && !file_exists($destination) && $create_directories) {
             $success = $this->createDirectory(dirname($destination), $dir_chmod, true);
@@ -126,13 +131,13 @@ class FileHandler
     {
         clearstatcache();
 
-        if (!file_exists($directory) || !is_dir($directory)) {
+        if ($directory === $destination) {
             return false;
         }
 
-        $success = false;
+        $success = file_exists($directory) && is_dir($directory);
 
-        if (!file_exists($destination) && $create_directories) {
+        if ($success && !file_exists($destination) && $create_directories) {
             $success = $this->createDirectory(dirname($destination), $dir_chmod, true);
         }
 

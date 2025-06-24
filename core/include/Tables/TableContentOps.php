@@ -32,8 +32,7 @@ class TableContentOps extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_CONTENT_OPS_TABLE;
         $this->column_checks = [
             'op_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
@@ -70,11 +69,15 @@ class TableContentOps extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['ImgOps', 'https://imgops.com/', 1, 1, 'Image Operations https://imgops.com/']);
         $this->insertDefaultRow(['EXIF', 'http://regex.info/imageinfo.cgi?url=', 1, 1, 'Jeffrey\'s Image Metadata Viewer http://regex.info']);
         $this->insertDefaultRow(['iqdb', 'http://iqdb.org/?url=', 1, 1, 'Multi-service image search https://iqdb.org']);
         $this->insertDefaultRow(['TinEye', 'https://tineye.com/search/?url=', 1, 1, 'TinEye reverse image search https://tineye.com/']);
         $this->insertDefaultRow(['Yandex', 'https://yandex.com/images/search?rpt=imageview&url=', 1, 1, 'Yandex https://yandex.com/']);
         $this->insertDefaultRow(['ASSE', 'https://trace.moe/?url=', 1, 1, 'Anime Scene Search Engine https://trace.moe/']);
+
+        $this->database->commit();
     }
 }

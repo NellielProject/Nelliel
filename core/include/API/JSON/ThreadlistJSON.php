@@ -19,7 +19,7 @@ class ThreadlistJSON extends JSON
     protected function generate(): void
     {
         $raw_data = array();
-        $threads = $this->board->activeThreads(true);
+        $threads = $this->board->getThreads(true, false);
         $page = 1;
         $page_threads = array_chunk($threads, $this->board->setting('threads_per_page'));
 

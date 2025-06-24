@@ -43,7 +43,6 @@ class PluginHook
         }
 
         if (!is_callable($function_name)) {
-            var_dump($function_name);
             return false;
         }
 

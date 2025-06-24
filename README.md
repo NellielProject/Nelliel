@@ -38,8 +38,12 @@ These are optional things that Nelliel or one of its libraries can utilize for e
 ## Installation
 See [INSTALL.md](INSTALL.md) for installation instructions.
 
-## Plugins
+## Plugin API
 Nelliel has a plugin system to allow extension of the software without having to worry about mods that can be easily broken during updates. Details about using the API are available in [plugin-api.md](documentation/plugins/plugin-api.md).
+
+### Official Plugins
+These are plugins which are maintained officially by the Nelliel Project:
+- [Add4ChanAPI](https://github.com/NellielProject/Add4ChanAPI)
 
 ## License
 Nelliel is released under the [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause). This can be viewed in [LICENSE.md](LICENSE.md) or the About Nelliel page.

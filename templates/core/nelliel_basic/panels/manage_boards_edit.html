@@ -1,0 +1,42 @@
+<form action="{{ form_action }}" method="post" enctype="multipart/form-data">
+	<div class="display-table">
+{{# alphanumeric_uri_only }}
+		<div class="display-row">
+			<span class="display-cell" data-i18n="">Only alphanumeric board URIs are allowed!</span>
+		</div>
+{{/ alphanumeric_uri_only }}
+		<div class="display-row">
+			<label for="board_uri" class="display-cell form-label" data-i18n="">Board URI</label>
+			<input id="board_uri" class="display-cell form-input" type="text" name="board_uri" maxlength="255" value="{{ board_uri }}">
+		</div>
+{{# allow_custom_directories }}
+		<div class="display-row">
+			<span class="display-cell" data-i18n="">Board subdirectories can be customized below if necessary.</span>
+		</div>
+	{{# alphanumeric_directory_only }}
+		<div class="display-row">
+			<span class="display-cell" data-i18n="">Only alphanumeric directory names are allowed!</span>
+		</div>
+	{{/ alphanumeric_directory_only }}
+		<div class="display-row">
+			<label for="source_directory" class="display-cell form-label" data-i18n="">Directory for uploads</label>
+			<input id="source_directory" class="display-cell form-input" type="text" name="source_directory" maxlength="255" value="{{ source_directory }}">
+		</div>
+		<div class="display-row">
+			<label for="preview_directory" class="display-cell form-label" data-i18n="">Directory for previews</label>
+			<input id="preview_directory" class="display-cell form-input" type="text" name="preview_directory" maxlength="255" value="{{ preview_directory }}">
+		</div>
+		<div class="display-row">
+			<label for="page_directory" class="display-cell form-label" data-i18n="">Directory for output</label>
+			<input id="page_directory" class="display-cell form-input" type="text" name="page_directory" maxlength="255" value="{{ page_directory }}">
+		</div>
+		<div class="display-row">
+			<label for="archive_directory" class="display-cell form-label" data-i18n="">Directory for archives</label>
+			<input id="archive_directory" class="display-cell form-input" type="text" name="archive_directory" maxlength="255" value="{{ archive_directory }}">
+		</div>
+{{/ allow_custom_directories }}
+		<div class="display-row">
+			<input type="submit" value="Submit" data-i18n-attributes="value">
+		</div>
+	</div>
+</form>

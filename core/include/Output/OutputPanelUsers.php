@@ -5,16 +5,18 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
 
 class OutputPanelUsers extends Output
 {
+    private $authorization;
 
     function __construct(Domain $domain, bool $write_mode)
     {
         parent::__construct($domain, $write_mode);
+        $this->authorization = new Authorization($domain->database());
     }
 
     public function main(array $parameters, bool $data_only)
@@ -34,15 +36,22 @@ class OutputPanelUsers extends Output
             $user_data = array();
             $user_data['bgclass'] = $bgclass;
             $bgclass = ($bgclass === 'row1') ? 'row2' : 'row1';
-            $user_data['username'] = $user_info['username'];
-            $user_data['display_name'] = $user_info['display_name'];
-            $user_data['active'] = $user_info['active'];
+            $user = $this->authorization->getUser($user_info['username']);
 
-            if ($user_info['owner'] > 0) {
-                $this->render_data['can_modify'] = $this->session->user()->isSiteOwner();
+            if ($user->empty()) {
+                continue;
+            }
+
+            $user_data['username'] = $user->id();
+            $user_data['display_name'] = $user->getData('display_name');
+            $user_data['active'] = $user->active();
+
+            if($user->isSiteOwner() && $user->id() === $this->session->user()->id()) {
+                $user_data['can_modify'] = true;
+                $user_data['can_delete'] = false;
             } else {
-                $this->render_data['can_modify'] = $this->session->user()->checkPermission($this->domain,
-                    'perm_users_manage');
+                $user_data['can_modify'] = !$user->isSiteOwner();
+                $user_data['can_delete'] = !$user->isSiteOwner();
             }
 
             $user_data['edit_url'] = nel_build_router_url(
@@ -73,23 +82,23 @@ class OutputPanelUsers extends Output
         $parameters['panel'] = $parameters['panel'] ?? _gettext('Users');
         $parameters['section'] = $parameters['section'] ?? _gettext('Edit');
         $username = $parameters['username'] ?? '';
-        $authorization = new Authorization($this->domain->database());
         $output_head = new OutputHead($this->domain, $this->write_mode);
         $this->render_data['head'] = $output_head->render([], true);
         $output_header = new OutputHeader($this->domain, $this->write_mode);
         $this->render_data['header'] = $output_header->manage($parameters, true);
 
-        if (empty($username)) {
+        $edit_user = $this->authorization->getUser($username);
+
+        if ($edit_user->empty()) {
             $this->render_data['form_action'] = nel_build_router_url([$this->domain->uri(), 'users', 'new']);
         } else {
-            $edit_user = $authorization->getUser($username);
             $this->render_data['username'] = $edit_user->getData('username');
             $this->render_data['form_action'] = nel_build_router_url(
                 [$this->domain->uri(), 'users', $username, 'modify']);
             $this->render_data['active'] = ($edit_user->active()) ? 'checked' : '';
         }
 
-        if (!empty($username) && $edit_user->isSiteOwner()) {
+        if ($edit_user->isSiteOwner()) {
             $this->render_data['is_site_owner'] = true;
         } else {
             $this->render_data['is_site_owner'] = false;
@@ -102,15 +111,16 @@ class OutputPanelUsers extends Output
             $roles = $this->database->executeFetchAll($query, PDO::FETCH_ASSOC);
 
             foreach ($domain_list as $domain_id) {
-                $domain = Domain::getDomainFromID($domain_id, $this->database);
+                $domain = Domain::getDomainFromID($domain_id);
                 $domain_role_data = array();
                 $domain_role_data['domain'] = $domain->uri();
                 $domain_role_data['select_name'] = 'domain_role_' . $domain->uri();
                 $domain_role_data['select_id'] = 'domain_role_' . $domain->uri();
                 $prepared = $this->database->prepare(
                     'SELECT "role_id" FROM "' . NEL_USER_ROLES_TABLE . '" WHERE "username" = ? AND "domain_id" = ?');
-                $role_id = $this->database->executePreparedFetch($prepared, [$username, $domain->uri()],
+                $role_id = $this->database->executePreparedFetch($prepared, [$username, $domain->id()],
                     PDO::FETCH_COLUMN);
+                $domain_role_data['roles']['options'][] = ['role_id' => '', 'role_title' => ''];
 
                 foreach ($roles as $role) {
                     $role_options = array();

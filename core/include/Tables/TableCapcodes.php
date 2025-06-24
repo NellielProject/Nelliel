@@ -28,8 +28,7 @@ class TableCapcodes extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_CAPCODES_TABLE;
         $this->column_checks = [
             'capcode_id' => ['row_check' => false, 'auto_inc' => true, 'update' => false],
@@ -62,11 +61,15 @@ class TableCapcodes extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['Site Owner', '<span class="capcode" style="color: fuchsia;"> ## Site Owner</span>', 1]);
         $this->insertDefaultRow(['Site Admin', '<span class="capcode" style="color: blue;"> ## Site Admin</span>', 1]);
         $this->insertDefaultRow(['Board Owner', '<span class="capcode" style="color: green;"> ## Board Owner</span>', 1]);
         $this->insertDefaultRow(['Moderator', '<span class="capcode" style="color: red;"> ## Moderator</span>', 1]);
         $this->insertDefaultRow(['Janitor', '<span class="capcode" style="color: orange;"> ## Janitor</span>', 1]);
         $this->insertDefaultRow(['', '<span class="capcode"> ## %s</span>', 1]);
+
+        $this->database->commit();
     }
 }

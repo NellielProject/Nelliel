@@ -39,7 +39,7 @@ class Cites
                     $this->getThreadID($source_domain, $cite_data['target_post']) !== 0;
             }
         } else if (preg_match('/^(?:>>>|&gt;&gt;&gt;)\/(.+?)\/([\d]*)/u', $text, $matches) === 1) {
-            $target_domain = Domain::getDomainFromID($matches[1], $this->database);
+            $target_domain = Domain::getDomainFromID($matches[1]);
             $cite_data['target_board'] = $target_domain->id();
 
             if (!empty($matches[2])) {
@@ -112,7 +112,7 @@ class Cites
 
     private function setCacheRegenForPost(string $domain, int $post_id): void
     {
-        $source_domain = Domain::getDomainFromID($domain, $this->database);
+        $source_domain = Domain::getDomainFromID($domain);
         $prepared = $this->database->prepare(
             'UPDATE "' . $source_domain->reference('posts_table') . '" SET "regen_cache" = 1 WHERE "post_number" = ?');
         $this->database->executePrepared($prepared, [$post_id]);
@@ -162,7 +162,7 @@ class Cites
         $url = '';
 
         if (!empty($cite_data)) {
-            $target_domain = new DomainBoard($cite_data['target_board'], $this->database);
+            $target_domain = Domain::getDomainFromID($cite_data['target_board']);
 
             if ($cite_data['type'] === 'board-cite') {
                 $url = NEL_BASE_WEB_PATH . $cite_data['target_board'] . '/';

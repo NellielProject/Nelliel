@@ -28,8 +28,7 @@ class TableRoles extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = NEL_ROLES_TABLE;
         $this->column_checks = [
             'role_id' => ['row_check' => true, 'auto_inc' => false, 'update' => false],
@@ -61,10 +60,14 @@ class TableRoles extends Table
 
     public function insertDefaults()
     {
+        $this->database->beginTransaction();
+
         $this->insertDefaultRow(['site_admin', 100, 'Site Administrator', 'Site Administrator']);
         $this->insertDefaultRow(['board_owner', 75, 'Board Owner', 'Board Owner']);
         $this->insertDefaultRow(['moderator', 50, 'Moderator', 'Moderator']);
         $this->insertDefaultRow(['janitor', 25, 'Janitor', 'Janitor']);
         $this->insertDefaultRow(['basic_user', 0, 'Basic', '']);
+
+        $this->database->commit();
     }
 }

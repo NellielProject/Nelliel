@@ -1,5 +1,5 @@
 <form id="new-post-form" class="display-table new-post-form" accept-charset="utf-8" name="new_post_form" action="{{ form_action }}" method="post" enctype="multipart/form-data" data-jsevents="click|change">
-	<input type="hidden" name="new_post[response_to]" value="{{ response_to }}">
+	<input type="hidden" name="new_post[thread_id]" value="{{ thread_id }}">
 	<div>
 		{{^ forced_anonymous }}
 			{{# display_name_field }}

@@ -21,7 +21,7 @@ class BoardsJSON extends JSON
             PDO::FETCH_COLUMN);
 
         foreach ($board_ids as $board_id) {
-            $board = Domain::getDomainFromID($board_id, nel_database('core'));
+            $board = Domain::getDomainFromID($board_id);
             $board_json = new BoardJSON($board);
             $raw_data['boards'][] = $board_json->getRawData();
         }

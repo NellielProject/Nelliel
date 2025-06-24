@@ -12,36 +12,37 @@ use Nelliel\Moar;
 use Nelliel\Overboard;
 use Nelliel\Regen;
 use Nelliel\API\JSON\ThreadJSON;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Database\NellielPDO;
 use Nelliel\Domains\Domain;
 use Nelliel\Domains\DomainBoard;
 use Nelliel\Interfaces\MutableData;
 use Nelliel\Tables\TableThreads;
+use Nelliel\Utility\SQLHelpers;
 use PDO;
 
 class Thread implements MutableData
 {
-    protected $content_id;
+    protected ContentID $content_id;
     protected NellielPDO $database;
-    protected $domain;
-    protected $content_data = array();
-    protected $content_moar;
-    protected $authorization;
+    protected DomainBoard $domain;
+    protected array $content_data = array();
+    protected Moar $content_moar;
+    protected Authorization $authorization;
     protected $main_table;
-    protected $archive_prune;
-    protected $overboard;
+    protected ArchiveAndPrune $archive_prune;
+    protected Overboard $overboard;
     protected $parent = null;
-    protected $json;
-    protected $sql_helpers;
+    protected ThreadJSON $json;
+    protected SQLHelpers $sql_helpers;
 
-    function __construct(ContentID $content_id, Domain $domain, bool $load = true)
+    function __construct(ContentID $content_id, DomainBoard $domain, bool $load = true)
     {
         $this->database = $domain->database();
         $this->content_id = $content_id;
         $this->domain = $domain;
         $this->authorization = new Authorization($this->database);
-        $this->storeMoar(new Moar());
+        $this->content_moar = new Moar();
         $this->main_table = new TableThreads($this->database, nel_utilities()->sqlCompatibility());
         $this->main_table->tableName($domain->reference('threads_table'));
         $this->json = new ThreadJSON($this);
@@ -51,7 +52,7 @@ class Thread implements MutableData
             $this->loadFromDatabase(true);
         }
 
-        $this->archive_prune = new ArchiveAndPrune($this->domain, nel_utilities()->fileHandler());
+        $this->archive_prune = new ArchiveAndPrune($this->domain);
         $this->overboard = new Overboard($this->database);
     }
 
@@ -75,8 +76,8 @@ class Thread implements MutableData
         }
 
         $this->content_data = TableThreads::typeCastData($result);
-        $moar = $result['moar'] ?? '';
-        $this->getMoar()->storeFromJSON($moar);
+        $moar = strval($result['moar'] ?? '');
+        $this->content_moar = new Moar($moar);
         return true;
     }
 
@@ -87,7 +88,7 @@ class Thread implements MutableData
         }
 
         $filtered_data = TableThreads::filterData($this->content_data);
-        $filtered_data['moar'] = $this->getMoar()->getJSON();
+        $filtered_data['moar'] = json_encode($this->content_moar->getData());
         $pdo_types = TableThreads::getPDOTypesForData($filtered_data);
         $column_list = array_keys($filtered_data);
         $values = array_values($filtered_data);
@@ -191,7 +192,7 @@ class Thread implements MutableData
         return $this;
     }
 
-    public function updateCounts()
+    public function updateCounts(): void
     {
         $prepared = $this->database->prepare(
             'SELECT COUNT(*) FROM "' . $this->domain->reference('posts_table') . '" WHERE "parent_thread" = ?');
@@ -418,10 +419,11 @@ class Thread implements MutableData
         $page_filename = '';
 
         if ($this->domain->setting('slugify_thread_url') && !nel_true_empty($this->content_data['slug'])) {
-            $page_filename = sprintf(nel_site_domain()->setting('slug_thread_filename_format'),
+            $page_filename = sprintf(nel_get_cached_domain(Domain::SITE)->setting('slug_thread_filename_format'),
                 $this->content_data['slug']);
         } else {
-            $page_filename = sprintf(nel_site_domain()->setting('thread_filename_format'), $this->content_id->threadID());
+            $page_filename = sprintf(nel_get_cached_domain(Domain::SITE)->setting('thread_filename_format'),
+                $this->content_id->threadID());
         }
 
         return $page_filename;
@@ -446,73 +448,83 @@ class Thread implements MutableData
                 $this->pageBasename()], $end_slash, $query_string);
     }
 
-    public function pageFilePath()
+    public function pageFilePath(): string
     {
         return $this->domain->reference('page_path') . $this->content_id->threadID() . '/';
     }
 
-    public function srcFilePath()
+    public function srcFilePath(): string
     {
         return $this->domain->reference('src_path');
     }
 
-    public function previewFilePath()
+    public function previewFilePath(): string
     {
         return $this->domain->reference('preview_path');
     }
 
-    public function pageWebPath()
+    public function pageWebPath(): string
     {
         return $this->domain->reference('page_web_path') . $this->content_id->threadID() . '/';
     }
 
-    public function srcWebPath()
+    public function srcWebPath(): string
     {
         return $this->domain->reference('src_web_path');
     }
 
-    public function previewWebPath()
+    public function previewWebPath(): string
     {
         return $this->domain->reference('preview_web_path');
     }
 
     public function archive(bool $permanent): bool
     {
-        return false; // TODO: Update for flattened structure
-        $thread_data = $this->getJSON()->getJSON();
+        $thread_meta = $this->getData();
+        $thread_data = $this->getData();
+
+        foreach ($this->getPosts() as $post) {
+            $post_data = $post->getData();
+
+            foreach ($post->getUploads() as $upload) {
+                $post_data['uploads'][] = $upload->getData();
+                $upload->archive();
+            }
+
+            if ($post->getData('op')) {
+                $thread_meta['op_post'] = $thread_data;
+            }
+
+            $thread_data['posts'][] = $post_data;
+        }
+
+        $thread_meta_json = json_encode($thread_meta);
+        $thread_data_json = json_encode($thread_data);
+
         $prepared = $this->database->prepare(
             'INSERT INTO "' . $this->domain->reference('archives_table') .
-            '" ("thread_id", "thread_data", "time_archived", "permanent", "moar") VALUES (?, ?, ?, ?, ?)');
-        $prepared->bindValue(1, $this->content_id->threadID(), PDO::PARAM_INT);
-        $prepared->bindValue(2, $thread_data, PDO::PARAM_STR);
-        $prepared->bindValue(3, time(), PDO::PARAM_INT);
-        $prepared->bindValue(4, $permanent, PDO::PARAM_INT);
-        $prepared->bindValue(5, $this->getMoar()->get(), PDO::PARAM_STR);
+            '" ("thread_id", "thread_meta", "thread_data", "time_archived", "permanent", "moar") VALUES (:thread_id, :thread_meta, :thread_data, :time_archived, :permanent, :moar)');
+        $prepared->bindValue(':thread_id', $this->content_id->threadID(), PDO::PARAM_INT);
+        $prepared->bindValue(':thread_meta', $thread_meta_json, PDO::PARAM_STR);
+        $prepared->bindValue(':thread_data', $thread_data_json, PDO::PARAM_STR);
+        $prepared->bindValue(':time_archived', time(), PDO::PARAM_INT);
+        $prepared->bindValue(':permanent', $permanent, PDO::PARAM_INT);
+        $prepared->bindValue(':moar', json_encode($this->content_moar->getData()), PDO::PARAM_STR);
         $result = $this->database->executePrepared($prepared);
 
         if ($result !== true) {
             return false;
         }
 
-        $file_handler = nel_utilities()->fileHandler();
-        $file_handler->moveDirectory($this->domain->reference('src_path') . $this->content_id->threadID() . '/',
-            $this->domain->reference('archive_src_path') . $this->content_id->threadID() . '/');
-        $file_handler->moveDirectory($this->domain->reference('preview_path') . $this->content_id->threadID() . '/',
-            $this->domain->reference('archive_preview_path') . $this->content_id->threadID() . '/');
-        // TODO: regen as archive page
-        $file_handler->moveDirectory($this->domain->reference('page_path') . $this->content_id->threadID() . '/',
-            $this->domain->reference('archive_page_path') . $this->content_id->threadID() . '/');
-
-        $this->deleteFromDatabase();
         return true;
     }
 
-    public function storeMoar(Moar $moar)
+    public function storeMoar(Moar $moar): void
     {
         $this->content_moar = $moar;
     }
 
-    public function getMoar()
+    public function getMoar(): Moar
     {
         return $this->content_moar;
     }
@@ -549,17 +561,17 @@ class Thread implements MutableData
         $this->content_data[$key] = TableThreads::typeCastValue($key, $new_data);
     }
 
-    public function contentID()
+    public function contentID(): ContentID
     {
         return $this->content_id;
     }
 
-    public function domain()
+    public function domain(): DomainBoard
     {
         return $this->domain;
     }
 
-    public function isLoaded()
+    public function isLoaded(): bool
     {
         return !empty($this->content_data);
     }
@@ -652,7 +664,6 @@ class Thread implements MutableData
                 $this->changeData('bump_time_milli', $post->getData('post_time_milli'));
             }
 
-            $post->changeData('reply_to', $this->content_id->threadID());
             $post->changeData('op', false);
         }
 
@@ -684,9 +695,9 @@ class Thread implements MutableData
 
                 if ($keep_shadow) {
                     $this->changeData('shadow', true);
-                    $this->getMoar()->modify('shadow_board_id', $domain->id());
-                    $this->getMoar()->modify('shadow_thread_id', $new_thread->contentID()->threadID());
-                    $this->getMoar()->modify('shadow_type', 'moved');
+                    $this->content_moar->changeData('shadow_board_id', $domain->id());
+                    $this->content_moar->changeData('shadow_thread_id', $new_thread->contentID()->threadID());
+                    $this->content_moar->changeData('shadow_type', 'moved');
                     $this->changeData('locked', true);
                     $this->writeToDatabase();
                 }
@@ -744,9 +755,9 @@ class Thread implements MutableData
 
         if ($cross_board && $keep_shadow) {
             $incoming_thread->changeData('shadow', true);
-            $incoming_thread->getMoar()->modify('shadow_board_id', $this->domain->id());
-            $incoming_thread->getMoar()->modify('shadow_thread_id', $this->contentID()->threadID());
-            $incoming_thread->getMoar()->modify('shadow_type', 'merged');
+            $incoming_thread->getMoar()->changeData('shadow_board_id', $this->domain->id());
+            $incoming_thread->getMoar()->changeData('shadow_thread_id', $this->contentID()->threadID());
+            $incoming_thread->getMoar()->changeData('shadow_type', 'merged');
             $incoming_thread->changeData('locked', true);
             $incoming_thread->writeToDatabase();
         } else {

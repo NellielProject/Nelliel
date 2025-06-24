@@ -5,7 +5,7 @@ namespace Nelliel\Output;
 
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -70,7 +70,7 @@ class OutputBoardlist extends Output
                 continue;
             }
 
-            $board_domain = Domain::getDomainFromID($board['board_id'], $this->database);
+            $board_domain = Domain::getDomainFromID($board['board_id']);
 
             if(!$board_domain->exists()) {
                 continue;

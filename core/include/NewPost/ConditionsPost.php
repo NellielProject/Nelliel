@@ -68,7 +68,7 @@ class ConditionsPost implements Conditions
                     break;
 
                 case 'ip_address':
-                    $met = preg_match($condition, $this->post->getData('ip_address'));
+                    $met = preg_match($condition, $this->post->getData('unhashed_ip_address'));
                     break;
 
                 case 'hashed_ip_address':

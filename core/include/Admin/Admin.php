@@ -6,7 +6,7 @@ namespace Nelliel\Admin;
 defined('NELLIEL_VERSION') or die('NOPE.AVI');
 
 use Nelliel\Account\Session;
-use Nelliel\Auth\Authorization;
+use Nelliel\Account\Authorization;
 use Nelliel\Domains\Domain;
 use PDO;
 
@@ -41,7 +41,7 @@ abstract class Admin
     {
         $entry = $this->getEntryByID($id);
         $domain_id = $entry['board_id'] ?? Domain::SITE;
-        return Domain::getDomainFromID($domain_id, $this->database);
+        return Domain::getDomainFromID($domain_id);
     }
 
     protected function getEntryByID($id): array

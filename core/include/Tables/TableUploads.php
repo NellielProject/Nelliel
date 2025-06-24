@@ -76,10 +76,8 @@ class TableUploads extends Table
 
     function __construct($database, $sql_compatibility)
     {
-        $this->database = $database;
-        $this->sql_compatibility = $sql_compatibility;
+        parent::__construct($database, $sql_compatibility);
         $this->table_name = '_uploads';
-        $this->increment_column = 'upload_id';
         $this->column_checks = [
             'upload_id' => ['row_check' => true, 'auto_inc' => true, 'update' => false],
             'parent_thread' => ['row_check' => false, 'auto_inc' => false, 'update' => false],
