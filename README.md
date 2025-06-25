@@ -45,5 +45,8 @@ Nelliel has a plugin system to allow extension of the software without having to
 These are plugins which are maintained officially by the Nelliel Project:
 - [Add4ChanAPI](https://github.com/NellielProject/Add4ChanAPI)
 
+## Contributing
+The project is not currently bringing in other members. However anyone is welcome to provide things for consideration. Please read the [development guidelines](documentation/development/basic-guidelines.md) and ensure your suggestions or contributions meet the guidelines before opening issues or pull requests.
+
 ## License
 Nelliel is released under the [3-Clause BSD License](https://opensource.org/licenses/BSD-3-Clause). This can be viewed in [LICENSE.md](LICENSE.md) or the About Nelliel page.
